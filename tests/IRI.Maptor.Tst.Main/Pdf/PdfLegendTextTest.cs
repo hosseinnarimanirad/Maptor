@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using IRI.Maptor.Jab.Common.Helpers;
+using IRI.Maptor.Jab.Wpf.Helpers;
 using IRI.Maptor.Sta.Pdf;
 using IRI.Maptor.Tst.Main.Common;
 using Xunit;

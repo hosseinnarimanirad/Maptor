@@ -2,7 +2,7 @@
 
 - **Status:** Step A implemented 2026-08-08 (build verified, 0 errors; in-app throttled-network
   verification still pending). Steps B and C remain proposed.
-- **Area:** `src/IRI.Maptor.Jab/IRI.Maptor.Jab.Common` — `Views/Map/MapViewer.xaml.cs`
+- **Area:** `src/IRI.Maptor.Jab/IRI.Maptor.Jab.Wpf` — `Views/Map/MapViewer.xaml.cs`
   (`RefreshTiles`, `AddTileServiceLayerAsync`), `Layers/TileServiceLayer.cs`,
   `Jab.Core/TileServices/TileCacheAddress.cs`
 - **Symptom (user-reported):** on a slow network, map refresh appears to wait for basemap tiles;
@@ -143,7 +143,7 @@ considered there (15 s is long for a 256px tile).
 
 ## Verification
 
-1. Build `IRI.Maptor.Jab.Common` + `IRI.App.MakanNegarSaba` (close running Saba first).
+1. Build `IRI.Maptor.Jab.Wpf` + `IRI.App.MakanNegarSaba` (close running Saba first).
 2. Throttle the network (e.g. temporarily wrap `HttpProtocol.GetByteArrayAsync` with
    `await Task.Delay(2000)` or use an OS/proxy throttle). Load a project with vector layers +
    basemap:

@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Windows.Media;
 
-using IRI.Maptor.Jab.Common.ViewModels.Symbology;
+using IRI.Maptor.Jab.Wpf.ViewModels.Symbology;
 using IRI.Maptor.Sta.Ogc.SLD;
 
 namespace IRI.Maptor.Tst.Main.OGC;

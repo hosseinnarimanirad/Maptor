@@ -13,6 +13,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
+
+    <!-- The TOC is built on MudBlazor rather than hand-rolled controls: every consumer of this
+         library is already a MudBlazor app, and a second widget vocabulary inside the same page
+         is exactly how a "shared" panel starts looking foreign in its host. Host apps must
+         include MudBlazor's css/js and providers, as a MudBlazor app already does. -->
+    <PackageReference Include="MudBlazor" />
   </ItemGroup>
 
   <ItemGroup>

@@ -68,7 +68,7 @@ static class SqlSpatialToBitmap
         //
         //ScaleTransform transform = new ScaleTransform(+1, -1);
         //StreamGeometry geo =
-        //    IRI.Maptor.Jab.Common.Converter.StreamGeometryRenderer.ParseSqlGeometry(geometries, p => transform.Transform(p));
+        //    IRI.Maptor.Jab.Wpf.Converter.StreamGeometryRenderer.ParseSqlGeometry(geometries, p => transform.Transform(p));
         //
         //*********************************************************
         watch.Stop();                                           //*

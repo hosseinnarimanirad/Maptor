@@ -15,7 +15,7 @@ namespace IRI.Maptor.Jab.Core.Layers;
 
 /// <summary>
 /// Platform-neutral abstract base class implementing ILayer without WPF dependencies.
-/// WPF-specific subclass lives in Jab.Common.Layers.BaseLayer (inherits this, implements IWpfLayer).
+/// WPF-specific subclass lives in Jab.Wpf.Layers.BaseLayer (inherits this, implements IWpfLayer).
 /// </summary>
 public abstract class BaseLayer : Notifier, ILayer
 {

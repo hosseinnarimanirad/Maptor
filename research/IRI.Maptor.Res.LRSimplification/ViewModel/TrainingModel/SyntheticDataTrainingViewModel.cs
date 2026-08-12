@@ -2,13 +2,13 @@
 using System.Collections.ObjectModel;
 
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Jab.Common;
+using IRI.Maptor.Jab.Wpf;
 using IRI.Maptor.Sta.MachineLearning;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 
 using Sb = IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Jab.Common.ViewModels;
+using IRI.Maptor.Jab.Wpf.ViewModels;
 using IRI.Maptor.Jab.Core;
 
 namespace IRI.Maptor.Res.LRSimplification.ViewModel.TrainingModel;

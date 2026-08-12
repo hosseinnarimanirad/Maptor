@@ -1,0 +1,287 @@
+<mahApp:MetroWindow x:Class="IRI.Maptor.Jab.Controls.Dialogs.GeoJsonTopoJsonOpenDialogView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core"
+    xmlns:dialogs="clr-namespace:IRI.Maptor.Jab.Controls.Dialogs"
+
+    Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Dialog}"
+    Title="{Binding DialogTitle}"
+    WindowStartupLocation="CenterOwner">
+
+    <mahApp:MetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries> 
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/SecurityInputStyles.xaml"/>
+                <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/> 
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>            
+        </ResourceDictionary>
+    </mahApp:MetroWindow.Resources>
+    
+    <mahApp:MetroWindow.TitleTemplate>
+        <DataTemplate>
+            <TextBlock Text="{TemplateBinding Content}" Style="{StaticResource IRI.Maptor.Styles.TextBlock.WindowTitle}" />
+        </DataTemplate>
+    </mahApp:MetroWindow.TitleTemplate>
+    <Grid Margin="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" MinHeight="100"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- File -->
+        <Border Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <iconPacks:PackIconMaterial Kind="File" Style="{StaticResource securityIconMaterial}"/>
+                <TextBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En}"
+                         mahApp:TextBoxHelper.Watermark="{Binding [dialog_common_fileWatermark], Source={StaticResource Localization}}"
+                         Text="{Binding FilePath, Mode=OneWay}" IsReadOnly="True"/>
+                <Button Grid.Column="2"
+                        ToolTip="{Binding [dialog_common_browse], Source={StaticResource Localization}}"
+                        Command="{Binding BrowseCommand}"
+                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
+                    <iconPacks:PackIconMaterial Kind="FileSearchOutline"/>
+                </Button>
+                <Button Grid.Column="3"
+                       ToolTip="{Binding [dialog_common_removeFile], Source={StaticResource Localization}}"
+                       Command="{Binding RemoveFileCommand}"
+                       Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
+                    <iconPacks:PackIconMaterial Kind="FileRemoveOutline"/>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- Spatial Reference -->
+        <Border Grid.Row="1" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <iconPacks:PackIconPhosphorIcons Kind="Globe" Style="{StaticResource securityIconPhosphor}"/>
+                <ComboBox Grid.Column="1"  
+                          ItemsSource="{Binding AvailableSrsOptions}"
+                          DisplayMemberPath="DisplayName"
+                          Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}"
+                          SelectedItem="{Binding SelectedSrsOption, Mode=TwoWay}" />
+            </Grid>
+        </Border>
+
+        <!-- UTM Zone (visible when UTM selected) -->
+        <Border Grid.Row="2" Style="{StaticResource IRI.Maptor.Styles.Border.Card}"
+                Visibility="{Binding IsUtmSelected, Converter={StaticResource boolToVisibilityConverter}}">
+            <Grid Margin="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <iconPacks:PackIconPhosphorIcons Kind="MapTrifoldFill" Style="{StaticResource securityIconPhosphor}"/>
+                <mahApp:NumericUpDown Grid.Column="1" Minimum="1" Maximum="60"
+                                        mahApp:ControlsHelper.CornerRadius="4"
+                                        Value="{Binding UtmZone, Mode=TwoWay}"
+                                        Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Normal}"/>
+                <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="8,2,4,0">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <!-- Default (northern hemisphere) -->
+                            <Setter Property="Text" 
+                     Value="{Binding [srs_northernHemisphere], Source={StaticResource Localization}}"/>
+                            <Style.Triggers>
+                                <!-- Southern hemisphere (IsChecked = False) -->
+                                <DataTrigger Binding="{Binding IsNorthHemisphere}" Value="False">
+                                    <Setter Property="Text" 
+                             Value="{Binding [srs_southernHemisphere], Source={StaticResource Localization}}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <ToggleButton Grid.Column="3" IsChecked="{Binding IsNorthHemisphere, Mode=TwoWay}"
+                              Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" FlowDirection="LeftToRight"
+                              ToolTip="{Binding [dialog_dxfOpen_hemisphereTooltip], Source={StaticResource Localization}}">
+                    <iconPacks:PackIconPhosphorIcons Kind="CircleHalfFill" RenderTransformOrigin="0.5,0.5"
+                                                    Margin="0" Width="24" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <iconPacks:PackIconPhosphorIcons.Style>
+                            <Style TargetType="iconPacks:PackIconPhosphorIcons" BasedOn="{StaticResource securityIconPhosphor}">
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsNorthHemisphere}" Value="False">
+                                        <Setter Property="RenderTransform">
+                                            <Setter.Value>
+                                                <RotateTransform Angle="90"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </iconPacks:PackIconPhosphorIcons.Style>
+                    </iconPacks:PackIconPhosphorIcons>
+                </ToggleButton>
+
+            </Grid>
+        </Border>
+
+        <!-- Options: X,Y vs Y,X -->
+        <Border Grid.Row="3" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
+            <DockPanel>
+                <iconPacks:PackIconPhosphorIcons DockPanel.Dock="Left" Kind="ListNumbers" Style="{StaticResource securityIconPhosphor}"/>
+                <TextBlock DockPanel.Dock="Left" Text="{Binding [dialog_common_xyOrder], Source={StaticResource Localization}}"
+                           VerticalAlignment="Center" Margin="8,0,0,0" FontWeight="Bold"/>
+
+
+
+                <ToggleButton DockPanel.Dock="Right" IsChecked="{Binding IsPrettyJson, Mode=TwoWay}"
+                               Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" FlowDirection="LeftToRight"
+                               ToolTip="{Binding [dialog_common_formatJson], Source={StaticResource Localization}}">
+                    <iconPacks:PackIconMaterial Kind="FileTree" RenderTransformOrigin="0.5,0.5"
+                                     Margin="0" Width="24" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center">
+
+                    </iconPacks:PackIconMaterial>
+                </ToggleButton>
+                <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" Margin="8,2,4,0">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock"> 
+                            <Setter Property="Text" Value="{Binding [dialog_common_prettyJson], Source={StaticResource Localization}}"/>
+                            <Style.Triggers> 
+                                <DataTrigger Binding="{Binding IsPrettyJson}" Value="False">
+                                    <Setter Property="Text" Value="{Binding [dialog_common_minifiedJson], Source={StaticResource Localization}}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <mahApp:ToggleSwitch DockPanel.Dock="Right" Visibility="Collapsed"
+                                     Style="{StaticResource IRI.Maptor.Styles.ToggleSwitch.Normal}"
+                                     IsOn="{Binding IsPrettyJson, Mode=TwoWay}"
+                                     OnContent="{Binding [dialog_common_prettyJson], Source={StaticResource Localization}}"
+                                     OffContent="{Binding [dialog_common_minifiedJson], Source={StaticResource Localization}}"
+                                     IsEnabled="{Binding IsRawTextReadOnly}"
+                                     />
+                <Button DockPanel.Dock="Right" Visibility="Collapsed"
+                        ToolTip="{Binding [dialog_common_formatJson], Source={StaticResource Localization}}"
+                        Command="{Binding FormatJsonCommand}"
+                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
+                    <iconPacks:PackIconMaterial Kind="CodeBlockBraces"/>
+                </Button>
+
+                <CheckBox DockPanel.Dock="Left"
+                          Content="{Binding [dialog_common_eastingFirst], Source={StaticResource Localization}}"
+                            Style="{StaticResource IRI.Maptor.Styles.CheckBox.Normal}"
+                            IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}" />
+
+                <!--<RadioButton Content="X,Y" IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}" Margin="4,0" VerticalAlignment="Center"
+                         ToolTip="{Binding [dialog_geoJsonTopoJsonOpen_orderXY], Source={StaticResource Localization}}"/>
+                <RadioButton Content="Y,X" IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay, Converter={StaticResource notConverter}}" Margin="4,0" VerticalAlignment="Center"
+                         ToolTip="{Binding [dialog_geoJsonTopoJsonOpen_orderYX], Source={StaticResource Localization}}"/>-->
+            </DockPanel>
+        </Border>
+
+        <!-- Data: paste or preview -->
+        <!--mahApp:TextBoxHelper.Watermark="{Binding [dialog_geoJsonTopoJsonOpen_pasteWatermark], Source={StaticResource Localization}}"-->
+        <!--<TextBox Grid.Row="4" Margin="0,4,0,8" MinHeight="120" MaxHeight="200"
+                 Text="{Binding RawJson, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 TextWrapping="NoWrap" AcceptsReturn="True"  VerticalScrollBarVisibility="Auto"
+                 HorizontalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="12"
+                 Padding="8" FlowDirection="LeftToRight"/>-->
+
+        <Grid Grid.Row="4">
+            <TextBlock                
+                    Text="{Binding [dialog_geoJsonTopoJsonOpen_pasteWatermark], Source={StaticResource Localization}}"
+                    IsHitTestVisible="False"
+                    VerticalAlignment="Top" Padding="4"
+                    Margin="8,0,0,0" 
+                    Visibility="{Binding ElementName=previewTextbox, Path=Text, Converter={StaticResource stringNullOrEmptyToVisibilityConverter}}"
+                    Foreground="Gray"/>
+            <!--mahApp:TextBoxHelper.Watermark="{Binding [dialog_csvTsvOpen_pasteWatermark], Source={StaticResource Localization}}"-->
+            <TextBox x:Name="previewTextbox" Grid.Row="5" Margin="4,0" MinHeight="150" MaxHeight="250"
+                    Background="Transparent"
+                    Style="{StaticResource IRI.Maptor.Styles.TextBox}"
+                    Text="{Binding RawJson, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    TextWrapping="NoWrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="12"
+                    Padding="4" FlowDirection="LeftToRight"
+                     IsReadOnly="{Binding IsRawTextReadOnly}"/>
+
+
+        </Grid>
+
+        <!-- Sample points -->
+        <TextBlock Grid.Row="5" Text="{Binding [dialog_geoJsonTopoJsonOpen_samplePoints], Source={StaticResource Localization}}"
+                   Margin="8,2"
+                   FontSize="12" Foreground="{DynamicResource MahApps.Brushes.Gray2}"/>
+        <DataGrid Grid.Row="6" Margin="0,0,0,8"
+                  ItemsSource="{Binding SamplePoints}"
+                  IsReadOnly="True"
+                  AutoGenerateColumns="False"
+                  MaxHeight="150"
+                  HeadersVisibility="Column"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserReorderColumns="False"
+                  SelectionMode="Single"
+                  GridLinesVisibility="Horizontal"
+                  BorderBrush="Gray"
+                  BorderThickness="1"
+                  FontSize="12">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Index}" Width="40">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Text="{Binding [dialog_dxfOpen_columnIndex], Source={StaticResource Localization}}"/>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding X, StringFormat=N6}" Width="*">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Text="{Binding [dialog_dxfOpen_columnX], Source={StaticResource Localization}}"/>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Y, StringFormat=N6}" Width="*">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Text="{Binding [dialog_dxfOpen_columnY], Source={StaticResource Localization}}"/>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Buttons -->
+        <dialogs:DialogFooterView Grid.Row="7"
+                                  SecondaryText="{Binding [dialog_common_cancel], Source={StaticResource Localization}}"
+                                  SecondaryCommand="{Binding CancelCommand}"
+                                  PrimaryText="{Binding [common_open], Source={StaticResource Localization}}"
+                                  PrimaryIconKind="FolderOpen"
+                                  PrimaryCommand="{Binding OpenCommand}"/>
+        
+        <!--<StackPanel Grid.Row="7" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
+            <Button ToolTip="{Binding [dialog_common_cancel], Source={StaticResource Localization}}"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding CancelCommand}" Margin="2">
+                <iconPacks:PackIconMaterial Kind="CloseThick" Foreground="{DynamicResource Fluent.Ribbon.Brushes.IdealForegroundColorBrush}"/>
+            </Button>
+            <Button ToolTip="{Binding [common_open], Source={StaticResource Localization}}" Margin="2"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding OpenCommand}">
+                <iconPacks:PackIconMaterial Kind="CheckBold" Foreground="{DynamicResource Fluent.Ribbon.Brushes.IdealForegroundColorBrush}"/>
+            </Button>
+        </StackPanel>-->
+    </Grid>
+</mahApp:MetroWindow>

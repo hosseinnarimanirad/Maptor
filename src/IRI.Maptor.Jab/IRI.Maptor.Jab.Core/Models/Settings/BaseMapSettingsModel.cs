@@ -70,10 +70,17 @@ public class BaseMapSettingsModel : Notifier, IBaseMapSettings
         get => _baseMapSettings.LocalNetworkUrl;
         set
         {
+            if (_baseMapSettings.LocalNetworkUrl == value)
+                return;
+
             _baseMapSettings.LocalNetworkUrl = value;
             RaisePropertyChanged();
 
-            OnBaseMapUrlChanged?.Invoke(this, EventArgs.Empty);
+            // Only the url the active mode actually reads is worth rebuilding the tile services for.
+            // Hosts bind this to a text box with UpdateSourceTrigger=PropertyChanged, so an unguarded
+            // event here means a base map rebuild on every keystroke.
+            if (SelectedTileMapAccessMode == TileMapAccessMode.LocalNetwork)
+                OnBaseMapUrlChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -82,10 +89,14 @@ public class BaseMapSettingsModel : Notifier, IBaseMapSettings
         get => _baseMapSettings.ProxyAppUrl;
         set
         {
+            if (_baseMapSettings.ProxyAppUrl == value)
+                return;
+
             _baseMapSettings.ProxyAppUrl = value;
             RaisePropertyChanged();
 
-            OnBaseMapUrlChanged?.Invoke(this, EventArgs.Empty);
+            if (SelectedTileMapAccessMode == TileMapAccessMode.ProxyApp)
+                OnBaseMapUrlChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -94,12 +105,32 @@ public class BaseMapSettingsModel : Notifier, IBaseMapSettings
         get => _baseMapSettings.SelectedTileMapAccessMode;
         set
         {
+            // LocalNetwork and ProxyApp build every tile url from their base url. Accepting the mode
+            // without one installs a strategy that yields unusable urls, and the only symptom is a
+            // blank base map. Keep the previous mode and notify, so a bound toggle snaps back.
+            if (!HasUrlFor(value))
+            {
+                RaisePropertyChanged();
+                return;
+            }
+
             _baseMapSettings.SelectedTileMapAccessMode = value;
             RaisePropertyChanged();
 
             OnBaseMapUrlChanged?.Invoke(this, EventArgs.Empty);
         }
     }
+
+    /// <summary>
+    /// Whether <paramref name="mode"/> has the base url it needs. <see cref="TileMapAccessMode.Internet"/>
+    /// needs none — its urls come from the built-in per-provider web url factory.
+    /// </summary>
+    public bool HasUrlFor(TileMapAccessMode mode) => mode switch
+    {
+        TileMapAccessMode.LocalNetwork => !string.IsNullOrWhiteSpace(LocalNetworkUrl),
+        TileMapAccessMode.ProxyApp => !string.IsNullOrWhiteSpace(ProxyAppUrl),
+        _ => true,
+    };
 
     public List<TileMapProvider> MapProviders
     {

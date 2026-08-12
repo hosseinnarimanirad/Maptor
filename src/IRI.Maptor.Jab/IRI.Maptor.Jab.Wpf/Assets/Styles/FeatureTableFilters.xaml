@@ -1,0 +1,200 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                    xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+                    xmlns:filters="clr-namespace:IRI.Maptor.Jab.Wpf.Models.Filters"
+                    xmlns:converters="clr-namespace:IRI.Maptor.Jab.Wpf.Converters"
+                    xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <converters:NumericFilterOperatorToSymbolConverter x:Key="numericFilterOperatorToSymbolConverter"/>
+
+    <x:Array x:Key="NumericFilterOperatorValues" Type="filters:NumericFilterOperator">
+        <filters:NumericFilterOperator>Equal</filters:NumericFilterOperator>
+        <filters:NumericFilterOperator>NotEqual</filters:NumericFilterOperator>
+        <filters:NumericFilterOperator>LessThan</filters:NumericFilterOperator>
+        <filters:NumericFilterOperator>LessThanOrEqual</filters:NumericFilterOperator>
+        <filters:NumericFilterOperator>GreaterThan</filters:NumericFilterOperator>
+        <filters:NumericFilterOperator>GreaterThanOrEqual</filters:NumericFilterOperator>
+        <filters:NumericFilterOperator>Between</filters:NumericFilterOperator>
+    </x:Array>
+
+    <!-- flat icon toggle used in column headers -->
+    <ControlTemplate x:Key="FeatureTableFilter.FlatToggleTemplate" TargetType="ToggleButton">
+        <Border Background="Transparent" Padding="2">
+            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+    </ControlTemplate>
+
+    <!-- Header content for generated columns; DataContext is a ColumnFilterViewModel.
+         Assigned in code by DataGridDictionaryBehavior. -->
+    <DataTemplate x:Key="FeatureTableColumnHeaderTemplate">
+        <DockPanel LastChildFill="True" Background="Transparent">
+            <Grid DockPanel.Dock="Right">
+                <ToggleButton x:Name="filterToggle" Focusable="False" Cursor="Hand"
+                              Template="{StaticResource FeatureTableFilter.FlatToggleTemplate}"
+                              IsChecked="{Binding IsPopupOpen, Mode=TwoWay}"
+                              ToolTip="{Binding [featureTable_filter_filter], Source={x:Static localization:LocalizationManager.Instance}}">
+                    <iconPacks:PackIconMaterial Width="10" Height="10">
+                        <iconPacks:PackIconMaterial.Style>
+                            <Style TargetType="iconPacks:PackIconMaterial">
+                                <Setter Property="Kind" Value="FilterOutline"/>
+                                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray4}"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsActive}" Value="True">
+                                        <Setter Property="Kind" Value="Filter"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </iconPacks:PackIconMaterial.Style>
+                    </iconPacks:PackIconMaterial>
+                </ToggleButton>
+                <Popup IsOpen="{Binding IsChecked, ElementName=filterToggle}"
+                       PlacementTarget="{Binding ElementName=filterToggle}"
+                       Placement="Bottom" StaysOpen="False" AllowsTransparency="True"
+                       PopupAnimation="Slide">
+                    <Border Background="White" BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
+                            BorderThickness="1" Padding="6" CornerRadius="4" MinWidth="180">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="8" Color="Gray" Opacity="0.5" ShadowDepth="2"/>
+                        </Border.Effect>
+                        <ContentControl Content="{Binding}" Focusable="False"/>
+                    </Border>
+                </Popup>
+            </Grid>
+            <iconPacks:PackIconMaterial DockPanel.Dock="Right" Width="10" Height="10"
+                                        VerticalAlignment="Center" Margin="2,0">
+                <iconPacks:PackIconMaterial.Style>
+                    <Style TargetType="iconPacks:PackIconMaterial">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsSortedAscending}" Value="True">
+                                <Setter Property="Visibility" Value="Visible"/>
+                                <Setter Property="Kind" Value="MenuUp"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsSortedDescending}" Value="True">
+                                <Setter Property="Visibility" Value="Visible"/>
+                                <Setter Property="Kind" Value="MenuDown"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </iconPacks:PackIconMaterial.Style>
+            </iconPacks:PackIconMaterial>
+            <Border Background="Transparent" Cursor="Hand"
+                    ToolTip="{Binding [featureTable_sort_toggle], Source={x:Static localization:LocalizationManager.Instance}}">
+                <Border.InputBindings>
+                    <MouseBinding Gesture="LeftClick" Command="{Binding ToggleSortCommand}"/>
+                </Border.InputBindings>
+                <TextBlock Text="{Binding Alias}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+            </Border>
+        </DockPanel>
+    </DataTemplate>
+
+    <!-- distinct-values checklist -->
+    <DataTemplate DataType="{x:Type filters:DistinctValuesColumnFilter}">
+        <StackPanel>
+            <TextBox Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                     mahApp:TextBoxHelper.Watermark="{Binding [featureTable_filter_search], Source={x:Static localization:LocalizationManager.Instance}}"
+                     mahApp:TextBoxHelper.ClearTextButton="True"
+                     Visibility="{Binding IsSearchVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,2">
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                        Command="{Binding SelectAllCommand}"
+                        ToolTip="{Binding [featureTable_filter_selectAllValues], Source={x:Static localization:LocalizationManager.Instance}}">
+                    <iconPacks:PackIconMaterial Kind="SelectAll" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
+                </Button>
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                        Command="{Binding ClearAllCommand}"
+                        ToolTip="{Binding [featureTable_filter_clearAllValues], Source={x:Static localization:LocalizationManager.Instance}}">
+                    <iconPacks:PackIconMaterial Kind="SelectionRemove" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
+                </Button>
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                        Command="{Binding ClearCommand}"
+                        ToolTip="{Binding [featureTable_filter_clear], Source={x:Static localization:LocalizationManager.Instance}}">
+                    <iconPacks:PackIconMaterial Kind="FilterOff" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
+                </Button>
+            </StackPanel>
+            <Separator/>
+            <ListBox ItemsSource="{Binding ItemsView}" MaxHeight="280" BorderThickness="0"
+                     Background="Transparent"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     VirtualizingStackPanel.IsVirtualizing="True"
+                     ScrollViewer.CanContentScroll="True">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Focusable" Value="False"/>
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <ContentPresenter/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Style="{StaticResource IRI.Maptor.Styles.CheckBox.Small}"
+                                  IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                  Content="{Binding DisplayText}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+    </DataTemplate>
+
+    <!-- numeric: operator + value(s) -->
+    <DataTemplate DataType="{x:Type filters:NumericColumnFilter}">
+        <StackPanel MinWidth="170">
+            <TextBlock Text="{Binding [featureTable_filter_operator], Source={x:Static localization:LocalizationManager.Instance}}"
+                       Margin="2,2,2,0"/>
+            <ComboBox SelectedItem="{Binding Operator, Mode=TwoWay}"
+                      ItemsSource="{StaticResource NumericFilterOperatorValues}"
+                      Margin="2" FlowDirection="LeftToRight">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource numericFilterOperatorToSymbolConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock Text="{Binding [featureTable_filter_value], Source={x:Static localization:LocalizationManager.Instance}}"
+                       Margin="2,2,2,0"/>
+            <mahApp:NumericUpDown Value="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  Margin="2" FlowDirection="LeftToRight"/>
+            <mahApp:NumericUpDown Value="{Binding ValueTo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  Margin="2" FlowDirection="LeftToRight"
+                                  Visibility="{Binding IsBetween, Converter={StaticResource boolToVisibilityConverter}}"/>
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Center"
+                    Command="{Binding ClearCommand}"
+                    ToolTip="{Binding [featureTable_filter_clear], Source={x:Static localization:LocalizationManager.Instance}}">
+                <iconPacks:PackIconMaterial Kind="FilterOff" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
+            </Button>
+        </StackPanel>
+    </DataTemplate>
+
+    <!-- date range -->
+    <DataTemplate DataType="{x:Type filters:DateColumnFilter}">
+        <StackPanel MinWidth="190">
+            <TextBlock Text="{Binding [featureTable_filter_from], Source={x:Static localization:LocalizationManager.Instance}}"
+                       Margin="2,2,2,0"/>
+            <DatePicker SelectedDate="{Binding FromDate, Mode=TwoWay}" Margin="2" FlowDirection="LeftToRight"/>
+            <TextBlock Text="{Binding [featureTable_filter_to], Source={x:Static localization:LocalizationManager.Instance}}"
+                       Margin="2,2,2,0"/>
+            <DatePicker SelectedDate="{Binding ToDate, Mode=TwoWay}" Margin="2" FlowDirection="LeftToRight"/>
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Center"
+                    Command="{Binding ClearCommand}"
+                    ToolTip="{Binding [featureTable_filter_clear], Source={x:Static localization:LocalizationManager.Instance}}">
+                <iconPacks:PackIconMaterial Kind="FilterOff" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
+            </Button>
+        </StackPanel>
+    </DataTemplate>
+
+</ResourceDictionary>

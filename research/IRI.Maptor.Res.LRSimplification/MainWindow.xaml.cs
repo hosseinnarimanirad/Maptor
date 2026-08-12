@@ -2,8 +2,8 @@ using System.Windows;
 
 using IRI.Maptor.Sta.MachineLearning;
 using IRI.Maptor.Res.LRSimplification.Common;
-using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Models;
+using IRI.Maptor.Jab.Wpf;
+using IRI.Maptor.Jab.Wpf.Models;
 using IRI.Maptor.Jab.Core.Data;
 
 namespace IRI.Maptor.Res.LRSimplification;

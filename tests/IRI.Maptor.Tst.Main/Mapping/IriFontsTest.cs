@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
-using IRI.Maptor.Jab.Common.Assets.Fonts;
+using IRI.Maptor.Jab.Wpf.Assets.Fonts;
 using IRI.Maptor.Tst.Main.Common;
 using Xunit;
 
@@ -15,7 +15,7 @@ public class IriFontsTest
     /// Guards the FontFamily construction: with a bare family name WPF silently looks up a
     /// SYSTEM-installed font and falls back to the default font when IRANSans isn't installed —
     /// which broke Farsi text in the printed PDF legend. The "./#IRANSans" composite form must
-    /// resolve the ttf packaged in Jab.Common's resources, so shaping a Farsi run with it must
+    /// resolve the ttf packaged in Jab.Wpf's resources, so shaping a Farsi run with it must
     /// produce different metrics than an unresolvable family (which is pure fallback).
     /// </summary>
     [Fact]

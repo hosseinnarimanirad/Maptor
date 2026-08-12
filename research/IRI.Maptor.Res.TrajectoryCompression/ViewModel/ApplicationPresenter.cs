@@ -1,15 +1,15 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 
-using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Models;
+using IRI.Maptor.Jab.Wpf;
+using IRI.Maptor.Jab.Wpf.Models;
 using IRI.Maptor.Sta.MachineLearning;
 using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Jab.Common.ViewModels;
+using IRI.Maptor.Jab.Wpf.ViewModels;
 using IRI.Maptor.Sta.Common.Enums;
-using IRI.Maptor.Jab.Common.Layers;
+using IRI.Maptor.Jab.Wpf.Layers;
 using IRI.Maptor.Jab.Core;
 
 namespace IRI.Maptor.Res.TrajectoryCompression;

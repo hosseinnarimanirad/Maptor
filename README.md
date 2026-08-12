@@ -58,7 +58,7 @@ Frequently used packages:
 | [IRI.Maptor.Sta.SpatialReferenceSystem](https://www.nuget.org/packages/IRI.Maptor.Sta.SpatialReferenceSystem) | Coordinate systems and map projections | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.SpatialReferenceSystem.svg?style=flat-square) |
 | [IRI.Maptor.Sta.Ogc](https://www.nuget.org/packages/IRI.Maptor.Sta.Ogc) | OGC standards (WFS, WMS, GML, KML, SLD) | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Ogc.svg?style=flat-square) |
 | [IRI.Maptor.Sta.Graph](https://www.nuget.org/packages/IRI.Maptor.Sta.Graph) | Graph algorithms (BFS, DFS, Dijkstra, MST) | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Graph.svg?style=flat-square) |
-| [IRI.Maptor.Jab.Common](https://www.nuget.org/packages/IRI.Maptor.Jab.Common) | WPF map viewer and UI controls | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Jab.Common.svg?style=flat-square) |
+| [IRI.Maptor.Jab.Wpf](https://www.nuget.org/packages/IRI.Maptor.Jab.Wpf) | WPF map viewer and UI controls | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Jab.Wpf.svg?style=flat-square) |
 
 Every library project in the Sta, Ket, and Jab tiers is published to NuGet — see the per-tier package tables in the [Sta](src/IRI.Maptor.Sta/README.md), [Ket](src/IRI.Maptor.Ket/README.md), and [Jab](src/IRI.Maptor.Jab/README.md) guides, or [browse all packages on NuGet.org](https://www.nuget.org/packages?q=IRI.Maptor).
 

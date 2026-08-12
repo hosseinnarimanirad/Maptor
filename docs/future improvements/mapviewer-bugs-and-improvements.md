@@ -2,7 +2,7 @@
 
 - **Status:** partially implemented — **all bugs (B1–B9) and all perf items (P1–P5) plus S1
   done (2026-08-06)**; S2, S3, S4 still open
-- **Area:** `src/IRI.Maptor.Jab/IRI.Maptor.Jab.Common/Views/Map/MapViewer.xaml.cs` (~5,400 lines)
+- **Area:** `src/IRI.Maptor.Jab/IRI.Maptor.Jab.Wpf/Views/Map/MapViewer.xaml.cs` (~5,400 lines)
 - **Companion doc:** `mapviewer-job-cancellation.md` (render-job cancellation redesign — items here
   deliberately do not repeat it)
 - **Suggested order for what remains:** S2/S4 (small structure), then S3 (the job-cancellation
@@ -310,7 +310,7 @@ converge on. Don't "improve" it while fixing the rest.
 
 ## Verification (when implementing)
 
-1. Build `IRI.Maptor.Jab.Common` + `IRI.App.MakanNegarSaba` (close any running Saba first — it
+1. Build `IRI.Maptor.Jab.Wpf` + `IRI.App.MakanNegarSaba` (close any running Saba first — it
    locks output DLLs).
 2. B1/S1: wheel-zoom to both extremes — scale stops at the configured levels; tiles stay sane.
 3. B3: spam `PanTo` / zoom-to-extent operations back-to-back — map always ends refreshed,

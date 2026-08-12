@@ -231,7 +231,7 @@ Excluded (never touch): `src/IRI.Maptor.Ket/IRI.Maptor.Ket.WindowsBase/ThirdPart
 | `src/IRI.Maptor.Ket/IRI.Maptor.Ket.SqlitePersistence/README.md` | C (keeps its extended format sections) |
 | `src/IRI.Maptor.Ket/IRI.Maptor.Ket.WebApiPersistence/README.md` | C |
 | `src/IRI.Maptor.Ket/IRI.Maptor.Ket.WindowsBase/README.md` | C |
-| `src/IRI.Maptor.Jab/IRI.Maptor.Jab.Common/README.md` | C |
+| `src/IRI.Maptor.Jab/IRI.Maptor.Jab.Wpf/README.md` | C |
 | `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Common/Mathematics/Algebra/README.md` | D (topic) |
 | `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Graph/Clustering/README.md` | D (topic) |
 | `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Graph/GraphRepresentation/README.md` | D (topic) |
@@ -253,7 +253,7 @@ Excluded (never touch): `src/IRI.Maptor.Ket/IRI.Maptor.Ket.WindowsBase/ThirdPart
 | `src/IRI.Maptor.Sta/IRI.Maptor.Sta.SpatialReferenceSystem/CoordinateSystems/README.md` | D (topic) |
 | `src/IRI.Maptor.Sta/IRI.Maptor.Sta.SpatialReferenceSystem/MapProjections/README.md` | D (topic) |
 | `src/IRI.Maptor.Sta/IRI.Maptor.Sta.SpatialReferenceSystem/Models/README.md` | D (topic) |
-| `src/IRI.Maptor.Jab/IRI.Maptor.Jab.Common/Views/Symbology/Sld/README.md` | D (topic) |
+| `src/IRI.Maptor.Jab/IRI.Maptor.Jab.Wpf/Views/Symbology/Sld/README.md` | D (topic) |
 | `samples/IRI.Maptor.Tag.SampleCodes/Geodesy/README.md` | D (topic) |
 | `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/CesiumTerrain/README.md` | D (format) |
 | `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/Dxf/README.md` | D (format) |

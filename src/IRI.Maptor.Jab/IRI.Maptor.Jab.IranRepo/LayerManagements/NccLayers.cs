@@ -1,13 +1,13 @@
 using System.Windows.Media;
 
-using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Helpers;
-using IRI.Maptor.Jab.Common.ViewModels;
+using IRI.Maptor.Jab.Wpf;
+using IRI.Maptor.Jab.Wpf.Helpers;
+using IRI.Maptor.Jab.Wpf.ViewModels;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Jab.Common.Models.Legend;
-using IRI.Maptor.Jab.Common.Cartography.Symbologies;
-using IRI.Maptor.Jab.Common.Layers;
+using IRI.Maptor.Jab.Wpf.Models.Legend;
+using IRI.Maptor.Jab.Wpf.Cartography.Symbologies;
+using IRI.Maptor.Jab.Wpf.Layers;
 using System.Collections.ObjectModel;
 using IRI.Maptor.Jab.Core.Layers;
 using IRI.Maptor.Jab.Core.Models;

@@ -1,0 +1,39 @@
+<mahApp:MetroWindow x:Class="IRI.Maptor.Jab.Controls.Dialogs.FeatureChangesDialogView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core"
+    xmlns:dialogs="clr-namespace:IRI.Maptor.Jab.Controls.Dialogs"
+
+    Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Dialog}"
+    Title=""
+    SizeToContent="Height"
+    MaxWidth="700"
+    ShowMaxRestoreButton="True"
+    WindowStartupLocation="CenterOwner">
+    <mahApp:MetroWindow.Resources>
+        <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+    </mahApp:MetroWindow.Resources>
+
+    <mahApp:MetroWindow.TitleTemplate>
+        <DataTemplate>
+            <TextBlock Text="{TemplateBinding Content}" Style="{StaticResource IRI.Maptor.Styles.TextBlock.WindowTitle}" />
+        </DataTemplate>
+    </mahApp:MetroWindow.TitleTemplate>
+
+    <Grid Margin="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <maptor:FeatureChangesView Grid.Row="0"/>
+
+        <!--read-only view of the changes, so Close is the only action-->
+        <dialogs:DialogFooterView Grid.Row="1" ShowSecondary="False"
+                                  PrimaryText="{Binding [dialog_common_close], Source={StaticResource Localization}}"
+                                  PrimaryIconKind="Close"/>
+    </Grid>
+</mahApp:MetroWindow>

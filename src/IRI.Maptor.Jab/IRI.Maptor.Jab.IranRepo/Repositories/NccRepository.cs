@@ -1,9 +1,9 @@
 ﻿
 using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Sta.Common.Helpers;
-using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Cartography.Symbologies;
-using IRI.Maptor.Jab.Common.Layers;
+using IRI.Maptor.Jab.Wpf;
+using IRI.Maptor.Jab.Wpf.Cartography.Symbologies;
+using IRI.Maptor.Jab.Wpf.Layers;
 using IRI.Maptor.Jab.Core;
 using IRI.Maptor.Jab.Core.Models;
 

@@ -43,6 +43,28 @@ public sealed class CanvasTileRenderer : IAsyncDisposable
         await _module.InvokeVoidAsync("drawTiles", _canvasHandle, tiles);
     }
 
+    /// <summary>
+    /// Hands over every visible vector layer as one batched call, for the same reason tiles are
+    /// batched: per-layer interop would put the marshaling cost back in the frame loop.
+    /// </summary>
+    public async Task DrawVectorsAsync(IReadOnlyList<VectorDrawCommand> layers)
+    {
+        if (_module is null || _canvasHandle is null) return;
+
+        try
+        {
+            await _module.InvokeVoidAsync("drawVectors", _canvasHandle, layers);
+        }
+        catch (JSException ex)
+        {
+            // A browser serving a cached mapCanvas.js from before drawVectors existed throws here.
+            // The overlays are lost either way, but the basemap and every map interaction must
+            // keep working, so this is reported and swallowed rather than propagated.
+            Console.Error.WriteLine($"MapCanvas: vector drawing unavailable ({ex.Message}). " +
+                                    "This usually means a stale cached mapCanvas.js — hard-reload the page.");
+        }
+    }
+
     public async ValueTask DisposeAsync()
     {
         if (_module is not null && _canvasHandle is not null)

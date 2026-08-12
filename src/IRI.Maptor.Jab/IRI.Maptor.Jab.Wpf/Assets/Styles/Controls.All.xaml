@@ -1,0 +1,22 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Common.Metrics.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.Path.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.Button.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.ToggleButton.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.TextBox.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.RadioButton.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.ScrollBar.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.TabItem.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.TextBlock.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.ToggleSwitch.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.Border.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.MetroWindow.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.CheckBox.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.ComboBox.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.NumericUpDown.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+</ResourceDictionary>

@@ -1,0 +1,129 @@
+/* The panel owns no width — a host docks it, so it fills whatever box it is given and scrolls
+   only in its tree region, keeping the header, search and footer pinned. */
+.toc-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    background: var(--mud-palette-surface);
+    color: var(--mud-palette-text-primary);
+}
+
+.toc-panel__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 0.85rem 0.6rem;
+    border-block-end: 1px solid var(--mud-palette-divider);
+}
+
+.toc-panel__header-icon {
+    color: var(--mud-palette-primary);
+}
+
+.toc-panel__title {
+    flex: 1 1 auto;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+.toc-panel__tally {
+    flex: 0 0 auto;
+    padding-inline: 0.5rem;
+    border-radius: 999px;
+    background: var(--mud-palette-primary-hover);
+    color: var(--mud-palette-primary);
+    font-size: 0.72rem;
+    line-height: 1.4rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.toc-panel__tally-sep {
+    opacity: 0.5;
+    margin-inline: 0.1rem;
+}
+
+.toc-panel__collapse {
+    flex: 0 0 auto;
+}
+
+.toc-panel__tools {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.6rem 0.7rem 0.35rem;
+}
+
+.toc-panel__search {
+    margin: 0;
+}
+
+.toc-panel__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.1rem;
+    color: var(--mud-palette-text-secondary);
+}
+
+.toc-panel__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0.2rem 0.35rem 0.6rem;
+}
+
+.toc-panel__tree {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.toc-panel__state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 2.5rem 1rem;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+.toc-panel__state--muted {
+    color: var(--mud-palette-text-disabled);
+}
+
+.toc-panel__alert {
+    width: 100%;
+}
+
+.toc-panel__footer {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border-block-start: 1px solid var(--mud-palette-divider);
+    color: var(--mud-palette-text-secondary);
+    font-size: 0.75rem;
+}
+
+/* A thin, unobtrusive scrollbar — the default platform bar is heavy next to a 320px panel. */
+.toc-panel__body {
+    scrollbar-width: thin;
+}
+
+.toc-panel__body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.toc-panel__body::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: var(--mud-palette-lines-default);
+}
+
+.toc-panel__body::-webkit-scrollbar-thumb:hover {
+    background: var(--mud-palette-text-disabled);
+}

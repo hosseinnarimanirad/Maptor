@@ -1,0 +1,288 @@
+@* Reusable layer table of contents for the Maptor web clients. Knows nothing about any specific
+   API: a host maps its own layer contract onto TocLayerNode and observes edits through
+   NodeChanged. *@
+
+<div class="toc-panel">
+    <header class="toc-panel__header">
+        <MudIcon Icon="@Icons.Material.Rounded.Layers" Size="Size.Small" Class="toc-panel__header-icon" />
+
+        <span class="toc-panel__title">@Title</span>
+
+        @if (!IsLoading && ErrorMessage is null && TotalLeafCount > 0)
+        {
+            <span class="toc-panel__tally" title="لایه‌های روشن از کل">
+                @ToPersianDigits(VisibleLeafCount)<span class="toc-panel__tally-sep">/</span>@ToPersianDigits(TotalLeafCount)
+            </span>
+        }
+
+        @if (OnCollapse.HasDelegate)
+        {
+            <MudIconButton Icon="@Icons.Material.Rounded.KeyboardDoubleArrowRight"
+                           Size="Size.Small"
+                           Title="بستن پنل لایه‌ها"
+                           OnClick="OnCollapse"
+                           Class="toc-panel__collapse" />
+        }
+    </header>
+
+    @if (!IsLoading && ErrorMessage is null && TotalLeafCount > 0)
+    {
+        <div class="toc-panel__tools">
+            <MudTextField T="string"
+                          Value="@_filter"
+                          ValueChanged="OnFilterChanged"
+                          Immediate="true"
+                          Clearable="true"
+                          Variant="Variant.Outlined"
+                          Margin="Margin.Dense"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Rounded.Search"
+                          Placeholder="جست‌وجوی لایه"
+                          Class="toc-panel__search" />
+
+            <div class="toc-panel__actions">
+                <MudIconButton Icon="@Icons.Material.Rounded.Visibility"
+                               Size="Size.Small"
+                               Title="روشن کردن همه"
+                               OnClick="@(() => SetAllVisibilityAsync(true))" />
+
+                <MudIconButton Icon="@Icons.Material.Rounded.VisibilityOff"
+                               Size="Size.Small"
+                               Title="خاموش کردن همه"
+                               OnClick="@(() => SetAllVisibilityAsync(false))" />
+
+                <MudIconButton Icon="@Icons.Material.Rounded.UnfoldMore"
+                               Size="Size.Small"
+                               Title="باز کردن همه‌ی گروه‌ها"
+                               OnClick="@(() => SetAllExpandedAsync(true))" />
+
+                <MudIconButton Icon="@Icons.Material.Rounded.UnfoldLess"
+                               Size="Size.Small"
+                               Title="بستن همه‌ی گروه‌ها"
+                               OnClick="@(() => SetAllExpandedAsync(false))" />
+            </div>
+        </div>
+    }
+
+    <div class="toc-panel__body">
+        @if (IsLoading)
+        {
+            <div class="toc-panel__state">
+                <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Small" />
+                <span>در حال دریافت لایه‌ها…</span>
+            </div>
+        }
+        else if (ErrorMessage is not null)
+        {
+            <div class="toc-panel__state">
+                <MudAlert Severity="Severity.Error" Dense="true" Class="toc-panel__alert">@ErrorMessage</MudAlert>
+
+                @if (OnRetry.HasDelegate)
+                {
+                    <MudButton Variant="Variant.Text"
+                               Color="Color.Primary"
+                               Size="Size.Small"
+                               StartIcon="@Icons.Material.Rounded.Refresh"
+                               OnClick="OnRetry">
+                        تلاش دوباره
+                    </MudButton>
+                }
+            </div>
+        }
+        else if (TotalLeafCount == 0)
+        {
+            <div class="toc-panel__state toc-panel__state--muted">
+                <MudIcon Icon="@Icons.Material.Rounded.LayersClear" Size="Size.Large" />
+                <span>لایه‌ای برای نمایش وجود ندارد.</span>
+            </div>
+        }
+        else if (_matchedIds is { Count: 0 })
+        {
+            <div class="toc-panel__state toc-panel__state--muted">
+                <MudIcon Icon="@Icons.Material.Rounded.SearchOff" Size="Size.Large" />
+                <span>لایه‌ای با این نام پیدا نشد.</span>
+            </div>
+        }
+        else
+        {
+            <div class="toc-panel__tree" role="tree">
+                @foreach (var node in Nodes)
+                {
+                    <LayerTocRow Node="node"
+                                 Depth="0"
+                                 ZoomLevel="@ZoomLevel"
+                                 MatchedIds="@_matchedIds"
+                                 NodeChanged="HandleNodeChangedAsync" />
+                }
+            </div>
+        }
+    </div>
+
+    @if (!IsLoading && ErrorMessage is null && TotalLeafCount > 0)
+    {
+        <footer class="toc-panel__footer">
+            <MudIcon Icon="@Icons.Material.Rounded.ZoomIn" Size="Size.Small" />
+            <span>بزرگ‌نمایی فعلی: @ToPersianDigits(ZoomLevel)</span>
+        </footer>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public IReadOnlyList<TocLayerNode> Nodes { get; set; } = [];
+
+    /// <summary>Current map zoom, so rows can show whether they are drawn at this scale.</summary>
+    [Parameter]
+    public int ZoomLevel { get; set; }
+
+    [Parameter]
+    public bool IsLoading { get; set; }
+
+    [Parameter]
+    public string? ErrorMessage { get; set; }
+
+    [Parameter]
+    public EventCallback OnRetry { get; set; }
+
+    /// <summary>Optional; the collapse affordance is only rendered when a host handles it.</summary>
+    [Parameter]
+    public EventCallback OnCollapse { get; set; }
+
+    /// <summary>Raised after any edit, with the node the user acted on. The node is already
+    /// mutated — this is a notification, not a request.</summary>
+    [Parameter]
+    public EventCallback<TocLayerNode> NodeChanged { get; set; }
+
+    [Parameter]
+    public string Title { get; set; } = "لایه‌ها";
+
+    private string? _filter;
+
+    /// <summary>Null when no filter is active — which the rows read as "render everything".</summary>
+    private IReadOnlySet<string>? _matchedIds;
+
+    private IEnumerable<TocLayerNode> AllNodes => Nodes.SelectMany(node => node.SelfAndDescendants());
+
+    private int TotalLeafCount => AllNodes.Count(node => !node.IsGroup);
+
+    private int VisibleLeafCount => AllNodes.Count(node => !node.IsGroup && node.IsVisible);
+
+    protected override void OnParametersSet()
+    {
+        // The tree can be replaced (a reload) while a filter is typed, so the id set is rebuilt
+        // from the current nodes rather than kept from when the filter was entered.
+        RecomputeFilter();
+    }
+
+    private void OnFilterChanged(string? value)
+    {
+        _filter = value;
+
+        RecomputeFilter();
+    }
+
+    private void RecomputeFilter()
+    {
+        var term = Normalize(_filter);
+
+        if (string.IsNullOrEmpty(term))
+        {
+            _matchedIds = null;
+            return;
+        }
+
+        var matched = new HashSet<string>(StringComparer.Ordinal);
+
+        foreach (var root in Nodes)
+            Collect(root, [], term, matched);
+
+        _matchedIds = matched;
+    }
+
+    /// <summary>
+    /// A hit pulls in its ancestors (so the path to it stays visible) and its descendants (so a
+    /// matching group still shows what it contains).
+    /// </summary>
+    private static void Collect(TocLayerNode node, List<TocLayerNode> ancestors, string term, HashSet<string> matched)
+    {
+        if (Normalize(node.Title).Contains(term, StringComparison.OrdinalIgnoreCase))
+        {
+            foreach (var ancestor in ancestors)
+                matched.Add(ancestor.Id);
+
+            foreach (var self in node.SelfAndDescendants())
+                matched.Add(self.Id);
+        }
+
+        ancestors.Add(node);
+
+        foreach (var child in node.Children)
+            Collect(child, ancestors, term, matched);
+
+        ancestors.RemoveAt(ancestors.Count - 1);
+    }
+
+    /// <summary>
+    /// Folds the Arabic letters that share a keyboard with their Persian counterparts, and drops
+    /// the zero-width non-joiner. Without this, typing "كارخانه" (Arabic kaf) finds nothing in a
+    /// layer named "کارخانه" (Persian kaf) even though the two look identical on screen.
+    /// </summary>
+    private static string Normalize(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        return value.Trim()
+                    .Replace('ي', 'ی')  // Arabic yeh  -> Persian yeh
+                    .Replace('ى', 'ی')  // Alef maksura -> Persian yeh
+                    .Replace('ك', 'ک')  // Arabic kaf  -> Persian keheh
+                    .Replace("‌", string.Empty);
+    }
+
+    private async Task HandleNodeChangedAsync(TocLayerNode node)
+    {
+        // A leaf toggle changes its ancestors' tri-state, so the whole panel re-renders rather
+        // than just the row that was clicked.
+        StateHasChanged();
+
+        await NodeChanged.InvokeAsync(node);
+    }
+
+    private async Task SetAllVisibilityAsync(bool isVisible)
+    {
+        foreach (var root in Nodes)
+            root.SetVisibility(isVisible);
+
+        StateHasChanged();
+
+        foreach (var root in Nodes)
+            await NodeChanged.InvokeAsync(root);
+    }
+
+    private async Task SetAllExpandedAsync(bool isExpanded)
+    {
+        foreach (var node in AllNodes.Where(node => node.IsGroup))
+            node.IsExpanded = isExpanded;
+
+        StateHasChanged();
+
+        foreach (var root in Nodes)
+            await NodeChanged.InvokeAsync(root);
+    }
+
+    private static string ToPersianDigits(int value)
+    {
+        var text = value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+        Span<char> buffer = stackalloc char[text.Length];
+
+        for (var i = 0; i < text.Length; i++)
+        {
+            buffer[i] = text[i] is >= '0' and <= '9'
+                ? (char)(text[i] - '0' + '۰')
+                : text[i];
+        }
+
+        return new string(buffer);
+    }
+}

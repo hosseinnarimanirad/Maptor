@@ -50,7 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\IRI.Maptor.Jab\IRI.Maptor.Jab.Common\IRI.Maptor.Jab.Common.csproj" />
+    <ProjectReference Include="..\..\src\IRI.Maptor.Jab\IRI.Maptor.Jab.Wpf\IRI.Maptor.Jab.Wpf.csproj" />
     <ProjectReference Include="..\..\src\IRI.Maptor.Ket\IRI.Maptor.Ket.EfCorePersistence\IRI.Maptor.Ket.EfCorePersistence.csproj" />
     <ProjectReference Include="..\..\src\IRI.Maptor.Ket\IRI.Maptor.Ket.PersonalGdbPersistence\IRI.Maptor.Ket.PersonalGdbPersistence.csproj" />
     <ProjectReference Include="..\..\src\IRI.Maptor.Ket\IRI.Maptor.Ket.SqlServerSpatialExtension\IRI.Maptor.Ket.SqlServerSpatialExtension.csproj" />

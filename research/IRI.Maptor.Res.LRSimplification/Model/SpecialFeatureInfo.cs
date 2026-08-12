@@ -1,4 +1,4 @@
-﻿using IRI.Maptor.Jab.Common;
+﻿using IRI.Maptor.Jab.Wpf;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives; 
 using System;

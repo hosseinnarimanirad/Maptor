@@ -4,9 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-        xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
+        xmlns:localization="clr-namespace:IRI.Maptor.Jab.Wpf.Localization;assembly=IRI.Maptor.Jab.Wpf"
         xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls" 
-        xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls;assembly=IRI.Maptor.Jab.Common"    
+        xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls;assembly=IRI.Maptor.Jab.Wpf"    
         mc:Ignorable="d" Loaded="Window_Loaded"
         FlowDirection="{Binding CurrentFlowDirection, Source={StaticResource Localization}}"
         Title="{Binding [lr_ui_title], Source={StaticResource Localization}}" Height="850" Width="1400">

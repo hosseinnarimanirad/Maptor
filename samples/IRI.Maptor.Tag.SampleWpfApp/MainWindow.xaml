@@ -5,7 +5,7 @@
         xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"  
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core"
-        xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls;assembly=IRI.Maptor.Jab.Common"
+        xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls;assembly=IRI.Maptor.Jab.Wpf"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" Loaded="Window_Loaded" 
         Title="MainWindow" Height="600" Width="1100" x:Name="root" >

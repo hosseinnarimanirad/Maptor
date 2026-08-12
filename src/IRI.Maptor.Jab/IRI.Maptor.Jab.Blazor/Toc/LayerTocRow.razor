@@ -1,0 +1,213 @@
+@* One TOC row plus, recursively, its children. Split out of LayerTocPanel because a tree row has
+   to render itself — and because per-row transient state (the opacity editor being open) belongs
+   to the row, not to a dictionary hanging off the panel. *@
+
+@if (IsRendered)
+{
+    <div class="toc-row @(Node.IsGroup ? "toc-row--group" : "toc-row--layer") @(IsDimmed ? "toc-row--dimmed" : null)"
+         style="--toc-depth: @Depth">
+
+        @if (Node.IsGroup && Node.Children.Count > 0)
+        {
+            <button type="button"
+                    class="toc-row__twisty"
+                    aria-expanded="@(IsExpanded ? "true" : "false")"
+                    title="@(IsExpanded ? "بستن گروه" : "باز کردن گروه")"
+                    @onclick="ToggleExpandedAsync">
+                <MudIcon Icon="@(IsExpanded ? Icons.Material.Rounded.KeyboardArrowDown : Icons.Material.Rounded.KeyboardArrowLeft)"
+                         Size="Size.Small" />
+            </button>
+        }
+        else
+        {
+            <span class="toc-row__twisty toc-row__twisty--empty"></span>
+        }
+
+        @if (Node.IsGroup)
+        {
+            <MudCheckBox T="bool?"
+                         Value="@Node.GetGroupState()"
+                         ValueChanged="@((bool? _) => ToggleGroupAsync())"
+                         Color="Color.Primary"
+                         Size="Size.Small"
+                         Class="toc-row__check" />
+        }
+        else
+        {
+            <MudCheckBox T="bool"
+                         Value="@Node.IsVisible"
+                         ValueChanged="ToggleLayerAsync"
+                         Color="Color.Primary"
+                         Size="Size.Small"
+                         Class="toc-row__check" />
+        }
+
+        @if (Node.IsGroup)
+        {
+            <MudIcon Icon="@(IsExpanded ? Icons.Material.Rounded.FolderOpen : Icons.Material.Rounded.Folder)"
+                     Size="Size.Small"
+                     Class="toc-row__folder" />
+        }
+        else
+        {
+            <span class="toc-row__swatch" style="@SwatchStyle"></span>
+        }
+
+        <span class="toc-row__title" title="@Node.Title">@Node.Title</span>
+
+        @if (Node.IsGroup)
+        {
+            <span class="toc-row__count">@ToPersianNumber(Node.Leaves().Count())</span>
+        }
+        else
+        {
+            @if (IsOutOfZoomRange)
+            {
+                <MudTooltip Text="@OutOfRangeHint" Placement="Placement.Top">
+                    <MudIcon Icon="@Icons.Material.Rounded.VisibilityOff" Size="Size.Small" Class="toc-row__warn" />
+                </MudTooltip>
+            }
+
+            <button type="button"
+                    class="toc-row__tune-toggle @(_isTuning ? "toc-row__tune-toggle--on" : null)"
+                    title="شفافیت لایه"
+                    @onclick="() => _isTuning = !_isTuning">
+                <MudIcon Icon="@Icons.Material.Rounded.Opacity" Size="Size.Small" />
+            </button>
+        }
+    </div>
+
+    @if (_isTuning && !Node.IsGroup)
+    {
+        <div class="toc-tune" style="--toc-depth: @Depth">
+            <MudSlider T="double"
+                       Value="@Node.Opacity"
+                       ValueChanged="ChangeOpacityAsync"
+                       Min="0"
+                       Max="1"
+                       Step="0.05"
+                       Color="Color.Primary"
+                       Size="Size.Small"
+                       Class="toc-tune__slider" />
+
+            <span class="toc-tune__value">@ToPersianNumber((int)Math.Round(Node.Opacity * 100))٪</span>
+        </div>
+    }
+
+    @if (Node.IsGroup && IsExpanded)
+    {
+        @foreach (var child in Node.Children)
+        {
+            <LayerTocRow Node="child"
+                         Depth="@(Depth + 1)"
+                         ZoomLevel="@ZoomLevel"
+                         MatchedIds="@MatchedIds"
+                         NodeChanged="@NodeChanged" />
+        }
+    }
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public TocLayerNode Node { get; set; } = default!;
+
+    [Parameter]
+    public int Depth { get; set; }
+
+    [Parameter]
+    public int ZoomLevel { get; set; }
+
+    /// <summary>
+    /// Ids the active filter allows through, or null when no filter is active. Computed once by
+    /// the panel so each row is an O(1) lookup instead of re-walking its own subtree.
+    /// </summary>
+    [Parameter]
+    public IReadOnlySet<string>? MatchedIds { get; set; }
+
+    [Parameter]
+    public EventCallback<TocLayerNode> NodeChanged { get; set; }
+
+    private bool _isTuning;
+
+    private bool IsRendered => MatchedIds is null || MatchedIds.Contains(Node.Id);
+
+    /// <summary>While filtering, groups stay open regardless of their stored state — a hit buried
+    /// in a collapsed group the user cannot see is the same as no hit at all.</summary>
+    private bool IsExpanded => MatchedIds is not null || Node.IsExpanded;
+
+    private bool IsOutOfZoomRange => !Node.IsGroup && !Node.IsWithinZoomRange(ZoomLevel);
+
+    /// <summary>A row reads as inactive when it is switched off, or on but not drawn at this scale.</summary>
+    private bool IsDimmed => !Node.IsGroup && (!Node.IsVisible || IsOutOfZoomRange);
+
+    private string OutOfRangeHint =>
+        $"در این بزرگ‌نمایی نمایش داده نمی‌شود (محدوده: {ToPersianBound(Node.MinZoomLevel)} تا {ToPersianBound(Node.MaxZoomLevel)})";
+
+    private string SwatchStyle
+    {
+        get
+        {
+            var fill = HexColor.ToCss(Node.Swatch?.FillColor, "transparent");
+            var stroke = HexColor.ToCss(Node.Swatch?.StrokeColor, "var(--mud-palette-lines-default)");
+
+            // Clamped rather than passed through: a stored thickness of 8 would swallow the chip.
+            var width = Math.Clamp(Node.Swatch?.StrokeThickness ?? 1, 1, 3);
+
+            return $"background:{fill};border-color:{stroke};border-width:{width.ToString(System.Globalization.CultureInfo.InvariantCulture)}px";
+        }
+    }
+
+    private async Task ToggleExpandedAsync()
+    {
+        Node.IsExpanded = !Node.IsExpanded;
+
+        await NodeChanged.InvokeAsync(Node);
+    }
+
+    private async Task ToggleLayerAsync(bool isVisible)
+    {
+        Node.IsVisible = isVisible;
+
+        await NodeChanged.InvokeAsync(Node);
+    }
+
+    /// <summary>
+    /// Derives the next state from the group itself rather than from the checkbox's incoming
+    /// value: a tri-state checkbox cycles through "indeterminate", and a mixed group must resolve
+    /// to "all on", never back to indeterminate.
+    /// </summary>
+    private async Task ToggleGroupAsync()
+    {
+        Node.SetVisibility(Node.GetGroupState() != true);
+
+        await NodeChanged.InvokeAsync(Node);
+    }
+
+    private async Task ChangeOpacityAsync(double opacity)
+    {
+        Node.Opacity = opacity;
+
+        await NodeChanged.InvokeAsync(Node);
+    }
+
+    private static string ToPersianNumber(int value) =>
+        ToPersianDigits(value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+    /// <summary>An unbounded end of a zoom band reads as an em dash rather than a missing value.</summary>
+    private static string ToPersianBound(int? value) =>
+        value is null ? "—" : ToPersianNumber(value.Value);
+
+    private static string ToPersianDigits(string value)
+    {
+        Span<char> buffer = stackalloc char[value.Length];
+
+        for (var i = 0; i < value.Length; i++)
+        {
+            buffer[i] = value[i] is >= '0' and <= '9'
+                ? (char)(value[i] - '0' + '۰')
+                : value[i];
+        }
+
+        return new string(buffer);
+    }
+}

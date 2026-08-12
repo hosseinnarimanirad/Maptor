@@ -1,0 +1,155 @@
+/* Depth is applied as inline padding so it follows the writing direction: in the RTL products
+   this stack targets, nesting has to indent from the right. */
+.toc-row {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    min-height: 2.25rem;
+    padding-inline: 0.35rem 0.5rem;
+    padding-inline-start: calc(0.35rem + var(--toc-depth) * 1.05rem);
+    border-radius: 8px;
+    transition: background-color 120ms ease;
+}
+
+.toc-row:hover {
+    background: var(--mud-palette-action-default-hover);
+}
+
+.toc-row--group .toc-row__title {
+    font-weight: 600;
+}
+
+/* Switched off, or on but outside its zoom band: still legible, clearly not in play. */
+.toc-row--dimmed .toc-row__title,
+.toc-row--dimmed .toc-row__swatch {
+    opacity: 0.45;
+}
+
+.toc-row__twisty {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.4rem;
+    height: 1.4rem;
+    flex: 0 0 auto;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--mud-palette-text-secondary);
+    cursor: pointer;
+}
+
+.toc-row__twisty:hover {
+    background: var(--mud-palette-action-default-hover);
+    color: var(--mud-palette-text-primary);
+}
+
+.toc-row__twisty--empty {
+    cursor: default;
+}
+
+.toc-row__check {
+    flex: 0 0 auto;
+    margin: 0;
+}
+
+.toc-row__folder {
+    flex: 0 0 auto;
+    color: var(--mud-palette-text-secondary);
+}
+
+.toc-row__swatch {
+    flex: 0 0 auto;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 4px;
+    border-style: solid;
+    /* A checkerboard behind the chip so a semi-transparent fill reads as transparent rather than
+       as a paler solid colour — the stored fills are routinely 40% alpha. */
+    background-image:
+        linear-gradient(45deg, rgba(0, 0, 0, 0.08) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(0, 0, 0, 0.08) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(0, 0, 0, 0.08) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(0, 0, 0, 0.08) 75%);
+    background-size: 8px 8px;
+    background-position: 0 0, 0 4px, 4px -4px, -4px 0;
+}
+
+.toc-row__title {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.875rem;
+    line-height: 1.35;
+}
+
+.toc-row__count {
+    flex: 0 0 auto;
+    padding-inline: 0.4rem;
+    border-radius: 999px;
+    background: var(--mud-palette-action-default-hover);
+    color: var(--mud-palette-text-secondary);
+    font-size: 0.7rem;
+    line-height: 1.35rem;
+}
+
+.toc-row__warn {
+    flex: 0 0 auto;
+    color: var(--mud-palette-warning);
+}
+
+.toc-row__tune-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    flex: 0 0 auto;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--mud-palette-text-disabled);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 120ms ease, color 120ms ease;
+}
+
+/* Revealed on hover so the resting panel stays quiet, but never hidden from keyboard users
+   or once the editor is open. */
+.toc-row:hover .toc-row__tune-toggle,
+.toc-row__tune-toggle:focus-visible,
+.toc-row__tune-toggle--on {
+    opacity: 1;
+}
+
+.toc-row__tune-toggle:hover,
+.toc-row__tune-toggle--on {
+    color: var(--mud-palette-primary);
+}
+
+.toc-tune {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-inline-end: 0.75rem;
+    padding-inline-start: calc(3.1rem + var(--toc-depth) * 1.05rem);
+    padding-block-end: 0.25rem;
+}
+
+.toc-tune__slider {
+    flex: 1 1 auto;
+    margin: 0;
+}
+
+.toc-tune__value {
+    flex: 0 0 auto;
+    min-width: 2.75rem;
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--mud-palette-text-secondary);
+    font-variant-numeric: tabular-nums;
+}

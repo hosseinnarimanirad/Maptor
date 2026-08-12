@@ -1,7 +1,7 @@
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.KmlFormat;
 using IRI.Maptor.Sta.KmlFormat.Primitives;
-using IRI.Maptor.Jab.Common.Cartography.Symbologies;
+using IRI.Maptor.Jab.Wpf.Cartography.Symbologies;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using System.Collections.Generic;

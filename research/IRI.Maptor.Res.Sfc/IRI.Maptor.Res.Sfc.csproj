@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\IRI.Maptor.Jab\IRI.Maptor.Jab.Common\IRI.Maptor.Jab.Common.csproj" />
+    <ProjectReference Include="..\..\src\IRI.Maptor.Jab\IRI.Maptor.Jab.Wpf\IRI.Maptor.Jab.Wpf.csproj" />
     <ProjectReference Include="..\..\src\IRI.Maptor.Sta\IRI.Maptor.Sta.Common\IRI.Maptor.Sta.Common.csproj" />
   </ItemGroup>
 

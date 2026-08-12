@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Jab.Common;
+using IRI.Maptor.Jab.Wpf;
 using IRI.Maptor.Sta.ShapefileFormat;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Spatial.Analysis;
@@ -17,7 +17,7 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Common.Enums;
-using IRI.Maptor.Jab.Common.Layers;
+using IRI.Maptor.Jab.Wpf.Layers;
 using IRI.Maptor.Jab.Core;
 
 namespace IRI.Maptor.Res.TrajectoryCompression;
@@ -435,11 +435,11 @@ public static class SimplificationHelper
         var colros = new Dictionary<SimplificationType, System.Windows.Media.Color>()
         {
             {SimplificationType.EuclideanDistance, System.Windows.Media.Colors.DarkGray},
-            {SimplificationType.RamerDouglasPeucker, IRI.Maptor.Jab.Common.Helpers.ColorHelper.ToWpfColor("#E051AD")},
+            {SimplificationType.RamerDouglasPeucker, IRI.Maptor.Jab.Wpf.Helpers.ColorHelper.ToWpfColor("#E051AD")},
             {SimplificationType.ReumannWitkam, System.Windows.Media.Colors.Navy},
             {SimplificationType.PerpendicularDistance, System.Windows.Media.Colors.Blue},
             {SimplificationType.VisvalingamWhyatt, System.Windows.Media.Colors.Yellow},
-            {SimplificationType.SleeveFitting, IRI.Maptor.Jab.Common.Helpers.ColorHelper.ToWpfColor("#3B878C")},
+            {SimplificationType.SleeveFitting, IRI.Maptor.Jab.Wpf.Helpers.ColorHelper.ToWpfColor("#3B878C")},
             {SimplificationType.NormalOpeningWindow, System.Windows.Media.Colors.Brown},
             {SimplificationType.BeforeOpeningWindow, System.Windows.Media.Colors.Orange},
             {SimplificationType.TriangleRoutine, System.Windows.Media.Colors.Gray}
@@ -471,7 +471,7 @@ public static class SimplificationHelper
                 estimatedZoomLevel,
                 boundingBox,
                 feature,
-                IRI.Maptor.Jab.Common.Helpers.ColorHelper.ToWpfColor("#C0C0C0"),
+                IRI.Maptor.Jab.Wpf.Helpers.ColorHelper.ToWpfColor("#C0C0C0"),
                 4,
                 1);
 
@@ -527,7 +527,7 @@ public static class SimplificationHelper
 
                 var screenSize = WebMercatorUtility.ToScreenSize(estimatedZoomLevel, boundingBox);
 
-                IRI.Maptor.Jab.Common.Helpers.ImageUtility.MergeAndSave($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-{coef}.png", drawingVisuals, screenSize.Width, screenSize.Height);
+                IRI.Maptor.Jab.Wpf.Helpers.ImageUtility.MergeAndSave($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-{coef}.png", drawingVisuals, screenSize.Width, screenSize.Height);
                 //Save($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-{coef}.png", drawingVisuals, estimatedZoomLevel, boundingBox);
 
                 temp.UpdateAllRanks();

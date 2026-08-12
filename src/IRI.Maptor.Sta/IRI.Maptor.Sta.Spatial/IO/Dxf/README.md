@@ -4,7 +4,7 @@ Bidirectional DXF (Drawing Exchange Format) support: parse DXF drawings into str
 `Geometry<Point>` values and write geometries back out to CAD-compatible DXF files, with
 color/fill styling and coordinate-reference-system awareness. Output is AutoCAD 2000 (`AC1015`)
 format. Ships in the [IRI.Maptor.Sta.Spatial](../../README.md) package; WPF integration lives in
-`IRI.Maptor.Jab.Common`.
+`IRI.Maptor.Jab.Wpf`.
 
 ## Supported capabilities
 
@@ -15,7 +15,7 @@ format. Ships in the [IRI.Maptor.Sta.Spatial](../../README.md) package; WPF inte
 | Write (geometries → DXF) | Yes | `DxfWriter.Write`/`WriteToFile`/`WriteToFileAsync`, `ToDxf`/`SaveAsDxfAsync` extensions |
 | Styling (true color, transparency, line width) | Yes (write) | `DxfColorInfo`, `RgbColor` |
 | CRS embedding/detection (ESRI WKT) | Yes | `DxfWriter` (XRECORD), `DxfReader` (SRID auto-detection) |
-| WPF import dialog / brush-based export | Yes | `DxfOpenDialogView`, `GeometryExtensions` (Jab.Common) |
+| WPF import dialog / brush-based export | Yes | `DxfOpenDialogView`, `GeometryExtensions` (Jab.Wpf) |
 
 All reading logic is centralized in `DxfReader` and all writing logic in `DxfWriter`
 (`IRI.Maptor.Sta.Spatial.IO.Dxf`); the WPF extension methods only convert visual parameters to
@@ -188,11 +188,11 @@ string oneDxf  = DxfWriter.Write(polygon1, colorInfo);
 string manyDxf = DxfWriter.Write(geometries, colorInfo);
 ```
 
-### From IRI.Maptor.Jab.Common (WPF)
+### From IRI.Maptor.Jab.Wpf (WPF)
 
 ```csharp
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Jab.Common;
+using IRI.Maptor.Jab.Wpf;
 using System.Windows.Media;
 
 // Using VisualParameters
@@ -264,7 +264,7 @@ fill, fill color); interior rings (holes) are handled in both. A stroke thicknes
 
 ## WPF import dialog
 
-`IRI.Maptor.Jab.Common` ships a ready-made import dialog, `DxfOpenDialogView`, exposed through the
+`IRI.Maptor.Jab.Wpf` ships a ready-made import dialog, `DxfOpenDialogView`, exposed through the
 dialog service:
 
 ```csharp

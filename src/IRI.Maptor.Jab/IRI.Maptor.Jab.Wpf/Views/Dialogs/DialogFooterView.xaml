@@ -1,0 +1,47 @@
+<UserControl x:Class="IRI.Maptor.Jab.Controls.Dialogs.DialogFooterView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             Name="root">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Border Style="{StaticResource IRI.Maptor.Styles.Border.DialogFooter}">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+
+            <!--IsCancel is bound to ShowSecondary so a hidden button never claims Esc:
+                on a modeless window that would try to set DialogResult and throw.-->
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Secondary}"
+                    Command="{Binding SecondaryCommand, ElementName=root}"
+                    IsCancel="{Binding ShowSecondary, ElementName=root}"
+                    Visibility="{Binding ShowSecondary, ElementName=root, Converter={StaticResource boolToVisibilityConverter}}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="{Binding SecondaryIconKind, ElementName=root}"
+                                                Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent}"
+                               Text="{Binding SecondaryText, ElementName=root}"/>
+                </StackPanel>
+            </Button>
+
+            <Button IsDefault="True"
+                    Click="OnPrimaryButtonClick"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}"
+                    Command="{Binding PrimaryCommand, ElementName=root}"
+                    CommandParameter="{Binding PrimaryCommandParameter, ElementName=root}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="{Binding PrimaryIconKind, ElementName=root}"
+                                                Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent}"
+                               Text="{Binding PrimaryText, ElementName=root}"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </Border>
+</UserControl>

@@ -3,8 +3,9 @@
             @onpointerdown="OnPointerDown"
             @onpointermove="OnPointerMove"
             @onpointerup="OnPointerUp"
-            @onpointerleave="OnPointerUp"
+            @onpointerleave="OnPointerLeave"
             @onwheel="OnWheel" @onwheel:preventDefault="true"
-            style="touch-action:none;">
+            @ondblclick="OnDoubleClick" @ondblclick:preventDefault="true"
+            style="touch-action:none; user-select:none;">
     </canvas>
 </div>

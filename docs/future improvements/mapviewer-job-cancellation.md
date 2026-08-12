@@ -1,13 +1,13 @@
 # MapViewer render-job cancellation: migrate to CancellationToken
 
 - **Status:** proposed (analysis done 2026-08-05, not implemented)
-- **Area:** `src/IRI.Maptor.Jab/IRI.Maptor.Jab.Common` — the WPF `MapViewer` control
+- **Area:** `src/IRI.Maptor.Jab/IRI.Maptor.Jab.Wpf` — the WPF `MapViewer` control
 - **Risk:** medium (touches the hottest render path); no caller-visible behavior change
 - **Effort:** ~half a day including in-app verification
 
 ## Where this lives in the repo
 
-The WPF map control is `src/IRI.Maptor.Jab/IRI.Maptor.Jab.Common/Views/Map/MapViewer.xaml.cs`
+The WPF map control is `src/IRI.Maptor.Jab/IRI.Maptor.Jab.Wpf/Views/Map/MapViewer.xaml.cs`
 (~5400 lines), backed by `ViewModels/Map/MapViewModelBase.cs`. Render work ("jobs") is queued
 onto the WPF dispatcher and tracked in a `List<Job> jobs` field; `Job` is
 `Models/Map/Job.cs` (a `LayerTag` + a `DispatcherOperation`). Tile extents are diffed by
@@ -154,16 +154,16 @@ The `jobs` list then contains only pending/running work; when the map is idle,
 
 | File | Change |
 |---|---|
-| `Jab.Common/Models/Map/Job.cs` | CTS + `Cancel()` |
-| `Jab.Common/Views/Map/MapViewer.xaml.cs` | inline queueing; `job.Cancel()` at both purge sites; tokens through the three render bodies + `RenderToBrushAsync`; self-removal `finally` |
-| `Jab.Common/Layers/TileServiceLayer.cs` | `GetTileAsync(..., CancellationToken)` → token overload of `GetByteArrayAsync` |
-| `Jab.Common/Cartography/RenderingStrategies/RenderStrategy.cs`, `GdiBitmapRenderStrategy.cs` | optional `ct`, checked between symbolizers |
+| `Jab.Wpf/Models/Map/Job.cs` | CTS + `Cancel()` |
+| `Jab.Wpf/Views/Map/MapViewer.xaml.cs` | inline queueing; `job.Cancel()` at both purge sites; tokens through the three render bodies + `RenderToBrushAsync`; self-removal `finally` |
+| `Jab.Wpf/Layers/TileServiceLayer.cs` | `GetTileAsync(..., CancellationToken)` → token overload of `GetByteArrayAsync` |
+| `Jab.Wpf/Cartography/RenderingStrategies/RenderStrategy.cs`, `GdiBitmapRenderStrategy.cs` | optional `ct`, checked between symbolizers |
 
 ## Verification
 
-1. Build `IRI.Maptor.Jab.Common` + `IRI.App.MakanNegarSaba` — 0 errors (close any running Saba
+1. Build `IRI.Maptor.Jab.Wpf` + `IRI.App.MakanNegarSaba` — 0 errors (close any running Saba
    first; it locks output DLLs).
-2. Harness (pattern: a `net8.0-windows`/`UseWPF` console project referencing `Jab.Common`, as
+2. Harness (pattern: a `net8.0-windows`/`UseWPF` console project referencing `Jab.Wpf`, as
    used for the 2026-08 off-thread render verification): `Render` with a pre-cancelled token
    returns promptly with no brush; with a live token, output pixels are byte-identical to a
    token-less baseline.

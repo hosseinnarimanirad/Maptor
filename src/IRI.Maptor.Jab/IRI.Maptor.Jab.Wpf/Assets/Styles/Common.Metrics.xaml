@@ -1,0 +1,19 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--Shared spacing scale for dialogs and forms. Use these instead of ad-hoc margins
+        so every dialog keeps the same rhythm.-->
+
+    <!--padding around a dialog's content area-->
+    <Thickness x:Key="IRI.Maptor.Styles.Thickness.DialogContent">8</Thickness>
+
+    <!--gap below a section (header + its rows) before the next section-->
+    <Thickness x:Key="IRI.Maptor.Styles.Thickness.SectionGap">0,0,0,8</Thickness>
+
+    <!--gap between rows inside one section-->
+    <Thickness x:Key="IRI.Maptor.Styles.Thickness.RowGap">0,4</Thickness>
+
+    <!--gap above the action-button row, see IRI.Maptor.Styles.Border.DialogFooter-->
+    <Thickness x:Key="IRI.Maptor.Styles.Thickness.DialogFooter">0,8,0,0</Thickness>
+
+</ResourceDictionary>

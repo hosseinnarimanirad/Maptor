@@ -3,8 +3,8 @@ using System.Diagnostics;
 using System.Windows.Media;
 
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Helpers;
+using IRI.Maptor.Jab.Wpf;
+using IRI.Maptor.Jab.Wpf.Helpers;
 using IRI.Maptor.Sta.ShapefileFormat;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Spatial.Analysis;
@@ -182,7 +182,7 @@ public static class SimplificationHelper
                     //featureSet.Save($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-{renderSize}-{method}.json", false, true);
                 }
                  
-                //IRI.Maptor.Jab.Common.Helpers.ImageUtility.MergeAndSave($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-{renderSize}-{scale:N}.png", drawingVisuals, screenSize.Width, screenSize.Height);
+                //IRI.Maptor.Jab.Wpf.Helpers.ImageUtility.MergeAndSave($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-{renderSize}-{scale:N}.png", drawingVisuals, screenSize.Width, screenSize.Height);
             }
         }
     }
