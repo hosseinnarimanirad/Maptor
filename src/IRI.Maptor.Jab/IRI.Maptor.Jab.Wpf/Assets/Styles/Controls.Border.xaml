@@ -15,10 +15,34 @@
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray9}"/>
         <Setter Property="Padding" Value="4,0"/>
         <Setter Property="Margin" Value="4"/>
-        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"/>
         <!--MinHeight, not Height: cards that hold more than one row (option groups,
             page setup) must be allowed to grow instead of clipping their content.-->
         <Setter Property="MinHeight" Value="39"/>
+    </Style>
+
+    <!--Framed content surface: the outer shell of a list/detail view, so the content does not
+        float directly on the window background. Pair with Border.PanelHeader for a title band.-->
+    <Style x:Key="IRI.Maptor.Styles.Border.Panel" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"/>
+    </Style>
+
+    <!--accent title band at the top of a panel; its caption is TextBlock.HeaderTitle-->
+    <Style x:Key="IRI.Maptor.Styles.Border.PanelHeader" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="CornerRadius" Value="4,4,0,0"/>
+        <Setter Property="Padding" Value="10,6"/>
+    </Style>
+
+    <!--the strip that carries a view's refresh/action buttons above its content-->
+    <Style x:Key="IRI.Maptor.Styles.Border.Toolbar" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        <Setter Property="Padding" Value="8,6"/>
     </Style>
 
     <!--divider + spacing above a dialog's action buttons, see DialogFooterView-->

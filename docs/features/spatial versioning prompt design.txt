@@ -1,0 +1,123 @@
+Architectural Design Request: Feature-Centric Versioning System with Competitive Review
+Context
+We are designing a custom versioning system for spatial features (geometry + attributes). The system is not based on ESRI's layer-versioning model – we consider it unsuitable for our needs. Instead, we are building a lightweight, feature‑level solution with a clear workflow, role‑based permissions, and a unique "competitive review" mechanic.
+
+Core Concept (Please Criticize Freely)
+Versioning applies to individual features, not whole layers.
+
+Multiple changed features can be grouped into a "Version Session" that captures:
+
+The editor who made the changes
+
+The session timestamp
+
+A batch of pending changes (one or more feature edits)
+
+An optional comment
+
+I am open to challenges: Is grouping into sessions meaningful? How do we handle bulk edits (e.g., 500 features)? What about topological relationships between features (shared edges, connectivity)?
+
+Key Requirement: Reviewer Comparison
+Reviewers must be able to:
+
+See multiple competing pending changes that target the exact same feature.
+
+Compare them side‑by‑side (geometry diff + attribute diff).
+
+Accept one of the competitors (promoting it to the next stage).
+
+Reject all others in that competition.
+
+This implies a per‑feature branching model, but kept lean.
+
+Roles (Preliminary Suggestion)
+Editor – Creates sessions, edits features, submits for review.
+
+Senior Reviewer – Compares competing changes, selects the best one, promotes it.
+
+Approver – Final check, commits the selected change to the live state.
+
+Viewer – Read‑only access to history and current state.
+
+Question: Are these roles sufficient? Are there overlaps or missing responsibilities?
+
+What I Need from You – A Comprehensive Analysis
+Please produce a complete architectural proposal that covers:
+
+1. End‑to‑End Workflow Definition
+Step‑by‑step flow from edit creation to final commit.
+
+How does an Editor start a Session vs. making a standalone change?
+
+How does a change enter the "pending" state?
+
+How does a Reviewer discover competing changes for a specific feature?
+
+What is the exact "Compare & Select" logic? (Visual diff? Manual choice? Auto‑merge hints?)
+
+How does the selected change move up to the Approver?
+
+What happens to rejected changes – archived or deleted?
+
+2. Detailed Role Matrix
+For each role, specify:
+
+Permitted actions
+
+Data visibility (can Editors see other Editors' pending sessions?)
+
+Any notification or UI triggers tied to role actions.
+
+3. Conceptual Data Model (EF Core friendly)
+Proposed tables/entities (e.g., Feature, VersionSession, PendingChange, CompetingChangeSet, ReviewDecision).
+
+How do we link the live state of a feature to its pending versions?
+
+How do we track history of accepted/rejected decisions?
+
+Critical: How do we handle simultaneous edits on the same feature without locking the entire layer? Optimistic concurrency? Allowing diverging pending versions until a Reviewer resolves them?
+
+4. Competitive Review Logic – Deep Dive
+Is the choice strictly binary (pick A or B), or can multiple contenders exist?
+
+What if changes are non‑overlapping (e.g., one edits geometry, another edits attributes)? Could they be merged rather than fully rejected?
+
+If a change is rejected, should the editor be notified and given a rejection reason field?
+
+5. Architecture & Integration Points
+UI (WPF): Which library (IRI.Maptor.Jab.Wpf or a new one) should host the versioning views? How should the UI represent "competing changes" (list, diff viewer, thumbnails)?
+
+Persistence: EF Core. Should we use SQL Server temporal tables (System‑Versioned) for history, or a custom audit log?
+
+Shared Libraries: Which mechanics (change tracking, diff algorithms, session management) must reside in common libraries for reuse across projects like Saba?
+
+6. Explicit List of Unresolved Questions
+I am not certain about many aspects. Please provide at least 5‑10 specific questions that you need me to answer before you can finalize the architecture. Examples of gaps:
+
+Is a Session bound to a single editor, or can multiple editors collaborate within it?
+
+What about undo/redo for Editors inside their own Session?
+
+Can a Reviewer be the same person as an Approver for small teams?
+
+How do we handle a feature that is deleted in one pending change and edited in another?
+
+Final Deliverables from Your Response
+Critical analysis of my session‑based model – its strengths, weaknesses, and risks.
+
+Detailed workflow diagram (text‑based flowchart) describing the entire lifecycle.
+
+Role matrix with clear action/visibility lists.
+
+Conceptual EF Core schema (tables, relationships, key fields).
+
+Clear list of architecture layers (WPF UI, Shared Logic, Persistence) and their boundaries.
+
+List of critical clarifications that I must provide before implementation starts.
+
+Mandatory Documentation
+Every decision, diagram, and insight must be recorded in:
+
+text
+C:\Users\ExpertBook\source\repos\IRI.Japey\docs\features
+This ensures we can pause and resume seamlessly.

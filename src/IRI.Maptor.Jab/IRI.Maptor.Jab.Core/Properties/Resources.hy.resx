@@ -898,6 +898,9 @@
   <data name="layerSettings_statistics_title" xml:space="preserve">
     <value>Վիճակագրություն</value>
   </data>
+  <data name="layerSettings_notYetAvailable" xml:space="preserve">
+    <value>Դեռ հասանելի չէ</value>
+  </data>
   <data name="layerSettings_symbology_title" xml:space="preserve">
     <value>Սիմվոլիկա</value>
   </data>

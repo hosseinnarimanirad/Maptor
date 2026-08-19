@@ -627,9 +627,18 @@
                             FontSize="{Binding ElementName=root, Path=TitleFontSize}"
                             Visibility="{Binding ElementName=root, Path=IsEditable, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"/>
 
+                        <!--versioned-layer marker: on these layers Save opens a review session
+                            instead of writing to live, which is otherwise invisible until after
+                            the fact. Collapsed for every ordinary layer.-->
+                        <iconPacks:PackIconMaterial DockPanel.Dock="Left" Kind="SourceBranch"
+                            Width="11" Height="11" Margin="3,0,0,0" VerticalAlignment="Center"
+                            Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                            ToolTip="{Binding [versioning_layer_badgeTooltip], Source={StaticResource Localization}}"
+                            Visibility="{Binding DataSource, Converter={StaticResource versionedDataSourceToVisibilityConverter}}"/>
+
                         <!--number of selected features-->
                         <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center"
-                            Text="{Binding NumberOfSelectedFeatures, Converter={StaticResource localizedNumberConverter}, StringFormat={}({0:N0})}" 
+                            Text="{Binding NumberOfSelectedFeatures, Converter={StaticResource localizedNumberConverter}, StringFormat={}({0:N0})}"
                             FontSize="{Binding ElementName=root, Path=TitleFontSize}"
                             Visibility="{Binding NumberOfSelectedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}"/>
 

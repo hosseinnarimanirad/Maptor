@@ -898,6 +898,9 @@
   <data name="layerSettings_statistics_title" xml:space="preserve">
     <value>आँकड़े</value>
   </data>
+  <data name="layerSettings_notYetAvailable" xml:space="preserve">
+    <value>अभी उपलब्ध नहीं है</value>
+  </data>
   <data name="layerSettings_symbology_title" xml:space="preserve">
     <value>प्रतीक विज्ञान</value>
   </data>

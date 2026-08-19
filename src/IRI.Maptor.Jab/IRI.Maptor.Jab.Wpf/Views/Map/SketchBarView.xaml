@@ -50,9 +50,8 @@
             <Style TargetType="{x:Type iconPacks:PackIconPhosphorIcons}" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.CircleLightButtonContent}"/>
             <Style TargetType="{x:Type Path}" BasedOn="{StaticResource circleButtonPath}"/>
 
-            <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource IRI.Maptor.Styles.TabItem}">
-                <Setter Property="mahApp:HeaderedControlHelper.HeaderFontFamily" Value="{StaticResource iranSans}"/>
-            </Style>
+            <!--the Persian font comes from the shared style's IsPersian trigger-->
+            <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource IRI.Maptor.Styles.TabItem}"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Border CornerRadius="15" BorderThickness="2 0" MinWidth="420" VerticalAlignment="Top" HorizontalAlignment="Center" 
@@ -245,7 +244,8 @@
             <Separator Background="{DynamicResource MahApps.Brushes.Accent}" Margin="2,4"/>
 
             <!--tabs-->
-            <TabControl SelectedIndex="2" Background="Transparent"  >
+            <!--centred track: this panel floats over the map rather than filling a dialog-->
+            <TabControl SelectedIndex="2" Style="{StaticResource IRI.Maptor.Styles.TabControl.Centered}">
                 <TabControl.Visibility>
                     <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
                         <Binding Path="SketchBar.Options.ShowAdvancedOptions"/>
@@ -255,7 +255,7 @@
                 <TabControl.Items>
 
                     <!--current point-->
-                    <TabItem Header="{Binding [mapPanel_currentPoint_title], Source={StaticResource Localization}}" Cursor="Hand"
+                    <TabItem Header="{Binding [mapPanel_currentPoint_title], Source={StaticResource Localization}}"
                                 Visibility="{Binding IsEditMode, Converter={StaticResource boolToVisibilityConverter}}" >
                         <StackPanel DataContext="{Binding CurrentEditingLayer}"
                                     Orientation="Horizontal" 
@@ -291,7 +291,7 @@
                     </TabItem>
 
                     <!--multi part-->
-                    <TabItem Header="{Binding [mapPanel_currentPart_title], Source={StaticResource Localization}}" Cursor="Hand" >
+                    <TabItem Header="{Binding [mapPanel_currentPart_title], Source={StaticResource Localization}}">
                         <TabItem.Visibility>
                             <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
                                 <Binding Path="SketchBar.Options.IsMultiPartSupportAvailable"/>
@@ -331,7 +331,7 @@
                     </TabItem>
 
                     <!--spatial reference system-->
-                    <TabItem Header="{Binding [mapPanel_srs_title], Source={StaticResource Localization}}" Cursor="Hand">
+                    <TabItem Header="{Binding [mapPanel_srs_title], Source={StaticResource Localization}}">
 
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <RadioButton GroupName="A" Style="{StaticResource simpleToggle}"
@@ -363,7 +363,7 @@
                     </TabItem>
 
                     <!--measure-->
-                    <TabItem Header="{Binding [mapPanel_measure_title], Source={StaticResource Localization}}" Cursor="Hand"
+                    <TabItem Header="{Binding [mapPanel_measure_title], Source={StaticResource Localization}}"
                              Visibility="{Binding IsEditMode, Converter={StaticResource boolToVisibilityConverter}}">
                         <StackPanel Visibility="{Binding IsEditMode, Converter={StaticResource boolToVisibilityConverter}}">
                             <StackPanel.Resources>

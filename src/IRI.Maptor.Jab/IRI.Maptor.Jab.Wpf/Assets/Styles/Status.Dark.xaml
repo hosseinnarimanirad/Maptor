@@ -12,6 +12,9 @@
     <SolidColorBrush x:Key="IRI.Maptor.Brushes.Invalid"      Color="#F2777A"/>
     <SolidColorBrush x:Key="IRI.Maptor.Brushes.Invalid.Fill" Color="#3F2222"/>
 
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Warning"      Color="#E5B84B"/>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Warning.Fill" Color="#3B3117"/>
+
     <SolidColorBrush x:Key="IRI.Maptor.Brushes.Muted"        Color="#9AA0A6"/>
     <SolidColorBrush x:Key="IRI.Maptor.Brushes.Muted.Fill"   Color="#2E2E31"/>
 

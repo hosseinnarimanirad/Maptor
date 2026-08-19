@@ -289,7 +289,10 @@ public class WebApiDataSource : MemoryDataSource
                 }
                 else
                 {
-                    throw new Exception(response.ErrorMessage);
+                    // Typed versioning errors (e.g. the D26 direct-sync gate) rethrow as
+                    // DomainExceptions so the standard dialog path localizes them.
+                    throw IRI.Maptor.Sta.Versioning.VersioningApiErrors.ToException(response.Error?.Title, response.Error?.Detail)
+                        ?? new Exception(response.ErrorMessage);
                 }
             }
         }

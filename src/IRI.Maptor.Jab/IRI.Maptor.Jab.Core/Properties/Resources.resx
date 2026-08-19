@@ -1675,6 +1675,9 @@
   <data name="layerSettings_statistics_title" xml:space="preserve">
     <value>Statistics</value>
   </data>
+  <data name="layerSettings_notYetAvailable" xml:space="preserve">
+    <value>Not available yet</value>
+  </data>
   <data name="layerSettings_symbology_title" xml:space="preserve">
     <value>Symbology</value>
   </data>
@@ -1908,5 +1911,386 @@
   </data>
   <data name="theme_mode_dark" xml:space="preserve">
     <value>Dark</value>
+  </data>
+  <data name="versioning_review_title" xml:space="preserve">
+    <value>Version review</value>
+  </data>
+  <data name="versioning_review_refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="versioning_review_lastRefresh" xml:space="preserve">
+    <value>Last refresh</value>
+  </data>
+  <data name="versioning_review_competitions" xml:space="preserve">
+    <value>Competitions</value>
+  </data>
+  <data name="versioning_review_singles" xml:space="preserve">
+    <value>Single proposals</value>
+  </data>
+  <data name="versioning_review_acceptSelected" xml:space="preserve">
+    <value>Accept selected</value>
+  </data>
+  <data name="versioning_review_groupSelected" xml:space="preserve">
+    <value>Group as competition</value>
+  </data>
+  <data name="versioning_review_compare" xml:space="preserve">
+    <value>Review</value>
+  </data>
+  <data name="versioning_review_colFeature" xml:space="preserve">
+    <value>Feature</value>
+  </data>
+  <data name="versioning_review_colLayer" xml:space="preserve">
+    <value>Layer</value>
+  </data>
+  <data name="versioning_review_colCount" xml:space="preserve">
+    <value>Proposals</value>
+  </data>
+  <data name="versioning_review_colAuthors" xml:space="preserve">
+    <value>Editors</value>
+  </data>
+  <data name="versioning_review_colAge" xml:space="preserve">
+    <value>Age</value>
+  </data>
+  <data name="versioning_review_colSuggestions" xml:space="preserve">
+    <value>Overlaps</value>
+  </data>
+  <data name="versioning_review_badgeStale" xml:space="preserve">
+    <value>Stale</value>
+  </data>
+  <data name="versioning_review_badgeOrphaned" xml:space="preserve">
+    <value>Orphaned</value>
+  </data>
+  <data name="versioning_review_badgeQueued" xml:space="preserve">
+    <value>Queued</value>
+  </data>
+  <data name="versioning_review_badgeDelete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="versioning_review_empty" xml:space="preserve">
+    <value>No pending proposals — submitted changes on versioned layers appear here.</value>
+  </data>
+  <data name="versioning_compare_back" xml:space="preserve">
+    <value>Back to queue</value>
+  </data>
+  <data name="versioning_compare_live" xml:space="preserve">
+    <value>Live</value>
+  </data>
+  <data name="versioning_compare_field" xml:space="preserve">
+    <value>Field</value>
+  </data>
+  <data name="versioning_compare_selectWinner" xml:space="preserve">
+    <value>Select as winner</value>
+  </data>
+  <data name="versioning_compare_closeNoWinner" xml:space="preserve">
+    <value>Reject all (no winner)</value>
+  </data>
+  <data name="versioning_compare_reason" xml:space="preserve">
+    <value>Rejection reason</value>
+  </data>
+  <data name="versioning_compare_staleOverride" xml:space="preserve">
+    <value>I know the live feature has changed since this proposal (recorded override)</value>
+  </data>
+  <data name="versioning_compare_showOnMap" xml:space="preserve">
+    <value>Show on map</value>
+  </data>
+  <data name="versioning_compare_deleteProposal" xml:space="preserve">
+    <value>DELETE PROPOSAL</value>
+  </data>
+  <data name="versioning_compare_orphanBanner" xml:space="preserve">
+    <value>The target feature no longer exists in live; only reject-all is possible.</value>
+  </data>
+  <data name="versioning_compare_queuedBanner" xml:space="preserve">
+    <value>This competition is queued behind one awaiting approval.</value>
+  </data>
+  <data name="versioning_approval_title" xml:space="preserve">
+    <value>Approval queue</value>
+  </data>
+  <data name="versioning_approval_commitSelected" xml:space="preserve">
+    <value>Commit selected</value>
+  </data>
+  <data name="versioning_approval_return" xml:space="preserve">
+    <value>Return</value>
+  </data>
+  <data name="versioning_approval_returnReason" xml:space="preserve">
+    <value>Return reason</value>
+  </data>
+  <data name="versioning_approval_returnReasonRequired" xml:space="preserve">
+    <value>A return must explain why.</value>
+  </data>
+  <data name="versioning_approval_staleNeedsOverride" xml:space="preserve">
+    <value>Selected items include stale proposals; check the override to commit them.</value>
+  </data>
+  <data name="versioning_approval_colWinner" xml:space="preserve">
+    <value>Winner</value>
+  </data>
+  <data name="versioning_approval_colReviewer" xml:space="preserve">
+    <value>Reviewer</value>
+  </data>
+  <data name="versioning_approval_colType" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="versioning_approval_colResolved" xml:space="preserve">
+    <value>Resolved</value>
+  </data>
+  <data name="versioning_myPending_title" xml:space="preserve">
+    <value>My pending proposals</value>
+  </data>
+  <data name="versioning_myPending_colSession" xml:space="preserve">
+    <value>Session</value>
+  </data>
+  <data name="versioning_myPending_colStatus" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="versioning_myPending_colSubmitted" xml:space="preserve">
+    <value>Submitted</value>
+  </data>
+  <data name="versioning_status_pendingReview" xml:space="preserve">
+    <value>Pending review</value>
+  </data>
+  <data name="versioning_status_inCompetition" xml:space="preserve">
+    <value>In competition ({0})</value>
+  </data>
+  <data name="versioning_status_underReview" xml:space="preserve">
+    <value>Under review</value>
+  </data>
+  <data name="versioning_status_committed" xml:space="preserve">
+    <value>Committed</value>
+  </data>
+  <data name="versioning_status_rejected" xml:space="preserve">
+    <value>Rejected</value>
+  </data>
+  <data name="versioning_status_withdrawn" xml:space="preserve">
+    <value>Withdrawn</value>
+  </data>
+  <data name="versioning_submit_title" xml:space="preserve">
+    <value>Session submitted</value>
+  </data>
+  <data name="versioning_submit_summary" xml:space="preserve">
+    <value>{0} proposal(s) submitted as pending. The map keeps showing the committed state; track progress in "My pending proposals".</value>
+  </data>
+  <data name="versioning_submit_competitions" xml:space="preserve">
+    <value>{0} entered a competition.</value>
+  </data>
+  <data name="versioning_submit_superseded" xml:space="preserve">
+    <value>{0} replaced your earlier proposal.</value>
+  </data>
+  <data name="versioning_submit_overlaps" xml:space="preserve">
+    <value>{0} overlap existing features (advisory).</value>
+  </data>
+  <data name="versioning_timeline_featureId" xml:space="preserve">
+    <value>Feature id</value>
+  </data>
+  <data name="versioning_timeline_load" xml:space="preserve">
+    <value>Show history</value>
+  </data>
+  <data name="versioning_timeline_liveNow" xml:space="preserve">
+    <value>Current state</value>
+  </data>
+  <data name="versioning_timeline_deleted" xml:space="preserve">
+    <value>This feature has been deleted</value>
+  </data>
+  <data name="versioning_timeline_colUntil" xml:space="preserve">
+    <value>Valid until</value>
+  </data>
+  <data name="versioning_timeline_colReplacedBy" xml:space="preserve">
+    <value>Replaced by</value>
+  </data>
+  <data name="versioning_timeline_colApprover" xml:space="preserve">
+    <value>Approver</value>
+  </data>
+  <data name="versioning_timeline_colBatch" xml:space="preserve">
+    <value>Commit batch</value>
+  </data>
+  <data name="versioning_timeline_attributes" xml:space="preserve">
+    <value>Values</value>
+  </data>
+  <data name="versioning_timeline_empty" xml:space="preserve">
+    <value>No history recorded for this feature</value>
+  </data>
+  <data name="versioning_timeline_featureIdInvalid" xml:space="preserve">
+    <value>Select a layer and enter a valid feature id</value>
+  </data>
+  <data name="versioning_inbox_markAllRead" xml:space="preserve">
+    <value>Mark all as read</value>
+  </data>
+  <data name="versioning_inbox_colWhen" xml:space="preserve">
+    <value>When</value>
+  </data>
+  <data name="versioning_inbox_colEvent" xml:space="preserve">
+    <value>Event</value>
+  </data>
+  <data name="versioning_inbox_colDetails" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="versioning_inbox_unread" xml:space="preserve">
+    <value>{0} unread</value>
+  </data>
+  <data name="versioning_inbox_items" xml:space="preserve">
+    <value>{0} item(s)</value>
+  </data>
+  <data name="versioning_inbox_features" xml:space="preserve">
+    <value>Features: {0}</value>
+  </data>
+  <data name="versioning_inbox_reason" xml:space="preserve">
+    <value>Reason: {0}</value>
+  </data>
+  <data name="versioning_inbox_typeCompetitionJoined" xml:space="preserve">
+    <value>Your proposal entered a competition</value>
+  </data>
+  <data name="versioning_inbox_typeCommitted" xml:space="preserve">
+    <value>Your proposals were committed</value>
+  </data>
+  <data name="versioning_inbox_typeRejected" xml:space="preserve">
+    <value>Your proposals were rejected</value>
+  </data>
+  <data name="versioning_inbox_typeClosedNoWinner" xml:space="preserve">
+    <value>Competition closed with no winner</value>
+  </data>
+  <data name="versioning_inbox_typeReturned" xml:space="preserve">
+    <value>Your decision was returned by the approver</value>
+  </data>
+  <data name="versioning_inbox_typeOrphaned" xml:space="preserve">
+    <value>Target feature no longer exists</value>
+  </data>
+  <data name="message_error_versionedLayerWriteRejected" xml:space="preserve">
+    <value>This layer is under versioning; edits must be submitted as proposals for review, not saved directly.</value>
+  </data>
+  <data name="message_error_versioningInvalidSubmission" xml:space="preserve">
+    <value>The submitted session is invalid; reload the layer and try again.</value>
+  </data>
+  <data name="message_error_versioningInvalidProposal" xml:space="preserve">
+    <value>One of the proposed changes is invalid; reload the layer and try again.</value>
+  </data>
+  <data name="message_error_versioningUnknownVersionedLayer" xml:space="preserve">
+    <value>This layer is not registered for versioning.</value>
+  </data>
+  <data name="message_error_versioningVersioningNotEnabled" xml:space="preserve">
+    <value>Versioning is not enabled for this layer; save through the normal path.</value>
+  </data>
+  <data name="message_error_versioningProposalUnderApproval" xml:space="preserve">
+    <value>Your earlier proposal for this feature is awaiting final approval; wait for its commit or return before resubmitting.</value>
+  </data>
+  <data name="message_error_versioningConcurrentSubmission" xml:space="preserve">
+    <value>Another submission touched the same feature at the same moment; refresh and retry.</value>
+  </data>
+  <data name="message_error_versioningCompetitionAlreadyResolved" xml:space="preserve">
+    <value>The competition was changed or resolved by another reviewer; refresh and retry.</value>
+  </data>
+  <data name="message_error_versioningConcurrentModification" xml:space="preserve">
+    <value>Something changed concurrently; refresh and retry.</value>
+  </data>
+  <data name="message_error_versioningConcurrentLiveChange" xml:space="preserve">
+    <value>A competition or live feature changed during the commit; nothing was committed — refresh and retry.</value>
+  </data>
+  <data name="message_error_versioningStaleBaseRequiresOverride" xml:space="preserve">
+    <value>The live feature changed after this proposal was authored; accepting requires an explicit stale override.</value>
+  </data>
+  <data name="message_error_versioningOrphanedTarget" xml:space="preserve">
+    <value>The target feature no longer exists; return the competition instead. Nothing was committed.</value>
+  </data>
+  <data name="message_error_versioningOrphanedTargetRejectOnly" xml:space="preserve">
+    <value>The target feature no longer exists in live; only close-no-winner is allowed.</value>
+  </data>
+  <data name="message_error_versioningRejectionReasonRequired" xml:space="preserve">
+    <value>A rejection reason is required.</value>
+  </data>
+  <data name="message_error_versioningReturnReasonRequired" xml:space="preserve">
+    <value>A return must state a reason.</value>
+  </data>
+  <data name="message_error_versioningUnknownCompetition" xml:space="preserve">
+    <value>The competition was not found; it may have been resolved or removed — refresh.</value>
+  </data>
+  <data name="message_error_versioningUnknownProposal" xml:space="preserve">
+    <value>The proposal was not found in this competition; refresh.</value>
+  </data>
+  <data name="message_error_versioningUnknownSuggestion" xml:space="preserve">
+    <value>The overlap suggestion was not found; refresh.</value>
+  </data>
+  <data name="message_error_versioningInvalidGrouping" xml:space="preserve">
+    <value>These proposals cannot be grouped; only pending creates from one layer can be grouped.</value>
+  </data>
+  <data name="message_error_versioningCompetitionBlockedByPredecessor" xml:space="preserve">
+    <value>This competition is queued behind an unresolved predecessor; resolve that one first.</value>
+  </data>
+  <data name="message_error_versioningEmptyCompetition" xml:space="preserve">
+    <value>The competition has no active proposals.</value>
+  </data>
+  <data name="message_error_versioningNotASingleton" xml:space="preserve">
+    <value>This competition has several proposals; use the compare view.</value>
+  </data>
+  <data name="message_error_versioningInvalidCommit" xml:space="preserve">
+    <value>The commit batch is empty or invalid.</value>
+  </data>
+  <data name="message_error_versioningCompetitionNotResolved" xml:space="preserve">
+    <value>The competition is not in the resolved state; refresh the queue.</value>
+  </data>
+  <data name="message_error_versioningSchemaMismatch" xml:space="preserve">
+    <value>The proposal no longer matches the layer schema; it cannot be committed.</value>
+  </data>
+  <data name="versioning_map_pendingStatus" xml:space="preserve">
+    <value>Pending proposals</value>
+  </data>
+  <data name="versioning_map_history" xml:space="preserve">
+    <value>Feature history</value>
+  </data>
+  <data name="versioning_map_myPendingOverlay" xml:space="preserve">
+    <value>My pending on map</value>
+  </data>
+  <data name="versioning_map_selectFeature" xml:space="preserve">
+    <value>Select a feature first</value>
+  </data>
+  <data name="versioning_map_noPending" xml:space="preserve">
+    <value>No pending proposals for this feature</value>
+  </data>
+  <data name="versioning_map_pendingSummary" xml:space="preserve">
+    <value>{0} pending proposal(s)</value>
+  </data>
+  <data name="versioning_map_pendingAuthors" xml:space="preserve">
+    <value>Editors: {0}</value>
+  </data>
+  <data name="versioning_map_pendingHasOwn" xml:space="preserve">
+    <value>Includes your own proposal</value>
+  </data>
+  <data name="versioning_map_overlayEmpty" xml:space="preserve">
+    <value>You have no pending proposals for this layer</value>
+  </data>
+  <data name="versioning_map_overlayName" xml:space="preserve">
+    <value>My pending — {0}</value>
+  </data>
+  <data name="versioning_changeType_create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="versioning_changeType_update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="versioning_changeType_delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="versioning_myPending_empty" xml:space="preserve">
+    <value>You have no pending proposals.</value>
+  </data>
+  <data name="versioning_approval_empty" xml:space="preserve">
+    <value>Nothing is waiting for approval.</value>
+  </data>
+  <data name="versioning_inbox_empty" xml:space="preserve">
+    <value>You have no notifications.</value>
+  </data>
+  <data name="versioning_compare_empty" xml:space="preserve">
+    <value>Select a competition from the review queue to compare its proposals.</value>
+  </data>
+  <data name="versioning_submit_confirm" xml:space="preserve">
+    <value>{0} change(s) on layer {1} will be submitted for review, not saved directly. The map keeps showing the approved state until an approver commits them. Submit now?</value>
+  </data>
+  <data name="versioning_layer_badgeTooltip" xml:space="preserve">
+    <value>Versioned layer — Save submits your edits for review instead of writing them directly.</value>
+  </data>
+  <data name="versioning_review_ageDays" xml:space="preserve">
+    <value>{0} d</value>
+  </data>
+  <data name="versioning_review_ageHours" xml:space="preserve">
+    <value>{0} h</value>
+  </data>
+  <data name="versioning_review_ageMinutes" xml:space="preserve">
+    <value>{0} m</value>
   </data>
 </root>

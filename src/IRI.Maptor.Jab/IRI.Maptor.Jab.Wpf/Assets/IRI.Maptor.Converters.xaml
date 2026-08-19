@@ -89,6 +89,7 @@
     <converters:UtcDateTimeToLocalTimeConverter x:Key="utcDateTimeToLocalTimeConverter"/>
     <converters:UtmZoneConverter x:Key="utmZoneConverter"/>
 
+    <converters:VersionedDataSourceToVisibilityConverter x:Key="versionedDataSourceToVisibilityConverter"/>
     <converters:VisibilityToBoolConverter x:Key="visibilityToBoolConverter"/>
 
 </ResourceDictionary>

@@ -898,6 +898,9 @@
   <data name="layerSettings_statistics_title" xml:space="preserve">
     <value>آمار</value>
   </data>
+  <data name="layerSettings_notYetAvailable" xml:space="preserve">
+    <value>هنوز در دسترس نیست</value>
+  </data>
   <data name="layerSettings_symbology_title" xml:space="preserve">
     <value>سمبل‌گذاری</value>
   </data>
@@ -1815,5 +1818,386 @@
   </data>
   <data name="theme_mode_dark" xml:space="preserve">
     <value>تیره</value>
+  </data>
+  <data name="versioning_review_title" xml:space="preserve">
+    <value>بررسی نسخه‌ها</value>
+  </data>
+  <data name="versioning_review_refresh" xml:space="preserve">
+    <value>به‌روزرسانی</value>
+  </data>
+  <data name="versioning_review_lastRefresh" xml:space="preserve">
+    <value>آخرین به‌روزرسانی</value>
+  </data>
+  <data name="versioning_review_competitions" xml:space="preserve">
+    <value>رقابت‌ها</value>
+  </data>
+  <data name="versioning_review_singles" xml:space="preserve">
+    <value>پیشنهادهای تکی</value>
+  </data>
+  <data name="versioning_review_acceptSelected" xml:space="preserve">
+    <value>پذیرش موارد انتخابی</value>
+  </data>
+  <data name="versioning_review_groupSelected" xml:space="preserve">
+    <value>گروه‌بندی به‌عنوان رقابت</value>
+  </data>
+  <data name="versioning_review_compare" xml:space="preserve">
+    <value>بررسی</value>
+  </data>
+  <data name="versioning_review_colFeature" xml:space="preserve">
+    <value>عارضه</value>
+  </data>
+  <data name="versioning_review_colLayer" xml:space="preserve">
+    <value>لایه</value>
+  </data>
+  <data name="versioning_review_colCount" xml:space="preserve">
+    <value>پیشنهادها</value>
+  </data>
+  <data name="versioning_review_colAuthors" xml:space="preserve">
+    <value>ویرایش‌کنندگان</value>
+  </data>
+  <data name="versioning_review_colAge" xml:space="preserve">
+    <value>قدمت</value>
+  </data>
+  <data name="versioning_review_colSuggestions" xml:space="preserve">
+    <value>هم‌پوشانی‌ها</value>
+  </data>
+  <data name="versioning_review_badgeStale" xml:space="preserve">
+    <value>قدیمی‌شده</value>
+  </data>
+  <data name="versioning_review_badgeOrphaned" xml:space="preserve">
+    <value>بدون عارضه</value>
+  </data>
+  <data name="versioning_review_badgeQueued" xml:space="preserve">
+    <value>در صف</value>
+  </data>
+  <data name="versioning_review_badgeDelete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="versioning_review_empty" xml:space="preserve">
+    <value>پیشنهاد در انتظاری وجود ندارد — تغییرات ارسال‌شده روی لایه‌های نسخه‌بند اینجا نمایش داده می‌شوند.</value>
+  </data>
+  <data name="versioning_compare_back" xml:space="preserve">
+    <value>بازگشت به صف</value>
+  </data>
+  <data name="versioning_compare_live" xml:space="preserve">
+    <value>وضعیت جاری</value>
+  </data>
+  <data name="versioning_compare_field" xml:space="preserve">
+    <value>فیلد</value>
+  </data>
+  <data name="versioning_compare_selectWinner" xml:space="preserve">
+    <value>انتخاب به‌عنوان برنده</value>
+  </data>
+  <data name="versioning_compare_closeNoWinner" xml:space="preserve">
+    <value>رد همه (بدون برنده)</value>
+  </data>
+  <data name="versioning_compare_reason" xml:space="preserve">
+    <value>دلیل رد</value>
+  </data>
+  <data name="versioning_compare_staleOverride" xml:space="preserve">
+    <value>می‌دانم عارضه پس از این پیشنهاد تغییر کرده است (تأیید آگاهانه ثبت می‌شود)</value>
+  </data>
+  <data name="versioning_compare_showOnMap" xml:space="preserve">
+    <value>نمایش روی نقشه</value>
+  </data>
+  <data name="versioning_compare_deleteProposal" xml:space="preserve">
+    <value>پیشنهاد حذف عارضه</value>
+  </data>
+  <data name="versioning_compare_orphanBanner" xml:space="preserve">
+    <value>عارضه هدف دیگر در وضعیت جاری وجود ندارد؛ فقط رد همه ممکن است.</value>
+  </data>
+  <data name="versioning_compare_queuedBanner" xml:space="preserve">
+    <value>این رقابت در صف پشت رقابتِ در انتظار تأیید است.</value>
+  </data>
+  <data name="versioning_approval_title" xml:space="preserve">
+    <value>صف تأیید</value>
+  </data>
+  <data name="versioning_approval_commitSelected" xml:space="preserve">
+    <value>ثبت موارد انتخابی</value>
+  </data>
+  <data name="versioning_approval_return" xml:space="preserve">
+    <value>بازگرداندن</value>
+  </data>
+  <data name="versioning_approval_returnReason" xml:space="preserve">
+    <value>دلیل بازگرداندن</value>
+  </data>
+  <data name="versioning_approval_returnReasonRequired" xml:space="preserve">
+    <value>برای بازگرداندن باید دلیل ذکر شود.</value>
+  </data>
+  <data name="versioning_approval_staleNeedsOverride" xml:space="preserve">
+    <value>موارد انتخابی شامل پیشنهاد قدیمی‌شده است؛ برای ثبت، گزینه تأیید آگاهانه را علامت بزنید.</value>
+  </data>
+  <data name="versioning_approval_colWinner" xml:space="preserve">
+    <value>برنده</value>
+  </data>
+  <data name="versioning_approval_colReviewer" xml:space="preserve">
+    <value>بررسی‌کننده</value>
+  </data>
+  <data name="versioning_approval_colType" xml:space="preserve">
+    <value>نوع تغییر</value>
+  </data>
+  <data name="versioning_approval_colResolved" xml:space="preserve">
+    <value>زمان تعیین برنده</value>
+  </data>
+  <data name="versioning_myPending_title" xml:space="preserve">
+    <value>پیشنهادهای در انتظار من</value>
+  </data>
+  <data name="versioning_myPending_colSession" xml:space="preserve">
+    <value>جلسه</value>
+  </data>
+  <data name="versioning_myPending_colStatus" xml:space="preserve">
+    <value>وضعیت</value>
+  </data>
+  <data name="versioning_myPending_colSubmitted" xml:space="preserve">
+    <value>زمان ارسال</value>
+  </data>
+  <data name="versioning_status_pendingReview" xml:space="preserve">
+    <value>در انتظار بررسی</value>
+  </data>
+  <data name="versioning_status_inCompetition" xml:space="preserve">
+    <value>در رقابت ({0})</value>
+  </data>
+  <data name="versioning_status_underReview" xml:space="preserve">
+    <value>در حال بررسی</value>
+  </data>
+  <data name="versioning_status_committed" xml:space="preserve">
+    <value>تثبیت‌شده</value>
+  </data>
+  <data name="versioning_status_rejected" xml:space="preserve">
+    <value>رد شده</value>
+  </data>
+  <data name="versioning_status_withdrawn" xml:space="preserve">
+    <value>پس‌گرفته</value>
+  </data>
+  <data name="versioning_submit_title" xml:space="preserve">
+    <value>جلسه ارسال شد</value>
+  </data>
+  <data name="versioning_submit_summary" xml:space="preserve">
+    <value>{0} پیشنهاد در انتظار بررسی ثبت شد. نقشه همچنان وضعیت تثبیت‌شده را نمایش می‌دهد؛ پیگیری در «پیشنهادهای در انتظار من».</value>
+  </data>
+  <data name="versioning_submit_competitions" xml:space="preserve">
+    <value>{0} مورد وارد رقابت شد.</value>
+  </data>
+  <data name="versioning_submit_superseded" xml:space="preserve">
+    <value>{0} مورد جایگزین پیشنهاد قبلی شما شد.</value>
+  </data>
+  <data name="versioning_submit_overlaps" xml:space="preserve">
+    <value>{0} مورد با عارضه‌های موجود هم‌پوشانی دارد (هشدار).</value>
+  </data>
+  <data name="versioning_timeline_featureId" xml:space="preserve">
+    <value>شناسه عارضه</value>
+  </data>
+  <data name="versioning_timeline_load" xml:space="preserve">
+    <value>نمایش تاریخچه</value>
+  </data>
+  <data name="versioning_timeline_liveNow" xml:space="preserve">
+    <value>وضعیت جاری</value>
+  </data>
+  <data name="versioning_timeline_deleted" xml:space="preserve">
+    <value>این عارضه حذف شده است</value>
+  </data>
+  <data name="versioning_timeline_colUntil" xml:space="preserve">
+    <value>معتبر تا</value>
+  </data>
+  <data name="versioning_timeline_colReplacedBy" xml:space="preserve">
+    <value>جایگزین‌شده توسط</value>
+  </data>
+  <data name="versioning_timeline_colApprover" xml:space="preserve">
+    <value>تصویب‌کننده</value>
+  </data>
+  <data name="versioning_timeline_colBatch" xml:space="preserve">
+    <value>دسته تثبیت</value>
+  </data>
+  <data name="versioning_timeline_attributes" xml:space="preserve">
+    <value>مقادیر</value>
+  </data>
+  <data name="versioning_timeline_empty" xml:space="preserve">
+    <value>برای این عارضه تاریخچه‌ای ثبت نشده است</value>
+  </data>
+  <data name="versioning_timeline_featureIdInvalid" xml:space="preserve">
+    <value>لایه را انتخاب کرده و شناسه عارضه معتبر وارد کنید</value>
+  </data>
+  <data name="versioning_inbox_markAllRead" xml:space="preserve">
+    <value>علامت‌گذاری همه به‌عنوان خوانده‌شده</value>
+  </data>
+  <data name="versioning_inbox_colWhen" xml:space="preserve">
+    <value>زمان</value>
+  </data>
+  <data name="versioning_inbox_colEvent" xml:space="preserve">
+    <value>رویداد</value>
+  </data>
+  <data name="versioning_inbox_colDetails" xml:space="preserve">
+    <value>جزئیات</value>
+  </data>
+  <data name="versioning_inbox_unread" xml:space="preserve">
+    <value>{0} خوانده‌نشده</value>
+  </data>
+  <data name="versioning_inbox_items" xml:space="preserve">
+    <value>{0} مورد</value>
+  </data>
+  <data name="versioning_inbox_features" xml:space="preserve">
+    <value>عارضه‌ها: {0}</value>
+  </data>
+  <data name="versioning_inbox_reason" xml:space="preserve">
+    <value>دلیل: {0}</value>
+  </data>
+  <data name="versioning_inbox_typeCompetitionJoined" xml:space="preserve">
+    <value>پیشنهاد شما وارد رقابت شد</value>
+  </data>
+  <data name="versioning_inbox_typeCommitted" xml:space="preserve">
+    <value>پیشنهادهای شما تثبیت شد</value>
+  </data>
+  <data name="versioning_inbox_typeRejected" xml:space="preserve">
+    <value>پیشنهادهای شما رد شد</value>
+  </data>
+  <data name="versioning_inbox_typeClosedNoWinner" xml:space="preserve">
+    <value>رقابت بدون برنده بسته شد</value>
+  </data>
+  <data name="versioning_inbox_typeReturned" xml:space="preserve">
+    <value>تصمیم شما توسط تصویب‌کننده بازگردانده شد</value>
+  </data>
+  <data name="versioning_inbox_typeOrphaned" xml:space="preserve">
+    <value>عارضه هدف دیگر وجود ندارد</value>
+  </data>
+  <data name="message_error_versionedLayerWriteRejected" xml:space="preserve">
+    <value>این لایه تحت نسخه‌بندی است؛ تغییرات باید به‌صورت پیشنهاد برای بررسی ارسال شود، نه ذخیره مستقیم.</value>
+  </data>
+  <data name="message_error_versioningInvalidSubmission" xml:space="preserve">
+    <value>جلسه ارسالی نامعتبر است؛ لایه را دوباره بارگذاری کرده و مجدداً تلاش کنید.</value>
+  </data>
+  <data name="message_error_versioningInvalidProposal" xml:space="preserve">
+    <value>یکی از تغییرات پیشنهادی نامعتبر است؛ لایه را دوباره بارگذاری کرده و مجدداً تلاش کنید.</value>
+  </data>
+  <data name="message_error_versioningUnknownVersionedLayer" xml:space="preserve">
+    <value>این لایه در سامانه نسخه‌بندی ثبت نشده است.</value>
+  </data>
+  <data name="message_error_versioningVersioningNotEnabled" xml:space="preserve">
+    <value>نسخه‌بندی برای این لایه فعال نیست؛ از مسیر عادی ذخیره کنید.</value>
+  </data>
+  <data name="message_error_versioningProposalUnderApproval" xml:space="preserve">
+    <value>پیشنهاد قبلی شما برای این عارضه در انتظار تأیید نهایی است؛ تا تثبیت یا بازگشت آن صبر کنید.</value>
+  </data>
+  <data name="message_error_versioningConcurrentSubmission" xml:space="preserve">
+    <value>ارسال هم‌زمان دیگری روی همین عارضه انجام شد؛ به‌روزرسانی کرده و دوباره تلاش کنید.</value>
+  </data>
+  <data name="message_error_versioningCompetitionAlreadyResolved" xml:space="preserve">
+    <value>این رقابت توسط بررسی‌کننده دیگری تغییر کرد یا حل‌وفصل شد؛ به‌روزرسانی کرده و دوباره تلاش کنید.</value>
+  </data>
+  <data name="message_error_versioningConcurrentModification" xml:space="preserve">
+    <value>هم‌زمان تغییری رخ داد؛ به‌روزرسانی کرده و دوباره تلاش کنید.</value>
+  </data>
+  <data name="message_error_versioningConcurrentLiveChange" xml:space="preserve">
+    <value>در حین تثبیت، رقابت یا عارضه زنده تغییر کرد؛ هیچ موردی تثبیت نشد — به‌روزرسانی کرده و دوباره تلاش کنید.</value>
+  </data>
+  <data name="message_error_versioningStaleBaseRequiresOverride" xml:space="preserve">
+    <value>عارضه زنده پس از تدوین این پیشنهاد تغییر کرده است؛ پذیرش نیازمند تأیید آگاهانه است.</value>
+  </data>
+  <data name="message_error_versioningOrphanedTarget" xml:space="preserve">
+    <value>عارضه هدف دیگر وجود ندارد؛ به‌جای تثبیت، رقابت را بازگردانید. هیچ موردی تثبیت نشد.</value>
+  </data>
+  <data name="message_error_versioningOrphanedTargetRejectOnly" xml:space="preserve">
+    <value>عارضه هدف دیگر در داده زنده وجود ندارد؛ فقط بستن بدون برنده مجاز است.</value>
+  </data>
+  <data name="message_error_versioningRejectionReasonRequired" xml:space="preserve">
+    <value>ذکر دلیل رد الزامی است.</value>
+  </data>
+  <data name="message_error_versioningReturnReasonRequired" xml:space="preserve">
+    <value>ذکر دلیل بازگرداندن الزامی است.</value>
+  </data>
+  <data name="message_error_versioningUnknownCompetition" xml:space="preserve">
+    <value>رقابت یافت نشد؛ ممکن است حل‌وفصل یا حذف شده باشد — به‌روزرسانی کنید.</value>
+  </data>
+  <data name="message_error_versioningUnknownProposal" xml:space="preserve">
+    <value>پیشنهاد در این رقابت یافت نشد؛ به‌روزرسانی کنید.</value>
+  </data>
+  <data name="message_error_versioningUnknownSuggestion" xml:space="preserve">
+    <value>پیشنهاد هم‌پوشانی یافت نشد؛ به‌روزرسانی کنید.</value>
+  </data>
+  <data name="message_error_versioningInvalidGrouping" xml:space="preserve">
+    <value>این پیشنهادها قابل گروه‌بندی نیستند؛ فقط ایجادهای در انتظار از یک لایه قابل گروه‌بندی‌اند.</value>
+  </data>
+  <data name="message_error_versioningCompetitionBlockedByPredecessor" xml:space="preserve">
+    <value>این رقابت در صف پشت رقابت حل‌نشده قبلی است؛ ابتدا آن را حل‌وفصل کنید.</value>
+  </data>
+  <data name="message_error_versioningEmptyCompetition" xml:space="preserve">
+    <value>این رقابت پیشنهاد فعالی ندارد.</value>
+  </data>
+  <data name="message_error_versioningNotASingleton" xml:space="preserve">
+    <value>این رقابت چند پیشنهاد دارد؛ از نمای مقایسه استفاده کنید.</value>
+  </data>
+  <data name="message_error_versioningInvalidCommit" xml:space="preserve">
+    <value>دسته تثبیت خالی یا نامعتبر است.</value>
+  </data>
+  <data name="message_error_versioningCompetitionNotResolved" xml:space="preserve">
+    <value>رقابت در وضعیت حل‌وفصل‌شده نیست؛ صف را به‌روزرسانی کنید.</value>
+  </data>
+  <data name="message_error_versioningSchemaMismatch" xml:space="preserve">
+    <value>پیشنهاد دیگر با ساختار لایه سازگار نیست و قابل تثبیت نیست.</value>
+  </data>
+  <data name="versioning_map_pendingStatus" xml:space="preserve">
+    <value>وضعیت پیشنهادها</value>
+  </data>
+  <data name="versioning_map_history" xml:space="preserve">
+    <value>تاریخچه عارضه</value>
+  </data>
+  <data name="versioning_map_myPendingOverlay" xml:space="preserve">
+    <value>پیشنهادهای من روی نقشه</value>
+  </data>
+  <data name="versioning_map_selectFeature" xml:space="preserve">
+    <value>ابتدا یک عارضه را انتخاب کنید</value>
+  </data>
+  <data name="versioning_map_noPending" xml:space="preserve">
+    <value>برای این عارضه پیشنهاد در انتظاری وجود ندارد</value>
+  </data>
+  <data name="versioning_map_pendingSummary" xml:space="preserve">
+    <value>{0} پیشنهاد در انتظار</value>
+  </data>
+  <data name="versioning_map_pendingAuthors" xml:space="preserve">
+    <value>کاربران: {0}</value>
+  </data>
+  <data name="versioning_map_pendingHasOwn" xml:space="preserve">
+    <value>شامل پیشنهاد شما</value>
+  </data>
+  <data name="versioning_map_overlayEmpty" xml:space="preserve">
+    <value>پیشنهاد در انتظاری برای این لایه ندارید</value>
+  </data>
+  <data name="versioning_map_overlayName" xml:space="preserve">
+    <value>پیشنهادهای من — {0}</value>
+  </data>
+  <data name="versioning_changeType_create" xml:space="preserve">
+    <value>ایجاد</value>
+  </data>
+  <data name="versioning_changeType_update" xml:space="preserve">
+    <value>ویرایش</value>
+  </data>
+  <data name="versioning_changeType_delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="versioning_myPending_empty" xml:space="preserve">
+    <value>هیچ پیشنهاد در انتظاری ندارید.</value>
+  </data>
+  <data name="versioning_approval_empty" xml:space="preserve">
+    <value>موردی در انتظار تصویب نیست.</value>
+  </data>
+  <data name="versioning_inbox_empty" xml:space="preserve">
+    <value>پیامی ندارید.</value>
+  </data>
+  <data name="versioning_compare_empty" xml:space="preserve">
+    <value>برای مقایسه، یک رقابت را از صف بررسی انتخاب کنید.</value>
+  </data>
+  <data name="versioning_submit_confirm" xml:space="preserve">
+    <value>{0} تغییر روی لایهٔ {1} برای بررسی ثبت می‌شود و مستقیم ذخیره نمی‌گردد. تا زمان تصویب، نقشه همان وضعیت تأییدشده را نشان می‌دهد. اکنون ثبت شود؟</value>
+  </data>
+  <data name="versioning_layer_badgeTooltip" xml:space="preserve">
+    <value>لایهٔ نسخه‌بندی‌شده — ذخیره، ویرایش‌ها را برای بررسی ثبت می‌کند و مستقیم روی داده نمی‌نویسد.</value>
+  </data>
+  <data name="versioning_review_ageDays" xml:space="preserve">
+    <value>{0} روز</value>
+  </data>
+  <data name="versioning_review_ageHours" xml:space="preserve">
+    <value>{0} ساعت</value>
+  </data>
+  <data name="versioning_review_ageMinutes" xml:space="preserve">
+    <value>{0} دقیقه</value>
   </data>
 </root>

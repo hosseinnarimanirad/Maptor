@@ -14,4 +14,20 @@
     <!--gap above the action-button row, see IRI.Maptor.Styles.Border.DialogFooter-->
     <Thickness x:Key="IRI.Maptor.Styles.Thickness.DialogFooter">0,8,0,0</Thickness>
 
+    <!--Shared corner rounding. Controls (buttons, tab pills) and surfaces (cards, panels)
+        round by slightly different amounts, so they are two tokens rather than one.-->
+
+    <!--buttons, tab pills, inline controls-->
+    <CornerRadius x:Key="IRI.Maptor.Styles.CornerRadius.Control">6</CornerRadius>
+
+    <!--cards and other content surfaces-->
+    <CornerRadius x:Key="IRI.Maptor.Styles.CornerRadius.Surface">5</CornerRadius>
+
+    <!--the tab strip's rounded track. Must stay equal to Control + TabTrackPadding, or the
+        track's curve and the selected pill's curve will not be concentric.-->
+    <CornerRadius x:Key="IRI.Maptor.Styles.CornerRadius.TabTrack">9</CornerRadius>
+
+    <!--breathing room between the track edge and the pills inside it-->
+    <Thickness x:Key="IRI.Maptor.Styles.Thickness.TabTrackPadding">3</Thickness>
+
 </ResourceDictionary>

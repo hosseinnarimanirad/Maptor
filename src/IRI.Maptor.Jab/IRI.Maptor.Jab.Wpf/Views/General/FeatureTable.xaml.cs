@@ -179,6 +179,18 @@ public partial class FeatureTable : UserControl
         if (hitResult?.VisualHit is not DependencyObject hit)
             return;
 
+        // Right-click targets the row under the cursor (for the context menu) without
+        // collapsing an existing multi-selection that already contains it.
+        if (e.ChangedButton == MouseButton.Right)
+        {
+            var rightClickedRow = FindVisualParent<DataGridRow>(hit);
+
+            if (rightClickedRow?.Item is not null && !grid.SelectedItems.Contains(rightClickedRow.Item))
+                grid.SelectedItem = rightClickedRow.Item;
+
+            return;
+        }
+
         var cell = FindVisualParent<DataGridCell>(hit);
 
         if (cell != null)

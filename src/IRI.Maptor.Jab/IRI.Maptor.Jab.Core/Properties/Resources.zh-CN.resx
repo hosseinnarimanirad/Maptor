@@ -898,6 +898,9 @@
   <data name="layerSettings_statistics_title" xml:space="preserve">
     <value>统计</value>
   </data>
+  <data name="layerSettings_notYetAvailable" xml:space="preserve">
+    <value>尚未提供</value>
+  </data>
   <data name="layerSettings_symbology_title" xml:space="preserve">
     <value>符号系统</value>
   </data>

@@ -12,6 +12,11 @@
     <SolidColorBrush x:Key="IRI.Maptor.Brushes.Invalid"      Color="#B3261E"/>
     <SolidColorBrush x:Key="IRI.Maptor.Brushes.Invalid.Fill" Color="#FAE9E8"/>
 
+    <!--advisory, not failure: a stale base version, a pending overlap. Sits between Valid and
+        Invalid so a warning never reads as a rejection.-->
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Warning"      Color="#8A6100"/>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Warning.Fill" Color="#FBF0D3"/>
+
     <SolidColorBrush x:Key="IRI.Maptor.Brushes.Muted"        Color="#5F6368"/>
     <SolidColorBrush x:Key="IRI.Maptor.Brushes.Muted.Fill"   Color="#ECECEE"/>
 

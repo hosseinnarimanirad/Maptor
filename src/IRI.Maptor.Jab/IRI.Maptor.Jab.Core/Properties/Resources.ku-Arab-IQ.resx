@@ -898,6 +898,9 @@
   <data name="layerSettings_statistics_title" xml:space="preserve">
     <value>ئامار</value>
   </data>
+  <data name="layerSettings_notYetAvailable" xml:space="preserve">
+    <value>هێشتا بەردەست نییە</value>
+  </data>
   <data name="layerSettings_symbology_title" xml:space="preserve">
     <value>نیشانەناسی</value>
   </data>

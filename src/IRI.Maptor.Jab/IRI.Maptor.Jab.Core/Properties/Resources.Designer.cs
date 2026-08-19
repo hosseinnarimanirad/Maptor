@@ -2786,7 +2786,16 @@ namespace IRI.Maptor.Jab.Core.Properties {
                 return ResourceManager.GetString("layerSettings_labeling", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Not available yet.
+        /// </summary>
+        public static string layerSettings_notYetAvailable {
+            get {
+                return ResourceManager.GetString("layerSettings_notYetAvailable", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Security.
         /// </summary>

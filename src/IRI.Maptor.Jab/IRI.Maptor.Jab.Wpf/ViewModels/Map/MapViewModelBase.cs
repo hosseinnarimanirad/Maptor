@@ -3103,6 +3103,9 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         try
         {
+            if (!await ConfirmVersionedSubmissionAsync(layer))
+                return;
+
             var selectedLayer = SelectedLayers?.SingleOrDefault(sl => sl.Id == layer.LayerId);
 
             if (selectedLayer != null)
@@ -3123,6 +3126,38 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             await DialogService.ShowErrorMessage(new DomainException(ex.Message));
         }
+    }
+
+    /// <summary>
+    /// On a versioned layer Save does not write to live: it opens a review session and the
+    /// map snaps back to the approved state (D34). That is invisible in an edit toolbar
+    /// shared with ordinary layers, so it is stated before the write, not after it.
+    /// Returns false when the editor backs out. Ordinary layers pass straight through.
+    /// </summary>
+    private async Task<bool> ConfirmVersionedSubmissionAsync(ILayer layer)
+    {
+        if (layer.DataSource is not IRI.Maptor.Sta.Versioning.IVersionedEditTarget target)
+            return true;
+
+        var pendingCount = target.CountPendingChanges();
+
+        if (pendingCount == 0)
+            return true;
+
+        var message = string.Format(
+            IRI.Maptor.Jab.Core.Localization.LocalizationManager.Instance["versioning_submit_confirm"],
+            pendingCount,
+            layer.LayerName);
+
+        if (await DialogService.ShowYesNoDialogAsync(message) != true)
+            return false;
+
+        // Without a title the review and history queues show a blank session column; the
+        // layer name is the one label the editor never has to be asked for.
+        if (string.IsNullOrWhiteSpace(target.NextSessionTitle))
+            target.NextSessionTitle = layer.LayerName;
+
+        return true;
     }
 
     private async Task HandleRequestUndoAllChanges(ILayer layer)

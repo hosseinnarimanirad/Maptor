@@ -1,0 +1,244 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                    xmlns:helpers="clr-namespace:IRI.Maptor.Jab.Wpf.Helpers">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Common.Metrics.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.Path.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <!--Container styles for TabControl. Until these existed only the TabItem was styled, so the
+        strip background, the content border and its corner rounding all fell through to the stock
+        MahApps template: a hard, square 1px box around the content that no other surface in the
+        app matches.
+
+        The strip is a segmented control — one rounded track holding every header, with the
+        selected pill filled in accent (see Controls.TabItem.xaml). The track's radius is the
+        pill's radius plus the track padding, which is what keeps the two curves concentric;
+        both come from Common.Metrics so they cannot drift apart.
+
+        Three header layouts, all sharing that track:
+          Wrap   (default)  headers flow onto further rows; track hugs them
+          Scroll (.Scroll)  one row, chevrons appear only when the headers overflow
+          Wrap, centred (.Centered) for panels floating over the map rather than dialogs
+
+        None of them uses the stock TabPanel. Its multi-row layout moves whichever row holds the
+        selected tab down to the content edge, so headers visibly jump between rows as you click
+        through them.-->
+
+    <!--chevrons for the scrolling layout: quiet enough to sit inside the track without competing
+        with the pills, but still a real hit target-->
+    <Style x:Key="IRI.Maptor.Styles.RepeatButton.TabScroll" TargetType="{x:Type RepeatButton}">
+        <Setter Property="Width" Value="22"/>
+        <Setter Property="Padding" Value="4"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Border x:Name="chrome" Background="{TemplateBinding Background}"
+                            CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}"
+                            SnapsToDevicePixels="True">
+                        <ContentPresenter Margin="{TemplateBinding Padding}"
+                                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="chrome" Property="Background"
+                                    Value="{DynamicResource MahApps.Brushes.Gray10}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--headers wrap onto further rows; the track sizes to them and hugs the start edge
+        (mirrored automatically under an RTL FlowDirection)-->
+    <ControlTemplate x:Key="IRI.Maptor.Styles.TabControl.Template" TargetType="{x:Type TabControl}">
+        <Grid KeyboardNavigation.TabNavigation="Local" SnapsToDevicePixels="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" HorizontalAlignment="Left" Margin="0,0,0,6"
+                    Background="{DynamicResource MahApps.Brushes.Gray9}"
+                    CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.TabTrack}"
+                    Padding="{StaticResource IRI.Maptor.Styles.Thickness.TabTrackPadding}">
+                <WrapPanel IsItemsHost="True" Orientation="Horizontal"
+                           KeyboardNavigation.TabIndex="1"/>
+            </Border>
+
+            <Border Grid.Row="1"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"
+                    Padding="{TemplateBinding Padding}">
+                <ContentPresenter ContentSource="SelectedContent"
+                                  KeyboardNavigation.TabIndex="2"
+                                  KeyboardNavigation.DirectionalNavigation="Contained"
+                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+            </Border>
+        </Grid>
+    </ControlTemplate>
+
+    <!--same track, centred. For panels that are themselves centred on the map rather than being
+        the full width of a dialog, where a start-hugging track looks off-balance.-->
+    <ControlTemplate x:Key="IRI.Maptor.Styles.TabControl.Template.Centered" TargetType="{x:Type TabControl}">
+        <Grid KeyboardNavigation.TabNavigation="Local" SnapsToDevicePixels="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,4"
+                    Background="{DynamicResource MahApps.Brushes.Gray9}"
+                    CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.TabTrack}"
+                    Padding="{StaticResource IRI.Maptor.Styles.Thickness.TabTrackPadding}">
+                <WrapPanel IsItemsHost="True" Orientation="Horizontal"
+                           KeyboardNavigation.TabIndex="1"/>
+            </Border>
+
+            <Border Grid.Row="1"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"
+                    Padding="{TemplateBinding Padding}">
+                <ContentPresenter ContentSource="SelectedContent"
+                                  KeyboardNavigation.TabIndex="2"
+                                  KeyboardNavigation.DirectionalNavigation="Contained"
+                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+            </Border>
+        </Grid>
+    </ControlTemplate>
+
+    <!--One row, scrolled. Keeps the strip a fixed height however many tabs there are, which is
+        what you want once the count is open-ended (attribute tables) or simply long (layer
+        settings). The chevrons hide themselves while everything fits.
+
+        Unlike the wrapping layouts the track stretches instead of hugging its pills: a ScrollViewer
+        measures its child against infinity, so a track sized to content would grow to fit every
+        tab and never scroll.-->
+    <ControlTemplate x:Key="IRI.Maptor.Styles.TabControl.Template.Scroll" TargetType="{x:Type TabControl}">
+        <Grid KeyboardNavigation.TabNavigation="Local" SnapsToDevicePixels="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Margin="0,0,0,6"
+                    Background="{DynamicResource MahApps.Brushes.Gray9}"
+                    CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.TabTrack}"
+                    Padding="{StaticResource IRI.Maptor.Styles.Thickness.TabTrackPadding}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!--the Viewbox is load-bearing: the shared chevron style is sized for a 32px
+                        circle button (18px glyph + 4px margin), which overflows and clips inside a
+                        strip-height button. Scaling it down is what keeps the arrow whole.
+                        Foreground is left alone — that style already binds it to the button.-->
+                    <RepeatButton x:Name="PART_ScrollLeft" Grid.Column="0"
+                                  Style="{StaticResource IRI.Maptor.Styles.RepeatButton.TabScroll}"
+                                  Command="{x:Static ScrollBar.LineLeftCommand}"
+                                  CommandTarget="{Binding ElementName=PART_HeaderScroll}">
+                        <Viewbox Width="12">
+                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronPrevious}"/>
+                        </Viewbox>
+                    </RepeatButton>
+
+                    <!--the headers can also be grabbed and pushed sideways, which beats clicking a
+                        chevron a dozen times; only active while there is something to scroll-->
+                    <ScrollViewer x:Name="PART_HeaderScroll" Grid.Column="1"
+                                  HorizontalScrollBarVisibility="Hidden"
+                                  VerticalScrollBarVisibility="Disabled"
+                                  Focusable="False"
+                                  helpers:TabStripDragScrollHelper.IsEnabled="True">
+                        <StackPanel IsItemsHost="True" Orientation="Horizontal"
+                                    KeyboardNavigation.TabIndex="1"/>
+                    </ScrollViewer>
+
+                    <RepeatButton x:Name="PART_ScrollRight" Grid.Column="2"
+                                  Style="{StaticResource IRI.Maptor.Styles.RepeatButton.TabScroll}"
+                                  Command="{x:Static ScrollBar.LineRightCommand}"
+                                  CommandTarget="{Binding ElementName=PART_HeaderScroll}">
+                        <Viewbox Width="12">
+                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronNext}"/>
+                        </Viewbox>
+                    </RepeatButton>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="1"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"
+                    Padding="{TemplateBinding Padding}">
+                <ContentPresenter ContentSource="SelectedContent"
+                                  KeyboardNavigation.TabIndex="2"
+                                  KeyboardNavigation.DirectionalNavigation="Contained"
+                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+            </Border>
+        </Grid>
+
+        <ControlTemplate.Triggers>
+            <!--no overflow, no chevrons-->
+            <Trigger SourceName="PART_HeaderScroll" Property="ScrollViewer.ScrollableWidth" Value="0">
+                <Setter TargetName="PART_ScrollLeft" Property="Visibility" Value="Collapsed"/>
+                <Setter TargetName="PART_ScrollRight" Property="Visibility" Value="Collapsed"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!--default: wrapping track over a borderless content area, so the track is the only chrome-->
+    <Style x:Key="IRI.Maptor.Styles.TabControl" TargetType="{x:Type TabControl}">
+        <Setter Property="Template" Value="{StaticResource IRI.Maptor.Styles.TabControl.Template}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+    </Style>
+
+    <!--single-row scrolling headers-->
+    <Style x:Key="IRI.Maptor.Styles.TabControl.Scroll"
+           TargetType="{x:Type TabControl}"
+           BasedOn="{StaticResource IRI.Maptor.Styles.TabControl}">
+        <Setter Property="Template" Value="{StaticResource IRI.Maptor.Styles.TabControl.Template.Scroll}"/>
+    </Style>
+
+    <!--dialogs and forms: scrolling headers, so a long tab list never eats the dialog's height,
+        plus padding between the content and the track-->
+    <Style x:Key="IRI.Maptor.Styles.TabControl.Form"
+           TargetType="{x:Type TabControl}"
+           BasedOn="{StaticResource IRI.Maptor.Styles.TabControl.Scroll}">
+        <Setter Property="Padding" Value="{StaticResource IRI.Maptor.Styles.Thickness.DialogContent}"/>
+    </Style>
+
+    <!--content sits on its own tinted surface; use when the tabs are not already inside a card-->
+    <Style x:Key="IRI.Maptor.Styles.TabControl.Card"
+           TargetType="{x:Type TabControl}"
+           BasedOn="{StaticResource IRI.Maptor.Styles.TabControl.Form}">
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}"/>
+    </Style>
+
+    <!--centred track, for map panels rather than dialogs-->
+    <Style x:Key="IRI.Maptor.Styles.TabControl.Centered"
+           TargetType="{x:Type TabControl}"
+           BasedOn="{StaticResource IRI.Maptor.Styles.TabControl}">
+        <Setter Property="Template" Value="{StaticResource IRI.Maptor.Styles.TabControl.Template.Centered}"/>
+    </Style>
+
+</ResourceDictionary>

@@ -13,6 +13,7 @@
         <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.RadioButton.xaml"/>
         <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.ScrollBar.xaml"/>
         <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.TabItem.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.TabControl.xaml"/>
         <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.TextBlock.xaml"/>
         <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.ToggleSwitch.xaml"/>
         <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.Border.xaml"/>
@@ -20,6 +21,9 @@
         <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.CheckBox.xaml"/>
         <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.ComboBox.xaml"/>
         <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.NumericUpDown.xaml"/>
+        <!--after Controls.TextBlock: both are BasedOn IRI.Maptor.Styles.TextBlock-->
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.Pill.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.DataGrid.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

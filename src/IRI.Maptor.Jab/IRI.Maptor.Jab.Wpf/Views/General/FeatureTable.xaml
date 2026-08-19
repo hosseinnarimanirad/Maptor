@@ -110,6 +110,21 @@
                     MouseDoubleClick="grid_MouseDoubleClick"
                     DataContextChanged="grid_DataContextChanged"
                     local:DataGridDictionaryBehavior.GenerateColumnsFromDictionary="True">
+            <!-- Right-click menu over the same per-feature commands as the footer strip;
+                 the ContextMenu inherits the SelectedLayer DataContext from the grid. -->
+            <DataGrid.ContextMenu>
+                <ContextMenu ItemsSource="{Binding AssociatedLayer.FeatureTableCommands}">
+                    <ContextMenu.ItemContainerStyle>
+                        <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                            <Setter Property="Header" Value="{Binding ToolTip}"/>
+                            <Setter Property="Command" Value="{Binding Command}"/>
+                            <Setter Property="CommandParameter" Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                            <Setter Property="IsEnabled" Value="{Binding IsEnabled}"/>
+                            <Setter Property="Visibility" Value="{Binding IsCommandVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
+                        </Style>
+                    </ContextMenu.ItemContainerStyle>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
             <DataGrid.RowHeaderTemplate>
                 <DataTemplate>
                     <Border DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=DataGridRow}}">

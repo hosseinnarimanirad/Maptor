@@ -898,6 +898,9 @@
   <data name="layerSettings_statistics_title" xml:space="preserve">
     <value>اعداد و شمار</value>
   </data>
+  <data name="layerSettings_notYetAvailable" xml:space="preserve">
+    <value>ابھی دستیاب نہیں</value>
+  </data>
   <data name="layerSettings_symbology_title" xml:space="preserve">
     <value>سمبولوجی</value>
   </data>

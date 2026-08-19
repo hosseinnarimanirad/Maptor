@@ -61,6 +61,7 @@
     <ProjectReference Include="..\..\IRI.Maptor.Sta\IRI.Maptor.Sta.ShapefileFormat\IRI.Maptor.Sta.ShapefileFormat.csproj" />
     <ProjectReference Include="..\..\IRI.Maptor.Sta\IRI.Maptor.Sta.Spatial\IRI.Maptor.Sta.Spatial.csproj" />
     <ProjectReference Include="..\..\IRI.Maptor.Sta\IRI.Maptor.Sta.SpatialReferenceSystem\IRI.Maptor.Sta.SpatialReferenceSystem.csproj" />
+    <ProjectReference Include="..\..\IRI.Maptor.Sta\IRI.Maptor.Sta.Versioning\IRI.Maptor.Sta.Versioning.csproj" />
     <ProjectReference Include="..\IRI.Maptor.Jab.Core\IRI.Maptor.Jab.Core.csproj" />
   </ItemGroup>
  

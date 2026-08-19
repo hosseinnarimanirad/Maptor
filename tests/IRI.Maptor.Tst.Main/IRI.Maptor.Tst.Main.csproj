@@ -52,6 +52,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\IRI.Maptor.Jab\IRI.Maptor.Jab.Wpf\IRI.Maptor.Jab.Wpf.csproj" />
     <ProjectReference Include="..\..\src\IRI.Maptor.Ket\IRI.Maptor.Ket.EfCorePersistence\IRI.Maptor.Ket.EfCorePersistence.csproj" />
+    <ProjectReference Include="..\..\src\IRI.Maptor.Ket\IRI.Maptor.Ket.VersioningPersistence\IRI.Maptor.Ket.VersioningPersistence.csproj" />
     <ProjectReference Include="..\..\src\IRI.Maptor.Ket\IRI.Maptor.Ket.PersonalGdbPersistence\IRI.Maptor.Ket.PersonalGdbPersistence.csproj" />
     <ProjectReference Include="..\..\src\IRI.Maptor.Ket\IRI.Maptor.Ket.SqlServerSpatialExtension\IRI.Maptor.Ket.SqlServerSpatialExtension.csproj" />
     <ProjectReference Include="..\..\src\IRI.Maptor.Sta\IRI.Maptor.Sta.Common\IRI.Maptor.Sta.Common.csproj" />
@@ -59,6 +60,7 @@
     <ProjectReference Include="..\..\src\IRI.Maptor.Sta\IRI.Maptor.Sta.MachineLearning\IRI.Maptor.Sta.MachineLearning.csproj" />
     <ProjectReference Include="..\..\src\IRI.Maptor.Sta\IRI.Maptor.Sta.Ogc\IRI.Maptor.Sta.Ogc.csproj" />
     <ProjectReference Include="..\..\src\IRI.Maptor.Sta\IRI.Maptor.Sta.ShapefileFormat\IRI.Maptor.Sta.ShapefileFormat.csproj" />
+    <ProjectReference Include="..\..\src\IRI.Maptor.Sta\IRI.Maptor.Sta.Versioning\IRI.Maptor.Sta.Versioning.csproj" />
   </ItemGroup>
 
   <ItemGroup>

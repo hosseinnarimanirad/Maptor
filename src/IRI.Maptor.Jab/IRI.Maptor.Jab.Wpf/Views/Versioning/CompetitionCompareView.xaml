@@ -1,0 +1,168 @@
+<UserControl x:Class="IRI.Maptor.Jab.Controls.Versioning.CompetitionCompareView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core"
+             mc:Ignorable="d"
+             FontFamily="{StaticResource iranSans}"
+             DataContextChanged="OnDataContextChanged">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- header -->
+        <Border Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Panel}" Padding="8,6">
+            <DockPanel>
+                <Button DockPanel.Dock="Left" Style="{StaticResource IRI.Maptor.Styles.Button.Secondary.Small}"
+                        Command="{Binding BackCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent.Small}" Kind="ArrowRight"/>
+                        <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent.Small}"
+                                   Text="{Binding [versioning_compare_back], Source={StaticResource Localization}}"/>
+                    </StackPanel>
+                </Button>
+                <TextBlock DockPanel.Dock="Left" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal.Bold}" Margin="12,0,0,0">
+                    <Run Text="{Binding EntityName, Mode=OneWay}"/>
+                    <Run Text=" — "/>
+                    <Run Text="{Binding TargetLabel, Mode=OneWay}"/>
+                </TextBlock>
+                <Border/>
+            </DockPanel>
+        </Border>
+
+        <!-- banners -->
+        <StackPanel Grid.Row="1" Margin="0,8,0,0">
+            <Border Background="{DynamicResource IRI.Maptor.Brushes.Muted.Fill}" Padding="8" Margin="0,0,0,4"
+                    CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"
+                    Visibility="{Binding IsOrphaned, Converter={StaticResource boolToVisibilityConverter}}">
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}" TextWrapping="Wrap"
+                           Foreground="{DynamicResource IRI.Maptor.Brushes.Muted}"
+                           Text="{Binding [versioning_compare_orphanBanner], Source={StaticResource Localization}}"/>
+            </Border>
+            <Border Background="{DynamicResource MahApps.Brushes.Accent4}" Padding="8" Margin="0,0,0,4"
+                    CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"
+                    Visibility="{Binding IsBlockedByPredecessor, Converter={StaticResource boolToVisibilityConverter}}">
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}" TextWrapping="Wrap"
+                           Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                           Text="{Binding [versioning_compare_queuedBanner], Source={StaticResource Localization}}"/>
+            </Border>
+        </StackPanel>
+
+        <!-- proposal cards -->
+        <ItemsControl Grid.Row="2" ItemsSource="{Binding Proposals}" Margin="0,8,0,0">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Panel}" Padding="10,8" Margin="0,0,8,8" MinWidth="240">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal.Bold}" Text="{Binding Header}"/>
+                                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}" Margin="8,0,0,0" Text="{Binding SubmittedAtLabel}"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                <Border Style="{StaticResource IRI.Maptor.Styles.Pill.Invalid}"
+                                        Visibility="{Binding IsDelete, Converter={StaticResource boolToVisibilityConverter}}">
+                                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.Pill.Text.Invalid}"
+                                               Text="{Binding [versioning_compare_deleteProposal], Source={StaticResource Localization}}"/>
+                                </Border>
+                                <Border Style="{StaticResource IRI.Maptor.Styles.Pill.Warning}"
+                                        Visibility="{Binding Item.IsStale, Converter={StaticResource boolToVisibilityConverter}}">
+                                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.Pill.Text.Warning}"
+                                               Text="{Binding [versioning_review_badgeStale], Source={StaticResource Localization}}"/>
+                                </Border>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                <Button Style="{StaticResource IRI.Maptor.Styles.Button.Secondary.Small}" Margin="0,0,6,0"
+                                        Command="{Binding DataContext.ShowOnMapCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent.Small}" Kind="MapSearchOutline"/>
+                                        <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent.Small}"
+                                                   Text="{Binding [versioning_compare_showOnMap], Source={StaticResource Localization}}"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Style="{StaticResource IRI.Maptor.Styles.Button.Primary.Small}"
+                                        Command="{Binding DataContext.SelectWinnerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent.Small}" Kind="TrophyOutline"/>
+                                        <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent.Small}"
+                                                   Text="{Binding [versioning_compare_selectWinner], Source={StaticResource Localization}}"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!-- N-way attribute grid (columns built in code-behind) -->
+        <Border Grid.Row="3" Style="{StaticResource IRI.Maptor.Styles.Border.Panel}" Margin="0,8,0,0">
+            <DataGrid x:Name="attributeGrid" Style="{StaticResource IRI.Maptor.Styles.DataGrid.ReadOnly}"
+                      ItemsSource="{Binding AttributeRows}" EnableRowVirtualization="True"/>
+        </Border>
+
+        <!-- decision footer -->
+        <Border Grid.Row="4" Style="{StaticResource IRI.Maptor.Styles.Border.DialogFooter}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!--the card's grey fill is what makes the (borderless) input read as a field-->
+                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Left" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}"
+                                   Text="{Binding [versioning_compare_reason], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
+                        <TextBox Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
+                                 Text="{Binding ReasonForAll, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                </Border>
+
+                <Button Grid.Row="0" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.Button.Secondary}" Margin="4"
+                        Command="{Binding CloseNoWinnerCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}" Kind="CloseCircleOutline"/>
+                        <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent}"
+                                   Text="{Binding [versioning_compare_closeNoWinner], Source={StaticResource Localization}}"/>
+                    </StackPanel>
+                </Button>
+
+                <CheckBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="4"
+                          Style="{StaticResource IRI.Maptor.Styles.CheckBox.Normal}"
+                          IsChecked="{Binding StaleOverride}"
+                          Visibility="{Binding HasStaleProposal, Converter={StaticResource boolToVisibilityConverter}}"
+                          Content="{Binding [versioning_compare_staleOverride], Source={StaticResource Localization}}"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

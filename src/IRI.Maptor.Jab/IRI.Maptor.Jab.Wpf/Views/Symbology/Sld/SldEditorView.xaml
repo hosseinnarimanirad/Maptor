@@ -10,8 +10,17 @@
              mc:Ignorable="d"
              d:DesignHeight="700" d:DesignWidth="900">
     <UserControl.Resources>
+        <ResourceDictionary>
+            <!--this view had no shared styles in scope at all, so its tabs (and everything else)
+                rendered with stock MahApps chrome instead of the Maptor design system-->
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource IRI.Maptor.Styles.TabItem}"/>
+
         <converters:NotNullToBoolConverter x:Key="NotNullToBool"/>
-        
+
         <!-- DataTemplate for PointSymbolizer -->
         <DataTemplate x:Key="PointSymbolizerTemplate">
             <maptor:PointSymbolizerView DataContext="{Binding}"/>
@@ -44,6 +53,7 @@
             PolygonTemplate="{StaticResource PolygonSymbolizerTemplate}"
             TextTemplate="{StaticResource TextSymbolizerTemplate}"
             RasterTemplate="{StaticResource RasterSymbolizerTemplate}"/>
+        </ResourceDictionary>
     </UserControl.Resources>
     
     <Grid>
@@ -129,6 +139,7 @@
             <!-- Rule Details -->
             <TabControl Grid.Column="2"
                         x:Name="RuleTabControl"
+                        Style="{StaticResource IRI.Maptor.Styles.TabControl}"
                         SelectionChanged="OnTabChanged"
                         IsEnabled="{Binding SelectedRule, Converter={StaticResource NotNullToBool}}">
                 
