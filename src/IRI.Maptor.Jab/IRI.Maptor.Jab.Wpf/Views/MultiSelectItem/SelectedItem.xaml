@@ -3,18 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  >
     <UserControl.Resources>
         <ResourceDictionary>
-            <Color x:Key="darkGrayColor">#999999</Color>
-            <SolidColorBrush x:Key="darkGrayBrush" Color="{StaticResource darkGrayColor}"/>  
-            
-            <Color x:Key="lightGrayColor">#CCCCCC</Color>
-            <SolidColorBrush x:Key="lightGrayBrush" Color="{StaticResource lightGrayColor}"/>
+            <!--This control used to carry its own private palette (#999999, #CCCCCC, #34495E,
+                #FFEA4333). Everything that could move to a theme brush has; what is left here is
+                only what cannot.
 
-            <Color x:Key="darkBlueColor">#34495E</Color>
-            <SolidColorBrush x:Key="darkBlueBrush" Color="{StaticResource darkBlueColor}"/>
+                ColorAnimation.To needs a Color rather than a Brush, and a Storyboard is a
+                Freezable, so it cannot take DynamicResource. The hover animation below therefore
+                uses StaticResource against a theme Color: it follows the accent the app starts
+                with, but will not repaint on a runtime theme switch. That is a WPF limitation,
+                not an oversight.
 
+                lightRedColor stays a literal on purpose. It is the hover colour of the remove
+                button, where red is semantic rather than thematic, and there is no theme Color
+                key for the status palette to point at (Status.Light/Dark define brushes only).-->
             <Color x:Key="lightRedColor">#FFEA4333</Color>
-            <SolidColorBrush x:Key="lightRedBrush" Color="{StaticResource lightRedColor}"/>
-
 
             <PathGeometry x:Key="cross">M1.442037,0L16.002031,14.585751 30.588022,0.025996563 32.001024,1.4409965 17.414783,16.001002 31.97503,30.587006 30.560022,32 15.999268,17.413969 1.4130009,31.973999 0,30.558998 14.586494,15.998742 0.027028472,1.4140019z</PathGeometry>
 
@@ -25,7 +27,7 @@
 
         </ResourceDictionary>
     </UserControl.Resources>
-    <!--<StackPanel Orientation="Horizontal" Background="{StaticResource lightGrayBrush}" Height="20" >
+    <StackPanel Orientation="Horizontal" Background="{DynamicResource MahApps.Brushes.Gray8}" Height="20" >
         <StackPanel.Resources>
             <Style TargetType="Button" >
                 <Setter Property="VerticalAlignment" Value="Center"/>
@@ -47,9 +49,7 @@
                                     <EventTrigger RoutedEvent="Control.MouseEnter">
                                         <BeginStoryboard>
                                             <Storyboard>
-                                                --><!--<ColorAnimation To="{StaticResource darkBlueColor}" Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)" 
-                                                    Duration="0:0:.2" AccelerationRatio=".8" />--><!--
-                                                <ColorAnimation To="{StaticResource darkBlueColor}" Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)" 
+                                                <ColorAnimation To="{StaticResource MahApps.Colors.Highlight}" Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)" 
                                                     Duration="0:0:.2" AccelerationRatio=".8" />
                                             </Storyboard>
                                         </BeginStoryboard>
@@ -57,7 +57,10 @@
                                     <EventTrigger RoutedEvent="Control.MouseLeave">
                                         <BeginStoryboard>
                                             <Storyboard>
-                                                <ColorAnimation To="{DynamicResource lightGrayColor}" Duration="0:0:.2" AccelerationRatio=".8"  
+                                                <!--was DynamicResource LightRedColor with a capital L,
+                                                    which matches no key, so the animation silently did
+                                                    nothing and the button stayed dark blue after hover-->
+                                                <ColorAnimation To="{StaticResource lightRedColor}" Duration="0:0:.2" AccelerationRatio=".8"
                                                     Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)" />
                                             </Storyboard>
                                         </BeginStoryboard>
@@ -70,61 +73,10 @@
 
             </Style>
         </StackPanel.Resources>
-        <TextBlock Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" FlowDirection="RightToLeft" Foreground="{StaticResource darkGrayBrush}" FontSize="11" Margin="5,0" VerticalAlignment="Center"/>
+        <TextBlock Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" FlowDirection="RightToLeft" Foreground="{DynamicResource MahApps.Brushes.Gray3}" FontSize="11" Margin="5,0" VerticalAlignment="Center"/>
 
         <Button Width="12" Height="12" Background="Transparent" Command="{Binding RemoveCommand}">
-            <Path Data="{StaticResource cross}" Stretch="Uniform"  Fill="{StaticResource darkGrayBrush}" Stroke="{StaticResource darkGrayBrush}"/>
-        </Button>
-
-
-    </StackPanel>-->
-    <StackPanel Orientation="Horizontal" Background="{StaticResource lightGrayBrush}" Height="20" >
-        <StackPanel.Resources>
-            <Style TargetType="Button" >
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="Margin" Value="2,0"/>
-                <Setter Property="Foreground" Value="White"/>
-                <Setter Property="Padding" Value="1"/>
-                <Setter Property="Cursor" Value="Hand"/>
-                <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="Button.Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type Button}">
-                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}"
-                                            Background="{TemplateBinding Background}">
-                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" 
-                                                RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
-                                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-
-                                <Border.Triggers>
-                                    <EventTrigger RoutedEvent="Control.MouseEnter">
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <ColorAnimation To="{StaticResource darkBlueColor}" Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)" 
-                                                    Duration="0:0:.2" AccelerationRatio=".8" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </EventTrigger>
-                                    <EventTrigger RoutedEvent="Control.MouseLeave">
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <ColorAnimation To="{DynamicResource LightRedColor}" Duration="0:0:.2" AccelerationRatio=".8"  
-                                                    Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </EventTrigger>
-                                </Border.Triggers>
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-
-            </Style>
-        </StackPanel.Resources>
-        <TextBlock Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" FlowDirection="RightToLeft" Foreground="{StaticResource darkGrayBrush}" FontSize="11" Margin="5,0" VerticalAlignment="Center"/>
-
-        <Button Width="12" Height="12" Background="Transparent" Command="{Binding RemoveCommand}">
-            <Path Data="{StaticResource cross}" Stretch="Uniform"  Fill="{StaticResource darkGrayBrush}" Stroke="{StaticResource darkGrayBrush}"/>
+            <Path Data="{StaticResource cross}" Stretch="Uniform"  Fill="{DynamicResource MahApps.Brushes.Gray3}" Stroke="{DynamicResource MahApps.Brushes.Gray3}"/>
         </Button>
 
 

@@ -37,7 +37,7 @@
     <Canvas x:Name="Document" Width="30" Height="30">
         <Image x:Name="image" Width="24" Height="24" Margin="0"/>
         <Viewbox Width="14" Margin="0" Canvas.Top="15" Canvas.Right="0">
-            <Ellipse x:Name="border" Width="30" Height="30" Fill="{StaticResource mapTehranIrNormalRedBrush}" Opacity="1">
+            <Ellipse x:Name="border" Width="30" Height="30" Fill="{DynamicResource MahApps.Brushes.Accent}" Opacity="1">
                 <Ellipse.Effect>
                     <DropShadowEffect x:Name="shadow" BlurRadius="4" ShadowDepth="0"  RenderingBias="Performance" Opacity="0" />
                 </Ellipse.Effect>

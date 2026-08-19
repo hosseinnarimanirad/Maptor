@@ -8,60 +8,70 @@
              xmlns:sldViews="clr-namespace:IRI.Maptor.Jab.Controls.Symbology.Sld"
              mc:Ignorable="d"
              d:DesignHeight="240" d:DesignWidth="400">
-    <Grid Margin="5">
+
+    <!--The inner GroupBox became a SectionHeader rather than another Border.Section: this view is
+        hosted inside the editor's "Filter" card, and a card within a card reads as a box in a box.
+        Label column uses the shared token (was 90, while the symbolizers used 120).-->
+
+    <Grid Margin="{StaticResource IRI.Maptor.Styles.Thickness.ViewContent}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <CheckBox Grid.Row="0" Margin="4"
+        <CheckBox Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.CheckBox.Normal}"
                   Content="{Binding [sldEditor_filter_enableFilter], Source={StaticResource Localization}}"
                   IsChecked="{Binding HasFilter, Mode=TwoWay}"/>
 
-        <GroupBox Grid.Row="1" Header="{Binding [sldEditor_filter_filterSettings], Source={StaticResource Localization}}" Margin="4"
-                  IsEnabled="{Binding HasFilter}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="90"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+        <StackPanel Grid.Row="1" IsEnabled="{Binding HasFilter}">
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}"
+                           Text="{Binding [sldEditor_filter_filterSettings], Source={StaticResource Localization}}"/>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding [sldEditor_filter_property], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
-                <!--editable combo: suggests the layer's field names when the editor has layer
-                    context (SldEditorViewModel.FieldNames), still accepts free text-->
-                <ComboBox Grid.Row="0" Grid.Column="1" Margin="4" IsEditable="True"
-                          ItemsSource="{Binding DataContext.FieldNames, RelativeSource={RelativeSource AncestorType=sldViews:SldEditorView}}"
-                          Text="{Binding FilterPropertyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding [sldEditor_filter_operator], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
-                <ComboBox Grid.Row="1" Grid.Column="1" Margin="4" SelectedItem="{Binding FilterOperator, Mode=TwoWay}">
-                    <ComboBox.ItemsSource>
-                        <x:Array Type="{x:Type vm:FilterComparisonOperator}">
-                            <vm:FilterComparisonOperator>Equal</vm:FilterComparisonOperator>
-                            <vm:FilterComparisonOperator>NotEqual</vm:FilterComparisonOperator>
-                            <vm:FilterComparisonOperator>LessThan</vm:FilterComparisonOperator>
-                            <vm:FilterComparisonOperator>GreaterThan</vm:FilterComparisonOperator>
-                            <vm:FilterComparisonOperator>LessThanOrEqual</vm:FilterComparisonOperator>
-                            <vm:FilterComparisonOperator>GreaterThanOrEqual</vm:FilterComparisonOperator>
-                        </x:Array>
-                    </ComboBox.ItemsSource>
-                </ComboBox>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                               Text="{Binding [sldEditor_filter_property], Source={StaticResource Localization}}"/>
+                    <!--editable combo: suggests the layer's field names when the editor has layer
+                        context (SldEditorViewModel.FieldNames), still accepts free text-->
+                    <ComboBox Grid.Row="0" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal}" IsEditable="True"
+                              ItemsSource="{Binding DataContext.FieldNames, RelativeSource={RelativeSource AncestorType=sldViews:SldEditorView}}"
+                              Text="{Binding FilterPropertyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding [sldEditor_filter_value], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
-                <TextBox Grid.Row="2" Grid.Column="1" Margin="4"
-                         Text="{Binding FilterValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                               Text="{Binding [sldEditor_filter_operator], Source={StaticResource Localization}}"/>
+                    <ComboBox Grid.Row="1" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal}"
+                              SelectedItem="{Binding FilterOperator, Mode=TwoWay}">
+                        <ComboBox.ItemsSource>
+                            <x:Array Type="{x:Type vm:FilterComparisonOperator}">
+                                <vm:FilterComparisonOperator>Equal</vm:FilterComparisonOperator>
+                                <vm:FilterComparisonOperator>NotEqual</vm:FilterComparisonOperator>
+                                <vm:FilterComparisonOperator>LessThan</vm:FilterComparisonOperator>
+                                <vm:FilterComparisonOperator>GreaterThan</vm:FilterComparisonOperator>
+                                <vm:FilterComparisonOperator>LessThanOrEqual</vm:FilterComparisonOperator>
+                                <vm:FilterComparisonOperator>GreaterThanOrEqual</vm:FilterComparisonOperator>
+                            </x:Array>
+                        </ComboBox.ItemsSource>
+                    </ComboBox>
 
-                <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,8,4,2"
-                           FontStyle="Italic" Foreground="Gray"
-                           TextWrapping="Wrap"
-                           Text="{Binding FilterDescription}"/>
-            </Grid>
-        </GroupBox>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                               Text="{Binding [sldEditor_filter_value], Source={StaticResource Localization}}"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
+                             Text="{Binding FilterValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                               Style="{StaticResource IRI.Maptor.Styles.TextBlock.Note}"
+                               Text="{Binding FilterDescription}"/>
+                </Grid>
+        </StackPanel>
     </Grid>
 </UserControl>

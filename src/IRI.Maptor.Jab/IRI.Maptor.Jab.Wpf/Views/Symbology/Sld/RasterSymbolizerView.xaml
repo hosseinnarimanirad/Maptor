@@ -7,7 +7,14 @@
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="380">
-    <Grid Margin="10">
+
+    <!--Same label column as the other symbolizers. This one additionally carries a colour-map
+        grid, so it has a section header and a command bar; those use the shared SectionHeader
+        and IconSquare tokens rather than a bold TextBlock and hand-sized 32x32 buttons.
+
+        The per-entry Color is SLD model data, not chrome.-->
+
+    <Grid Margin="{StaticResource IRI.Maptor.Styles.Thickness.ViewContent}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -16,29 +23,37 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding [sldEditor_raster_opacity], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
-        <Slider Grid.Row="0" Grid.Column="1" Margin="4"
+        <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                   Text="{Binding [sldEditor_raster_opacity], Source={StaticResource Localization}}"/>
+        <Slider Grid.Row="0" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.Slider.Normal}"
                 Value="{Binding Opacity, Mode=TwoWay}"
                 Minimum="0" Maximum="1" TickFrequency="0.1" IsSnapToTickEnabled="True"/>
 
         <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                   Text="{Binding [sldEditor_raster_colorMap], Source={StaticResource Localization}}"
-                   FontWeight="Bold" Margin="4,10,4,4"/>
+                   Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}"
+                   Text="{Binding [sldEditor_raster_colorMap], Source={StaticResource Localization}}"/>
 
-        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="4">
-            <Button Command="{Binding AddEntryCommand}" ToolTip="{Binding [sldEditor_raster_addEntry], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
-                <iconPacks:PackIconMaterial Kind="Plus"/>
+        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal"
+                    Margin="{StaticResource IRI.Maptor.Styles.Thickness.FieldGap}">
+            <Button Command="{Binding AddEntryCommand}"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.IconSquare}"
+                    ToolTip="{Binding [sldEditor_raster_addEntry], Source={StaticResource Localization}}">
+                <iconPacks:PackIconMaterial Kind="Plus" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
             </Button>
-            <Button Command="{Binding RemoveEntryCommand}" ToolTip="{Binding [sldEditor_raster_removeEntry], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
-                <iconPacks:PackIconMaterial Kind="Delete"/>
+            <Button Command="{Binding RemoveEntryCommand}"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.IconSquare}"
+                    ToolTip="{Binding [sldEditor_raster_removeEntry], Source={StaticResource Localization}}">
+                <iconPacks:PackIconMaterial Kind="Delete" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
             </Button>
         </StackPanel>
 
-        <DataGrid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="4"
+        <DataGrid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                  Margin="{StaticResource IRI.Maptor.Styles.Thickness.FieldGap}"
+                  Style="{StaticResource IRI.Maptor.Styles.DataGrid}"
                   ItemsSource="{Binding ColorMap}"
                   SelectedItem="{Binding SelectedEntry, Mode=TwoWay}"
                   AutoGenerateColumns="False"
@@ -48,7 +63,8 @@
                 <DataGridTemplateColumn Header="{Binding [sldEditor_raster_color], Source={StaticResource Localization}}" Width="90">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <mahApp:ColorPicker SelectedColor="{Binding Color, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <mahApp:ColorPicker Style="{StaticResource IRI.Maptor.Styles.ColorPicker.Small}"
+                                                SelectedColor="{Binding Color, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -61,8 +77,8 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="4"
-                   FontStyle="Italic" FontSize="10" Foreground="Gray"
+        <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                   Style="{StaticResource IRI.Maptor.Styles.TextBlock.Note}"
                    Text="{Binding [sldEditor_raster_note], Source={StaticResource Localization}}"/>
     </Grid>
 </UserControl>

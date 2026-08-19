@@ -52,10 +52,14 @@
                                       Padding="4" InputBorderBrush="Gray" InputBorderThickness="1"/>
         <Border Grid.Row="2" MinHeight="20">
             <StackPanel Margin="8,12">
+                <!--Foreground="White" was set on both buttons, overriding the styles' own.
+                    Harmless on Primary (which already uses IdealForeground) but wrong on
+                    Secondary, whose background is Gray10 — white-on-near-white made the Cancel
+                    caption invisible in light theme.-->
                 <Button Margin="4" Content="{Binding [dialog_userSignUp_createUser], Source={StaticResource Localization}}"
-                        Style="{StaticResource IRI.Maptor.Styles.Button.Primary.Large}" Foreground="White" FontSize="16"
+                        Style="{StaticResource IRI.Maptor.Styles.Button.Primary.Large}" FontSize="16"
                         Command="{Binding SignUpCommand}" CommandParameter="{Binding ElementName=userNameSignUpView}"/>
-                <Button Margin="4" Content="{Binding [dialog_common_cancel], Source={StaticResource Localization}}" Foreground="White" FontSize="16"  Style="{StaticResource IRI.Maptor.Styles.Button.Secondary.Large}"
+                <Button Margin="4" Content="{Binding [dialog_common_cancel], Source={StaticResource Localization}}" FontSize="16" Style="{StaticResource IRI.Maptor.Styles.Button.Secondary.Large}"
                         Command="{Binding CancelCommand}">
 
                 </Button>
@@ -63,8 +67,13 @@
         </Border>
 
         <Grid Grid.Row="3">
-            <Border Grid.Row="3" BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Stretch" Height="2" Margin="8"/>
-            <TextBlock Grid.Row="3" HorizontalAlignment="Center" Text="{Binding [dialog_emailSignUp_or], Source={StaticResource Localization}}" Background="White" Padding="8,1" Foreground="Gray"/>
+            <Border Grid.Row="3" BorderBrush="{DynamicResource MahApps.Brushes.Gray8}" BorderThickness="1" HorizontalAlignment="Stretch" Height="2" Margin="8"/>
+            <!--the caption's Background masks the rule behind it, so it has to match the dialog
+                surface rather than being literal White-->
+            <TextBlock Grid.Row="3" HorizontalAlignment="Center" Text="{Binding [dialog_emailSignUp_or], Source={StaticResource Localization}}"
+                       Padding="8,1"
+                       Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                       Foreground="{DynamicResource IRI.Maptor.Brushes.Muted}"/>
         </Grid>
 
         <!--<Button Grid.Row="4" Background="White" Margin="8" BorderBrush="#4285F4" BorderThickness="1" Padding="0" HorizontalContentAlignment="Stretch">
@@ -127,7 +136,8 @@
 
         </Border>
 
-        <TextBlock Grid.Row="5" Text="{Binding [dialog_userSignUp_enterCredentials], Source={StaticResource Localization}}" Foreground="Black" VerticalAlignment="Center"
+        <TextBlock Grid.Row="5" Text="{Binding [dialog_userSignUp_enterCredentials], Source={StaticResource Localization}}" VerticalAlignment="Center"
+                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                        HorizontalAlignment="Center"/>
     </Grid>
 </mahApp:MetroWindow>

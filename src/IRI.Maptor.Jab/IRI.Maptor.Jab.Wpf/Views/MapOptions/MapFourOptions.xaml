@@ -12,23 +12,23 @@
     </UserControl.RenderTransform>
 
     <Grid Margin="0">
-        
-        <Ellipse Width="8" Height="8" Opacity=".6" Fill="{DynamicResource MahApps.Brushes.Accent}"  Margin="0" Stroke="White" StrokeThickness="2"/>
 
-        <Button Name="rightButton" Style="{StaticResource mapOptionsButton}" Command="{Binding RightCommand}" ToolTip="{Binding RightToolTip}" >
-            <Path Style="{StaticResource mapOptionsPath}" Data="{Binding RightSymbol}"/>
+        <Ellipse Width="8" Height="8" Opacity=".6" Fill="{DynamicResource MahApps.Brushes.Highlight}"  Margin="0" Stroke="White" StrokeThickness="2"/>
+
+        <Button Name="rightButton" Style="{StaticResource IRI.Maptor.Styles.Button.MapOption}" Command="{Binding RightCommand}" ToolTip="{Binding RightToolTip}" >
+            <Path Style="{StaticResource IRI.Maptor.Styles.Path.MapOption}" Data="{Binding RightSymbol}"/>
         </Button>
 
-        <Button Name="upperRightButton" Style="{StaticResource mapOptionsButton}" Command="{Binding UpperRightCommand}" ToolTip="{Binding UpperRightToolTip}"  >
-            <Path Style="{StaticResource mapOptionsPath}" Data="{Binding UpperRightSymbol}"/>
+        <Button Name="upperRightButton" Style="{StaticResource IRI.Maptor.Styles.Button.MapOption}" Command="{Binding UpperRightCommand}" ToolTip="{Binding UpperRightToolTip}"  >
+            <Path Style="{StaticResource IRI.Maptor.Styles.Path.MapOption}" Data="{Binding UpperRightSymbol}"/>
         </Button>
 
-        <Button Name="upperLeftButton" Style="{StaticResource mapOptionsButton}" Command="{Binding UpperLeftCommand}" ToolTip="{Binding UpperLeftToolTip}"  >
-            <Path Style="{StaticResource mapOptionsPath}" Data="{Binding UpperLeftSymbol}"/>
+        <Button Name="upperLeftButton" Style="{StaticResource IRI.Maptor.Styles.Button.MapOption}" Command="{Binding UpperLeftCommand}" ToolTip="{Binding UpperLeftToolTip}"  >
+            <Path Style="{StaticResource IRI.Maptor.Styles.Path.MapOption}" Data="{Binding UpperLeftSymbol}"/>
         </Button>
 
-        <Button Name="leftButton" Style="{StaticResource mapOptionsButton}" Command="{Binding LeftCommand}" ToolTip="{Binding LeftToolTip}"  >
-            <Path Style="{StaticResource mapOptionsPath}" Data="{Binding LeftSymbol}"/>
+        <Button Name="leftButton" Style="{StaticResource IRI.Maptor.Styles.Button.MapOption}" Command="{Binding LeftCommand}" ToolTip="{Binding LeftToolTip}"  >
+            <Path Style="{StaticResource IRI.Maptor.Styles.Path.MapOption}" Data="{Binding LeftSymbol}"/>
         </Button>
     </Grid>
 </UserControl>

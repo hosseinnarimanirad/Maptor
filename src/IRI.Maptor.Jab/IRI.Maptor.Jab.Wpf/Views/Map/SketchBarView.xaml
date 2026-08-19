@@ -16,7 +16,7 @@
 
             <Style  TargetType="{x:Type ToggleButton}" x:Key="simpleToggle">
                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.OnAccent.Text}"/>
                 <Setter Property="Margin" Value="4,2"/>
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
                 <Setter Property="Cursor" Value="Hand"/>
@@ -55,13 +55,14 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Border CornerRadius="15" BorderThickness="2 0" MinWidth="420" VerticalAlignment="Top" HorizontalAlignment="Center" 
-            Background="White" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" Opacity=".95"
+            Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+            BorderBrush="{DynamicResource MahApps.Brushes.Accent}" Opacity=".95"
             Margin="4">
         <StackPanel >
             <Border  Background="{DynamicResource MahApps.Brushes.Accent}" 
                      CornerRadius="13 13 0 0"
                      BorderThickness="0">
-                <TextBlock Text="{Binding SketchBar.Title}" HorizontalAlignment="Center" Foreground="White"/>
+                <TextBlock Text="{Binding SketchBar.Title}" HorizontalAlignment="Center" Foreground="{DynamicResource IRI.Maptor.Brushes.OnAccent.Text}"/>
             </Border>
             
             
@@ -339,7 +340,7 @@
                                         IsChecked="{Binding SketchBar.IsGeodeticWgs84EditingMode, Mode=TwoWay}">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
                                     <iconPacks:PackIconMaterial Kind="Earth" Margin="0 0 4 0" VerticalAlignment="Center"/>
-                                    <TextBlock Text="WGS84" Margin="2" Foreground="White"/>
+                                    <TextBlock Text="WGS84" Margin="2" Foreground="{DynamicResource IRI.Maptor.Brushes.OnAccent.Text}"/>
                                 </StackPanel>
                             </RadioButton>
                             <RadioButton GroupName="A" Style="{StaticResource simpleToggle}"
@@ -347,7 +348,7 @@
                                         IsChecked="{Binding SketchBar.IsUTMEditingMode, Mode=TwoWay}">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
                                     <iconPacks:PackIconMaterial Kind="EarthBox" Margin="0 0 4 0" VerticalAlignment="Center"/>
-                                    <TextBlock Text="UTM" Margin="2" Foreground="White"/>
+                                    <TextBlock Text="UTM" Margin="2" Foreground="{DynamicResource IRI.Maptor.Brushes.OnAccent.Text}"/>
                                 </StackPanel>
                             </RadioButton>
                             <TextBlock DockPanel.Dock="Left" Margin="4"

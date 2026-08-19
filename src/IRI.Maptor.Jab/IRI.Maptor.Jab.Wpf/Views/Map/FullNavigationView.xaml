@@ -16,7 +16,7 @@
                     <DrawingBrush.Drawing>
                         <DrawingGroup>
                             <DrawingGroup.Children>
-                                <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M 19,14L 31.9999,23.7501L 31.9999,24.5001L 19,34L 19,14 Z "/>
+                                <GeometryDrawing Brush="{DynamicResource MahApps.Brushes.ThemeForeground}" Geometry="F1 M 19,14L 31.9999,23.7501L 31.9999,24.5001L 19,34L 19,14 Z "/>
                             </DrawingGroup.Children>
                         </DrawingGroup>
                     </DrawingBrush.Drawing>
@@ -25,7 +25,7 @@
                     <DrawingBrush.Drawing>
                         <DrawingGroup>
                             <DrawingGroup.Children>
-                                <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M 35.5,17.5L 25.7499,30.5L 24.9999,30.5L 15.5,17.5L 35.5,17.5 Z "/>
+                                <GeometryDrawing Brush="{DynamicResource MahApps.Brushes.ThemeForeground}" Geometry="F1 M 35.5,17.5L 25.7499,30.5L 24.9999,30.5L 15.5,17.5L 35.5,17.5 Z "/>
                             </DrawingGroup.Children>
                         </DrawingGroup>
                     </DrawingBrush.Drawing>
@@ -34,7 +34,7 @@
                     <DrawingBrush.Drawing>
                         <DrawingGroup>
                             <DrawingGroup.Children>
-                                <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M 31.9999,34L 19,24.2499L 19,23.5L 31.9999,14L 31.9999,34 Z "/>
+                                <GeometryDrawing Brush="{DynamicResource MahApps.Brushes.ThemeForeground}" Geometry="F1 M 31.9999,34L 19,24.2499L 19,23.5L 31.9999,14L 31.9999,34 Z "/>
                             </DrawingGroup.Children>
                         </DrawingGroup>
                     </DrawingBrush.Drawing>
@@ -43,7 +43,7 @@
                     <DrawingBrush.Drawing>
                         <DrawingGroup>
                             <DrawingGroup.Children>
-                                <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M 15.5,30.5L 25.25,17.5001L 26,17.5001L 35.4999,30.5L 15.5,30.5 Z "/>
+                                <GeometryDrawing Brush="{DynamicResource MahApps.Brushes.ThemeForeground}" Geometry="F1 M 15.5,30.5L 25.25,17.5001L 26,17.5001L 35.4999,30.5L 15.5,30.5 Z "/>
                             </DrawingGroup.Children>
                         </DrawingGroup>
                     </DrawingBrush.Drawing>
@@ -52,7 +52,7 @@
                     <DrawingBrush.Drawing>
                         <DrawingGroup>
                             <DrawingGroup.Children>
-                                <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M 22,12L 26,12L 26,22L 36,22L 36,26L 26,26L 26,36L 22,36L 22,26L 12,26L 12,22L 22,22L 22,12 Z "/>
+                                <GeometryDrawing Brush="{DynamicResource MahApps.Brushes.ThemeForeground}" Geometry="F1 M 22,12L 26,12L 26,22L 36,22L 36,26L 26,26L 26,36L 22,36L 22,26L 12,26L 12,22L 22,22L 22,12 Z "/>
                             </DrawingGroup.Children>
                         </DrawingGroup>
                     </DrawingBrush.Drawing>
@@ -61,21 +61,21 @@
                     <DrawingBrush.Drawing>
                         <DrawingGroup>
                             <DrawingGroup.Children>
-                                <GeometryDrawing Brush="White" Geometry="F1 M 12,24L 36,24L 36,28L 12,28L 12,24 Z "/>
+                                <GeometryDrawing Brush="{DynamicResource MahApps.Brushes.ThemeForeground}" Geometry="F1 M 12,24L 36,24L 36,28L 12,28L 12,24 Z "/>
                             </DrawingGroup.Children>
                         </DrawingGroup>
                     </DrawingBrush.Drawing>
                 </DrawingBrush>
+                <!--This pad used to be a fixed dark widget: a #868686-to-black gradient button with
+                    white vector glyphs, independent of the app theme. It now follows the theme, so
+                    the glyphs above use ThemeForeground and must sit on a themed surface.
+
+                    Note the glyph brushes are DynamicResource inside a DrawingBrush. That works
+                    only because these resources are not frozen; adding PresentationOptions:Freeze
+                    to this dictionary would silently break the theming.-->
                 <Style TargetType="Border" x:Key="navigationBorder">
-                    <Setter Property="Background">
-                        <Setter.Value>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="#FF868686" Offset="0.026" />
-                                <GradientStop Color="Black" Offset="1" />
-                            </LinearGradientBrush>
-                        </Setter.Value>
-                    </Setter>
-                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
                     <Setter Property="BorderThickness" Value="1"/>
                     <Setter Property="Width" Value="25"/>
                     <Setter Property="Height" Value="25"/>
@@ -116,7 +116,7 @@
                 <Border Name="zoomIn" Style="{StaticResource ResourceKey=navigationBorder}" Margin="0,0,0,0" MouseDown="zoomIn_MouseDown">
                     <Border Background="{StaticResource zoomIn}" BorderThickness="1" BorderBrush="Transparent" Margin="2"></Border>
                 </Border>
-                <Slider Name="zoom" Orientation="Vertical" Height="120" Margin="0,10" HorizontalAlignment="Center" Foreground="Black"
+                <Slider Name="zoom" Orientation="Vertical" Height="120" Margin="0,10" HorizontalAlignment="Center" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                         BorderBrush="{x:Null}" Background="{x:Null}" TickPlacement="Both" SmallChange="1" SelectionStart="1" LargeChange="1" 
                         IsSnapToTickEnabled="True" IsSelectionRangeEnabled="False" Value="0" Ticks="1,2,3,4,5,6,7,8,9,10,11,12,13" ValueChanged="zoom_ValueChanged"
                         Minimum="1"  Maximum="13" TickFrequency="0" IsMoveToPointEnabled="False" AutoToolTipPlacement="TopLeft">

@@ -1,0 +1,48 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--Over-map chrome.
+
+        Panels that float on the map canvas (scalebar, coordinate readout, legend card, sketch
+        bar, the extent handles) must stay legible against arbitrary basemap imagery — satellite,
+        street, dark, or a blank white raster. They therefore do NOT follow the app theme, and
+        deliberately do not appear in Status.Light/Dark.xaml.
+
+        This dictionary exists so that intent is written down. Before it, those surfaces were
+        raw Background="White" and Stroke="White" literals scattered across eight files, which
+        read as theme bugs and invited exactly the wrong fix.
+
+        Rule of thumb: if removing the map behind the element would make a theme brush correct,
+        it is chrome and belongs on MahApps.Brushes.*; if the element has to survive whatever
+        imagery is underneath it, it belongs here.-->
+
+    <!--backing plate for a readout or a small floating panel-->
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.OnMap.Surface" Color="#F2FFFFFF"/>
+
+    <!--text and glyphs sitting on OnMap.Surface-->
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.OnMap.Text" Color="#FF1A1A1A"/>
+
+    <!--hairline around an OnMap.Surface-->
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.OnMap.Border" Color="#33000000"/>
+
+    <!--outline that keeps a marker, handle or label readable directly on imagery,
+        with no backing plate-->
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.OnMap.Halo" Color="#FFFFFFFF"/>
+
+    <!--fill of a draggable handle on the map (extent corners, vertex grips)-->
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.OnMap.HandleFill" Color="#FFFFFFFF"/>
+
+    <!--Ink for text or glyphs sitting directly ON an accent fill.
+
+        This has to be fixed rather than themed, and the reason is not obvious: the MahApps accent
+        is the SAME colour in the light and dark themes, and in the Amber theme this app ships it
+        is a light colour in both. So neither ThemeForeground (white in dark) nor IdealForeground
+        (white in both) can sit on it. Measured: white on Accent is 2.11:1, well under the 4.5:1
+        needed for body text, in both themes.
+
+        Use this wherever an accent-filled surface carries a caption. Roughly 9:1 on Accent and
+        Accent2. If a surface can stop being accent-filled instead, prefer that: a themed surface
+        with themed ink reaches 21:1 (see CoordinatePanelView).-->
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.OnAccent.Text" Color="#FF1A1A1A"/>
+
+</ResourceDictionary>

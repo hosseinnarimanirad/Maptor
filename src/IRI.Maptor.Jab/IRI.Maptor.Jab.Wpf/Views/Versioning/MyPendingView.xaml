@@ -57,8 +57,12 @@
                         <DataGridTemplateColumn Header="{Binding [versioning_myPending_colStatus], Source={StaticResource Localization}}" Width="Auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Border Style="{StaticResource IRI.Maptor.Styles.Pill.Accent}">
-                                        <TextBlock Style="{StaticResource IRI.Maptor.Styles.Pill.Text.Accent}" Text="{Binding StatusLabel}"/>
+                                    <!--Committed reads Valid, Rejected reads Invalid, the
+                                        in-flight states read Warning/Accent. One Accent pill for
+                                        all six made a rejected proposal look like a committed one.-->
+                                    <Border Style="{Binding Item.Status, Converter={StaticResource editorFacingStatusToPillStyleConverter}}">
+                                        <TextBlock Style="{Binding Item.Status, Converter={StaticResource editorFacingStatusToPillTextStyleConverter}}"
+                                                   Text="{Binding StatusLabel}"/>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

@@ -4,7 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
              >
-    <Border BorderBrush="Black" CornerRadius="10" BorderThickness="1">
-        <Canvas x:Name="mapView" Background="#FFFAFFFF" Margin="0" ClipToBounds="True" FlowDirection="LeftToRight" />
+    <!--was BorderBrush="Black" over a #FFFAFFFF canvas: an off-white with a 1/255 blue tint,
+        which hard-locked the viewer to the light theme-->
+    <Border BorderBrush="{DynamicResource MahApps.Brushes.Gray8}" CornerRadius="10" BorderThickness="1">
+        <Canvas x:Name="mapView" Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                Margin="0" ClipToBounds="True" FlowDirection="LeftToRight" />
     </Border>
 </UserControl>

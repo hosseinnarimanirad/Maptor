@@ -51,7 +51,7 @@
 
     <Canvas x:Name="Document" Width="30" Height="30">
         <Viewbox Width="30" Margin="0">
-            <Ellipse x:Name="border" Width="30" Height="30" Fill="{StaticResource mapTehranIrNormalRedBrush}" Opacity="1">
+            <Ellipse x:Name="border" Width="30" Height="30" Fill="{DynamicResource MahApps.Brushes.Accent}" Opacity="1">
                 <Ellipse.Effect>
                     <DropShadowEffect x:Name="shadow" BlurRadius="4" ShadowDepth="0"  RenderingBias="Performance" Opacity="0" />
                 </Ellipse.Effect>

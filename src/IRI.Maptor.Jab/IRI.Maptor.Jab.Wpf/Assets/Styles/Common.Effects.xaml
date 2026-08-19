@@ -1,0 +1,27 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--Shared elevation. There are 32 hand-rolled DropShadowEffect instances across the project;
+        "BlurRadius=8 Color=Gray Opacity=0.5 ShadowDepth=2" appears four times byte-identical and
+        "BlurRadius=2 ShadowDepth=1 Opacity=0.25 Color=Black" six times. These three cover every
+        case observed.
+
+        Effects are Freezable, so referencing one resource from many elements is safe and cheaper
+        than constructing a new effect per element.-->
+
+    <!--a resting surface barely lifted off its parent: a legend swatch, a pressed-in chip-->
+    <DropShadowEffect x:Key="IRI.Maptor.Effects.Elevation1"
+                      BlurRadius="2" ShadowDepth="1" Direction="270"
+                      Opacity="0.25" Color="Black" RenderingBias="Performance"/>
+
+    <!--a floating panel: a filter popup, a flyout, a legend card over the map-->
+    <DropShadowEffect x:Key="IRI.Maptor.Effects.Elevation2"
+                      BlurRadius="8" ShadowDepth="2" Direction="270"
+                      Opacity="0.35" Color="Black" RenderingBias="Performance"/>
+
+    <!--a modal-ish overlay that must read as clearly above everything else-->
+    <DropShadowEffect x:Key="IRI.Maptor.Effects.Elevation3"
+                      BlurRadius="12" ShadowDepth="3" Direction="270"
+                      Opacity="0.4" Color="Black" RenderingBias="Performance"/>
+
+</ResourceDictionary>

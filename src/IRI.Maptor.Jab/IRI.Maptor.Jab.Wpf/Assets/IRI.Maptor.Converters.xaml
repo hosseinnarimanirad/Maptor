@@ -29,6 +29,9 @@
     <converters:EnumToBoolConverter x:Key="enumToBoolConverter"/>
     <converters:EnumToDescriptionConverter x:Key="enumToDescriptionConverter"/>
 
+    <converters:EditorFacingStatusToPillStyleConverter x:Key="editorFacingStatusToPillStyleConverter"/>
+    <converters:EditorFacingStatusToPillTextStyleConverter x:Key="editorFacingStatusToPillTextStyleConverter"/>
+
     <converters:FeatureStatusToBrushConverter x:Key="featureStatusToBrushConverter"/>
     <converters:FeatureStatusToBackgroundBrushConverter x:Key="featureStatusToBackgroundBrushConverter"/>
     <converters:FeatureStatusToMaterialIconConverter x:Key="featureStatusToMaterialIconConverter"/>

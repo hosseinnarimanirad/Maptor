@@ -16,11 +16,22 @@
                     <RowDefinition/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Path Grid.Column="0" Width="28" Data="{Binding Icon}" Fill="White" Stretch="Uniform" FlowDirection="LeftToRight"/>
+                <!--This template sits on the HamburgerMenu's PaneBackground, which is
+                    MahApps.Brushes.Highlight. IdealForeground is the token that pairs with an
+                    accent/highlight fill, so the icons and captions stay legible whatever
+                    accent the user picks. They were literal White before.-->
+                <Path Grid.Column="0" Width="28" Data="{Binding Icon}" Stretch="Uniform" FlowDirection="LeftToRight"
+                      Fill="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                <!--had no Foreground at all, so it rendered in default dark text on the pane-->
                 <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding SubTitle}" HorizontalAlignment="Center" FontSize="11"
+                           Style="{StaticResource IRI.Maptor.Styles.TextBlock}"
+                           Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
                            Visibility="{Binding HasSubTitle, Converter={StaticResource boolToVisibilityConverter}}"/>
-                <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="12" Foreground="White" Text="{Binding Title}" Grid.RowSpan="2"
-                           FontFamily="Segoe UI"/>
+                <!--FontFamily="Segoe UI" was hardcoded here, overriding the Persian face in an
+                    RTL app; the base TextBlock style carries the IsPersian trigger instead-->
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="12" Text="{Binding Title}" Grid.RowSpan="2"
+                           Style="{StaticResource IRI.Maptor.Styles.TextBlock}"
+                           Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
             </Grid>
         </DataTemplate>
     </UserControl.Resources>

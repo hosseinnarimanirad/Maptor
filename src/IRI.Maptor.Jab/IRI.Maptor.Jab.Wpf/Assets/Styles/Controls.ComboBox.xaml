@@ -1,8 +1,17 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                    xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core"
                     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls">
- 
+
+    <!--ComboBox.Normal's IsPersian trigger below binds {StaticResource Localization}. A
+        StaticResource resolves only inside its own dictionary and that dictionary's merges — never
+        across sibling dictionaries in the same MergedDictionaries list — so without this provider
+        the ComboBox.Normal entry failed to load and the key was silently absent at runtime.
+        Every other dictionary that uses the trigger (TextBox, TextBlock, Button, CheckBox,
+        TabItem, ToggleSwitch, MetroWindow) declares its own copy; this one was the odd one out.-->
+    <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+
     <Style x:Key="IRI.Maptor.Styles.ComboBox.Base" TargetType="ComboBox" BasedOn="{StaticResource MahApps.Styles.ComboBox}">
         <Setter Property="Margin" Value="4"/>
         <Setter Property="FontWeight" Value="Normal"/>

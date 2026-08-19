@@ -11,7 +11,6 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries> 
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/SecurityInputStyles.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.All.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -36,7 +35,7 @@
         <!--layer name-->
         <Border Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Card}"  >
             <StackPanel Orientation="Horizontal">
-                <iconPacks:PackIconMaterial Kind="Layers" Style="{StaticResource securityIconMaterial}"/>
+                <iconPacks:PackIconMaterial Kind="Layers" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.FieldAdornment}"/>
                 <TextBlock Text="{Binding [layerSettings_general_layerName], Source={StaticResource Localization}}"/>
                 <TextBox Grid.Column="1" BorderThickness="0" MinWidth="150"
                          Text="{Binding LayerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -48,7 +47,7 @@
         <!--source address-->
         <Border Grid.Row="1" Style="{StaticResource IRI.Maptor.Styles.Border.Card}" >
             <DockPanel LastChildFill="True">
-                <iconPacks:PackIconMaterial Kind="Layers" Style="{StaticResource securityIconMaterial}"/>
+                <iconPacks:PackIconMaterial Kind="Layers" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.FieldAdornment}"/>
                 <TextBlock DockPanel.Dock="Left" Text="{Binding [layerSettings_general_sourceAddress], Source={StaticResource Localization}}" Width="Auto"/>
                 <Button DockPanel.Dock="Right"
                         Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}"
@@ -67,7 +66,7 @@
         <!--source type-->
         <Border Grid.Row="2" Style="{StaticResource IRI.Maptor.Styles.Border.Card}" >
             <DockPanel LastChildFill="True">
-                <iconPacks:PackIconMaterial Kind="Layers" Style="{StaticResource securityIconMaterial}"/>
+                <iconPacks:PackIconMaterial Kind="Layers" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.FieldAdornment}"/>
                 <TextBlock DockPanel.Dock="Left" Text="{Binding [layerSettings_general_sourceType], Source={StaticResource Localization}}" />
                 <Button DockPanel.Dock="Right"
                         Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}"
@@ -85,7 +84,7 @@
         <!--feature type-->
         <Border Grid.Row="3" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
             <DockPanel LastChildFill="False">
-                <iconPacks:PackIconPhosphorIcons Kind="ShapesLight" Style="{StaticResource securityIconPhosphor}"
+                <iconPacks:PackIconPhosphorIcons Kind="ShapesLight" Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}"
                                   ToolTip="{Binding [dialog_csvTsvOpen_geometryType],Source={StaticResource Localization}}"/>
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding [layerSettings_general_featureType], Source={StaticResource Localization}}"/>
                 <!--<TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SpatialModelMode, Mode=OneWay}"/>-->
@@ -105,7 +104,7 @@
                             </Setter>
                             <!-- Default fill (deselected) -->
                             <Setter Property="Fill" Value="{DynamicResource MahApps.Brushes.SystemControlDisabledBaseLow}"/>
-                            <Setter Property="Stroke" Value="Gray"/>
+                            <Setter Property="Stroke" Value="{DynamicResource MahApps.Brushes.Gray6}"/>
 
                             <Style.Triggers>
                                 <!-- Trigger that activates when current mode == ellipse's Tag -->
@@ -121,21 +120,42 @@
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
+
+                        <!--The glyph sits on top of ModeHighlightEllipse, so it has to follow the
+                            same selected/deselected swap. It was a flat Foreground="White", which
+                            on the pale deselected fill was all but invisible in light theme.
+                            Same Tag and same trigger, so the two can never disagree.-->
+                        <Style TargetType="iconPacks:PackIconPhosphorIcons" x:Key="ModeGlyph">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                            <Style.Triggers>
+                                <DataTrigger Value="True">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource enumMatchConverter}">
+                                            <Binding Path="SpatialModelMode"/>
+                                            <Binding Path="Tag" RelativeSource="{RelativeSource Self}"/>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
                     </StackPanel.Resources>
                     <!-- Polygon -->
                     <Grid>
                         <Ellipse Style="{StaticResource ModeHighlightEllipse}"
                                     Tag="{x:Static maptorJabCore:SpatialModelMode.Polygon}"/>
-                        <iconPacks:PackIconPhosphorIcons Kind="Polygon" Foreground="White"
-                                          VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <iconPacks:PackIconPhosphorIcons Kind="Polygon" Style="{StaticResource ModeGlyph}"
+                                          Tag="{x:Static maptorJabCore:SpatialModelMode.Polygon}"/>
                     </Grid>
 
                     <!-- Polyline -->
                     <Grid>
                         <Ellipse Style="{StaticResource ModeHighlightEllipse}"
                                     Tag="{x:Static maptorJabCore:SpatialModelMode.Polyline}"/>
-                        <iconPacks:PackIconPhosphorIcons Kind="LineSegments" Foreground="White"
-                                          VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <iconPacks:PackIconPhosphorIcons Kind="LineSegments" Style="{StaticResource ModeGlyph}"
+                                          Tag="{x:Static maptorJabCore:SpatialModelMode.Polyline}"/>
                     </Grid>
 
                     <!-- Point -->
@@ -143,8 +163,9 @@
                         <Ellipse Style="{StaticResource ModeHighlightEllipse}"
                                     Tag="{x:Static maptorJabCore:SpatialModelMode.Point}"/>
                         <Viewbox>
-                            <iconPacks:PackIconPhosphorIcons Kind="DotOutlineThin" Foreground="White"
-                                          VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20" Padding="0"/>
+                            <iconPacks:PackIconPhosphorIcons Kind="DotOutlineThin" Style="{StaticResource ModeGlyph}"
+                                          Tag="{x:Static maptorJabCore:SpatialModelMode.Point}"
+                                          Margin="20" Padding="0"/>
                         </Viewbox>
                     </Grid>
                 </StackPanel>
@@ -155,7 +176,7 @@
         <!--opacity-->
         <Border Grid.Row="4" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
             <DockPanel >
-                <iconPacks:PackIconMaterial Kind="SquareOpacity" Style="{StaticResource securityIconMaterial}" />
+                <iconPacks:PackIconMaterial Kind="SquareOpacity" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.FieldAdornment}" />
                 <TextBlock DockPanel.Dock="Left" Text="{Binding [layerSettings_general_opacity], Source={StaticResource Localization}}"/>
                 <TextBlock DockPanel.Dock="Right" Text="{Binding Opacity, StringFormat=P0}" Width="40"/>
                 <Slider Margin="10,4" Cursor="Hand"

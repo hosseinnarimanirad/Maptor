@@ -1,0 +1,119 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+                    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                    xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core">
+
+    <!--Replaces SecurityInputStyles.xaml (Step 4).
+
+        That file was a second, ungoverned design system: it owned generic icon and input styles
+        under non-conventional key names, and six views with nothing to do with security merged it
+        purely to reach two icon styles. What remains here is only what is genuinely specific to
+        the Security and auth screens, under the normal IRI.Maptor.Styles.* convention.
+
+        The generic parts went to their proper homes:
+          - securityIconPhosphor / securityIconMaterial are gone; use
+            IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment and
+            IRI.Maptor.Styles.PackIconMaterial.FieldAdornment in Controls.Misc.xaml.
+          - myErrorTemplate is gone; it had zero references anywhere in the repository.
+
+        This dictionary is deliberately NOT merged into Controls.All.xaml. FieldGroup below binds
+        to an ancestor named "root", so it is only usable by views that expose those properties.
+        Merge it explicitly where you need it.-->
+
+    <ResourceDictionary.MergedDictionaries>
+        <!--MahApps.Styles.PasswordBox, used as the BasedOn below-->
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Common.Metrics.xaml"/>
+        <!--iranSans-->
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/IRI.Maptor.Fonts.xaml"/>
+        <!--FieldAdornment icon styles, the BasedOn for the confirm-row variant-->
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.Misc.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <!--Declared in this file on purpose. A StaticResource resolves only within its own dictionary
+        and that dictionary's merges, never across sibling dictionaries in one MergedDictionaries
+        list. The old file happened to reach a provider through Controls.TextBox.xaml; relying on
+        that is how Controls.ComboBox.xaml and Controls.RadioButton.xaml silently failed to load
+        before Step 3.-->
+    <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+
+    <!--Password entry on the auth screens. Kept setter-for-setter as it was, because these screens
+        are signed off visually. Note this does NOT derive from IRI.Maptor.Styles.PasswordBoxBase:
+        that one carries the IsPersian font trigger, which would change the typeface here.-->
+    <Style x:Key="IRI.Maptor.Styles.Security.PasswordBox" TargetType="PasswordBox" BasedOn="{StaticResource MahApps.Styles.PasswordBox}">
+        <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="MinHeight" Value="35"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="mahApp:PasswordBoxHelper.CapsLockWarningToolTip" Value="{Binding [common_capsLockWarning], Source={StaticResource Localization}}"/>
+        <Setter Property="mahApp:PasswordBoxHelper.RevealButtonContent">
+            <Setter.Value>
+                <Button/>
+            </Setter.Value>
+        </Setter>
+        <!--The template supplies the reveal button's *content*, so it must be a glyph, not
+            another Button. It previously held a bare red 30x30 rectangle.-->
+        <Setter Property="mahApp:PasswordBoxHelper.RevealButtonContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <iconPacks:PackIconMaterial Kind="Eye" Width="16" Height="16"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                Foreground="{DynamicResource IRI.Maptor.Brushes.Muted}"/>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ContextMenu">
+            <Setter.Value>
+                <ContextMenu FlowDirection="{Binding CurrentFlowDirection, Source={StaticResource Localization}}">
+                    <!--no Cut/Copy: lifting a password out of the box is not an affordance we offer-->
+                    <MenuItem Header="{Binding [cmd_contextMenu_paste], Source={StaticResource Localization}}" Command="ApplicationCommands.Paste"/>
+                </ContextMenu>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--The framed row that wraps an icon plus its input on the auth screens.
+        Was x:Key="borderGroup". The two Binding setters require an ancestor element named "root"
+        exposing InputBorderBrush / InputBorderThickness; on a view without one they resolve to
+        nothing and the border simply does not paint.-->
+    <Style x:Key="IRI.Maptor.Styles.Security.FieldGroup" TargetType="Border">
+        <Setter Property="BorderBrush" Value="{Binding ElementName=root, Path=InputBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="{Binding ElementName=root, Path=InputBorderThickness}"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Width" Value="300"/>
+        <!--was Background="White": the field text follows the theme, so in dark mode this
+            produced near-white text on a white slab across all seven Security views-->
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="4"/>
+        <Setter Property="CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"/>
+        <!--MinHeight, not Height: a fixed height clips the field when a validation message
+            or a taller adornment appears-->
+        <Setter Property="MinHeight" Value="39"/>
+    </Style>
+
+    <!--Supporting caption under a field on the auth screens. Was x:Key="securityPathText".-->
+    <Style x:Key="IRI.Maptor.Styles.Security.PathText" TargetType="TextBlock">
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+        <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray2}"/>
+    </Style>
+
+    <!--Adornment icon on a confirm row, which sits tighter to the field above it.
+        Was x:Key="securityIconPhosphorConfirmRow".-->
+    <Style x:Key="IRI.Maptor.Styles.Security.IconConfirmRow" TargetType="iconPacks:PackIconPhosphorIcons"
+           BasedOn="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}">
+        <Setter Property="Margin" Value="4,4,4,0"/>
+    </Style>
+
+</ResourceDictionary>

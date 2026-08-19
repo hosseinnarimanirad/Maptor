@@ -1,5 +1,23 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--Fixed, non-theme-aware colours. Anything that should follow the light/dark theme belongs
+        in Status.Light/Dark.xaml or on a MahApps.Brushes.* token instead.
+
+        Step 5a removed 23 bare-name brushes from this file (red, green, blue, purple, orange,
+        lime, emerald, teal, cyan, cobalt, indigo, violet, pink, magenta, crimson, amber, yellow,
+        brown, olive, steel, mauve, taupe, sienna). They had zero references anywhere in the
+        repository, verified across StaticResource, DynamicResource and string-based C# lookups.
+        They also collided with the design system's naming convention. If a general palette is
+        ever wanted again, add it under IRI.Maptor.Brushes.Palette.* rather than bare words.-->
+
+    <!--Tehran municipality brand red. Kept because IRI.App.SanadNegar resolves
+        mapTehranIrLightRedColor from this dictionary at runtime. Note IRI.Mun.RahyabTehran and
+        IRI.App.GonbadNegar define their own private copies of these keys and do not reference
+        this library at all, so they are unaffected by anything here.
+
+        As of Step 5a the generic MapMarker views no longer use these: a municipal brand colour
+        was the hardcoded default fill for markers shipped to every app.-->
     <Color x:Key="mapTehranIrDarkRedColor">#FF900000</Color>
     <Color x:Key="mapTehranIrLightRedColor">#FFC75050</Color>
     <Color x:Key="mapTehranIrNormalRedColor">#FFAD0000</Color>
@@ -7,34 +25,12 @@
     <SolidColorBrush x:Key="mapTehranIrDarkRedBrush" Color="{StaticResource mapTehranIrDarkRedColor}"/>
     <SolidColorBrush x:Key="mapTehranIrLightRedBrush" Color="{StaticResource mapTehranIrLightRedColor}"/>
     <SolidColorBrush x:Key="mapTehranIrNormalRedBrush" Color="{StaticResource mapTehranIrNormalRedColor}"/>
- 
-    <SolidColorBrush x:Key="red">#FFEA4333</SolidColorBrush>
-    <SolidColorBrush x:Key="green">#FF81BA45</SolidColorBrush>
-    <SolidColorBrush x:Key="blue">#FF41B1E1</SolidColorBrush>
-    <SolidColorBrush x:Key="purple">#FF837AE5</SolidColorBrush>
-    <SolidColorBrush x:Key="orange">#FFFF8130</SolidColorBrush>
-    <SolidColorBrush x:Key="lime">#FFB8D135</SolidColorBrush>
-    <SolidColorBrush x:Key="emerald">#FF34A134</SolidColorBrush>
-    <SolidColorBrush x:Key="teal">#FF34BCBA</SolidColorBrush>
-    <SolidColorBrush x:Key="cyan">#FF4AB4E8</SolidColorBrush>
-    <SolidColorBrush x:Key="cobalt">#FF3474F2</SolidColorBrush>
-    <SolidColorBrush x:Key="indigo">#FF8D3BFF</SolidColorBrush>
-    <SolidColorBrush x:Key="violet">#FFB733F9</SolidColorBrush>
-    <SolidColorBrush x:Key="pink">#FFF68ED9</SolidColorBrush>
-    <SolidColorBrush x:Key="magenta">#FFE0338F</SolidColorBrush>
-    <SolidColorBrush x:Key="crimson">#FFB53251</SolidColorBrush>
-    <SolidColorBrush x:Key="amber">#FFEEB739</SolidColorBrush>
-    <SolidColorBrush x:Key="yellow">#FFFFE736</SolidColorBrush>
-    <SolidColorBrush x:Key="brown">#FF9E794F</SolidColorBrush>
-    <SolidColorBrush x:Key="olive">#FF8A9E82</SolidColorBrush>
-    <SolidColorBrush x:Key="steel">#FF83919E</SolidColorBrush>
-    <SolidColorBrush x:Key="mauve">#FF9180A2</SolidColorBrush>
-    <SolidColorBrush x:Key="taupe">#FFA09575</SolidColorBrush>
-    <SolidColorBrush x:Key="sienna">#FFB27759</SolidColorBrush>
 
-    <SolidColorBrush x:Key="linkedInBrush">#0077B5</SolidColorBrush>
-    <SolidColorBrush x:Key="stackoverflowBrush">#F48024</SolidColorBrush>
-    <SolidColorBrush x:Key="githubBrush">#24292E</SolidColorBrush>
-    <SolidColorBrush x:Key="makanNegarBrush">#B8D135</SolidColorBrush>
-    
+    <!--External brand colours. These are fixed by the brands themselves and must never be
+        theme-swapped or tokenised into the semantic palette.-->
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Brand.LinkedIn">#0077B5</SolidColorBrush>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Brand.StackOverflow">#F48024</SolidColorBrush>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Brand.GitHub">#24292E</SolidColorBrush>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Brand.MakanNegar">#B8D135</SolidColorBrush>
+
 </ResourceDictionary>

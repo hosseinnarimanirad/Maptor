@@ -9,7 +9,8 @@
              xmlns:enums="clr-namespace:IRI.Maptor.Sta.Common.Enums;assembly=IRI.Maptor.Sta.Common"
              xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core"
              FontFamily="{StaticResource iranSans}"
-             Background="Transparent">
+             Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+             Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -258,9 +259,13 @@
                         </CheckBox.Visibility>
                     </CheckBox>
 
-                    <!--group layer title-->
-                    <TextBlock DockPanel.Dock="Left" MinWidth="30" VerticalAlignment="Center" Margin="4"  
-                                Text="{Binding LayerName, Mode=TwoWay}" 
+                    <!--group layer title. Needs an explicit style: an unstyled TextBlock inherits
+                        WPF's default black Foreground, which is invisible on the dark theme's
+                        #252525 background (1.37:1). MahApps applies no implicit TextBlock style,
+                        so every TextBlock has to opt in.-->
+                    <TextBlock DockPanel.Dock="Left" MinWidth="30" VerticalAlignment="Center" Margin="4"
+                                Style="{StaticResource IRI.Maptor.Styles.TextBlock}"
+                                Text="{Binding LayerName, Mode=TwoWay}"
                                 FontSize="{Binding ElementName=root, Path=TitleFontSize}"
                                 Visibility="{Binding IsGroupLayer, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}"/>
 
@@ -621,9 +626,10 @@
                         Value="{Binding Opacity, Mode=TwoWay}"                        
                         IsEnabled="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"/>
 
-                        <!--layer title (textblock)-->
-                        <TextBlock DockPanel.Dock="Left" MinWidth="30" VerticalAlignment="Center" Margin="2" 
-                            Text="{Binding LayerName}" 
+                        <!--layer title (textblock); see the note on the group title above-->
+                        <TextBlock DockPanel.Dock="Left" MinWidth="30" VerticalAlignment="Center" Margin="2"
+                            Style="{StaticResource IRI.Maptor.Styles.TextBlock}"
+                            Text="{Binding LayerName}"
                             FontSize="{Binding ElementName=root, Path=TitleFontSize}"
                             Visibility="{Binding ElementName=root, Path=IsEditable, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"/>
 
@@ -638,6 +644,7 @@
 
                         <!--number of selected features-->
                         <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center"
+                            Style="{StaticResource IRI.Maptor.Styles.TextBlock}"
                             Text="{Binding NumberOfSelectedFeatures, Converter={StaticResource localizedNumberConverter}, StringFormat={}({0:N0})}"
                             FontSize="{Binding ElementName=root, Path=TitleFontSize}"
                             Visibility="{Binding NumberOfSelectedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}"/>
@@ -755,9 +762,11 @@
                                 </Style>
                             </Popup.Style>
 
-                            <Border x:Name="pendingChangesPopupBorder" 
-                                Background="White"
-                                BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="6" Padding="6">
+                            <!--was Background="White" with a literal #E0E0E0 edge. A flyout inside
+                                the docked legend panel is chrome and must follow the theme; the
+                                sibling popup further down this file already got this right.-->
+                            <Border x:Name="pendingChangesPopupBorder"
+                                Style="{StaticResource IRI.Maptor.Styles.Border.Popup}">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
@@ -904,7 +913,8 @@
                                                 <iconPacks:PackIconMaterial Kind="ContentSaveOutline" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
                                             </Viewbox>
                                         </Button>
-                                        <TextBlock Text="{Binding LayerName}" FontWeight="SemiBold" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Text="{Binding LayerName}" FontWeight="SemiBold" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
+                                                   Style="{StaticResource IRI.Maptor.Styles.TextBlock}"/>
                                     </DockPanel>
 
                                     <Border DockPanel.Dock="Top" Height="1" Background="{DynamicResource MahApps.Brushes.Gray8}" Margin="0,8,0,6"/>

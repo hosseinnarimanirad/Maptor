@@ -9,7 +9,6 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/SecurityInputStyles.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.All.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -33,7 +32,7 @@
         <!--export format type-->
         <Border Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
             <StackPanel Orientation="Horizontal">
-                <iconPacks:PackIconMaterial Kind="File" Style="{StaticResource securityIconMaterial}"/>
+                <iconPacks:PackIconMaterial Kind="File" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.FieldAdornment}"/>
                 <TextBlock Text="{Binding [dialog_export_outputFileFormat], Source={StaticResource Localization}}" FontWeight="Bold" VerticalAlignment="Center" Margin="4"/>
                 <RadioButton GroupName="A" Content="SHP" Style="{StaticResource IRI.Maptor.Styles.RadioButton.Form.Latin}"
                              IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.Shapefile}}" />
@@ -56,7 +55,7 @@
         <!--what to export-->
         <Border Grid.Row="1" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
             <StackPanel Orientation="Horizontal">
-                <iconPacks:PackIconMaterial Kind="SelectMarker" Style="{StaticResource securityIconMaterial}"/>
+                <iconPacks:PackIconMaterial Kind="SelectMarker" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.FieldAdornment}"/>
                 <TextBlock Text="{Binding [dialog_export_exportModeTitle], Source={StaticResource Localization}}" FontWeight="Bold" VerticalAlignment="Center" Margin="4"/>
                 <RadioButton GroupName="B"
                              Style="{StaticResource IRI.Maptor.Styles.RadioButton.Form}"
@@ -78,7 +77,7 @@
         <Border Grid.Row="2" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
             <StackPanel Orientation="Horizontal">
 
-                <iconPacks:PackIconPhosphorIcons DockPanel.Dock="Left" Kind="Globe" Style="{StaticResource securityIconPhosphor}"/>
+                <iconPacks:PackIconPhosphorIcons DockPanel.Dock="Left" Kind="Globe" Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}"/>
                 <TextBlock Text="{Binding [dialog_export_sourceSrs], Source={StaticResource Localization}, StringFormat={}{0}:}" FontWeight="Bold" VerticalAlignment="Center" Margin="4"/>
 
                 <TextBlock Text="{Binding SourceLayerSrs.DisplayName}"
@@ -91,7 +90,7 @@
         <Border Grid.Row="3" Style="{StaticResource IRI.Maptor.Styles.Border.Card}"
                 Visibility="{Binding ShowSrsOptions, Converter={StaticResource boolToVisibilityConverter}}">
             <DockPanel>
-                <iconPacks:PackIconPhosphorIcons DockPanel.Dock="Left" Kind="Globe" Style="{StaticResource securityIconPhosphor}"/>
+                <iconPacks:PackIconPhosphorIcons DockPanel.Dock="Left" Kind="Globe" Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}"/>
                 <TextBlock Text="{Binding [dialog_export_targetSrs], Source={StaticResource Localization}, StringFormat={}{0}:}" FontWeight="Bold" VerticalAlignment="Center" Margin="4"/>
 
                 <mahApp:ToggleSwitch DockPanel.Dock="Left" Style="{StaticResource IRI.Maptor.Styles.ToggleSwitch.Normal}"
@@ -117,7 +116,7 @@
                 </MultiBinding>
             </Border.Visibility>
             <DockPanel>
-                <iconPacks:PackIconPhosphorIcons DockPanel.Dock="Left" Kind="MapTrifoldFill" Style="{StaticResource securityIconPhosphor}"/>
+                <iconPacks:PackIconPhosphorIcons DockPanel.Dock="Left" Kind="MapTrifoldFill" Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}"/>
                 <TextBlock DockPanel.Dock="Left" Text="{Binding [srs_utmZone_full], Source={StaticResource Localization}, StringFormat='{}{0}:'}"
                            />
 
@@ -127,7 +126,7 @@
                     <iconPacks:PackIconPhosphorIcons Kind="CircleHalfFill" RenderTransformOrigin="0.5,0.5"
                                                   Margin="0" Width="24" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <iconPacks:PackIconPhosphorIcons.Style>
-                            <Style TargetType="iconPacks:PackIconPhosphorIcons" BasedOn="{StaticResource securityIconPhosphor}">
+                            <Style TargetType="iconPacks:PackIconPhosphorIcons" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}">
                                 <Setter Property="RenderTransform">
                                     <Setter.Value>
                                         <RotateTransform Angle="-90"/>
@@ -174,7 +173,7 @@
         <Border Grid.Row="5" Style="{StaticResource IRI.Maptor.Styles.Border.Card}"
                 Visibility="{Binding ShowXYOrderOptions, Converter={StaticResource boolToVisibilityConverter}}">
             <StackPanel Orientation="Horizontal">
-                <iconPacks:PackIconPhosphorIcons Kind="ListNumbers" Style="{StaticResource securityIconPhosphor}"/>
+                <iconPacks:PackIconPhosphorIcons Kind="ListNumbers" Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}"/>
                 <TextBlock Text="{Binding [dialog_common_xyOrder], Source={StaticResource Localization}}"
                          VerticalAlignment="Center" Margin="8,0,0,0" FontWeight="Bold"/>
                 <CheckBox Content="{Binding [dialog_common_eastingFirst], Source={StaticResource Localization}}"

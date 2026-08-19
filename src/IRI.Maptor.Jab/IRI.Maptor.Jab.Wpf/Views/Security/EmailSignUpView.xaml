@@ -12,7 +12,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.TextBox.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/SecurityInputStyles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.SecurityInputs.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
         </ResourceDictionary>
@@ -24,13 +24,13 @@
             <RowDefinition Height="Auto"/> 
         </Grid.RowDefinitions>
   
-        <Border Grid.Row="0" Style="{StaticResource borderGroup}">
+        <Border Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Security.FieldGroup}">
             <Grid Margin="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <iconPacks:PackIconMaterial Kind="Email" Style="{StaticResource securityIconMaterial}"/>
+                <iconPacks:PackIconMaterial Kind="Email" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.FieldAdornment}"/>
                 <TextBox Grid.Column="1"
                          Style="{StaticResource IRI.Maptor.Styles.TextBox.Large}" FlowDirection="LeftToRight"
                          mahApp:TextBoxHelper.Watermark="{Binding [common_email], Source={StaticResource Localization}}">
@@ -50,20 +50,20 @@
             </Grid>
         </Border>
 
-        <Border Grid.Row="1" Style="{StaticResource borderGroup}">
+        <Border Grid.Row="1" Style="{StaticResource IRI.Maptor.Styles.Security.FieldGroup}">
             <Grid Margin="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions> 
-                <iconPacks:PackIconPhosphorIcons Kind="PasswordFill" Style="{StaticResource securityIconPhosphor}"/>
+                <iconPacks:PackIconPhosphorIcons Kind="PasswordFill" Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}"/>
                 <PasswordBox x:Name="key" Grid.Column="1"
-                             Style="{StaticResource securityPasswordBoxBase}"
+                             Style="{StaticResource IRI.Maptor.Styles.Security.PasswordBox}"
                              mahApp:TextBoxHelper.Watermark="{Binding [common_password], Source={StaticResource Localization}}"/>
             </Grid>
         </Border>
  
-        <Border Grid.Row="2" Style="{StaticResource borderGroup}">
+        <Border Grid.Row="2" Style="{StaticResource IRI.Maptor.Styles.Security.FieldGroup}">
             <Grid Margin="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
@@ -71,13 +71,13 @@
                 </Grid.ColumnDefinitions>
                 <Viewbox Width="32" HorizontalAlignment="Center">
                     <StackPanel Grid.Column="0">
-                        <iconPacks:PackIconPhosphorIcons Kind="PasswordFill" Style="{StaticResource securityIconPhosphorConfirmRow}"/>
-                        <TextBlock Style="{StaticResource securityPathText}"
+                        <iconPacks:PackIconPhosphorIcons Kind="PasswordFill" Style="{StaticResource IRI.Maptor.Styles.Security.IconConfirmRow}"/>
+                        <TextBlock Style="{StaticResource IRI.Maptor.Styles.Security.PathText}"
                                    Text="{Binding [common_confirm], Source={StaticResource Localization}}"/>
                     </StackPanel>
                 </Viewbox>
                 <PasswordBox x:Name="confirmPassword" Grid.Column="1"
-                             Style="{StaticResource securityPasswordBoxBase}"
+                             Style="{StaticResource IRI.Maptor.Styles.Security.PasswordBox}"
                              mahApp:TextBoxHelper.Watermark="{Binding [common_confirmPassword], Source={StaticResource Localization}}"/>
             </Grid>
         </Border>

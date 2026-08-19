@@ -11,13 +11,6 @@
     <UserControl.Resources>
         <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource IRI.Maptor.Styles.TabItem}" />
         <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
-        <DataTemplate x:Key="FeatureTableTemplate">
-            <maptor:FeatureTable
-                DataContext="{Binding}"
-                IsZoomToGeometryEnabled="{Binding IsZoomToGeometryEnabled, RelativeSource={RelativeSource AncestorType=maptor:FeatureTabControl}}"
-                CanUserEditGeometry="{Binding CanUserEditGeometry, RelativeSource={RelativeSource AncestorType=maptor:FeatureTabControl}}"
-                CanUserEditAttribute="{Binding CanUserEditAttribute, RelativeSource={RelativeSource AncestorType=maptor:FeatureTabControl}}" />
-        </DataTemplate>
     </UserControl.Resources>
     <TabControl ItemsSource="{Binding SelectedLayers}" VerticalAlignment="Stretch" Margin="0"
                 SelectedItem="{Binding CurrentLayer, Mode=TwoWay}" Padding="0" SelectedIndex="0">

@@ -24,7 +24,7 @@
     </x:Array>
 
     <!-- flat icon toggle used in column headers -->
-    <ControlTemplate x:Key="FeatureTableFilter.FlatToggleTemplate" TargetType="ToggleButton">
+    <ControlTemplate x:Key="IRI.Maptor.Templates.ToggleButton.FeatureTableFilter" TargetType="ToggleButton">
         <Border Background="Transparent" Padding="2">
             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Border>
@@ -32,11 +32,11 @@
 
     <!-- Header content for generated columns; DataContext is a ColumnFilterViewModel.
          Assigned in code by DataGridDictionaryBehavior. -->
-    <DataTemplate x:Key="FeatureTableColumnHeaderTemplate">
+    <DataTemplate x:Key="IRI.Maptor.Templates.FeatureTable.ColumnHeader">
         <DockPanel LastChildFill="True" Background="Transparent">
             <Grid DockPanel.Dock="Right">
                 <ToggleButton x:Name="filterToggle" Focusable="False" Cursor="Hand"
-                              Template="{StaticResource FeatureTableFilter.FlatToggleTemplate}"
+                              Template="{StaticResource IRI.Maptor.Templates.ToggleButton.FeatureTableFilter}"
                               IsChecked="{Binding IsPopupOpen, Mode=TwoWay}"
                               ToolTip="{Binding [featureTable_filter_filter], Source={x:Static localization:LocalizationManager.Instance}}">
                     <iconPacks:PackIconMaterial Width="10" Height="10">

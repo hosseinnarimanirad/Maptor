@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
 
-    <Style x:Key="menuIcon" TargetType="iconPacks:PackIconMaterial">
+    <Style x:Key="IRI.Maptor.Styles.PackIconMaterial.Menu" TargetType="iconPacks:PackIconMaterial">
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="Height" Value="16"/>
         <Setter Property="Width" Value="16"/>
@@ -10,7 +10,7 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Margin" Value="2,0,2,0"/>
     </Style>
-    <Style x:Key="menuPath" TargetType="Path">
+    <Style x:Key="IRI.Maptor.Styles.Path.Menu" TargetType="Path">
         <Setter Property="Fill" Value="White"/>
         <Setter Property="Height" Value="16"/>
         <Setter Property="Width" Value="16"/>
@@ -19,7 +19,7 @@
         <Setter Property="Stretch" Value="Uniform"/>
         <Setter Property="Margin" Value="2,0,2,0"/>
     </Style>
-    <Style x:Key="menuBorder" TargetType="Border">
+    <Style x:Key="IRI.Maptor.Styles.Border.Menu" TargetType="Border">
         <Setter Property="CornerRadius" Value="4"/>
         <Setter Property="Padding" Value="4,2"/>
     </Style>

@@ -40,7 +40,7 @@
     <!--<Canvas x:Name="Document" Width="18" Height="24" Clip="F1 M 0,0L 18,0L 18,24L 0,24L 0,0">-->
     <Canvas x:Name="Document" Width="30" Height="40">
         <Viewbox Width="30">
-            <Path x:Name="Path" Width="18" Height="24" Stretch="Fill" Fill="{StaticResource mapTehranIrNormalRedBrush}" Stroke="White" StrokeThickness="1"
+            <Path x:Name="Path" Width="18" Height="24" Stretch="Fill" Fill="{DynamicResource MahApps.Brushes.Accent}" Stroke="White" StrokeThickness="1"
                   Data="F1 M 9,6.10352e-005C 13.9706,0 18,3.58179 18,8.C 18,8.69061 17.9016,9.36078 17.7165,10L 9,24L 0.283539,10C 0.098443,9.36078 0,8.69061 0,8C 0,3.58179 4.02944,0 9,0 Z ">
                 <Path.Effect>
                     <DropShadowEffect x:Name="shadow" BlurRadius="4" ShadowDepth="0"  RenderingBias="Performance" Opacity="0" />

@@ -6,7 +6,9 @@
                                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
                                     xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core"
-                                    xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls" 
+                                    xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls"
+                                    Background="Transparent"
+                                    Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                     Width="auto" Height="auto" >
     <maptor:NotifiableUserControl.Resources>
         <ResourceDictionary>
@@ -19,9 +21,12 @@
         <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
         </ResourceDictionary>
     </maptor:NotifiableUserControl.Resources>
-    <Border Background="White" CornerRadius="5" >
+    <Border BorderThickness="1" CornerRadius="3" >
         <Border.Style>
             <Style TargetType="Border">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+
                 <Setter Property="Opacity" Value="0.8"/>
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">

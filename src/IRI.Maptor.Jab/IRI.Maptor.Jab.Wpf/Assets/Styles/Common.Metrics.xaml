@@ -1,5 +1,6 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <!--Shared spacing scale for dialogs and forms. Use these instead of ad-hoc margins
         so every dialog keeps the same rhythm.-->
@@ -29,5 +30,46 @@
 
     <!--breathing room between the track edge and the pills inside it-->
     <Thickness x:Key="IRI.Maptor.Styles.Thickness.TabTrackPadding">3</Thickness>
+
+    <!--Form rhythm. A form row is a label column plus an editor; these keep the label
+        columns of sibling views aligned. Before these existed the SLD editor used 90, 100
+        and 120 in one dialog, so labels jumped as the user changed tab.-->
+
+    <!--width of the label column in a label+editor row-->
+    <sys:Double x:Key="IRI.Maptor.Styles.Size.FieldLabelColumn">120</sys:Double>
+
+    <!--same value as a GridLength, for ColumnDefinition.Width which will not take a Double.
+        Use this one in form grids; keep the two in step.-->
+    <GridLength x:Key="IRI.Maptor.Styles.GridLength.FieldLabelColumn">120</GridLength>
+
+    <!--padding around a single editor inside its row-->
+    <Thickness x:Key="IRI.Maptor.Styles.Thickness.FieldGap">4</Thickness>
+
+    <!--gap below one form row before the next-->
+    <Thickness x:Key="IRI.Maptor.Styles.Thickness.FieldRowGap">0,0,0,6</Thickness>
+
+    <!--padding around a view's content area. Same value as DialogContent, but named for
+        views so authors of non-dialog screens have a token to reach for.-->
+    <Thickness x:Key="IRI.Maptor.Styles.Thickness.ViewContent">8</Thickness>
+
+    <!--gap above a new section within a scrolling column-->
+    <Thickness x:Key="IRI.Maptor.Styles.Thickness.SectionGap">0,8,0,0</Thickness>
+
+    <!--Icon sizing. Written as raw Width/Height in nearly every view audited.-->
+
+    <!--glyph inside a form field's adornment column-->
+    <sys:Double x:Key="IRI.Maptor.Styles.Size.Icon.Field">24</sys:Double>
+
+    <!--glyph beside a caption-->
+    <sys:Double x:Key="IRI.Maptor.Styles.Size.Icon.Small">16</sys:Double>
+
+    <!--status dot in a list row-->
+    <sys:Double x:Key="IRI.Maptor.Styles.Size.Icon.Indicator">10</sys:Double>
+
+    <!--square command-bar button, e.g. the SLD editor's rule toolbar-->
+    <sys:Double x:Key="IRI.Maptor.Styles.Size.Button.IconSquare">32</sys:Double>
+
+    <!--opacity of a disabled affordance-->
+    <sys:Double x:Key="IRI.Maptor.Styles.Opacity.Disabled">0.5</sys:Double>
 
 </ResourceDictionary>

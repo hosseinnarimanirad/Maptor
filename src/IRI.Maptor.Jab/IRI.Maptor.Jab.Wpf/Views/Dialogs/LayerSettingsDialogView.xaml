@@ -42,7 +42,6 @@
             
             <!--the Persian font now comes from the shared style's IsPersian trigger-->
             <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource IRI.Maptor.Styles.TabItem.Form}"/>
-            <Style TargetType="{x:Type Slider}" BasedOn="{StaticResource MahApps.Styles.Slider}"/>
              
         </ResourceDictionary>
     </mahApp:MetroWindow.Resources>

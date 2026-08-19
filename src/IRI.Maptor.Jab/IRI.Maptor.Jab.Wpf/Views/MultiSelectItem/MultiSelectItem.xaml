@@ -10,12 +10,9 @@
     <Grid>
         <Grid.Resources>
             <ResourceDictionary>
-                <Color x:Key="darkGrayColor">#999999</Color>
-                <SolidColorBrush x:Key="darkGrayBrush" Color="{StaticResource darkGrayColor}"/>
-
-                <Color x:Key="lightGrayColor">#CCCCCC</Color>
-                <SolidColorBrush x:Key="lightGrayBrush" Color="{StaticResource lightGrayColor}"/>
-
+                <!--The private #999999 / #CCCCCC palette that used to live here is gone; the two
+                    call sites now use MahApps.Brushes.Gray8 so this control follows the theme.
+                    The darkGray pair was declared but referenced nowhere in this file.-->
 
                 <Style TargetType="Button" >
                     <Setter Property="VerticalAlignment" Value="Center"/>
@@ -144,7 +141,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <TextBlock Text="{Binding Path=Title, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>
-        <ComboBox Grid.Column="1" VerticalAlignment="Center" IsEditable="True" BorderBrush="{StaticResource lightGrayBrush}" MinWidth="200"
+        <ComboBox Grid.Column="1" VerticalAlignment="Center" IsEditable="True" BorderBrush="{DynamicResource MahApps.Brushes.Gray8}" MinWidth="200"
                   Text="{Binding CurrentText, Mode=TwoWay}"
                   ItemsSource="{Binding DataContext.AllItems, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
                   SelectedItem="{Binding DataContext.CurrentSelectedItem, Mode=TwoWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
@@ -177,7 +174,7 @@
                      Visibility="{Binding IsAndOrVisible,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Converter={StaticResource boolToVisibilityConverter}}"/>
 
         <StackPanel Grid.Row="1" Grid.ColumnSpan="6" Margin="4">
-            <Border Height="1" Background="{StaticResource lightGrayBrush}" HorizontalAlignment="Stretch" Margin="4"/>
+            <Border Height="1" Background="{DynamicResource MahApps.Brushes.Gray8}" HorizontalAlignment="Stretch" Margin="4"/>
             <ItemsControl ItemsSource="{Binding DataContext.SelectedItems, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>

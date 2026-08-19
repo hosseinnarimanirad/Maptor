@@ -32,31 +32,44 @@
         </Grid.RowDefinitions>
 
         <!-- Toolbar -->
-        <ToolBar Grid.Row="0">
-            <Button Command="{Binding ImportSldCommand}" ToolTip="{Binding [sldEditor_common_importTooltip], Source={StaticResource Localization}}">
-                <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconMaterial Kind="FolderOpen" Margin="0,0,5,0"/>
-                    <TextBlock Text="{Binding [sldEditor_common_import], Source={StaticResource Localization}}"/>
-                </StackPanel>
-            </Button>
-            <Button Command="{Binding ExportSldCommand}" ToolTip="{Binding [sldEditor_common_exportTooltip], Source={StaticResource Localization}}">
-                <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconMaterial Kind="ContentSave" Margin="0,0,5,0"/>
-                    <TextBlock Text="{Binding [sldEditor_common_export], Source={StaticResource Localization}}"/>
-                </StackPanel>
-            </Button>
-            <!--restore the layer's captured default symbology (server style); shown only
-                when the host wired RequestResetToDefaultAction-->
-            <Button Command="{Binding ResetToDefaultCommand}"
-                    Visibility="{Binding ShowResetOption, Converter={StaticResource boolToVisibilityConverter}}">
-                <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconMaterial Kind="Restore" Margin="0,0,5,0"/>
-                    <TextBlock Text="{Binding [dialog_symbology_resetToDefault], Source={StaticResource Localization}}"/>
-                </StackPanel>
-            </Button>
-            <Separator/>
-            <TextBlock Text="{Binding [sldEditor_common_editorBanner], Source={StaticResource Localization}}" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0"/>
-        </ToolBar>
+        <!--Border.Toolbar rather than a stock ToolBar: ToolBar coerces its children into its own
+            chrome, so the Maptor button styles never reached these three buttons.-->
+        <Border Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Toolbar}">
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding ImportSldCommand}"
+                        Style="{StaticResource IRI.Maptor.Styles.Button.Secondary}"
+                        ToolTip="{Binding [sldEditor_common_importTooltip], Source={StaticResource Localization}}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Kind="FolderOpen" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                        <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent}"
+                                   Text="{Binding [sldEditor_common_import], Source={StaticResource Localization}}"/>
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding ExportSldCommand}"
+                        Style="{StaticResource IRI.Maptor.Styles.Button.Secondary}"
+                        ToolTip="{Binding [sldEditor_common_exportTooltip], Source={StaticResource Localization}}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Kind="ContentSave" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                        <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent}"
+                                   Text="{Binding [sldEditor_common_export], Source={StaticResource Localization}}"/>
+                    </StackPanel>
+                </Button>
+                <!--restore the layer's captured default symbology (server style); shown only
+                    when the host wired RequestResetToDefaultAction-->
+                <Button Command="{Binding ResetToDefaultCommand}"
+                        Style="{StaticResource IRI.Maptor.Styles.Button.Secondary}"
+                        Visibility="{Binding ShowResetOption, Converter={StaticResource boolToVisibilityConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Kind="Restore" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                        <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent}"
+                                   Text="{Binding [dialog_symbology_resetToDefault], Source={StaticResource Localization}}"/>
+                    </StackPanel>
+                </Button>
+                <Separator Style="{StaticResource IRI.Maptor.Styles.Separator.Vertical}"/>
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}"
+                           Text="{Binding [sldEditor_common_editorBanner], Source={StaticResource Localization}}"/>
+            </StackPanel>
+        </Border>
 
         <!-- Main Editor -->
         <sldViews:SldEditorView Grid.Row="1" DataContext="{Binding}"/>

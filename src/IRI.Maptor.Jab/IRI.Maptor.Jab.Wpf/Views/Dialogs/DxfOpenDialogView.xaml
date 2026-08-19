@@ -17,7 +17,6 @@
     <mahApp:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/SecurityInputStyles.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.All.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -48,7 +47,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <iconPacks:PackIconMaterial Kind="File" Style="{StaticResource securityIconMaterial}"/>
+                <iconPacks:PackIconMaterial Kind="File" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.FieldAdornment}"/>
                 <TextBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En}" FlowDirection="LeftToRight"
                             mahApp:TextBoxHelper.Watermark="{Binding [dialog_common_fileWatermark], Source={StaticResource Localization}}"
                             Text="{Binding FilePath, Mode=OneWay}" IsReadOnly="True" >
@@ -80,7 +79,7 @@
                     <ColumnDefinition Width="32"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <iconPacks:PackIconPhosphorIcons Kind="Globe" Style="{StaticResource securityIconPhosphor}"/>
+                <iconPacks:PackIconPhosphorIcons Kind="Globe" Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}"/>
                 <ComboBox Grid.Column="1" 
                           ItemsSource="{Binding AvailableSrsOptions}"
                           DisplayMemberPath="DisplayName"                          
@@ -98,7 +97,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <iconPacks:PackIconPhosphorIcons Kind="MapTrifoldFill" Style="{StaticResource securityIconPhosphor}"/>
+                <iconPacks:PackIconPhosphorIcons Kind="MapTrifoldFill" Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}"/>
                 <mahApp:NumericUpDown Grid.Column="1"
                                     Minimum="1" Maximum="60"
                                     mahApp:ControlsHelper.CornerRadius="4"
@@ -111,7 +110,7 @@
                               AutomationProperties.Name="{Binding [dialog_dxfOpen_hemisphereTooltip], Source={StaticResource Localization}}">
                     <iconPacks:PackIconPhosphorIcons Kind="CircleHalfFill" RenderTransformOrigin="0.5,0.5">
                         <iconPacks:PackIconPhosphorIcons.Style>
-                            <Style TargetType="iconPacks:PackIconPhosphorIcons" BasedOn="{StaticResource securityIconPhosphor}">
+                            <Style TargetType="iconPacks:PackIconPhosphorIcons" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}">
                                 <Setter Property="RenderTransform">
                                     <Setter.Value>
                                         <RotateTransform Angle="-90"/>

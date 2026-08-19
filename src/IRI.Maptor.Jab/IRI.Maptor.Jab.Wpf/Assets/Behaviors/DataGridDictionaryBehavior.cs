@@ -199,7 +199,7 @@ public static class DataGridDictionaryBehavior
                 var filterVm = presenter.FilterManager?.GetFilter(field.Name);
 
                 if (filterVm != null &&
-                    grid.TryFindResource("FeatureTableColumnHeaderTemplate") is DataTemplate headerTemplate)
+                    grid.TryFindResource("IRI.Maptor.Templates.FeatureTable.ColumnHeader") is DataTemplate headerTemplate)
                 {
                     column.Header = filterVm;
                     column.HeaderTemplate = headerTemplate;

@@ -16,7 +16,6 @@
     <mahApp:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/SecurityInputStyles.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.All.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -43,7 +42,7 @@
                         <ColumnDefinition Width="32"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <iconPacks:PackIconMaterial Kind="FormatTitle" Style="{StaticResource securityIconMaterial}"/>
+                    <iconPacks:PackIconMaterial Kind="FormatTitle" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.FieldAdornment}"/>
                     <TextBox Grid.Column="1" x:Name="mapTitleTextBox" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
                              mahApp:TextBoxHelper.Watermark="{Binding [dialog_printPdf_mapTitleWatermark], Source={StaticResource Localization}}"
                              Text="{Binding MapTitle, UpdateSourceTrigger=PropertyChanged}"/>
@@ -80,7 +79,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <iconPacks:PackIconMaterial Kind="ImageOutline" Style="{StaticResource securityIconMaterial}"/>
+                    <iconPacks:PackIconMaterial Kind="ImageOutline" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.FieldAdornment}"/>
                     <TextBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En}" FlowDirection="LeftToRight"
                              mahApp:TextBoxHelper.Watermark="{Binding [dialog_printPdf_companyLogo], Source={StaticResource Localization}}"
                              Text="{Binding CompanyLogoPath, Mode=OneWay}" IsReadOnly="True"/>
@@ -113,7 +112,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <iconPacks:PackIconMaterial Kind="FileDocumentOutline" Style="{StaticResource securityIconMaterial}"/>
+                        <iconPacks:PackIconMaterial Kind="FileDocumentOutline" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.FieldAdornment}"/>
                         <ComboBox Grid.Column="1"
                                   ItemsSource="{Binding AvailablePageSizes}"
                                   Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}"

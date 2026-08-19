@@ -98,8 +98,8 @@
            TargetType="{x:Type Button}"
            BasedOn="{StaticResource IRI.Maptor.Styles.ButtonBase}">
 
-        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Button.Flat.Foreground}"/>
-        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}"/>
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
         <Setter Property="FocusVisualStyle">
             <Setter.Value>
@@ -498,5 +498,22 @@
         </Setter>
     </Style>
 
+    <!--Square command-bar button: the add/remove/move-up/move-down cluster above a list.
+        Dialogs.Secondary.Circle is the round sibling; a command bar of six of these reads
+        better square, and the SLD editor's rule toolbar writes Width="32" Height="32"
+        Margin="2" by hand twelve times because this did not exist.-->
+    <Style x:Key="IRI.Maptor.Styles.Button.IconSquare"
+           TargetType="{x:Type Button}"
+           BasedOn="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Secondary}">
+        <Setter Property="Width" Value="{StaticResource IRI.Maptor.Styles.Size.Button.IconSquare}"/>
+        <Setter Property="Height" Value="{StaticResource IRI.Maptor.Styles.Size.Button.IconSquare}"/>
+        <Setter Property="MinWidth" Value="0"/>
+        <Setter Property="MinHeight" Value="0"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}"/>
+    </Style>
 
 </ResourceDictionary>

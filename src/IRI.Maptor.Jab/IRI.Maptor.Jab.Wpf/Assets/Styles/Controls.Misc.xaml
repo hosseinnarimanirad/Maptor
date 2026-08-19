@@ -1,0 +1,116 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
+
+    <!--Remaining controls and glyph roles the system had no token for.-->
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Common.Metrics.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <!--A list that carries its own item chrome, so the container should not add a frame of its
+        own. Several views set BorderThickness="0" Background="Transparent" by hand.-->
+    <Style x:Key="IRI.Maptor.Styles.ListBox.Plain" TargetType="ListBox">
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+    </Style>
+
+    <!--Selectable row with a hairline separator, hover and selected states. Replaces the
+        hand-rolled ListBoxItem templates in the language selector and the legend.-->
+    <Style x:Key="IRI.Maptor.Styles.ListBoxItem.Row" TargetType="ListBoxItem">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Border x:Name="rowRoot"
+                            Background="Transparent"
+                            BorderBrush="{DynamicResource MahApps.Brushes.Gray9}"
+                            BorderThickness="0,0,0,1"
+                            Padding="8,5">
+                        <ContentPresenter/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="rowRoot" Property="Background"
+                                    Value="{DynamicResource MahApps.Brushes.Gray9}"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="rowRoot" Property="Background"
+                                    Value="{DynamicResource MahApps.Brushes.Accent4}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.Separator.Horizontal" TargetType="Separator">
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
+        <Setter Property="Height" Value="1"/>
+        <Setter Property="Margin" Value="0,6"/>
+    </Style>
+
+    <!--divider between groups of buttons in a horizontal command bar. A Separator lays out
+        horizontally by default, so it needs the layout transform to stand up.-->
+    <Style x:Key="IRI.Maptor.Styles.Separator.Vertical" TargetType="Separator">
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
+        <Setter Property="Width" Value="1"/>
+        <Setter Property="Margin" Value="6,4"/>
+        <Setter Property="LayoutTransform">
+            <Setter.Value>
+                <RotateTransform Angle="90"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--The two splitters in the SLD editor hardcode Background="LightGray", which is a bright
+        bar bisecting the panel in dark theme. Transparent with a fixed grab width is the usual
+        answer: the gap between the two panes already reads as the divider.-->
+    <Style x:Key="IRI.Maptor.Styles.GridSplitter.Vertical" TargetType="GridSplitter">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Width" Value="6"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.GridSplitter.Horizontal" TargetType="GridSplitter">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Height" Value="6"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <!--Glyph roles. Controls.Path.xaml covers glyphs *inside a button*; these two cover the
+        other two roles that kept being written as raw Width/Height: a status dot in a list row,
+        and the muted icon in a form field's adornment column.-->
+
+    <Style x:Key="IRI.Maptor.Styles.PackIconMaterial.Indicator" TargetType="iconPacks:PackIconMaterial">
+        <Setter Property="Width" Value="{StaticResource IRI.Maptor.Styles.Size.Icon.Indicator}"/>
+        <Setter Property="Height" Value="{StaticResource IRI.Maptor.Styles.Size.Icon.Indicator}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,4,0"/>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.PackIconMaterial.FieldAdornment" TargetType="iconPacks:PackIconMaterial">
+        <Setter Property="Width" Value="{StaticResource IRI.Maptor.Styles.Size.Icon.Field}"/>
+        <Setter Property="Height" Value="{StaticResource IRI.Maptor.Styles.Size.Icon.Field}"/>
+        <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Muted}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="4"/>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment" TargetType="iconPacks:PackIconPhosphorIcons">
+        <Setter Property="Width" Value="{StaticResource IRI.Maptor.Styles.Size.Icon.Field}"/>
+        <Setter Property="Height" Value="{StaticResource IRI.Maptor.Styles.Size.Icon.Field}"/>
+        <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Muted}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="4"/>
+    </Style>
+
+</ResourceDictionary>

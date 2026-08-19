@@ -63,4 +63,18 @@
         <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
     </Style>
 
+    <!--Compact variant for badges inside a dense list row, where the full-size pill crowds the
+        row. Set Background to the matching IRI.Maptor.Brushes.*.Fill and pair the caption with
+        Pill.Text.Small plus the matching foreground.-->
+
+    <Style x:Key="IRI.Maptor.Styles.Pill.Small" TargetType="Border" BasedOn="{StaticResource IRI.Maptor.Styles.Pill}">
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="6,1"/>
+        <Setter Property="Margin" Value="0,0,4,0"/>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.Pill.Text.Small" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.Pill.Text}">
+        <Setter Property="FontSize" Value="10"/>
+    </Style>
+
 </ResourceDictionary>

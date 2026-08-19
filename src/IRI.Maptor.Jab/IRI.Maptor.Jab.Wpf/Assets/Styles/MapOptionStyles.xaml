@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" >
 
 
-    <Style x:Key="mapOptionsButton" TargetType="Button">
+    <Style x:Key="IRI.Maptor.Styles.Button.MapOption" TargetType="Button">
         <Setter Property="Width" Value="40"/>
         <Setter Property="Height" Value="40"/>
         <Setter Property="Cursor" Value="Hand"/>
@@ -73,7 +73,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="mapOptionsPath" TargetType="Path">
+    <Style x:Key="IRI.Maptor.Styles.Path.MapOption" TargetType="Path">
         <Setter Property="Fill" Value="White"/>
         <Setter Property="Stretch" Value="Uniform"/>
         <Setter Property="Width" Value="20"/>

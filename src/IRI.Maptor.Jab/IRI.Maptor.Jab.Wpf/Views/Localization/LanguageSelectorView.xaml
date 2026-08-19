@@ -6,7 +6,7 @@
     <UserControl.Resources>
         <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
     </UserControl.Resources>
-    <Border Background="White" Padding="8" FlowDirection="LeftToRight"  
+    <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}" Padding="8" FlowDirection="LeftToRight"  
             Effect="{DynamicResource MahApps.Effects.DropShadow}"> 
         <StackPanel>
             <TextBlock Text="{Binding [languageSelector_title], Source={StaticResource Localization}}" FontWeight="SemiBold" Margin="0,0,0,8"

@@ -3,8 +3,24 @@
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Common.Metrics.xaml"/>
-        <!--default status palette; ThemeHelper appends Status.Light/Dark at app level, which wins-->
-        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Status.Light.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Common.Effects.xaml"/>
+        <!--over-map chrome; deliberately not theme-swapped, see the file header-->
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Brushes.OnMap.xaml"/>
+        <!--The semantic status palette is deliberately NOT merged here.
+
+            It used to be, with a comment claiming the Status.Light/Dark that ThemeHelper appends
+            at application level "wins". That is backwards. WPF resolves a resource by walking the
+            element tree's own dictionaries first and only then Application.Resources, and every
+            view merges this file into its OWN Resources. So the light palette bundled here was
+            always found first and the runtime dark swap could never take effect. Measured: with
+            Status.Dark.xaml applied at app level, IRI.Maptor.Brushes.Valid resolved to #FF4CC38A
+            from Application.Resources but #FF1B7F4B from inside a view. It also put XAML and
+            Helpers/StatusBrushes.cs (which searches app scope) in permanent disagreement.
+
+            Consuming apps must merge Status.Light.xaml in their own App.xaml (all nine that
+            reference this library now do), or call ThemeHelper.ApplyTheme at startup, which
+            appends the correct variant. Every usage in the repo is DynamicResource, so a missing
+            key leaves the property at its default rather than throwing.-->
         <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.Expander.xaml"/>
         <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.Path.xaml"/>
         <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.Button.xaml"/>
@@ -21,8 +37,14 @@
         <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.CheckBox.xaml"/>
         <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.ComboBox.xaml"/>
         <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.NumericUpDown.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.PasswordBox.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.Inputs.Extra.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.Misc.xaml"/>
         <!--after Controls.TextBlock: both are BasedOn IRI.Maptor.Styles.TextBlock-->
         <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.Pill.xaml"/>
+        <!--after Controls.TextBlock for the same reason: the field/title text styles are
+            BasedOn IRI.Maptor.Styles.TextBlock-->
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.Section.xaml"/>
         <ResourceDictionary Source="/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.DataGrid.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 

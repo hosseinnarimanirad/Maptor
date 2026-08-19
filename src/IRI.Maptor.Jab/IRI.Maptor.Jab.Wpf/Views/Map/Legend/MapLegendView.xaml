@@ -7,7 +7,8 @@
             xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core"
             xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
             xmlns:sta="clr-namespace:IRI.Maptor.Sta.Common.Enums;assembly=IRI.Maptor.Sta.Common"
-            xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase">
+            xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+            Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
     <maptor:NotifiableUserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -218,8 +219,10 @@
                    PlacementTarget="{Binding ElementName=dataSourceKindFilterToggle}"
                    Placement="Bottom" StaysOpen="False" AllowsTransparency="True"
                    PopupAnimation="Slide">
-                    <Border Background="White" BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
-                        BorderThickness="1" Padding="4" CornerRadius="4"
+                    <!--was Background="White": this is a flyout inside the docked legend panel,
+                        i.e. ordinary chrome, so it must follow the theme. It is not an over-map
+                        surface.-->
+                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Popup}"
                         DataContext="{Binding LegendViewModel, ElementName=root}">
                         <Border.Effect>
                             <DropShadowEffect BlurRadius="8" Color="Gray" Opacity="0.5" ShadowDepth="2"/>
@@ -244,10 +247,10 @@
                                         <ToggleButton Style="{StaticResource dataSourceKindFilterItemToggleStyle}"
                                                       IsChecked="{Binding IsSelected, Mode=TwoWay}" 
                                                       ToolTip="{Binding DisplayName}" Background="Transparent">
-                                            <Border Style="{StaticResource menuBorder}"
+                                            <Border Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
                                                     Background="{Binding Kind, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <Path Style="{StaticResource menuPath}"
+                                                    <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}"
                                                           Data="{Binding Kind, Converter={StaticResource dataSourceKindToGeometryConverter}}"/>
                                                     <iconPacks:PackIconMaterial Kind="CheckBold" Margin="2,0,0,0" VerticalAlignment="Center" >
                                                         <iconPacks:PackIconMaterial.Style>
@@ -311,8 +314,8 @@
                        Placement="Bottom" StaysOpen="False" AllowsTransparency="True"
                        PopupAnimation="Slide"
                        x:Name="importLayerPopup">
-                    <Border Background="White" BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
-                            BorderThickness="1" Padding="4" CornerRadius="4"
+                    <!--was Background="White"; see the note on the filter popup above-->
+                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Popup}"
                             DataContext="{Binding DataContext, ElementName=root}"
                             x:Name="importLayerBorder">
                         <Border.Effect>
@@ -323,11 +326,11 @@
                             <!--shapefile-->
                             <Button Style="{StaticResource menuButton}" Command="{Binding AddShapefileCommand}">
                                 <StackPanel Orientation="Horizontal">
-                                    <Border Style="{StaticResource menuBorder}"
+                                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
                                             Background="{Binding Source={x:Static sta:DataSourceKind.Shapefile}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
-                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource shp}"/>
+                                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.Menu}"/>
+                                            <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}" Data="{StaticResource shp}"/>
                                         </StackPanel>
                                     </Border>
                                     <TextBlock Text="{Binding [cmd_general_addShapefile], Source={StaticResource Localization}}"
@@ -338,11 +341,11 @@
                             <!--KMZ-->
                             <Button Style="{StaticResource menuButton}" Command="{Binding AddKmzfileCommand}">
                                 <StackPanel Orientation="Horizontal">
-                                    <Border Style="{StaticResource menuBorder}"
+                                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
                                             Background="{Binding Source={x:Static sta:DataSourceKind.Kmz}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
-                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource kmz}"/>
+                                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.Menu}"/>
+                                            <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}" Data="{StaticResource kmz}"/>
                                         </StackPanel>
                                     </Border>
                                     <TextBlock Style="{StaticResource menuTextBlock}"
@@ -355,11 +358,11 @@
                                 <StackPanel Orientation="Horizontal">
                                     <Rectangle Style="{StaticResource menuRectangle}"
                                                Fill="{Binding Source={x:Static sta:DataSourceKind.Kml}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
-                                    <Border Style="{StaticResource menuBorder}"
+                                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
                                             Background="{Binding Source={x:Static sta:DataSourceKind.Kml}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
-                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource kml}"/>
+                                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.Menu}"/>
+                                            <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}" Data="{StaticResource kml}"/>
                                         </StackPanel>
                                     </Border>
                                     <TextBlock Text="{Binding [cmd_legend_addKml], Source={StaticResource Localization}}"
@@ -372,11 +375,11 @@
                                 <StackPanel Orientation="Horizontal">
                                     <Rectangle Style="{StaticResource menuRectangle}"
                                                Fill="{Binding Source={x:Static sta:DataSourceKind.Dxf}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
-                                    <Border Style="{StaticResource menuBorder}"
+                                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
                                             Background="{Binding Source={x:Static sta:DataSourceKind.Dxf}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
-                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource dxf}"/>
+                                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.Menu}"/>
+                                            <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}" Data="{StaticResource dxf}"/>
                                         </StackPanel>
                                     </Border>
                                     <TextBlock Text="{Binding [cmd_legend_addDxf], Source={StaticResource Localization}}"
@@ -389,11 +392,11 @@
                                 <StackPanel Orientation="Horizontal">
                                     <Rectangle Style="{StaticResource menuRectangle}"
                                                Fill="{Binding Source={x:Static sta:DataSourceKind.Csv}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
-                                    <Border Style="{StaticResource menuBorder}"
+                                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
                                             Background="{Binding Source={x:Static sta:DataSourceKind.Csv}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
-                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource csv}"/>
+                                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.Menu}"/>
+                                            <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}" Data="{StaticResource csv}"/>
                                         </StackPanel>
                                     </Border>
                                     <TextBlock Text="{Binding [cmd_legend_addCsv], Source={StaticResource Localization}}"
@@ -406,11 +409,11 @@
                                 <StackPanel Orientation="Horizontal">
                                     <Rectangle Style="{StaticResource menuRectangle}"
                                                Fill="{Binding Source={x:Static sta:DataSourceKind.Tsv}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
-                                    <Border Style="{StaticResource menuBorder}"
+                                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
                                             Background="{Binding Source={x:Static sta:DataSourceKind.Tsv}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
-                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource tsv}"/>
+                                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.Menu}"/>
+                                            <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}" Data="{StaticResource tsv}"/>
                                         </StackPanel>
                                     </Border>
                                     <TextBlock Text="{Binding [cmd_legend_addTsv], Source={StaticResource Localization}}"
@@ -423,11 +426,11 @@
                                 <StackPanel Orientation="Horizontal">
                                     <Rectangle Style="{StaticResource menuRectangle}"
                                                Fill="{Binding Source={x:Static sta:DataSourceKind.GeoJson}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
-                                    <Border Style="{StaticResource menuBorder}"
+                                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
                                             Background="{Binding Source={x:Static sta:DataSourceKind.GeoJson}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
-                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource json}"/>
+                                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.Menu}"/>
+                                            <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}" Data="{StaticResource json}"/>
                                         </StackPanel>
                                     </Border>
                                     <TextBlock Text="{Binding [cmd_general_addGeoJson], Source={StaticResource Localization}}"
@@ -440,11 +443,11 @@
                                 <StackPanel Orientation="Horizontal">
                                     <Rectangle Style="{StaticResource menuRectangle}"
                                                Fill="{Binding Source={x:Static sta:DataSourceKind.TopoJson}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
-                                    <Border Style="{StaticResource menuBorder}"
+                                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
                                             Background="{Binding Source={x:Static sta:DataSourceKind.TopoJson}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
-                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource topo}"/>
+                                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.Menu}"/>
+                                            <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}" Data="{StaticResource topo}"/>
                                         </StackPanel>
                                     </Border>
                                     <TextBlock Text="{Binding [cmd_legend_addTopoJson], Source={StaticResource Localization}}"
@@ -457,11 +460,11 @@
                                 <StackPanel Orientation="Horizontal">
                                     <Rectangle Style="{StaticResource menuRectangle}"
                                                Fill="{Binding Source={x:Static sta:DataSourceKind.EsriJson}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
-                                    <Border Style="{StaticResource menuBorder}"
+                                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
                                             Background="{Binding Source={x:Static sta:DataSourceKind.EsriJson}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
-                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource json}"/>
+                                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.Menu}"/>
+                                            <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}" Data="{StaticResource json}"/>
                                         </StackPanel>
                                     </Border>
                                     <TextBlock Text="{Binding [cmd_legend_addEsriJson], Source={StaticResource Localization}}"
@@ -474,11 +477,11 @@
                                 <StackPanel Orientation="Horizontal">
                                     <Rectangle Style="{StaticResource menuRectangle}"
                                                Fill="{Binding Source={x:Static sta:DataSourceKind.Gpx}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
-                                    <Border Style="{StaticResource menuBorder}"
+                                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
                                             Background="{Binding Source={x:Static sta:DataSourceKind.Gpx}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
-                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource gpx}"/>
+                                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.Menu}"/>
+                                            <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}" Data="{StaticResource gpx}"/>
                                         </StackPanel>
                                     </Border>
                                     <TextBlock Text="{Binding [cmd_legend_addGpx], Source={StaticResource Localization}}"
@@ -603,7 +606,13 @@
                                     <Trigger Property="TreeViewItem.IsSelected" Value="True">
                                         <!--<Setter TargetName="Bd" Property="Panel.Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />-->
                                         <Setter TargetName="Bd" Property="Panel.Background" Value="Transparent" />
-                                        <Setter Property="TextElement.Foreground"  Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
+                                        <!--No Foreground override here on purpose. This used to set
+                                            SystemColors.HighlightTextBrushKey (white), which is the colour
+                                            for text sitting ON the selection highlight, but the highlight
+                                            background is commented out one line above, so the row keeps the
+                                            items host's own surface. White text on that surface is invisible
+                                            in the Light theme. Selection is already indicated by the item's
+                                            own chrome, so the row just keeps the themed foreground.-->
                                     </Trigger>
                                     <!--<MultiTrigger>
                                         <MultiTrigger.Conditions>
@@ -614,7 +623,9 @@
                                         <Setter Property="TextElement.Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
                                     </MultiTrigger>-->
                                     <Trigger Property="UIElement.IsEnabled" Value="False">
-                                        <Setter Property="TextElement.Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                                        <!--Themed grey, not SystemColors.GrayTextBrushKey: the system brush is a
+                                            fixed mid-grey that does not move with the theme.-->
+                                        <Setter Property="TextElement.Foreground" Value="{DynamicResource MahApps.Brushes.Gray3}" />
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
