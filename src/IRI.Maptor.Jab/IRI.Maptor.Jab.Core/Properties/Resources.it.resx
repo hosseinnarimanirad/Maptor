@@ -1819,4 +1819,31 @@
   <data name="theme_mode_dark" xml:space="preserve">
     <value>Scuro</value>
   </data>
+  <data name="dialog_common_apply" xml:space="preserve">
+    <value>Applica</value>
+  </data>
+  <data name="dialog_symbology_advanced" xml:space="preserve">
+    <value>Avanzato (SLD)</value>
+  </data>
+  <data name="dialog_symbology_resetToDefault" xml:space="preserve">
+    <value>Ripristina predefinito</value>
+  </data>
+  <data name="sldEditor_common_preservedContentNotice" xml:space="preserve">
+    <value>Questo documento contiene stili o livelli aggiuntivi non modificabili qui; verranno conservati senza modifiche.</value>
+  </data>
+  <data name="sldEditor_message_invalidSldFile" xml:space="preserve">
+    <value>Il file selezionato non può essere letto come documento SLD valido.</value>
+  </data>
+  <data name="sldEditor_message_importError" xml:space="preserve">
+    <value>Errore durante l'importazione dell'SLD: {0}</value>
+  </data>
+  <data name="sldEditor_message_exportError" xml:space="preserve">
+    <value>Errore durante l'esportazione dell'SLD: {0}</value>
+  </data>
+  <data name="sldEditor_filter_noFilter" xml:space="preserve">
+    <value>Nessun filtro</value>
+  </data>
+  <data name="sldEditor_filter_advancedFilter" xml:space="preserve">
+    <value>Filtro avanzato (non modificabile qui)</value>
+  </data>
 </root>

@@ -1819,4 +1819,31 @@
   <data name="theme_mode_dark" xml:space="preserve">
     <value>Koyu</value>
   </data>
+  <data name="dialog_common_apply" xml:space="preserve">
+    <value>Uygula</value>
+  </data>
+  <data name="dialog_symbology_advanced" xml:space="preserve">
+    <value>Gelişmiş (SLD)</value>
+  </data>
+  <data name="dialog_symbology_resetToDefault" xml:space="preserve">
+    <value>Varsayılana sıfırla</value>
+  </data>
+  <data name="sldEditor_common_preservedContentNotice" xml:space="preserve">
+    <value>Bu belge burada düzenlenemeyen ek stiller veya katmanlar içeriyor; bunlar değiştirilmeden korunacaktır.</value>
+  </data>
+  <data name="sldEditor_message_invalidSldFile" xml:space="preserve">
+    <value>Seçilen dosya geçerli bir SLD belgesi olarak okunamadı.</value>
+  </data>
+  <data name="sldEditor_message_importError" xml:space="preserve">
+    <value>SLD içe aktarma hatası: {0}</value>
+  </data>
+  <data name="sldEditor_message_exportError" xml:space="preserve">
+    <value>SLD dışa aktarma hatası: {0}</value>
+  </data>
+  <data name="sldEditor_filter_noFilter" xml:space="preserve">
+    <value>Filtre yok</value>
+  </data>
+  <data name="sldEditor_filter_advancedFilter" xml:space="preserve">
+    <value>Gelişmiş filtre (burada düzenlenemez)</value>
+  </data>
 </root>

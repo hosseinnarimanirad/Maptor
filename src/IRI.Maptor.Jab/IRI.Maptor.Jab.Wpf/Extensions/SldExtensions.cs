@@ -57,7 +57,18 @@ public static class SldExtensions
         {
             foreach (var sldSymbolizer in rule.Symbolizers)
             {
-                var symbolizer = ParseSymbolizer(sldSymbolizer);
+                ISymbolizer symbolizer;
+
+                try
+                {
+                    symbolizer = ParseSymbolizer(sldSymbolizer);
+                }
+                catch (NotImplementedException)
+                {
+                    // e.g. RasterSymbolizer — no runtime renderer yet; skip instead of
+                    // failing the whole layer (an SLD authored elsewhere may carry one)
+                    continue;
+                }
 
                 symbolizer.MaxScaleDenominator = rule.MaxScaleDenominator;
                 symbolizer.MinScaleDenominator = rule.MinScaleDenominator;

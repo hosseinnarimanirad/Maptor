@@ -1819,4 +1819,31 @@
   <data name="theme_mode_dark" xml:space="preserve">
     <value>Մուգ</value>
   </data>
+  <data name="dialog_common_apply" xml:space="preserve">
+    <value>Կիրառել</value>
+  </data>
+  <data name="dialog_symbology_advanced" xml:space="preserve">
+    <value>Ընդլայնված (SLD)</value>
+  </data>
+  <data name="dialog_symbology_resetToDefault" xml:space="preserve">
+    <value>Վերականգնել լռելյայնը</value>
+  </data>
+  <data name="sldEditor_common_preservedContentNotice" xml:space="preserve">
+    <value>Այս փաստաթուղթը պարունակում է լրացուցիչ ոճեր կամ շերտեր, որոնք այստեղ խմբագրելի չեն. դրանք կպահպանվեն անփոփոխ։</value>
+  </data>
+  <data name="sldEditor_message_invalidSldFile" xml:space="preserve">
+    <value>Ընտրված ֆայլը չհաջողվեց կարդալ որպես վավեր SLD փաստաթուղթ։</value>
+  </data>
+  <data name="sldEditor_message_importError" xml:space="preserve">
+    <value>SLD-ի ներմուծման սխալ՝ {0}</value>
+  </data>
+  <data name="sldEditor_message_exportError" xml:space="preserve">
+    <value>SLD-ի արտահանման սխալ՝ {0}</value>
+  </data>
+  <data name="sldEditor_filter_noFilter" xml:space="preserve">
+    <value>Առանց զտիչի</value>
+  </data>
+  <data name="sldEditor_filter_advancedFilter" xml:space="preserve">
+    <value>Ընդլայնված զտիչ (այստեղ խմբագրելի չէ)</value>
+  </data>
 </root>

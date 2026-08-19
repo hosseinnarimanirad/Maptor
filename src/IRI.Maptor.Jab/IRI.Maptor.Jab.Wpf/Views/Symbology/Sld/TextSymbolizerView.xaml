@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:sld="clr-namespace:IRI.Maptor.Sta.Ogc.SLD;assembly=IRI.Maptor.Sta.Ogc"
-             mc:Ignorable="d" 
+             xmlns:sldViews="clr-namespace:IRI.Maptor.Jab.Controls.Symbology.Sld"
+             mc:Ignorable="d"
              d:DesignHeight="550" d:DesignWidth="350">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid Margin="10">
@@ -29,8 +30,11 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding [sldEditor_textSymbolizer_labelProperty], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
-            <TextBox Grid.Row="0" Grid.Column="1" Margin="4" 
-                     Text="{Binding LabelPropertyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <!--editable combo: suggests the layer's field names when the editor has layer
+                context (SldEditorViewModel.FieldNames), still accepts free text-->
+            <ComboBox Grid.Row="0" Grid.Column="1" Margin="4" IsEditable="True"
+                      ItemsSource="{Binding DataContext.FieldNames, RelativeSource={RelativeSource AncestorType=sldViews:SldEditorView}}"
+                      Text="{Binding LabelPropertyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
             <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding [sldEditor_textSymbolizer_fontFamily], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
             <ComboBox Grid.Row="1" Grid.Column="1" Margin="4" 

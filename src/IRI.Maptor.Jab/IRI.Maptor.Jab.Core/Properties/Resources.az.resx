@@ -1819,4 +1819,31 @@
   <data name="theme_mode_dark" xml:space="preserve">
     <value>Qaranlıq</value>
   </data>
+  <data name="dialog_common_apply" xml:space="preserve">
+    <value>Tətbiq et</value>
+  </data>
+  <data name="dialog_symbology_advanced" xml:space="preserve">
+    <value>Ətraflı (SLD)</value>
+  </data>
+  <data name="dialog_symbology_resetToDefault" xml:space="preserve">
+    <value>Standarta qaytar</value>
+  </data>
+  <data name="sldEditor_common_preservedContentNotice" xml:space="preserve">
+    <value>Bu sənəddə burada redaktə edilə bilməyən əlavə üslublar və ya laylar var; onlar dəyişdirilmədən saxlanılacaq.</value>
+  </data>
+  <data name="sldEditor_message_invalidSldFile" xml:space="preserve">
+    <value>Seçilmiş fayl etibarlı SLD sənədi kimi oxuna bilmədi.</value>
+  </data>
+  <data name="sldEditor_message_importError" xml:space="preserve">
+    <value>SLD idxalında xəta: {0}</value>
+  </data>
+  <data name="sldEditor_message_exportError" xml:space="preserve">
+    <value>SLD ixracında xəta: {0}</value>
+  </data>
+  <data name="sldEditor_filter_noFilter" xml:space="preserve">
+    <value>Filtr yoxdur</value>
+  </data>
+  <data name="sldEditor_filter_advancedFilter" xml:space="preserve">
+    <value>Ətraflı filtr (burada redaktə edilə bilməz)</value>
+  </data>
 </root>

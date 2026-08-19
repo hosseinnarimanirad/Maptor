@@ -1819,4 +1819,31 @@
   <data name="theme_mode_dark" xml:space="preserve">
     <value>深色</value>
   </data>
+  <data name="dialog_common_apply" xml:space="preserve">
+    <value>应用</value>
+  </data>
+  <data name="dialog_symbology_advanced" xml:space="preserve">
+    <value>高级 (SLD)</value>
+  </data>
+  <data name="dialog_symbology_resetToDefault" xml:space="preserve">
+    <value>重置为默认值</value>
+  </data>
+  <data name="sldEditor_common_preservedContentNotice" xml:space="preserve">
+    <value>此文档包含无法在此编辑的其他样式或图层；它们将原样保留。</value>
+  </data>
+  <data name="sldEditor_message_invalidSldFile" xml:space="preserve">
+    <value>所选文件无法解析为有效的 SLD 文档。</value>
+  </data>
+  <data name="sldEditor_message_importError" xml:space="preserve">
+    <value>导入 SLD 时出错：{0}</value>
+  </data>
+  <data name="sldEditor_message_exportError" xml:space="preserve">
+    <value>导出 SLD 时出错：{0}</value>
+  </data>
+  <data name="sldEditor_filter_noFilter" xml:space="preserve">
+    <value>无筛选</value>
+  </data>
+  <data name="sldEditor_filter_advancedFilter" xml:space="preserve">
+    <value>高级筛选（此处不可编辑）</value>
+  </data>
 </root>

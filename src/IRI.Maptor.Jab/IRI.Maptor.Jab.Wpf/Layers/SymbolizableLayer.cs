@@ -123,6 +123,73 @@ public abstract class SymbolizableLayer : BaseLayer
         return Symbolizers.ParseToSld(SpatialModelMode);
     }
 
+    #region Default symbology (reset + user-modification tracking)
+
+    /// <summary>
+    /// Pristine snapshot of the symbology the layer was created with (e.g. the
+    /// server-provided SLD, or the synthesized simple style when there was none).
+    /// Captured via <see cref="CaptureDefaultSymbology"/>; null when the creator
+    /// never captured one — then reset is unavailable.
+    /// </summary>
+    public StyledLayerDescriptor? DefaultSld { get; private set; }
+
+    public bool CanResetSymbology => DefaultSld is not null;
+
+    private bool _isSymbologyUserModified;
+
+    /// <summary>
+    /// True once the user restyled this layer (quick dialog or SLD editor, or a
+    /// project override replay). Lets hosts persist a symbology override only for
+    /// layers that genuinely diverged from their default, so untouched layers keep
+    /// tracking future default changes. Cleared by <see cref="ResetSymbologyToDefault"/>.
+    /// </summary>
+    public bool IsSymbologyUserModified
+    {
+        get => _isSymbologyUserModified;
+        set
+        {
+            _isSymbologyUserModified = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// Snapshots the current symbology (<see cref="SourceSld"/> when present, else the
+    /// <see cref="GetSld"/> reconstruction) as the layer's default. Call once right after
+    /// the layer is created and styled.
+    /// </summary>
+    public void CaptureDefaultSymbology()
+    {
+        DefaultSld = CloneSld(SourceSld ?? GetSld());
+        IsSymbologyUserModified = false;
+        RaisePropertyChanged(nameof(CanResetSymbology));
+    }
+
+    /// <summary>
+    /// Restores the symbology captured by <see cref="CaptureDefaultSymbology"/> and clears
+    /// <see cref="IsSymbologyUserModified"/>. Returns false when no default is available.
+    /// </summary>
+    public bool ResetSymbologyToDefault()
+    {
+        // hand a clone to the layer so later edits can never reach the pristine snapshot
+        var restored = CloneSld(DefaultSld);
+
+        if (restored is null)
+            return false;
+
+        ReplaceSymbolizers(restored.ParseToSymbolizers(), restored);
+
+        IsSymbologyUserModified = false;
+
+        return true;
+    }
+
+    // Serialize/parse round-trip as a deep clone — the same path every SLD takes anyway.
+    private static StyledLayerDescriptor? CloneSld(StyledLayerDescriptor? sld)
+        => sld is null ? null : SldHelper.Parse(SldHelper.Serialize(sld, indented: false));
+
+    #endregion
+
     #region Symbology details (complex-SLD legend)
 
     private bool _isSymbologyDetailsOpen;

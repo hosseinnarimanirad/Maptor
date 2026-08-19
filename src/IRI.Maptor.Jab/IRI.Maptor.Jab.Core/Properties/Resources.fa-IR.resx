@@ -2200,4 +2200,31 @@
   <data name="versioning_review_ageMinutes" xml:space="preserve">
     <value>{0} دقیقه</value>
   </data>
+  <data name="dialog_common_apply" xml:space="preserve">
+    <value>اعمال</value>
+  </data>
+  <data name="dialog_symbology_advanced" xml:space="preserve">
+    <value>پیشرفته (SLD)</value>
+  </data>
+  <data name="dialog_symbology_resetToDefault" xml:space="preserve">
+    <value>بازگشت به پیش‌فرض</value>
+  </data>
+  <data name="sldEditor_common_preservedContentNotice" xml:space="preserve">
+    <value>این سند شامل استایل‌ها یا لایه‌های دیگری است که در اینجا قابل ویرایش نیستند؛ این موارد بدون تغییر حفظ می‌شوند.</value>
+  </data>
+  <data name="sldEditor_message_invalidSldFile" xml:space="preserve">
+    <value>فایل انتخاب‌شده به‌عنوان یک سند SLD معتبر قابل خواندن نیست.</value>
+  </data>
+  <data name="sldEditor_message_importError" xml:space="preserve">
+    <value>خطا در وارد کردن SLD: {0}</value>
+  </data>
+  <data name="sldEditor_message_exportError" xml:space="preserve">
+    <value>خطا در خروجی گرفتن SLD: {0}</value>
+  </data>
+  <data name="sldEditor_filter_noFilter" xml:space="preserve">
+    <value>بدون فیلتر</value>
+  </data>
+  <data name="sldEditor_filter_advancedFilter" xml:space="preserve">
+    <value>فیلتر پیشرفته (در اینجا قابل ویرایش نیست)</value>
+  </data>
 </root>

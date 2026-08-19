@@ -1819,4 +1819,31 @@
   <data name="theme_mode_dark" xml:space="preserve">
     <value>داكن</value>
   </data>
+  <data name="dialog_common_apply" xml:space="preserve">
+    <value>تطبيق</value>
+  </data>
+  <data name="dialog_symbology_advanced" xml:space="preserve">
+    <value>متقدم (SLD)</value>
+  </data>
+  <data name="dialog_symbology_resetToDefault" xml:space="preserve">
+    <value>إعادة التعيين إلى الافتراضي</value>
+  </data>
+  <data name="sldEditor_common_preservedContentNotice" xml:space="preserve">
+    <value>يحتوي هذا المستند على أنماط أو طبقات إضافية غير قابلة للتحرير هنا؛ وسيتم الاحتفاظ بها دون تغيير.</value>
+  </data>
+  <data name="sldEditor_message_invalidSldFile" xml:space="preserve">
+    <value>تعذر قراءة الملف المحدد كمستند SLD صالح.</value>
+  </data>
+  <data name="sldEditor_message_importError" xml:space="preserve">
+    <value>خطأ في استيراد SLD: {0}</value>
+  </data>
+  <data name="sldEditor_message_exportError" xml:space="preserve">
+    <value>خطأ في تصدير SLD: {0}</value>
+  </data>
+  <data name="sldEditor_filter_noFilter" xml:space="preserve">
+    <value>بدون فلتر</value>
+  </data>
+  <data name="sldEditor_filter_advancedFilter" xml:space="preserve">
+    <value>فلتر متقدم (غير قابل للتحرير هنا)</value>
+  </data>
 </root>

@@ -1,18 +1,30 @@
-<Window x:Class="IRI.Maptor.Jab.Controls.Symbology.Sld.SldEditorWindow"
+<maptor:LocalizedMetroWindow x:Class="IRI.Maptor.Jab.Controls.Symbology.Sld.SldEditorWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls.Symbology.Sld"
+        xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls"
+        xmlns:sldViews="clr-namespace:IRI.Maptor.Jab.Controls.Symbology.Sld"
+        xmlns:dialogs="clr-namespace:IRI.Maptor.Jab.Controls.Dialogs"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core"
         mc:Ignorable="d"
-        Title="{Binding [sldEditor_common_editorTitle], Source={StaticResource Localization}}" Height="750" Width="950"
-        WindowStartupLocation="CenterScreen">
-    <Grid>
-        <Grid.Resources>
+        Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Localized}"
+        WindowTransitionsEnabled="False"
+        ShowIconOnTitleBar="False"
+        ShowInTaskbar="False"
+        Title="{Binding [sldEditor_common_editorTitle], Source={StaticResource Localization}}"
+        Height="750" Width="950" MinHeight="500" MinWidth="700">
+    <maptor:LocalizedMetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
-        </Grid.Resources>
+        </ResourceDictionary>
+    </maptor:LocalizedMetroWindow.Resources>
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -33,25 +45,32 @@
                     <TextBlock Text="{Binding [sldEditor_common_export], Source={StaticResource Localization}}"/>
                 </StackPanel>
             </Button>
+            <!--restore the layer's captured default symbology (server style); shown only
+                when the host wired RequestResetToDefaultAction-->
+            <Button Command="{Binding ResetToDefaultCommand}"
+                    Visibility="{Binding ShowResetOption, Converter={StaticResource boolToVisibilityConverter}}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="Restore" Margin="0,0,5,0"/>
+                    <TextBlock Text="{Binding [dialog_symbology_resetToDefault], Source={StaticResource Localization}}"/>
+                </StackPanel>
+            </Button>
             <Separator/>
             <TextBlock Text="{Binding [sldEditor_common_editorBanner], Source={StaticResource Localization}}" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0"/>
         </ToolBar>
 
         <!-- Main Editor -->
-        <maptor:SldEditorView Grid.Row="1" DataContext="{Binding}"/>
+        <sldViews:SldEditorView Grid.Row="1" DataContext="{Binding}"/>
 
-        <!-- Status Bar -->
-        <StatusBar Grid.Row="2">
-            <StatusBarItem>
-                <TextBlock>
-                    <Run Text="{Binding [sldEditor_common_rulesLabel], Source={StaticResource Localization}}"/>
-                    <Run Text="{Binding Rules.Count, Mode=OneWay}"/>
-                    <Run Text=" | "/>
-                    <Run Text="{Binding [sldEditor_common_selected], Source={StaticResource Localization}}"/>
-                    <Run Text="{Binding SelectedRule.Name, Mode=OneWay, FallbackValue='None'}"/>
-                </TextBlock>
-            </StatusBarItem>
-        </StatusBar>
+        <!-- Footer: [Apply][Cancel][OK] -->
+        <dialogs:DialogFooterView Grid.Row="2"
+                                  ShowTertiary="True"
+                                  TertiaryText="{Binding [dialog_common_apply], Source={StaticResource Localization}}"
+                                  TertiaryIconKind="Check"
+                                  TertiaryCommand="{Binding ApplyCommand}"
+                                  SecondaryText="{Binding [dialog_common_cancel], Source={StaticResource Localization}}"
+                                  SecondaryCommand="{Binding CancelCommand}"
+                                  PrimaryText="{Binding [dialog_common_ok], Source={StaticResource Localization}}"
+                                  PrimaryIconKind="CheckBold"
+                                  PrimaryCommand="{Binding OkCommand}"/>
     </Grid>
-</Window>
-
+</maptor:LocalizedMetroWindow>

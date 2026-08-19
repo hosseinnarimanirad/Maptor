@@ -1,11 +1,17 @@
 using System;
 using System.Linq;
+using System.ComponentModel;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Threading;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 using IRI.Maptor.Sta.Ogc;
 using IRI.Maptor.Sta.Ogc.SLD;
 using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Localization;
+using IRI.Maptor.Jab.Wpf.Cartography.Legend;
 
 
 namespace IRI.Maptor.Jab.Wpf.ViewModels.Symbology;
@@ -71,6 +77,18 @@ public class RuleViewModel : Notifier
     // (spatial/logical/like/…) is retained here so it round-trips unchanged.
     private OgcFilter _loadedFilter;
 
+    // Rule parts the editor doesn't surface, retained for lossless round-trip.
+    private LegendGraphic? _loadedLegendGraphic;
+    private ElseFilter? _loadedElseFilter;
+
+    /// <summary>
+    /// Index of the FeatureTypeStyle this rule was loaded from within its UserStyle
+    /// (GeoServer commonly splits one logical style across several FeatureTypeStyles,
+    /// one rule each, for compositing order). Used to map the rule back to the same
+    /// slot on save; -1 marks a rule created in the editor.
+    /// </summary>
+    public int SourceFeatureTypeStyleIndex { get; set; } = -1;
+
     private bool _hasFilter;
     public bool HasFilter
     {
@@ -125,14 +143,14 @@ public class RuleViewModel : Notifier
         get
         {
             if (!HasFilter)
-                return "No filter";
+                return LocalizationManager.Instance["sldEditor_filter_noFilter"];
 
             if (!string.IsNullOrWhiteSpace(FilterPropertyName))
                 return $"{FilterPropertyName} {OperatorSymbol(FilterOperator)} {FilterValue}";
 
             return _loadedFilter?.Predicate != null
-                ? "Advanced filter (not editable here)"
-                : "No filter";
+                ? LocalizationManager.Instance["sldEditor_filter_advancedFilter"]
+                : LocalizationManager.Instance["sldEditor_filter_noFilter"];
         }
     }
 
@@ -164,7 +182,92 @@ public class RuleViewModel : Notifier
         AddTextSymbolizerCommand = new RelayCommand(_ => Symbolizers.Add(new TextSymbolizerViewModel()));
         AddRasterSymbolizerCommand = new RelayCommand(_ => Symbolizers.Add(new RasterSymbolizerViewModel()));
         RemoveSymbolizerCommand = new RelayCommand(_ => RemoveSymbolizer(), _ => SelectedSymbolizer != null);
+
+        Symbolizers.CollectionChanged += OnSymbolizersCollectionChanged;
     }
+
+    #region Live swatch preview
+
+    private const int SwatchDebounceMilliseconds = 300;
+
+    private static readonly SldLegendOptions _swatchOptions = new SldLegendOptions();
+
+    private ImageSource? _swatchImage;
+    private bool _swatchDirty = true;
+    private DispatcherTimer? _swatchTimer;
+
+    /// <summary>
+    /// Live preview of this rule's symbolizers (same swatch renderer as the legend;
+    /// filter/scale neutralized). Regenerated lazily on read after edits, so headless
+    /// usage (tests, serialization) never triggers rendering.
+    /// </summary>
+    public ImageSource? SwatchImage
+    {
+        get
+        {
+            if (_swatchDirty)
+            {
+                _swatchDirty = false;
+                _swatchImage = CreateSwatchImage();
+            }
+
+            return _swatchImage;
+        }
+    }
+
+    private ImageSource? CreateSwatchImage()
+    {
+        try
+        {
+            using var bitmap = LegendSwatchFactory.CreateSwatchBitmap(ToRule(), _swatchOptions);
+
+            return SldLegendBuilder.ToFrozenBitmapImage(bitmap);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private void OnSymbolizersCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.OldItems is not null)
+        {
+            foreach (INotifyPropertyChanged item in e.OldItems)
+                item.PropertyChanged -= OnSymbolizerPropertyChanged;
+        }
+
+        if (e.NewItems is not null)
+        {
+            foreach (INotifyPropertyChanged item in e.NewItems)
+                item.PropertyChanged += OnSymbolizerPropertyChanged;
+        }
+
+        InvalidateSwatch();
+    }
+
+    private void OnSymbolizerPropertyChanged(object? sender, PropertyChangedEventArgs e) => InvalidateSwatch();
+
+    private void InvalidateSwatch()
+    {
+        _swatchDirty = true;
+
+        if (_swatchTimer is null)
+        {
+            _swatchTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(SwatchDebounceMilliseconds) };
+            _swatchTimer.Tick += (_, _) =>
+            {
+                _swatchTimer.Stop();
+                RaisePropertyChanged(nameof(SwatchImage));
+            };
+        }
+
+        // restart on every change: bursts (per-keystroke edits) collapse into one refresh
+        _swatchTimer.Stop();
+        _swatchTimer.Start();
+    }
+
+    #endregion
 
     private void RemoveSymbolizer()
     {
@@ -185,6 +288,8 @@ public class RuleViewModel : Notifier
             MinScaleDenominator = MinScale,
             MaxScaleDenominator = MaxScale,
             Filter = HasFilter ? BuildFilter() : null,
+            LegendGraphic = _loadedLegendGraphic,
+            ElseFilter = _loadedElseFilter,
             Symbolizers = Symbolizers.Select(s => s.ToSymbolizer()).ToList()
         };
 
@@ -198,6 +303,8 @@ public class RuleViewModel : Notifier
         Abstract = rule.Abstract;
         MinScale = rule.MinScaleDenominator;
         MaxScale = rule.MaxScaleDenominator;
+        _loadedLegendGraphic = rule.LegendGraphic;
+        _loadedElseFilter = rule.ElseFilter;
         LoadFilter(rule.Filter);
 
         Symbolizers.Clear();

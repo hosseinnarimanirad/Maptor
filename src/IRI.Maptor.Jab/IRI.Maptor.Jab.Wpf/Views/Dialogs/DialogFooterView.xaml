@@ -18,6 +18,20 @@
 
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
 
+            <!--optional third action (e.g. Apply-without-close). Hidden unless a dialog
+                opts in via ShowTertiary, so existing two-button dialogs are unaffected.-->
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Secondary}"
+                    Command="{Binding TertiaryCommand, ElementName=root}"
+                    IsEnabled="{Binding IsTertiaryEnabled, ElementName=root}"
+                    Visibility="{Binding ShowTertiary, ElementName=root, Converter={StaticResource boolToVisibilityConverter}}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="{Binding TertiaryIconKind, ElementName=root}"
+                                                Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent}"
+                               Text="{Binding TertiaryText, ElementName=root}"/>
+                </StackPanel>
+            </Button>
+
             <!--IsCancel is bound to ShowSecondary so a hidden button never claims Esc:
                 on a modeless window that would try to set DialogResult and throw.-->
             <Button Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Secondary}"

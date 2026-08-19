@@ -88,6 +88,62 @@ public partial class DialogFooterView : UserControl
         DependencyProperty.Register(nameof(SecondaryIconKind), typeof(PackIconMaterialKind), typeof(DialogFooterView), new PropertyMetadata(PackIconMaterialKind.CloseThick));
 
 
+    public ICommand? TertiaryCommand
+    {
+        get { return (ICommand?)GetValue(TertiaryCommandProperty); }
+        set { SetValue(TertiaryCommandProperty, value); }
+    }
+
+    public static readonly DependencyProperty TertiaryCommandProperty =
+        DependencyProperty.Register(nameof(TertiaryCommand), typeof(ICommand), typeof(DialogFooterView), new PropertyMetadata(null));
+
+
+    public string? TertiaryText
+    {
+        get { return (string?)GetValue(TertiaryTextProperty); }
+        set { SetValue(TertiaryTextProperty, value); }
+    }
+
+    public static readonly DependencyProperty TertiaryTextProperty =
+        DependencyProperty.Register(nameof(TertiaryText), typeof(string), typeof(DialogFooterView), new PropertyMetadata(null));
+
+
+    public PackIconMaterialKind TertiaryIconKind
+    {
+        get { return (PackIconMaterialKind)GetValue(TertiaryIconKindProperty); }
+        set { SetValue(TertiaryIconKindProperty, value); }
+    }
+
+    public static readonly DependencyProperty TertiaryIconKindProperty =
+        DependencyProperty.Register(nameof(TertiaryIconKind), typeof(PackIconMaterialKind), typeof(DialogFooterView), new PropertyMetadata(PackIconMaterialKind.Check));
+
+
+    /// <summary>
+    /// False by default; a dialog that needs a third action (e.g. Apply) opts in.
+    /// </summary>
+    public bool ShowTertiary
+    {
+        get { return (bool)GetValue(ShowTertiaryProperty); }
+        set { SetValue(ShowTertiaryProperty, value); }
+    }
+
+    public static readonly DependencyProperty ShowTertiaryProperty =
+        DependencyProperty.Register(nameof(ShowTertiary), typeof(bool), typeof(DialogFooterView), new PropertyMetadata(false));
+
+
+    /// <summary>
+    /// Only needed when the command itself carries no CanExecute.
+    /// </summary>
+    public bool IsTertiaryEnabled
+    {
+        get { return (bool)GetValue(IsTertiaryEnabledProperty); }
+        set { SetValue(IsTertiaryEnabledProperty, value); }
+    }
+
+    public static readonly DependencyProperty IsTertiaryEnabledProperty =
+        DependencyProperty.Register(nameof(IsTertiaryEnabled), typeof(bool), typeof(DialogFooterView), new PropertyMetadata(true));
+
+
     /// <summary>
     /// Optional status line shown opposite the buttons (e.g. "3 users loaded").
     /// </summary>

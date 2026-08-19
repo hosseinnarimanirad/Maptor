@@ -1819,4 +1819,31 @@
   <data name="theme_mode_dark" xml:space="preserve">
     <value>تاریک</value>
   </data>
+  <data name="dialog_common_apply" xml:space="preserve">
+    <value>جێبەجێکردن</value>
+  </data>
+  <data name="dialog_symbology_advanced" xml:space="preserve">
+    <value>پێشکەوتوو (SLD)</value>
+  </data>
+  <data name="dialog_symbology_resetToDefault" xml:space="preserve">
+    <value>گەڕاندنەوە بۆ بنەڕەت</value>
+  </data>
+  <data name="sldEditor_common_preservedContentNotice" xml:space="preserve">
+    <value>ئەم بەڵگەنامەیە ستایل یان چینی زیاتری تێدایە کە لێرە ناتوانرێت دەستکاری بکرێن؛ بەبێ گۆڕانکاری دەپارێزرێن.</value>
+  </data>
+  <data name="sldEditor_message_invalidSldFile" xml:space="preserve">
+    <value>فایلی هەڵبژێردراو نەتوانرا وەک بەڵگەنامەیەکی دروستی SLD بخوێنرێتەوە.</value>
+  </data>
+  <data name="sldEditor_message_importError" xml:space="preserve">
+    <value>هەڵە لە هاوردەکردنی SLD: {0}</value>
+  </data>
+  <data name="sldEditor_message_exportError" xml:space="preserve">
+    <value>هەڵە لە هەناردەکردنی SLD: {0}</value>
+  </data>
+  <data name="sldEditor_filter_noFilter" xml:space="preserve">
+    <value>بەبێ فلتەر</value>
+  </data>
+  <data name="sldEditor_filter_advancedFilter" xml:space="preserve">
+    <value>فلتەری پێشکەوتوو (لێرە دەستکاری ناکرێت)</value>
+  </data>
 </root>

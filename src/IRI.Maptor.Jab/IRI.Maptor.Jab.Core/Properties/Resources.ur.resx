@@ -1819,4 +1819,31 @@
   <data name="theme_mode_dark" xml:space="preserve">
     <value>گہرا</value>
   </data>
+  <data name="dialog_common_apply" xml:space="preserve">
+    <value>لاگو کریں</value>
+  </data>
+  <data name="dialog_symbology_advanced" xml:space="preserve">
+    <value>اعلی درجے کا (SLD)</value>
+  </data>
+  <data name="dialog_symbology_resetToDefault" xml:space="preserve">
+    <value>ڈیفالٹ پر بحال کریں</value>
+  </data>
+  <data name="sldEditor_common_preservedContentNotice" xml:space="preserve">
+    <value>اس دستاویز میں اضافی اسٹائل یا پرتیں شامل ہیں جن میں یہاں ترمیم نہیں کی جا سکتی؛ انہیں بغیر تبدیلی کے محفوظ رکھا جائے گا۔</value>
+  </data>
+  <data name="sldEditor_message_invalidSldFile" xml:space="preserve">
+    <value>منتخب فائل کو درست SLD دستاویز کے طور پر نہیں پڑھا جا سکا۔</value>
+  </data>
+  <data name="sldEditor_message_importError" xml:space="preserve">
+    <value>SLD درآمد کرنے میں خرابی: {0}</value>
+  </data>
+  <data name="sldEditor_message_exportError" xml:space="preserve">
+    <value>SLD برآمد کرنے میں خرابی: {0}</value>
+  </data>
+  <data name="sldEditor_filter_noFilter" xml:space="preserve">
+    <value>کوئی فلٹر نہیں</value>
+  </data>
+  <data name="sldEditor_filter_advancedFilter" xml:space="preserve">
+    <value>اعلی درجے کا فلٹر (یہاں قابل ترمیم نہیں)</value>
+  </data>
 </root>

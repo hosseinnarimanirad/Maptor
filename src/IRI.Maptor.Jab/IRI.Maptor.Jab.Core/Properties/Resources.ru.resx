@@ -1819,4 +1819,31 @@
   <data name="theme_mode_dark" xml:space="preserve">
     <value>Тёмная</value>
   </data>
+  <data name="dialog_common_apply" xml:space="preserve">
+    <value>Применить</value>
+  </data>
+  <data name="dialog_symbology_advanced" xml:space="preserve">
+    <value>Расширенный (SLD)</value>
+  </data>
+  <data name="dialog_symbology_resetToDefault" xml:space="preserve">
+    <value>Сбросить к значению по умолчанию</value>
+  </data>
+  <data name="sldEditor_common_preservedContentNotice" xml:space="preserve">
+    <value>Этот документ содержит дополнительные стили или слои, которые здесь нельзя редактировать; они будут сохранены без изменений.</value>
+  </data>
+  <data name="sldEditor_message_invalidSldFile" xml:space="preserve">
+    <value>Не удалось прочитать выбранный файл как корректный документ SLD.</value>
+  </data>
+  <data name="sldEditor_message_importError" xml:space="preserve">
+    <value>Ошибка импорта SLD: {0}</value>
+  </data>
+  <data name="sldEditor_message_exportError" xml:space="preserve">
+    <value>Ошибка экспорта SLD: {0}</value>
+  </data>
+  <data name="sldEditor_filter_noFilter" xml:space="preserve">
+    <value>Без фильтра</value>
+  </data>
+  <data name="sldEditor_filter_advancedFilter" xml:space="preserve">
+    <value>Расширенный фильтр (здесь не редактируется)</value>
+  </data>
 </root>

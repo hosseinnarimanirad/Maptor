@@ -15,6 +15,7 @@
                 rendered with stock MahApps chrome instead of the Maptor design system-->
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource IRI.Maptor.Styles.TabItem}"/>
@@ -70,6 +71,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100"/>
@@ -89,9 +91,16 @@
                          Text="{Binding StyleTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <TextBlock Grid.Row="3" Grid.Column="0" Text="{Binding [sldEditor_common_abstract], Source={StaticResource Localization}}" VerticalAlignment="Top" Margin="4"/>
-                <TextBox Grid.Row="3" Grid.Column="1" Margin="4" Height="50" 
+                <TextBox Grid.Row="3" Grid.Column="1" Margin="4" Height="50"
                          TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
                          Text="{Binding StyleAbstract, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <!--notice: the loaded document holds styles/layers beyond the one edited
+                    here; they round-trip unchanged (SldEditorViewModel.HasPreservedContent)-->
+                <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,6,4,2"
+                           FontStyle="Italic" Foreground="Gray" TextWrapping="Wrap"
+                           Text="{Binding [sldEditor_common_preservedContentNotice], Source={StaticResource Localization}}"
+                           Visibility="{Binding HasPreservedContent, Converter={StaticResource boolToVisibilityConverter}}"/>
             </Grid>
         </GroupBox>
 
@@ -126,11 +135,27 @@
                         </Button>
                     </StackPanel>
 
-                    <ListBox Grid.Row="1" 
-                             ItemsSource="{Binding Rules}" 
+                    <ListBox Grid.Row="1"
+                             ItemsSource="{Binding Rules}"
                              SelectedItem="{Binding SelectedRule, Mode=TwoWay}"
-                             DisplayMemberPath="Name"
-                             Margin="4"/>
+                             HorizontalContentAlignment="Stretch"
+                             Margin="4">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel MinHeight="28">
+                                    <!--live swatch preview (regenerates as the rule's symbolizers change)-->
+                                    <Border DockPanel.Dock="Left" Width="36" Height="26" Margin="0,1,6,1"
+                                            BorderBrush="{DynamicResource MahApps.Brushes.Gray8}" BorderThickness="1"
+                                            CornerRadius="3" VerticalAlignment="Center" FlowDirection="LeftToRight">
+                                        <Image Source="{Binding SwatchImage}" Width="32" Height="24"
+                                               Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                               RenderOptions.BitmapScalingMode="HighQuality"/>
+                                    </Border>
+                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </Grid>
             </GroupBox>
 
@@ -213,7 +238,10 @@
                                     ToolTip="{Binding [sldEditor_common_addTextSymbolizer], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
                                 <iconPacks:PackIconMaterial Kind="FormatAnnotationPlus" />
                             </Button>
+                            <!--hidden for vector layers: the runtime renderer skips raster
+                                symbolizers, so authoring one there would silently do nothing-->
                             <Button Command="{Binding SelectedRule.AddRasterSymbolizerCommand}"
+                                    Visibility="{Binding CanAddRasterSymbolizer, Converter={StaticResource boolToVisibilityConverter}}"
                                     ToolTip="{Binding [sldEditor_common_addRasterSymbolizer], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
                                 <iconPacks:PackIconMaterial Kind="Image" />
                             </Button>
@@ -257,10 +285,13 @@
                             <Button Content="{Binding [sldEditor_common_importFromFile], Source={StaticResource Localization}}" Command="{Binding ImportSldCommand}" Width="120" Margin="4"/>
                         </StackPanel>
 
+                        <!--XML is inherently LTR; without the explicit FlowDirection the RTL
+                            (Persian) window mirrors the markup into unreadable text-->
                         <TextBox Grid.Row="1"
                                  Margin="4"
                                  IsReadOnly="True"
                                  TextWrapping="NoWrap"
+                                 FlowDirection="LeftToRight"
                                  VerticalScrollBarVisibility="Auto"
                                  HorizontalScrollBarVisibility="Auto"
                                  FontFamily="Consolas"

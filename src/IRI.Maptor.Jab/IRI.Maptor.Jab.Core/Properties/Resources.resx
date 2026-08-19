@@ -1600,6 +1600,33 @@
   <data name="dialog_common_ok" xml:space="preserve">
     <value>OK</value>
   </data>
+  <data name="dialog_common_apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="sldEditor_common_preservedContentNotice" xml:space="preserve">
+    <value>This document contains additional styles or layers that are not editable here; they will be preserved unchanged.</value>
+  </data>
+  <data name="dialog_symbology_advanced" xml:space="preserve">
+    <value>Advanced (SLD)</value>
+  </data>
+  <data name="dialog_symbology_resetToDefault" xml:space="preserve">
+    <value>Reset to default</value>
+  </data>
+  <data name="sldEditor_message_invalidSldFile" xml:space="preserve">
+    <value>The selected file could not be parsed as a valid SLD document.</value>
+  </data>
+  <data name="sldEditor_message_importError" xml:space="preserve">
+    <value>Error importing SLD: {0}</value>
+  </data>
+  <data name="sldEditor_message_exportError" xml:space="preserve">
+    <value>Error exporting SLD: {0}</value>
+  </data>
+  <data name="sldEditor_filter_noFilter" xml:space="preserve">
+    <value>No filter</value>
+  </data>
+  <data name="sldEditor_filter_advancedFilter" xml:space="preserve">
+    <value>Advanced filter (not editable here)</value>
+  </data>
   <data name="cmd_drawingLegend_openAll" xml:space="preserve">
     <value>Open All</value>
   </data>

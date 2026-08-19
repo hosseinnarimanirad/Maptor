@@ -115,16 +115,42 @@ public static class SldHelper
 
     public static StyledLayerDescriptor? Parse(string? xmlSld)
     {
+        return TryParse(xmlSld, out var sld, out _) ? sld : null;
+    }
+
+    /// <summary>
+    /// Parses an SLD XML string, surfacing the failure reason instead of swallowing it
+    /// (<see cref="Parse"/> keeps the old null-on-failure contract on top of this).
+    /// </summary>
+    public static bool TryParse(string? xmlSld, out StyledLayerDescriptor? sld, out string? error)
+    {
+        sld = null;
+        error = null;
+
         if (string.IsNullOrWhiteSpace(xmlSld))
-            return null;
+        {
+            error = "The SLD document is empty.";
+            return false;
+        }
 
         try
         {
-            return XmlHelper.DeserializeFromXmlString<StyledLayerDescriptor>(xmlSld);
+            sld = XmlHelper.DeserializeFromXmlString<StyledLayerDescriptor>(xmlSld);
+
+            if (sld is null)
+            {
+                error = "The document could not be read as a StyledLayerDescriptor.";
+                return false;
+            }
+
+            return true;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return null;
+            // XmlSerializer wraps the informative message ("There is an error in XML
+            // document (line, pos)…") around an inner exception carrying the real cause.
+            error = ex.InnerException is null ? ex.Message : $"{ex.Message} {ex.InnerException.Message}";
+            return false;
         }
     }
 

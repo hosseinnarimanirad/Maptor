@@ -1819,4 +1819,31 @@
   <data name="theme_mode_dark" xml:space="preserve">
     <value>गहरा</value>
   </data>
+  <data name="dialog_common_apply" xml:space="preserve">
+    <value>लागू करें</value>
+  </data>
+  <data name="dialog_symbology_advanced" xml:space="preserve">
+    <value>उन्नत (SLD)</value>
+  </data>
+  <data name="dialog_symbology_resetToDefault" xml:space="preserve">
+    <value>डिफ़ॉल्ट पर रीसेट करें</value>
+  </data>
+  <data name="sldEditor_common_preservedContentNotice" xml:space="preserve">
+    <value>इस दस्तावेज़ में अतिरिक्त शैलियाँ या परतें हैं जिन्हें यहाँ संपादित नहीं किया जा सकता; उन्हें बिना बदलाव के सुरक्षित रखा जाएगा।</value>
+  </data>
+  <data name="sldEditor_message_invalidSldFile" xml:space="preserve">
+    <value>चयनित फ़ाइल को मान्य SLD दस्तावेज़ के रूप में नहीं पढ़ा जा सका।</value>
+  </data>
+  <data name="sldEditor_message_importError" xml:space="preserve">
+    <value>SLD आयात करने में त्रुटि: {0}</value>
+  </data>
+  <data name="sldEditor_message_exportError" xml:space="preserve">
+    <value>SLD निर्यात करने में त्रुटि: {0}</value>
+  </data>
+  <data name="sldEditor_filter_noFilter" xml:space="preserve">
+    <value>कोई फ़िल्टर नहीं</value>
+  </data>
+  <data name="sldEditor_filter_advancedFilter" xml:space="preserve">
+    <value>उन्नत फ़िल्टर (यहाँ संपादन योग्य नहीं)</value>
+  </data>
 </root>

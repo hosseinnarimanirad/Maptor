@@ -85,7 +85,7 @@ public static class SldLegendBuilder
         return row;
     }
 
-    private static Imaging.BitmapImage? ToFrozenBitmapImage(System.Drawing.Bitmap bitmap)
+    internal static Imaging.BitmapImage? ToFrozenBitmapImage(System.Drawing.Bitmap bitmap)
     {
         var image = ImageUtility.CreateBitmapImage(bitmap, ImageFormat.Png);
 
