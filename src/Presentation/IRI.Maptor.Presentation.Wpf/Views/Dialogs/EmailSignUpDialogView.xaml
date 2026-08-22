@@ -1,0 +1,143 @@
+<mahApp:MetroWindow x:Class="IRI.Maptor.Presentation.Wpf.Controls.Dialogs.EmailSignUpDialogView"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
+            xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"              
+            xmlns:iriSecurity="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls.Security"
+            xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
+            xmlns:converters="clr-namespace:IRI.Maptor.Presentation.Wpf.Converters"
+            Title="{Binding Title}" FlowDirection="RightToLeft" ShowInTaskbar="False"
+            GlowBrush="{Binding Source={DynamicResource MahApps.Brushes.Highlight}, TargetNullValue=Red}" ShowMaxRestoreButton="False" ShowCloseButton="False" 
+            ShowMinButton="False" ShowTitleBar="True"
+            SizeToContent="WidthAndHeight" MinWidth="300" FontFamily="{StaticResource iranSans}" WindowStartupLocation="CenterOwner">
+    <Grid>
+        <Grid.Resources>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+            <SolidColorBrush x:Key="defaultRed">#FFEA4333</SolidColorBrush>
+            <SolidColorBrush x:Key="defaultGreen">#FF81BA45</SolidColorBrush>
+            <Style TargetType="Path">
+                <Setter Property="Fill" Value="White"/>
+                <Setter Property="Stretch" Value="Uniform"/>
+                <Setter Property="Width" Value="18"/>
+                <Setter Property="Height" Value="18"/>
+                <Setter Property="Margin" Value="4"/>
+                <Setter Property="FlowDirection" Value="LeftToRight"/>
+            </Style>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <TextBlock HorizontalAlignment="Center" FontSize="18" Margin="8">
+            <TextBlock.Text>
+                <MultiBinding>
+                    <MultiBinding.Converter>
+                        <converters:FirstNonNullConverter/>
+                    </MultiBinding.Converter>
+                    <Binding Path="BannerText"/>
+                    <Binding Path="[dialog_userSignUp_bannerNewUser]" Source="{StaticResource Localization}"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        <iriSecurity:UserNameSignUpView x:Name="userNameSignUpView" Grid.Row="1" HorizontalAlignment="Stretch" FlowDirection="RightToLeft"
+                                      Padding="4" InputBorderBrush="Gray" InputBorderThickness="1"/>
+        <Border Grid.Row="2" MinHeight="20">
+            <StackPanel Margin="8,12">
+                <!--Foreground="White" was set on both buttons, overriding the styles' own.
+                    Harmless on Primary (which already uses IdealForeground) but wrong on
+                    Secondary, whose background is Gray10 — white-on-near-white made the Cancel
+                    caption invisible in light theme.-->
+                <Button Margin="4" Content="{Binding [dialog_userSignUp_createUser], Source={StaticResource Localization}}"
+                        Style="{StaticResource IRI.Maptor.Styles.Button.Primary.Large}" FontSize="16"
+                        Command="{Binding SignUpCommand}" CommandParameter="{Binding ElementName=userNameSignUpView}"/>
+                <Button Margin="4" Content="{Binding [dialog_common_cancel], Source={StaticResource Localization}}" FontSize="16" Style="{StaticResource IRI.Maptor.Styles.Button.Secondary.Large}"
+                        Command="{Binding CancelCommand}">
+
+                </Button>
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="3">
+            <Border Grid.Row="3" BorderBrush="{DynamicResource MahApps.Brushes.Gray8}" BorderThickness="1" HorizontalAlignment="Stretch" Height="2" Margin="8"/>
+            <!--the caption's Background masks the rule behind it, so it has to match the dialog
+                surface rather than being literal White-->
+            <TextBlock Grid.Row="3" HorizontalAlignment="Center" Text="{Binding [dialog_emailSignUp_or], Source={StaticResource Localization}}"
+                       Padding="8,1"
+                       Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                       Foreground="{DynamicResource IRI.Maptor.Brushes.Muted}"/>
+        </Grid>
+
+        <!--<Button Grid.Row="4" Background="White" Margin="8" BorderBrush="#4285F4" BorderThickness="1" Padding="0" HorizontalContentAlignment="Stretch">
+            <Grid FlowDirection="LeftToRight" HorizontalAlignment="Stretch" Margin="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Viewbox Grid.Column="0" Height="24" Margin="8">
+                    <Grid>
+                        <Grid.Resources>
+                            <Style TargetType="Path">
+                                <Setter Property="FlowDirection" Value="LeftToRight"/>
+                            </Style>
+                        </Grid.Resources>
+                        <Path Data="M43.609375,20.082031L42,20.082031 42,20 24,20 24,28 35.304688,28C33.652344,32.65625 29.222656,36 24,36 17.371094,36 12,30.628906 12,24 12,17.371094 17.371094,12 24,12 27.058594,12 29.84375,13.152344 31.960938,15.039063L37.617188,9.382813C34.046875,6.054688 29.269531,4 24,4 12.953125,4 4,12.953125 4,24 4,35.046875 12.953125,44 24,44 35.046875,44 44,35.046875 44,24 44,22.660156 43.863281,21.351563 43.609375,20.082031z" Fill="#FFFFC107" />
+                        <Path Data="M6.304688,14.691406L12.878906,19.511719C14.65625,15.109375 18.960938,12 24,12 27.058594,12 29.84375,13.152344 31.960938,15.039063L37.617188,9.382813C34.046875,6.054688 29.269531,4 24,4 16.316406,4 9.65625,8.335938 6.304688,14.691406z" Fill="#FFFF3D00" />
+                        <Path Data="M24,44C29.164063,44,33.859375,42.023438,37.410156,38.808594L31.21875,33.570313C29.210938,35.089844 26.714844,36 24,36 18.796875,36 14.382813,32.683594 12.71875,28.054688L6.195313,33.078125C9.503906,39.554688,16.226563,44,24,44z" Fill="#FF4CAF50" />
+                        <Path Data="M43.609375,20.082031L42,20.082031 42,20 24,20 24,28 35.304688,28C34.511719,30.238281 33.070313,32.164063 31.214844,33.570313 31.21875,33.570313 31.21875,33.570313 31.21875,33.570313L37.410156,38.808594C36.972656,39.203125 44,34 44,24 44,22.660156 43.863281,21.351563 43.609375,20.082031z" Fill="#FF1976D2" />
+                    </Grid>
+                </Viewbox>
+                <Border Background="#4285F4" HorizontalAlignment="Stretch" Grid.Column="1" >
+                    <TextBlock Text="ورود با حساب گوگل" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16" />
+                </Border>
+            </Grid>
+        </Button>-->
+        <Button Grid.Row="4" Margin="8" BorderBrush="#4285F4" BorderThickness="0" Padding="0" HorizontalContentAlignment="Stretch"
+                            Width="296" Command="{Binding LoginWithGoogleOAuthCommand}"
+                Style="{StaticResource IRI.Maptor.Styles.Button.Primary.Large}">
+            
+            <Grid FlowDirection="LeftToRight" HorizontalAlignment="Stretch" Margin="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Border Background="White" Margin="0">
+                    <Viewbox Grid.Column="0" Height="24" Margin="8">
+                        <Grid>
+                            <Grid.Resources>
+                                <Style TargetType="Path">
+                                    <Setter Property="FlowDirection" Value="LeftToRight"/>
+                                </Style>
+                            </Grid.Resources>
+                            <Path Data="M43.609375,20.082031L42,20.082031 42,20 24,20 24,28 35.304688,28C33.652344,32.65625 29.222656,36 24,36 17.371094,36 12,30.628906 12,24 12,17.371094 17.371094,12 24,12 27.058594,12 29.84375,13.152344 31.960938,15.039063L37.617188,9.382813C34.046875,6.054688 29.269531,4 24,4 12.953125,4 4,12.953125 4,24 4,35.046875 12.953125,44 24,44 35.046875,44 44,35.046875 44,24 44,22.660156 43.863281,21.351563 43.609375,20.082031z" Fill="#FFFFC107" />
+                            <Path Data="M6.304688,14.691406L12.878906,19.511719C14.65625,15.109375 18.960938,12 24,12 27.058594,12 29.84375,13.152344 31.960938,15.039063L37.617188,9.382813C34.046875,6.054688 29.269531,4 24,4 16.316406,4 9.65625,8.335938 6.304688,14.691406z" Fill="#FFFF3D00" />
+                            <Path Data="M24,44C29.164063,44,33.859375,42.023438,37.410156,38.808594L31.21875,33.570313C29.210938,35.089844 26.714844,36 24,36 18.796875,36 14.382813,32.683594 12.71875,28.054688L6.195313,33.078125C9.503906,39.554688,16.226563,44,24,44z" Fill="#FF4CAF50" />
+                            <Path Data="M43.609375,20.082031L42,20.082031 42,20 24,20 24,28 35.304688,28C34.511719,30.238281 33.070313,32.164063 31.214844,33.570313 31.21875,33.570313 31.21875,33.570313 31.21875,33.570313L37.410156,38.808594C36.972656,39.203125 44,34 44,24 44,22.660156 43.863281,21.351563 43.609375,20.082031z" Fill="#FF1976D2" />
+                        </Grid>
+                    </Viewbox>
+                </Border>
+                <Border HorizontalAlignment="Stretch" Grid.Column="1">
+                    <TextBlock Grid.Column="1" Text="{Binding [dialog_emailSignUp_signUpGoogle], Source={StaticResource Localization}}"
+                               VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16" />
+                </Border>
+            </Grid>
+        </Button>
+
+        <Border Grid.Row="5" MinHeight="50" Background="{DynamicResource MahApps.Brushes.Accent4}" BorderThickness="0,2,0,0" Opacity=".5"
+                BorderBrush="{DynamicResource MahApps.Brushes.Accent3}">
+
+        </Border>
+
+        <TextBlock Grid.Row="5" Text="{Binding [dialog_userSignUp_enterCredentials], Source={StaticResource Localization}}" VerticalAlignment="Center"
+                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                       HorizontalAlignment="Center"/>
+    </Grid>
+</mahApp:MetroWindow>

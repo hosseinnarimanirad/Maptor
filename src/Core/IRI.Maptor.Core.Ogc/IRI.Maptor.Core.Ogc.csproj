@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <!-- or "latest", "preview", or "11.0" -->
+    <!--<LangVersion>latestMajor</LangVersion>-->
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>A .NET standard library containing OGC standards such as SFA, SLD, WFS, WMS, GML, KML</Description>
+    <PackageTags>GIS;spatial;OGC;GML;SLD;WMS;WFS</PackageTags>
+  </PropertyGroup>
+ 
+  <ItemGroup>
+    <ProjectReference Include="..\IRI.Maptor.Core.Common\IRI.Maptor.Core.Common.csproj" />
+    <ProjectReference Include="..\IRI.Maptor.Core.Spatial\IRI.Maptor.Core.Spatial.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Annotations" />
+  </ItemGroup>
+ 
+  <ItemGroup>
+    <EmbeddedResource Include="KML\Schemas\*.xsd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="KMZ\" />
+  </ItemGroup>
+
+</Project>

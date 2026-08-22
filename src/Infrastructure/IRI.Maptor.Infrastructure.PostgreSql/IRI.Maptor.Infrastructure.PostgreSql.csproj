@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageTags>GIS;spatial;PostgreSQL;PostGIS;geometry;database;datasource</PackageTags>
+    <Description>PostgreSQL/PostGIS adapter: reads PostGIS WKB into Maptor geometries, supports bounding-box and scale-dependent queries plus insert/update/delete.</Description>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Npgsql" /> 
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Persistence\IRI.Maptor.Core.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>

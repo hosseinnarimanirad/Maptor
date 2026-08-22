@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageTags>GIS;spatial;EntityFrameworkCore;EFCore;SqlServer;geometry;ORM</PackageTags>
+    <TargetFramework>net8.0</TargetFramework>
+    <Description>Shared EF Core persistence support for materializing SQL Server geometry/geography columns directly into IRI.Maptor Geometry&lt;Point&gt;, replacing NetTopologySuite. Reusable across desktop (WPF) and service applications.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Spatial\IRI.Maptor.Core.Spatial.csproj" />
+  </ItemGroup>
+
+</Project>

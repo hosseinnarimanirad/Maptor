@@ -18,9 +18,9 @@ The core code resides in the src/ folder. Here’s an overview:
 
 ```
 src/
- ├── IRI.Maptor.Sta           # Core spatial operations, models, and analysis
- ├── IRI.Maptor.Ket           # Persistence, database, and infrastructures extensions
- ├── IRI.Maptor.Jab           # WPF-based map viewer and components
+ ├── IRI.Maptor.Core           # Core spatial operations, models, and analysis
+ ├── IRI.Maptor.Infrastructure           # Persistence, database, and infrastructures extensions
+ ├── IRI.Maptor.Presentation           # WPF-based map viewer and components
  └── ... (other modules)
 ```
 

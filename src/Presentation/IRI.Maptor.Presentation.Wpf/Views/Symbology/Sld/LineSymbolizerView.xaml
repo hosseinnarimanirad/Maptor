@@ -1,0 +1,90 @@
+<UserControl x:Class="IRI.Maptor.Presentation.Wpf.Controls.Symbology.Sld.LineSymbolizerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:sld="clr-namespace:IRI.Maptor.Core.Ogc.SLD;assembly=IRI.Maptor.Core.Ogc"
+             mc:Ignorable="d"
+             d:DesignHeight="400" d:DesignWidth="350">
+
+    <!--Same row pattern as PointSymbolizerView; see that file for the rationale.
+        StrokeColor is SLD model data, not chrome.-->
+
+    <Grid Margin="{StaticResource IRI.Maptor.Styles.Thickness.ViewContent}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                   Text="{Binding [sldEditor_common_strokeColor], Source={StaticResource Localization}}"/>
+        <mahApp:ColorPicker Grid.Row="0" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.ColorPicker.Normal}"
+                            SelectedColor="{Binding StrokeColor, Mode=TwoWay}"/>
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                   Text="{Binding [sldEditor_common_strokeWidth], Source={StaticResource Localization}}"/>
+        <mahApp:NumericUpDown Grid.Row="1" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Normal}"
+                              Value="{Binding StrokeWidth, Mode=TwoWay}"
+                              Minimum="0" Maximum="50" Interval="0.5"/>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                   Text="{Binding [sldEditor_common_strokeOpacity], Source={StaticResource Localization}}"/>
+        <Slider Grid.Row="2" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.Slider.Normal}"
+                Value="{Binding StrokeOpacity, Mode=TwoWay}"
+                Minimum="0" Maximum="1" TickFrequency="0.1" IsSnapToTickEnabled="True"/>
+
+        <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                   Text="{Binding [sldEditor_common_lineCap], Source={StaticResource Localization}}"/>
+        <ComboBox Grid.Row="3" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal}"
+                  SelectedItem="{Binding LineCap}">
+            <ComboBox.ItemsSource>
+                <x:Array Type="{x:Type sld:Sld_StrokeLineCap}">
+                    <sld:Sld_StrokeLineCap>Butt</sld:Sld_StrokeLineCap>
+                    <sld:Sld_StrokeLineCap>Round</sld:Sld_StrokeLineCap>
+                    <sld:Sld_StrokeLineCap>Square</sld:Sld_StrokeLineCap>
+                </x:Array>
+            </ComboBox.ItemsSource>
+        </ComboBox>
+
+        <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                   Text="{Binding [sldEditor_common_lineJoin], Source={StaticResource Localization}}"/>
+        <ComboBox Grid.Row="4" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal}"
+                  SelectedItem="{Binding LineJoin}">
+            <ComboBox.ItemsSource>
+                <x:Array Type="{x:Type sld:Sld_StrokeLineJoin}">
+                    <sld:Sld_StrokeLineJoin>Mitre</sld:Sld_StrokeLineJoin>
+                    <sld:Sld_StrokeLineJoin>Round</sld:Sld_StrokeLineJoin>
+                    <sld:Sld_StrokeLineJoin>Bevel</sld:Sld_StrokeLineJoin>
+                </x:Array>
+            </ComboBox.ItemsSource>
+        </ComboBox>
+
+        <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                   Text="{Binding [sldEditor_lineSymbolizer_dashArray], Source={StaticResource Localization}}"/>
+        <TextBox Grid.Row="5" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
+                 Text="{Binding DashArray, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 mahApp:TextBoxHelper.Watermark="{Binding [sldEditor_lineSymbolizer_dashArrayWatermark], Source={StaticResource Localization}}"/>
+
+        <TextBlock Grid.Row="6" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                   Text="{Binding [sldEditor_lineSymbolizer_dashOffset], Source={StaticResource Localization}}"/>
+        <mahApp:NumericUpDown Grid.Row="6" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Normal}"
+                              Value="{Binding DashOffset, Mode=TwoWay}"
+                              Minimum="0" Maximum="1000" Interval="0.5"/>
+
+        <TextBlock Grid.Row="7" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                   Text="{Binding [sldEditor_common_geometryProperty], Source={StaticResource Localization}}"/>
+        <TextBox Grid.Row="7" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
+                 Text="{Binding GeometryPropertyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+    </Grid>
+</UserControl>

@@ -1,5 +1,5 @@
-﻿using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.MachineLearning; 
+﻿using IRI.Maptor.Core.Common.Primitives;
+using IRI.Maptor.Core.MachineLearning; 
 
 namespace IRI.Maptor.Res.LRSimplification.Common;
 

@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageTags>GIS;spatial;SqlServer;geometry;geography;database;datasource</PackageTags>
+    <Description>SQL Server Spatial adapter for geometry/geography columns: reads the native binary format directly into Maptor geometries, with scale-dependent and bounding-box queries and write support.</Description>
+    <TargetFramework>net8.0-windows</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+    <PackageReference Include="System.Data.SqlClient" /> 
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Persistence\IRI.Maptor.Core.Persistence.csproj" />
+    <ProjectReference Include="..\IRI.Maptor.Infrastructure.SqlServerSpatialExtension\IRI.Maptor.Infrastructure.SqlServerSpatialExtension.csproj" /> 
+  </ItemGroup>
+
+  <!--<ItemGroup>
+    <Reference Include="Microsoft.SqlServer.Types">
+      <HintPath>..\..\..\deploy\MicrosoftSqlServerTypes\v14\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
+  </ItemGroup>-->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SqlServer.Types"/>
+  </ItemGroup>
+
+
+</Project>

@@ -1,0 +1,22 @@
+<Application x:Class="IRI.Maptor.Samples.Wpf.HelloMap.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- MahApps.Metro theme: the Maptor controls use its brushes and control styles -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+
+                <!-- Maptor styles, shapes, converters, fonts and colors -->
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Shapes/Others.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Converters.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Colors.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/hosseinnarimanirad/Maptor/blob/master/LICENSE.txt)
 [![Build](https://img.shields.io/github/actions/workflow/status/hosseinnarimanirad/Maptor/master-release.yml)](https://github.com/hosseinnarimanirad/Maptor/actions)
 [![.NET Standard](https://img.shields.io/badge/.NET%20Standard-2.1-blue.svg)](https://learn.microsoft.com/dotnet/standard/net-standard)
-[![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Spatial.svg?style=flat-square)](https://www.nuget.org/packages/IRI.Maptor.Sta.Spatial)
+[![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Core.Spatial.svg?style=flat-square)](https://www.nuget.org/packages/IRI.Maptor.Core.Spatial)
 
 **A comprehensive .NET GIS library for spatial data modeling, processing, and visualization**
 
@@ -22,13 +22,13 @@ Maptor is an open-source .NET library suite for spatial operations, geospatial d
 ```
 IRI.Maptor.sln
 ├── src/
-│   ├── IRI.Maptor.Sta/   # 12 core spatial libraries (netstandard2.1, UI-free)
-│   ├── IRI.Maptor.Ket/   # 9 infrastructure & persistence adapters (net8.0 / net8.0-windows)
-│   └── IRI.Maptor.Jab/   # WPF UI tier: MapViewer control, MVVM, symbology, localization
+│   ├── Core/   # 12 core spatial libraries (netstandard2.1, UI-free)
+│   ├── Infrastructure/   # 9 infrastructure & persistence adapters (net8.0 / net8.0-windows)
+│   └── Presentation/   # WPF UI tier: MapViewer control, MVVM, symbology, localization
 ├── tests/                # xUnit test suite
-├── samples/              # sample WPF and console applications
+├── samples/              # sample code: core cookbook, WPF HelloMap, WPF gallery
 ├── research/             # algorithm research prototypes
-└── docs/                 # tutorials, the README style guide, and "future improvements/"
+└── docs/                 # tutorials, the README style guide, and "future-improvements/"
                           # (one .md per planned improvement or feature, ready to implement)
 ```
 
@@ -36,40 +36,44 @@ Three library tiers where dependencies flow downward (Jab UI → Ket infrastruct
 
 | Area | Target | Contents |
 |------|--------|----------|
-| [`src/IRI.Maptor.Sta`](src/IRI.Maptor.Sta/README.md) | netstandard2.1 | Twelve UI-free core libraries: primitives, spatial engine and format I/O, reference systems, Shapefile, OGC standards, graphs, ML, PDF export, security, persistence abstractions |
-| [`src/IRI.Maptor.Ket`](src/IRI.Maptor.Ket/README.md) | net8.0 / net8.0-windows | Nine infrastructure and persistence adapters: SQL Server, PostgreSQL/PostGIS, SQLite (MBTiles/GeoPackage), EF Core, Personal GDB, web APIs, GDI+ raster |
-| [`src/IRI.Maptor.Jab`](src/IRI.Maptor.Jab/README.md) | net8.0 / net8.0-windows | UI and presentation: the WPF `MapViewer` control, MVVM infrastructure, layers and symbology, tile services, localization |
+| [`src/IRI.Maptor.Core`](src/Core/README.md) | netstandard2.1 | Twelve UI-free core libraries: primitives, spatial engine and format I/O, reference systems, Shapefile, OGC standards, graphs, ML, PDF export, security, persistence abstractions |
+| [`src/IRI.Maptor.Infrastructure`](src/Infrastructure/README.md) | net8.0 / net8.0-windows | Nine infrastructure and persistence adapters: SQL Server, PostgreSQL/PostGIS, SQLite (MBTiles/GeoPackage), EF Core, Personal GDB, web APIs, GDI+ raster |
+| [`src/IRI.Maptor.Presentation`](src/Presentation/README.md) | net8.0 / net8.0-windows | UI and presentation: the WPF `MapViewer` control, MVVM infrastructure, layers and symbology, tile services, localization |
 | [`tests/`](tests/) | net8.0 | xUnit test suite |
-| [`samples/`](samples/) | — | Sample WPF and console applications |
+| [`samples/`](samples/README.md) | net8.0 / net8.0-windows | Sample code: a console cookbook for the core libraries, a minimal WPF map app, and a WPF gallery with one page per UI feature |
 
 ## Installation
 
 ```bash
 # Core spatial functionality
-dotnet add package IRI.Maptor.Sta.Spatial
+dotnet add package IRI.Maptor.Core.Spatial
 ```
 
 Frequently used packages:
 
 | Package | Description | Version |
 |---------|-------------|---------|
-| [IRI.Maptor.Sta.Spatial](https://www.nuget.org/packages/IRI.Maptor.Sta.Spatial) | Core spatial engine: geometry, analysis, format I/O | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Spatial.svg?style=flat-square) |
-| [IRI.Maptor.Sta.ShapefileFormat](https://www.nuget.org/packages/IRI.Maptor.Sta.ShapefileFormat) | Shapefile read/write (SHP, SHX, DBF, PRJ) | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.ShapefileFormat.svg?style=flat-square) |
-| [IRI.Maptor.Sta.SpatialReferenceSystem](https://www.nuget.org/packages/IRI.Maptor.Sta.SpatialReferenceSystem) | Coordinate systems and map projections | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.SpatialReferenceSystem.svg?style=flat-square) |
-| [IRI.Maptor.Sta.Ogc](https://www.nuget.org/packages/IRI.Maptor.Sta.Ogc) | OGC standards (WFS, WMS, GML, KML, SLD) | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Ogc.svg?style=flat-square) |
-| [IRI.Maptor.Sta.Graph](https://www.nuget.org/packages/IRI.Maptor.Sta.Graph) | Graph algorithms (BFS, DFS, Dijkstra, MST) | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Graph.svg?style=flat-square) |
-| [IRI.Maptor.Jab.Wpf](https://www.nuget.org/packages/IRI.Maptor.Jab.Wpf) | WPF map viewer and UI controls | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Jab.Wpf.svg?style=flat-square) |
+| [IRI.Maptor.Core.Spatial](https://www.nuget.org/packages/IRI.Maptor.Core.Spatial) | Core spatial engine: geometry, analysis, format I/O | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Core.Spatial.svg?style=flat-square) |
+| [IRI.Maptor.Core.ShapefileFormat](https://www.nuget.org/packages/IRI.Maptor.Core.ShapefileFormat) | Shapefile read/write (SHP, SHX, DBF, PRJ) | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Core.ShapefileFormat.svg?style=flat-square) |
+| [IRI.Maptor.Core.SpatialReferenceSystem](https://www.nuget.org/packages/IRI.Maptor.Core.SpatialReferenceSystem) | Coordinate systems and map projections | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Core.SpatialReferenceSystem.svg?style=flat-square) |
+| [IRI.Maptor.Core.Ogc](https://www.nuget.org/packages/IRI.Maptor.Core.Ogc) | OGC standards (WFS, WMS, GML, KML, SLD) | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Core.Ogc.svg?style=flat-square) |
+| [IRI.Maptor.Core.Graph](https://www.nuget.org/packages/IRI.Maptor.Core.Graph) | Graph algorithms (BFS, DFS, Dijkstra, MST) | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Core.Graph.svg?style=flat-square) |
+| [IRI.Maptor.Presentation.Wpf](https://www.nuget.org/packages/IRI.Maptor.Presentation.Wpf) | WPF map viewer and UI controls | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Presentation.Wpf.svg?style=flat-square) |
 
-Every library project in the Sta, Ket, and Jab tiers is published to NuGet — see the per-tier package tables in the [Sta](src/IRI.Maptor.Sta/README.md), [Ket](src/IRI.Maptor.Ket/README.md), and [Jab](src/IRI.Maptor.Jab/README.md) guides, or [browse all packages on NuGet.org](https://www.nuget.org/packages?q=IRI.Maptor).
+> **Renamed:** the WPF tier was previously published as `IRI.Maptor.Presentation.Common`. That package is
+> deprecated — switch to [`IRI.Maptor.Presentation.Wpf`](https://www.nuget.org/packages/IRI.Maptor.Presentation.Wpf).
+> The namespace changed accordingly: `IRI.Maptor.Presentation.Controls` is now `IRI.Maptor.Presentation.Wpf.Controls`.
+
+Every library project in the Sta, Ket, and Jab tiers is published to NuGet — see the per-tier package tables in the [Sta](src/Core/README.md), [Ket](src/Infrastructure/README.md), and [Jab](src/Presentation/README.md) guides, or [browse all packages on NuGet.org](https://www.nuget.org/packages?q=IRI.Maptor).
 
 ## Quick start
 
 ```csharp
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Analysis;
-using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Core.Common.Primitives;
+using IRI.Maptor.Core.Spatial.Analysis;
+using IRI.Maptor.Core.Spatial.Primitives;
+using IRI.Maptor.Core.SpatialReferenceSystem;
 
 // Create and work with points
 var point1 = new Point(51.33, 35.70);
@@ -93,7 +97,7 @@ Reading a shapefile and converting to GeoJSON:
 
 ```csharp
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Sta.ShapefileFormat;
+using IRI.Maptor.Core.ShapefileFormat;
 
 var shapes = await Shapefile.ReadShapesAsync("countries.shp");
 var geoJson = shapes.Select(s => s.AsGeometry().AsGeoJson()).ToList();
@@ -107,23 +111,26 @@ cd Maptor
 dotnet build
 ```
 
-Run the samples:
+Run the samples (see the [samples index](samples/README.md) for the full list):
 
 ```bash
-# WPF sample application
-dotnet run --project samples/IRI.Maptor.Tag.SampleWpfApp
+# the smallest complete WPF map application
+dotnet run --project samples/IRI.Maptor.Samples.Wpf.HelloMap
 
-# Console samples
-dotnet run --project samples/IRI.Maptor.Tag.SampleCodes
+# WPF gallery: one page per UI feature (legend, go to, identify, drawing, ...)
+dotnet run --project samples/IRI.Maptor.Samples.Wpf.Gallery
+
+# console cookbook for the core libraries
+dotnet run --project samples/IRI.Maptor.Samples.Core -- all
 ```
 
 ## Documentation
 
 - [README style guide](docs/readme-style-guide.md) — conventions for documentation in this repo
 - [Tutorial PDFs](docs/) — step-by-step guides
-- Tier guides: [Sta core libraries](src/IRI.Maptor.Sta/README.md) · [Ket adapters](src/IRI.Maptor.Ket/README.md) · [Jab UI libraries](src/IRI.Maptor.Jab/README.md)
-- Format deep-dives: each format folder under [`src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/`](src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/) has its own README
-- [Sample applications](samples/) — real-world examples
+- Tier guides: [Sta core libraries](src/Core/README.md) · [Ket adapters](src/Infrastructure/README.md) · [Jab UI libraries](src/Presentation/README.md)
+- Format deep-dives: each format folder under [`src/Core/IRI.Maptor.Core.Spatial/IO/`](src/Core/IRI.Maptor.Core.Spatial/IO/) has its own README
+- [Samples](samples/README.md) — one folder per sample, each with its own README
 
 ## Contributing
 

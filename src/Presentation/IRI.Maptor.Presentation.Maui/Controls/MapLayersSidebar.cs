@@ -1,0 +1,411 @@
+using System.Collections;
+using System.Windows.Input;
+
+using IRI.Maptor.Presentation.Maui.Layers;
+using IRI.Maptor.Presentation.Maui.Localization;
+
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Graphics;
+
+namespace IRI.Maptor.Presentation.Maui.Controls;
+
+/// <summary>
+/// A SW-Maps-style layer panel that slides in over the <see cref="MapViewer"/> from the
+/// right edge. It shows a background-map (basemap) picker and the list of vector layers;
+/// each row offers a visibility toggle, a color swatch (tap to cycle a preset palette),
+/// the layer name + auto-generated description, and a delete button. A "+" button raises
+/// <see cref="AddLayerCommand"/> so the host can import a layer (e.g. GeoJSON).
+///
+/// Bind <see cref="ItemsSource"/> to the map's <c>Layers</c> collection, <see cref="BaseMaps"/>
+/// / <see cref="SelectedBaseMap"/> to the basemap options, set <see cref="Map"/> for
+/// zoom-to-layer, and drive <see cref="IsOpen"/> from the toolbar's "layers" button.
+/// </summary>
+public class MapLayersSidebar : SlideOverSidebar
+{
+    private static readonly Color[] _swatchPalette =
+    {
+        Colors.Red, Colors.RoyalBlue, Colors.ForestGreen, Colors.Orange,
+        Colors.MediumPurple, Colors.Brown, Colors.Teal, Colors.DeepPink, Colors.Black,
+    };
+
+    private readonly CollectionView _list;
+
+    public MapLayersSidebar()
+    {
+        var emptyLabel = new Label
+        {
+            HorizontalOptions = LayoutOptions.Center,
+            Margin = new Thickness(0, 18),
+            TextColor = SecondaryText,
+        };
+        emptyLabel.SetLoc(Label.TextProperty, "layersPanel_empty");
+
+        _list = new CollectionView
+        {
+            SelectionMode = SelectionMode.None,
+            ItemTemplate = new DataTemplate(CreateRow),
+            EmptyView = emptyLabel,
+        };
+
+        SetPanelContent(BuildPanelContent());
+    }
+
+    public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(
+        nameof(ItemsSource), typeof(IEnumerable), typeof(MapLayersSidebar), null, propertyChanged: OnItemsSourceChanged);
+
+    /// <summary>The layer collection shown in the list (typically the map's <c>Layers</c>).</summary>
+    public IEnumerable? ItemsSource
+    {
+        get => (IEnumerable?)GetValue(ItemsSourceProperty);
+        set => SetValue(ItemsSourceProperty, value);
+    }
+
+    public static readonly BindableProperty BaseMapsProperty = BindableProperty.Create(
+        nameof(BaseMaps), typeof(IEnumerable), typeof(MapLayersSidebar), null);
+
+    /// <summary>The basemap options offered by the background-map picker.</summary>
+    public IEnumerable? BaseMaps
+    {
+        get => (IEnumerable?)GetValue(BaseMapsProperty);
+        set => SetValue(BaseMapsProperty, value);
+    }
+
+    public static readonly BindableProperty SelectedBaseMapProperty = BindableProperty.Create(
+        nameof(SelectedBaseMap), typeof(object), typeof(MapLayersSidebar), null, BindingMode.TwoWay);
+
+    /// <summary>The currently selected basemap (two-way).</summary>
+    public object? SelectedBaseMap
+    {
+        get => GetValue(SelectedBaseMapProperty);
+        set => SetValue(SelectedBaseMapProperty, value);
+    }
+
+    public static readonly BindableProperty MapProperty = BindableProperty.Create(
+        nameof(Map), typeof(MapViewer), typeof(MapLayersSidebar), null);
+
+    /// <summary>The map the sidebar controls (used for zoom-to-layer).</summary>
+    public MapViewer? Map
+    {
+        get => (MapViewer?)GetValue(MapProperty);
+        set => SetValue(MapProperty, value);
+    }
+
+    public static readonly BindableProperty AddLayerCommandProperty = BindableProperty.Create(
+        nameof(AddLayerCommand), typeof(ICommand), typeof(MapLayersSidebar), null);
+
+    /// <summary>Raised by the "+" button so the host can import a new layer.</summary>
+    public ICommand? AddLayerCommand
+    {
+        get => (ICommand?)GetValue(AddLayerCommandProperty);
+        set => SetValue(AddLayerCommandProperty, value);
+    }
+
+    public static readonly BindableProperty AddMbTilesCommandProperty = BindableProperty.Create(
+        nameof(AddMbTilesCommand), typeof(ICommand), typeof(MapLayersSidebar), null);
+
+    /// <summary>Raised by the MBTiles button so the host can import an .mbtiles file.</summary>
+    public ICommand? AddMbTilesCommand
+    {
+        get => (ICommand?)GetValue(AddMbTilesCommandProperty);
+        set => SetValue(AddMbTilesCommandProperty, value);
+    }
+
+    private static void OnItemsSourceChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        ((MapLayersSidebar)bindable)._list.ItemsSource = newValue as IEnumerable;
+    }
+
+    private View BuildPanelContent()
+    {
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = GridLength.Auto }, // header
+                new RowDefinition { Height = GridLength.Auto }, // background map
+                new RowDefinition { Height = GridLength.Auto }, // divider
+                new RowDefinition { Height = GridLength.Auto }, // layers header
+                new RowDefinition { Height = GridLength.Star },  // layer list
+            },
+            RowSpacing = 10,
+        };
+
+        grid.Add(BuildHeader(), 0, 0);
+        grid.Add(BuildBackgroundMapRow(), 0, 1);
+        grid.Add(new BoxView { HeightRequest = 1, Color = Divider }, 0, 2);
+        grid.Add(BuildLayersHeader(), 0, 3);
+        grid.Add(_list, 0, 4);
+
+        return grid;
+    }
+
+    private View BuildHeader()
+    {
+        var header = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = GridLength.Star },
+                new ColumnDefinition { Width = GridLength.Auto },
+                new ColumnDefinition { Width = GridLength.Auto },
+            },
+            ColumnSpacing = 4,
+        };
+
+        var title = new Label
+        {
+            TextColor = PrimaryText,
+            FontSize = 18,
+            FontAttributes = FontAttributes.Bold,
+            VerticalOptions = LayoutOptions.Center,
+        };
+        title.SetLoc(Label.TextProperty, "layersPanel_title");
+
+        header.Add(title, 0);
+        header.Add(CreateExpandButton(), 1);
+        header.Add(CreateCloseButton(), 2);
+
+        return header;
+    }
+
+    private View BuildBackgroundMapRow()
+    {
+        var grid = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = GridLength.Auto },
+                new ColumnDefinition { Width = GridLength.Star },
+            },
+            ColumnSpacing = 8,
+        };
+
+        var label = new Label
+        {
+            TextColor = Accent,
+            FontSize = 13,
+            VerticalOptions = LayoutOptions.Center,
+        };
+        label.SetLoc(Label.TextProperty, "layersPanel_backgroundMapLabel");
+
+        var picker = new Picker
+        {
+            TextColor = PrimaryText,
+            TitleColor = SecondaryText,
+            HorizontalOptions = LayoutOptions.Fill,
+        };
+        picker.SetLoc(Picker.TitleProperty, "layersPanel_basemapPickerTitle");
+        picker.SetBinding(Picker.ItemsSourceProperty, new Binding(nameof(BaseMaps), source: this));
+        picker.SetBinding(Picker.SelectedItemProperty, new Binding(nameof(SelectedBaseMap), BindingMode.TwoWay, source: this));
+
+        grid.Add(label, 0);
+        grid.Add(picker, 1);
+
+        return grid;
+    }
+
+    private View BuildLayersHeader()
+    {
+        var grid = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = GridLength.Star },
+                new ColumnDefinition { Width = GridLength.Auto },
+                new ColumnDefinition { Width = GridLength.Auto },
+            },
+            ColumnSpacing = 6,
+        };
+
+        var label = new Label
+        {
+            TextColor = Accent,
+            FontSize = 13,
+            VerticalOptions = LayoutOptions.Center,
+        };
+        label.SetLoc(Label.TextProperty, "layersPanel_sectionTitle");
+
+        var add = new Button
+        {
+            Text = "＋",
+            FontSize = 20,
+            FontAttributes = FontAttributes.Bold,
+            TextColor = PrimaryText,
+            BackgroundColor = Accent,
+            WidthRequest = 36,
+            HeightRequest = 36,
+            Padding = 0,
+            CornerRadius = 6,
+        };
+        add.SetBinding(Button.CommandProperty, new Binding(nameof(AddLayerCommand), source: this));
+
+        // Import an MBTiles (raster or vector) file as overlay layer(s).
+        var addMbTiles = new Button
+        {
+            Text = "▦",
+            FontSize = 18,
+            FontAttributes = FontAttributes.Bold,
+            TextColor = PrimaryText,
+            BackgroundColor = Accent,
+            WidthRequest = 36,
+            HeightRequest = 36,
+            Padding = 0,
+            CornerRadius = 6,
+        };
+        addMbTiles.SetBinding(Button.CommandProperty, new Binding(nameof(AddMbTilesCommand), source: this));
+
+        grid.Add(label, 0);
+        grid.Add(add, 1);
+        grid.Add(addMbTiles, 2);
+
+        return grid;
+    }
+
+    private View CreateRow()
+    {
+        var grid = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = GridLength.Auto }, // visibility
+                new ColumnDefinition { Width = GridLength.Auto }, // color swatch
+                new ColumnDefinition { Width = GridLength.Star },  // name + description
+                new ColumnDefinition { Width = GridLength.Auto }, // delete
+            },
+            RowDefinitions =
+            {
+                new RowDefinition { Height = GridLength.Auto }, // controls
+                new RowDefinition { Height = GridLength.Auto }, // opacity slider
+            },
+            ColumnSpacing = 8,
+            Padding = new Thickness(0, 6),
+        };
+
+        var visibility = new CheckBox { VerticalOptions = LayoutOptions.Center, Color = Accent };
+        visibility.SetBinding(CheckBox.IsCheckedProperty, nameof(MapLayer.IsVisible));
+        grid.Add(visibility, 0);
+
+        var colorSwatch = new Button
+        {
+            WidthRequest = 26,
+            HeightRequest = 26,
+            CornerRadius = 13,
+            Padding = 0,
+            BorderColor = Colors.White,
+            BorderWidth = 1,
+            VerticalOptions = LayoutOptions.Center,
+        };
+        colorSwatch.SetBinding(Button.BackgroundColorProperty, nameof(MapLayer.Color));
+        colorSwatch.Clicked += OnColorClicked;
+        grid.Add(colorSwatch, 1);
+
+        var name = new Label
+        {
+            TextColor = PrimaryText,
+            FontSize = 15,
+            LineBreakMode = LineBreakMode.TailTruncation,
+        };
+        name.SetBinding(Label.TextProperty, nameof(MapLayer.Name));
+
+        var description = new Label
+        {
+            TextColor = SecondaryText,
+            FontSize = 12,
+            LineBreakMode = LineBreakMode.TailTruncation,
+        };
+        description.SetBinding(Label.TextProperty, nameof(MapLayer.Description));
+
+        var textStack = new VerticalStackLayout
+        {
+            Spacing = 0,
+            VerticalOptions = LayoutOptions.Center,
+            Children = { name, description },
+        };
+
+        // Tap the name/description to zoom to the layer.
+        var tap = new TapGestureRecognizer();
+        tap.Tapped += OnZoomTapped;
+        textStack.GestureRecognizers.Add(tap);
+        grid.Add(textStack, 2);
+
+        var remove = new Button
+        {
+            Text = "🗑",
+            FontSize = 16,
+            BackgroundColor = Colors.Transparent,
+            TextColor = SecondaryText,
+            WidthRequest = 38,
+            HeightRequest = 38,
+            Padding = 0,
+            VerticalOptions = LayoutOptions.Center,
+        };
+        remove.Clicked += OnRemoveClicked;
+        grid.Add(remove, 3);
+
+        // Second line: an opacity slider spanning the row, so an overlay can be faded to reveal
+        // the basemap (or lower layers) underneath.
+        var opacityGlyph = new Label
+        {
+            Text = "◐",
+            FontSize = 13,
+            TextColor = SecondaryText,
+            VerticalOptions = LayoutOptions.Center,
+        };
+
+        var opacity = new Slider
+        {
+            Minimum = 0,
+            Maximum = 1,
+            MinimumTrackColor = Accent,
+            ThumbColor = Accent,
+            HorizontalOptions = LayoutOptions.Fill,
+            VerticalOptions = LayoutOptions.Center,
+        };
+        opacity.SetBinding(Slider.ValueProperty, new Binding(nameof(MapLayer.Opacity), BindingMode.TwoWay));
+
+        var opacityRow = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = GridLength.Auto },
+                new ColumnDefinition { Width = GridLength.Star },
+            },
+            ColumnSpacing = 6,
+        };
+        opacityRow.Add(opacityGlyph, 0);
+        opacityRow.Add(opacity, 1);
+
+        grid.Add(opacityRow, 0, 1);
+        Grid.SetColumnSpan(opacityRow, 4);
+
+        return grid;
+    }
+
+    private void OnColorClicked(object? sender, EventArgs e)
+    {
+        if (sender is not BindableObject b || b.BindingContext is not MapLayer layer)
+        {
+            return;
+        }
+
+        var currentHex = layer.Color?.ToArgbHex();
+        var index = Array.FindIndex(_swatchPalette, c => c.ToArgbHex() == currentHex);
+        layer.Color = _swatchPalette[(index + 1) % _swatchPalette.Length];
+    }
+
+    private void OnZoomTapped(object? sender, EventArgs e)
+    {
+        if (sender is BindableObject b && b.BindingContext is MapLayer layer && layer.Extent is { } extent)
+        {
+            Map?.ZoomToExtent(extent);
+        }
+    }
+
+    private void OnRemoveClicked(object? sender, EventArgs e)
+    {
+        if (sender is BindableObject b && b.BindingContext is MapLayer layer)
+        {
+            (ItemsSource as IList)?.Remove(layer);
+        }
+    }
+}

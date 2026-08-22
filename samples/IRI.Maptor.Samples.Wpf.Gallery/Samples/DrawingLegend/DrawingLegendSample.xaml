@@ -1,0 +1,33 @@
+<UserControl x:Class="IRI.Maptor.Samples.Wpf.Gallery.Samples.DrawingLegend.DrawingLegendSample"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls;assembly=IRI.Maptor.Presentation.Wpf"
+             Loaded="OnLoaded">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Style="{StaticResource SampleToolbar}">
+            <StackPanel.Resources>
+                <Style TargetType="Button" BasedOn="{StaticResource SampleToolbarButton}" />
+            </StackPanel.Resources>
+            <Button Content="Draw point" Command="{Binding DrawPointCommand}" />
+            <Button Content="Draw polyline" Command="{Binding DrawPolylineCommand}" />
+            <Button Content="Draw polygon" Command="{Binding DrawPolygonCommand}" />
+            <Button Content="Draw rectangle" Command="{Binding DrawRectangleCommand}" />
+            <Button Content="Add text" Command="{Binding AddTextToMapCommand}" />
+            <Button Content="Remove all" Command="{Binding RemoveAllDrawingItemsCommand}" />
+        </StackPanel>
+
+        <Border DockPanel.Dock="Left" Style="{StaticResource SampleSidePanel}" Width="360">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Style="{StaticResource SampleHint}"
+                           Text="Each finished sketch becomes a drawing item: toggle, restyle, reorder, export or remove it here." />
+                <maptor:MapDrawingLegendView />
+            </DockPanel>
+        </Border>
+
+        <Grid>
+            <maptor:MapViewer x:Name="map" MapAction="{Binding MapAction, Mode=OneWay}" />
+            <!-- Finish / finish part / cancel while a sketch is in progress -->
+            <maptor:SketchBarView DataContext="{Binding}" />
+        </Grid>
+    </DockPanel>
+</UserControl>

@@ -1,0 +1,40 @@
+<UserControl x:Class="IRI.Maptor.Samples.Wpf.Gallery.Samples.AttributeTable.AttributeTableSample"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls;assembly=IRI.Maptor.Presentation.Wpf"
+             Loaded="OnLoaded">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Style="{StaticResource SampleToolbar}">
+            <Button Content="Add shapefile…" Command="{Binding AddShapefileCommand}" Style="{StaticResource SampleToolbarButton}" />
+            <TextBlock Style="{StaticResource SampleHint}" VerticalAlignment="Center"
+                       Text="Right-click a layer in the legend and choose its attribute table; a tab opens below. Select a row to highlight the feature; double-click to zoom to it." />
+        </StackPanel>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="220" />
+            </Grid.RowDefinitions>
+
+            <Border Style="{StaticResource SampleSidePanel}" Width="Auto">
+                <maptor:MapLegendView LegendViewModel="{Binding LegendViewModel}" />
+            </Border>
+
+            <maptor:MapViewer x:Name="map" Grid.Column="1" MapAction="{Binding MapAction, Mode=OneWay}" />
+
+            <GridSplitter Grid.Row="1" Grid.ColumnSpan="2" Height="5" HorizontalAlignment="Stretch"
+                          Background="{DynamicResource MahApps.Brushes.Gray8}" />
+
+            <!-- One tab per entry in the view model's SelectedLayers collection -->
+            <maptor:FeatureTabControl Grid.Row="2" Grid.ColumnSpan="2"
+                                      CanUserEditGeometry="False"
+                                      CanUserEditAttribute="True"
+                                      IsZoomToGeometryEnabled="True" />
+        </Grid>
+    </DockPanel>
+</UserControl>

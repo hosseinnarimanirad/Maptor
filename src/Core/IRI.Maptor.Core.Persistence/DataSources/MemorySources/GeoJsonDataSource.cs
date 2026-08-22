@@ -1,0 +1,110 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+
+using IRI.Maptor.Extensions;
+using IRI.Maptor.Core.Common.Enums;
+using IRI.Maptor.Core.Common.Primitives;
+using IRI.Maptor.Core.Spatial.Primitives;
+using IRI.Maptor.Core.Spatial.GeoJsonFormat;
+using IRI.Maptor.Core.SpatialReferenceSystem;
+using IRI.Maptor.Core.SpatialReferenceSystem.MapProjections;
+using IRI.Maptor.Core.Persistence.Abstractions;
+using IRI.Maptor.Core.Persistence.Model;
+
+namespace IRI.Maptor.Core.Persistence.DataSources;
+
+/// <summary>
+/// Memory data source that loads from and saves to GeoJSON files.
+/// </summary>
+public class GeoJsonDataSource : MemoryDataSource
+{
+    private readonly string _fileName;
+
+    private readonly bool _isLongitudeFirst;
+
+    private readonly int _sourceSrid;
+
+    private readonly string? _rawJson;
+
+    public override SourceLocation? Location => string.IsNullOrEmpty(_fileName) ? null : new FileLocation { Path = _fileName };
+
+    public override DataSourceKind DataSourceKind => DataSourceKind.GeoJson;
+
+    public override int OriginalSrid => _sourceSrid;
+
+    public bool IsLongitudeFirst => _isLongitudeFirst;
+
+    /// <summary>
+    /// Original pasted JSON when created via <see cref="CreateFromTextAsync"/>;
+    /// null for file-backed sources.
+    /// </summary>
+    public string? RawJson => _rawJson;
+
+    private GeoJsonDataSource(string fileName, List<Feature<Point>> features, bool isLongitudeFirst, int sourceSrid, string? rawJson)
+        : base(features, resetIds: true, kind: DataSourceKind.GeoJson)
+    {
+        _fileName = fileName ?? string.Empty;
+        _isLongitudeFirst = isLongitudeFirst;
+        _sourceSrid = sourceSrid;
+        _rawJson = rawJson;
+    }
+
+    public override string ToString() => $"{nameof(GeoJsonDataSource)}";
+
+    public override async Task SaveChangesAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(_fileName))
+        {
+            await _webMercatorFeatureSet.SaveAsGeoJson(_fileName, _isLongitudeFirst);
+        }
+
+        _webMercatorFeatureSet.ApplyChanges();
+
+        UpdateHasPendingChanges(); 
+    }
+     
+    /// <summary>
+    /// Creates a GeoJsonDataSource from a GeoJSON file with the specified spatial reference.
+    /// </summary>
+    public static async Task<GeoJsonDataSource> CreateFromFileAsync(string fileName, bool isLongitudeFirst, int sourceSrid)
+    {
+        if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
+            throw new FileNotFoundException($"GeoJSON file not found: {fileName}", fileName);
+
+        var jsonString = await File.ReadAllTextAsync(fileName);
+
+        return CreateFromJson(jsonString, fileName, isLongitudeFirst, sourceSrid, rawJson: null);
+    }
+
+    /// <summary>
+    /// Creates a GeoJsonDataSource from pasted or in-memory JSON text.
+    /// </summary>
+    public static Task<GeoJsonDataSource> CreateFromTextAsync(string jsonText, bool isLongitudeFirst, int sourceSrid)
+    {
+        if (string.IsNullOrWhiteSpace(jsonText))
+            throw new ArgumentException("JSON text cannot be empty.", nameof(jsonText));
+
+        var ds = CreateFromJson(jsonText, string.Empty, isLongitudeFirst, sourceSrid, rawJson: jsonText);
+
+        return Task.FromResult(ds);
+    }
+
+    private static GeoJsonDataSource CreateFromJson(string jsonString, string fileName, bool isLongitudeFirst, int sourceSrid, string? rawJson)
+    {
+        var featureSet = GeoJsonFeatureSet.Parse(jsonString);
+
+        var features = (featureSet.Features ?? [])
+            .Select(f => f.AsFeature(isLongitudeFirst, SrsBases.WebMercator, sourceSrid))
+            .ToList();
+
+        if (features.Count == 0)
+            throw new InvalidOperationException(string.IsNullOrEmpty(fileName)
+                ? "No features found in the JSON text."
+                : $"No features found in GeoJSON file: {fileName}");
+
+        return new GeoJsonDataSource(fileName ?? string.Empty, features, isLongitudeFirst, sourceSrid, rawJson);
+    }
+}

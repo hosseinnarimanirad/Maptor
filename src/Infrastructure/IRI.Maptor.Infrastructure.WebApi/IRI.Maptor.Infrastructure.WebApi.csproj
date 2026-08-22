@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageTags>GIS;spatial;WebApi;GeoJson;datasource;REST</PackageTags>
+    <Description>Loads features from an HTTP web API (JSON/GeoJSON) as a vector data source, with bounding-box filtering via query parameters, so remote feature services behave like any other layer.</Description>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Persistence\IRI.Maptor.Core.Persistence.csproj" />
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Common\IRI.Maptor.Core.Common.csproj" />
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Spatial\IRI.Maptor.Core.Spatial.csproj" />
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Versioning\IRI.Maptor.Core.Versioning.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DTOs\" />
+  </ItemGroup>
+   
+</Project>

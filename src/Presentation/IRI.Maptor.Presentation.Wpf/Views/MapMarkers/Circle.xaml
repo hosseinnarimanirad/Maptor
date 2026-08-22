@@ -1,0 +1,28 @@
+﻿<maptor:MapMarker x:Class="IRI.Maptor.Presentation.Wpf.Controls.MapMarkers.Circle"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls"
+                    Width="12" Height="12">
+    <maptor:MapMarker.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Animations.xaml"/>
+                <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Colors.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </maptor:MapMarker.Resources>
+    <maptor:MapMarker.RenderTransform>
+        <TransformGroup>
+            <ScaleTransform />
+        </TransformGroup>
+    </maptor:MapMarker.RenderTransform>
+    <maptor:MapMarker.Triggers>
+        <EventTrigger RoutedEvent="UIElement.MouseEnter">
+            <BeginStoryboard Storyboard="{StaticResource mapMarkerExpandOnMouseEnter}"/>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="UIElement.MouseLeave" >
+            <BeginStoryboard Storyboard="{StaticResource mapMarkerResetOnMouseLeave}"/>
+        </EventTrigger>
+    </maptor:MapMarker.Triggers>
+    <Ellipse Fill="White" Stroke="DarkGray" StrokeThickness="1" Cursor="Hand" x:Name="ellipse"/>
+</maptor:MapMarker>

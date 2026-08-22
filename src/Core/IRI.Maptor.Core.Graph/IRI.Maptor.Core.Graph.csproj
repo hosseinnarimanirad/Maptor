@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>A .NET standard library containing primitive graph structures and algorithms</Description>
+    <PackageTags>graph</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="MaximumFlow\**" />
+    <EmbeddedResource Remove="MaximumFlow\**" />
+    <None Remove="MaximumFlow\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IRI.Maptor.Core.Common\IRI.Maptor.Core.Common.csproj" />
+  </ItemGroup>
+
+</Project>

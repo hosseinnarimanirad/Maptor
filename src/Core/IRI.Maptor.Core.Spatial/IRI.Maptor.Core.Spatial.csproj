@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>A .NET standard library to work with spatial types, structures and algorithms (GeoJson, Geometry, KdTree, RTree, Delaunay, Simplification, etc.)</Description>
+    <PackageTags>geometry;GIS;spatial;GeoJson;map;KdTree;RTree;Delaunay;Generalization</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IRI.Maptor.Core.Common\IRI.Maptor.Core.Common.csproj" />
+    <ProjectReference Include="..\IRI.Maptor.Core.SpatialReferenceSystem\IRI.Maptor.Core.SpatialReferenceSystem.csproj" />
+    <ProjectReference Include="..\IRI.Maptor.Core.Graph\IRI.Maptor.Core.Graph.csproj" />
+  </ItemGroup>
+
+</Project>

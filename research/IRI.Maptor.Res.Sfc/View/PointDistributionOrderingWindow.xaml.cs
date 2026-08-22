@@ -6,8 +6,8 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Collections.Generic;
 
-using IRI.Maptor.Sta.Spatial.Analysis.SFC;
-using spatial = IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Core.Spatial.Analysis.SFC;
+using spatial = IRI.Maptor.Core.Common.Primitives;
 
 namespace IRI.Maptor.Res.Sfc.View;
 

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageTags>GIS;spatial;versioning;persistence;EFCore</PackageTags>
+    <TargetFramework>net8.0</TargetFramework>
+    <Description>EF Core persistence for the Maptor feature-level spatial versioning core: entity configurations (schema "versioning"), canonical attribute serialization, and schema-signature computation from the EF model.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Versioning\IRI.Maptor.Core.Versioning.csproj" />
+  </ItemGroup>
+
+</Project>

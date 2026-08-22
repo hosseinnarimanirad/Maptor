@@ -15,15 +15,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\IRI.Maptor.Jab\IRI.Maptor.Jab.Wpf\IRI.Maptor.Jab.Wpf.csproj" />
-    <ProjectReference Include="..\..\src\IRI.Maptor.Ket\IRI.Maptor.Ket.PersonalGdbPersistence\IRI.Maptor.Ket.PersonalGdbPersistence.csproj" />
-    <ProjectReference Include="..\..\src\IRI.Maptor.Ket\IRI.Maptor.Ket.SqlServerSpatialExtension\IRI.Maptor.Ket.SqlServerSpatialExtension.csproj" />
-    <ProjectReference Include="..\..\src\IRI.Maptor.Ket\IRI.Maptor.Ket.WindowsBase\IRI.Maptor.Ket.WindowsBase.csproj" />
-    <ProjectReference Include="..\..\src\IRI.Maptor.Sta\IRI.Maptor.Sta.Common\IRI.Maptor.Sta.Common.csproj" />
-    <ProjectReference Include="..\..\src\IRI.Maptor.Sta\IRI.Maptor.Sta.MachineLearning\IRI.Maptor.Sta.MachineLearning.csproj" />
-    <ProjectReference Include="..\..\src\IRI.Maptor.Sta\IRI.Maptor.Sta.ShapefileFormat\IRI.Maptor.Sta.ShapefileFormat.csproj" />
-    <ProjectReference Include="..\..\src\IRI.Maptor.Sta\IRI.Maptor.Sta.SpatialReferenceSystem\IRI.Maptor.Sta.SpatialReferenceSystem.csproj" />
-    <ProjectReference Include="..\..\src\IRI.Maptor.Sta\IRI.Maptor.Sta.Spatial\IRI.Maptor.Sta.Spatial.csproj" />
+    <ProjectReference Include="..\..\src\Presentation\IRI.Maptor.Presentation.Wpf\IRI.Maptor.Presentation.Wpf.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure\IRI.Maptor.Infrastructure.PersonalGdb\IRI.Maptor.Infrastructure.PersonalGdb.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure\IRI.Maptor.Infrastructure.SqlServerSpatialExtension\IRI.Maptor.Infrastructure.SqlServerSpatialExtension.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure\IRI.Maptor.Infrastructure.WindowsBase\IRI.Maptor.Infrastructure.WindowsBase.csproj" />
+    <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.Common\IRI.Maptor.Core.Common.csproj" />
+    <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.MachineLearning\IRI.Maptor.Core.MachineLearning.csproj" />
+    <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.ShapefileFormat\IRI.Maptor.Core.ShapefileFormat.csproj" />
+    <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.SpatialReferenceSystem\IRI.Maptor.Core.SpatialReferenceSystem.csproj" />
+    <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.Spatial\IRI.Maptor.Core.Spatial.csproj" />
   </ItemGroup>
 
   <!--<ItemGroup>

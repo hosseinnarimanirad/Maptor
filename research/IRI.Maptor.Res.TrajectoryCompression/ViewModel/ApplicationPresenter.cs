@@ -1,16 +1,16 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 
-using IRI.Maptor.Jab.Wpf;
-using IRI.Maptor.Jab.Wpf.Models;
-using IRI.Maptor.Sta.MachineLearning;
-using IRI.Maptor.Sta.Spatial.Analysis;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Jab.Wpf.ViewModels;
-using IRI.Maptor.Sta.Common.Enums;
-using IRI.Maptor.Jab.Wpf.Layers;
-using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Presentation.Wpf;
+using IRI.Maptor.Presentation.Wpf.Models;
+using IRI.Maptor.Core.MachineLearning;
+using IRI.Maptor.Core.Spatial.Analysis;
+using IRI.Maptor.Core.Common.Primitives;
+using IRI.Maptor.Core.Spatial.Primitives;
+using IRI.Maptor.Presentation.Wpf.ViewModels;
+using IRI.Maptor.Core.Common.Enums;
+using IRI.Maptor.Presentation.Wpf.Layers;
+using IRI.Maptor.Presentation.Core;
 
 namespace IRI.Maptor.Res.TrajectoryCompression;
 
@@ -148,7 +148,7 @@ public class ApplicationPresenter : MapViewModelBase
                     var points = System.IO.File.ReadAllLines(fileName)
                                     .Where(i => !string.IsNullOrWhiteSpace(i))
                                     .Select(i => i.Split(','))
-                                    .Select(i => new IRI.Maptor.Sta.Common.Primitives.Point(double.Parse(i[0]), double.Parse(i[1])))
+                                    .Select(i => new IRI.Maptor.Core.Common.Primitives.Point(double.Parse(i[0]), double.Parse(i[1])))
                                     .ToList();
 
                     var lineString = Geometry<Point>.Create(points, GeometryType.LineString, 0);

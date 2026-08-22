@@ -1,12 +1,12 @@
-﻿using IRI.Maptor.Sta.Spatial.Analysis;
-using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.Mathematics;
+﻿using IRI.Maptor.Core.Spatial.Analysis;
+using IRI.Maptor.Core.Spatial.Primitives;
+using IRI.Maptor.Core.Common.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Core.Common.Primitives;
 
 namespace IRI.Maptor.Res.LRSimplification;
 

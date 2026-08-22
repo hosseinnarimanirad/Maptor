@@ -1,0 +1,4 @@
+This folder holds Windows (net8.0-windows) platform-specific code for the
+IRI.Maptor.Presentation.Maui library. The MAUI SDK auto-includes *.cs files here only
+when building the net8.0-windows target. A class library needs no app manifest,
+so this placeholder simply keeps the folder under source control.

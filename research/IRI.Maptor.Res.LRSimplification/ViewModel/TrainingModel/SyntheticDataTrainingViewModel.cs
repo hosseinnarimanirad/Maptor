@@ -2,14 +2,14 @@
 using System.Collections.ObjectModel;
 
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Jab.Wpf;
-using IRI.Maptor.Sta.MachineLearning;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Presentation.Wpf;
+using IRI.Maptor.Core.MachineLearning;
+using IRI.Maptor.Core.Common.Primitives;
+using IRI.Maptor.Core.Spatial.Primitives;
 
-using Sb = IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Jab.Wpf.ViewModels;
-using IRI.Maptor.Jab.Core;
+using Sb = IRI.Maptor.Core.Common.Primitives;
+using IRI.Maptor.Presentation.Wpf.ViewModels;
+using IRI.Maptor.Presentation.Core;
 
 namespace IRI.Maptor.Res.LRSimplification.ViewModel.TrainingModel;
 

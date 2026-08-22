@@ -1,6 +1,6 @@
-﻿using IRI.Maptor.Jab.Wpf;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Primitives; 
+﻿using IRI.Maptor.Presentation.Wpf;
+using IRI.Maptor.Core.Common.Primitives;
+using IRI.Maptor.Core.Spatial.Primitives; 
 using System;
 using System.Collections.Generic;
 using System.Linq;

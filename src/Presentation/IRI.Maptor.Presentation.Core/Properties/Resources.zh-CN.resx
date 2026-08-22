@@ -1,0 +1,1894 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="cmd_contextMenu_copy" xml:space="preserve">
+    <value>复制</value>
+  </data>
+  <data name="cmd_contextMenu_cut" xml:space="preserve">
+    <value>剪切</value>
+  </data>
+  <data name="cmd_contextMenu_delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="cmd_contextMenu_paste" xml:space="preserve">
+    <value>粘贴</value>
+  </data>
+  <data name="cmd_drawingLegendItem_boundary" xml:space="preserve">
+    <value>边界</value>
+  </data>
+  <data name="cmd_drawingLegendItem_breakIntoGeometries" xml:space="preserve">
+    <value>打破几何形状</value>
+  </data>
+  <data name="cmd_drawingLegendItem_breakIntoPoints" xml:space="preserve">
+    <value>分解点</value>
+  </data>
+  <data name="cmd_drawingLegendItem_convexHull" xml:space="preserve">
+    <value>凸包</value>
+  </data>
+  <data name="cmd_drawingLegendItem_downloadRegionImages" xml:space="preserve">
+    <value>下载图片</value>
+  </data>
+  <data name="cmd_drawingLegendItem_duplicateFeature" xml:space="preserve">
+    <value>复制</value>
+  </data>
+  <data name="cmd_drawingLegendItem_edit" xml:space="preserve">
+    <value>编辑</value>
+  </data>
+  <data name="cmd_drawingLegendItem_envelope" xml:space="preserve">
+    <value>信封</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsCsv" xml:space="preserve">
+    <value>导出为 csv</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsDxf" xml:space="preserve">
+    <value>导出为 Dxf</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsGeoJson" xml:space="preserve">
+    <value>导出为 GeoJson</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsPng" xml:space="preserve">
+    <value>导出为 png</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsShapefile" xml:space="preserve">
+    <value>导出为 shapefile</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exteriorRing" xml:space="preserve">
+    <value>外环</value>
+  </data>
+  <data name="cmd_drawingLegendItem_remove" xml:space="preserve">
+    <value>删除功能</value>
+  </data>
+  <data name="cmd_drawingLegend_addLatLongTxt" xml:space="preserve">
+    <value>添加纬度/经度文本</value>
+  </data>
+  <data name="cmd_drawingLegend_moveDown" xml:space="preserve">
+    <value>下移</value>
+  </data>
+  <data name="cmd_drawingLegend_moveUp" xml:space="preserve">
+    <value>向上移动</value>
+  </data>
+  <data name="cmd_drawingLegend_openAll" xml:space="preserve">
+    <value>全部打开</value>
+  </data>
+  <data name="cmd_drawingLegend_removeAll" xml:space="preserve">
+    <value>全部删除</value>
+  </data>
+  <data name="cmd_drawingLegend_saveAll" xml:space="preserve">
+    <value>全部保存</value>
+  </data>
+  <data name="cmd_general_addGeoJson" xml:space="preserve">
+    <value>添加 GeoJson</value>
+  </data>
+  <data name="cmd_general_addShapefile" xml:space="preserve">
+    <value>添加形状文件</value>
+  </data>
+  <data name="cmd_general_addTextToMap" xml:space="preserve">
+    <value>添加文本</value>
+  </data>
+  <data name="cmd_general_clearAll" xml:space="preserve">
+    <value>全部清除</value>
+  </data>
+  <data name="cmd_general_drawPoint" xml:space="preserve">
+    <value>绘制点</value>
+  </data>
+  <data name="cmd_general_drawPolygon" xml:space="preserve">
+    <value>绘制多边形</value>
+  </data>
+  <data name="cmd_general_drawPolyline" xml:space="preserve">
+    <value>绘制折线</value>
+  </data>
+  <data name="cmd_general_drawRectangle" xml:space="preserve">
+    <value>绘制矩形</value>
+  </data>
+  <data name="cmd_general_fullExtent" xml:space="preserve">
+    <value>全范围</value>
+  </data>
+  <data name="cmd_general_goTo" xml:space="preserve">
+    <value>前往</value>
+  </data>
+  <data name="cmd_general_identify" xml:space="preserve">
+    <value>识别</value>
+  </data>
+  <data name="cmd_general_measureArea" xml:space="preserve">
+    <value>测量面积</value>
+  </data>
+  <data name="cmd_general_measureLength" xml:space="preserve">
+    <value>测量长度</value>
+  </data>
+  <data name="cmd_general_nextExtent" xml:space="preserve">
+    <value>下一个视图</value>
+  </data>
+  <data name="cmd_general_pan" xml:space="preserve">
+    <value>平底锅</value>
+  </data>
+  <data name="cmd_general_previousExtent" xml:space="preserve">
+    <value>上一视图</value>
+  </data>
+  <data name="cmd_general_zoomIn" xml:space="preserve">
+    <value>放大</value>
+  </data>
+  <data name="cmd_general_zoomNext" xml:space="preserve">
+    <value>放大下一个</value>
+  </data>
+  <data name="cmd_general_zoomOut" xml:space="preserve">
+    <value>缩小</value>
+  </data>
+  <data name="cmd_general_zoomPrevious" xml:space="preserve">
+    <value>放大上一个</value>
+  </data>
+  <data name="cmd_general_zoomToExtent" xml:space="preserve">
+    <value>缩放至范围</value>
+  </data>
+  <data name="cmd_legendItem_clearSelected" xml:space="preserve">
+    <value>清除选定的功能</value>
+  </data>
+  <data name="cmd_legendItem_exportAsGeoJson" xml:space="preserve">
+    <value>导出为 GeoJson</value>
+  </data>
+  <data name="cmd_legendItem_exportAsPng" xml:space="preserve">
+    <value>导出为 png</value>
+  </data>
+  <data name="cmd_legendItem_exportAsShapefile" xml:space="preserve">
+    <value>导出为 shapefile</value>
+  </data>
+  <data name="cmd_legendItem_remove" xml:space="preserve">
+    <value>删除图层</value>
+  </data>
+  <data name="cmd_legendItem_selectByDrawing" xml:space="preserve">
+    <value>按图纸选择</value>
+  </data>
+  <data name="cmd_legendItem_showAttributes" xml:space="preserve">
+    <value>显示属性</value>
+  </data>
+  <data name="cmd_legendItem_showSymbology" xml:space="preserve">
+    <value>显示符号</value>
+  </data>
+  <data name="cmd_legendItem_toggleLayerLabel" xml:space="preserve">
+    <value>切换图层标签</value>
+  </data>
+  <data name="cmd_legendItem_zoomToExtent" xml:space="preserve">
+    <value>缩放到一定程度</value>
+  </data>
+  <data name="cmd_legend_addCsv" xml:space="preserve">
+    <value>添加 CSV</value>
+  </data>
+  <data name="cmd_legend_addDxf" xml:space="preserve">
+    <value>添加DXF</value>
+  </data>
+  <data name="cmd_legend_addEsriJson" xml:space="preserve">
+    <value>添加 EsriJson</value>
+  </data>
+  <data name="cmd_legend_addGpx" xml:space="preserve">
+    <value>添加 GPX</value>
+  </data>
+  <data name="cmd_legend_addKml" xml:space="preserve">
+    <value>添加KML</value>
+  </data>
+  <data name="cmd_legend_addKmz" xml:space="preserve">
+    <value>添加KMZ</value>
+  </data>
+  <data name="cmd_legend_addLatLongTxt" xml:space="preserve">
+    <value>添加纬度/经度</value>
+  </data>
+  <data name="cmd_legend_addTopoJson" xml:space="preserve">
+    <value>添加 TopoJSON</value>
+  </data>
+  <data name="cmd_legend_addTsv" xml:space="preserve">
+    <value>添加硅通孔</value>
+  </data>
+  <data name="cmd_legend_importLayer" xml:space="preserve">
+    <value>导入层</value>
+  </data>
+  <data name="cmd_legend_moveDown" xml:space="preserve">
+    <value>下移</value>
+  </data>
+  <data name="cmd_legend_moveUp" xml:space="preserve">
+    <value>向上移动</value>
+  </data>
+  <data name="cmd_legend_removeAll" xml:space="preserve">
+    <value>全部删除</value>
+  </data>
+  <data name="cmd_security_resetPassword" xml:space="preserve">
+    <value>重置密码</value>
+  </data>
+  <data name="common_capsLockWarning" xml:space="preserve">
+    <value>大写锁定已打开</value>
+  </data>
+  <data name="common_confirm" xml:space="preserve">
+    <value>确认</value>
+  </data>
+  <data name="common_confirmPassword" xml:space="preserve">
+    <value>确认密码</value>
+  </data>
+  <data name="common_email" xml:space="preserve">
+    <value>电子邮件</value>
+  </data>
+  <data name="common_emailVerification" xml:space="preserve">
+    <value>验证电子邮件</value>
+  </data>
+  <data name="common_forgetPassword" xml:space="preserve">
+    <value>忘记密码</value>
+  </data>
+  <data name="common_geometryType_point" xml:space="preserve">
+    <value>点要素</value>
+  </data>
+  <data name="common_geometryType_polygon" xml:space="preserve">
+    <value>面要素</value>
+  </data>
+  <data name="common_geometryType_polyline" xml:space="preserve">
+    <value>线要素</value>
+  </data>
+  <data name="common_kilometer" xml:space="preserve">
+    <value>千米</value>
+  </data>
+  <data name="common_loadingText" xml:space="preserve">
+    <value>加载中...</value>
+  </data>
+  <data name="common_login" xml:space="preserve">
+    <value>登录</value>
+  </data>
+  <data name="common_meter" xml:space="preserve">
+    <value>米</value>
+  </data>
+  <data name="common_new" xml:space="preserve">
+    <value>新的</value>
+  </data>
+  <data name="common_newPassword" xml:space="preserve">
+    <value>新密码</value>
+  </data>
+  <data name="common_old" xml:space="preserve">
+    <value>老的</value>
+  </data>
+  <data name="common_open" xml:space="preserve">
+    <value>打开</value>
+  </data>
+  <data name="common_password" xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="common_register" xml:space="preserve">
+    <value>注册</value>
+  </data>
+  <data name="common_save" xml:space="preserve">
+    <value>节省</value>
+  </data>
+  <data name="common_squareMeter" xml:space="preserve">
+    <value>平方米</value>
+  </data>
+  <data name="common_username" xml:space="preserve">
+    <value>用户名</value>
+  </data>
+  <data name="dialog_changePassword_enterPassword" xml:space="preserve">
+    <value>输入您想要的密码。</value>
+  </data>
+  <data name="dialog_changePassword_title" xml:space="preserve">
+    <value>更改密码</value>
+  </data>
+  <data name="dialog_common_areYouSure" xml:space="preserve">
+    <value>确定吗？</value>
+  </data>
+  <data name="dialog_common_browse" xml:space="preserve">
+    <value>浏览...</value>
+  </data>
+  <data name="dialog_common_browseFolder" xml:space="preserve">
+    <value>浏览文件夹...</value>
+  </data>
+  <data name="dialog_common_cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="dialog_common_close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="dialog_common_confirmTitle" xml:space="preserve">
+    <value>确认</value>
+  </data>
+  <data name="dialog_common_eastingFirst" xml:space="preserve">
+    <value>先 X 后 Y</value>
+  </data>
+  <data name="dialog_common_export" xml:space="preserve">
+    <value>导出</value>
+  </data>
+  <data name="dialog_common_fileWatermark" xml:space="preserve">
+    <value>文件</value>
+  </data>
+  <data name="dialog_common_formatJson" xml:space="preserve">
+    <value>格式化 Json</value>
+  </data>
+  <data name="dialog_common_minifiedJson" xml:space="preserve">
+    <value>压缩 Json</value>
+  </data>
+  <data name="dialog_common_no" xml:space="preserve">
+    <value>否</value>
+  </data>
+  <data name="dialog_common_ok" xml:space="preserve">
+    <value>确定</value>
+  </data>
+  <data name="dialog_common_prettyJson" xml:space="preserve">
+    <value>美化 Json</value>
+  </data>
+  <data name="dialog_common_removeFile" xml:space="preserve">
+    <value>删除文件</value>
+  </data>
+  <data name="dialog_common_save" xml:space="preserve">
+    <value>节省</value>
+  </data>
+  <data name="dialog_common_xyOrder" xml:space="preserve">
+    <value>X/Y 顺序</value>
+  </data>
+  <data name="dialog_common_yes" xml:space="preserve">
+    <value>是</value>
+  </data>
+  <data name="dialog_csvTsvOpen_formatCsv" xml:space="preserve">
+    <value>CSV</value>
+  </data>
+  <data name="dialog_csvTsvOpen_formatTsv" xml:space="preserve">
+    <value>硅通孔</value>
+  </data>
+  <data name="dialog_csvTsvOpen_geometryType" xml:space="preserve">
+    <value>几何类型</value>
+  </data>
+  <data name="dialog_csvTsvOpen_orderXY" xml:space="preserve">
+    <value>第一列 = X（经度/东），第二列 = Y（纬度/北）</value>
+  </data>
+  <data name="dialog_csvTsvOpen_orderYX" xml:space="preserve">
+    <value>第一列 = Y（纬度/北），第二列 = X（经度/东）</value>
+  </data>
+  <data name="dialog_csvTsvOpen_pasteWatermark" xml:space="preserve">
+    <value>粘贴数据或所选文件的预览（前50行）</value>
+  </data>
+  <data name="dialog_csvTsvOpen_title" xml:space="preserve">
+    <value>导入 CSV / TSV</value>
+  </data>
+  <data name="dialog_csvTsvOpen_useFirstLineAsHeader" xml:space="preserve">
+    <value>使用第一行作为属性名</value>
+  </data>
+  <data name="dialog_dxfOpen_columnIndex" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="dialog_dxfOpen_columnX" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="dialog_dxfOpen_columnY" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="dialog_dxfOpen_hemisphereTooltip" xml:space="preserve">
+    <value>北半球 / 南半球</value>
+  </data>
+  <data name="dialog_dxfOpen_samplePoints" xml:space="preserve">
+    <value>样点（前50个）：</value>
+  </data>
+  <data name="dialog_dxfOpen_title" xml:space="preserve">
+    <value>导入 DXF</value>
+  </data>
+  <data name="dialog_emailSignUp_or" xml:space="preserve">
+    <value>或者</value>
+  </data>
+  <data name="dialog_emailSignUp_signInGoogle" xml:space="preserve">
+    <value>使用 Google 登录</value>
+  </data>
+  <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
+    <value>与谷歌注册</value>
+  </data>
+  <data name="dialog_export_disabledProjection" xml:space="preserve">
+    <value>使用默认 SRS</value>
+  </data>
+  <data name="dialog_export_enabledProjection" xml:space="preserve">
+    <value>投影到</value>
+  </data>
+  <data name="dialog_export_exportModeAll" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="dialog_export_exportModeHighlighted" xml:space="preserve">
+    <value>已高亮</value>
+  </data>
+  <data name="dialog_export_exportModeSelected" xml:space="preserve">
+    <value>已选择</value>
+  </data>
+  <data name="dialog_export_exportModeTitle" xml:space="preserve">
+    <value>要导出的要素：</value>
+  </data>
+  <data name="dialog_export_outputFileFormat" xml:space="preserve">
+    <value>输出格式：</value>
+  </data>
+  <data name="dialog_export_sourceSrs" xml:space="preserve">
+    <value>源 SRS</value>
+  </data>
+  <data name="dialog_export_targetSrs" xml:space="preserve">
+    <value>目标 SRS</value>
+  </data>
+  <data name="dialog_geoJsonOpen_title" xml:space="preserve">
+    <value>导入 GeoJSON</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_orderXY" xml:space="preserve">
+    <value>第一坐标 = X（经度/东），第二 = Y（纬度/北）</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_orderYX" xml:space="preserve">
+    <value>第一坐标 = Y（纬度/北），第二 = X（经度/东）</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_pasteWatermark" xml:space="preserve">
+    <value>粘贴 JSON 或所选文件的预览</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_samplePoints" xml:space="preserve">
+    <value>采样点（前50个）</value>
+  </data>
+  <data name="dialog_geometryDetails_addPart" xml:space="preserve">
+    <value>添加零件</value>
+  </data>
+  <data name="dialog_geometryDetails_addPoint" xml:space="preserve">
+    <value>添加点</value>
+  </data>
+  <data name="dialog_geometryDetails_addPolygon" xml:space="preserve">
+    <value>添加多边形</value>
+  </data>
+  <data name="dialog_geometryDetails_basicInfo" xml:space="preserve">
+    <value>基本信息</value>
+  </data>
+  <data name="dialog_geometryDetails_copy" xml:space="preserve">
+    <value>复制</value>
+  </data>
+  <data name="dialog_geometryDetails_deletePart" xml:space="preserve">
+    <value>删除部分</value>
+  </data>
+  <data name="dialog_geometryDetails_dimension" xml:space="preserve">
+    <value>方面</value>
+  </data>
+  <data name="dialog_geometryDetails_editCoordinates" xml:space="preserve">
+    <value>编辑坐标</value>
+  </data>
+  <data name="dialog_geometryDetails_export" xml:space="preserve">
+    <value>出口</value>
+  </data>
+  <data name="dialog_geometryDetails_exteriorRing" xml:space="preserve">
+    <value>外环</value>
+  </data>
+  <data name="dialog_geometryDetails_format" xml:space="preserve">
+    <value>格式</value>
+  </data>
+  <data name="dialog_geometryDetails_geometryType" xml:space="preserve">
+    <value>几何类型</value>
+  </data>
+  <data name="dialog_geometryDetails_interiorRings" xml:space="preserve">
+    <value>内环</value>
+  </data>
+  <data name="dialog_geometryDetails_numberOfGeometries" xml:space="preserve">
+    <value>几何形状数量</value>
+  </data>
+  <data name="dialog_geometryDetails_numberOfPoints" xml:space="preserve">
+    <value>点数</value>
+  </data>
+  <data name="dialog_geometryDetails_points" xml:space="preserve">
+    <value>积分</value>
+  </data>
+  <data name="dialog_geometryDetails_title" xml:space="preserve">
+    <value>几何细节</value>
+  </data>
+  <data name="dialog_geometryDetails_zoomToPoint" xml:space="preserve">
+    <value>缩放至点</value>
+  </data>
+  <data name="dialog_goto_addToDrawing" xml:space="preserve">
+    <value>添加到绘图</value>
+  </data>
+  <data name="dialog_goto_drawingItemName" xml:space="preserve">
+    <value>转到 ({0}, {1})</value>
+  </data>
+  <data name="dialog_goto_panTo" xml:space="preserve">
+    <value>平移至</value>
+  </data>
+  <data name="dialog_goto_title" xml:space="preserve">
+    <value>前往</value>
+  </data>
+  <data name="dialog_goto_zoomTo" xml:space="preserve">
+    <value>缩放至</value>
+  </data>
+  <data name="dialog_layerSettings_title" xml:space="preserve">
+    <value>图层设置</value>
+  </data>
+  <data name="dialog_msg_confirmDeleteFeatures" xml:space="preserve">
+    <value>删除要素</value>
+  </data>
+  <data name="dialog_msg_discardPendingChanges" xml:space="preserve">
+    <value>图层的待处理更改将被放弃</value>
+  </data>
+  <data name="dialog_openfile_title" xml:space="preserve">
+    <value>选择文件</value>
+  </data>
+  <data name="dialog_savefile_title" xml:space="preserve">
+    <value>节省</value>
+  </data>
+  <data name="dialog_showMessage_title" xml:space="preserve">
+    <value>信息</value>
+  </data>
+  <data name="dialog_symbology_fill" xml:space="preserve">
+    <value>充满</value>
+  </data>
+  <data name="dialog_symbology_stroke" xml:space="preserve">
+    <value>中风</value>
+  </data>
+  <data name="dialog_symbology_strokeWidth" xml:space="preserve">
+    <value>笔画宽度</value>
+  </data>
+  <data name="dialog_symbology_title" xml:space="preserve">
+    <value>图层符号系统</value>
+  </data>
+  <data name="dialog_themeSelection_title" xml:space="preserve">
+    <value>选择应用程序背景颜色</value>
+  </data>
+  <data name="dialog_themeSelection_windowTitle" xml:space="preserve">
+    <value>外观设置</value>
+  </data>
+  <data name="dialog_topojsonOpen_title" xml:space="preserve">
+    <value>导入 TopoJSON</value>
+  </data>
+  <data name="dialog_userSignUp_bannerNewUser" xml:space="preserve">
+    <value>新用户</value>
+  </data>
+  <data name="dialog_userSignUp_createUser" xml:space="preserve">
+    <value>创建用户</value>
+  </data>
+  <data name="dialog_userSignUp_enterCredentials" xml:space="preserve">
+    <value>输入您的用户名和密码。</value>
+  </data>
+  <data name="featureChanges_areaChange" xml:space="preserve">
+    <value>面积变化</value>
+  </data>
+  <data name="featureChanges_areaNew" xml:space="preserve">
+    <value>面积 (新)</value>
+  </data>
+  <data name="featureChanges_areaOld" xml:space="preserve">
+    <value>面积 (旧)</value>
+  </data>
+  <data name="featureChanges_attributeChanges" xml:space="preserve">
+    <value>属性变更</value>
+  </data>
+  <data name="featureChanges_attributeName" xml:space="preserve">
+    <value>属性</value>
+  </data>
+  <data name="featureChanges_compareOnMap" xml:space="preserve">
+    <value>在地图上比较</value>
+  </data>
+  <data name="featureChanges_geometryChanges" xml:space="preserve">
+    <value>几何变更</value>
+  </data>
+  <data name="featureChanges_id" xml:space="preserve">
+    <value>ID：</value>
+  </data>
+  <data name="featureChanges_lastModified" xml:space="preserve">
+    <value>最后修改</value>
+  </data>
+  <data name="featureChanges_lengthChange" xml:space="preserve">
+    <value>长度变化</value>
+  </data>
+  <data name="featureChanges_lengthNew" xml:space="preserve">
+    <value>长度 (新)</value>
+  </data>
+  <data name="featureChanges_lengthOld" xml:space="preserve">
+    <value>长度 (旧)</value>
+  </data>
+  <data name="featureChanges_newValue" xml:space="preserve">
+    <value>新值</value>
+  </data>
+  <data name="featureChanges_oldValue" xml:space="preserve">
+    <value>旧值</value>
+  </data>
+  <data name="featureChanges_status" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="featureChanges_title" xml:space="preserve">
+    <value>要素变更</value>
+  </data>
+  <data name="featureChanges_viewChanges" xml:space="preserve">
+    <value>查看变更</value>
+  </data>
+  <data name="featureChanges_wktNew" xml:space="preserve">
+    <value>WGS84 WKT (新)</value>
+  </data>
+  <data name="featureChanges_wktOld" xml:space="preserve">
+    <value>WGS84 WKT (旧)</value>
+  </data>
+  <data name="featureChanges_zoomToBoth" xml:space="preserve">
+    <value>缩放到两者</value>
+  </data>
+  <data name="featureChanges_zoomToCurrent" xml:space="preserve">
+    <value>缩放到当前</value>
+  </data>
+  <data name="featureChanges_zoomToOld" xml:space="preserve">
+    <value>缩放到旧版</value>
+  </data>
+  <data name="featureTable_addNew" xml:space="preserve">
+    <value>添加新的</value>
+  </data>
+  <data name="featureTable_delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="featureTable_editGeometry" xml:space="preserve">
+    <value>编辑几何图形</value>
+  </data>
+  <data name="featureTable_rowHeader_hour" xml:space="preserve">
+    <value>小时</value>
+  </data>
+  <data name="featureTable_rowHeader_minute" xml:space="preserve">
+    <value>分钟</value>
+  </data>
+  <data name="featureTable_saveChanges" xml:space="preserve">
+    <value>保存更改</value>
+  </data>
+  <data name="featureTable_undo" xml:space="preserve">
+    <value>撤消</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_azimuthToNext" xml:space="preserve">
+    <value>下一个方位角</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_azimuthToPrevious" xml:space="preserve">
+    <value>至上一个方位角</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_distanceToNext" xml:space="preserve">
+    <value>到下一个的距离</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_number" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_vertexAngle" xml:space="preserve">
+    <value>顶角</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_x" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_y" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_z" xml:space="preserve">
+    <value>Z</value>
+  </data>
+  <data name="geometryDetails_currentPoint_add" xml:space="preserve">
+    <value>添加点</value>
+  </data>
+  <data name="geometryDetails_currentPoint_copyCoordinate" xml:space="preserve">
+    <value>复制坐标</value>
+  </data>
+  <data name="geometryDetails_currentPoint_delete" xml:space="preserve">
+    <value>删除点</value>
+  </data>
+  <data name="geometryDetails_currentPoint_edit" xml:space="preserve">
+    <value>编辑</value>
+  </data>
+  <data name="geometryDetails_currentPoint_goToNextPage" xml:space="preserve">
+    <value>转到下一页</value>
+  </data>
+  <data name="geometryDetails_currentPoint_goToNextPoint" xml:space="preserve">
+    <value>转到下一点</value>
+  </data>
+  <data name="geometryDetails_currentPoint_goToPreviousPage" xml:space="preserve">
+    <value>转到上一页</value>
+  </data>
+  <data name="featureTable_goToFirstPage" xml:space="preserve">
+    <value>转到第一页</value>
+  </data>
+  <data name="featureTable_goToLastPage" xml:space="preserve">
+    <value>转到最后一页</value>
+  </data>
+  <data name="geometryDetails_currentPoint_goToPreviousPoint" xml:space="preserve">
+    <value>转到上一点</value>
+  </data>
+  <data name="geometryDetails_currentPoint_x" xml:space="preserve">
+    <value>X：</value>
+  </data>
+  <data name="geometryDetails_currentPoint_y" xml:space="preserve">
+    <value>是：</value>
+  </data>
+  <data name="geometryDetails_currentPoint_zoom" xml:space="preserve">
+    <value>平移到点</value>
+  </data>
+  <data name="geometryDetails_currentPoint_zoomToPoint" xml:space="preserve">
+    <value>缩放至点</value>
+  </data>
+  <data name="geometryDetails_options_ellipsoid" xml:space="preserve">
+    <value>椭球：</value>
+  </data>
+  <data name="geometryDetails_options_gridOptions" xml:space="preserve">
+    <value>网格选项</value>
+  </data>
+  <data name="geometryDetails_options_latLongPrecision" xml:space="preserve">
+    <value>纬度/经度精度：</value>
+  </data>
+  <data name="geometryDetails_options_showInnerAngle" xml:space="preserve">
+    <value>显示内角</value>
+  </data>
+  <data name="geometryDetails_options_showZColumn" xml:space="preserve">
+    <value>显示 Z 列</value>
+  </data>
+  <data name="geometryDetails_options_srs" xml:space="preserve">
+    <value>安全响应：</value>
+  </data>
+  <data name="geometryDetails_options_srsConfiguration" xml:space="preserve">
+    <value>SRS配置</value>
+  </data>
+  <data name="geometryDetails_options_srsInfoFormat" xml:space="preserve">
+    <value>SRS：{0}{1}{2}</value>
+  </data>
+  <data name="geometryDetails_options_useDecimalDegreesForAngles" xml:space="preserve">
+    <value>使用十进制度数表示角度</value>
+  </data>
+  <data name="geometryDetails_options_xyPrecision" xml:space="preserve">
+    <value>X/Y精度：</value>
+  </data>
+  <data name="geometryDetails_parts_format" xml:space="preserve">
+    <value>{1} 的第 {0} 部分</value>
+  </data>
+  <data name="geometryDetails_parts_invalid" xml:space="preserve">
+    <value>✗ 无效的几何部分</value>
+  </data>
+  <data name="geometryDetails_parts_noParts" xml:space="preserve">
+    <value>无零件</value>
+  </data>
+  <data name="geometryDetails_parts_title" xml:space="preserve">
+    <value>部分</value>
+  </data>
+  <data name="geometryDetails_parts_valid" xml:space="preserve">
+    <value>✓ 有效的几何零件</value>
+  </data>
+  <data name="geometryDetails_pointCounter_format" xml:space="preserve">
+    <value>{1} 中的 {0} 点（{3} 中的 {2} 页）</value>
+  </data>
+  <data name="geometryDetails_polygon_title" xml:space="preserve">
+    <value>多边形</value>
+  </data>
+  <data name="geometryDetails_polygons_format" xml:space="preserve">
+    <value>{1} 的多边形 {0}</value>
+  </data>
+  <data name="geometryDetails_polygons_invalid" xml:space="preserve">
+    <value>✗ 无效多边形</value>
+  </data>
+  <data name="geometryDetails_polygons_noPolygon" xml:space="preserve">
+    <value>无多边形</value>
+  </data>
+  <data name="geometryDetails_polygons_valid" xml:space="preserve">
+    <value>✓ 有效多边形</value>
+  </data>
+  <data name="index_100k_title" xml:space="preserve">
+    <value>索引100k</value>
+  </data>
+  <data name="index_10k_title" xml:space="preserve">
+    <value>指数10k</value>
+  </data>
+  <data name="index_1kUtm_title" xml:space="preserve">
+    <value>指数1000</value>
+  </data>
+  <data name="index_250k_title" xml:space="preserve">
+    <value>索引250k</value>
+  </data>
+  <data name="index_25k_title" xml:space="preserve">
+    <value>指数25k</value>
+  </data>
+  <data name="index_2kUtm_title" xml:space="preserve">
+    <value>指数2000</value>
+  </data>
+  <data name="index_2kblocks_title" xml:space="preserve">
+    <value>索引 2000 个区块</value>
+  </data>
+  <data name="index_500Utm_title" xml:space="preserve">
+    <value>指数500</value>
+  </data>
+  <data name="index_50k_title" xml:space="preserve">
+    <value>索引50k</value>
+  </data>
+  <data name="index_5k_title" xml:space="preserve">
+    <value>指数5k</value>
+  </data>
+  <data name="input_coordinateNote" xml:space="preserve">
+    <value>注：坐标为经纬度格式</value>
+  </data>
+  <data name="input_drawFeatureOnMap" xml:space="preserve">
+    <value>在地图上绘制要素</value>
+  </data>
+  <data name="input_geodetic" xml:space="preserve">
+    <value>大地测量学</value>
+  </data>
+  <data name="input_utm" xml:space="preserve">
+    <value>UTM</value>
+  </data>
+  <data name="languageSelector_title" xml:space="preserve">
+    <value>语言</value>
+  </data>
+  <data name="layerSettings_analysis_title" xml:space="preserve">
+    <value>分析</value>
+  </data>
+  <data name="layerSettings_export_title" xml:space="preserve">
+    <value>导出</value>
+  </data>
+  <data name="layerSettings_fields_title" xml:space="preserve">
+    <value>字段</value>
+  </data>
+  <data name="layerSettings_filters_title" xml:space="preserve">
+    <value>过滤器</value>
+  </data>
+  <data name="layerSettings_general_featureType" xml:space="preserve">
+    <value>要素类型：</value>
+  </data>
+  <data name="layerSettings_general_layerName" xml:space="preserve">
+    <value>图层名称：</value>
+  </data>
+  <data name="layerSettings_general_opacity" xml:space="preserve">
+    <value>不透明度：</value>
+  </data>
+  <data name="layerSettings_general_sourceAddress" xml:space="preserve">
+    <value>源地址</value>
+  </data>
+  <data name="layerSettings_general_sourceType" xml:space="preserve">
+    <value>源类型：</value>
+  </data>
+  <data name="layerSettings_general_title" xml:space="preserve">
+    <value>常规</value>
+  </data>
+  <data name="layerSettings_labeling" xml:space="preserve">
+    <value>标注</value>
+  </data>
+  <data name="layerSettings_security_title" xml:space="preserve">
+    <value>安全</value>
+  </data>
+  <data name="layerSettings_statistics_title" xml:space="preserve">
+    <value>统计</value>
+  </data>
+  <data name="layerSettings_notYetAvailable" xml:space="preserve">
+    <value>尚未提供</value>
+  </data>
+  <data name="layerSettings_symbology_title" xml:space="preserve">
+    <value>符号系统</value>
+  </data>
+  <data name="layerSettings_trackChanges_title" xml:space="preserve">
+    <value>跟踪更改</value>
+  </data>
+  <data name="layer_geodesy1_title" xml:space="preserve">
+    <value>大地测量学1</value>
+  </data>
+  <data name="layer_geodesy2_title" xml:space="preserve">
+    <value>大地测量学2</value>
+  </data>
+  <data name="layer_geodynamics_title" xml:space="preserve">
+    <value>地球动力学</value>
+  </data>
+  <data name="layer_gravimetry_title" xml:space="preserve">
+    <value>重量分析法</value>
+  </data>
+  <data name="layer_leveling1_title" xml:space="preserve">
+    <value>练级1</value>
+  </data>
+  <data name="layer_leveling2_title" xml:space="preserve">
+    <value>练级2</value>
+  </data>
+  <data name="layer_leveling3_title" xml:space="preserve">
+    <value>练级3</value>
+  </data>
+  <data name="legendItem_layerTitle" xml:space="preserve">
+    <value>标题</value>
+  </data>
+  <data name="legendItem_pendingChanges_added" xml:space="preserve">
+    <value>额外：</value>
+  </data>
+  <data name="legendItem_pendingChanges_deleted" xml:space="preserve">
+    <value>已删除：</value>
+  </data>
+  <data name="legendItem_pendingChanges_save" xml:space="preserve">
+    <value>保存更改</value>
+  </data>
+  <data name="legendItem_pendingChanges_undo" xml:space="preserve">
+    <value>撤消更改</value>
+  </data>
+  <data name="legendItem_pendingChanges_updated" xml:space="preserve">
+    <value>更新：</value>
+  </data>
+  <data name="legendItem_reloadData" xml:space="preserve">
+    <value>重新加载数据</value>
+  </data>
+  <data name="legend_clearAll" xml:space="preserve">
+    <value>全部清除</value>
+  </data>
+  <data name="legend_filter_clear" xml:space="preserve">
+    <value>清除过滤器</value>
+  </data>
+  <data name="legend_filter_filterByLayerType" xml:space="preserve">
+    <value>按图层类型过滤</value>
+  </data>
+  <data name="legend_filter_searchLayerWatermark" xml:space="preserve">
+    <value>搜索层</value>
+  </data>
+  <data name="legend_selectAll" xml:space="preserve">
+    <value>选择全部</value>
+  </data>
+  <data name="manageAccount_changePassword" xml:space="preserve">
+    <value>更改密码</value>
+  </data>
+  <data name="manageAccount_logOut" xml:space="preserve">
+    <value>登出</value>
+  </data>
+  <data name="manageAccount_manageUsers" xml:space="preserve">
+    <value>管理用户</value>
+  </data>
+  <data name="manageAccount_newPassword" xml:space="preserve">
+    <value>新密码</value>
+  </data>
+  <data name="manageAccount_newUsername" xml:space="preserve">
+    <value>新用户名</value>
+  </data>
+  <data name="manageAccount_userName" xml:space="preserve">
+    <value>用户名</value>
+  </data>
+  <data name="mapExtent_common_title" xml:space="preserve">
+    <value>范围管理器</value>
+  </data>
+  <data name="mapExtent_currentView_currentPointGroundResolution" xml:space="preserve">
+    <value>地面分辨率 (米/像素)：</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScale" xml:space="preserve">
+    <value>地图比例尺 (WebMercator)：</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScaleCurrentPoint" xml:space="preserve">
+    <value>地图比例尺 (当前点)：</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevel" xml:space="preserve">
+    <value>最接近的 Google 比例尺：</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevelCurrentPoint" xml:space="preserve">
+    <value>最接近的 Google 比例尺 (当前点)：</value>
+  </data>
+  <data name="mapExtent_currentView_nearestGoogleZoomLevel" xml:space="preserve">
+    <value>最接近的 Google 缩放级别：</value>
+  </data>
+  <data name="mapExtent_currentView_title" xml:space="preserve">
+    <value>当前范围</value>
+  </data>
+  <data name="mapExtent_gotoScale_title" xml:space="preserve">
+    <value>转到比例尺 (以中心为准)</value>
+  </data>
+  <data name="mapExtent_gotoScale_useGroundScaleForStandardScales" xml:space="preserve">
+    <value>标准比例尺使用地面比例尺</value>
+  </data>
+  <data name="mapExtent_gotoScale_useWebMercatorScaleForStandardScales" xml:space="preserve">
+    <value>标准比例尺使用 webmercator 比例尺</value>
+  </data>
+  <data name="mapExtent_new_addNew" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="mapExtent_new_extentTitle" xml:space="preserve">
+    <value>范围标题</value>
+  </data>
+  <data name="mapExtent_new_title" xml:space="preserve">
+    <value>新建范围</value>
+  </data>
+  <data name="mapExtent_savedExtents_title" xml:space="preserve">
+    <value>已保存的范围</value>
+  </data>
+  <data name="mapPanel_currentPart_add" xml:space="preserve">
+    <value>添加新部分</value>
+  </data>
+  <data name="mapPanel_currentPart_delete" xml:space="preserve">
+    <value>删除当前部分</value>
+  </data>
+  <data name="mapPanel_currentPart_title" xml:space="preserve">
+    <value>多部分</value>
+  </data>
+  <data name="mapPanel_currentPart_zoom" xml:space="preserve">
+    <value>缩放至当前部分</value>
+  </data>
+  <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
+    <value>复制当前点的坐标</value>
+  </data>
+  <data name="mapPanel_currentPoint_delete" xml:space="preserve">
+    <value>删除当前点</value>
+  </data>
+  <data name="mapPanel_currentPoint_displayCoordinate" xml:space="preserve">
+    <value>显示坐标</value>
+  </data>
+  <data name="mapPanel_currentPoint_goToNextPoint" xml:space="preserve">
+    <value>下一点</value>
+  </data>
+  <data name="mapPanel_currentPoint_goToPreviousPoint" xml:space="preserve">
+    <value>上一点</value>
+  </data>
+  <data name="mapPanel_currentPoint_linkToMouseMove" xml:space="preserve">
+    <value>链接到地图上的鼠标位置</value>
+  </data>
+  <data name="mapPanel_currentPoint_title" xml:space="preserve">
+    <value>当前点</value>
+  </data>
+  <data name="mapPanel_currentPoint_zoom" xml:space="preserve">
+    <value>缩放至当前点</value>
+  </data>
+  <data name="mapPanel_edit_cancel" xml:space="preserve">
+    <value>取消编辑</value>
+  </data>
+  <data name="mapPanel_edit_convertToDrawing" xml:space="preserve">
+    <value>转换为绘图项目</value>
+  </data>
+  <data name="mapPanel_edit_delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="mapPanel_edit_finish" xml:space="preserve">
+    <value>完成编辑</value>
+  </data>
+  <data name="mapPanel_edit_showEdgeLabels" xml:space="preserve">
+    <value>显示边缘标签</value>
+  </data>
+  <data name="mapPanel_edit_showGeometryDetails" xml:space="preserve">
+    <value>显示几何详情</value>
+  </data>
+  <data name="mapPanel_measure_areaTitle" xml:space="preserve">
+    <value>区域</value>
+  </data>
+  <data name="mapPanel_measure_authalicSphereArea" xml:space="preserve">
+    <value>真实球体区域：</value>
+  </data>
+  <data name="mapPanel_measure_ellipsoidalArea" xml:space="preserve">
+    <value>椭圆体面积：</value>
+  </data>
+  <data name="mapPanel_measure_ellipsoidalLength" xml:space="preserve">
+    <value>椭圆体长度：</value>
+  </data>
+  <data name="mapPanel_measure_euclideanAreaUtm" xml:space="preserve">
+    <value>欧几里德面积 (UTM)：</value>
+  </data>
+  <data name="mapPanel_measure_euclideanLengthUtm" xml:space="preserve">
+    <value>Utm 中的欧几里得长度：</value>
+  </data>
+  <data name="mapPanel_measure_euclideanLengthUtmRefined" xml:space="preserve">
+    <value>EuclideanLengthInUtm_Refined：</value>
+  </data>
+  <data name="mapPanel_measure_generalTitle" xml:space="preserve">
+    <value>一般的</value>
+  </data>
+  <data name="mapPanel_measure_groundArea" xml:space="preserve">
+    <value>地面面积：</value>
+  </data>
+  <data name="mapPanel_measure_groundLength" xml:space="preserve">
+    <value>接地长度：</value>
+  </data>
+  <data name="mapPanel_measure_karneyArea" xml:space="preserve">
+    <value>卡尼地区：</value>
+  </data>
+  <data name="mapPanel_measure_lengthTitle" xml:space="preserve">
+    <value>长度</value>
+  </data>
+  <data name="mapPanel_measure_meanHeight" xml:space="preserve">
+    <value>平均身高</value>
+  </data>
+  <data name="mapPanel_measure_scaleFactor" xml:space="preserve">
+    <value>比例因子：</value>
+  </data>
+  <data name="mapPanel_measure_sphericalLength" xml:space="preserve">
+    <value>球体长度：</value>
+  </data>
+  <data name="mapPanel_measure_title" xml:space="preserve">
+    <value>测量</value>
+  </data>
+  <data name="mapPanel_srs_title" xml:space="preserve">
+    <value>空间参考系统</value>
+  </data>
+  <data name="map_coordinatePanel_height" xml:space="preserve">
+    <value>高度</value>
+  </data>
+  <data name="map_draw_addPoint" xml:space="preserve">
+    <value>添加点</value>
+  </data>
+  <data name="map_draw_cancelDrawing" xml:space="preserve">
+    <value>取消绘图</value>
+  </data>
+  <data name="map_draw_finishDrawing" xml:space="preserve">
+    <value>完成图</value>
+  </data>
+  <data name="map_draw_finishDrawingPart" xml:space="preserve">
+    <value>完成绘图部分</value>
+  </data>
+  <data name="map_draw_newDrawing" xml:space="preserve">
+    <value>单击最后一个点即可完成绘制。</value>
+  </data>
+  <data name="map_scalebar_content" xml:space="preserve">
+    <value>规模</value>
+  </data>
+  <data name="map_scalebar_zoomLevel" xml:space="preserve">
+    <value>等级</value>
+  </data>
+  <data name="message_error_concurrencyConflict" xml:space="preserve">
+    <value>数据已被另一用户修改。请重新加载后重试。</value>
+  </data>
+  <data name="message_error_formatException" xml:space="preserve">
+    <value>格式异常</value>
+  </data>
+  <data name="message_error_lockedFile" xml:space="preserve">
+    <value>文件已被锁定或正被其他程序使用</value>
+  </data>
+  <data name="message_error_title" xml:space="preserve">
+    <value>错误</value>
+  </data>
+  <data name="message_error_unknown" xml:space="preserve">
+    <value>未知错误</value>
+  </data>
+  <data name="message_error_userEmailAlreadyVerified" xml:space="preserve">
+    <value>用户邮箱已验证</value>
+  </data>
+  <data name="message_info_doneSuccessfully" xml:space="preserve">
+    <value>操作成功完成</value>
+  </data>
+  <data name="message_info_title" xml:space="preserve">
+    <value>消息</value>
+  </data>
+  <data name="ribbon_header_drawing" xml:space="preserve">
+    <value>绘画</value>
+  </data>
+  <data name="ribbon_header_help" xml:space="preserve">
+    <value>帮助</value>
+  </data>
+  <data name="ribbon_header_map" xml:space="preserve">
+    <value>地图</value>
+  </data>
+  <data name="ribbon_header_settings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="sketchBar_title_drawPoint" xml:space="preserve">
+    <value>绘制点</value>
+  </data>
+  <data name="sketchBar_title_drawPolygon" xml:space="preserve">
+    <value>绘制多边形</value>
+  </data>
+  <data name="sketchBar_title_drawPolyline" xml:space="preserve">
+    <value>绘制线</value>
+  </data>
+  <data name="sketchBar_title_drawRectangle" xml:space="preserve">
+    <value>绘制矩形</value>
+  </data>
+  <data name="sketchBar_title_editing" xml:space="preserve">
+    <value>编辑中</value>
+  </data>
+  <data name="sketchBar_title_measureArea" xml:space="preserve">
+    <value>测量面积</value>
+  </data>
+  <data name="sketchBar_title_measureLength" xml:space="preserve">
+    <value>测量长度</value>
+  </data>
+  <data name="sldEditor_common_abstract" xml:space="preserve">
+    <value>抽象的：</value>
+  </data>
+  <data name="sldEditor_common_addLineSymbolizer" xml:space="preserve">
+    <value>添加线符号</value>
+  </data>
+  <data name="sldEditor_common_addPointSymbolizer" xml:space="preserve">
+    <value>添加点符号</value>
+  </data>
+  <data name="sldEditor_common_addPolygonSymbolizer" xml:space="preserve">
+    <value>添加多边形符号器</value>
+  </data>
+  <data name="sldEditor_common_addRule" xml:space="preserve">
+    <value>添加规则</value>
+  </data>
+  <data name="sldEditor_common_addTextSymbolizer" xml:space="preserve">
+    <value>添加文本符号</value>
+  </data>
+  <data name="sldEditor_common_editorBanner" xml:space="preserve">
+    <value>OGC SLD 1.0.0 编辑器</value>
+  </data>
+  <data name="sldEditor_common_editorTitle" xml:space="preserve">
+    <value>SLD 风格编辑器</value>
+  </data>
+  <data name="sldEditor_common_export" xml:space="preserve">
+    <value>出口</value>
+  </data>
+  <data name="sldEditor_common_exportToFile" xml:space="preserve">
+    <value>导出到文件...</value>
+  </data>
+  <data name="sldEditor_common_exportTooltip" xml:space="preserve">
+    <value>将 SLD 导出到文件</value>
+  </data>
+  <data name="sldEditor_common_fillColor" xml:space="preserve">
+    <value>填充颜​​色：</value>
+  </data>
+  <data name="sldEditor_common_fillOpacity" xml:space="preserve">
+    <value>填充不透明度：</value>
+  </data>
+  <data name="sldEditor_common_filter" xml:space="preserve">
+    <value>筛选</value>
+  </data>
+  <data name="sldEditor_common_general" xml:space="preserve">
+    <value>一般的</value>
+  </data>
+  <data name="sldEditor_common_geometryProperty" xml:space="preserve">
+    <value>几何性质：</value>
+  </data>
+  <data name="sldEditor_common_import" xml:space="preserve">
+    <value>进口</value>
+  </data>
+  <data name="sldEditor_common_importFromFile" xml:space="preserve">
+    <value>从文件导入...</value>
+  </data>
+  <data name="sldEditor_common_importTooltip" xml:space="preserve">
+    <value>从文件导入 SLD</value>
+  </data>
+  <data name="sldEditor_common_layerName" xml:space="preserve">
+    <value>图层名称：</value>
+  </data>
+  <data name="sldEditor_common_lineCap" xml:space="preserve">
+    <value>线帽：</value>
+  </data>
+  <data name="sldEditor_common_lineJoin" xml:space="preserve">
+    <value>线路连接：</value>
+  </data>
+  <data name="sldEditor_common_moveDown" xml:space="preserve">
+    <value>下移</value>
+  </data>
+  <data name="sldEditor_common_moveUp" xml:space="preserve">
+    <value>向上移动</value>
+  </data>
+  <data name="sldEditor_common_name" xml:space="preserve">
+    <value>姓名：</value>
+  </data>
+  <data name="sldEditor_common_removeRule" xml:space="preserve">
+    <value>删除规则</value>
+  </data>
+  <data name="sldEditor_common_removeSymbolizer" xml:space="preserve">
+    <value>删除符号器</value>
+  </data>
+  <data name="sldEditor_common_ruleProperties" xml:space="preserve">
+    <value>规则属性</value>
+  </data>
+  <data name="sldEditor_common_rules" xml:space="preserve">
+    <value>规则</value>
+  </data>
+  <data name="sldEditor_common_rulesLabel" xml:space="preserve">
+    <value>规则：</value>
+  </data>
+  <data name="sldEditor_common_scaleRange" xml:space="preserve">
+    <value>量程范围</value>
+  </data>
+  <data name="sldEditor_common_selected" xml:space="preserve">
+    <value>已选择：</value>
+  </data>
+  <data name="sldEditor_common_strokeColor" xml:space="preserve">
+    <value>描边颜色：</value>
+  </data>
+  <data name="sldEditor_common_strokeOpacity" xml:space="preserve">
+    <value>描边不透明度：</value>
+  </data>
+  <data name="sldEditor_common_strokeWidth" xml:space="preserve">
+    <value>描边宽度：</value>
+  </data>
+  <data name="sldEditor_common_styleInformation" xml:space="preserve">
+    <value>款式信息</value>
+  </data>
+  <data name="sldEditor_common_styleName" xml:space="preserve">
+    <value>款式名称：</value>
+  </data>
+  <data name="sldEditor_common_styleTitle" xml:space="preserve">
+    <value>样式标题：</value>
+  </data>
+  <data name="sldEditor_common_symbolizerProperties" xml:space="preserve">
+    <value>符号属性</value>
+  </data>
+  <data name="sldEditor_common_symbolizers" xml:space="preserve">
+    <value>象征符号</value>
+  </data>
+  <data name="sldEditor_common_title" xml:space="preserve">
+    <value>标题：</value>
+  </data>
+  <data name="sldEditor_common_xmlPreview" xml:space="preserve">
+    <value>XML 预览</value>
+  </data>
+  <data name="sldEditor_common_xmlPreviewPlaceholder" xml:space="preserve">
+    <value>XML 预览将显示在此处</value>
+  </data>
+  <data name="sldEditor_filter_enableFilter" xml:space="preserve">
+    <value>启用过滤器</value>
+  </data>
+  <data name="sldEditor_filter_filterExpression" xml:space="preserve">
+    <value>过滤表达式：</value>
+  </data>
+  <data name="sldEditor_filter_filterSettings" xml:space="preserve">
+    <value>过滤器设置</value>
+  </data>
+  <data name="sldEditor_filter_simplifiedViewNote" xml:space="preserve">
+    <value>注意：这是一个简化的视图。对于复杂的过滤器，请直接编辑 XML 或使用专门的过滤器构建器。</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashArray" xml:space="preserve">
+    <value>破折号数组：</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashArrayWatermark" xml:space="preserve">
+    <value>例如，5 5 或 10 5 3 5</value>
+  </data>
+  <data name="sldEditor_pointSymbolizer_markType" xml:space="preserve">
+    <value>标记类型：</value>
+  </data>
+  <data name="sldEditor_pointSymbolizer_rotation" xml:space="preserve">
+    <value>旋转：</value>
+  </data>
+  <data name="sldEditor_pointSymbolizer_size" xml:space="preserve">
+    <value>尺寸：</value>
+  </data>
+  <data name="sldEditor_scaleRange_maxScale" xml:space="preserve">
+    <value>最大规模：</value>
+  </data>
+  <data name="sldEditor_scaleRange_maxWatermark" xml:space="preserve">
+    <value>可选 - 留空则没有上限</value>
+  </data>
+  <data name="sldEditor_scaleRange_minScale" xml:space="preserve">
+    <value>最小规模：</value>
+  </data>
+  <data name="sldEditor_scaleRange_minWatermark" xml:space="preserve">
+    <value>可选 - 留空无最低要求</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_enableHalo" xml:space="preserve">
+    <value>启用光环（文本轮廓）</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_fontColor" xml:space="preserve">
+    <value>字体颜色：</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_fontFamily" xml:space="preserve">
+    <value>字体系列：</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_fontSize" xml:space="preserve">
+    <value>字体大小：</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_fontStyle" xml:space="preserve">
+    <value>字体样式：</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_fontWeight" xml:space="preserve">
+    <value>字体粗细：</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloColor" xml:space="preserve">
+    <value>光环颜色：</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloRadius" xml:space="preserve">
+    <value>光环半径：</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_labelProperty" xml:space="preserve">
+    <value>标签属性：</value>
+  </data>
+  <data name="srs_ceaSubTitle" xml:space="preserve">
+    <value>等面积圆柱</value>
+  </data>
+  <data name="srs_ceaTitle" xml:space="preserve">
+    <value>等面积圆柱</value>
+  </data>
+  <data name="srs_defaultLatitude" xml:space="preserve">
+    <value>纬度：</value>
+  </data>
+  <data name="srs_defaultLongitude" xml:space="preserve">
+    <value>经度：</value>
+  </data>
+  <data name="srs_defaultX" xml:space="preserve">
+    <value>X：</value>
+  </data>
+  <data name="srs_defaultY" xml:space="preserve">
+    <value>是：</value>
+  </data>
+  <data name="srs_geodeticDmsSubTitle" xml:space="preserve">
+    <value>大地测量学，WGS84</value>
+  </data>
+  <data name="srs_geodeticDmsTitle" xml:space="preserve">
+    <value>大地测量，WGS84 (dms)</value>
+  </data>
+  <data name="srs_geodeticSubTitle" xml:space="preserve">
+    <value>大地测量学，WGS84</value>
+  </data>
+  <data name="srs_geodeticTitle" xml:space="preserve">
+    <value>大地测量学，WGS84（十进制度）</value>
+  </data>
+  <data name="srs_mercatorSubTitle" xml:space="preserve">
+    <value>墨卡托</value>
+  </data>
+  <data name="srs_mercatorTitle" xml:space="preserve">
+    <value>墨卡托</value>
+  </data>
+  <data name="srs_northernHemisphere" xml:space="preserve">
+    <value>北半球</value>
+  </data>
+  <data name="srs_southernHemisphere" xml:space="preserve">
+    <value>南半球</value>
+  </data>
+  <data name="srs_tmSubTitle" xml:space="preserve">
+    <value>横轴墨卡托</value>
+  </data>
+  <data name="srs_tmTitle" xml:space="preserve">
+    <value>横轴墨卡托</value>
+  </data>
+  <data name="srs_utmSubTitle" xml:space="preserve">
+    <value>UTM</value>
+  </data>
+  <data name="srs_utmTitle" xml:space="preserve">
+    <value>通用横轴墨卡托 (UTM)</value>
+  </data>
+  <data name="srs_utmZone" xml:space="preserve">
+    <value>区</value>
+  </data>
+  <data name="srs_utmZone_full" xml:space="preserve">
+    <value>UTM 分带</value>
+  </data>
+  <data name="srs_webMercatorSubTitle" xml:space="preserve">
+    <value>网络墨卡托</value>
+  </data>
+  <data name="srs_webMercatorTitle" xml:space="preserve">
+    <value>网络墨卡托</value>
+  </data>
+  <data name="theme_color_amber" xml:space="preserve">
+    <value>琥珀色</value>
+  </data>
+  <data name="theme_color_blue" xml:space="preserve">
+    <value>蓝色的</value>
+  </data>
+  <data name="theme_color_brown" xml:space="preserve">
+    <value>棕色的</value>
+  </data>
+  <data name="theme_color_cobalt" xml:space="preserve">
+    <value>钴</value>
+  </data>
+  <data name="theme_color_crimson" xml:space="preserve">
+    <value>赤红</value>
+  </data>
+  <data name="theme_color_cyan" xml:space="preserve">
+    <value>青色</value>
+  </data>
+  <data name="theme_color_emerald" xml:space="preserve">
+    <value>翠</value>
+  </data>
+  <data name="theme_color_green" xml:space="preserve">
+    <value>绿色的</value>
+  </data>
+  <data name="theme_color_indigo" xml:space="preserve">
+    <value>靛青</value>
+  </data>
+  <data name="theme_color_lime" xml:space="preserve">
+    <value>酸橙</value>
+  </data>
+  <data name="theme_color_magenta" xml:space="preserve">
+    <value>品红</value>
+  </data>
+  <data name="theme_color_mauve" xml:space="preserve">
+    <value>紫红色</value>
+  </data>
+  <data name="theme_color_olive" xml:space="preserve">
+    <value>橄榄</value>
+  </data>
+  <data name="theme_color_orange" xml:space="preserve">
+    <value>橙子</value>
+  </data>
+  <data name="theme_color_pink" xml:space="preserve">
+    <value>粉色的</value>
+  </data>
+  <data name="theme_color_purple" xml:space="preserve">
+    <value>紫色的</value>
+  </data>
+  <data name="theme_color_red" xml:space="preserve">
+    <value>红色的</value>
+  </data>
+  <data name="theme_color_sienna" xml:space="preserve">
+    <value>赭色</value>
+  </data>
+  <data name="theme_color_steel" xml:space="preserve">
+    <value>钢</value>
+  </data>
+  <data name="theme_color_taupe" xml:space="preserve">
+    <value>灰褐色</value>
+  </data>
+  <data name="theme_color_teal" xml:space="preserve">
+    <value>青色</value>
+  </data>
+  <data name="theme_color_violet" xml:space="preserve">
+    <value>紫色</value>
+  </data>
+  <data name="theme_color_yellow" xml:space="preserve">
+    <value>黄色的</value>
+  </data>
+  <data name="tile_mapType_blackWhite" xml:space="preserve">
+    <value>黑白色</value>
+  </data>
+  <data name="tile_mapType_cleanGrey" xml:space="preserve">
+    <value>清洁灰</value>
+  </data>
+  <data name="tile_mapType_comic" xml:space="preserve">
+    <value>漫画</value>
+  </data>
+  <data name="tile_mapType_dark" xml:space="preserve">
+    <value>黑暗的</value>
+  </data>
+  <data name="tile_mapType_hikeBike" xml:space="preserve">
+    <value>远足自行车</value>
+  </data>
+  <data name="tile_mapType_hybrid" xml:space="preserve">
+    <value>杂交种</value>
+  </data>
+  <data name="tile_mapType_light" xml:space="preserve">
+    <value>光</value>
+  </data>
+  <data name="tile_mapType_mapyTourist" xml:space="preserve">
+    <value>地图旅游</value>
+  </data>
+  <data name="tile_mapType_mapyWinter" xml:space="preserve">
+    <value>麻皮冬</value>
+  </data>
+  <data name="tile_mapType_nature" xml:space="preserve">
+    <value>自然</value>
+  </data>
+  <data name="tile_mapType_neutralBlue" xml:space="preserve">
+    <value>中性蓝</value>
+  </data>
+  <data name="tile_mapType_roadMap" xml:space="preserve">
+    <value>路线图</value>
+  </data>
+  <data name="tile_mapType_satellite" xml:space="preserve">
+    <value>卫星</value>
+  </data>
+  <data name="tile_mapType_street" xml:space="preserve">
+    <value>街道</value>
+  </data>
+  <data name="tile_mapType_terrain" xml:space="preserve">
+    <value>地形</value>
+  </data>
+  <data name="tile_mapType_topo" xml:space="preserve">
+    <value>拓扑</value>
+  </data>
+  <data name="tile_mapType_traffic" xml:space="preserve">
+    <value>交通</value>
+  </data>
+  <data name="tile_mapType_watercolor" xml:space="preserve">
+    <value>水彩</value>
+  </data>
+  <data name="tile_provider_bing" xml:space="preserve">
+    <value>必应</value>
+  </data>
+  <data name="tile_provider_carto" xml:space="preserve">
+    <value>卡托</value>
+  </data>
+  <data name="tile_provider_google" xml:space="preserve">
+    <value>谷歌</value>
+  </data>
+  <data name="tile_provider_mapbox" xml:space="preserve">
+    <value>地图盒</value>
+  </data>
+  <data name="tile_provider_nokia" xml:space="preserve">
+    <value>诺基亚</value>
+  </data>
+  <data name="tile_provider_osm" xml:space="preserve">
+    <value>开放式街道地图</value>
+  </data>
+  <data name="tile_provider_waze" xml:space="preserve">
+    <value>位智</value>
+  </data>
+  <data name="tile_provider_yandex" xml:space="preserve">
+    <value>燕德克斯</value>
+  </data>
+  <data name="ui_header_attributeTable" xml:space="preserve">
+    <value>属性表</value>
+  </data>
+  <data name="ui_header_baseMaps" xml:space="preserve">
+    <value>底图</value>
+  </data>
+  <data name="ui_header_drawingLegend" xml:space="preserve">
+    <value>图纸</value>
+  </data>
+  <data name="ui_header_layerLegend" xml:space="preserve">
+    <value>层数</value>
+  </data>
+  <data name="validation_msg_invalidEmail" xml:space="preserve">
+    <value>无效的电子邮件地址</value>
+  </data>
+  <data name="validation_msg_nullOrEmptyString" xml:space="preserve">
+    <value>不能为空</value>
+  </data>
+  <data name="validation_msg_unknownError" xml:space="preserve">
+    <value>未知异常</value>
+  </data>
+  <data name="dialog_printPdf_title" xml:space="preserve">
+    <value>打印为PDF</value>
+  </data>
+  <data name="dialog_printPdf_mapTitleWatermark" xml:space="preserve">
+    <value>地图标题...</value>
+  </data>
+  <data name="dialog_printPdf_includeDecorations" xml:space="preserve">
+    <value>包含地图装饰要素</value>
+  </data>
+  <data name="dialog_printPdf_scaleBar" xml:space="preserve">
+    <value>比例尺</value>
+  </data>
+  <data name="dialog_printPdf_maptorLogo" xml:space="preserve">
+    <value>Maptor图标</value>
+  </data>
+  <data name="dialog_printPdf_legend" xml:space="preserve">
+    <value>图例</value>
+  </data>
+  <data name="dialog_printPdf_companyLogo" xml:space="preserve">
+    <value>公司徽标（PNG）...</value>
+  </data>
+  <data name="dialog_printPdf_graticule" xml:space="preserve">
+    <value>经纬网</value>
+  </data>
+  <data name="dialog_printPdf_landscape" xml:space="preserve">
+    <value>横向</value>
+  </data>
+  <data name="dialog_printPdf_preview" xml:space="preserve">
+    <value>预览</value>
+  </data>
+  <data name="dialog_printPdf_print" xml:space="preserve">
+    <value>打印</value>
+  </data>
+  <data name="sldEditor_common_refreshPreview" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="sldEditor_common_addRasterSymbolizer" xml:space="preserve">
+    <value>添加栅格符号</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashOffset" xml:space="preserve">
+    <value>虚线偏移：</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloOpacity" xml:space="preserve">
+    <value>光环不透明度：</value>
+  </data>
+  <data name="sldEditor_raster_opacity" xml:space="preserve">
+    <value>不透明度：</value>
+  </data>
+  <data name="sldEditor_raster_colorMap" xml:space="preserve">
+    <value>颜色映射</value>
+  </data>
+  <data name="sldEditor_raster_addEntry" xml:space="preserve">
+    <value>添加条目</value>
+  </data>
+  <data name="sldEditor_raster_removeEntry" xml:space="preserve">
+    <value>删除条目</value>
+  </data>
+  <data name="sldEditor_raster_color" xml:space="preserve">
+    <value>颜色</value>
+  </data>
+  <data name="sldEditor_raster_quantity" xml:space="preserve">
+    <value>数量</value>
+  </data>
+  <data name="sldEditor_raster_label" xml:space="preserve">
+    <value>标签</value>
+  </data>
+  <data name="sldEditor_raster_entryOpacity" xml:space="preserve">
+    <value>不透明度</value>
+  </data>
+  <data name="sldEditor_raster_note" xml:space="preserve">
+    <value>颜色映射条目将栅格值（数量）映射为颜色。</value>
+  </data>
+  <data name="sldEditor_filter_property" xml:space="preserve">
+    <value>属性：</value>
+  </data>
+  <data name="sldEditor_filter_operator" xml:space="preserve">
+    <value>运算符：</value>
+  </data>
+  <data name="sldEditor_filter_value" xml:space="preserve">
+    <value>值：</value>
+  </data>
+  <data name="dialog_printPdf_keepScale" xml:space="preserve">
+    <value>保持当前地图比例（使页面适应地图）</value>
+  </data>
+  <data name="featureTable_filter_filter" xml:space="preserve">
+    <value>筛选</value>
+  </data>
+  <data name="featureTable_filter_clear" xml:space="preserve">
+    <value>清除筛选</value>
+  </data>
+  <data name="featureTable_filter_clearAll" xml:space="preserve">
+    <value>清除所有筛选</value>
+  </data>
+  <data name="featureTable_filter_selectAllValues" xml:space="preserve">
+    <value>全选</value>
+  </data>
+  <data name="featureTable_filter_clearAllValues" xml:space="preserve">
+    <value>取消全选</value>
+  </data>
+  <data name="featureTable_filter_search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="featureTable_filter_empty" xml:space="preserve">
+    <value>(空)</value>
+  </data>
+  <data name="featureTable_filter_operator" xml:space="preserve">
+    <value>运算符</value>
+  </data>
+  <data name="featureTable_filter_value" xml:space="preserve">
+    <value>值</value>
+  </data>
+  <data name="featureTable_filter_from" xml:space="preserve">
+    <value>从</value>
+  </data>
+  <data name="featureTable_filter_to" xml:space="preserve">
+    <value>至</value>
+  </data>
+  <data name="featureTable_sort_toggle" xml:space="preserve">
+    <value>排序</value>
+  </data>
+  <data name="cmd_general_openProject" xml:space="preserve">
+    <value>打开项目</value>
+  </data>
+  <data name="cmd_general_saveProject" xml:space="preserve">
+    <value>保存项目</value>
+  </data>
+  <data name="cmd_general_saveProjectAs" xml:space="preserve">
+    <value>项目另存为</value>
+  </data>
+  <data name="msg_project_confirmReplace" xml:space="preserve">
+    <value>打开项目将替换当前图层和绘图。是否继续？</value>
+  </data>
+  <data name="msg_project_skippedLayers" xml:space="preserve">
+    <value>以下项目因未找到源文件而被跳过：{0}</value>
+  </data>
+  <data name="msg_project_unsupportedVersion" xml:space="preserve">
+    <value>此项目文件由较新版本创建，无法打开。</value>
+  </data>
+  <data name="dialog_common_sectionCoordinateSystem" xml:space="preserve">
+    <value>坐标系</value>
+  </data>
+  <data name="dialog_common_sectionOptions" xml:space="preserve">
+    <value>选项</value>
+  </data>
+  <data name="dialog_common_sectionData" xml:space="preserve">
+    <value>数据</value>
+  </data>
+  <data name="dialog_printPdf_sectionDecorations" xml:space="preserve">
+    <value>修饰元素</value>
+  </data>
+  <data name="dialog_printPdf_sectionPage" xml:space="preserve">
+    <value>页面设置</value>
+  </data>
+  <data name="dialog_geometryDetails_alsoZones" xml:space="preserve">
+    <value>（另有：{0}）</value>
+  </data>
+  <data name="dialog_common_validationNoData" xml:space="preserve">
+    <value>请先粘贴数据或选择文件</value>
+  </data>
+  <data name="dialog_common_validationNoFile" xml:space="preserve">
+    <value>请先选择文件</value>
+  </data>
+  <data name="dialog_common_validationNoSrs" xml:space="preserve">
+    <value>请选择坐标系</value>
+  </data>
+  <data name="dialog_common_validationUtmZone" xml:space="preserve">
+    <value>UTM 带号必须在 1 到 60 之间</value>
+  </data>
+  <data name="theme_mode_title" xml:space="preserve">
+    <value>外观</value>
+  </data>
+  <data name="theme_mode_light" xml:space="preserve">
+    <value>浅色</value>
+  </data>
+  <data name="theme_mode_dark" xml:space="preserve">
+    <value>深色</value>
+  </data>
+  <data name="dialog_common_apply" xml:space="preserve">
+    <value>应用</value>
+  </data>
+  <data name="dialog_symbology_advanced" xml:space="preserve">
+    <value>高级 (SLD)</value>
+  </data>
+  <data name="dialog_symbology_resetToDefault" xml:space="preserve">
+    <value>重置为默认值</value>
+  </data>
+  <data name="sldEditor_common_preservedContentNotice" xml:space="preserve">
+    <value>此文档包含无法在此编辑的其他样式或图层；它们将原样保留。</value>
+  </data>
+  <data name="sldEditor_message_invalidSldFile" xml:space="preserve">
+    <value>所选文件无法解析为有效的 SLD 文档。</value>
+  </data>
+  <data name="sldEditor_message_importError" xml:space="preserve">
+    <value>导入 SLD 时出错：{0}</value>
+  </data>
+  <data name="sldEditor_message_exportError" xml:space="preserve">
+    <value>导出 SLD 时出错：{0}</value>
+  </data>
+  <data name="sldEditor_filter_noFilter" xml:space="preserve">
+    <value>无筛选</value>
+  </data>
+  <data name="sldEditor_filter_advancedFilter" xml:space="preserve">
+    <value>高级筛选（此处不可编辑）</value>
+  </data>
+  <data name="identify_title" xml:space="preserve">
+    <value>识别结果</value>
+  </data>
+  <data name="identify_summary" xml:space="preserve">
+    <value>{1} 个图层中的 {0} 个要素</value>
+  </data>
+  <data name="identify_noResults" xml:space="preserve">
+    <value>此位置未找到要素</value>
+  </data>
+  <data name="identify_noMatch" xml:space="preserve">
+    <value>没有符合筛选条件的要素</value>
+  </data>
+  <data name="identify_filterPlaceholder" xml:space="preserve">
+    <value>筛选要素…</value>
+  </data>
+  <data name="identify_zoomTo" xml:space="preserve">
+    <value>缩放至</value>
+  </data>
+  <data name="identify_flash" xml:space="preserve">
+    <value>在地图上闪烁</value>
+  </data>
+  <data name="identify_copyAttributes" xml:space="preserve">
+    <value>复制属性</value>
+  </data>
+  <data name="identify_attribute" xml:space="preserve">
+    <value>属性</value>
+  </data>
+  <data name="identify_value" xml:space="preserve">
+    <value>值</value>
+  </data>
+  <data name="identify_fields" xml:space="preserve">
+    <value>字段</value>
+  </data>
+  <data name="identify_location" xml:space="preserve">
+    <value>位置</value>
+  </data>
+  <data name="identify_featuresFound" xml:space="preserve">
+    <value>找到的要素</value>
+  </data>
+</root>

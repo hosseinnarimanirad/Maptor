@@ -1,9 +1,9 @@
-﻿using IRI.Maptor.Jab.Wpf;
+﻿using IRI.Maptor.Presentation.Wpf;
 using System;
 using System.Text;
 using System.Windows;
-using IRI.Maptor.Jab.Wpf.Models;
-using IRI.Maptor.Jab.Core.Data;
+using IRI.Maptor.Presentation.Wpf.Models;
+using IRI.Maptor.Presentation.Core.Data;
 
 
 namespace IRI.Maptor.Res.TrajectoryCompression;

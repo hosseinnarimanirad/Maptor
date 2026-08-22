@@ -5,8 +5,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Collections.Generic;
-using Rectangle = IRI.Maptor.Sta.Spatial.AdvancedStructures.Rectangle;
-using IRI.Maptor.Sta.Spatial.AdvancedStructures;
+using Rectangle = IRI.Maptor.Core.Spatial.AdvancedStructures.Rectangle;
+using IRI.Maptor.Core.Spatial.AdvancedStructures;
 
 namespace IRI.Maptor.Res.Sfc.View;
 

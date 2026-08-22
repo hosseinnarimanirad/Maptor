@@ -1,0 +1,51 @@
+﻿using IRI.Maptor.Core.Common.Enums;
+using IRI.Maptor.Core.Common.Primitives;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace IRI.Maptor.Core.Spatial.Primitives;
+
+public interface IGeometry
+{
+    GeometryType Type { get; set; }
+
+    int NumberOfPoints { get; }
+     
+    int NumberOfGeometries { get; }
+
+    int TotalNumberOfPoints { get; }
+
+    int Srid { get; set; }
+
+    BoundingBox GetBoundingBox();
+
+    //List<Point> GetPoints();
+
+    bool IsLeafGeometry();
+
+    bool HasZ();
+
+    bool HasM();
+
+    string AsWkt();
+
+    byte[]? AsWkb();
+
+    byte[]? AsSqlServerNativeBinary();
+
+    string AsSqlServerWkt();
+
+    CoordinateDimension GetDimension();
+
+    bool IsValid();
+
+    bool IsEmpty();
+
+    List<IGeometry>? GetGeometries();
+
+    int ToGlobalPointIndex(PointAddress pointAddress);
+
+    PointAddress FindPointAddress(int globalIndex);
+     
+}

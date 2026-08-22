@@ -1,0 +1,47 @@
+﻿<maptor:NotifiableUserControl x:Class="IRI.Maptor.Presentation.Wpf.Controls.DegreeMinuteSecondView"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+                xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+                x:Name="root">
+    <Grid>
+        <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight" >
+            <mahApp:NumericUpDown MinWidth="{Binding ElementName=root, Path=MinInputWidth}"
+                             Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Small}"
+                             Width="Auto"
+                             HideUpDownButtons="{Binding ElementName=root, Path=HideUpDownButtons}"
+                             Maximum="{Binding ElementName=root, Path=MaxDegreeValue}"
+                             Minimum="{Binding ElementName=root, Path=MinDegreeValue}"
+                             Margin="1,0"  
+                             NumericInputMode="Numbers"  
+                             Value="{Binding Degree, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             StringFormat="{}{0:000} °" />
+
+            <mahApp:NumericUpDown MinWidth="{Binding ElementName=root, Path=MinInputWidth}"
+                            Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Small}"
+                            Width="Auto"  
+                            HideUpDownButtons="{Binding ElementName=root, Path=HideUpDownButtons}"
+                            Maximum="59"
+                            Minimum="0"
+                            Margin="1,0"  
+                            NumericInputMode="Numbers" 
+                            Value="{Binding Minute, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            StringFormat="{}{0:00} ′ " />
+
+            <mahApp:NumericUpDown MinWidth="{Binding ElementName=root, Path=MinInputWidth}"
+                            Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Small}"
+                            Width="Auto"
+                            HideUpDownButtons="{Binding ElementName=root, Path=HideUpDownButtons}"
+                            Maximum="59.99"
+                            Minimum="0"
+                            Margin="1,0"  
+                            NumericInputMode="Decimal"
+                            DecimalPointCorrection="Number"
+                            Speedup="True"
+                            Value="{Binding Second, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            StringFormat="{}{0:00.00} ″ " />
+                                  
+                             <!--StringFormat="{}{0:00.00} &quot;" />-->
+        </StackPanel>
+    </Grid>
+</maptor:NotifiableUserControl>

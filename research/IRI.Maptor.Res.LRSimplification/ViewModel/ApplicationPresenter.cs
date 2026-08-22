@@ -1,13 +1,13 @@
 using Microsoft.SqlServer.Types;
 
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Jab.Wpf;
-using IRI.Maptor.Jab.Wpf.Helpers;
-using IRI.Maptor.Sta.MachineLearning;
-using IRI.Maptor.Sta.Spatial.Analysis;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Jab.Wpf.ViewModels;
-using IRI.Maptor.Jab.Wpf.Models.Legend;
+using IRI.Maptor.Presentation.Wpf;
+using IRI.Maptor.Presentation.Wpf.Helpers;
+using IRI.Maptor.Core.MachineLearning;
+using IRI.Maptor.Core.Spatial.Analysis;
+using IRI.Maptor.Core.Common.Primitives;
+using IRI.Maptor.Presentation.Wpf.ViewModels;
+using IRI.Maptor.Presentation.Wpf.Models.Legend;
 using IRI.Maptor.Res.LRSimplification.ViewModel.TrainingModel;
 
 

@@ -1,0 +1,28 @@
+<Project>
+
+  <!-- A nested Directory.Build.props REPLACES the one above it unless that one is imported
+       explicitly, so this line is load-bearing: without it every project in this tier would
+       silently lose the repository-wide version and package metadata. -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <!-- Nullable debt inherited from before Nullable was enabled tier-wide. Kept scoped to Core
+       deliberately: hoisting it higher would hide real warnings in Infrastructure/Presentation. -->
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);CS8602;CS8618;CS8625</NoWarn>
+  </PropertyGroup>
+
+  <!-- Three projects in this repository still have no README.md; without this condition
+       `dotnet pack` would fail for them with NU5039. -->
+  <PropertyGroup Condition="Exists('$(MSBuildProjectDirectory)/README.md')">
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+
+</Project>

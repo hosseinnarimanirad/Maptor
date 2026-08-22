@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <!-- or "latest", "preview", or "11.0" -->
+    <!--<LangVersion>latestMajor</LangVersion>-->
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>A .NET standard library containing machine learning structures and algorithms</Description>
+    <PackageTags>MachineLearning</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IRI.Maptor.Core.Common\IRI.Maptor.Core.Common.csproj" />
+    <ProjectReference Include="..\IRI.Maptor.Core.Spatial\IRI.Maptor.Core.Spatial.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageTags>GIS;spatial;SqlServer;SqlGeometry;SqlGeography;WKB;GeoJson;GML</PackageTags>
+    <Description>Conversion helpers between SQL Server SqlGeometry/SqlGeography and the Maptor model, plus GeoJSON/GML/GPX/Shapefile interchange and bounding-box/WKB utilities.</Description>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+    <PackageReference Include="System.Data.SqlClient" /> 
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Common\IRI.Maptor.Core.Common.csproj" />
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.ShapefileFormat\IRI.Maptor.Core.ShapefileFormat.csproj" />
+  </ItemGroup>
+
+  <!--<ItemGroup>
+    <Reference Include="Microsoft.SqlServer.Types">
+      <HintPath>..\..\..\deploy\MicrosoftSqlServerTypes\v14\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
+  </ItemGroup>-->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SqlServer.Types"/>
+  </ItemGroup>
+
+</Project>

@@ -1,10 +1,10 @@
 using System.Windows;
 
-using IRI.Maptor.Sta.MachineLearning;
+using IRI.Maptor.Core.MachineLearning;
 using IRI.Maptor.Res.LRSimplification.Common;
-using IRI.Maptor.Jab.Wpf;
-using IRI.Maptor.Jab.Wpf.Models;
-using IRI.Maptor.Jab.Core.Data;
+using IRI.Maptor.Presentation.Wpf;
+using IRI.Maptor.Presentation.Wpf.Models;
+using IRI.Maptor.Presentation.Core.Data;
 
 namespace IRI.Maptor.Res.LRSimplification;
 /// <summary>

@@ -1,0 +1,456 @@
+<UserControl x:Class="IRI.Maptor.Presentation.Wpf.Controls.GoToView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:globalization="clr-namespace:System.Globalization;assembly=System.Runtime"
+             xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
+             xmlns:goto="clr-namespace:IRI.Maptor.Presentation.Wpf.Models.GoTo"
+             x:Name="root"
+             NumberSubstitution.Substitution="European">
+
+    <!--Go To dialog body. A free-text box that understands pasted coordinates, then one card:
+        a coordinate-system picker (geodetic in two notations, UTM, every map projection), the
+        datum, and the fields that system needs. A one-line position reading closes the body;
+        the actions live in the window's footer. Every editor that holds a number is a
+        Latin/LTR variant so the figures read the same way in a Persian UI.-->
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+
+            <!--a degree / minute / second cell: spinner chrome hidden, unit written by the caption
+                beside it, invariant culture so the decimal point is a point whatever the UI language-->
+            <Style x:Key="DmsCell" TargetType="{x:Type mahApp:NumericUpDown}" BasedOn="{StaticResource IRI.Maptor.Styles.NumericUpDown.Normal}">
+                <Setter Property="HideUpDownButtons" Value="True"/>
+                <Setter Property="TextAlignment" Value="Right"/>
+                <Setter Property="Culture" Value="{x:Static globalization:CultureInfo.InvariantCulture}"/>
+                <Setter Property="Interval" Value="1"/>
+                <Setter Property="Margin" Value="4,4,0,4"/>
+                <Setter Property="MinWidth" Value="0"/>
+                <Setter Property="FlowDirection" Value="LeftToRight"/>
+            </Style>
+
+            <!--the ° ′ ″ glyph after a DMS cell and the m / ° unit after a plain number-->
+            <Style x:Key="UnitGlyph" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.FieldValue}">
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray3}"/>
+                <Setter Property="Margin" Value="2,0,6,0"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="FlowDirection" Value="LeftToRight"/>
+            </Style>
+
+            <!--a metre or degree entry: Latin, left-to-right, fills the row-->
+            <Style x:Key="NumberBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En}">
+                <Setter Property="Margin" Value="4,4,0,4"/>
+            </Style>
+
+            <!--a projection constant in the two-column parameter grid-->
+            <Style x:Key="ParameterBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource NumberBox}">
+                <Setter Property="MinWidth" Value="90"/>
+            </Style>
+
+            <!--a field row's label-->
+            <Style x:Key="RowLabel" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"/>
+
+            <!--One geodetic axis in DMS: three cells, their unit glyphs and the hemisphere. The
+                DataContext is a DmsAxisModel. Left-to-right as a block so the order D M S survives
+                an RTL window.-->
+            <DataTemplate x:Key="DmsAxisTemplate" DataType="{x:Type goto:DmsAxisModel}">
+                <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight" VerticalAlignment="Center">
+                    <mahApp:NumericUpDown Style="{StaticResource DmsCell}" Width="58"
+                                          Minimum="0" Maximum="{Binding MaxDegrees, Mode=OneWay}"
+                                          NumericInputMode="Numbers" StringFormat="{}{0:0}"
+                                          Value="{Binding Degrees, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Style="{StaticResource UnitGlyph}" Text="°"/>
+
+                    <mahApp:NumericUpDown Style="{StaticResource DmsCell}" Width="54"
+                                          Minimum="0" Maximum="59"
+                                          NumericInputMode="Numbers" StringFormat="{}{0:00}"
+                                          Value="{Binding Minutes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Style="{StaticResource UnitGlyph}" Text="′"/>
+
+                    <mahApp:NumericUpDown Style="{StaticResource DmsCell}" Width="78"
+                                          Minimum="0" Maximum="59.999"
+                                          NumericInputMode="Decimal" DecimalPointCorrection="Number" StringFormat="{}{0:00.###}"
+                                          Value="{Binding Seconds, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Style="{StaticResource UnitGlyph}" Text="″"/>
+
+                    <ComboBox Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}"
+                              MinWidth="0" Width="62" Margin="4,4,0,4"
+                              ItemsSource="{Binding HemisphereOptions, Mode=OneWay}"
+                              SelectedItem="{Binding Hemisphere, Mode=TwoWay}"
+                              ToolTip="{Binding [dialog_goto_hemisphere], Source={StaticResource Localization}}"/>
+                </StackPanel>
+            </DataTemplate>
+
+            <!--a picker entry: localized title, then the qualifier (EPSG code, datum, notation)
+                as its own left-to-right element so bidi cannot reorder it. A Grid, not a
+                StackPanel, so the qualifier trims in the selection box instead of widening it.-->
+            <DataTemplate x:Key="SystemTemplate" DataType="{x:Type goto:CoordinateSystemOption}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldValue}" Text="{Binding Title}"/>
+                    <TextBlock Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}" Margin="8,0,0,0"
+                               Text="{Binding Subtitle}" FlowDirection="LeftToRight"
+                               TextTrimming="CharacterEllipsis" HorizontalAlignment="Left"
+                               VerticalAlignment="Center"/>
+                </Grid>
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <StackPanel>
+
+        <!--═══ Quick entry ═══════════════════════════════════════════════════════════════-->
+        <Grid Margin="0,0,0,2" FlowDirection="LeftToRight">
+            <TextBox x:Name="quickEntryBox"
+                     Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En}"
+                     Margin="0" Padding="34,4,8,4"
+                     BorderThickness="1" BorderBrush="{DynamicResource MahApps.Brushes.Gray8}"
+                     Text="{Binding QuickEntryText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     mahApp:TextBoxHelper.ClearTextButton="True"
+                     mahApp:TextBoxHelper.Watermark="{Binding [dialog_goto_quickEntryWatermark], Source={StaticResource Localization}}"
+                     mahApp:TextBoxHelper.WatermarkTrimming="CharacterEllipsis"
+                     mahApp:TextBoxHelper.WatermarkAlignment="Left"
+                     AutomationProperties.Name="{Binding [dialog_goto_quickEntry], Source={StaticResource Localization}}"
+                     ToolTip="{Binding [dialog_goto_quickEntryTooltip], Source={StaticResource Localization}}"/>
+            <!--leading glyph, drawn over the box's left padding-->
+            <iconPacks:PackIconMaterial Kind="MapSearchOutline" FlowDirection="LeftToRight"
+                                        Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.FieldAdornment}"
+                                        Width="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"
+                                        Height="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"
+                                        HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"
+                                        IsHitTestVisible="False"/>
+        </Grid>
+
+        <!--what the parser made of it: the label follows the UI direction, the reading is its own
+            left-to-right element (one string would let bidi reorder the lat, lon pair after Persian text)-->
+        <StackPanel Orientation="Horizontal" Margin="4,0,4,6" HorizontalAlignment="Left"
+                    Visibility="{Binding IsQuickEntryRecognized, Converter={StaticResource boolToVisibilityConverter}}">
+            <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldHint}" Margin="0"
+                       Text="{Binding QuickEntryMessage}"/>
+            <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldHint}" Margin="6,0,0,0" FlowDirection="LeftToRight"
+                       Text="{Binding QuickEntryReading}"/>
+        </StackPanel>
+        <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.Error}" Margin="4,0,4,6"
+                   Text="{Binding QuickEntryMessage}"
+                   Visibility="{Binding IsQuickEntryRejected, Converter={StaticResource boolToVisibilityConverter}}"/>
+
+        <!--═══ System and fields ═════════════════════════════════════════════════════════-->
+        <!--Border.Card tints the surface so the borderless editors read as fields on it (on the
+            window's own background they are invisible until focused). Its field-row defaults
+            (centre alignment, 4 px margin) are overridden because here it holds the whole group.-->
+        <Border Style="{StaticResource IRI.Maptor.Styles.Border.Card}"
+                Margin="0,4,0,0" Padding="12,8" VerticalAlignment="Stretch">
+            <StackPanel>
+
+                <!--coordinate system-->
+                <Grid Style="{StaticResource IRI.Maptor.Styles.Grid.FieldRow}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Style="{StaticResource RowLabel}"
+                               Text="{Binding [dialog_goto_coordinateSystem], Source={StaticResource Localization}}"/>
+                    <ComboBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal}" Margin="4,4,0,4"
+                              ItemsSource="{Binding Systems}"
+                              ItemTemplate="{StaticResource SystemTemplate}"
+                              SelectedItem="{Binding SelectedSystem, Mode=TwoWay}"
+                              ToolTip="{Binding SelectedSystem}"/>
+                </Grid>
+
+                <!--datum: one row for every system; locked while the system carries its own-->
+                <Grid Style="{StaticResource IRI.Maptor.Styles.Grid.FieldRow}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Style="{StaticResource RowLabel}"
+                               Text="{Binding [dialog_goto_datum], Source={StaticResource Localization}}"/>
+                    <ComboBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}" Margin="4,4,0,4"
+                              ItemsSource="{Binding Ellipsoids}" DisplayMemberPath="Name"
+                              SelectedItem="{Binding Datum, Mode=TwoWay}"
+                              IsEnabled="{Binding CanEditDatum}"/>
+                </Grid>
+
+                <!--─── Geodetic, degrees minutes seconds ───────────────────────────────-->
+                <StackPanel Visibility="{Binding ShowDmsRows, Converter={StaticResource boolToVisibilityConverter}}">
+                    <Grid Style="{StaticResource IRI.Maptor.Styles.Grid.FieldRow}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource RowLabel}"
+                                   Text="{Binding [dialog_goto_latitude], Source={StaticResource Localization}}"/>
+                        <ContentControl Grid.Column="1" Focusable="False"
+                                        Content="{Binding Latitude}" ContentTemplate="{StaticResource DmsAxisTemplate}"/>
+                    </Grid>
+                    <Grid Style="{StaticResource IRI.Maptor.Styles.Grid.FieldRow}" Margin="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource RowLabel}"
+                                   Text="{Binding [dialog_goto_longitude], Source={StaticResource Localization}}"/>
+                        <ContentControl Grid.Column="1" Focusable="False"
+                                        Content="{Binding Longitude}" ContentTemplate="{StaticResource DmsAxisTemplate}"/>
+                    </Grid>
+                </StackPanel>
+
+                <!--─── Geodetic, decimal degrees ───────────────────────────────────────-->
+                <StackPanel Visibility="{Binding ShowDecimalRows, Converter={StaticResource boolToVisibilityConverter}}">
+                    <Grid Style="{StaticResource IRI.Maptor.Styles.Grid.FieldRow}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource RowLabel}"
+                                   Text="{Binding [dialog_goto_latitude], Source={StaticResource Localization}}"/>
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Style="{StaticResource NumberBox}"
+                                     Text="{Binding LatitudeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     ToolTip="{Binding [dialog_goto_decimalHint], Source={StaticResource Localization}}"/>
+                            <TextBlock Grid.Column="1" Style="{StaticResource UnitGlyph}" Text="°"/>
+                        </Grid>
+                    </Grid>
+                    <Grid Style="{StaticResource IRI.Maptor.Styles.Grid.FieldRow}" Margin="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource RowLabel}"
+                                   Text="{Binding [dialog_goto_longitude], Source={StaticResource Localization}}"/>
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Style="{StaticResource NumberBox}"
+                                     Text="{Binding LongitudeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     ToolTip="{Binding [dialog_goto_decimalHint], Source={StaticResource Localization}}"/>
+                            <TextBlock Grid.Column="1" Style="{StaticResource UnitGlyph}" Text="°"/>
+                        </Grid>
+                    </Grid>
+                </StackPanel>
+
+                <!--─── UTM ─────────────────────────────────────────────────────────────-->
+                <StackPanel Visibility="{Binding IsUtmMode, Converter={StaticResource boolToVisibilityConverter}}">
+                    <!--zone and hemisphere share a row: together they name the grid-->
+                    <Grid Style="{StaticResource IRI.Maptor.Styles.Grid.FieldRow}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource RowLabel}"
+                                   Text="{Binding [srs_utmZone_full], Source={StaticResource Localization}}"/>
+                        <mahApp:NumericUpDown Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Normal}"
+                                              Width="92" Margin="4,4,0,4" MinWidth="0"
+                                              Minimum="1" Maximum="60" Interval="1" NumericInputMode="Numbers"
+                                              Culture="{x:Static globalization:CultureInfo.InvariantCulture}"
+                                              Value="{Binding UtmZone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <ComboBox Grid.Column="2" Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal}" Margin="8,4,0,4"
+                                  SelectedIndex="{Binding UtmHemisphereIndex, Mode=TwoWay}"
+                                  ToolTip="{Binding [dialog_goto_hemisphere], Source={StaticResource Localization}}">
+                            <ComboBoxItem Content="{Binding [srs_northernHemisphere], Source={StaticResource Localization}}"/>
+                            <ComboBoxItem Content="{Binding [srs_southernHemisphere], Source={StaticResource Localization}}"/>
+                        </ComboBox>
+                    </Grid>
+
+                    <Grid Style="{StaticResource IRI.Maptor.Styles.Grid.FieldRow}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource RowLabel}"
+                                   Text="{Binding [dialog_goto_easting], Source={StaticResource Localization}}"/>
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Style="{StaticResource NumberBox}"
+                                     Text="{Binding EastingText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBlock Grid.Column="1" Style="{StaticResource UnitGlyph}" Text="m"/>
+                        </Grid>
+                    </Grid>
+
+                    <Grid Style="{StaticResource IRI.Maptor.Styles.Grid.FieldRow}" Margin="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource RowLabel}"
+                                   Text="{Binding [dialog_goto_northing], Source={StaticResource Localization}}"/>
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Style="{StaticResource NumberBox}"
+                                     Text="{Binding NorthingText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBlock Grid.Column="1" Style="{StaticResource UnitGlyph}" Text="m"/>
+                        </Grid>
+                    </Grid>
+
+                    <!--"Central meridian 51° E · EPSG:32639": label in the UI direction, the Latin
+                        payload as its own LTR block (bidi would scramble one mixed string)-->
+                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0" HorizontalAlignment="Left">
+                        <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.Note}" Margin="0"
+                                   Text="{Binding [dialog_goto_paramCentralMeridian], Source={StaticResource Localization}}"/>
+                        <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.Note}" Margin="6,0,0,0" FlowDirection="LeftToRight"
+                                   Text="{Binding UtmZoneHint}"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!--─── Projected ───────────────────────────────────────────────────────-->
+                <StackPanel Visibility="{Binding IsProjectedMode, Converter={StaticResource boolToVisibilityConverter}}">
+
+                    <!--projection constants, two per row; visible for the conic and transverse
+                        families, read-only for named systems-->
+                    <Grid Margin="0,2,0,4"
+                          IsEnabled="{Binding CanEditProjectionParameters}"
+                          Visibility="{Binding ShowProjectionParameters, Converter={StaticResource boolToVisibilityConverter}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource RowLabel}"
+                                   Text="{Binding [dialog_goto_paramCentralMeridian], Source={StaticResource Localization}}"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource ParameterBox}"
+                                 Text="{Binding CentralMeridianText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock Grid.Row="0" Grid.Column="2" Style="{StaticResource RowLabel}" Margin="12,0,8,0"
+                                   Text="{Binding [dialog_goto_paramLatitudeOfOrigin], Source={StaticResource Localization}}"/>
+                        <TextBox Grid.Row="0" Grid.Column="3" Style="{StaticResource ParameterBox}"
+                                 Text="{Binding LatitudeOfOriginText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource RowLabel}"
+                                   Text="{Binding [dialog_goto_paramFalseEasting], Source={StaticResource Localization}}"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource ParameterBox}"
+                                 Text="{Binding FalseEastingText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource RowLabel}" Margin="12,0,8,0"
+                                   Text="{Binding [dialog_goto_paramFalseNorthing], Source={StaticResource Localization}}"/>
+                        <TextBox Grid.Row="1" Grid.Column="3" Style="{StaticResource ParameterBox}"
+                                 Text="{Binding FalseNorthingText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource RowLabel}"
+                                   Text="{Binding [dialog_goto_paramStandardParallel1], Source={StaticResource Localization}}"
+                                   Visibility="{Binding HasStandardParallels, Converter={StaticResource boolToVisibilityConverter}}"/>
+                        <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource ParameterBox}"
+                                 Text="{Binding StandardParallel1Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Visibility="{Binding HasStandardParallels, Converter={StaticResource boolToVisibilityConverter}}"/>
+                        <TextBlock Grid.Row="2" Grid.Column="2" Style="{StaticResource RowLabel}" Margin="12,0,8,0"
+                                   Text="{Binding [dialog_goto_paramStandardParallel2], Source={StaticResource Localization}}"
+                                   Visibility="{Binding HasStandardParallels, Converter={StaticResource boolToVisibilityConverter}}"/>
+                        <TextBox Grid.Row="2" Grid.Column="3" Style="{StaticResource ParameterBox}"
+                                 Text="{Binding StandardParallel2Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Visibility="{Binding HasStandardParallels, Converter={StaticResource boolToVisibilityConverter}}"/>
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource RowLabel}"
+                                   Text="{Binding [dialog_goto_paramScaleFactor], Source={StaticResource Localization}}"
+                                   Visibility="{Binding HasScaleFactor, Converter={StaticResource boolToVisibilityConverter}}"/>
+                        <TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource ParameterBox}"
+                                 Text="{Binding ScaleFactorText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Visibility="{Binding HasScaleFactor, Converter={StaticResource boolToVisibilityConverter}}"/>
+                    </Grid>
+
+                    <Grid Style="{StaticResource IRI.Maptor.Styles.Grid.FieldRow}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource RowLabel}"
+                                   Text="{Binding [dialog_goto_x], Source={StaticResource Localization}}"/>
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Style="{StaticResource NumberBox}"
+                                     Text="{Binding XText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBlock Grid.Column="1" Style="{StaticResource UnitGlyph}" Text="m"/>
+                        </Grid>
+                    </Grid>
+
+                    <Grid Style="{StaticResource IRI.Maptor.Styles.Grid.FieldRow}" Margin="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource RowLabel}"
+                                   Text="{Binding [dialog_goto_y], Source={StaticResource Localization}}"/>
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Style="{StaticResource NumberBox}"
+                                     Text="{Binding YText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBlock Grid.Column="1" Style="{StaticResource UnitGlyph}" Text="m"/>
+                        </Grid>
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!--═══ Position ══════════════════════════════════════════════════════════════════-->
+        <!--one line: state pill, then either the resolved WGS 84 reading (decimal, then UTM)
+            as a left-to-right block, or the reason there is none. HorizontalAlignment=Left is
+            the start edge, so under Persian the pill leads from the right. The DMS notation
+            is the tooltip.-->
+        <StackPanel Orientation="Horizontal" Margin="4,8,4,0" HorizontalAlignment="Left">
+            <Border Style="{StaticResource IRI.Maptor.Styles.Pill.Valid}" VerticalAlignment="Center"
+                    Visibility="{Binding IsValid, Converter={StaticResource boolToVisibilityConverter}}">
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.Pill.Text.Valid}"
+                           Text="{Binding [dialog_goto_statusReady], Source={StaticResource Localization}}"/>
+            </Border>
+            <Border Style="{StaticResource IRI.Maptor.Styles.Pill.Invalid}" VerticalAlignment="Center"
+                    Visibility="{Binding IsValid, Converter={StaticResource boolToInverseVisibilityConverter}}">
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.Pill.Text.Invalid}"
+                           Text="{Binding [dialog_goto_statusInvalid], Source={StaticResource Localization}}"/>
+            </Border>
+
+            <StackPanel Orientation="Horizontal" Margin="8,0,0,0" FlowDirection="LeftToRight" VerticalAlignment="Center"
+                        Visibility="{Binding IsValid, Converter={StaticResource boolToVisibilityConverter}}"
+                        ToolTip="{Binding ResultDmsText}">
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldValue}" FontWeight="SemiBold"
+                           Text="{Binding ResultDecimalText}"/>
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}" Margin="8,0,0,0" VerticalAlignment="Center"
+                           Text="{Binding ResultUtmText}"/>
+            </StackPanel>
+
+            <!--why there is no reading, in the reading's place-->
+            <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.Error}" Margin="8,0,0,0" VerticalAlignment="Center"
+                       TextWrapping="Wrap" MaxWidth="360"
+                       Text="{Binding ValidationMessage}"
+                       Visibility="{Binding HasValidationMessage, Converter={StaticResource boolToVisibilityConverter}}"/>
+        </StackPanel>
+
+        <!--a reading that is computable but suspicious-->
+        <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldHint}" Margin="4,4,4,0"
+                   Foreground="{DynamicResource IRI.Maptor.Brushes.Warning}"
+                   Text="{Binding WarningMessage}"
+                   Visibility="{Binding HasWarningMessage, Converter={StaticResource boolToVisibilityConverter}}"/>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework> 
+    <Title>IRI.Maptor.Core.ShapefileFormat</Title>
+    <!-- or "latest", "preview", or "11.0" -->
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <Description>A .NET standard library to read/write shapefile (*.shp, *.shx, *.dbf, *.prj)</Description>
+    <PackageTags>shapefile;GIS;spatial;dbf</PackageTags>
+    <!-- PackageIconUrl can be added when an icon is available -->
+    <!-- <PackageIconUrl>https://github.com/hosseinnarimanirad/Maptor/raw/master/icon.png</PackageIconUrl> -->
+  </PropertyGroup>
+ 
+  <ItemGroup>
+    <None Update="Info\Info.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="License.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+ 
+  <ItemGroup>
+    <ProjectReference Include="..\IRI.Maptor.Core.Common\IRI.Maptor.Core.Common.csproj" />
+    <ProjectReference Include="..\IRI.Maptor.Core.Ogc\IRI.Maptor.Core.Ogc.csproj" />
+    <ProjectReference Include="..\IRI.Maptor.Core.Spatial\IRI.Maptor.Core.Spatial.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="PGdb\" />
+  </ItemGroup>
+
+</Project>

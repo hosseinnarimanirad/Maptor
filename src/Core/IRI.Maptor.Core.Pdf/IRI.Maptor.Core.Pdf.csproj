@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>PDF vector file writing support for IRI.Maptor.Core.Spatial geometries</Description>
+    <PackageTags>pdf;geometry;GIS;spatial;vector</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IRI.Maptor.Core.Spatial\IRI.Maptor.Core.Spatial.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PdfSharpCore" />
+  </ItemGroup>
+
+</Project>
+

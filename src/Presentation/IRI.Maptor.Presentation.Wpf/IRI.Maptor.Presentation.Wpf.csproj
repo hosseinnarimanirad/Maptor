@@ -1,0 +1,178 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- This project sets both UseWPF and UseWindowsForms, so the implicit usings enabled by the
+         Presentation tier props would import System.Drawing and System.Windows.Media together and
+         make Brush/Color/Point/Button/Cursor ambiguous (659 CS0104 errors). Keep it opted out. -->
+    <ImplicitUsings>disable</ImplicitUsings>
+    <PackageTags>GIS;spatial;WPF;map;MapViewer;symbology;cartography;tiles</PackageTags>
+    <Description>The WPF map UI library: the central MapViewer control, MVVM building blocks, layer types (feature, raster, grid, group), cartographic rendering and symbology, tile-service providers, map markers, converters/behaviors, and Excel/Word export helpers.</Description>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\**" />
+    <EmbeddedResource Remove="Data\**" />
+    <None Remove="Data\**" />
+    <Page Remove="Data\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\Cursors\MaptorCursorSet\DrawPoint.cur" />
+    <None Remove="Assets\Cursors\MaptorCursorSet\information.cur" />
+    <None Remove="Assets\Cursors\MaptorCursorSet\ZoomIn.cur" />
+    <None Remove="Assets\Cursors\MaptorCursorSet\ZoomOut.cur" />
+    <None Remove="Assets\Fonts\IRANSans.ttf" />
+    <None Remove="Assets\Images\imageNotFound.jpg" />
+    <None Remove="Assets\Images\Logos\google.png" />
+    <None Remove="Properties\Resources.resx~RF2341c1.TMP" />
+    <None Remove="Views\Map\SketchBarView.xaml~RF205a3a.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\Images\Logos\google.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DocumentFormat.OpenXml" />
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" />
+    <PackageReference Include="Stateless" />
+    <PackageReference Include="System.Data.SqlClient" />
+    <PackageReference Include="System.Drawing.Common" />
+    <PackageReference Include="WriteableBitmapEx" />
+    <PackageReference Include="MahApps.Metro" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Modern" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Material" />
+    <PackageReference Include="MahApps.Metro.IconPacks.PhosphorIcons" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\IRI.Maptor.Infrastructure.GdiPlus\IRI.Maptor.Infrastructure.GdiPlus.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\IRI.Maptor.Infrastructure.Sqlite\IRI.Maptor.Infrastructure.Sqlite.csproj" />
+    <!--<ProjectReference Include="..\..\Infrastructure\IRI.Maptor.Infrastructure.SqlServerSpatialExtension\IRI.Maptor.Infrastructure.SqlServerSpatialExtension.csproj" />-->
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Common\IRI.Maptor.Core.Common.csproj" />
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.MachineLearning\IRI.Maptor.Core.MachineLearning.csproj" />
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Ogc\IRI.Maptor.Core.Ogc.csproj" />
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Persistence\IRI.Maptor.Core.Persistence.csproj" />
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Pdf\IRI.Maptor.Core.Pdf.csproj" />
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Security\IRI.Maptor.Core.Security.csproj" />
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.ShapefileFormat\IRI.Maptor.Core.ShapefileFormat.csproj" />
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Spatial\IRI.Maptor.Core.Spatial.csproj" />
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.SpatialReferenceSystem\IRI.Maptor.Core.SpatialReferenceSystem.csproj" />
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Versioning\IRI.Maptor.Core.Versioning.csproj" />
+    <ProjectReference Include="..\IRI.Maptor.Presentation.Core\IRI.Maptor.Presentation.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Cursors\MaptorCursorSet\DrawPoint.cur" />
+    <Resource Include="Assets\Cursors\MaptorCursorSet\information.cur" />
+    <Resource Include="Assets\Cursors\MaptorCursorSet\ZoomIn.cur" />
+    <Resource Include="Assets\Cursors\MaptorCursorSet\ZoomOut.cur" />
+    <Resource Include="Assets\Fonts\IRANSans.ttf" />
+    <Resource Include="Assets\Images\Flags\us.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Images\Flags\ir.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Images\Flags\sa.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Images\Flags\fr.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Images\Flags\es.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Images\Flags\tr.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Images\Flags\ru.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Images\Flags\az.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Images\Flags\am.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Images\Flags\it.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Images\Flags\iq.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Images\Flags\br.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Images\Flags\in.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Images\Flags\cn.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Images\Flags\pk.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Images\imageNotFound.jpg" />
+    <Resource Include="Assets\Images\whiteImage.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Dialogs\LayerSettingsDialogView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\General\FeatureTabControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\LayerSettings\LayerSettings_ExportView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\LayerSettings\LayerSettings_GeneralView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Localization\LanguageCombo.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Map\MapViewer.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\Attributes\" />
+    <Folder Include="Cartography\Symbologies\Decorators\" />
+    <Folder Include="Cartography\Symbologies\Factories\" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Windows.ThemeInfo">
+      <_Parameter1>None</_Parameter1>
+      <_Parameter2>SourceAssembly</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Page Update="Assets\Styles\Controls.Path.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+</Project>

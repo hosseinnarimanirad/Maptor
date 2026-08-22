@@ -1,0 +1,1894 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="cmd_contextMenu_copy" xml:space="preserve">
+    <value>Kopyala</value>
+  </data>
+  <data name="cmd_contextMenu_cut" xml:space="preserve">
+    <value>Kes</value>
+  </data>
+  <data name="cmd_contextMenu_delete" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="cmd_contextMenu_paste" xml:space="preserve">
+    <value>Yapıştır</value>
+  </data>
+  <data name="cmd_drawingLegendItem_boundary" xml:space="preserve">
+    <value>Sınır</value>
+  </data>
+  <data name="cmd_drawingLegendItem_breakIntoGeometries" xml:space="preserve">
+    <value>Geometrilere Böl</value>
+  </data>
+  <data name="cmd_drawingLegendItem_breakIntoPoints" xml:space="preserve">
+    <value>Noktalara Böl</value>
+  </data>
+  <data name="cmd_drawingLegendItem_convexHull" xml:space="preserve">
+    <value>Dışbükey Zarf</value>
+  </data>
+  <data name="cmd_drawingLegendItem_downloadRegionImages" xml:space="preserve">
+    <value>Görüntüleri indir</value>
+  </data>
+  <data name="cmd_drawingLegendItem_duplicateFeature" xml:space="preserve">
+    <value>Öğeyi Çoğalt</value>
+  </data>
+  <data name="cmd_drawingLegendItem_edit" xml:space="preserve">
+    <value>Düzenle</value>
+  </data>
+  <data name="cmd_drawingLegendItem_envelope" xml:space="preserve">
+    <value>Zarf</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsCsv" xml:space="preserve">
+    <value>CSV olarak dışa aktar</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsDxf" xml:space="preserve">
+    <value>DXF olarak dışa aktar</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsGeoJson" xml:space="preserve">
+    <value>GeoJson olarak dışa aktar</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsPng" xml:space="preserve">
+    <value>PNG olarak dışa aktar</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsShapefile" xml:space="preserve">
+    <value>Shapefile olarak dışa aktar</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exteriorRing" xml:space="preserve">
+    <value>Dış Halka</value>
+  </data>
+  <data name="cmd_drawingLegendItem_remove" xml:space="preserve">
+    <value>Öğeyi Kaldır</value>
+  </data>
+  <data name="cmd_drawingLegend_addLatLongTxt" xml:space="preserve">
+    <value>Enlem/Boylam Metni Ekle</value>
+  </data>
+  <data name="cmd_drawingLegend_moveDown" xml:space="preserve">
+    <value>Aşağı Taşı</value>
+  </data>
+  <data name="cmd_drawingLegend_moveUp" xml:space="preserve">
+    <value>Yukarı Taşı</value>
+  </data>
+  <data name="cmd_drawingLegend_openAll" xml:space="preserve">
+    <value>Tümünü Aç</value>
+  </data>
+  <data name="cmd_drawingLegend_removeAll" xml:space="preserve">
+    <value>Tümünü Kaldır</value>
+  </data>
+  <data name="cmd_drawingLegend_saveAll" xml:space="preserve">
+    <value>Tümünü Kaydet</value>
+  </data>
+  <data name="cmd_general_addGeoJson" xml:space="preserve">
+    <value>GeoJson&apos;u ekleyin</value>
+  </data>
+  <data name="cmd_general_addShapefile" xml:space="preserve">
+    <value>Shapefile Ekle</value>
+  </data>
+  <data name="cmd_general_addTextToMap" xml:space="preserve">
+    <value>Metin Ekle</value>
+  </data>
+  <data name="cmd_general_clearAll" xml:space="preserve">
+    <value>Tümünü Temizle</value>
+  </data>
+  <data name="cmd_general_drawPoint" xml:space="preserve">
+    <value>Nokta Çiz</value>
+  </data>
+  <data name="cmd_general_drawPolygon" xml:space="preserve">
+    <value>Çokgen Çiz</value>
+  </data>
+  <data name="cmd_general_drawPolyline" xml:space="preserve">
+    <value>Çizgi Çiz</value>
+  </data>
+  <data name="cmd_general_drawRectangle" xml:space="preserve">
+    <value>Dikdörtgen Çiz</value>
+  </data>
+  <data name="cmd_general_fullExtent" xml:space="preserve">
+    <value>Tam Görünüm</value>
+  </data>
+  <data name="cmd_general_goTo" xml:space="preserve">
+    <value>Git</value>
+  </data>
+  <data name="cmd_general_identify" xml:space="preserve">
+    <value>Tanımla</value>
+  </data>
+  <data name="cmd_general_measureArea" xml:space="preserve">
+    <value>Alan Ölç</value>
+  </data>
+  <data name="cmd_general_measureLength" xml:space="preserve">
+    <value>Uzunluk Ölç</value>
+  </data>
+  <data name="cmd_general_nextExtent" xml:space="preserve">
+    <value>Sonraki Görünüm</value>
+  </data>
+  <data name="cmd_general_pan" xml:space="preserve">
+    <value>Kaydır</value>
+  </data>
+  <data name="cmd_general_previousExtent" xml:space="preserve">
+    <value>Önceki Görünüm</value>
+  </data>
+  <data name="cmd_general_zoomIn" xml:space="preserve">
+    <value>Yakınlaştır</value>
+  </data>
+  <data name="cmd_general_zoomNext" xml:space="preserve">
+    <value>Sonraki Yakınlaştırma</value>
+  </data>
+  <data name="cmd_general_zoomOut" xml:space="preserve">
+    <value>Uzaklaştır</value>
+  </data>
+  <data name="cmd_general_zoomPrevious" xml:space="preserve">
+    <value>Önceki Yakınlaştırma</value>
+  </data>
+  <data name="cmd_general_zoomToExtent" xml:space="preserve">
+    <value>Kapsama Yakınlaştır</value>
+  </data>
+  <data name="cmd_legendItem_clearSelected" xml:space="preserve">
+    <value>Seçimi Temizle</value>
+  </data>
+  <data name="cmd_legendItem_exportAsGeoJson" xml:space="preserve">
+    <value>GeoJson olarak dışa aktar</value>
+  </data>
+  <data name="cmd_legendItem_exportAsPng" xml:space="preserve">
+    <value>PNG olarak dışa aktar</value>
+  </data>
+  <data name="cmd_legendItem_exportAsShapefile" xml:space="preserve">
+    <value>Shapefile olarak dışa aktar</value>
+  </data>
+  <data name="cmd_legendItem_remove" xml:space="preserve">
+    <value>Katmanı Kaldır</value>
+  </data>
+  <data name="cmd_legendItem_selectByDrawing" xml:space="preserve">
+    <value>Çizerek Seç</value>
+  </data>
+  <data name="cmd_legendItem_showAttributes" xml:space="preserve">
+    <value>Öznitelikleri Göster</value>
+  </data>
+  <data name="cmd_legendItem_showSymbology" xml:space="preserve">
+    <value>Semboloji Göster</value>
+  </data>
+  <data name="cmd_legendItem_toggleLayerLabel" xml:space="preserve">
+    <value>Katman Etiketini Aç/Kapat</value>
+  </data>
+  <data name="cmd_legendItem_zoomToExtent" xml:space="preserve">
+    <value>Yakınlaştır</value>
+  </data>
+  <data name="cmd_legend_addCsv" xml:space="preserve">
+    <value>CSV ekle</value>
+  </data>
+  <data name="cmd_legend_addDxf" xml:space="preserve">
+    <value>DXF&apos;yi ekle</value>
+  </data>
+  <data name="cmd_legend_addEsriJson" xml:space="preserve">
+    <value>EsriJson Ekle</value>
+  </data>
+  <data name="cmd_legend_addGpx" xml:space="preserve">
+    <value>GPX Ekle</value>
+  </data>
+  <data name="cmd_legend_addKml" xml:space="preserve">
+    <value>KML&apos;yi ekle</value>
+  </data>
+  <data name="cmd_legend_addKmz" xml:space="preserve">
+    <value>KMZ&apos;yi ekle</value>
+  </data>
+  <data name="cmd_legend_addLatLongTxt" xml:space="preserve">
+    <value>Enlem/boylam ekle</value>
+  </data>
+  <data name="cmd_legend_addTopoJson" xml:space="preserve">
+    <value>TopoJSON Ekle</value>
+  </data>
+  <data name="cmd_legend_addTsv" xml:space="preserve">
+    <value>TSV&apos;yi ekle</value>
+  </data>
+  <data name="cmd_legend_importLayer" xml:space="preserve">
+    <value>Katmanı içe aktar</value>
+  </data>
+  <data name="cmd_legend_moveDown" xml:space="preserve">
+    <value>Aşağı taşı</value>
+  </data>
+  <data name="cmd_legend_moveUp" xml:space="preserve">
+    <value>Yukarı taşı</value>
+  </data>
+  <data name="cmd_legend_removeAll" xml:space="preserve">
+    <value>Tümünü Kaldır</value>
+  </data>
+  <data name="cmd_security_resetPassword" xml:space="preserve">
+    <value>Parolayı Sıfırla</value>
+  </data>
+  <data name="common_capsLockWarning" xml:space="preserve">
+    <value>Caps Lock açık</value>
+  </data>
+  <data name="common_confirm" xml:space="preserve">
+    <value>Onayla</value>
+  </data>
+  <data name="common_confirmPassword" xml:space="preserve">
+    <value>Şifreyi onayla</value>
+  </data>
+  <data name="common_email" xml:space="preserve">
+    <value>E-posta</value>
+  </data>
+  <data name="common_emailVerification" xml:space="preserve">
+    <value>E-posta doğrula</value>
+  </data>
+  <data name="common_forgetPassword" xml:space="preserve">
+    <value>Şifremi unuttum</value>
+  </data>
+  <data name="common_geometryType_point" xml:space="preserve">
+    <value>Nokta Öznitelik</value>
+  </data>
+  <data name="common_geometryType_polygon" xml:space="preserve">
+    <value>Poligon Öznitelik</value>
+  </data>
+  <data name="common_geometryType_polyline" xml:space="preserve">
+    <value>Çoklu Çizgi Öznitelik</value>
+  </data>
+  <data name="common_kilometer" xml:space="preserve">
+    <value>kilometre</value>
+  </data>
+  <data name="common_loadingText" xml:space="preserve">
+    <value>YÜKLENİYOR...</value>
+  </data>
+  <data name="common_login" xml:space="preserve">
+    <value>Giriş</value>
+  </data>
+  <data name="common_meter" xml:space="preserve">
+    <value>metre</value>
+  </data>
+  <data name="common_new" xml:space="preserve">
+    <value>Yeni</value>
+  </data>
+  <data name="common_newPassword" xml:space="preserve">
+    <value>Yeni şifre</value>
+  </data>
+  <data name="common_old" xml:space="preserve">
+    <value>Eski</value>
+  </data>
+  <data name="common_open" xml:space="preserve">
+    <value>Aç</value>
+  </data>
+  <data name="common_password" xml:space="preserve">
+    <value>Şifre</value>
+  </data>
+  <data name="common_register" xml:space="preserve">
+    <value>Kayıt ol</value>
+  </data>
+  <data name="common_save" xml:space="preserve">
+    <value>Kaydet</value>
+  </data>
+  <data name="common_squareMeter" xml:space="preserve">
+    <value>Metrekare</value>
+  </data>
+  <data name="common_username" xml:space="preserve">
+    <value>Kullanıcı adı</value>
+  </data>
+  <data name="dialog_changePassword_enterPassword" xml:space="preserve">
+    <value>İstediğiniz şifreyi girin.</value>
+  </data>
+  <data name="dialog_changePassword_title" xml:space="preserve">
+    <value>Şifreyi değiştir</value>
+  </data>
+  <data name="dialog_common_areYouSure" xml:space="preserve">
+    <value>Emin misiniz?</value>
+  </data>
+  <data name="dialog_common_browse" xml:space="preserve">
+    <value>Göz at...</value>
+  </data>
+  <data name="dialog_common_browseFolder" xml:space="preserve">
+    <value>Klasöre Gözat...</value>
+  </data>
+  <data name="dialog_common_cancel" xml:space="preserve">
+    <value>İptal etmek</value>
+  </data>
+  <data name="dialog_common_close" xml:space="preserve">
+    <value>Kapat</value>
+  </data>
+  <data name="dialog_common_confirmTitle" xml:space="preserve">
+    <value>Onay</value>
+  </data>
+  <data name="dialog_common_eastingFirst" xml:space="preserve">
+    <value>Önce X sonra Y</value>
+  </data>
+  <data name="dialog_common_export" xml:space="preserve">
+    <value>Dışa Aktar</value>
+  </data>
+  <data name="dialog_common_fileWatermark" xml:space="preserve">
+    <value>Dosya</value>
+  </data>
+  <data name="dialog_common_formatJson" xml:space="preserve">
+    <value>Json Biçimlendir</value>
+  </data>
+  <data name="dialog_common_minifiedJson" xml:space="preserve">
+    <value>Küçültülmüş Json</value>
+  </data>
+  <data name="dialog_common_no" xml:space="preserve">
+    <value>Hayır</value>
+  </data>
+  <data name="dialog_common_ok" xml:space="preserve">
+    <value>Tamam</value>
+  </data>
+  <data name="dialog_common_prettyJson" xml:space="preserve">
+    <value>Düzenli Json</value>
+  </data>
+  <data name="dialog_common_removeFile" xml:space="preserve">
+    <value>Dosyayı Kaldır</value>
+  </data>
+  <data name="dialog_common_save" xml:space="preserve">
+    <value>Kaydetmek</value>
+  </data>
+  <data name="dialog_common_xyOrder" xml:space="preserve">
+    <value>X/Y sırası</value>
+  </data>
+  <data name="dialog_common_yes" xml:space="preserve">
+    <value>Evet</value>
+  </data>
+  <data name="dialog_csvTsvOpen_formatCsv" xml:space="preserve">
+    <value>CSV</value>
+  </data>
+  <data name="dialog_csvTsvOpen_formatTsv" xml:space="preserve">
+    <value>TSV</value>
+  </data>
+  <data name="dialog_csvTsvOpen_geometryType" xml:space="preserve">
+    <value>Geometri Türü</value>
+  </data>
+  <data name="dialog_csvTsvOpen_orderXY" xml:space="preserve">
+    <value>İlk sütun = X (boylam/doğu), ikinci = Y (enlem/kuzey)</value>
+  </data>
+  <data name="dialog_csvTsvOpen_orderYX" xml:space="preserve">
+    <value>İlk sütun = Y (enlem/kuzey), ikinci = X (boylam/doğu)</value>
+  </data>
+  <data name="dialog_csvTsvOpen_pasteWatermark" xml:space="preserve">
+    <value>Veri yapıştır veya seçilen dosyanın önizlemesi (ilk 50 satır)</value>
+  </data>
+  <data name="dialog_csvTsvOpen_title" xml:space="preserve">
+    <value>CSV / TSV İçe Aktar</value>
+  </data>
+  <data name="dialog_csvTsvOpen_useFirstLineAsHeader" xml:space="preserve">
+    <value>İlk satırı öznitelik adları olarak kullan</value>
+  </data>
+  <data name="dialog_dxfOpen_columnIndex" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="dialog_dxfOpen_columnX" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="dialog_dxfOpen_columnY" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="dialog_dxfOpen_hemisphereTooltip" xml:space="preserve">
+    <value>Kuzey / Güney yarımküre</value>
+  </data>
+  <data name="dialog_dxfOpen_samplePoints" xml:space="preserve">
+    <value>Örnek noktalar (ilk 50):</value>
+  </data>
+  <data name="dialog_dxfOpen_title" xml:space="preserve">
+    <value>DXF İçe Aktar</value>
+  </data>
+  <data name="dialog_emailSignUp_or" xml:space="preserve">
+    <value>veya</value>
+  </data>
+  <data name="dialog_emailSignUp_signInGoogle" xml:space="preserve">
+    <value>Google ile giriş yap</value>
+  </data>
+  <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
+    <value>Google ile kayıt ol</value>
+  </data>
+  <data name="dialog_export_disabledProjection" xml:space="preserve">
+    <value>Varsayılan SRS Kullan</value>
+  </data>
+  <data name="dialog_export_enabledProjection" xml:space="preserve">
+    <value>Şuraya Projekte Et</value>
+  </data>
+  <data name="dialog_export_exportModeAll" xml:space="preserve">
+    <value>Tümü</value>
+  </data>
+  <data name="dialog_export_exportModeHighlighted" xml:space="preserve">
+    <value>Vurgulanan</value>
+  </data>
+  <data name="dialog_export_exportModeSelected" xml:space="preserve">
+    <value>Seçilen</value>
+  </data>
+  <data name="dialog_export_exportModeTitle" xml:space="preserve">
+    <value>Dışa aktarılacak öznitelikler:</value>
+  </data>
+  <data name="dialog_export_outputFileFormat" xml:space="preserve">
+    <value>Çıktı biçimi:</value>
+  </data>
+  <data name="dialog_export_sourceSrs" xml:space="preserve">
+    <value>Kaynak SRS</value>
+  </data>
+  <data name="dialog_export_targetSrs" xml:space="preserve">
+    <value>Hedef SRS</value>
+  </data>
+  <data name="dialog_geoJsonOpen_title" xml:space="preserve">
+    <value>GeoJSON İçe Aktar</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_orderXY" xml:space="preserve">
+    <value>İlk koordinat = X (boylam/doğu), ikinci = Y (enlem/kuzey)</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_orderYX" xml:space="preserve">
+    <value>İlk koordinat = Y (enlem/kuzey), ikinci = X (boylam/doğu)</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_pasteWatermark" xml:space="preserve">
+    <value>JSON yapıştır veya seçilen dosyanın önizlemesi</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_samplePoints" xml:space="preserve">
+    <value>Örnek noktalar (ilk 50)</value>
+  </data>
+  <data name="dialog_geometryDetails_addPart" xml:space="preserve">
+    <value>Parça Ekle</value>
+  </data>
+  <data name="dialog_geometryDetails_addPoint" xml:space="preserve">
+    <value>Nokta Ekle</value>
+  </data>
+  <data name="dialog_geometryDetails_addPolygon" xml:space="preserve">
+    <value>Poligon Ekle</value>
+  </data>
+  <data name="dialog_geometryDetails_basicInfo" xml:space="preserve">
+    <value>Temel Bilgiler</value>
+  </data>
+  <data name="dialog_geometryDetails_copy" xml:space="preserve">
+    <value>Kopyala</value>
+  </data>
+  <data name="dialog_geometryDetails_deletePart" xml:space="preserve">
+    <value>Parçayı Sil</value>
+  </data>
+  <data name="dialog_geometryDetails_dimension" xml:space="preserve">
+    <value>Boyut</value>
+  </data>
+  <data name="dialog_geometryDetails_editCoordinates" xml:space="preserve">
+    <value>Koordinatları Düzenle</value>
+  </data>
+  <data name="dialog_geometryDetails_export" xml:space="preserve">
+    <value>İhracat</value>
+  </data>
+  <data name="dialog_geometryDetails_exteriorRing" xml:space="preserve">
+    <value>Dış Halka</value>
+  </data>
+  <data name="dialog_geometryDetails_format" xml:space="preserve">
+    <value>Biçim</value>
+  </data>
+  <data name="dialog_geometryDetails_geometryType" xml:space="preserve">
+    <value>Geometri Türü</value>
+  </data>
+  <data name="dialog_geometryDetails_interiorRings" xml:space="preserve">
+    <value>İç Halkalar</value>
+  </data>
+  <data name="dialog_geometryDetails_numberOfGeometries" xml:space="preserve">
+    <value>Geometri Sayısı</value>
+  </data>
+  <data name="dialog_geometryDetails_numberOfPoints" xml:space="preserve">
+    <value>Puan Sayısı</value>
+  </data>
+  <data name="dialog_geometryDetails_points" xml:space="preserve">
+    <value>Puanlar</value>
+  </data>
+  <data name="dialog_geometryDetails_title" xml:space="preserve">
+    <value>Geometri Detayları</value>
+  </data>
+  <data name="dialog_geometryDetails_zoomToPoint" xml:space="preserve">
+    <value>Noktaya Yakınlaştır</value>
+  </data>
+  <data name="dialog_goto_addToDrawing" xml:space="preserve">
+    <value>Çizimlere ekle</value>
+  </data>
+  <data name="dialog_goto_drawingItemName" xml:space="preserve">
+    <value>Şuraya git ({0}, {1})</value>
+  </data>
+  <data name="dialog_goto_panTo" xml:space="preserve">
+    <value>Şuraya kaydır:</value>
+  </data>
+  <data name="dialog_goto_title" xml:space="preserve">
+    <value>Git</value>
+  </data>
+  <data name="dialog_goto_zoomTo" xml:space="preserve">
+    <value>Yakınlaştır</value>
+  </data>
+  <data name="dialog_layerSettings_title" xml:space="preserve">
+    <value>Katman Ayarları</value>
+  </data>
+  <data name="dialog_msg_confirmDeleteFeatures" xml:space="preserve">
+    <value>Öznitelikler Siliniyor</value>
+  </data>
+  <data name="dialog_msg_discardPendingChanges" xml:space="preserve">
+    <value>Katmanlardaki bekleyen değişiklikler iptal edilecek</value>
+  </data>
+  <data name="dialog_openfile_title" xml:space="preserve">
+    <value>Dosya Seç</value>
+  </data>
+  <data name="dialog_savefile_title" xml:space="preserve">
+    <value>Kaydet</value>
+  </data>
+  <data name="dialog_showMessage_title" xml:space="preserve">
+    <value>Mesaj</value>
+  </data>
+  <data name="dialog_symbology_fill" xml:space="preserve">
+    <value>Doldurmak</value>
+  </data>
+  <data name="dialog_symbology_stroke" xml:space="preserve">
+    <value>Felç</value>
+  </data>
+  <data name="dialog_symbology_strokeWidth" xml:space="preserve">
+    <value>Kontur genişliği</value>
+  </data>
+  <data name="dialog_symbology_title" xml:space="preserve">
+    <value>Katman Sembololojisi</value>
+  </data>
+  <data name="dialog_themeSelection_title" xml:space="preserve">
+    <value>Arka plan rengi seç</value>
+  </data>
+  <data name="dialog_themeSelection_windowTitle" xml:space="preserve">
+    <value>Görünüm ayarları</value>
+  </data>
+  <data name="dialog_topojsonOpen_title" xml:space="preserve">
+    <value>TopoJSON İçe Aktar</value>
+  </data>
+  <data name="dialog_userSignUp_bannerNewUser" xml:space="preserve">
+    <value>Yeni kullanıcı</value>
+  </data>
+  <data name="dialog_userSignUp_createUser" xml:space="preserve">
+    <value>Kullanıcı oluştur</value>
+  </data>
+  <data name="dialog_userSignUp_enterCredentials" xml:space="preserve">
+    <value>Kullanıcı adı ve şifrenizi girin.</value>
+  </data>
+  <data name="featureChanges_areaChange" xml:space="preserve">
+    <value>Alan değişikliği</value>
+  </data>
+  <data name="featureChanges_areaNew" xml:space="preserve">
+    <value>Alan (yeni)</value>
+  </data>
+  <data name="featureChanges_areaOld" xml:space="preserve">
+    <value>Alan (eski)</value>
+  </data>
+  <data name="featureChanges_attributeChanges" xml:space="preserve">
+    <value>Öznitelik değişiklikleri</value>
+  </data>
+  <data name="featureChanges_attributeName" xml:space="preserve">
+    <value>Öznitelik</value>
+  </data>
+  <data name="featureChanges_compareOnMap" xml:space="preserve">
+    <value>Haritada karşılaştır</value>
+  </data>
+  <data name="featureChanges_geometryChanges" xml:space="preserve">
+    <value>Geometri değişiklikleri</value>
+  </data>
+  <data name="featureChanges_id" xml:space="preserve">
+    <value>İD:</value>
+  </data>
+  <data name="featureChanges_lastModified" xml:space="preserve">
+    <value>Son değişiklik</value>
+  </data>
+  <data name="featureChanges_lengthChange" xml:space="preserve">
+    <value>Uzunluk değişikliği</value>
+  </data>
+  <data name="featureChanges_lengthNew" xml:space="preserve">
+    <value>Uzunluk (yeni)</value>
+  </data>
+  <data name="featureChanges_lengthOld" xml:space="preserve">
+    <value>Uzunluk (eski)</value>
+  </data>
+  <data name="featureChanges_newValue" xml:space="preserve">
+    <value>Yeni değer</value>
+  </data>
+  <data name="featureChanges_oldValue" xml:space="preserve">
+    <value>Eski değer</value>
+  </data>
+  <data name="featureChanges_status" xml:space="preserve">
+    <value>Durum</value>
+  </data>
+  <data name="featureChanges_title" xml:space="preserve">
+    <value>Nesne değişiklikleri</value>
+  </data>
+  <data name="featureChanges_viewChanges" xml:space="preserve">
+    <value>Değişiklikleri görüntüle</value>
+  </data>
+  <data name="featureChanges_wktNew" xml:space="preserve">
+    <value>WGS84 WKT (yeni)</value>
+  </data>
+  <data name="featureChanges_wktOld" xml:space="preserve">
+    <value>WGS84 WKT (eski)</value>
+  </data>
+  <data name="featureChanges_zoomToBoth" xml:space="preserve">
+    <value>İkisine yakınlaştır</value>
+  </data>
+  <data name="featureChanges_zoomToCurrent" xml:space="preserve">
+    <value>Mevcuda yakınlaştır</value>
+  </data>
+  <data name="featureChanges_zoomToOld" xml:space="preserve">
+    <value>Eskisine yakınlaştır</value>
+  </data>
+  <data name="featureTable_addNew" xml:space="preserve">
+    <value>Yeni ekle</value>
+  </data>
+  <data name="featureTable_delete" xml:space="preserve">
+    <value>Silmek</value>
+  </data>
+  <data name="featureTable_editGeometry" xml:space="preserve">
+    <value>Geometriyi düzenle</value>
+  </data>
+  <data name="featureTable_rowHeader_hour" xml:space="preserve">
+    <value>saat</value>
+  </data>
+  <data name="featureTable_rowHeader_minute" xml:space="preserve">
+    <value>dakika</value>
+  </data>
+  <data name="featureTable_saveChanges" xml:space="preserve">
+    <value>Değişiklikleri kaydet</value>
+  </data>
+  <data name="featureTable_undo" xml:space="preserve">
+    <value>Geri al</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_azimuthToNext" xml:space="preserve">
+    <value>Azimut Sonrakine</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_azimuthToPrevious" xml:space="preserve">
+    <value>Azimut Öncekine</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_distanceToNext" xml:space="preserve">
+    <value>Sonrakine Uzaklık</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_number" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_vertexAngle" xml:space="preserve">
+    <value>Tepe Açısı</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_x" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_y" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_z" xml:space="preserve">
+    <value>Z</value>
+  </data>
+  <data name="geometryDetails_currentPoint_add" xml:space="preserve">
+    <value>Nokta Ekle</value>
+  </data>
+  <data name="geometryDetails_currentPoint_copyCoordinate" xml:space="preserve">
+    <value>Koordinat Kopyala</value>
+  </data>
+  <data name="geometryDetails_currentPoint_delete" xml:space="preserve">
+    <value>Noktayı Sil</value>
+  </data>
+  <data name="geometryDetails_currentPoint_edit" xml:space="preserve">
+    <value>Düzenlemek</value>
+  </data>
+  <data name="geometryDetails_currentPoint_goToNextPage" xml:space="preserve">
+    <value>Sonraki Sayfaya Git</value>
+  </data>
+  <data name="geometryDetails_currentPoint_goToNextPoint" xml:space="preserve">
+    <value>Sonraki Noktaya Git</value>
+  </data>
+  <data name="geometryDetails_currentPoint_goToPreviousPage" xml:space="preserve">
+    <value>Önceki Sayfaya Git</value>
+  </data>
+  <data name="featureTable_goToFirstPage" xml:space="preserve">
+    <value>İlk Sayfaya Git</value>
+  </data>
+  <data name="featureTable_goToLastPage" xml:space="preserve">
+    <value>Son Sayfaya Git</value>
+  </data>
+  <data name="geometryDetails_currentPoint_goToPreviousPoint" xml:space="preserve">
+    <value>Önceki Noktaya Git</value>
+  </data>
+  <data name="geometryDetails_currentPoint_x" xml:space="preserve">
+    <value>X:</value>
+  </data>
+  <data name="geometryDetails_currentPoint_y" xml:space="preserve">
+    <value>Y:</value>
+  </data>
+  <data name="geometryDetails_currentPoint_zoom" xml:space="preserve">
+    <value>Noktaya Kaydırma</value>
+  </data>
+  <data name="geometryDetails_currentPoint_zoomToPoint" xml:space="preserve">
+    <value>Noktaya Yakınlaştır</value>
+  </data>
+  <data name="geometryDetails_options_ellipsoid" xml:space="preserve">
+    <value>Elipsoid:</value>
+  </data>
+  <data name="geometryDetails_options_gridOptions" xml:space="preserve">
+    <value>Izgara Seçenekleri</value>
+  </data>
+  <data name="geometryDetails_options_latLongPrecision" xml:space="preserve">
+    <value>Enlem/Boylam Hassasiyeti:</value>
+  </data>
+  <data name="geometryDetails_options_showInnerAngle" xml:space="preserve">
+    <value>İç Açıyı Göster</value>
+  </data>
+  <data name="geometryDetails_options_showZColumn" xml:space="preserve">
+    <value>Z Sütununu Göster</value>
+  </data>
+  <data name="geometryDetails_options_srs" xml:space="preserve">
+    <value>SRS:</value>
+  </data>
+  <data name="geometryDetails_options_srsConfiguration" xml:space="preserve">
+    <value>SRS Yapılandırması</value>
+  </data>
+  <data name="geometryDetails_options_srsInfoFormat" xml:space="preserve">
+    <value>SRS: {0}{1}{2}</value>
+  </data>
+  <data name="geometryDetails_options_useDecimalDegreesForAngles" xml:space="preserve">
+    <value>Açılar için Ondalık Dereceleri Kullan</value>
+  </data>
+  <data name="geometryDetails_options_xyPrecision" xml:space="preserve">
+    <value>X/Y Hassasiyeti:</value>
+  </data>
+  <data name="geometryDetails_parts_format" xml:space="preserve">
+    <value>{1} parçasının {0} kısmı</value>
+  </data>
+  <data name="geometryDetails_parts_invalid" xml:space="preserve">
+    <value>✗ Geçersiz Geometri Parçası</value>
+  </data>
+  <data name="geometryDetails_parts_noParts" xml:space="preserve">
+    <value>Parça yok</value>
+  </data>
+  <data name="geometryDetails_parts_title" xml:space="preserve">
+    <value>Parçalar</value>
+  </data>
+  <data name="geometryDetails_parts_valid" xml:space="preserve">
+    <value>✓ Geçerli Geometri Parçası</value>
+  </data>
+  <data name="geometryDetails_pointCounter_format" xml:space="preserve">
+    <value>{1} noktasının {0} noktası ({3} sayfasının {2} Sayfası)</value>
+  </data>
+  <data name="geometryDetails_polygon_title" xml:space="preserve">
+    <value>Çokgen</value>
+  </data>
+  <data name="geometryDetails_polygons_format" xml:space="preserve">
+    <value>{1} poligonu {0}</value>
+  </data>
+  <data name="geometryDetails_polygons_invalid" xml:space="preserve">
+    <value>✗ Geçersiz Çokgen</value>
+  </data>
+  <data name="geometryDetails_polygons_noPolygon" xml:space="preserve">
+    <value>Çokgen yok</value>
+  </data>
+  <data name="geometryDetails_polygons_valid" xml:space="preserve">
+    <value>✓ Geçerli Çokgen</value>
+  </data>
+  <data name="index_100k_title" xml:space="preserve">
+    <value>Dizin 100k</value>
+  </data>
+  <data name="index_10k_title" xml:space="preserve">
+    <value>Dizin 10k</value>
+  </data>
+  <data name="index_1kUtm_title" xml:space="preserve">
+    <value>Dizin 1000</value>
+  </data>
+  <data name="index_250k_title" xml:space="preserve">
+    <value>Dizin 250k</value>
+  </data>
+  <data name="index_25k_title" xml:space="preserve">
+    <value>Dizin 25k</value>
+  </data>
+  <data name="index_2kUtm_title" xml:space="preserve">
+    <value>Dizin 2000</value>
+  </data>
+  <data name="index_2kblocks_title" xml:space="preserve">
+    <value>Dizin 2000 Blok</value>
+  </data>
+  <data name="index_500Utm_title" xml:space="preserve">
+    <value>Dizin 500</value>
+  </data>
+  <data name="index_50k_title" xml:space="preserve">
+    <value>Endeks 50k</value>
+  </data>
+  <data name="index_5k_title" xml:space="preserve">
+    <value>Dizin 5k</value>
+  </data>
+  <data name="input_coordinateNote" xml:space="preserve">
+    <value>Not: Koordinatlar enlem ve boylam biçimindedir</value>
+  </data>
+  <data name="input_drawFeatureOnMap" xml:space="preserve">
+    <value>Haritada çizim özelliği</value>
+  </data>
+  <data name="input_geodetic" xml:space="preserve">
+    <value>Jeodezik</value>
+  </data>
+  <data name="input_utm" xml:space="preserve">
+    <value>UTM</value>
+  </data>
+  <data name="languageSelector_title" xml:space="preserve">
+    <value>Dil</value>
+  </data>
+  <data name="layerSettings_analysis_title" xml:space="preserve">
+    <value>Analiz</value>
+  </data>
+  <data name="layerSettings_export_title" xml:space="preserve">
+    <value>Dışa Aktar</value>
+  </data>
+  <data name="layerSettings_fields_title" xml:space="preserve">
+    <value>Alanlar</value>
+  </data>
+  <data name="layerSettings_filters_title" xml:space="preserve">
+    <value>Filtreler</value>
+  </data>
+  <data name="layerSettings_general_featureType" xml:space="preserve">
+    <value>Öznitelik Türü:</value>
+  </data>
+  <data name="layerSettings_general_layerName" xml:space="preserve">
+    <value>Katman Adı:</value>
+  </data>
+  <data name="layerSettings_general_opacity" xml:space="preserve">
+    <value>Saydamlık:</value>
+  </data>
+  <data name="layerSettings_general_sourceAddress" xml:space="preserve">
+    <value>Kaynak Adres</value>
+  </data>
+  <data name="layerSettings_general_sourceType" xml:space="preserve">
+    <value>Kaynak Türü:</value>
+  </data>
+  <data name="layerSettings_general_title" xml:space="preserve">
+    <value>Genel</value>
+  </data>
+  <data name="layerSettings_labeling" xml:space="preserve">
+    <value>Etiketleme</value>
+  </data>
+  <data name="layerSettings_security_title" xml:space="preserve">
+    <value>Güvenlik</value>
+  </data>
+  <data name="layerSettings_statistics_title" xml:space="preserve">
+    <value>İstatistikler</value>
+  </data>
+  <data name="layerSettings_notYetAvailable" xml:space="preserve">
+    <value>Henüz kullanılamıyor</value>
+  </data>
+  <data name="layerSettings_symbology_title" xml:space="preserve">
+    <value>Sembolleştirme</value>
+  </data>
+  <data name="layerSettings_trackChanges_title" xml:space="preserve">
+    <value>Değişiklikleri İzle</value>
+  </data>
+  <data name="layer_geodesy1_title" xml:space="preserve">
+    <value>Jeodezi 1</value>
+  </data>
+  <data name="layer_geodesy2_title" xml:space="preserve">
+    <value>Jeodezi 2</value>
+  </data>
+  <data name="layer_geodynamics_title" xml:space="preserve">
+    <value>Jeodinamik</value>
+  </data>
+  <data name="layer_gravimetry_title" xml:space="preserve">
+    <value>Gravimetri</value>
+  </data>
+  <data name="layer_leveling1_title" xml:space="preserve">
+    <value>Tesviye 1</value>
+  </data>
+  <data name="layer_leveling2_title" xml:space="preserve">
+    <value>Seviyelendirme 2</value>
+  </data>
+  <data name="layer_leveling3_title" xml:space="preserve">
+    <value>Seviye 3</value>
+  </data>
+  <data name="legendItem_layerTitle" xml:space="preserve">
+    <value>Başlık</value>
+  </data>
+  <data name="legendItem_pendingChanges_added" xml:space="preserve">
+    <value>Eklendi:</value>
+  </data>
+  <data name="legendItem_pendingChanges_deleted" xml:space="preserve">
+    <value>Silindi:</value>
+  </data>
+  <data name="legendItem_pendingChanges_save" xml:space="preserve">
+    <value>Değişiklikleri kaydet</value>
+  </data>
+  <data name="legendItem_pendingChanges_undo" xml:space="preserve">
+    <value>Değişiklikleri geri al</value>
+  </data>
+  <data name="legendItem_pendingChanges_updated" xml:space="preserve">
+    <value>Güncellendi:</value>
+  </data>
+  <data name="legendItem_reloadData" xml:space="preserve">
+    <value>Veriyi Yeniden Yükle</value>
+  </data>
+  <data name="legend_clearAll" xml:space="preserve">
+    <value>Tümünü Temizle</value>
+  </data>
+  <data name="legend_filter_clear" xml:space="preserve">
+    <value>Filtreleri Temizle</value>
+  </data>
+  <data name="legend_filter_filterByLayerType" xml:space="preserve">
+    <value>Katman Türüne Göre Filtrele</value>
+  </data>
+  <data name="legend_filter_searchLayerWatermark" xml:space="preserve">
+    <value>Arama Katmanı</value>
+  </data>
+  <data name="legend_selectAll" xml:space="preserve">
+    <value>Tümünü Seç</value>
+  </data>
+  <data name="manageAccount_changePassword" xml:space="preserve">
+    <value>Şifreyi değiştir</value>
+  </data>
+  <data name="manageAccount_logOut" xml:space="preserve">
+    <value>Çıkış yap</value>
+  </data>
+  <data name="manageAccount_manageUsers" xml:space="preserve">
+    <value>Kullanıcıları yönet</value>
+  </data>
+  <data name="manageAccount_newPassword" xml:space="preserve">
+    <value>Yeni şifre</value>
+  </data>
+  <data name="manageAccount_newUsername" xml:space="preserve">
+    <value>Yeni kullanıcı adı</value>
+  </data>
+  <data name="manageAccount_userName" xml:space="preserve">
+    <value>Kullanıcı Adı</value>
+  </data>
+  <data name="mapExtent_common_title" xml:space="preserve">
+    <value>Kapsam Yöneticisi</value>
+  </data>
+  <data name="mapExtent_currentView_currentPointGroundResolution" xml:space="preserve">
+    <value>Zemin çözünürlüğü (m/px):</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScale" xml:space="preserve">
+    <value>Harita Ölçeği (WebMercator):</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScaleCurrentPoint" xml:space="preserve">
+    <value>Harita Ölçeği (geçerli nokta):</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevel" xml:space="preserve">
+    <value>En Yakın Google Ölçeği:</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevelCurrentPoint" xml:space="preserve">
+    <value>En Yakın Google Ölçeği (geçerli nokta):</value>
+  </data>
+  <data name="mapExtent_currentView_nearestGoogleZoomLevel" xml:space="preserve">
+    <value>En Yakın Google Yakınlaştırma seviyesi:</value>
+  </data>
+  <data name="mapExtent_currentView_title" xml:space="preserve">
+    <value>Geçerli Kapsam</value>
+  </data>
+  <data name="mapExtent_gotoScale_title" xml:space="preserve">
+    <value>Ölçeğe git (merkezde)</value>
+  </data>
+  <data name="mapExtent_gotoScale_useGroundScaleForStandardScales" xml:space="preserve">
+    <value>Standart ölçekler için zemin ölçeğini kullan</value>
+  </data>
+  <data name="mapExtent_gotoScale_useWebMercatorScaleForStandardScales" xml:space="preserve">
+    <value>Standart ölçekler için webmercator ölçeğini kullan</value>
+  </data>
+  <data name="mapExtent_new_addNew" xml:space="preserve">
+    <value>Yeni Ekle</value>
+  </data>
+  <data name="mapExtent_new_extentTitle" xml:space="preserve">
+    <value>Kapsam Başlığı</value>
+  </data>
+  <data name="mapExtent_new_title" xml:space="preserve">
+    <value>Yeni Kapsam</value>
+  </data>
+  <data name="mapExtent_savedExtents_title" xml:space="preserve">
+    <value>Kaydedilmiş kapsamlar</value>
+  </data>
+  <data name="mapPanel_currentPart_add" xml:space="preserve">
+    <value>Yeni bölüm ekle</value>
+  </data>
+  <data name="mapPanel_currentPart_delete" xml:space="preserve">
+    <value>Geçerli bölümü sil</value>
+  </data>
+  <data name="mapPanel_currentPart_title" xml:space="preserve">
+    <value>Çok parçalı</value>
+  </data>
+  <data name="mapPanel_currentPart_zoom" xml:space="preserve">
+    <value>Geçerli parçayı yakınlaştır</value>
+  </data>
+  <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
+    <value>Geçerli noktanın koordinatını kopyala</value>
+  </data>
+  <data name="mapPanel_currentPoint_delete" xml:space="preserve">
+    <value>Geçerli noktayı sil</value>
+  </data>
+  <data name="mapPanel_currentPoint_displayCoordinate" xml:space="preserve">
+    <value>Koordinatları Görüntüle</value>
+  </data>
+  <data name="mapPanel_currentPoint_goToNextPoint" xml:space="preserve">
+    <value>Sonraki nokta</value>
+  </data>
+  <data name="mapPanel_currentPoint_goToPreviousPoint" xml:space="preserve">
+    <value>Önceki nokta</value>
+  </data>
+  <data name="mapPanel_currentPoint_linkToMouseMove" xml:space="preserve">
+    <value>Haritadaki fare konumuna bağla</value>
+  </data>
+  <data name="mapPanel_currentPoint_title" xml:space="preserve">
+    <value>Geçerli Nokta</value>
+  </data>
+  <data name="mapPanel_currentPoint_zoom" xml:space="preserve">
+    <value>Geçerli noktaya yakınlaştır</value>
+  </data>
+  <data name="mapPanel_edit_cancel" xml:space="preserve">
+    <value>Düzenlemeyi İptal Et</value>
+  </data>
+  <data name="mapPanel_edit_convertToDrawing" xml:space="preserve">
+    <value>Çizim öğesine dönüştür</value>
+  </data>
+  <data name="mapPanel_edit_delete" xml:space="preserve">
+    <value>Silmek</value>
+  </data>
+  <data name="mapPanel_edit_finish" xml:space="preserve">
+    <value>Düzenlemeyi Bitir</value>
+  </data>
+  <data name="mapPanel_edit_showEdgeLabels" xml:space="preserve">
+    <value>Kenar Etiketlerini Göster</value>
+  </data>
+  <data name="mapPanel_edit_showGeometryDetails" xml:space="preserve">
+    <value>Geometri Ayrıntılarını Göster</value>
+  </data>
+  <data name="mapPanel_measure_areaTitle" xml:space="preserve">
+    <value>Alan</value>
+  </data>
+  <data name="mapPanel_measure_authalicSphereArea" xml:space="preserve">
+    <value>AuthalicSphereArea:</value>
+  </data>
+  <data name="mapPanel_measure_ellipsoidalArea" xml:space="preserve">
+    <value>ElipsoidalAlan:</value>
+  </data>
+  <data name="mapPanel_measure_ellipsoidalLength" xml:space="preserve">
+    <value>ElipsoidalUzunluk:</value>
+  </data>
+  <data name="mapPanel_measure_euclideanAreaUtm" xml:space="preserve">
+    <value>Öklid Alanı (UTM):</value>
+  </data>
+  <data name="mapPanel_measure_euclideanLengthUtm" xml:space="preserve">
+    <value>Öklid UzunluğuInUtm:</value>
+  </data>
+  <data name="mapPanel_measure_euclideanLengthUtmRefined" xml:space="preserve">
+    <value>EuclideanLengthInUtm_Refined:</value>
+  </data>
+  <data name="mapPanel_measure_generalTitle" xml:space="preserve">
+    <value>Genel</value>
+  </data>
+  <data name="mapPanel_measure_groundArea" xml:space="preserve">
+    <value>Zemin Alanı:</value>
+  </data>
+  <data name="mapPanel_measure_groundLength" xml:space="preserve">
+    <value>Zemin Uzunluğu:</value>
+  </data>
+  <data name="mapPanel_measure_karneyArea" xml:space="preserve">
+    <value>Karney Bölgesi:</value>
+  </data>
+  <data name="mapPanel_measure_lengthTitle" xml:space="preserve">
+    <value>Uzunluk</value>
+  </data>
+  <data name="mapPanel_measure_meanHeight" xml:space="preserve">
+    <value>Ortalama Yükseklik</value>
+  </data>
+  <data name="mapPanel_measure_scaleFactor" xml:space="preserve">
+    <value>Ölçek Faktörü:</value>
+  </data>
+  <data name="mapPanel_measure_sphericalLength" xml:space="preserve">
+    <value>Küresel Uzunluk:</value>
+  </data>
+  <data name="mapPanel_measure_title" xml:space="preserve">
+    <value>Ölçüm</value>
+  </data>
+  <data name="mapPanel_srs_title" xml:space="preserve">
+    <value>Mekansal Referans Sistemi</value>
+  </data>
+  <data name="map_coordinatePanel_height" xml:space="preserve">
+    <value>Yükseklik</value>
+  </data>
+  <data name="map_draw_addPoint" xml:space="preserve">
+    <value>Nokta Ekle</value>
+  </data>
+  <data name="map_draw_cancelDrawing" xml:space="preserve">
+    <value>Çizimi İptal Et</value>
+  </data>
+  <data name="map_draw_finishDrawing" xml:space="preserve">
+    <value>Çizimi Bitir</value>
+  </data>
+  <data name="map_draw_finishDrawingPart" xml:space="preserve">
+    <value>Çizim Parçasını Bitir</value>
+  </data>
+  <data name="map_draw_newDrawing" xml:space="preserve">
+    <value>Çizimi bitirmek için son noktaya tıklayın.</value>
+  </data>
+  <data name="map_scalebar_content" xml:space="preserve">
+    <value>ÖLÇEK</value>
+  </data>
+  <data name="map_scalebar_zoomLevel" xml:space="preserve">
+    <value>Seviye</value>
+  </data>
+  <data name="message_error_concurrencyConflict" xml:space="preserve">
+    <value>Veriler başka bir kullanıcı tarafından değiştirildi. Lütfen yeniden yükleyip tekrar deneyin.</value>
+  </data>
+  <data name="message_error_formatException" xml:space="preserve">
+    <value>Biçim İstisnası</value>
+  </data>
+  <data name="message_error_lockedFile" xml:space="preserve">
+    <value>Dosya kilitli veya başka bir program tarafından kullanılıyor</value>
+  </data>
+  <data name="message_error_title" xml:space="preserve">
+    <value>Hata</value>
+  </data>
+  <data name="message_error_unknown" xml:space="preserve">
+    <value>Bilinmeyen hata</value>
+  </data>
+  <data name="message_error_userEmailAlreadyVerified" xml:space="preserve">
+    <value>Kullanıcı e-postası zaten doğrulanmış</value>
+  </data>
+  <data name="message_info_doneSuccessfully" xml:space="preserve">
+    <value>İşlem Başarıyla Tamamlandı</value>
+  </data>
+  <data name="message_info_title" xml:space="preserve">
+    <value>Mesaj</value>
+  </data>
+  <data name="ribbon_header_drawing" xml:space="preserve">
+    <value>Çizim</value>
+  </data>
+  <data name="ribbon_header_help" xml:space="preserve">
+    <value>Yardım</value>
+  </data>
+  <data name="ribbon_header_map" xml:space="preserve">
+    <value>Harita</value>
+  </data>
+  <data name="ribbon_header_settings" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="sketchBar_title_drawPoint" xml:space="preserve">
+    <value>Nokta Çiz</value>
+  </data>
+  <data name="sketchBar_title_drawPolygon" xml:space="preserve">
+    <value>Poligon Çiz</value>
+  </data>
+  <data name="sketchBar_title_drawPolyline" xml:space="preserve">
+    <value>Çizgi Çiz</value>
+  </data>
+  <data name="sketchBar_title_drawRectangle" xml:space="preserve">
+    <value>Dikdörtgen Çiz</value>
+  </data>
+  <data name="sketchBar_title_editing" xml:space="preserve">
+    <value>Düzenleme</value>
+  </data>
+  <data name="sketchBar_title_measureArea" xml:space="preserve">
+    <value>Alan Ölçülüyor</value>
+  </data>
+  <data name="sketchBar_title_measureLength" xml:space="preserve">
+    <value>Uzunluk Ölçülüyor</value>
+  </data>
+  <data name="sldEditor_common_abstract" xml:space="preserve">
+    <value>Soyut:</value>
+  </data>
+  <data name="sldEditor_common_addLineSymbolizer" xml:space="preserve">
+    <value>Satır Simgeleştirici Ekle</value>
+  </data>
+  <data name="sldEditor_common_addPointSymbolizer" xml:space="preserve">
+    <value>Nokta Simgeleştirici Ekle</value>
+  </data>
+  <data name="sldEditor_common_addPolygonSymbolizer" xml:space="preserve">
+    <value>Çokgen Sembolleştirici Ekle</value>
+  </data>
+  <data name="sldEditor_common_addRule" xml:space="preserve">
+    <value>Kural Ekle</value>
+  </data>
+  <data name="sldEditor_common_addTextSymbolizer" xml:space="preserve">
+    <value>Metin Simgeleştirici Ekle</value>
+  </data>
+  <data name="sldEditor_common_editorBanner" xml:space="preserve">
+    <value>OGC SLD 1.0.0 Düzenleyici</value>
+  </data>
+  <data name="sldEditor_common_editorTitle" xml:space="preserve">
+    <value>SLD Stil Düzenleyicisi</value>
+  </data>
+  <data name="sldEditor_common_export" xml:space="preserve">
+    <value>İhracat</value>
+  </data>
+  <data name="sldEditor_common_exportToFile" xml:space="preserve">
+    <value>Dosyaya Aktar...</value>
+  </data>
+  <data name="sldEditor_common_exportTooltip" xml:space="preserve">
+    <value>SLD&apos;yi Dosyaya Aktar</value>
+  </data>
+  <data name="sldEditor_common_fillColor" xml:space="preserve">
+    <value>Dolgu Rengi:</value>
+  </data>
+  <data name="sldEditor_common_fillOpacity" xml:space="preserve">
+    <value>Dolgu Opaklığı:</value>
+  </data>
+  <data name="sldEditor_common_filter" xml:space="preserve">
+    <value>Filtre</value>
+  </data>
+  <data name="sldEditor_common_general" xml:space="preserve">
+    <value>Genel</value>
+  </data>
+  <data name="sldEditor_common_geometryProperty" xml:space="preserve">
+    <value>Geometri Özelliği:</value>
+  </data>
+  <data name="sldEditor_common_import" xml:space="preserve">
+    <value>İçe aktarmak</value>
+  </data>
+  <data name="sldEditor_common_importFromFile" xml:space="preserve">
+    <value>Dosyadan İçe Aktar...</value>
+  </data>
+  <data name="sldEditor_common_importTooltip" xml:space="preserve">
+    <value>SLD&apos;yi Dosyadan İçe Aktar</value>
+  </data>
+  <data name="sldEditor_common_layerName" xml:space="preserve">
+    <value>Katman Adı:</value>
+  </data>
+  <data name="sldEditor_common_lineCap" xml:space="preserve">
+    <value>Hat Başlığı:</value>
+  </data>
+  <data name="sldEditor_common_lineJoin" xml:space="preserve">
+    <value>Hat Birleştirme:</value>
+  </data>
+  <data name="sldEditor_common_moveDown" xml:space="preserve">
+    <value>Aşağı Taşı</value>
+  </data>
+  <data name="sldEditor_common_moveUp" xml:space="preserve">
+    <value>Yukarı Taşı</value>
+  </data>
+  <data name="sldEditor_common_name" xml:space="preserve">
+    <value>İsim:</value>
+  </data>
+  <data name="sldEditor_common_removeRule" xml:space="preserve">
+    <value>Kuralı Kaldır</value>
+  </data>
+  <data name="sldEditor_common_removeSymbolizer" xml:space="preserve">
+    <value>Sembolleştiriciyi Kaldır</value>
+  </data>
+  <data name="sldEditor_common_ruleProperties" xml:space="preserve">
+    <value>Kural Özellikleri</value>
+  </data>
+  <data name="sldEditor_common_rules" xml:space="preserve">
+    <value>Tüzük</value>
+  </data>
+  <data name="sldEditor_common_rulesLabel" xml:space="preserve">
+    <value>Tüzük:</value>
+  </data>
+  <data name="sldEditor_common_scaleRange" xml:space="preserve">
+    <value>Ölçek Aralığı</value>
+  </data>
+  <data name="sldEditor_common_selected" xml:space="preserve">
+    <value>Seçilen:</value>
+  </data>
+  <data name="sldEditor_common_strokeColor" xml:space="preserve">
+    <value>Kontur Rengi:</value>
+  </data>
+  <data name="sldEditor_common_strokeOpacity" xml:space="preserve">
+    <value>Kontur Opaklığı:</value>
+  </data>
+  <data name="sldEditor_common_strokeWidth" xml:space="preserve">
+    <value>Kontur Genişliği:</value>
+  </data>
+  <data name="sldEditor_common_styleInformation" xml:space="preserve">
+    <value>Stil Bilgileri</value>
+  </data>
+  <data name="sldEditor_common_styleName" xml:space="preserve">
+    <value>Stil Adı:</value>
+  </data>
+  <data name="sldEditor_common_styleTitle" xml:space="preserve">
+    <value>Stil Başlığı:</value>
+  </data>
+  <data name="sldEditor_common_symbolizerProperties" xml:space="preserve">
+    <value>Sembolleştirici Özellikleri</value>
+  </data>
+  <data name="sldEditor_common_symbolizers" xml:space="preserve">
+    <value>Sembolleştiriciler</value>
+  </data>
+  <data name="sldEditor_common_title" xml:space="preserve">
+    <value>Başlık:</value>
+  </data>
+  <data name="sldEditor_common_xmlPreview" xml:space="preserve">
+    <value>XML Önizlemesi</value>
+  </data>
+  <data name="sldEditor_common_xmlPreviewPlaceholder" xml:space="preserve">
+    <value>XML önizlemesi burada görüntülenecek</value>
+  </data>
+  <data name="sldEditor_filter_enableFilter" xml:space="preserve">
+    <value>Filtreyi Etkinleştir</value>
+  </data>
+  <data name="sldEditor_filter_filterExpression" xml:space="preserve">
+    <value>Filtre İfadesi:</value>
+  </data>
+  <data name="sldEditor_filter_filterSettings" xml:space="preserve">
+    <value>Filtre Ayarları</value>
+  </data>
+  <data name="sldEditor_filter_simplifiedViewNote" xml:space="preserve">
+    <value>Not: Bu basitleştirilmiş bir görünümdür. Karmaşık filtreler için XML&apos;i doğrudan düzenleyin veya özel bir filtre oluşturucu kullanın.</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashArray" xml:space="preserve">
+    <value>Çizgi Dizisi:</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashArrayWatermark" xml:space="preserve">
+    <value>ör. 5 5 veya 10 5 3 5</value>
+  </data>
+  <data name="sldEditor_pointSymbolizer_markType" xml:space="preserve">
+    <value>İşaretleme Türü:</value>
+  </data>
+  <data name="sldEditor_pointSymbolizer_rotation" xml:space="preserve">
+    <value>Rotasyon:</value>
+  </data>
+  <data name="sldEditor_pointSymbolizer_size" xml:space="preserve">
+    <value>Boyut:</value>
+  </data>
+  <data name="sldEditor_scaleRange_maxScale" xml:space="preserve">
+    <value>Maksimum Ölçek:</value>
+  </data>
+  <data name="sldEditor_scaleRange_maxWatermark" xml:space="preserve">
+    <value>İsteğe bağlı - Maksimum değer olmadan boş bırakın</value>
+  </data>
+  <data name="sldEditor_scaleRange_minScale" xml:space="preserve">
+    <value>Minimum Ölçek:</value>
+  </data>
+  <data name="sldEditor_scaleRange_minWatermark" xml:space="preserve">
+    <value>İsteğe bağlı - Minimum değer olmadan boş bırakın</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_enableHalo" xml:space="preserve">
+    <value>Halo&apos;yu Etkinleştir (Metin Anahattı)</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_fontColor" xml:space="preserve">
+    <value>Yazı Tipi Rengi:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_fontFamily" xml:space="preserve">
+    <value>Yazı Tipi Ailesi:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_fontSize" xml:space="preserve">
+    <value>Yazı Tipi Boyutu:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_fontStyle" xml:space="preserve">
+    <value>Yazı Tipi Stili:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_fontWeight" xml:space="preserve">
+    <value>Yazı Tipi Ağırlığı:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloColor" xml:space="preserve">
+    <value>Hale Rengi:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloRadius" xml:space="preserve">
+    <value>Halo Yarıçapı:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_labelProperty" xml:space="preserve">
+    <value>Etiket Özelliği:</value>
+  </data>
+  <data name="srs_ceaSubTitle" xml:space="preserve">
+    <value>Silindirik Eşit Alan</value>
+  </data>
+  <data name="srs_ceaTitle" xml:space="preserve">
+    <value>Silindirik Eşit Alan</value>
+  </data>
+  <data name="srs_defaultLatitude" xml:space="preserve">
+    <value>Enlem:</value>
+  </data>
+  <data name="srs_defaultLongitude" xml:space="preserve">
+    <value>Boylam:</value>
+  </data>
+  <data name="srs_defaultX" xml:space="preserve">
+    <value>X:</value>
+  </data>
+  <data name="srs_defaultY" xml:space="preserve">
+    <value>Y:</value>
+  </data>
+  <data name="srs_geodeticDmsSubTitle" xml:space="preserve">
+    <value>Jeodezik, WGS84</value>
+  </data>
+  <data name="srs_geodeticDmsTitle" xml:space="preserve">
+    <value>Jeodezik, WGS84 (dms)</value>
+  </data>
+  <data name="srs_geodeticSubTitle" xml:space="preserve">
+    <value>Jeodezik, WGS84</value>
+  </data>
+  <data name="srs_geodeticTitle" xml:space="preserve">
+    <value>Jeodezik, WGS84 (ondalık derece)</value>
+  </data>
+  <data name="srs_mercatorSubTitle" xml:space="preserve">
+    <value>Merkator</value>
+  </data>
+  <data name="srs_mercatorTitle" xml:space="preserve">
+    <value>Merkator</value>
+  </data>
+  <data name="srs_northernHemisphere" xml:space="preserve">
+    <value>Kuzey Yarımküre</value>
+  </data>
+  <data name="srs_southernHemisphere" xml:space="preserve">
+    <value>Güney Yarımküre</value>
+  </data>
+  <data name="srs_tmSubTitle" xml:space="preserve">
+    <value>Enine Merkatör</value>
+  </data>
+  <data name="srs_tmTitle" xml:space="preserve">
+    <value>Enine Merkatör</value>
+  </data>
+  <data name="srs_utmSubTitle" xml:space="preserve">
+    <value>UTM</value>
+  </data>
+  <data name="srs_utmTitle" xml:space="preserve">
+    <value>Evrensel Enine Merkatör (UTM)</value>
+  </data>
+  <data name="srs_utmZone" xml:space="preserve">
+    <value>Alan</value>
+  </data>
+  <data name="srs_utmZone_full" xml:space="preserve">
+    <value>UTM Dilimi</value>
+  </data>
+  <data name="srs_webMercatorSubTitle" xml:space="preserve">
+    <value>Web Mercatörü</value>
+  </data>
+  <data name="srs_webMercatorTitle" xml:space="preserve">
+    <value>Web Mercatörü</value>
+  </data>
+  <data name="theme_color_amber" xml:space="preserve">
+    <value>kehribar</value>
+  </data>
+  <data name="theme_color_blue" xml:space="preserve">
+    <value>Mavi</value>
+  </data>
+  <data name="theme_color_brown" xml:space="preserve">
+    <value>Kahverengi</value>
+  </data>
+  <data name="theme_color_cobalt" xml:space="preserve">
+    <value>Kobalt</value>
+  </data>
+  <data name="theme_color_crimson" xml:space="preserve">
+    <value>Kızıl</value>
+  </data>
+  <data name="theme_color_cyan" xml:space="preserve">
+    <value>Camgöbeği</value>
+  </data>
+  <data name="theme_color_emerald" xml:space="preserve">
+    <value>Zümrüt</value>
+  </data>
+  <data name="theme_color_green" xml:space="preserve">
+    <value>Yeşil</value>
+  </data>
+  <data name="theme_color_indigo" xml:space="preserve">
+    <value>Çivit mavisi</value>
+  </data>
+  <data name="theme_color_lime" xml:space="preserve">
+    <value>Kireç</value>
+  </data>
+  <data name="theme_color_magenta" xml:space="preserve">
+    <value>Macenta</value>
+  </data>
+  <data name="theme_color_mauve" xml:space="preserve">
+    <value>leylak rengi</value>
+  </data>
+  <data name="theme_color_olive" xml:space="preserve">
+    <value>Zeytin</value>
+  </data>
+  <data name="theme_color_orange" xml:space="preserve">
+    <value>Turuncu</value>
+  </data>
+  <data name="theme_color_pink" xml:space="preserve">
+    <value>Pembe</value>
+  </data>
+  <data name="theme_color_purple" xml:space="preserve">
+    <value>Mor</value>
+  </data>
+  <data name="theme_color_red" xml:space="preserve">
+    <value>Kırmızı</value>
+  </data>
+  <data name="theme_color_sienna" xml:space="preserve">
+    <value>Siena</value>
+  </data>
+  <data name="theme_color_steel" xml:space="preserve">
+    <value>Çelik</value>
+  </data>
+  <data name="theme_color_taupe" xml:space="preserve">
+    <value>Boz kahverengi</value>
+  </data>
+  <data name="theme_color_teal" xml:space="preserve">
+    <value>turkuaz</value>
+  </data>
+  <data name="theme_color_violet" xml:space="preserve">
+    <value>Menekşe</value>
+  </data>
+  <data name="theme_color_yellow" xml:space="preserve">
+    <value>Sarı</value>
+  </data>
+  <data name="tile_mapType_blackWhite" xml:space="preserve">
+    <value>SiyahBeyaz</value>
+  </data>
+  <data name="tile_mapType_cleanGrey" xml:space="preserve">
+    <value>TemizGrey</value>
+  </data>
+  <data name="tile_mapType_comic" xml:space="preserve">
+    <value>komik</value>
+  </data>
+  <data name="tile_mapType_dark" xml:space="preserve">
+    <value>Karanlık</value>
+  </data>
+  <data name="tile_mapType_hikeBike" xml:space="preserve">
+    <value>YürüyüşBisiklet</value>
+  </data>
+  <data name="tile_mapType_hybrid" xml:space="preserve">
+    <value>Hibrit</value>
+  </data>
+  <data name="tile_mapType_light" xml:space="preserve">
+    <value>Işık</value>
+  </data>
+  <data name="tile_mapType_mapyTourist" xml:space="preserve">
+    <value>MapyTurist</value>
+  </data>
+  <data name="tile_mapType_mapyWinter" xml:space="preserve">
+    <value>HaritaKış</value>
+  </data>
+  <data name="tile_mapType_nature" xml:space="preserve">
+    <value>Doğa</value>
+  </data>
+  <data name="tile_mapType_neutralBlue" xml:space="preserve">
+    <value>NötrMavi</value>
+  </data>
+  <data name="tile_mapType_roadMap" xml:space="preserve">
+    <value>Yol Haritası</value>
+  </data>
+  <data name="tile_mapType_satellite" xml:space="preserve">
+    <value>Uydu</value>
+  </data>
+  <data name="tile_mapType_street" xml:space="preserve">
+    <value>Sokak</value>
+  </data>
+  <data name="tile_mapType_terrain" xml:space="preserve">
+    <value>Arazi</value>
+  </data>
+  <data name="tile_mapType_topo" xml:space="preserve">
+    <value>Topo</value>
+  </data>
+  <data name="tile_mapType_traffic" xml:space="preserve">
+    <value>Trafik</value>
+  </data>
+  <data name="tile_mapType_watercolor" xml:space="preserve">
+    <value>Suluboya</value>
+  </data>
+  <data name="tile_provider_bing" xml:space="preserve">
+    <value>BING</value>
+  </data>
+  <data name="tile_provider_carto" xml:space="preserve">
+    <value>KARTO</value>
+  </data>
+  <data name="tile_provider_google" xml:space="preserve">
+    <value>GOOGLE</value>
+  </data>
+  <data name="tile_provider_mapbox" xml:space="preserve">
+    <value>HARİTA KUTUSU</value>
+  </data>
+  <data name="tile_provider_nokia" xml:space="preserve">
+    <value>NOKIA</value>
+  </data>
+  <data name="tile_provider_osm" xml:space="preserve">
+    <value>AÇIK SOKAK HARİTASI</value>
+  </data>
+  <data name="tile_provider_waze" xml:space="preserve">
+    <value>WAZE</value>
+  </data>
+  <data name="tile_provider_yandex" xml:space="preserve">
+    <value>YANDEX&apos;te</value>
+  </data>
+  <data name="ui_header_attributeTable" xml:space="preserve">
+    <value>Öznitelik Tablosu</value>
+  </data>
+  <data name="ui_header_baseMaps" xml:space="preserve">
+    <value>Temel Haritalar</value>
+  </data>
+  <data name="ui_header_drawingLegend" xml:space="preserve">
+    <value>Çizimler</value>
+  </data>
+  <data name="ui_header_layerLegend" xml:space="preserve">
+    <value>Katmanlar</value>
+  </data>
+  <data name="validation_msg_invalidEmail" xml:space="preserve">
+    <value>Geçersiz E-posta Adresi</value>
+  </data>
+  <data name="validation_msg_nullOrEmptyString" xml:space="preserve">
+    <value>Boş veya null olamaz</value>
+  </data>
+  <data name="validation_msg_unknownError" xml:space="preserve">
+    <value>Bilinmeyen İstisna</value>
+  </data>
+  <data name="dialog_printPdf_title" xml:space="preserve">
+    <value>PDF'ye yazdır</value>
+  </data>
+  <data name="dialog_printPdf_mapTitleWatermark" xml:space="preserve">
+    <value>Harita başlığı...</value>
+  </data>
+  <data name="dialog_printPdf_includeDecorations" xml:space="preserve">
+    <value>Harita süsleme öğelerini ekle</value>
+  </data>
+  <data name="dialog_printPdf_scaleBar" xml:space="preserve">
+    <value>Ölçek çubuğu</value>
+  </data>
+  <data name="dialog_printPdf_maptorLogo" xml:space="preserve">
+    <value>Maptor simgesi</value>
+  </data>
+  <data name="dialog_printPdf_legend" xml:space="preserve">
+    <value>Lejant</value>
+  </data>
+  <data name="dialog_printPdf_companyLogo" xml:space="preserve">
+    <value>Şirket logosu (PNG)...</value>
+  </data>
+  <data name="dialog_printPdf_graticule" xml:space="preserve">
+    <value>Enlem/boylam ızgarası</value>
+  </data>
+  <data name="dialog_printPdf_landscape" xml:space="preserve">
+    <value>Yatay</value>
+  </data>
+  <data name="dialog_printPdf_preview" xml:space="preserve">
+    <value>Önizleme</value>
+  </data>
+  <data name="dialog_printPdf_print" xml:space="preserve">
+    <value>Yazdır</value>
+  </data>
+  <data name="sldEditor_common_refreshPreview" xml:space="preserve">
+    <value>Yenile</value>
+  </data>
+  <data name="sldEditor_common_addRasterSymbolizer" xml:space="preserve">
+    <value>Raster Sembolleştirici Ekle</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashOffset" xml:space="preserve">
+    <value>Çizgi Kaydırması:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloOpacity" xml:space="preserve">
+    <value>Hale Opaklığı:</value>
+  </data>
+  <data name="sldEditor_raster_opacity" xml:space="preserve">
+    <value>Opaklık:</value>
+  </data>
+  <data name="sldEditor_raster_colorMap" xml:space="preserve">
+    <value>Renk Haritası</value>
+  </data>
+  <data name="sldEditor_raster_addEntry" xml:space="preserve">
+    <value>Girdi Ekle</value>
+  </data>
+  <data name="sldEditor_raster_removeEntry" xml:space="preserve">
+    <value>Girdiyi Kaldır</value>
+  </data>
+  <data name="sldEditor_raster_color" xml:space="preserve">
+    <value>Renk</value>
+  </data>
+  <data name="sldEditor_raster_quantity" xml:space="preserve">
+    <value>Miktar</value>
+  </data>
+  <data name="sldEditor_raster_label" xml:space="preserve">
+    <value>Etiket</value>
+  </data>
+  <data name="sldEditor_raster_entryOpacity" xml:space="preserve">
+    <value>Opaklık</value>
+  </data>
+  <data name="sldEditor_raster_note" xml:space="preserve">
+    <value>Renk haritası girdileri raster değerlerini (miktar) renklerle eşleştirir.</value>
+  </data>
+  <data name="sldEditor_filter_property" xml:space="preserve">
+    <value>Özellik:</value>
+  </data>
+  <data name="sldEditor_filter_operator" xml:space="preserve">
+    <value>Operatör:</value>
+  </data>
+  <data name="sldEditor_filter_value" xml:space="preserve">
+    <value>Değer:</value>
+  </data>
+  <data name="dialog_printPdf_keepScale" xml:space="preserve">
+    <value>Geçerli harita ölçeğini koru (sayfayı haritaya sığdır)</value>
+  </data>
+  <data name="featureTable_filter_filter" xml:space="preserve">
+    <value>Filtre</value>
+  </data>
+  <data name="featureTable_filter_clear" xml:space="preserve">
+    <value>Filtreyi temizle</value>
+  </data>
+  <data name="featureTable_filter_clearAll" xml:space="preserve">
+    <value>Tüm filtreleri temizle</value>
+  </data>
+  <data name="featureTable_filter_selectAllValues" xml:space="preserve">
+    <value>Tümünü seç</value>
+  </data>
+  <data name="featureTable_filter_clearAllValues" xml:space="preserve">
+    <value>Tüm seçimleri kaldır</value>
+  </data>
+  <data name="featureTable_filter_search" xml:space="preserve">
+    <value>Ara</value>
+  </data>
+  <data name="featureTable_filter_empty" xml:space="preserve">
+    <value>(Boş)</value>
+  </data>
+  <data name="featureTable_filter_operator" xml:space="preserve">
+    <value>Operatör</value>
+  </data>
+  <data name="featureTable_filter_value" xml:space="preserve">
+    <value>Değer</value>
+  </data>
+  <data name="featureTable_filter_from" xml:space="preserve">
+    <value>Başlangıç</value>
+  </data>
+  <data name="featureTable_filter_to" xml:space="preserve">
+    <value>Bitiş</value>
+  </data>
+  <data name="featureTable_sort_toggle" xml:space="preserve">
+    <value>Sırala</value>
+  </data>
+  <data name="cmd_general_openProject" xml:space="preserve">
+    <value>Projeyi Aç</value>
+  </data>
+  <data name="cmd_general_saveProject" xml:space="preserve">
+    <value>Projeyi Kaydet</value>
+  </data>
+  <data name="cmd_general_saveProjectAs" xml:space="preserve">
+    <value>Projeyi Farklı Kaydet</value>
+  </data>
+  <data name="msg_project_confirmReplace" xml:space="preserve">
+    <value>Projeyi açmak mevcut katmanları ve çizimleri değiştirecek. Devam edilsin mi?</value>
+  </data>
+  <data name="msg_project_skippedLayers" xml:space="preserve">
+    <value>Kaynak dosyaları bulunamadığı için aşağıdaki öğeler atlandı: {0}</value>
+  </data>
+  <data name="msg_project_unsupportedVersion" xml:space="preserve">
+    <value>Bu proje dosyası daha yeni bir sürümle oluşturulmuş ve açılamıyor.</value>
+  </data>
+  <data name="dialog_common_sectionCoordinateSystem" xml:space="preserve">
+    <value>Koordinat sistemi</value>
+  </data>
+  <data name="dialog_common_sectionOptions" xml:space="preserve">
+    <value>Seçenekler</value>
+  </data>
+  <data name="dialog_common_sectionData" xml:space="preserve">
+    <value>Veri</value>
+  </data>
+  <data name="dialog_printPdf_sectionDecorations" xml:space="preserve">
+    <value>Süslemeler</value>
+  </data>
+  <data name="dialog_printPdf_sectionPage" xml:space="preserve">
+    <value>Sayfa düzeni</value>
+  </data>
+  <data name="dialog_geometryDetails_alsoZones" xml:space="preserve">
+    <value>(ayrıca: {0})</value>
+  </data>
+  <data name="dialog_common_validationNoData" xml:space="preserve">
+    <value>Önce veri yapıştırın veya bir dosya seçin</value>
+  </data>
+  <data name="dialog_common_validationNoFile" xml:space="preserve">
+    <value>Önce bir dosya seçin</value>
+  </data>
+  <data name="dialog_common_validationNoSrs" xml:space="preserve">
+    <value>Bir koordinat sistemi seçin</value>
+  </data>
+  <data name="dialog_common_validationUtmZone" xml:space="preserve">
+    <value>UTM dilimi 1 ile 60 arasında olmalıdır</value>
+  </data>
+  <data name="theme_mode_title" xml:space="preserve">
+    <value>Görünüm</value>
+  </data>
+  <data name="theme_mode_light" xml:space="preserve">
+    <value>Açık</value>
+  </data>
+  <data name="theme_mode_dark" xml:space="preserve">
+    <value>Koyu</value>
+  </data>
+  <data name="dialog_common_apply" xml:space="preserve">
+    <value>Uygula</value>
+  </data>
+  <data name="dialog_symbology_advanced" xml:space="preserve">
+    <value>Gelişmiş (SLD)</value>
+  </data>
+  <data name="dialog_symbology_resetToDefault" xml:space="preserve">
+    <value>Varsayılana sıfırla</value>
+  </data>
+  <data name="sldEditor_common_preservedContentNotice" xml:space="preserve">
+    <value>Bu belge burada düzenlenemeyen ek stiller veya katmanlar içeriyor; bunlar değiştirilmeden korunacaktır.</value>
+  </data>
+  <data name="sldEditor_message_invalidSldFile" xml:space="preserve">
+    <value>Seçilen dosya geçerli bir SLD belgesi olarak okunamadı.</value>
+  </data>
+  <data name="sldEditor_message_importError" xml:space="preserve">
+    <value>SLD içe aktarma hatası: {0}</value>
+  </data>
+  <data name="sldEditor_message_exportError" xml:space="preserve">
+    <value>SLD dışa aktarma hatası: {0}</value>
+  </data>
+  <data name="sldEditor_filter_noFilter" xml:space="preserve">
+    <value>Filtre yok</value>
+  </data>
+  <data name="sldEditor_filter_advancedFilter" xml:space="preserve">
+    <value>Gelişmiş filtre (burada düzenlenemez)</value>
+  </data>
+  <data name="identify_title" xml:space="preserve">
+    <value>Tanımlama sonuçları</value>
+  </data>
+  <data name="identify_summary" xml:space="preserve">
+    <value>{1} katmanda {0} öğe</value>
+  </data>
+  <data name="identify_noResults" xml:space="preserve">
+    <value>Bu konumda öğe bulunamadı</value>
+  </data>
+  <data name="identify_noMatch" xml:space="preserve">
+    <value>Filtreyle eşleşen öğe yok</value>
+  </data>
+  <data name="identify_filterPlaceholder" xml:space="preserve">
+    <value>Öğeleri filtrele…</value>
+  </data>
+  <data name="identify_zoomTo" xml:space="preserve">
+    <value>Yakınlaştır</value>
+  </data>
+  <data name="identify_flash" xml:space="preserve">
+    <value>Haritada yanıp söndür</value>
+  </data>
+  <data name="identify_copyAttributes" xml:space="preserve">
+    <value>Öznitelikleri kopyala</value>
+  </data>
+  <data name="identify_attribute" xml:space="preserve">
+    <value>Öznitelik</value>
+  </data>
+  <data name="identify_value" xml:space="preserve">
+    <value>Değer</value>
+  </data>
+  <data name="identify_fields" xml:space="preserve">
+    <value>Alanlar</value>
+  </data>
+  <data name="identify_location" xml:space="preserve">
+    <value>Konum</value>
+  </data>
+  <data name="identify_featuresFound" xml:space="preserve">
+    <value>Bulunan öğeler</value>
+  </data>
+</root>

@@ -1,0 +1,267 @@
+using System;
+
+using IRI.Maptor.Core.Common.Primitives;
+using IRI.Maptor.Core.Common.Abstractions;
+using IRI.Maptor.Presentation.Core;
+
+
+namespace IRI.Maptor.Presentation.Wpf.ViewModels;
+
+public class MapOptionsViewModel : Notifier, ILocatable
+{
+    private Point _point = Point.NaN;
+
+    public Point Location
+    {
+        get => _point;
+        set
+        {
+            _point = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    public Action? PrepareAction;
+
+    public Action<object>? RightCommandAction;
+    public Action<object>? LeftCommandAction;
+    public Action<object>? MiddleCommandAction;
+    public Action<object>? UpperRightCommandAction;
+    public Action<object>? UpperLeftCommandAction;
+
+    public Predicate<object>? CanExecuteRightCommandAction;
+    public Predicate<object>? CanExecuteLeftCommandAction;
+    public Predicate<object>? CanExecuteMiddleCommandAction;
+    public Predicate<object>? CanExecuteUpperRightCommandAction;
+    public Predicate<object>? CanExecuteUpperLeftCommandAction;
+
+    #region Symbols
+
+    private string? _rightSymbol;
+    public string? RightSymbol
+    {
+        get { return _rightSymbol; }
+        set
+        {
+            _rightSymbol = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    private string? _leftSymbol;
+    public string? LeftSymbol
+    {
+        get { return _leftSymbol; }
+        set
+        {
+            _leftSymbol = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    private string? _middleSymbol;
+    public string? MiddleSymbol
+    {
+        get { return _middleSymbol; }
+        set
+        {
+            _middleSymbol = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    private string? _upperRightSymbol;
+    public string? UpperRightSymbol
+    {
+        get { return _upperRightSymbol; }
+        set
+        {
+            _upperRightSymbol = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    private string? _upperLeftSymbol;
+    public string? UpperLeftSymbol
+    {
+        get { return _upperLeftSymbol; }
+        set
+        {
+            _upperLeftSymbol = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+
+    #endregion
+
+
+    #region Tooltips
+
+    private string? _rightToolTip;
+    public string? RightToolTip
+    {
+        get { return _rightToolTip; }
+        set
+        {
+            _rightToolTip = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    private string? _leftToolTip;
+    public string? LeftToolTip
+    {
+        get { return _leftToolTip; }
+        set
+        {
+            _leftToolTip = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    private string? _middleToolTip;
+    public string? MiddleToolTip
+    {
+        get { return _middleToolTip; }
+        set
+        {
+            _middleToolTip = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    private string? _upperRightTooltip;
+    public string? UpperRightToolTip
+    {
+        get { return _upperRightTooltip; }
+        set
+        {
+            _upperRightTooltip = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    private string? _upperLeftToolTip;
+    public string? UpperLeftToolTip
+    {
+        get { return _upperLeftToolTip; }
+        set
+        {
+            _upperLeftToolTip = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    #endregion
+
+
+    #region Commands
+
+    private RelayCommand? _rightCommand;
+    public RelayCommand RightCommand
+    {
+        get
+        {
+            if (_rightCommand == null)
+            {
+                _rightCommand = new RelayCommand(param =>
+                {
+                    RightCommandAction?.Invoke(param);
+                }, CanExecuteRightCommandAction);
+            }
+            return _rightCommand;
+        }
+    }
+
+
+    private RelayCommand? _leftCommand;
+    public RelayCommand LeftCommand
+    {
+        get
+        {
+            if (_leftCommand == null)
+            {
+                _leftCommand = new RelayCommand(param =>
+                {
+                    LeftCommandAction?.Invoke(param);
+                }, CanExecuteLeftCommandAction);
+            }
+            return _leftCommand;
+        }
+    }
+
+
+    private RelayCommand? _middleCommand;
+    public RelayCommand MiddleCommand
+    {
+        get
+        {
+            if (_middleCommand == null)
+            {
+                _middleCommand = new RelayCommand(param =>
+                {
+                    MiddleCommandAction?.Invoke(param);
+                }, CanExecuteMiddleCommandAction);
+            }
+            return _middleCommand;
+        }
+    }
+
+
+    private RelayCommand? _upperRightCommand;
+    public RelayCommand UpperRightCommand
+    {
+        get
+        {
+            if (_upperRightCommand == null)
+            {
+                _upperRightCommand = new RelayCommand(param =>
+                {
+                    UpperRightCommandAction?.Invoke(param);
+                }, CanExecuteUpperRightCommandAction);
+            }
+            return _upperRightCommand;
+        }
+    }
+
+
+    private RelayCommand? _upperLeftCommand;
+    public RelayCommand UpperLeftCommand
+    {
+        get
+        {
+            if (_upperLeftCommand == null)
+            {
+                _upperLeftCommand = new RelayCommand(param =>
+                {
+                    UpperLeftCommandAction?.Invoke(param);
+                }, CanExecuteUpperLeftCommandAction);
+            }
+            return _upperLeftCommand;
+        }
+    }
+
+    #endregion
+
+    public MapOptionsViewModel(string rightToolTip, string leftToolTip, string middleToolTip,
+                                string? rightSymbol, string? leftSymbol, string? middleSymbol)
+    {
+        RightToolTip = rightToolTip;
+        LeftToolTip = leftToolTip;
+        MiddleToolTip = middleToolTip;
+
+        RightSymbol = rightSymbol;
+        LeftSymbol = leftSymbol;
+        MiddleSymbol = middleSymbol;
+    }
+}

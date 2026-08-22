@@ -1,0 +1,637 @@
+<maptor:NotifiableUserControl x:Class="IRI.Maptor.Presentation.Wpf.Controls.GeometryEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
+             xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:converters="clr-namespace:IRI.Maptor.Presentation.Wpf.Converters"
+             xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls"
+             FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}"
+             mc:Ignorable="d" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="2">
+    <maptor:NotifiableUserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.Button.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Fonts.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
+
+            <converters:DistanceAzimuthConverter x:Key="distanceAzimuthConverter"/>
+            <converters:LocalizedFormatConverter x:Key="localizedFormatConverter"/>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+
+            <!-- One Persian-font style; there used to be three byte-identical copies
+                 (header / polygon / parts). IRI.Maptor.Styles.TextBlock already carries the
+                 same IsPersian trigger, so this only adds the vertical centring. -->
+            <Style x:Key="editorTextBlockStyle" TargetType="TextBlock"
+                   BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}"/>
+        </ResourceDictionary>
+    </maptor:NotifiableUserControl.Resources>
+    <Grid Margin="0" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!--Polygon section-->
+        <Border Grid.Row="0" BorderBrush="{DynamicResource MahApps.Brushes.Gray8}" BorderThickness="0,0,0,1"
+                FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization} }">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="4">
+                <TextBlock Text="{Binding [geometryDetails_polygon_title], Source={StaticResource Localization}}"
+                           FontWeight="Bold" Margin="0,4,10,4" VerticalAlignment="Center" Style="{StaticResource editorTextBlockStyle}"/>
+                <StackPanel Orientation="Horizontal" >
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                        Command="{Binding GoToPreviousPolygonCommand}"
+                        IsEnabled="{Binding IsPreviousPolygonAvailable, FallbackValue=False}">
+                        <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronPrevious}"/>
+                    </Button>
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                        Command="{Binding GoToNextPolygonCommand}"
+                        IsEnabled="{Binding IsNextPolygonAvailable, FallbackValue=False}">
+                        <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronNext}"/>
+                    </Button>
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
+                            Command="{Binding AddPolygonCommand}">
+                        <iconPacks:PackIconMaterial Kind="ShapePolygonPlus"/>
+                    </Button>
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
+                              Command="{Binding DeletePolygonCommand}"
+                              CommandParameter="{Binding CurrentPolygon}"
+                              IsEnabled="{Binding CurrentPolygon, Converter={StaticResource notNullToBoolConverter}}">
+                        <iconPacks:PackIconMaterial Kind="Delete"/>
+                    </Button>
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
+                              Command="{Binding ZoomToCurrentPolygonCommand}"
+                              IsEnabled="{Binding CurrentPolygon, Converter={StaticResource notNullToBoolConverter}}">
+                        <iconPacks:PackIconMaterial Kind="MagnifyExpand"/>
+                    </Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock VerticalAlignment="Center" 
+                         TextBlock.TextAlignment="Right" Margin="0,0,8,0">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource editorTextBlockStyle}">
+                                <Setter Property="Text">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource localizedFormatConverter}" ConverterParameter="geometryDetails_polygons_format">
+                                            <Binding Path="CurrentPolygonNumber"/>
+                                            <Binding Path="TotalPolygonCount"/>
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding TotalPartCount}" Value="0">
+                                        <Setter Property="Text" Value="{Binding [geometryDetails_polygons_noPolygon], Source={StaticResource Localization}}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <TextBlock VerticalAlignment="Center" FontStyle="Italic" Margin="0,0,0,0">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource editorTextBlockStyle}">
+                                <Setter Property="Text" Value=""/>
+                                <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Valid}"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentPolygonIsValid}" Value="True">
+                                        <Setter Property="Text" Value="{Binding [geometryDetails_polygons_valid], Source={StaticResource Localization}}"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Valid}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding CurrentPolygonIsValid, FallbackValue=False}" Value="False">
+                                        <Setter Property="Text" Value="{Binding [geometryDetails_polygons_invalid], Source={StaticResource Localization}}"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Invalid}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+        <!-- Geometry parts -->
+
+        <Border Grid.Row="1" BorderBrush="{DynamicResource MahApps.Brushes.Gray8}" BorderThickness="0,0,0,1"
+                FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization} }">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="4">
+            <TextBlock Text="{Binding [geometryDetails_parts_title], Source={StaticResource Localization}}" VerticalAlignment="Center" FontWeight="Bold" Margin="0,4,10,4" Style="{StaticResource editorTextBlockStyle}"/>
+            <StackPanel Orientation="Horizontal" >
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                            Command="{Binding GoToPreviousPartCommand}"
+                            IsEnabled="{Binding IsPreviousPartAvailable}">
+                    <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronPrevious}"/>
+                </Button>
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                            Command="{Binding GoToNextPartCommand}"
+                            IsEnabled="{Binding IsNextPartAvailable}">
+                    <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronNext}"/>
+                </Button>
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
+                            Command="{Binding AddPartCommand}">
+                    <iconPacks:PackIconMaterial Kind="Plus"/>
+                </Button>
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
+                            Command="{Binding DeletePartCommand}"
+                            CommandParameter="{Binding CurrentPart}"
+                            IsEnabled="{Binding CurrentPart, Converter={StaticResource notNullToBoolConverter}}">
+                    <iconPacks:PackIconMaterial Kind="Delete"/>
+                </Button>
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
+                            Command="{Binding ZoomToCurrentPartCommand}"
+                            IsEnabled="{Binding CurrentPart, Converter={StaticResource notNullToBoolConverter}}">
+                    <iconPacks:PackIconMaterial Kind="MagnifyExpand"/>
+                </Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock VerticalAlignment="Center" 
+                                    TextBlock.TextAlignment="Right" Margin="0,0,8,0">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource editorTextBlockStyle}">
+                            <Setter Property="Text">
+                                <Setter.Value>
+                                    <MultiBinding Converter="{StaticResource localizedFormatConverter}" ConverterParameter="geometryDetails_parts_format">
+                                        <Binding Path="CurrentPartNumber"/>
+                                        <Binding Path="TotalPartCount"/>
+                                    </MultiBinding>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding TotalPartCount}" Value="0">
+                                    <Setter Property="Text" Value="{Binding [geometryDetails_parts_noParts], Source={StaticResource Localization}}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <TextBlock VerticalAlignment="Center" FontStyle="Italic" Margin="0,0,0,0">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource editorTextBlockStyle}">
+                            <Setter Property="Text" Value=""/>
+                            <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Valid}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentPartIsValid}" Value="True">
+                                    <Setter Property="Text" Value="{Binding [geometryDetails_parts_valid], Source={StaticResource Localization}}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Valid}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CurrentPartIsValid}" Value="False">
+                                    <Setter Property="Text" Value="{Binding [geometryDetails_parts_invalid], Source={StaticResource Localization}}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Invalid}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </StackPanel>
+            <iconPacks:PackIconMaterial Kind="{Binding GeometryType, Converter={StaticResource geometryTypeToMaterialIconConverter}, FallbackValue=Null}"
+                                        Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}" Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                        Width="18" Height="18"/>
+            </StackPanel>
+        </Border>
+
+        <!-- SRS Selection and Current Point Editor Section -->
+        <Border Grid.Row="2" BorderBrush="{DynamicResource MahApps.Brushes.Gray8}" BorderThickness="0,0,0,0" Padding="0" Margin="0,0,0,4"
+                FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization} }">
+            <Grid >
+                <StackPanel Margin="0">
+                    <!-- Current Point Editor -->
+                    <Border Background="{DynamicResource MahApps.Brushes.Accent4}" Padding="0,4" Margin="2" CornerRadius="4">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding [geometryDetails_currentPoint_x], Source={StaticResource Localization}}"
+                                   VerticalAlignment="Center" Margin="4,0,0,0" Width="20"/>
+                            <!-- DMS Mode: Use DegreeMinuteSecondView -->
+                            <maptor:DegreeMinuteSecondView x:Name="dmsXView" DataContext="{Binding CurrentPointEditor.DmsX}" 
+                                                      MaxDegreeValue="180" MinDegreeValue="-180" 
+                                                      HideUpDownButtons="False" Margin="0,0,8,0"
+                                                      Visibility="{Binding DataContext.CurrentPointEditor.IsDmsMode, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource boolToVisibilityConverter}}"/>
+                            <!-- Non-DMS Mode: Use TextBox -->
+                            <TextBox Text="{Binding CurrentPointEditor.CoordinateX, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
+                                 Visibility="{Binding CurrentPointEditor.IsDmsMode, Converter={StaticResource boolToInverseVisibilityConverter}}"
+                                 Width="150" Margin="0,0,8,0" 
+                                 Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En}"/>
+                            <TextBlock Text="{Binding [geometryDetails_currentPoint_y], Source={StaticResource Localization}}"
+                                   VerticalAlignment="Center" Margin="4,0,0,0" Width="20"/>
+                            <!-- DMS Mode: Use DegreeMinuteSecondView -->
+                            <maptor:DegreeMinuteSecondView DataContext="{Binding CurrentPointEditor.DmsY}" 
+                                                      MaxDegreeValue="90" MinDegreeValue="-90"
+                                                      HideUpDownButtons="False" Margin="0,0,8,0"
+                                                      Visibility="{Binding DataContext.CurrentPointEditor.IsDmsMode, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource boolToVisibilityConverter}}"/>
+                            <!-- Non-DMS Mode: Use TextBox -->
+                            <TextBox Text="{Binding CurrentPointEditor.CoordinateY, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
+                                 Visibility="{Binding CurrentPointEditor.IsDmsMode, Converter={StaticResource boolToInverseVisibilityConverter}}"
+                                 Width="150" Margin="0,0,8,0" 
+                                 Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En}"/>
+                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                                Command="{Binding ApplyCurrentPointChangesCommand}" 
+                                IsEnabled="{Binding CurrentPointEditor, Converter={StaticResource notNullToBoolConverter}}"
+                                Margin="4,0,0,0">
+                                <iconPacks:PackIconMaterial Kind="CheckBold"/>
+                            </Button>
+                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                                 Command="{Binding AddPointCommand}" 
+                                 IsEnabled="{Binding CurrentPointEditor, Converter={StaticResource notNullToBoolConverter}}"
+                                 Margin="4,0,0,0">
+                                <iconPacks:PackIconMaterial Kind="Plus"/>
+                            </Button>
+                            <ToggleButton x:Name="srsConfigToggleButton" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" Margin="8,0,0,0">
+                                <iconPacks:PackIconMaterial Kind="Cog"/>
+                            </ToggleButton>
+                        </StackPanel>
+                    </Border>
+                    <!-- SRS Info TextBlock -->
+                    <TextBlock VerticalAlignment="Center" Margin="8,4,8,0" FontStyle="Italic" Foreground="{DynamicResource MahApps.Brushes.Gray3}" FontSize="11"  
+                               >
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource localizedFormatConverter}" ConverterParameter="geometryDetails_options_srsInfoFormat">
+                                <Binding Path="SrsViewModel.SelectedSrsType"/>
+                                <Binding Path="SrsViewModel.SelectedEllipsoid" Converter="{StaticResource ellipsoidNameConverter}"/>
+                                <Binding Path="SrsViewModel.UtmZone" Converter="{StaticResource utmZoneConverter}"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
+
+                <!-- SRS Configuration Popup -->
+                <!---->
+                <Popup x:Name="srsConfigPopup" 
+                       IsOpen="{Binding IsChecked, ElementName=srsConfigToggleButton}"
+                       Placement="Bottom"
+                       PlacementTarget="{Binding ElementName=srsConfigToggleButton}"
+                       StaysOpen="False"
+                       PopupAnimation="Slide"
+                       AllowsTransparency="True">
+                    <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                            BorderBrush="{DynamicResource MahApps.Brushes.Gray8}"
+                            BorderThickness="1"
+                            Padding="8"
+                            CornerRadius="4">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="8" Color="Gray" Opacity="0.5" ShadowDepth="2"/>
+                        </Border.Effect>
+                        <StackPanel Orientation="Vertical"  MinWidth="200">
+                            <TextBlock Text="{Binding [geometryDetails_options_srsConfiguration], Source={StaticResource Localization}}" FontWeight="Bold" Margin="0,0,0,8"/>
+                            <!-- SRS Type -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                <TextBlock Text="{Binding [geometryDetails_options_srs], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
+                                <ComboBox ItemsSource="{Binding SrsViewModel.AvailableSrsTypes}" 
+                                          SelectedItem="{Binding SrsViewModel.SelectedSrsType, Mode=TwoWay}"
+                                          Style="{StaticResource IRI.Maptor.Styles.ComboBox.Small.Latin}" Width="150">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconMaterial 
+                                                    Kind="{Binding Converter={StaticResource srsTypeToIconConverter}}" 
+                                                    Width="16" Height="16" 
+                                                    Margin="0,0,4,0"
+                                                    VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding Converter={StaticResource srsTypeToDescriptionConverter}}" 
+                                                          VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
+                            <!-- Ellipsoid -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4"
+                                        Visibility="{Binding SrsViewModel.IsEllipsoidVisible, Converter={StaticResource boolToVisibilityConverter}}">
+                                <TextBlock Text="{Binding [geometryDetails_options_ellipsoid], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
+                                <ComboBox ItemsSource="{Binding SrsViewModel.AvailableEllipsoids}" 
+                                          SelectedItem="{Binding SrsViewModel.SelectedEllipsoid, Mode=TwoWay}"
+                                          DisplayMemberPath="Name" 
+                                          Style="{StaticResource IRI.Maptor.Styles.ComboBox.Small.Latin}"/>
+                            </StackPanel>
+                            <!-- UTM Zone -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4"
+                                        Visibility="{Binding SrsViewModel.IsUtmZoneVisible, Converter={StaticResource boolToVisibilityConverter}}">
+                                <TextBlock Text="{Binding [srs_utmZone_full], Source={StaticResource Localization}, StringFormat='{}{0}:'}"
+                                           VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
+                                <mahApp:NumericUpDown Minimum="1" Maximum="60"
+                                                      Value="{Binding SrsViewModel.UtmZone, Mode=TwoWay}"                                                      
+                                                      Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Small}" />
+                            </StackPanel>
+                            <!-- Coordinate Precision -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                <TextBlock Text="{Binding [geometryDetails_options_latLongPrecision], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
+                                <mahApp:NumericUpDown Minimum="0" Maximum="10"
+                                                      Value="{Binding SrsViewModel.LatLongPrecision, Mode=TwoWay}"
+                                                      Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Small}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                <TextBlock Text="{Binding [geometryDetails_options_xyPrecision], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
+                                <mahApp:NumericUpDown Minimum="0" Maximum="10"
+                                                      Value="{Binding SrsViewModel.XYPrecision, Mode=TwoWay}"
+                                                      Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Small}"/>
+                            </StackPanel>
+                            <!-- Grid Options Section -->
+                            <Border BorderBrush="{DynamicResource MahApps.Brushes.Gray8}" BorderThickness="0,1,0,0" Margin="0,8,0,4"/>
+                            <TextBlock Text="{Binding [geometryDetails_options_gridOptions], Source={StaticResource Localization}}" FontWeight="Bold" Margin="0,0,0,8"/>
+
+                            <CheckBox Content="{Binding [geometryDetails_options_showInnerAngle], Source={StaticResource Localization}}" 
+                                      IsChecked="{Binding ShowInnerAngle, Mode=TwoWay}"
+                                      Style="{StaticResource IRI.Maptor.Styles.CheckBox.Small}"/>
+
+                            <CheckBox Content="{Binding [geometryDetails_options_useDecimalDegreesForAngles], Source={StaticResource Localization}}" 
+                                      IsChecked="{Binding UseDecimalDegreesForAngles, Mode=TwoWay}"
+                                      Style="{StaticResource IRI.Maptor.Styles.CheckBox.Small}"/>
+
+                            <!--<CheckBox Content="{Binding [geometryDetails_options_showZColumn], Source={StaticResource Localization}}" 
+                                      IsChecked="{Binding ShowZColumn, Mode=TwoWay}"
+                                      Style="{StaticResource IRI.Maptor.Styles.CheckBox.Small}"  />-->
+                        </StackPanel>
+                    </Border>
+                </Popup>
+            </Grid>
+        </Border>
+
+        <!-- Coordinate grid -->
+        <DataGrid Grid.Row="3" x:Name="dataGrid"
+                  FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization} }"
+                  ItemsSource="{Binding CurrentPagePoints}" 
+                  SelectedItem="{Binding SelectedPoint, Mode=TwoWay}"
+                  AutoGenerateColumns="False" SelectionChanged="DataGrid_SelectionChanged"
+                  CanUserSortColumns="False" CanUserAddRows="False"
+                  IsReadOnly="True"
+                  Style="{DynamicResource MahApps.Styles.DataGrid}" CanUserReorderColumns="True"
+                  HeadersVisibility="Column" AlternationCount="2000000000"
+                  SelectionMode="Single" MinHeight="160" 
+                  SelectionUnit="FullRow"
+                  FontFamily="Segoe UI">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="Auto" MinWidth="40">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_number], Source={StaticResource Localization}}" Style="{StaticResource editorTextBlockStyle}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2,0" Foreground="{DynamicResource MahApps.Brushes.Gray3}">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource pointNumberConverter}">
+                                        <Binding Path="DataContext.CurrentPageIndex" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext.SelectedPageSize" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="."/>
+                                        <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="*" MinWidth="100">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_x], Source={StaticResource Localization}}" Style="{StaticResource editorTextBlockStyle}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock FlowDirection="LeftToRight" Margin="1" VerticalAlignment="Center">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource coordinateDisplayConverter}" ConverterParameter="X">
+                                        <Binding Path="."/>
+                                        <Binding Path="DataContext.SrsViewModel.SelectedSrsType" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext.SrsViewModel.UtmZone" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext.SrsViewModel.LatLongPrecision" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext.SrsViewModel.XYPrecision" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext.SrsViewModel.SelectedEllipsoid" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="*" MinWidth="100">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_y], Source={StaticResource Localization}}" Style="{StaticResource editorTextBlockStyle}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock FlowDirection="LeftToRight" Margin="1" VerticalAlignment="Center">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource coordinateDisplayConverter}" ConverterParameter="Y">
+                                        <Binding Path="."/>
+                                        <Binding Path="DataContext.SrsViewModel.SelectedSrsType" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext.SrsViewModel.UtmZone" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext.SrsViewModel.LatLongPrecision" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext.SrsViewModel.XYPrecision" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext.SrsViewModel.SelectedEllipsoid" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!--z column-->
+                <!--<DataGridTemplateColumn Width="*" MinWidth="100"
+                                         Visibility="{Binding DataContext.ShowZColumn, RelativeSource={RelativeSource AncestorType=DataGrid}, Converter={StaticResource boolToVisibilityConverter}}">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_z], Source={StaticResource Localization}}" Style="{StaticResource editorTextBlockStyle}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Z, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
+                                     FlowDirection="LeftToRight" Margin="1"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>-->
+
+                <DataGridTemplateColumn Width="*" MinWidth="120">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_distanceToNext], Source={StaticResource Localization}}" Style="{StaticResource editorTextBlockStyle}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock FlowDirection="LeftToRight" Margin="1" VerticalAlignment="Center">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource distanceAzimuthConverter}" ConverterParameter="DistanceToNext">
+                                        <Binding Path="."/>
+                                        <Binding Path="DataContext.Points" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="*" MinWidth="120">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_azimuthToNext], Source={StaticResource Localization}}" Style="{StaticResource editorTextBlockStyle}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock FlowDirection="LeftToRight" Margin="1" VerticalAlignment="Center">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource distanceAzimuthConverter}" ConverterParameter="AzimuthToNext">
+                                        <Binding Path="."/>
+                                        <Binding Path="DataContext.Points" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="*" MinWidth="120">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_azimuthToPrevious], Source={StaticResource Localization}}" Style="{StaticResource editorTextBlockStyle}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock FlowDirection="LeftToRight" Margin="1" VerticalAlignment="Center">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource distanceAzimuthConverter}" ConverterParameter="AzimuthToPrevious">
+                                        <Binding Path="."/>
+                                        <Binding Path="DataContext.Points" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="*" MinWidth="120">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_vertexAngle], Source={StaticResource Localization}}" Style="{StaticResource editorTextBlockStyle}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock FlowDirection="LeftToRight" Margin="1" VerticalAlignment="Center">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource distanceAzimuthConverter}" ConverterParameter="VertexAngle">
+                                        <Binding Path="."/>
+                                        <Binding Path="DataContext.Points" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+        </DataGrid>
+
+        <!-- Grid's buttons with point counter and navigation buttons -->
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,4,0,0"
+                    Background="{DynamicResource MahApps.Brushes.Accent}"
+                    FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization} }">
+
+            <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" 
+                         IsChecked="{Binding IsEditable, Mode=TwoWay}"
+                         ToolTip="{Binding [geometryDetails_currentPoint_edit], Source={StaticResource Localization}}" Visibility="Collapsed" >
+                <iconPacks:PackIconMaterial Kind="Pencil"/>
+            </ToggleButton>
+
+            <!--<Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" 
+                    Command="{Binding InsertPointBeforeSelectedCommand}"
+                    ToolTip="{Binding [geometryDetails_currentPoint_insert], Source={StaticResource Localization}}">
+                <iconPacks:PackIconMaterial Kind="ListAdd"/>
+            </Button>-->
+            <!--<Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" 
+                    Command="{Binding AddPointCommand}"
+                    ToolTip="{Binding [geometryDetails_currentPoint_add], Source={StaticResource Localization}}">
+                <iconPacks:PackIconMaterial Kind="Add"/>
+            </Button>-->
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" 
+                    Command="{Binding DeleteCurrentPointCommand}"
+                    IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
+                    ToolTip="{Binding [geometryDetails_currentPoint_delete], Source={StaticResource Localization}}">
+                <iconPacks:PackIconMaterial Kind="Delete"/>
+            </Button>
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" 
+                    Command="{Binding ZoomToCurrentPointCommand}"
+                    IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
+                    ToolTip="{Binding [geometryDetails_currentPoint_zoomToPoint], Source={StaticResource Localization}}">
+                <iconPacks:PackIconMaterial Kind="MagnifyExpand"/>
+            </Button>
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" 
+                    Command="{Binding PanToCurrentPointCommand}"
+                    IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
+                    ToolTip="{Binding [geometryDetails_currentPoint_zoom], Source={StaticResource Localization}}">
+                <iconPacks:PackIconMaterial Kind="HandBackRight"  />
+            </Button>
+
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" 
+                    Command="{Binding CopyCurrentPointCommand}"
+                    CommandParameter="{Binding SrsViewModel.SelectedSrsType}"
+                    IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
+                    ToolTip="{Binding [geometryDetails_currentPoint_copyCoordinate], Source={StaticResource Localization}}">
+                <iconPacks:PackIconMaterial Kind="ContentCopy"/>
+            </Button>
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
+                      Command="{Binding GoToPreviousPageCommand}"  
+                      ToolTip="{Binding [geometryDetails_currentPoint_goToPreviousPage], Source={StaticResource Localization}}">
+                <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronDoublePrevious}"/>
+            </Button>
+
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
+                      Command="{Binding GoToPreviousPointCommand}"
+                      ToolTip="{Binding [geometryDetails_currentPoint_goToPreviousPoint], Source={StaticResource Localization}}">
+                <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronPrevious}"/>
+            </Button>
+            <ComboBox ItemsSource="{Binding AvailablePageSizes}"
+                     SelectedItem="{Binding SelectedPageSize, Mode=TwoWay}"
+                     Width="60" Margin="4,0" VerticalAlignment="Center"
+                     FlowDirection="LeftToRight"/>
+            <TextBlock VerticalAlignment="Center" 
+                        TextBlock.TextAlignment="Right" Margin="8,0,0,0"
+                       FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization} }">
+                <TextBlock.Text>
+                    <MultiBinding Converter="{StaticResource localizedFormatConverter}" ConverterParameter="geometryDetails_pointCounter_format">
+                        <Binding Path="CurrentPointNumber"/>
+                        <Binding Path="TotalPointCount"/>
+                        <Binding Path="CurrentPageNumber"/>
+                        <Binding Path="TotalPages"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
+          Command="{Binding GoToNextPointCommand}"
+          ToolTip="{Binding [geometryDetails_currentPoint_goToNextPoint], Source={StaticResource Localization}}">
+                <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronNext}"/>
+            </Button>
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" 
+                     Command="{Binding GoToNextPageCommand}"
+                     ToolTip="{Binding [geometryDetails_currentPoint_goToNextPage], Source={StaticResource Localization}}">
+                <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronDoubleNext}"/>
+            </Button>
+        </StackPanel>
+
+    </Grid>
+</maptor:NotifiableUserControl>
+
+
+
+

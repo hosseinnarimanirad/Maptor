@@ -1,0 +1,12 @@
+<Project>
+
+  <!-- This lives in Directory.Build.TARGETS, not .props, on purpose: .props is imported before the
+       SDK adds its default None items, so an <None Update="README.md"> there matches nothing and
+       packing fails with NU5039. .targets is imported after the default items exist.
+       (If a repository-root Directory.Build.targets is ever added, these tier files must import it
+       explicitly - the nearest file wins, exactly as with Directory.Build.props.) -->
+  <ItemGroup>
+    <None Update="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>

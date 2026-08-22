@@ -268,7 +268,7 @@ __pycache__/
 /scripts
 /CLAUDE.md
 /MaptorMobile.zip
-/tests/IRI.Maptor.Tst.Main/Assets
+/tests/IRI.Maptor.Tests/Assets
 
 # Secrets must never be committed. Connection strings, JWT signing keys and the integrity key belong
 # in user-secrets (dotnet user-secrets) or environment variables. The tracked appsettings.json files

@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>A .NET standard library to transform various spatial reference systems</Description>
+    <PackageTags>geometry;GIS;spatial;Ellipsoid;WGS84;UTM;Mercator;latitude;longitude</PackageTags>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\IRI.Maptor.Core.Common\IRI.Maptor.Core.Common.csproj" />
+  </ItemGroup>
+
+</Project>

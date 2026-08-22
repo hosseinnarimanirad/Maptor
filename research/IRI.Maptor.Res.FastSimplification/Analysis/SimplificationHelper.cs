@@ -3,14 +3,14 @@ using System.Diagnostics;
 using System.Windows.Media;
 
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Jab.Wpf;
-using IRI.Maptor.Jab.Wpf.Helpers;
-using IRI.Maptor.Sta.ShapefileFormat;
-using IRI.Maptor.Sta.Spatial.Helpers;
-using IRI.Maptor.Sta.Spatial.Analysis;
-using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
-using IRI.Maptor.Sta.SpatialReferenceSystem;
-using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Presentation.Wpf;
+using IRI.Maptor.Presentation.Wpf.Helpers;
+using IRI.Maptor.Core.ShapefileFormat;
+using IRI.Maptor.Core.Spatial.Helpers;
+using IRI.Maptor.Core.Spatial.Analysis;
+using IRI.Maptor.Core.Spatial.GeoJsonFormat;
+using IRI.Maptor.Core.SpatialReferenceSystem;
+using IRI.Maptor.Core.Common.Enums;
 
 
 namespace IRI.Maptor.Res.FastSimplification;
@@ -182,7 +182,7 @@ public static class SimplificationHelper
                     //featureSet.Save($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-{renderSize}-{method}.json", false, true);
                 }
                  
-                //IRI.Maptor.Jab.Wpf.Helpers.ImageUtility.MergeAndSave($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-{renderSize}-{scale:N}.png", drawingVisuals, screenSize.Width, screenSize.Height);
+                //IRI.Maptor.Presentation.Wpf.Helpers.ImageUtility.MergeAndSave($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-{renderSize}-{scale:N}.png", drawingVisuals, screenSize.Width, screenSize.Height);
             }
         }
     }

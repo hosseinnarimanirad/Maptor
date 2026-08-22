@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework> 
+    <Title>IRI.Maptor SQLite Persistence</Title>
+    <Description>SQLite-based format support for Maptor library: MBTiles and OGC GeoPackage (vector and raster). Works with .NET 8, MAUI, and mobile platforms.</Description>
+    <PackageTags>sqlite;mbtiles;geopackage;gpkg;tiles;offline;ogc;mapping;maui;mobile;gis</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Core SQLite package for cross-platform support -->
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" />
+    <!-- Native SQLite bundle for MAUI/mobile compatibility -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Common\IRI.Maptor.Core.Common.csproj" />
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Persistence\IRI.Maptor.Core.Persistence.csproj" />
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Spatial\IRI.Maptor.Core.Spatial.csproj" />
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Ogc\IRI.Maptor.Core.Ogc.csproj" />
+  </ItemGroup>
+
+</Project>

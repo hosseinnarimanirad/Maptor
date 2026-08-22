@@ -4,8 +4,8 @@ using System.Linq;
 using System.Windows;
 
 using IRI.Maptor.Res.Sfc.View;
-using IRI.Maptor.Sta.DataStructures;
-using IRI.Maptor.Sta.Spatial.Analysis.SFC;
+using IRI.Maptor.Core.Common.DataStructures;
+using IRI.Maptor.Core.Spatial.Analysis.SFC;
 
 namespace IRI.Maptor.Res.Sfc;
 
@@ -33,7 +33,7 @@ public partial class MainWindow : Window
             double dpiX = 96.0 * source.CompositionTarget.TransformToDevice.M11;
 
             //size of each pixel (in meter)
-            _unitDistance = IRI.Maptor.Sta.Common.Helpers.ConversionHelper.InchToMeterFactor / dpiX;
+            _unitDistance = IRI.Maptor.Core.Common.Helpers.ConversionHelper.InchToMeterFactor / dpiX;
         }
 
         return _unitDistance.Value;
@@ -100,7 +100,7 @@ public partial class MainWindow : Window
 
             ////read the points
             //SqlServerDataSource source = new SqlServerDataSource("data source=.;integrated security=true;initial catalog = IRI.Database", "Earthquakes", "Location");
-            //var points = source.SelectFeatures(query).Select(d => new IRI.Maptor.Sta.Common.Primitives.Point((double)d["lat"], (double)d["_long"])).ToArray();
+            //var points = source.SelectFeatures(query).Select(d => new IRI.Maptor.Core.Common.Primitives.Point((double)d["lat"], (double)d["_long"])).ToArray();
 
             //***********************************waze
             //if (numberOfPoints[i] == int.MaxValue)
@@ -113,7 +113,7 @@ public partial class MainWindow : Window
             //}
 
             //SqlServerDataSource source = new SqlServerDataSource("data source=.;integrated security=true;initial catalog = WaseDb", "Users", "Location");
-            //var points = source.SelectFeatures(query).Select(d => new IRI.Maptor.Sta.Common.Primitives.Point((double)d["Latitude"], (double)d["Longitude"])).ToArray();
+            //var points = source.SelectFeatures(query).Select(d => new IRI.Maptor.Core.Common.Primitives.Point((double)d["Latitude"], (double)d["Longitude"])).ToArray();
 
 
 
@@ -125,7 +125,7 @@ public partial class MainWindow : Window
 
             //order the points
             PointOrdering.HilbertSorter(points);
-            //IRI.Maptor.Ket.DataStructure.SortAlgorithm.MergeSort(points, (p1, p2) => p1.X.CompareTo(p2.X));
+            //IRI.Maptor.Infrastructure.DataStructure.SortAlgorithm.MergeSort(points, (p1, p2) => p1.X.CompareTo(p2.X));
 
             watch.Stop();
             Debug.WriteLine($"{points.Count()}, {watch.ElapsedMilliseconds / 1000.0}");
@@ -134,17 +134,17 @@ public partial class MainWindow : Window
         ////show result
     }
 
-    IRI.Maptor.Sta.Common.Primitives.Point[] GetRandomArray()
+    IRI.Maptor.Core.Common.Primitives.Point[] GetRandomArray()
     {
         Random xRandom = new Random(13);
 
         Random yRandom = new Random(40);
 
-        IRI.Maptor.Sta.Common.Primitives.Point[] result = new IRI.Maptor.Sta.Common.Primitives.Point[1500000];
+        IRI.Maptor.Core.Common.Primitives.Point[] result = new IRI.Maptor.Core.Common.Primitives.Point[1500000];
 
         for (int i = 0; i < result.Length; i++)
         {
-            result[i] = new IRI.Maptor.Sta.Common.Primitives.Point(xRandom.Next(0, 100000), yRandom.Next(0, 100000));
+            result[i] = new IRI.Maptor.Core.Common.Primitives.Point(xRandom.Next(0, 100000), yRandom.Next(0, 100000));
         }
 
         return result;

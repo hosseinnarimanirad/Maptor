@@ -1,6 +1,6 @@
-﻿using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Analysis.SFC;
-using IRI.Maptor.Sta.Spatial.Primitives;
+﻿using IRI.Maptor.Core.Common.Primitives;
+using IRI.Maptor.Core.Spatial.Analysis.SFC;
+using IRI.Maptor.Core.Spatial.Primitives;
 using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Input;

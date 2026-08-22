@@ -14,7 +14,7 @@ Applies to all README files in the repository, with one exclusion:
 
 1. **Filename** is exactly `README.md` (case-sensitive). Supplementary docs (e.g.
    `USAGE_EXAMPLES.md`) keep their own names and are not covered by this guide.
-2. **One H1 on line 1**, naming the thing verbatim: the package id (`# IRI.Maptor.Sta.Spatial`),
+2. **One H1 on line 1**, naming the thing verbatim: the package id (`# IRI.Maptor.Core.Spatial`),
    the topic (`# Shortest paths`), or the format (`# SVG`). Badges, if any, come immediately after
    the H1.
 3. **Sentence case for all H2+ headings**: `## Getting started`, not `## Getting Started`.
@@ -34,7 +34,7 @@ Applies to all README files in the repository, with one exclusion:
 8. **Length** targets per type are in the taxonomy table. Shorter is fine; padding is not.
 9. **Code samples** must compile against the current API. Known gotcha:
    `Geometry<T>.CreatePointOrLineString(List<T> points, int srid)` is the only valid overload; the
-   KML/KMZ namespace is `IRI.Maptor.Sta.KmlFormat` (not `...Sta.Ogc.KML`).
+   KML/KMZ namespace is `IRI.Maptor.Core.Ogc.Kml` (not `...Sta.Ogc.KML`).
 10. **No ASCII folder trees** ("Project structure" sections). Folder layout is visible in the repo
     itself; trees rot silently. The exception is docs whose *subject* is a layout (e.g. a package
     format's directory structure).
@@ -163,7 +163,7 @@ Format reference variant adds a required capability matrix, verified against cod
 - <honest list>
 
 ---
-[Back to IRI.Maptor.Sta.Spatial](../../README.md)
+[Back to IRI.Maptor.Core.Spatial](../../README.md)
 ```
 
 ### Type E — app/ops guide
@@ -203,69 +203,69 @@ Format reference variant adds a required capability matrix, verified against cod
 
 ## Appendix: file-to-type assignment
 
-Excluded (never touch): `src/IRI.Maptor.Ket/IRI.Maptor.Ket.WindowsBase/ThirdPartyLibraries/ManagedNativeWifi/README.md`.
+Excluded (never touch): `src/Infrastructure/IRI.Maptor.Infrastructure.WindowsBase/ThirdPartyLibraries/ManagedNativeWifi/README.md`.
 
 | File | Type |
 |---|---|
 | `README.md` | A |
-| `src/IRI.Maptor.Sta/README.md` | B |
-| `src/IRI.Maptor.Ket/README.md` | B |
-| `src/IRI.Maptor.Jab/README.md` | B |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Common/README.md` | C |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Graph/README.md` | C |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.GsmGprs/README.md` | C |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.MachineLearning/README.md` | C |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Ogc/README.md` | C |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Pdf/README.md` | C |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Persistence/README.md` | C |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Security/README.md` | C |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.ShapefileFormat/README.md` | C |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/README.md` | C |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.SpatialReferenceSystem/README.md` | C |
-| `src/IRI.Maptor.Ket/IRI.Maptor.Ket.EfCorePersistence/README.md` | C |
-| `src/IRI.Maptor.Ket/IRI.Maptor.Ket.GdiPlus/README.md` | C |
-| `src/IRI.Maptor.Ket/IRI.Maptor.Ket.PersonalGdbPersistence/README.md` | C |
-| `src/IRI.Maptor.Ket/IRI.Maptor.Ket.PostgreSqlPersistence/README.md` | C |
-| `src/IRI.Maptor.Ket/IRI.Maptor.Ket.SqlServerPersistence/README.md` | C |
-| `src/IRI.Maptor.Ket/IRI.Maptor.Ket.SqlServerSpatialExtension/README.md` | C |
-| `src/IRI.Maptor.Ket/IRI.Maptor.Ket.SqlitePersistence/README.md` | C (keeps its extended format sections) |
-| `src/IRI.Maptor.Ket/IRI.Maptor.Ket.WebApiPersistence/README.md` | C |
-| `src/IRI.Maptor.Ket/IRI.Maptor.Ket.WindowsBase/README.md` | C |
-| `src/IRI.Maptor.Jab/IRI.Maptor.Jab.Wpf/README.md` | C |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Common/Mathematics/Algebra/README.md` | D (topic) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Graph/Clustering/README.md` | D (topic) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Graph/GraphRepresentation/README.md` | D (topic) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Graph/MinCut/README.md` | D (topic) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Graph/MinimumSpanningTree/README.md` | D (topic) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Graph/Search/README.md` | D (topic) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Graph/ShortestPaths/README.md` | D (topic) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Ogc/GML/README.md` | D (topic) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Ogc/KML/README.md` | D (topic) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Ogc/KMZ/README.md` | D (topic) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Ogc/SLD/README.md` | D (topic) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Ogc/WFS/README.md` | D (topic) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Ogc/WMS/README.md` | D (topic) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/AdvancedStructures/README.md` | D (topic) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/Analysis/README.md` | D (topic) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/Analysis/DigitalTerrainModeling/README.md` | D (topic) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/Analysis/Interpolation/README.md` | D (topic) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/Analysis/SFC/README.md` | D (topic) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.SpatialReferenceSystem/CoordinateSystems/README.md` | D (topic) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.SpatialReferenceSystem/MapProjections/README.md` | D (topic) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.SpatialReferenceSystem/Models/README.md` | D (topic) |
-| `src/IRI.Maptor.Jab/IRI.Maptor.Jab.Wpf/Views/Symbology/Sld/README.md` | D (topic) |
+| `src/Core/README.md` | B |
+| `src/Infrastructure/README.md` | B |
+| `src/Presentation/README.md` | B |
+| `src/Core/IRI.Maptor.Core.Common/README.md` | C |
+| `src/Core/IRI.Maptor.Core.Graph/README.md` | C |
+| `src/Core/IRI.Maptor.Core.GsmGprs/README.md` | C |
+| `src/Core/IRI.Maptor.Core.MachineLearning/README.md` | C |
+| `src/Core/IRI.Maptor.Core.Ogc/README.md` | C |
+| `src/Core/IRI.Maptor.Core.Pdf/README.md` | C |
+| `src/Core/IRI.Maptor.Core.Persistence/README.md` | C |
+| `src/Core/IRI.Maptor.Core.Security/README.md` | C |
+| `src/Core/IRI.Maptor.Core.ShapefileFormat/README.md` | C |
+| `src/Core/IRI.Maptor.Core.Spatial/README.md` | C |
+| `src/Core/IRI.Maptor.Core.SpatialReferenceSystem/README.md` | C |
+| `src/Infrastructure/IRI.Maptor.Infrastructure.EfCore/README.md` | C |
+| `src/Infrastructure/IRI.Maptor.Infrastructure.GdiPlus/README.md` | C |
+| `src/Infrastructure/IRI.Maptor.Infrastructure.PersonalGdb/README.md` | C |
+| `src/Infrastructure/IRI.Maptor.Infrastructure.PostgreSql/README.md` | C |
+| `src/Infrastructure/IRI.Maptor.Infrastructure.SqlServer/README.md` | C |
+| `src/Infrastructure/IRI.Maptor.Infrastructure.SqlServerSpatialExtension/README.md` | C |
+| `src/Infrastructure/IRI.Maptor.Infrastructure.Sqlite/README.md` | C (keeps its extended format sections) |
+| `src/Infrastructure/IRI.Maptor.Infrastructure.WebApi/README.md` | C |
+| `src/Infrastructure/IRI.Maptor.Infrastructure.WindowsBase/README.md` | C |
+| `src/Presentation/IRI.Maptor.Presentation.Wpf/README.md` | C |
+| `src/Core/IRI.Maptor.Core.Common/Mathematics/Algebra/README.md` | D (topic) |
+| `src/Core/IRI.Maptor.Core.Graph/Clustering/README.md` | D (topic) |
+| `src/Core/IRI.Maptor.Core.Graph/GraphRepresentation/README.md` | D (topic) |
+| `src/Core/IRI.Maptor.Core.Graph/MinCut/README.md` | D (topic) |
+| `src/Core/IRI.Maptor.Core.Graph/MinimumSpanningTree/README.md` | D (topic) |
+| `src/Core/IRI.Maptor.Core.Graph/Search/README.md` | D (topic) |
+| `src/Core/IRI.Maptor.Core.Graph/ShortestPaths/README.md` | D (topic) |
+| `src/Core/IRI.Maptor.Core.Ogc/GML/README.md` | D (topic) |
+| `src/Core/IRI.Maptor.Core.Ogc/KML/README.md` | D (topic) |
+| `src/Core/IRI.Maptor.Core.Ogc/KMZ/README.md` | D (topic) |
+| `src/Core/IRI.Maptor.Core.Ogc/SLD/README.md` | D (topic) |
+| `src/Core/IRI.Maptor.Core.Ogc/WFS/README.md` | D (topic) |
+| `src/Core/IRI.Maptor.Core.Ogc/WMS/README.md` | D (topic) |
+| `src/Core/IRI.Maptor.Core.Spatial/AdvancedStructures/README.md` | D (topic) |
+| `src/Core/IRI.Maptor.Core.Spatial/Analysis/README.md` | D (topic) |
+| `src/Core/IRI.Maptor.Core.Spatial/Analysis/DigitalTerrainModeling/README.md` | D (topic) |
+| `src/Core/IRI.Maptor.Core.Spatial/Analysis/Interpolation/README.md` | D (topic) |
+| `src/Core/IRI.Maptor.Core.Spatial/Analysis/SFC/README.md` | D (topic) |
+| `src/Core/IRI.Maptor.Core.SpatialReferenceSystem/CoordinateSystems/README.md` | D (topic) |
+| `src/Core/IRI.Maptor.Core.SpatialReferenceSystem/MapProjections/README.md` | D (topic) |
+| `src/Core/IRI.Maptor.Core.SpatialReferenceSystem/Models/README.md` | D (topic) |
+| `src/Presentation/IRI.Maptor.Presentation.Wpf/Views/Symbology/Sld/README.md` | D (topic) |
 | `samples/IRI.Maptor.Tag.SampleCodes/Geodesy/README.md` | D (topic) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/CesiumTerrain/README.md` | D (format) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/Dxf/README.md` | D (format) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/Eps/README.md` | D (format) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/EsriJson/README.md` | D (format) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/GeoJsonFormat/README.md` | D (format) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/OgcSFA/README.md` | D (format) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/PmTiles/README.md` | D (format) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/SqlServerNativeBinary/README.md` | D (format) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/Svg/README.md` | D (format) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/TopoJson/README.md` | D (format) |
-| `src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/VectorTiles/README.md` | D (format) |
+| `src/Core/IRI.Maptor.Core.Spatial/IO/CesiumTerrain/README.md` | D (format) |
+| `src/Core/IRI.Maptor.Core.Spatial/IO/Dxf/README.md` | D (format) |
+| `src/Core/IRI.Maptor.Core.Spatial/IO/Eps/README.md` | D (format) |
+| `src/Core/IRI.Maptor.Core.Spatial/IO/EsriJson/README.md` | D (format) |
+| `src/Core/IRI.Maptor.Core.Spatial/IO/GeoJsonFormat/README.md` | D (format) |
+| `src/Core/IRI.Maptor.Core.Spatial/IO/OgcSFA/README.md` | D (format) |
+| `src/Core/IRI.Maptor.Core.Spatial/IO/PmTiles/README.md` | D (format) |
+| `src/Core/IRI.Maptor.Core.Spatial/IO/SqlServerNativeBinary/README.md` | D (format) |
+| `src/Core/IRI.Maptor.Core.Spatial/IO/Svg/README.md` | D (format) |
+| `src/Core/IRI.Maptor.Core.Spatial/IO/TopoJson/README.md` | D (format) |
+| `src/Core/IRI.Maptor.Core.Spatial/IO/VectorTiles/README.md` | D (format) |
 | `research/IRI.Maptor.Res.FastSimplification/README.md` | F |
 | `samples/IRI.Maptor.Tag.SampleWpfApp/README.md` | F |
 

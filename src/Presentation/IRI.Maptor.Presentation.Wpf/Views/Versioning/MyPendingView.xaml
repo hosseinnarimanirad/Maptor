@@ -1,0 +1,80 @@
+<UserControl x:Class="IRI.Maptor.Presentation.Wpf.Controls.Versioning.MyPendingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
+             mc:Ignorable="d"
+             FontFamily="{StaticResource iranSans}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Panel}" Margin="8">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Toolbar}" CornerRadius="4,4,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.Secondary.Small}"
+                            Command="{Binding RefreshCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent.Small}" Kind="Refresh"/>
+                            <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent.Small}"
+                                       Text="{Binding [versioning_review_refresh], Source={StaticResource Localization}}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}" Margin="12,0,4,0"
+                               Text="{Binding [versioning_review_lastRefresh], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
+                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}"
+                               Text="{Binding LastRefreshedAt, StringFormat='{}{0:HH:mm:ss}', TargetNullValue='—'}"/>
+
+                    <mah:ProgressRing Width="16" Height="16" Margin="12,0,0,0" IsActive="{Binding IsBusy}"/>
+                </StackPanel>
+            </Border>
+
+            <Grid Grid.Row="1">
+                <DataGrid Style="{StaticResource IRI.Maptor.Styles.DataGrid.ReadOnly}"
+                          ItemsSource="{Binding Rows}" SelectionMode="Single"
+                          Visibility="{Binding IsEmpty, Converter={StaticResource boolToInverseVisibilityConverter}}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="{Binding [versioning_myPending_colSession], Source={StaticResource Localization}}" Binding="{Binding Item.SessionTitle}" Width="*"/>
+                        <DataGridTextColumn Header="{Binding [versioning_review_colLayer], Source={StaticResource Localization}}" Binding="{Binding Item.EntityName}" Width="Auto"/>
+                        <DataGridTextColumn Header="{Binding [versioning_review_colFeature], Source={StaticResource Localization}}" Binding="{Binding TargetLabel}" Width="Auto"/>
+                        <DataGridTextColumn Header="{Binding [versioning_approval_colType], Source={StaticResource Localization}}" Binding="{Binding ChangeTypeLabel}" Width="Auto"/>
+                        <DataGridTemplateColumn Header="{Binding [versioning_myPending_colStatus], Source={StaticResource Localization}}" Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <!--Committed reads Valid, Rejected reads Invalid, the
+                                        in-flight states read Warning/Accent. One Accent pill for
+                                        all six made a rejected proposal look like a committed one.-->
+                                    <Border Style="{Binding Item.Status, Converter={StaticResource editorFacingStatusToPillStyleConverter}}">
+                                        <TextBlock Style="{Binding Item.Status, Converter={StaticResource editorFacingStatusToPillTextStyleConverter}}"
+                                                   Text="{Binding StatusLabel}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="{Binding [versioning_myPending_colSubmitted], Source={StaticResource Localization}}" Binding="{Binding SubmittedAtLabel}" Width="Auto"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.EmptyState}"
+                           Text="{Binding [versioning_myPending_empty], Source={StaticResource Localization}}"
+                           Visibility="{Binding IsEmpty, Converter={StaticResource boolToVisibilityConverter}}"/>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

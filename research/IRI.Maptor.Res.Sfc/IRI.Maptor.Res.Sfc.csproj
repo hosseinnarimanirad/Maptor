@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\IRI.Maptor.Jab\IRI.Maptor.Jab.Wpf\IRI.Maptor.Jab.Wpf.csproj" />
-    <ProjectReference Include="..\..\src\IRI.Maptor.Sta\IRI.Maptor.Sta.Common\IRI.Maptor.Sta.Common.csproj" />
+    <ProjectReference Include="..\..\src\Presentation\IRI.Maptor.Presentation.Wpf\IRI.Maptor.Presentation.Wpf.csproj" />
+    <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.Common\IRI.Maptor.Core.Common.csproj" />
   </ItemGroup>
 
 </Project>

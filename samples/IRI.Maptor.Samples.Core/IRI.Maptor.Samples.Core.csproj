@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <RootNamespace>IRI.Maptor.Samples.Core</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.Common\IRI.Maptor.Core.Common.csproj" />
+    <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.Graph\IRI.Maptor.Core.Graph.csproj" />
+    <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.ShapefileFormat\IRI.Maptor.Core.ShapefileFormat.csproj" />
+    <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.SpatialReferenceSystem\IRI.Maptor.Core.SpatialReferenceSystem.csproj" />
+    <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.Spatial\IRI.Maptor.Core.Spatial.csproj" />
+  </ItemGroup>
+
+</Project>

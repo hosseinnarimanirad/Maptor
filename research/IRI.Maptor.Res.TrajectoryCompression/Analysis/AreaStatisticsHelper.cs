@@ -2,13 +2,13 @@
 using System.Linq;
 using System.Collections.Generic;
 
-using IRI.Maptor.Sta.Spatial.Analysis;
-using IRI.Maptor.Sta.MachineLearning;
-using IRI.Maptor.Sta.Spatial.Helpers;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
-using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Core.Spatial.Analysis;
+using IRI.Maptor.Core.MachineLearning;
+using IRI.Maptor.Core.Spatial.Helpers;
+using IRI.Maptor.Core.Common.Primitives;
+using IRI.Maptor.Core.Spatial.Primitives;
+using IRI.Maptor.Core.SpatialReferenceSystem.MapProjections;
+using IRI.Maptor.Core.Common.Enums;
 
 
 namespace IRI.Maptor.Res.TrajectoryCompression;
@@ -35,7 +35,7 @@ public static class AreaStatisticsHelper
 
         foreach (var shpFile in shpFiles)
         {
-            var features = IRI.Maptor.Sta.ShapefileFormat.Shapefile.ReadShapes(shpFile).Select(g => g.AsGeometry().Project(SrsBases.WebMercator)).ToList();
+            var features = IRI.Maptor.Core.ShapefileFormat.Shapefile.ReadShapes(shpFile).Select(g => g.AsGeometry().Project(SrsBases.WebMercator)).ToList();
 
             AreaStatistics stat = new AreaStatistics(features);
 

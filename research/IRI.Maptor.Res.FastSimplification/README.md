@@ -1,7 +1,7 @@
 # IRI.Maptor.Res.FastSimplification
 
 A WPF research harness for evaluating fast line-simplification. It runs the simplification
-algorithms implemented in IRI.Maptor.Sta.Spatial (Ramer–Douglas–Peucker, Visvalingam–Whyatt,
+algorithms implemented in IRI.Maptor.Core.Spatial (Ramer–Douglas–Peucker, Visvalingam–Whyatt,
 normal opening window, cumulative triangle routine) over OSM shapefile datasets, renders the
 original versus the simplified geometry at several zoom levels and render sizes, and writes
 side-by-side comparison PNGs whose file names record the compression ratio and the total

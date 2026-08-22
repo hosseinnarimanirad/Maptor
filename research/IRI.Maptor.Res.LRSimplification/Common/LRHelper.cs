@@ -3,16 +3,16 @@ using System.Text;
 using System.Diagnostics;
 
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Jab.Wpf;
-using IRI.Maptor.Sta.ShapefileFormat;
-using IRI.Maptor.Sta.Spatial.Helpers;
-using IRI.Maptor.Sta.MachineLearning;
-using IRI.Maptor.Sta.Spatial.Analysis;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
-using IRI.Maptor.Sta.SpatialReferenceSystem;
-using IRI.Maptor.Jab.Wpf.Helpers;
-using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Presentation.Wpf;
+using IRI.Maptor.Core.ShapefileFormat;
+using IRI.Maptor.Core.Spatial.Helpers;
+using IRI.Maptor.Core.MachineLearning;
+using IRI.Maptor.Core.Spatial.Analysis;
+using IRI.Maptor.Core.Common.Primitives;
+using IRI.Maptor.Core.Spatial.GeoJsonFormat;
+using IRI.Maptor.Core.SpatialReferenceSystem;
+using IRI.Maptor.Presentation.Wpf.Helpers;
+using IRI.Maptor.Core.Common.Enums;
 
 
 namespace IRI.Maptor.Res.LRSimplification.Common;
@@ -753,7 +753,7 @@ public static class LRHelper
                     if (coef != 0)
                         continue;
 
-                    var result = await IRI.Maptor.Jab.Wpf.Helpers.SimplificationHelper.CompareBySingleFeature(
+                    var result = await IRI.Maptor.Presentation.Wpf.Helpers.SimplificationHelper.CompareBySingleFeature(
                                     feature,
                                     g => g.Simplify(lrModel, toScreenMap3, true),
                                     boundingBox,
@@ -782,7 +782,7 @@ public static class LRHelper
 
                 foreach (var method in methods)
                 {
-                    var result = await IRI.Maptor.Jab.Wpf.Helpers.SimplificationHelper.CompareBySingleFeature(
+                    var result = await IRI.Maptor.Presentation.Wpf.Helpers.SimplificationHelper.CompareBySingleFeature(
                                    feature,
                                    g => g.Simplify(method, parameters),
                                    boundingBox,
@@ -924,7 +924,7 @@ public static class LRHelper
 
                 foreach (var lrModel in lrModels)
                 {
-                    var result = await IRI.Maptor.Jab.Wpf.Helpers.SimplificationHelper.CompareBySingleFeature(
+                    var result = await IRI.Maptor.Presentation.Wpf.Helpers.SimplificationHelper.CompareBySingleFeature(
                                     feature,
                                     g => g.Simplify(lrModel, toScreenMap3, true),
                                     boundingBox,
@@ -958,7 +958,7 @@ public static class LRHelper
 
                     parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
 
-                    var result = await IRI.Maptor.Jab.Wpf.Helpers.SimplificationHelper.CompareBySingleFeature(
+                    var result = await IRI.Maptor.Presentation.Wpf.Helpers.SimplificationHelper.CompareBySingleFeature(
                                    feature,
                                    g => g.Simplify(method, parameters),
                                    boundingBox,
@@ -1069,7 +1069,7 @@ public static class LRHelper
 
         foreach (var lrModel in lrModels)
         {
-            var result = await IRI.Maptor.Jab.Wpf.Helpers.SimplificationHelper.CompareByLayer(
+            var result = await IRI.Maptor.Presentation.Wpf.Helpers.SimplificationHelper.CompareByLayer(
                      features,
                      g => g.Simplify(lrModel, toScreenMap3, true),
                      boundingBox,
@@ -1101,7 +1101,7 @@ public static class LRHelper
 
                 parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
 
-                var result = await IRI.Maptor.Jab.Wpf.Helpers.SimplificationHelper.CompareByLayer(
+                var result = await IRI.Maptor.Presentation.Wpf.Helpers.SimplificationHelper.CompareByLayer(
                          features,
                          g => g.Simplify(method, parameters),
                          boundingBox,
@@ -1287,7 +1287,7 @@ public static class LRHelper
 
             var estimatedZoomLevel = WebMercatorUtility.EstimateZoomLevel(boundingBox, /*34,*/ 256, 256);
 
-            var comparison = await IRI.Maptor.Jab.Wpf.Helpers.SimplificationHelper.Compare(item.OriginalGeometry, featureIndex, outputDirectory, estimatedZoomLevel, fileName, methods, lrModels);
+            var comparison = await IRI.Maptor.Presentation.Wpf.Helpers.SimplificationHelper.Compare(item.OriginalGeometry, featureIndex, outputDirectory, estimatedZoomLevel, fileName, methods, lrModels);
 
             foreach (var accuracy in comparison)
             {
@@ -1481,7 +1481,7 @@ public static class LRHelper
 
             var estimatedZoomLevel = WebMercatorUtility.EstimateZoomLevel(boundingBox, /*34,*/ 256, 256);
 
-            await IRI.Maptor.Jab.Wpf.Helpers.SimplificationHelper.Compare(feature, featureIndex, outputDirectory, estimatedZoomLevel, fileName, methods, lrModels);
+            await IRI.Maptor.Presentation.Wpf.Helpers.SimplificationHelper.Compare(feature, featureIndex, outputDirectory, estimatedZoomLevel, fileName, methods, lrModels);
         }
     }
 

@@ -1,0 +1,23 @@
+<UserControl x:Class="IRI.Maptor.Samples.Wpf.Gallery.Samples.Identify.IdentifySample"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls;assembly=IRI.Maptor.Presentation.Wpf"
+             Loaded="OnLoaded">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Style="{StaticResource SampleToolbar}">
+            <!-- IdentifyModeCommand toggles MapAction between Identify and Pan -->
+            <ToggleButton Content="Identify" MinWidth="110" Margin="2"
+                          Command="{Binding IdentifyModeCommand}"
+                          IsChecked="{Binding IsIdentifyMode, Mode=OneWay}" />
+            <Button Content="Pan" Command="{Binding PanCommand}" Style="{StaticResource SampleToolbarButton}" />
+            <TextBlock Style="{StaticResource SampleHint}" VerticalAlignment="Center"
+                       Text="Turn Identify on and click a coloured area. Every hit layer and feature appears in the Identify results window, with its attributes." />
+        </StackPanel>
+
+        <Border DockPanel.Dock="Left" Style="{StaticResource SampleSidePanel}" Width="240">
+            <maptor:MapLegendView LegendViewModel="{Binding LegendViewModel}" />
+        </Border>
+
+        <maptor:MapViewer x:Name="map" MapAction="{Binding MapAction, Mode=OneWay}" />
+    </DockPanel>
+</UserControl>

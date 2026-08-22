@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageTags>GIS;spatial;ESRI;geodatabase;PersonalGdb;mdb;ArcGIS</PackageTags>
+    <Description>Reads ESRI Personal Geodatabases (.mdb) via OleDb/ACE, handling ArcGIS 10.x/11.x schema differences and ACE provider selection automatically.</Description>
+    <TargetFramework>net8.0-windows</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.OleDb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- empty ArcGIS 10.7 personal geodatabase; extracted by PersonalGdb.CreateEmpty -->
+    <EmbeddedResource Include="template.mdb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Persistence\IRI.Maptor.Core.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>

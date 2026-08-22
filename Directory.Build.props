@@ -1,17 +1,35 @@
 <Project>
+
+  <!-- Shared by EVERY project in the repository. Nothing packs unless it opts in:
+       the per-tier Directory.Build.props under src/Core, src/Infrastructure and
+       src/Presentation set IsPackable=true. -->
   <PropertyGroup>
-    <Version>2.11.0</Version>
+    <Version>3.0.0</Version>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <!-- Package metadata shared by every published package. Do not repeat these in a csproj;
+       only Description, PackageTags and Title are per-project. -->
+  <PropertyGroup>
+    <Authors>Hossein Narimani Rad</Authors>
+    <Company>Maptor</Company>
+    <Copyright>Maptor</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/hosseinnarimanirad/Maptor</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <PackageIcon>package-icon.png</PackageIcon>
     <PackageIconUrl/>
-    <PackageProjectUrl>https://github.com/hosseinnarimanirad/Maptor</PackageProjectUrl>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)assets/images/package-icon.png"
-			    Pack="true" 
-			    PackagePath="\" 
+			    Pack="true"
+			    PackagePath="\"
 			    Visible="false" />
   </ItemGroup>
+
 </Project>

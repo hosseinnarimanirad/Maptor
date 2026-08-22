@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageTags>GIS;spatial;GdiPlus;raster;GeoTIFF;worldfile;image-processing;remote-sensing</PackageTags>
+    <Description>GDI+/System.Drawing bridge: georeferenced raster I/O (GeoTIFF, world files), digital image processing (image matrices, spatial-domain enhancement, template matching), and remote-sensing helpers.</Description>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="DigitalImageProcessing\MorphologicalProcessing\**" />
+    <Compile Remove="DigitalImageProcessing\Object Recognition\**" />
+    <EmbeddedResource Remove="DigitalImageProcessing\MorphologicalProcessing\**" />
+    <EmbeddedResource Remove="DigitalImageProcessing\Object Recognition\**" />
+    <None Remove="DigitalImageProcessing\MorphologicalProcessing\**" />
+    <None Remove="DigitalImageProcessing\Object Recognition\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="DigitalImageProcessing\ImageMatching\SIFT\Qs.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="DigitalImageProcessing\ImageMatching\SIFT\Qs.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" /> 
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Common\IRI.Maptor.Core.Common.csproj" />
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Persistence\IRI.Maptor.Core.Persistence.csproj" />
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Spatial\IRI.Maptor.Core.Spatial.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DigitalImageProcessing\FrequencyDomainEnhancement\" />
+  </ItemGroup>
+
+</Project>

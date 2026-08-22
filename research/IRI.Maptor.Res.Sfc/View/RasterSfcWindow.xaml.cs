@@ -8,10 +8,10 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 
 using IRI.Maptor.Res.Sfc.View.Components;
-using IRI.Maptor.Sta.Spatial.Analysis.SFC;
-using spatial = IRI.Maptor.Sta.Common.Primitives;
-using sfc = IRI.Maptor.Sta.Spatial.Analysis.SFC;
-using Transform = IRI.Maptor.Sta.Spatial.Analysis.SFC.Transform;
+using IRI.Maptor.Core.Spatial.Analysis.SFC;
+using spatial = IRI.Maptor.Core.Common.Primitives;
+using sfc = IRI.Maptor.Core.Spatial.Analysis.SFC;
+using Transform = IRI.Maptor.Core.Spatial.Analysis.SFC.Transform;
 
 namespace IRI.Maptor.Res.Sfc.View;
 

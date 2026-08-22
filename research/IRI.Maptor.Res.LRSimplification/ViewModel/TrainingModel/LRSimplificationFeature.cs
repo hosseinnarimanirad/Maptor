@@ -1,5 +1,5 @@
 ﻿
-using IRI.Maptor.Sta.MachineLearning;
+using IRI.Maptor.Core.MachineLearning;
 using System;
 using System.Collections.Generic;
 using System.Linq;

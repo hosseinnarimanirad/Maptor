@@ -2,13 +2,13 @@
 using System.Windows;
 using System.Windows.Media;
 
-using IRI.Maptor.Jab.Wpf;
-using IRI.Maptor.Sta.Mathematics;
-using IRI.Maptor.Sta.Spatial.Helpers;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Jab.Wpf.Layers;
-using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Presentation.Wpf;
+using IRI.Maptor.Core.Common.Mathematics;
+using IRI.Maptor.Core.Spatial.Helpers;
+using IRI.Maptor.Core.Common.Primitives;
+using IRI.Maptor.Core.Spatial.Primitives;
+using IRI.Maptor.Presentation.Wpf.Layers;
+using IRI.Maptor.Presentation.Core;
 
 namespace IRI.Maptor.Res.LRSimplification.Common;
 
@@ -31,7 +31,7 @@ public static class GeneralHelper
 
         var bitmap = await vectorLayer.AsGdiBitmapAsync(groundBoundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
 
-        var diff = IRI.Maptor.Ket.GdiPlus.Helpers.ImageHelper.CalculateDifPlusBitmaps(originalBitmap, bitmap, true);
+        var diff = IRI.Maptor.Infrastructure.GdiPlus.Helpers.ImageHelper.CalculateDifPlusBitmaps(originalBitmap, bitmap, true);
 
         if (saveImages)
         {
@@ -44,7 +44,7 @@ public static class GeneralHelper
 
 
 
-    public static VectorLayer GetAsLayer(string layerName, List<Geometry<IRI.Maptor.Sta.Common.Primitives.Point>> geometries)
+    public static VectorLayer GetAsLayer(string layerName, List<Geometry<IRI.Maptor.Core.Common.Primitives.Point>> geometries)
     {
         var vectorLayer = new VectorLayer(layerName,
                                             geometries,
@@ -75,7 +75,7 @@ public static class GeneralHelper
 
         var bitmap = await vectorLayer.AsGdiBitmapAsync(groundBoundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
 
-        var diff = IRI.Maptor.Ket.GdiPlus.Helpers.ImageHelper.CalculateConfusionMatrixBitmaps(originalBitmap, bitmap);
+        var diff = IRI.Maptor.Infrastructure.GdiPlus.Helpers.ImageHelper.CalculateConfusionMatrixBitmaps(originalBitmap, bitmap);
 
         if (saveImages)
         {

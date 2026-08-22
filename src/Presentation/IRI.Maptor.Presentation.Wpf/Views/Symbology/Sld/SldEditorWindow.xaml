@@ -1,0 +1,89 @@
+<maptor:LocalizedMetroWindow x:Class="IRI.Maptor.Presentation.Wpf.Controls.Symbology.Sld.SldEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls"
+        xmlns:sldViews="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls.Symbology.Sld"
+        xmlns:dialogs="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls.Dialogs"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
+        mc:Ignorable="d"
+        Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Localized}"
+        WindowTransitionsEnabled="False"
+        ShowIconOnTitleBar="False"
+        ShowInTaskbar="False"
+        Title="{Binding [sldEditor_common_editorTitle], Source={StaticResource Localization}}"
+        Height="750" Width="950" MinHeight="500" MinWidth="700">
+    <maptor:LocalizedMetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+        </ResourceDictionary>
+    </maptor:LocalizedMetroWindow.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Toolbar -->
+        <!--Border.Toolbar rather than a stock ToolBar: ToolBar coerces its children into its own
+            chrome, so the Maptor button styles never reached these three buttons.-->
+        <Border Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Toolbar}">
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding ImportSldCommand}"
+                        Style="{StaticResource IRI.Maptor.Styles.Button.Secondary}"
+                        ToolTip="{Binding [sldEditor_common_importTooltip], Source={StaticResource Localization}}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Kind="FolderOpen" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                        <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent}"
+                                   Text="{Binding [sldEditor_common_import], Source={StaticResource Localization}}"/>
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding ExportSldCommand}"
+                        Style="{StaticResource IRI.Maptor.Styles.Button.Secondary}"
+                        ToolTip="{Binding [sldEditor_common_exportTooltip], Source={StaticResource Localization}}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Kind="ContentSave" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                        <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent}"
+                                   Text="{Binding [sldEditor_common_export], Source={StaticResource Localization}}"/>
+                    </StackPanel>
+                </Button>
+                <!--restore the layer's captured default symbology (server style); shown only
+                    when the host wired RequestResetToDefaultAction-->
+                <Button Command="{Binding ResetToDefaultCommand}"
+                        Style="{StaticResource IRI.Maptor.Styles.Button.Secondary}"
+                        Visibility="{Binding ShowResetOption, Converter={StaticResource boolToVisibilityConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Kind="Restore" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                        <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent}"
+                                   Text="{Binding [dialog_symbology_resetToDefault], Source={StaticResource Localization}}"/>
+                    </StackPanel>
+                </Button>
+                <Separator Style="{StaticResource IRI.Maptor.Styles.Separator.Vertical}"/>
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}"
+                           Text="{Binding [sldEditor_common_editorBanner], Source={StaticResource Localization}}"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Editor -->
+        <sldViews:SldEditorView Grid.Row="1" DataContext="{Binding}"/>
+
+        <!-- Footer: [Apply][Cancel][OK] -->
+        <dialogs:DialogFooterView Grid.Row="2"
+                                  ShowTertiary="True"
+                                  TertiaryText="{Binding [dialog_common_apply], Source={StaticResource Localization}}"
+                                  TertiaryIconKind="Check"
+                                  TertiaryCommand="{Binding ApplyCommand}"
+                                  SecondaryText="{Binding [dialog_common_cancel], Source={StaticResource Localization}}"
+                                  SecondaryCommand="{Binding CancelCommand}"
+                                  PrimaryText="{Binding [dialog_common_ok], Source={StaticResource Localization}}"
+                                  PrimaryIconKind="CheckBold"
+                                  PrimaryCommand="{Binding OkCommand}"/>
+    </Grid>
+</maptor:LocalizedMetroWindow>

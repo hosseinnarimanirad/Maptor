@@ -1,0 +1,28 @@
+<UserControl x:Class="IRI.Maptor.Samples.Wpf.Gallery.Samples.MapLegend.MapLegendSample"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls;assembly=IRI.Maptor.Presentation.Wpf"
+             Loaded="OnLoaded">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Style="{StaticResource SampleToolbar}">
+            <StackPanel.Resources>
+                <Style TargetType="Button" BasedOn="{StaticResource SampleToolbarButton}" />
+            </StackPanel.Resources>
+            <Button Content="Add shapefile…" Command="{Binding AddShapefileCommand}" />
+            <Button Content="Add GeoJSON…" Command="{Binding AddGeoJSONfileCommand}" />
+            <Button Content="Add sample layer" Click="OnAddSampleLayer" />
+            <Button Content="Clear all" Command="{Binding ClearAllCommand}" />
+        </StackPanel>
+
+        <Border DockPanel.Dock="Left" Style="{StaticResource SampleSidePanel}">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Style="{StaticResource SampleHint}"
+                           Text="Right-click a layer for its commands (zoom to, attribute table, symbology, settings, remove). Drag to reorder." />
+                <!-- The table of contents. LegendViewModel is owned by the map view model. -->
+                <maptor:MapLegendView LegendViewModel="{Binding LegendViewModel}" />
+            </DockPanel>
+        </Border>
+
+        <maptor:MapViewer x:Name="map" MapAction="{Binding MapAction, Mode=OneWay}" />
+    </DockPanel>
+</UserControl>

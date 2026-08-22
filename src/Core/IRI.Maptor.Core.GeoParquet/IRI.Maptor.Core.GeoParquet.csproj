@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>A .NET standard library for GeoParquet format support (read/write geospatial vector data in Parquet format)</Description>
+    <PackageTags>geometry;GIS;spatial;GeoParquet;Parquet;geospatial</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IRI.Maptor.Core.Spatial\IRI.Maptor.Core.Spatial.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Parquet.Net" />
+  </ItemGroup>
+
+</Project>
+

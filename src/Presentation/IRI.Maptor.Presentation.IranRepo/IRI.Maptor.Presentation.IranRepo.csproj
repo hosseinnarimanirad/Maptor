@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <TargetFramework>net8.0-windows</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="LayerManagements\NccLayers.cs~RF8a503.TMP" />
+  </ItemGroup>
+ 
+  <ItemGroup>
+    <ProjectReference Include="..\IRI.Maptor.Presentation.Wpf\IRI.Maptor.Presentation.Wpf.csproj" />
+  </ItemGroup>
+
+</Project>

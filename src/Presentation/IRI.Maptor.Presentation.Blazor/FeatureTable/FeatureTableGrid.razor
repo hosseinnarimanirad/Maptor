@@ -1,0 +1,354 @@
+@* One layer's attributes as a filterable, sortable, scrollable grid. Split from FeatureTabControl
+   so the tab strip is only about which table is showing, and this is only about drawing one. *@
+
+@using IRI.Maptor.Core.Common.Primitives
+@using IRI.Maptor.Core.Spatial.Primitives
+
+@if (Tab.IsLoading)
+{
+    <div class="feature-table__state">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Small" />
+        <span>در حال بارگذاری عارضه‌ها…</span>
+    </div>
+}
+else if (Tab.ErrorMessage is not null)
+{
+    <div class="feature-table__state feature-table__state--error">@Tab.ErrorMessage</div>
+}
+else if (_allRows.Count == 0)
+{
+    <div class="feature-table__state">این لایه عارضه‌ای ندارد.</div>
+}
+else if (Tab.Columns.Count == 0)
+{
+    <div class="feature-table__state">این لایه اطلاعات توصیفی ندارد.</div>
+}
+else
+{
+    <div class="feature-table__toolbar">
+        <MudIcon Icon="@Icons.Material.Rounded.FilterAlt" Size="Size.Small" Color="Color.Primary" />
+
+        @* Debounced because filtering re-scans every row on the one UI thread WebAssembly has;
+           per-keystroke filtering of a large layer would stutter as you type. *@
+        <MudTextField T="string"
+                      Value="@Tab.Filter"
+                      ValueChanged="ApplyFilter"
+                      DebounceInterval="250"
+                      Immediate="true"
+                      Placeholder="فیلتر در همه‌ی ستون‌ها…"
+                      Underline="false"
+                      Margin="Margin.Dense"
+                      Class="feature-table__filter" />
+
+        <span class="feature-table__summary">
+            @if (Rows.Count == _allRows.Count)
+            {
+                @($"{ToPersianDigits(_allRows.Count)} عارضه")
+            }
+            else
+            {
+                @($"{ToPersianDigits(Rows.Count)} از {ToPersianDigits(_allRows.Count)} عارضه")
+            }
+        </span>
+
+        @if (Tab.SortColumn is not null || !string.IsNullOrEmpty(Tab.Filter))
+        {
+            <MudIconButton Icon="@Icons.Material.Rounded.FilterAltOff"
+                           Size="Size.Small"
+                           title="حذف فیلتر و مرتب‌سازی"
+                           OnClick="ResetView" />
+        }
+    </div>
+
+    @if (Rows.Count == 0)
+    {
+        <div class="feature-table__state">هیچ عارضه‌ای با این فیلتر مطابقت ندارد.</div>
+    }
+    else
+    {
+        <div class="feature-table__scroll">
+            <table class="feature-table__grid">
+                <thead>
+                    <tr>
+                        <th class="feature-table__index">#</th>
+                        @foreach (var column in Tab.Columns)
+                        {
+                            <th class="feature-table__sortable"
+                                title="@column.Name"
+                                @onclick="@(() => ToggleSort(column.Name))">
+                                <span class="feature-table__header">
+                                    @column.Header
+                                    @if (Tab.SortColumn == column.Name)
+                                    {
+                                        <MudIcon Icon="@(Tab.SortDescending ? Icons.Material.Rounded.ArrowDownward : Icons.Material.Rounded.ArrowUpward)"
+                                                 Size="Size.Small" />
+                                    }
+                                </span>
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @* Virtualized because a layer is thousands of features and WebAssembly renders on
+                       the one UI thread: without this, opening a table freezes the tab for as long as
+                       it takes to build every row. SpacerElement="tr" keeps the padding elements legal
+                       inside a tbody — the default div would be dropped by the HTML parser and the
+                       scroll height would collapse. *@
+                    <Virtualize Items="Rows" ItemSize="RowHeightPixels" SpacerElement="tr" TItem="FeatureRow">
+                        <ItemContent Context="row">
+                            <tr class="feature-table__row @(ReferenceEquals(row.Feature, SelectedFeature) ? "feature-table__row--selected" : null)"
+                                @onclick="@(() => FeatureSelected.InvokeAsync(row.Feature))"
+                                @ondblclick="@(() => FeatureActivated.InvokeAsync(row.Feature))">
+                                <td class="feature-table__index">@ToPersianDigits(row.Number)</td>
+                                @foreach (var column in Tab.Columns)
+                                {
+                                    <td title="@ValueOf(row.Feature, column)">@ValueOf(row.Feature, column)</td>
+                                }
+                            </tr>
+                        </ItemContent>
+                    </Virtualize>
+                </tbody>
+            </table>
+        </div>
+    }
+}
+
+@code {
+    /// <summary>Must match the CSS row height, or Virtualize mis-sizes its scroll area.</summary>
+    private const float RowHeightPixels = 34;
+
+    /// <summary>Joins a row's column values for searching. A newline rather than a space, so a
+    /// filter cannot accidentally match text spanning two adjacent columns.</summary>
+    private const char ColumnSeparator = '\n';
+
+    [Parameter, EditorRequired]
+    public FeatureTableTab Tab { get; set; } = default!;
+
+    /// <summary>Highlighted row, kept in step with whatever the map has selected.</summary>
+    [Parameter]
+    public Feature<Point>? SelectedFeature { get; set; }
+
+    /// <summary>Single click — select without moving the map.</summary>
+    [Parameter]
+    public EventCallback<Feature<Point>> FeatureSelected { get; set; }
+
+    /// <summary>Double click — select and frame it, matching the map's own double-click-to-zoom.</summary>
+    [Parameter]
+    public EventCallback<Feature<Point>> FeatureActivated { get; set; }
+
+    /// <summary>
+    /// SearchText is every column's value, digit-normalised and lower-cased, joined once when the
+    /// row is built. Filtering then costs one Contains per row instead of re-formatting every cell
+    /// of every row on each keystroke.
+    /// </summary>
+    private sealed record FeatureRow(int Number, Feature<Point> Feature, string SearchText);
+
+    /// <summary>Every row of the layer, in service order — the set filtering draws from.</summary>
+    private List<FeatureRow> _allRows = [];
+
+    /// <summary>What is actually shown: filtered, sorted, renumbered.</summary>
+    private List<FeatureRow> Rows { get; set; } = [];
+
+    private FeatureSet<Point>? _rowsBuiltFrom;
+    private string? _viewFilter;
+    private string? _viewSortColumn;
+    private bool _viewSortDescending;
+
+    protected override void OnParametersSet() => SyncView();
+
+    /// <summary>
+    /// Brings <see cref="Rows"/> back in line with the tab's features, filter and sort.
+    ///
+    /// <para>Called from OnParametersSet AND from the handlers below. OnParametersSet alone is not
+    /// enough: it only runs when the PARENT re-renders, and editing the filter or clicking a header
+    /// changes state this component owns, so the view would never be rebuilt.</para>
+    /// </summary>
+    private void SyncView()
+    {
+        // Rebuilt only when something it depends on actually changed — this runs on every parent
+        // render, including a selection change, and re-sorting thousands of rows there would undo
+        // the point of virtualizing them.
+        var featuresChanged = !ReferenceEquals(Tab.Features, _rowsBuiltFrom);
+
+        if (featuresChanged)
+        {
+            _rowsBuiltFrom = Tab.Features;
+            _allRows = BuildAllRows(Tab.Features, Tab.Columns);
+        }
+
+        var viewChanged = _viewFilter != Tab.Filter
+                          || _viewSortColumn != Tab.SortColumn
+                          || _viewSortDescending != Tab.SortDescending;
+
+        if (!featuresChanged && !viewChanged)
+            return;
+
+        _viewFilter = Tab.Filter;
+        _viewSortColumn = Tab.SortColumn;
+        _viewSortDescending = Tab.SortDescending;
+
+        Rows = BuildView();
+    }
+
+    private void ApplyFilter(string? filter)
+    {
+        Tab.Filter = filter;
+
+        SyncView();
+    }
+
+    private void ToggleSort(string columnName)
+    {
+        Tab.ToggleSort(columnName);
+
+        SyncView();
+    }
+
+    private void ResetView()
+    {
+        Tab.Filter = null;
+        Tab.SortColumn = null;
+        Tab.SortDescending = false;
+
+        SyncView();
+    }
+
+    private static List<FeatureRow> BuildAllRows(FeatureSet<Point>? featureSet, IReadOnlyList<FeatureTableColumn> columns)
+    {
+        if (featureSet is null)
+            return [];
+
+        var rows = new List<FeatureRow>(featureSet.Features.Count);
+        var builder = new System.Text.StringBuilder();
+
+        for (var i = 0; i < featureSet.Features.Count; i++)
+        {
+            var feature = featureSet.Features[i];
+
+            builder.Clear();
+
+            foreach (var column in columns)
+            {
+                if (feature.Attributes is not null && feature.Attributes.TryGetValue(column.Name, out var value) && value is not null)
+                {
+                    builder.Append(RawText(value));
+
+                    // Separator so a filter cannot match across a column boundary.
+                    builder.Append(ColumnSeparator);
+                }
+            }
+
+            rows.Add(new FeatureRow(i + 1, feature, NormalizeForSearch(builder.ToString())));
+        }
+
+        return rows;
+    }
+
+    private List<FeatureRow> BuildView()
+    {
+        IEnumerable<FeatureRow> view = _allRows;
+
+        if (!string.IsNullOrWhiteSpace(Tab.Filter))
+        {
+            // Normalised the same way the row text was, so a query typed in Persian digits matches
+            // values stored in Latin ones and vice versa.
+            var needle = NormalizeForSearch(Tab.Filter.Trim());
+
+            view = view.Where(row => row.SearchText.Contains(needle, StringComparison.Ordinal));
+        }
+
+        if (Tab.SortColumn is { } sortColumn)
+        {
+            var comparer = Comparer<FeatureRow>.Create((left, right) =>
+                CompareValues(ValueFor(left.Feature, sortColumn), ValueFor(right.Feature, sortColumn)));
+
+            // OrderBy is a stable sort, so rows equal on the sort column keep their service order
+            // rather than shuffling on every re-sort.
+            view = Tab.SortDescending
+                ? view.OrderByDescending(row => row, comparer)
+                : view.OrderBy(row => row, comparer);
+        }
+
+        // Renumbered to the position on screen: with a filter applied, the original indices would
+        // read as an arbitrary jumble of gaps.
+        return view.Select((row, index) => row with { Number = index + 1 }).ToList();
+    }
+
+    private static object? ValueFor(Feature<Point> feature, string columnName) =>
+        feature.Attributes is not null && feature.Attributes.TryGetValue(columnName, out var value) ? value : null;
+
+    /// <summary>
+    /// Nulls sort first, like an empty cell should. Same-typed comparables use their own ordering —
+    /// which is what keeps numbers numeric rather than sorting 10 before 9 — and anything mixed
+    /// falls back to text so the comparison at least stays consistent.
+    /// </summary>
+    private static int CompareValues(object? left, object? right)
+    {
+        if (left is null)
+            return right is null ? 0 : -1;
+
+        if (right is null)
+            return 1;
+
+        if (left.GetType() == right.GetType() && left is IComparable comparable)
+            return comparable.CompareTo(right);
+
+        return string.Compare(RawText(left), RawText(right), StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string RawText(object value) =>
+        value is IFormattable formattable
+            ? formattable.ToString(null, System.Globalization.CultureInfo.InvariantCulture)
+            : value.ToString() ?? string.Empty;
+
+    /// <summary>Lower-cases and folds Persian/Arabic-Indic digits to ASCII, so search is agnostic
+    /// to which digit form either the data or the query happens to use.</summary>
+    private static string NormalizeForSearch(string value)
+    {
+        Span<char> buffer = value.Length <= 512 ? stackalloc char[value.Length] : new char[value.Length];
+
+        for (var i = 0; i < value.Length; i++)
+        {
+            var c = value[i];
+
+            buffer[i] = c switch
+            {
+                >= '۰' and <= '۹' => (char)(c - '۰' + '0'), // Persian
+                >= '٠' and <= '٩' => (char)(c - '٠' + '0'), // Arabic-Indic
+                _ => char.ToLowerInvariant(c),
+            };
+        }
+
+        return new string(buffer);
+    }
+
+    private static string ValueOf(Feature<Point> feature, FeatureTableColumn column)
+    {
+        var value = ValueFor(feature, column.Name);
+
+        return value switch
+        {
+            null => "—",
+            DateTime date => ToPersianDigits(date.ToString("yyyy/MM/dd", System.Globalization.CultureInfo.InvariantCulture)),
+            IFormattable formattable => ToPersianDigits(formattable.ToString(null, System.Globalization.CultureInfo.InvariantCulture)),
+            _ => ToPersianDigits(value.ToString() ?? string.Empty),
+        };
+    }
+
+    private static string ToPersianDigits(int value) =>
+        ToPersianDigits(value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+    private static string ToPersianDigits(string value)
+    {
+        Span<char> buffer = value.Length <= 512 ? stackalloc char[value.Length] : new char[value.Length];
+
+        for (var i = 0; i < value.Length; i++)
+        {
+            buffer[i] = value[i] is >= '0' and <= '9'
+                ? (char)(value[i] - '0' + '۰')
+                : value[i];
+        }
+
+        return new string(buffer);
+    }
+}

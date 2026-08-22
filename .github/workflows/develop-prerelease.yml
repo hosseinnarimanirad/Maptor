@@ -10,7 +10,7 @@ concurrency:
 
 env:
   DOTNET_VERSION: '8.0.x'
-  PROJECT_PREFIXES: 'IRI.Maptor.Sta IRI.Maptor.Ket IRI.Maptor.Jab'
+  PROJECT_PREFIXES: 'IRI.Maptor.Core IRI.Maptor.Infrastructure IRI.Maptor.Presentation'
   NUGET_SOURCE: 'https://api.nuget.org/v3/index.json'
   NOWARN_CODES: 'CS1591;CS1573;CS0618;NU5104;CS8600;CS0414;CS8601;CS8603'
 

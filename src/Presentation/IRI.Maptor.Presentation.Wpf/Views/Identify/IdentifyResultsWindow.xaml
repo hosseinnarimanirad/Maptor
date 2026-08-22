@@ -1,0 +1,38 @@
+<mahApp:MetroWindow x:Class="IRI.Maptor.Presentation.Wpf.Controls.Identify.IdentifyResultsWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
+    xmlns:dialogs="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls.Dialogs"
+    xmlns:identify="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls.Identify"
+
+    Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Localized}"
+    Title="{Binding [identify_title], Source={StaticResource Localization}}"
+    Width="760" Height="520" MinWidth="560" MinHeight="380"
+    SizeToContent="Manual" ResizeMode="CanResizeWithGrip"
+    ShowInTaskbar="False" ShowMinButton="False" ShowMaxRestoreButton="True"
+    GlowBrush="{DynamicResource MahApps.Brushes.Highlight}"
+    WindowStartupLocation="CenterOwner">
+
+    <!--Modeless, single-instance host for IdentifyResultsView. Deliberately NOT on
+        MetroWindow.Dialog: that style pins MaxWidth 550 + SizeToContent, which is wrong for a
+        resizable results window that stays open beside the map.-->
+
+    <mahApp:MetroWindow.Resources>
+        <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+    </mahApp:MetroWindow.Resources>
+
+    <Grid Margin="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <identify:IdentifyResultsView x:Name="resultsView" Grid.Row="0"/>
+
+        <!--read-only view, so Close is the only action-->
+        <dialogs:DialogFooterView Grid.Row="1" ShowSecondary="False"
+                                  PrimaryText="{Binding [dialog_common_close], Source={StaticResource Localization}}"
+                                  PrimaryIconKind="Close"/>
+    </Grid>
+</mahApp:MetroWindow>

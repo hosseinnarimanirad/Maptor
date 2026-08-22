@@ -1,0 +1,111 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Common.Metrics.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+
+    <!--Tabs are a segmented control, not a filing-cabinet strip: every header is a pill inside one
+        rounded track (see Controls.TabControl.xaml) and the selection is carried by an accent fill.
+
+        This replaces the MahApps TabItem template rather than restyling it. The stock template's
+        only state channel is BorderThickness, which is why the previous style had to fake an
+        underline with a 4px bottom border and could not round its hover fill.
+
+        Because the template is ours, the header uses the TabItem's own FontSize/FontFamily/
+        Foreground rather than MahApps' HeaderedControlHelper attached properties.-->
+    <ControlTemplate x:Key="IRI.Maptor.Styles.TabItem.Template" TargetType="{x:Type TabItem}">
+        <Border x:Name="pill"
+                Background="{TemplateBinding Background}"
+                CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}"
+                Margin="1,0" SnapsToDevicePixels="True">
+            <ContentPresenter ContentSource="Header"
+                              Margin="{TemplateBinding Padding}"
+                              HorizontalAlignment="Center" VerticalAlignment="Center"
+                              RecognizesAccessKey="True"
+                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                <!--A header's text must follow the pill's Foreground, or it disappears against the
+                    accent fill when selected. Inheritance is not enough: views like SketchBarView
+                    declare an implicit TextBlock style for the whole panel, and a style setter
+                    outranks an inherited value. Declaring the implicit style here — closer to the
+                    generated TextBlock than any view-level one — puts it back in front. Headers
+                    that set Foreground themselves still win, being a local value.-->
+                <ContentPresenter.Resources>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Foreground"
+                                Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabItem}}, Path=Foreground}"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                    </Style>
+                </ContentPresenter.Resources>
+            </ContentPresenter>
+        </Border>
+    </ControlTemplate>
+
+    <!--keyboard focus only; pointer selection is already obvious from the fill-->
+    <Style x:Key="IRI.Maptor.Styles.TabItem.FocusVisual">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle Margin="2" RadiusX="6" RadiusY="6"
+                               Stroke="{DynamicResource MahApps.Brushes.Highlight}"
+                               StrokeThickness="1" StrokeDashArray="2 2" SnapsToDevicePixels="True"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.TabItem" TargetType="{x:Type TabItem}">
+        <Setter Property="Template" Value="{StaticResource IRI.Maptor.Styles.TabItem.Template}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <!--horizontal padding carries the pill's presence; vertical is kept tight so a tab strip
+            costs as little height as possible above the content it is labelling-->
+        <Setter Property="Padding" Value="12,3"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="FocusVisualStyle" Value="{StaticResource IRI.Maptor.Styles.TabItem.FocusVisual}"/>
+
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Source={StaticResource Localization}, Path=IsPersian}" Value="True">
+                <Setter Property="FontFamily" Value="{DynamicResource iranSans}"/>
+            </DataTrigger>
+
+            <!--lighter than the track, so an unselected pill lifts off it on hover-->
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}"/>
+            </Trigger>
+
+            <!--after hover, so a selected pill keeps its accent fill while the pointer is on it.
+                Colour alone carries the selection: bolding the header, as this style used to do,
+                changes its measured width and re-flows the whole track on every click.-->
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+            </Trigger>
+
+            <!--last, so it wins over the states above. A dedicated muted colour rather than
+                Opacity: fading the whole pill washes out its fill too and reads as a rendering
+                fault instead of a deliberate "not yet" state. ShowOnDisabled lets the call site
+                explain why via ToolTip.-->
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Muted}"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Cursor" Value="Arrow"/>
+                <Setter Property="ToolTipService.ShowOnDisabled" Value="True"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--dialogs and forms: same pill, one step up in size-->
+    <Style x:Key="IRI.Maptor.Styles.TabItem.Form"
+           TargetType="{x:Type TabItem}"
+           BasedOn="{StaticResource IRI.Maptor.Styles.TabItem}">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Padding" Value="14,4"/>
+    </Style>
+
+</ResourceDictionary>

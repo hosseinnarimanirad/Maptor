@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <IsPackable>false</IsPackable>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!--<ItemGroup>
+    <Reference Include="Microsoft.SqlServer.Types">
+      <HintPath>..\..\deploy\MicrosoftSqlServerTypes\v14\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
+  </ItemGroup>-->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SqlServer.Types" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Native SQLite provider so MBTiles/SQLite tests can open a connection in the test host -->
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" />
+    <PackageReference Include="System.Data.OleDb" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The ruling-span calculator lives in the Saba client (the analysis is client-side
+         by design) and is pure, UI-free arithmetic, so it is unit-tested from here. -->
+    <ProjectReference Include="..\..\src\Presentation\IRI.Maptor.Presentation.Wpf\IRI.Maptor.Presentation.Wpf.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure\IRI.Maptor.Infrastructure.EfCore\IRI.Maptor.Infrastructure.EfCore.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure\IRI.Maptor.Infrastructure.Versioning\IRI.Maptor.Infrastructure.Versioning.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure\IRI.Maptor.Infrastructure.PersonalGdb\IRI.Maptor.Infrastructure.PersonalGdb.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure\IRI.Maptor.Infrastructure.SqlServerSpatialExtension\IRI.Maptor.Infrastructure.SqlServerSpatialExtension.csproj" />
+    <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.Common\IRI.Maptor.Core.Common.csproj" />
+    <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.Graph\IRI.Maptor.Core.Graph.csproj" />
+    <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.MachineLearning\IRI.Maptor.Core.MachineLearning.csproj" />
+    <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.Ogc\IRI.Maptor.Core.Ogc.csproj" />
+    <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.ShapefileFormat\IRI.Maptor.Core.ShapefileFormat.csproj" />
+    <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.Versioning\IRI.Maptor.Core.Versioning.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\" />
+  </ItemGroup>
+
+</Project>

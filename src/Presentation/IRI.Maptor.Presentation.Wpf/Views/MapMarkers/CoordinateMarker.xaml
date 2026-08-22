@@ -1,0 +1,88 @@
+<maptor:MapMarker x:Class="IRI.Maptor.Presentation.Wpf.Controls.MapMarkers.CoordinateMarker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  
+             xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls"             
+             Background="Transparent" FlowDirection="LeftToRight"
+             x:Name="root" Width="95" Height="40" MinWidth="40" 
+             MouseDoubleClick="changeCoordinate">
+    <maptor:MapMarker.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Animations.xaml"/>
+                <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Colors.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </maptor:MapMarker.Resources>
+    <maptor:MapMarker.Style>
+        <Style TargetType="maptor:MapMarker">
+            <!--<Style.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Animations.xaml"/>
+                        <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Colors.xaml"/>
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+            </Style.Resources>-->
+            <Setter Property="Canvas.ZIndex" Value="1000000"/>  
+        </Style>
+    </maptor:MapMarker.Style>
+    <maptor:MapMarker.RenderTransform>
+        <TransformGroup>
+            <ScaleTransform />
+        </TransformGroup>
+    </maptor:MapMarker.RenderTransform>
+    <maptor:MapMarker.Triggers>
+        <EventTrigger RoutedEvent="UIElement.MouseEnter">
+            <BeginStoryboard >
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="shadow" Storyboard.TargetProperty="Opacity" To="1" Duration="00:00:00.1"/>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="UIElement.MouseLeave" >
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="shadow" Storyboard.TargetProperty="Opacity" To="0" Duration="00:00:00.1"/>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </maptor:MapMarker.Triggers>
+    <Grid x:Name="Document" Background="#CCFFFFFF" ToolTip="{Binding CurrentCoordinateDisplayMode, RelativeSource={RelativeSource AncestorType=maptor:MapMarker}}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions> 
+        <Border Grid.RowSpan="2" CornerRadius="0" Width="5"  Height="Auto" Background="{DynamicResource MahApps.Brushes.Highlight}">
+            <Border.Effect>
+                <DropShadowEffect x:Name="shadow" BlurRadius="4" ShadowDepth="0"  RenderingBias="Performance" Opacity="0" />
+            </Border.Effect>
+        </Border>
+        <TextBlock Grid.Column="1" Grid.Row="0"  TextAlignment="Right" FontSize="11" Margin="1" Height="Auto"                       
+                    HorizontalAlignment="Right" VerticalAlignment="Center"  
+                    Foreground="{DynamicResource MahApps.Brushes.Highlight}" TextWrapping="Wrap">
+            <TextBlock.Text>
+                <MultiBinding Converter="{StaticResource coordinateDisplayConverter}" ConverterParameter="X">
+                    <Binding Path="WebMercatorLocation" RelativeSource="{RelativeSource AncestorType=maptor:MapMarker}"/>
+                    <Binding Path="CurrentCoordinateDisplayMode" RelativeSource="{RelativeSource AncestorType=maptor:MapMarker}"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+
+        <TextBlock Grid.Column="1" Grid.Row="1"  TextAlignment="Right" FontSize="11" Margin="1" Height="Auto"                       
+                    HorizontalAlignment="Right" VerticalAlignment="Center"                   
+                    Foreground="{DynamicResource MahApps.Brushes.Highlight}" TextWrapping="Wrap">
+            <TextBlock.Text>
+                <MultiBinding Converter="{StaticResource coordinateDisplayConverter}" ConverterParameter="Y">
+                    <Binding Path="WebMercatorLocation" RelativeSource="{RelativeSource AncestorType=maptor:MapMarker}"/>
+                    <Binding Path="CurrentCoordinateDisplayMode" RelativeSource="{RelativeSource AncestorType=maptor:MapMarker}"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+ 
+    </Grid>
+</maptor:MapMarker>

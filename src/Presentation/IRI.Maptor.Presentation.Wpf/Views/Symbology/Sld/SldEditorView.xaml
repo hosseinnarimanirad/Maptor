@@ -1,0 +1,375 @@
+<UserControl x:Class="IRI.Maptor.Presentation.Wpf.Controls.Symbology.Sld.SldEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls.Symbology.Sld"
+             xmlns:converters="clr-namespace:IRI.Maptor.Presentation.Wpf.Converters"
+             mc:Ignorable="d"
+             d:DesignHeight="700" d:DesignWidth="900">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <!--Controls.All is already merged at App level by every host app, so these keys were
+                always reachable; the merge here just keeps the view usable on its own. An earlier
+                comment claimed no shared styles were in scope, which was wrong and is why this
+                subtree hand-rolled its chrome for so long.-->
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource IRI.Maptor.Styles.TabItem}"/>
+
+        <converters:NotNullToBoolConverter x:Key="NotNullToBool"/>
+
+        <!-- DataTemplate for PointSymbolizer -->
+        <DataTemplate x:Key="PointSymbolizerTemplate">
+            <maptor:PointSymbolizerView DataContext="{Binding}"/>
+        </DataTemplate>
+        
+        <!-- DataTemplate for LineSymbolizer -->
+        <DataTemplate x:Key="LineSymbolizerTemplate">
+            <maptor:LineSymbolizerView DataContext="{Binding}"/>
+        </DataTemplate>
+        
+        <!-- DataTemplate for PolygonSymbolizer -->
+        <DataTemplate x:Key="PolygonSymbolizerTemplate">
+            <maptor:PolygonSymbolizerView DataContext="{Binding}"/>
+        </DataTemplate>
+        
+        <!-- DataTemplate for TextSymbolizer -->
+        <DataTemplate x:Key="TextSymbolizerTemplate">
+            <maptor:TextSymbolizerView DataContext="{Binding}"/>
+        </DataTemplate>
+
+        <!-- DataTemplate for RasterSymbolizer -->
+        <DataTemplate x:Key="RasterSymbolizerTemplate">
+            <maptor:RasterSymbolizerView DataContext="{Binding}"/>
+        </DataTemplate>
+
+        <!-- Symbolizer Type Selector -->
+        <maptor:SymbolizerDataTemplateSelector x:Key="SymbolizerTemplateSelector"
+            PointTemplate="{StaticResource PointSymbolizerTemplate}"
+            LineTemplate="{StaticResource LineSymbolizerTemplate}"
+            PolygonTemplate="{StaticResource PolygonSymbolizerTemplate}"
+            TextTemplate="{StaticResource TextSymbolizerTemplate}"
+            RasterTemplate="{StaticResource RasterSymbolizerTemplate}"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header with Style Information -->
+        <!--GroupBox throughout this view has become Border.Section + TextBlock.CardTitle: the
+            stock GroupBox draws its own chrome, which is the one thing in the editor that did
+            not match the rest of the application.-->
+        <Border Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Section}"
+                Margin="{StaticResource IRI.Maptor.Styles.Thickness.ViewContent}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardTitle}"
+                           Text="{Binding [sldEditor_common_styleInformation], Source={StaticResource Localization}}"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                               Text="{Binding [sldEditor_common_layerName], Source={StaticResource Localization}}"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
+                             Text="{Binding LayerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                               Text="{Binding [sldEditor_common_styleName], Source={StaticResource Localization}}"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
+                             Text="{Binding StyleName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                               Text="{Binding [sldEditor_common_styleTitle], Source={StaticResource Localization}}"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
+                             Text="{Binding StyleTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Top"
+                               Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                               Text="{Binding [sldEditor_common_abstract], Source={StaticResource Localization}}"/>
+                    <!--TextBox.Normal fixes Height at 32 for single-line fields; a multi-line box
+                        has to set its own Height and top-align its content-->
+                    <TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
+                             Height="50" VerticalContentAlignment="Top"
+                             TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
+                             Text="{Binding StyleAbstract, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <!--notice: the loaded document holds styles/layers beyond the one edited
+                        here; they round-trip unchanged (SldEditorViewModel.HasPreservedContent)-->
+                    <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                               Style="{StaticResource IRI.Maptor.Styles.TextBlock.Note}"
+                               Text="{Binding [sldEditor_common_preservedContentNotice], Source={StaticResource Localization}}"
+                               Visibility="{Binding HasPreservedContent, Converter={StaticResource boolToVisibilityConverter}}"/>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content with Rules and Symbolizers -->
+        <Grid Grid.Row="1" Margin="{StaticResource IRI.Maptor.Styles.Thickness.ViewContent}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250"/>
+                <!--Auto: the splitter's own style carries its grab width-->
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Rules List -->
+            <Border Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.Border.Section}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardTitle}"
+                               Text="{Binding [sldEditor_common_rules], Source={StaticResource Localization}}"/>
+
+                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+                        <Button Command="{Binding AddRuleCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.IconSquare}"
+                                ToolTip="{Binding [sldEditor_common_addRule], Source={StaticResource Localization}}">
+                            <iconPacks:PackIconMaterial Kind="Plus" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                        </Button>
+                        <Button Command="{Binding RemoveRuleCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.IconSquare}"
+                                ToolTip="{Binding [sldEditor_common_removeRule], Source={StaticResource Localization}}">
+                            <iconPacks:PackIconMaterial Kind="Delete" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                        </Button>
+                        <Button Command="{Binding MoveRuleUpCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.IconSquare}"
+                                ToolTip="{Binding [sldEditor_common_moveUp], Source={StaticResource Localization}}">
+                            <iconPacks:PackIconMaterial Kind="ChevronUp" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                        </Button>
+                        <Button Command="{Binding MoveRuleDownCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.IconSquare}"
+                                ToolTip="{Binding [sldEditor_common_moveDown], Source={StaticResource Localization}}">
+                            <iconPacks:PackIconMaterial Kind="ChevronDown" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                        </Button>
+                    </StackPanel>
+
+                    <ListBox Grid.Row="2" Style="{StaticResource IRI.Maptor.Styles.ListBox.Plain}"
+                             ItemsSource="{Binding Rules}"
+                             SelectedItem="{Binding SelectedRule, Mode=TwoWay}"
+                             Margin="0,4,0,0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel MinHeight="28">
+                                    <!--live swatch preview (regenerates as the rule's symbolizers change)-->
+                                    <Border DockPanel.Dock="Left" Width="36" Height="26" Margin="0,1,6,1"
+                                            BorderBrush="{DynamicResource MahApps.Brushes.Gray8}" BorderThickness="1"
+                                            CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"
+                                            VerticalAlignment="Center" FlowDirection="LeftToRight">
+                                        <Image Source="{Binding SwatchImage}" Width="32" Height="24"
+                                               Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                               RenderOptions.BitmapScalingMode="HighQuality"/>
+                                    </Border>
+                                    <TextBlock Text="{Binding Name}" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldValue}"/>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+
+            <GridSplitter Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.GridSplitter.Vertical}"/>
+
+            <!-- Rule Details -->
+            <TabControl Grid.Column="2"
+                        x:Name="RuleTabControl"
+                        Style="{StaticResource IRI.Maptor.Styles.TabControl}"
+                        SelectionChanged="OnTabChanged"
+                        IsEnabled="{Binding SelectedRule, Converter={StaticResource NotNullToBool}}">
+                
+                <!-- Rule Properties Tab -->
+                <TabItem Header="{Binding [sldEditor_common_ruleProperties], Source={StaticResource Localization}}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="{StaticResource IRI.Maptor.Styles.Thickness.ViewContent}">
+                            <Border Style="{StaticResource IRI.Maptor.Styles.Border.Section}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardTitle}"
+                                               Text="{Binding [sldEditor_common_general], Source={StaticResource Localization}}"/>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                                                   Text="{Binding [sldEditor_common_name], Source={StaticResource Localization}}"/>
+                                        <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
+                                                 Text="{Binding SelectedRule.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                                                   Text="{Binding [sldEditor_common_title], Source={StaticResource Localization}}"/>
+                                        <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
+                                                 Text="{Binding SelectedRule.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Top"
+                                                   Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                                                   Text="{Binding [sldEditor_common_abstract], Source={StaticResource Localization}}"/>
+                                        <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
+                                                 Height="50" VerticalContentAlignment="Top"
+                                                 TextWrapping="Wrap" AcceptsReturn="True"
+                                                 Text="{Binding SelectedRule.Abstract, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource IRI.Maptor.Styles.Border.Section}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardTitle}"
+                                               Text="{Binding [sldEditor_common_scaleRange], Source={StaticResource Localization}}"/>
+                                    <maptor:ScaleRangeEditorView DataContext="{Binding SelectedRule}"/>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource IRI.Maptor.Styles.Border.Section}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardTitle}"
+                                               Text="{Binding [sldEditor_common_filter], Source={StaticResource Localization}}"/>
+                                    <maptor:SimpleFilterEditorView DataContext="{Binding SelectedRule}"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- Symbolizers Tab -->
+                <TabItem Header="{Binding [sldEditor_common_symbolizers], Source={StaticResource Localization}}">
+                    <Grid Margin="{StaticResource IRI.Maptor.Styles.Thickness.ViewContent}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="200"/>
+                            <!--Auto: the splitter's own style carries its grab height-->
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Symbolizer Toolbar -->
+                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                            <Button Command="{Binding SelectedRule.AddPointSymbolizerCommand}"
+                                    Style="{StaticResource IRI.Maptor.Styles.Button.IconSquare}"
+                                    ToolTip="{Binding [sldEditor_common_addPointSymbolizer], Source={StaticResource Localization}}">
+                                <iconPacks:PackIconMaterial Kind="VectorPointPlus" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                            </Button>
+                            <Button Command="{Binding SelectedRule.AddLineSymbolizerCommand}"
+                                    Style="{StaticResource IRI.Maptor.Styles.Button.IconSquare}"
+                                    ToolTip="{Binding [sldEditor_common_addLineSymbolizer], Source={StaticResource Localization}}">
+                                <iconPacks:PackIconMaterial Kind="VectorPolylinePlus" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                            </Button>
+                            <Button Command="{Binding SelectedRule.AddPolygonSymbolizerCommand}"
+                                    Style="{StaticResource IRI.Maptor.Styles.Button.IconSquare}"
+                                    ToolTip="{Binding [sldEditor_common_addPolygonSymbolizer], Source={StaticResource Localization}}">
+                                <iconPacks:PackIconMaterial Kind="ShapePolygonPlus" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                            </Button>
+                            <Button Command="{Binding SelectedRule.AddTextSymbolizerCommand}"
+                                    Style="{StaticResource IRI.Maptor.Styles.Button.IconSquare}"
+                                    ToolTip="{Binding [sldEditor_common_addTextSymbolizer], Source={StaticResource Localization}}">
+                                <iconPacks:PackIconMaterial Kind="FormatAnnotationPlus" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                            </Button>
+                            <!--hidden for vector layers: the runtime renderer skips raster
+                                symbolizers, so authoring one there would silently do nothing-->
+                            <Button Command="{Binding SelectedRule.AddRasterSymbolizerCommand}"
+                                    Style="{StaticResource IRI.Maptor.Styles.Button.IconSquare}"
+                                    Visibility="{Binding CanAddRasterSymbolizer, Converter={StaticResource boolToVisibilityConverter}}"
+                                    ToolTip="{Binding [sldEditor_common_addRasterSymbolizer], Source={StaticResource Localization}}">
+                                <iconPacks:PackIconMaterial Kind="Image" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                            </Button>
+                            <Separator Style="{StaticResource IRI.Maptor.Styles.Separator.Vertical}"/>
+                            <Button Command="{Binding SelectedRule.RemoveSymbolizerCommand}"
+                                    Style="{StaticResource IRI.Maptor.Styles.Button.IconSquare}"
+                                    ToolTip="{Binding [sldEditor_common_removeSymbolizer], Source={StaticResource Localization}}">
+                                <iconPacks:PackIconMaterial Kind="Delete" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                            </Button>
+                        </StackPanel>
+
+                        <!-- Symbolizers List -->
+                        <ListBox Grid.Row="1" Style="{StaticResource IRI.Maptor.Styles.ListBox.Plain}"
+                                 ItemsSource="{Binding SelectedRule.Symbolizers}"
+                                 SelectedItem="{Binding SelectedRule.SelectedSymbolizer, Mode=TwoWay}"
+                                 DisplayMemberPath="SymbolizerType"
+                                 Margin="0,4"/>
+
+                        <GridSplitter Grid.Row="2" Style="{StaticResource IRI.Maptor.Styles.GridSplitter.Horizontal}"/>
+
+                        <!-- Symbolizer Editor -->
+                        <Border Grid.Row="3" Style="{StaticResource IRI.Maptor.Styles.Border.Section}" Margin="0,4,0,0">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardTitle}"
+                                           Text="{Binding [sldEditor_common_symbolizerProperties], Source={StaticResource Localization}}"/>
+                                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                    <ContentControl Content="{Binding SelectedRule.SelectedSymbolizer}"
+                                                  ContentTemplateSelector="{StaticResource SymbolizerTemplateSelector}"/>
+                                </ScrollViewer>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </TabItem>
+
+                <!-- XML Preview Tab -->
+                <TabItem x:Name="XmlPreviewTab" Header="{Binding [sldEditor_common_xmlPreview], Source={StaticResource Localization}}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <StackPanel Grid.Row="0" Orientation="Horizontal"
+                                    Margin="{StaticResource IRI.Maptor.Styles.Thickness.ViewContent}">
+                            <Button Content="{Binding [sldEditor_common_refreshPreview], Source={StaticResource Localization}}"
+                                    Style="{StaticResource IRI.Maptor.Styles.Button.Secondary}"
+                                    Command="{Binding RefreshPreviewCommand}" Width="120"/>
+                            <Button Content="{Binding [sldEditor_common_exportToFile], Source={StaticResource Localization}}"
+                                    Style="{StaticResource IRI.Maptor.Styles.Button.Secondary}"
+                                    Command="{Binding ExportSldCommand}" Width="120"/>
+                            <Button Content="{Binding [sldEditor_common_importFromFile], Source={StaticResource Localization}}"
+                                    Style="{StaticResource IRI.Maptor.Styles.Button.Secondary}"
+                                    Command="{Binding ImportSldCommand}" Width="120"/>
+                        </StackPanel>
+
+                        <!--XML is inherently LTR; without the explicit FlowDirection the RTL
+                            (Persian) window mirrors the markup into unreadable text.
+                            Height="Auto" overrides TextBox.Normal's fixed 32 so the box fills
+                            its row; Consolas stays because there is no monospace token yet.-->
+                        <TextBox Grid.Row="1"
+                                 Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
+                                 Height="Auto" VerticalContentAlignment="Top"
+                                 Margin="{StaticResource IRI.Maptor.Styles.Thickness.ViewContent}"
+                                 IsReadOnly="True"
+                                 TextWrapping="NoWrap"
+                                 FlowDirection="LeftToRight"
+                                 VerticalScrollBarVisibility="Auto"
+                                 HorizontalScrollBarVisibility="Auto"
+                                 FontFamily="Consolas"
+                                 Text="{Binding XmlPreview, Mode=OneWay}"/>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </Grid>
+</UserControl>
+

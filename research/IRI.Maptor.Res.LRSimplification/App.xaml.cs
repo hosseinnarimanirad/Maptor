@@ -1,5 +1,5 @@
-﻿using IRI.Maptor.Jab.Wpf.Localization;
-using IRI.Maptor.Jab.Core.Localization;
+﻿using IRI.Maptor.Presentation.Wpf.Localization;
+using IRI.Maptor.Presentation.Core.Localization;
 using System.Configuration;
 using System.Data;
 using System.Windows;

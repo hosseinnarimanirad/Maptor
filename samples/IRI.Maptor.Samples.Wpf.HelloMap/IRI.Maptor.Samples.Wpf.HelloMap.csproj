@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <RootNamespace>IRI.Maptor.Samples.Wpf.HelloMap</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Presentation\IRI.Maptor.Presentation.Wpf\IRI.Maptor.Presentation.Wpf.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- App.xaml merges the MahApps styles that the Maptor controls are built on -->
+    <PackageReference Include="MahApps.Metro" />
+  </ItemGroup>
+
+</Project>

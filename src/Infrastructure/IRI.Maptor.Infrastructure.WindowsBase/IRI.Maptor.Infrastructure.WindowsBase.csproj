@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageTags>Windows;hardware;geolocation;wifi;desktop</PackageTags>
+    <Description>Windows-specific services for desktop applications: hardware detection and machine fingerprinting, geolocation, and Wi-Fi network scanning.</Description>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Title>Maptor WindowsBase library</Title>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Common\IRI.Maptor.Core.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Management">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Management.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+
+</Project>
