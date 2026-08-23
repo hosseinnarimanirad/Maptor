@@ -8,6 +8,22 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Assets\GeoJsonSamples\networkblock.json" />
+    <None Remove="Assets\GeoJsonSamples\stations.json" />
+    <None Remove="Assets\PrjSamples\Clarke 1880 %28RGS%29.prj" />
+    <None Remove="Assets\PrjSamples\Cylindrical Equal Area %28world%29.prj" />
+    <None Remove="Assets\PrjSamples\d900.prj" />
+    <None Remove="Assets\PrjSamples\lccnioc.prj" />
+    <None Remove="Assets\PrjSamples\Mercator %28sphere%29.prj" />
+    <None Remove="Assets\PrjSamples\Mercator %28world%29.prj" />
+    <None Remove="Assets\PrjSamples\WGS 1984 UTM Zone 39N.prj" />
+    <None Remove="Assets\PrjSamples\WGS 1984 Web Mercator %28auxiliary sphere%29.prj" />
+    <None Remove="Assets\PrjSamples\WGS 1984 World Mercator.prj" />
+    <None Remove="Assets\PrjSamples\WGS 1984.prj" />
+    <None Remove="Assets\PrjSamples\World_Mercator.prj" />
+  </ItemGroup>
+
   <!--<ItemGroup>
     <Reference Include="Microsoft.SqlServer.Types">
       <HintPath>..\..\deploy\MicrosoftSqlServerTypes\v14\Microsoft.SqlServer.Types.dll</HintPath>
@@ -50,7 +66,118 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Assets\" />
+    <EmbeddedResource Include="Assets\PrjSamples\Clarke 1880 (RGS).prj" />
+    <EmbeddedResource Include="Assets\PrjSamples\Cylindrical Equal Area (world).prj" />
+    <EmbeddedResource Include="Assets\PrjSamples\d900.prj" />
+    <EmbeddedResource Include="Assets\PrjSamples\lccnioc.prj" />
+    <EmbeddedResource Include="Assets\PrjSamples\Mercator (sphere).prj" />
+    <EmbeddedResource Include="Assets\PrjSamples\Mercator (world).prj" />
+    <EmbeddedResource Include="Assets\PrjSamples\WGS 1984 UTM Zone 39N.prj" />
+    <EmbeddedResource Include="Assets\PrjSamples\WGS 1984 Web Mercator (auxiliary sphere).prj" />
+    <EmbeddedResource Include="Assets\PrjSamples\WGS 1984 World Mercator.prj" />
+    <EmbeddedResource Include="Assets\PrjSamples\WGS 1984.prj" />
+    <EmbeddedResource Include="Assets\PrjSamples\World_Mercator.prj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\GeoJsonSamples\networkblock.json" />
+    <EmbeddedResource Include="Assets\GeoJsonSamples\stations.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Assets\MbTilesSamples\countries_z0_x0_y0.mvt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\PersonalGdb\Test.mdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples2\buildings_oops.dbf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples2\buildings_oops.shp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples2\buildings_oops.shx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples2\mjrRoad.dbf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples2\mjrRoad.shp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples2\mjrRoad.shx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples2\regions.dbf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples2\regions.shp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples2\regions.shx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples2\Spot_Height_P.dbf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples2\Spot_Height_P.shp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples2\Spot_Height_P.shx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples\sampleMultiPolygon.cpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples\sampleMultiPolygon.dbf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples\sampleMultiPolygon.prj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples\sampleMultiPolygon.shp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples\sampleMultiPolygon.shx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples\sourceD900.dbf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples\sourceD900.prj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples\sourceD900.shp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples\sourceD900.shx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples\sourceD900C.dbf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples\sourceD900C.prj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples\sourceD900C.shp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples\sourceD900C.shx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples\targetWebMercator.dbf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples\targetWebMercator.prj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples\targetWebMercator.shp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ShapefileSamples\targetWebMercator.shx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

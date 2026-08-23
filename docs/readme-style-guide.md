@@ -254,7 +254,7 @@ Excluded (never touch): `src/Infrastructure/IRI.Maptor.Infrastructure.WindowsBas
 | `src/Core/IRI.Maptor.Core.SpatialReferenceSystem/MapProjections/README.md` | D (topic) |
 | `src/Core/IRI.Maptor.Core.SpatialReferenceSystem/Models/README.md` | D (topic) |
 | `src/Presentation/IRI.Maptor.Presentation.Wpf/Views/Symbology/Sld/README.md` | D (topic) |
-| `samples/IRI.Maptor.Tag.SampleCodes/Geodesy/README.md` | D (topic) |
+| `samples/IRI.Maptor.Samples.Core/Geodesy/README.md` | D (topic) |
 | `src/Core/IRI.Maptor.Core.Spatial/IO/CesiumTerrain/README.md` | D (format) |
 | `src/Core/IRI.Maptor.Core.Spatial/IO/Dxf/README.md` | D (format) |
 | `src/Core/IRI.Maptor.Core.Spatial/IO/Eps/README.md` | D (format) |
@@ -267,7 +267,6 @@ Excluded (never touch): `src/Infrastructure/IRI.Maptor.Infrastructure.WindowsBas
 | `src/Core/IRI.Maptor.Core.Spatial/IO/TopoJson/README.md` | D (format) |
 | `src/Core/IRI.Maptor.Core.Spatial/IO/VectorTiles/README.md` | D (format) |
 | `research/IRI.Maptor.Res.FastSimplification/README.md` | F |
-| `samples/IRI.Maptor.Tag.SampleWpfApp/README.md` | F |
 
 ## Checklist for new or edited READMEs
 

@@ -268,7 +268,11 @@ __pycache__/
 /scripts
 /CLAUDE.md
 /MaptorMobile.zip
-/tests/IRI.Maptor.Tests/Assets
+# Test sample data is deliberately untracked (12 MB of shapefiles, .mdb, .gpkg, .mbtiles, ...),
+# but the three C# sample-source files in this folder ARE compiled into the test project and must
+# be tracked, otherwise the solution does not build from a clean clone.
+/tests/IRI.Maptor.Tests/Assets/*
+!/tests/IRI.Maptor.Tests/Assets/*.cs
 
 # Secrets must never be committed. Connection strings, JWT signing keys and the integrity key belong
 # in user-secrets (dotnet user-secrets) or environment variables. The tracked appsettings.json files

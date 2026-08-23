@@ -53,8 +53,8 @@ await MapInitializationHelper.InitializeMapAsync(this.map, this, presenter);
 this.DataContext = presenter;
 ```
 
-See the sample application for a complete window with measurement, drawing, legends, and basemap
-selection: https://github.com/hosseinnarimanirad/Maptor/blob/master/samples/IRI.Maptor.Tag.SampleWpfApp/README.md
+See the WPF gallery for a window per feature - measurement, drawing, legends, markers, identify,
+localization: https://github.com/hosseinnarimanirad/Maptor/blob/master/samples/IRI.Maptor.Samples.Wpf.Gallery/README.md
 
 ### Bring the resources into your app
 

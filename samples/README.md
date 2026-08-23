@@ -10,7 +10,7 @@ from an issue, a blog post or a LinkedIn post — and read top to bottom in a fe
 |---|---|---|---|
 | [IRI.Maptor.Samples.Core](IRI.Maptor.Samples.Core/README.md) | .NET 8 console | A cookbook for the UI-free libraries: one file per sample, a runner that lists and executes them | `dotnet run --project samples/IRI.Maptor.Samples.Core -- <id>` |
 | [IRI.Maptor.Samples.Wpf.HelloMap](IRI.Maptor.Samples.Wpf.HelloMap/README.md) | WPF | The smallest complete map application: a `MapViewer`, a base map, a scale bar, a coordinate panel | `dotnet run --project samples/IRI.Maptor.Samples.Wpf.HelloMap` |
-| [IRI.Maptor.Samples.Wpf.Gallery](IRI.Maptor.Samples.Wpf.Gallery/README.md) | WPF | One window, one page per UI feature: legend, go to, identify, drawing, markers, localization, ... | `dotnet run --project samples/IRI.Maptor.Samples.Wpf.Gallery` |
+| [IRI.Maptor.Samples.Wpf.Gallery](IRI.Maptor.Samples.Wpf.Gallery/README.md) | WPF | One window, one page per UI feature: legend, go to, identify, drawing, markers, Delaunay/Voronoi, localization, ... | `dotnet run --project samples/IRI.Maptor.Samples.Wpf.Gallery` |
 | IRI.Maptor.SampleMauiApp | .NET MAUI | Mobile/desktop sample (separate track, not covered by this index) | — |
 
 Prerequisites: .NET 8 SDK; Windows for the WPF projects. Tiles come from the selected online
@@ -38,6 +38,7 @@ base-map provider, so the WPF samples need internet access to show a background 
 | [Drawing and drawing legend](IRI.Maptor.Samples.Wpf.Gallery/Samples/DrawingLegend/README.md) | Draw commands, `MapDrawingLegendView`, `SketchBarView` |
 | [Measurement](IRI.Maptor.Samples.Wpf.Gallery/Samples/Measurement/README.md) | `MeasureLengthCommand`, `MeasureAreaCommand` |
 | [Identify](IRI.Maptor.Samples.Wpf.Gallery/Samples/Identify/README.md) | `IdentifyModeCommand`, the Identify results window, overlapping layers |
+| [Delaunay and Voronoi](IRI.Maptor.Samples.Wpf.Gallery/Samples/DelaunayVoronoi/README.md) | `DelaunayTriangulation`, `VoronoiDiagram`, clipping unbounded cells, toggling layer visibility |
 | [Localization and right-to-left](IRI.Maptor.Samples.Wpf.Gallery/Samples/Localization/README.md) | `LanguageCombo`, `LocalizationManager` bindings, `FlowDirection` |
 
 ## Conventions

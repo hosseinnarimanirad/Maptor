@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using IRI.Maptor.Samples.Wpf.Gallery.Samples.AttributeTable;
 using IRI.Maptor.Samples.Wpf.Gallery.Samples.BasicMap;
+using IRI.Maptor.Samples.Wpf.Gallery.Samples.DelaunayVoronoi;
 using IRI.Maptor.Samples.Wpf.Gallery.Samples.DrawingLegend;
 using IRI.Maptor.Samples.Wpf.Gallery.Samples.GoTo;
 using IRI.Maptor.Samples.Wpf.Gallery.Samples.Identify;
@@ -50,6 +51,10 @@ public static class SampleCatalog
         new("Tools", "Identify",
             "Click a feature to inspect its attributes in the Identify results window.",
             "Identify", () => new IdentifySample()),
+
+        new("Analysis", "Delaunay and Voronoi",
+            "Scatter random points over Europe, then draw the Delaunay triangulation and the Voronoi diagram Maptor derives from them. Show either, or both.",
+            "DelaunayVoronoi", () => new DelaunayVoronoiSample()),
 
         new("UI", "Localization and right-to-left",
             "Switch the UI language at run time; Maptor controls and your own localized bindings follow, including right-to-left flow.",

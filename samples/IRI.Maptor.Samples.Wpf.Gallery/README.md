@@ -18,6 +18,7 @@ with a README that explains it and links to the source.
 | Drawing and drawing legend | [Samples/DrawingLegend](Samples/DrawingLegend/README.md) | Draw commands, `MapDrawingLegendView`, `SketchBarView` |
 | Measurement | [Samples/Measurement](Samples/Measurement/README.md) | `MeasureLengthCommand`, `MeasureAreaCommand` |
 | Identify | [Samples/Identify](Samples/Identify/README.md) | `IdentifyModeCommand`, Identify results window |
+| Delaunay and Voronoi | [Samples/DelaunayVoronoi](Samples/DelaunayVoronoi/README.md) | `DelaunayTriangulation`, `VoronoiDiagram`, clipping unbounded cells |
 | Localization and right-to-left | [Samples/Localization](Samples/Localization/README.md) | `LanguageCombo`, `LocalizationManager` bindings, `FlowDirection` |
 
 ## How a page is built
