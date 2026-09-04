@@ -1,4 +1,4 @@
-<mahApp:MetroWindow x:Class="IRI.Maptor.Presentation.Wpf.Controls.Dialogs.GeometryDetailsDialogView"
+﻿<mahApp:MetroWindow x:Class="IRI.Maptor.Presentation.Wpf.Controls.Dialogs.GeometryDetailsDialogView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
@@ -109,7 +109,7 @@
                             <TextBlock Style="{StaticResource GeometryStatValue}"
                                        Text="{Binding UtmZone, TargetNullValue='N/A'}"/>
                             <!-- the other zones this geometry crosses -->
-                            <TextBlock FontSize="11" Margin="0,1,0,0"
+                            <TextBlock FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Caption}" Margin="0,1,0,0"
                                        TextTrimming="CharacterEllipsis"
                                        Foreground="{DynamicResource MahApps.Brushes.Accent}"
                                        Visibility="{Binding SpansMultipleUtmZones, Converter={StaticResource boolToVisibilityConverter}}">
@@ -180,7 +180,7 @@
                                      VerticalScrollBarVisibility="Auto"
                                      HorizontalScrollBarVisibility="Disabled"
                                      Padding="8,6"
-                                     FontFamily="Consolas" FontSize="11"/>
+                                     FontFamily="Consolas" FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Caption}"/>
                         </Border>
                     </StackPanel>
                 </Expander>

@@ -1,4 +1,4 @@
-# IRI.Maptor.Samples.Wpf.Gallery
+﻿# IRI.Maptor.Samples.Wpf.Gallery
 
 One window, one page per `IRI.Maptor.Presentation.Wpf` feature. The navigation list on the left is built
 from `Shell/SampleCatalog.cs`; each page is a `UserControl` in its own folder under `Samples/`,
@@ -19,6 +19,7 @@ with a README that explains it and links to the source.
 | Measurement | [Samples/Measurement](Samples/Measurement/README.md) | `MeasureLengthCommand`, `MeasureAreaCommand` |
 | Identify | [Samples/Identify](Samples/Identify/README.md) | `IdentifyModeCommand`, Identify results window |
 | Delaunay and Voronoi | [Samples/DelaunayVoronoi](Samples/DelaunayVoronoi/README.md) | `DelaunayTriangulation`, `VoronoiDiagram`, clipping unbounded cells |
+| Theme and controls | [Samples/ThemeAndControls](Samples/ThemeAndControls/README.md) | Every design-system token over a live accent + light/dark switch; `ThemeHelper`, `FollowWindowsMode` |
 | Localization and right-to-left | [Samples/Localization](Samples/Localization/README.md) | `LanguageCombo`, `LocalizationManager` bindings, `FlowDirection` |
 
 ## How a page is built

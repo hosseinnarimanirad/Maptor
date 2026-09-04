@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--A dev tool, not a shipped artefact: nothing here is packed or referenced by any other
+      project, and it is deliberately NOT in IRI.Maptor.sln (see docs/features/design-system,
+      PROGRESS.md section 6 on the solution build). README.md beside this file has the command;
+      it cannot be repeated here because an XML comment may not contain a double hyphen.
+
+      Exit code 0 = PASS, 1 = FAIL, so it can gate a pipeline.-->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+
+    <!--the library it probes raises thousands of these; they are not this tool's business-->
+    <NoWarn>$(NoWarn);CA1416</NoWarn>
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--so the probe can assert that one ChangeTheme themes Fluent.Ribbon as well as MahApps,
+        which is what let ThemeHelper drop its second hand-rolled merge-->
+    <PackageReference Include="Fluent.Ribbon" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Presentation\IRI.Maptor.Presentation.Wpf\IRI.Maptor.Presentation.Wpf.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -170,8 +170,8 @@
 
                     <TextBlock Grid.Row="7" Grid.Column="0" Text="{Binding [featureChanges_wktOld], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4" VerticalAlignment="Top"/>
                     <ScrollViewer Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="4" FlowDirection="LeftToRight" MaxHeight="50" Margin="0" HorizontalAlignment="Stretch">
-                        <TextBlock Text="{Binding GeometryOldWkt, TargetNullValue='-'}" HorizontalAlignment="Stretch" Background="#EEEEEE"
-                                    TextWrapping="Wrap" Padding="4" MaxWidth="700" Margin="0,0,0,4" FontFamily="Consolas" FontSize="11"/>
+                        <TextBlock Text="{Binding GeometryOldWkt, TargetNullValue='-'}" HorizontalAlignment="Stretch" Background="{DynamicResource MahApps.Brushes.Gray10}"
+                                    TextWrapping="Wrap" Padding="4" MaxWidth="700" Margin="0,0,0,4" FontFamily="Consolas" FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Caption}"/>
                     </ScrollViewer>
                     
                     <Separator Grid.Row="8" Grid.ColumnSpan="4"/>
@@ -179,8 +179,8 @@
                     <TextBlock Grid.Row="9" Grid.Column="0" Text="{Binding [featureChanges_wktNew], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4" VerticalAlignment="Top"/>
                     <ScrollViewer Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="4" FlowDirection="LeftToRight" 
                  VerticalScrollBarVisibility="Auto" MaxHeight="50" Margin="0" HorizontalAlignment="Stretch">
-                        <TextBlock Text="{Binding GeometryNewWkt, TargetNullValue='-'}" HorizontalAlignment="Stretch" Background="#EEEEEE"
-                 TextWrapping="Wrap" Padding="4" MaxWidth="700" Margin="0,0,0,4" FontFamily="Consolas" FontSize="11"/>
+                        <TextBlock Text="{Binding GeometryNewWkt, TargetNullValue='-'}" HorizontalAlignment="Stretch" Background="{DynamicResource MahApps.Brushes.Gray10}"
+                 TextWrapping="Wrap" Padding="4" MaxWidth="700" Margin="0,0,0,4" FontFamily="Consolas" FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Caption}"/>
                     </ScrollViewer>
 
                 </Grid>

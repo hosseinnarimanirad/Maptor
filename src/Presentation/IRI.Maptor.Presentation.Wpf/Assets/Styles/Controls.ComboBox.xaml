@@ -4,6 +4,13 @@
                     xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
                     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls">
 
+
+    <!--for the IRI.Maptor.Styles.Size.Text.* type scale used below. A StaticResource
+        resolves only within its own dictionary and its merges, so this line is required,
+        not decorative.-->
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Common.Metrics.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
     <!--ComboBox.Normal's IsPersian trigger below binds {StaticResource Localization}. A
         StaticResource resolves only inside its own dictionary and that dictionary's merges — never
         across sibling dictionaries in the same MergedDictionaries list — so without this provider
@@ -15,7 +22,7 @@
     <Style x:Key="IRI.Maptor.Styles.ComboBox.Base" TargetType="ComboBox" BasedOn="{StaticResource MahApps.Styles.ComboBox}">
         <Setter Property="Margin" Value="4"/>
         <Setter Property="FontWeight" Value="Normal"/>
-        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.BodyLarge}"/>
         <Setter Property="MinHeight" Value="32"/>
         <Setter Property="MinWidth" Value="150"/>
         <Setter Property="Cursor" Value="Hand"/>
@@ -38,7 +45,7 @@
     </Style>
 
     <Style x:Key="IRI.Maptor.Styles.ComboBox.Large" TargetType="ComboBox" BasedOn="{StaticResource IRI.Maptor.Styles.ComboBox.Normal}">
-        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Input}"/>
         <Setter Property="MinHeight" Value="35"/>
     </Style>
 
@@ -47,13 +54,13 @@
     </Style>
 
     <Style x:Key="IRI.Maptor.Styles.ComboBox.Small.Latin" TargetType="ComboBox" BasedOn="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}">
-        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="MinHeight" Value="24"/>
     </Style>
     
     <Style x:Key="IRI.Maptor.Styles.ComboBox.Large.Latin" TargetType="ComboBox" BasedOn="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}">
-        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Input}"/>
         <Setter Property="MinHeight" Value="35"/>
     </Style>
 </ResourceDictionary> 

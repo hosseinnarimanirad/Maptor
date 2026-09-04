@@ -1138,6 +1138,66 @@
   <data name="mapPanel_srs_title" xml:space="preserve">
     <value>Mekansal Referans Sistemi</value>
   </data>
+  <data name="dialog_mgrs_title" xml:space="preserve">
+    <value>MGRS’ye git</value>
+  </data>
+  <data name="dialog_mgrs_reference" xml:space="preserve">
+    <value>Referans</value>
+  </data>
+  <data name="dialog_mgrs_watermark" xml:space="preserve">
+    <value>39 · 39S · 39S WV · 39S WV 53516 39501</value>
+  </data>
+  <data name="dialog_mgrs_tooltip" xml:space="preserve">
+    <value>Bir bölge, grid bölgesi, 100 km kare veya tam referans. Kısaldıkça bölge büyür.</value>
+  </data>
+  <data name="layer_mgrsGrid_cells" xml:space="preserve">
+    <value>Kareler</value>
+  </data>
+  <data name="layer_mgrsGrid_labels" xml:space="preserve">
+    <value>Izgara değerleri</value>
+  </data>
+  <data name="layer_mgrsGrid_squares" xml:space="preserve">
+    <value>Kare adları</value>
+  </data>
+  <data name="cmd_general_mapGrids" xml:space="preserve">
+    <value>Izgaralar</value>
+  </data>
+  <data name="layer_mapGrid_geodetic" xml:space="preserve">
+    <value>Enlem/boylam ızgarası</value>
+  </data>
+  <data name="layer_mapGrid_utm" xml:space="preserve">
+    <value>UTM ızgarası</value>
+  </data>
+  <data name="layer_mapGrid_lines" xml:space="preserve">
+    <value>Izgara çizgileri</value>
+  </data>
+  <data name="layer_mapGrid_labels" xml:space="preserve">
+    <value>Izgara değerleri</value>
+  </data>
+  <data name="layer_mgrsGrid_title" xml:space="preserve">
+    <value>MGRS ızgarası</value>
+  </data>
+  <data name="cmd_general_toggleMgrsGrid" xml:space="preserve">
+    <value>MGRS ızgarası</value>
+  </data>
+  <data name="dialog_mgrs_currentPosition" xml:space="preserve">
+    <value>İmlecin altında</value>
+  </data>
+  <data name="dialog_mgrs_copyCurrentPosition" xml:space="preserve">
+    <value>Konumu kopyala</value>
+  </data>
+  <data name="dialog_mgrs_copy" xml:space="preserve">
+    <value>Referansı kopyala</value>
+  </data>
+  <data name="dialog_mgrs_invalid" xml:space="preserve">
+    <value>Geçersiz MGRS referansı</value>
+  </data>
+  <data name="dialog_mgrs_zoomTo" xml:space="preserve">
+    <value>Yakınlaştır</value>
+  </data>
+  <data name="map_coordinatePanel_mgrs" xml:space="preserve">
+    <value>MGRS</value>
+  </data>
   <data name="map_coordinatePanel_height" xml:space="preserve">
     <value>Yükseklik</value>
   </data>

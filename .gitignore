@@ -264,7 +264,12 @@ __pycache__/
 /IRI.Tst/IRI.Tst.MainTestProject/Assets/PersonalGdb/Test.ldb
 /assets/*
 !/assets/images/
-/tools
+# /tools is a local scratch folder, EXCEPT the style probe: it is the runtime verification for the
+# WPF design system and the entire point of promoting it out of a session scratchpad was that it
+# survives. Same shape as the /assets rule above -- the directory has to be /tools/* rather than
+# /tools, because git cannot re-include a path whose parent directory is itself excluded.
+/tools/*
+!/tools/StyleProbe/
 /scripts
 /CLAUDE.md
 /MaptorMobile.zip

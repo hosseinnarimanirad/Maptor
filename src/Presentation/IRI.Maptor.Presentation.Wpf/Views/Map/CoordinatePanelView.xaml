@@ -69,6 +69,19 @@
       
             <DockPanel Grid.Row="2" VerticalAlignment="Center" MouseDown="options_MouseDown" Cursor="Hand" LastChildFill="True" Background="Transparent">
                 
+                <!--MGRS. Optional in exactly the way Height is: a value plus a gate, both bound
+                    through ElementName=root, and hidden unless the host opts in. Declared first
+                    among the right-docked children so it reads last on the line. One alphanumeric
+                    reference rather than an x/y pair, so it takes a single value field.-->
+                <TextBlock DockPanel.Dock="Right" Margin="0"
+                            Style="{StaticResource dynamicText}"
+                            Text="{Binding ElementName=root, Path=CurrentMgrs}"
+                            Visibility="{Binding ElementName=root, Path=ShowMgrs, Converter={StaticResource boolToVisibilityConverter}}"/>
+                <TextBlock DockPanel.Dock="Right"
+                            Style="{StaticResource staticText}"
+                            Text="{Binding [map_coordinatePanel_mgrs], Source={StaticResource Localization}}"
+                            Visibility="{Binding ElementName=root, Path=ShowMgrs, Converter={StaticResource boolToVisibilityConverter}}"/>
+
                 <!--Height-->
                 <TextBlock DockPanel.Dock="Right" Margin="0"
                             Style="{StaticResource dynamicText}" 

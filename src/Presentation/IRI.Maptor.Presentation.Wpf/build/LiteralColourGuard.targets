@@ -1,0 +1,114 @@
+<Project>
+
+  <!--Fails the build when a view under Views/ gains a literal colour.
+
+      Step 7 of the design-system remediation listed this as "optionally add a build check that
+      fails on new literal hex under Views/". It was never built, and by 2026-08-31 there were 39
+      literals across 13 views. Most have a real reason; the point of this guard is not to remove
+      them but to stop the next one appearing, so it works off an explicit allow list
+      (LiteralColours.allow) rather than a count. A file on that list is exempt entirely; anything
+      else under Views/ must use MahApps.Brushes.*, IRI.Maptor.Brushes.* or a Maptor style.
+
+      Severity is controlled by $(MaptorLiteralColourGuard): Error (default), Warning, or None.
+      Pass -p:MaptorLiteralColourGuard=Warning for a build that must not fail on this.
+
+      XML comments are stripped before scanning, replaced by the same number of newlines so that
+      reported line numbers stay true. Without that the guard would flag the commented-out
+      Shape.Fill values in MapLegendView.xaml and the palette described in SelectedItem.xaml's
+      header comment, neither of which renders anything.-->
+
+  <PropertyGroup>
+    <MaptorLiteralColourGuard Condition="'$(MaptorLiteralColourGuard)' == ''">Error</MaptorLiteralColourGuard>
+  </PropertyGroup>
+
+  <UsingTask TaskName="FindLiteralColours"
+             TaskFactory="RoslynCodeTaskFactory"
+             AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <Files ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+      <AllowFile ParameterType="System.String" Required="true" />
+      <ProjectDir ParameterType="System.String" Required="true" />
+      <Violations ParameterType="System.String[]" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Code Type="Fragment" Language="cs"><![CDATA[
+        var allowed = new System.Collections.Generic.HashSet<string>(System.StringComparer.OrdinalIgnoreCase);
+
+        if (System.IO.File.Exists(AllowFile))
+        {
+            foreach (var raw in System.IO.File.ReadAllLines(AllowFile))
+            {
+                var line = raw.Trim();
+                if (line.Length == 0 || line.StartsWith("#")) continue;
+
+                var bar = line.IndexOf('|');
+                var path = (bar < 0 ? line : line.Substring(0, bar)).Trim();
+                if (path.Length > 0) allowed.Add(path.Replace('\\', '/'));
+            }
+        }
+
+        // a complete hex token: not part of a longer word, so a font URI like ".ttf#B Yekan"
+        // and a resource key like "#FontAwesome" do not match
+        var pattern = new System.Text.RegularExpressions.Regex(
+            @"#[0-9A-Fa-f]{3,8}(?![0-9A-Za-z])");
+        var comments = new System.Text.RegularExpressions.Regex(
+            @"<!--.*?-->", System.Text.RegularExpressions.RegexOptions.Singleline);
+
+        var found = new System.Collections.Generic.List<string>();
+
+        foreach (var item in Files)
+        {
+            var full = item.GetMetadata("FullPath");
+
+            var relative = full.Replace('\\', '/');
+            var root = ProjectDir.Replace('\\', '/');
+            if (!root.EndsWith("/")) root += "/";
+            if (relative.StartsWith(root, System.StringComparison.OrdinalIgnoreCase))
+                relative = relative.Substring(root.Length);
+
+            if (allowed.Contains(relative)) continue;
+
+            var text = System.IO.File.ReadAllText(full);
+
+            // blank out comments but keep their newlines, so line numbers stay true
+            text = comments.Replace(text, m =>
+                new string('\n', m.Value.Split('\n').Length - 1));
+
+            foreach (System.Text.RegularExpressions.Match m in pattern.Matches(text))
+            {
+                var line = 1;
+                for (var i = 0; i < m.Index; i++) if (text[i] == '\n') line++;
+
+                found.Add(full + "(" + line + "): literal colour " + m.Value);
+            }
+        }
+
+        Violations = found.ToArray();
+      ]]></Code>
+    </Task>
+  </UsingTask>
+
+  <Target Name="MaptorLiteralColourGuard"
+          BeforeTargets="CoreCompile"
+          Condition="'$(MaptorLiteralColourGuard)' != 'None'">
+
+    <ItemGroup>
+      <MaptorGuardedView Include="$(MSBuildProjectDirectory)/Views/**/*.xaml" />
+    </ItemGroup>
+
+    <FindLiteralColours Files="@(MaptorGuardedView)"
+                        AllowFile="$(MSBuildThisFileDirectory)LiteralColours.allow"
+                        ProjectDir="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="Violations" ItemName="MaptorLiteralColour" />
+    </FindLiteralColours>
+
+    <Warning Condition="'$(MaptorLiteralColourGuard)' == 'Warning' and '@(MaptorLiteralColour)' != ''"
+             Code="MAPTOR001"
+             Text="%(MaptorLiteralColour.Identity) - use a MahApps.Brushes.*, IRI.Maptor.Brushes.* or Maptor style token, or add this file to build/LiteralColours.allow with a reason. See docs/features/design-system/AUTHORING.md section 4." />
+
+    <Error Condition="'$(MaptorLiteralColourGuard)' == 'Error' and '@(MaptorLiteralColour)' != ''"
+           Code="MAPTOR001"
+           Text="%(MaptorLiteralColour.Identity) - use a MahApps.Brushes.*, IRI.Maptor.Brushes.* or Maptor style token, or add this file to build/LiteralColours.allow with a reason. See docs/features/design-system/AUTHORING.md section 4." />
+  </Target>
+
+</Project>

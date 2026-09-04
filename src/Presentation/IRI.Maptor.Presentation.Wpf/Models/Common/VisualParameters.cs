@@ -633,8 +633,13 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
             Foreground = foreground ?? Brushes.Black,
             FontFamily = fontFamily,
             PositionFunc = positionFunc,
-            IsRtl = isRtl,            
-        };//
+            IsRtl = isRtl,
+            // Both render strategies gate labels on IsInScaleRangeAndSelected, which is
+            // VisibleRange && IsSelected. This factory builds through an object initializer rather
+            // than the constructor that every other factory uses with isOn: true, so IsSelected
+            // was left at its default false and no label built here ever drew.
+            IsSelected = true,
+        };
     }
 
     public static VisualParameters GetFill(Color fill, double opacity = 1)

@@ -1,4 +1,4 @@
-<mahApp:MetroWindow x:Class="IRI.Maptor.Presentation.Wpf.Controls.Dialogs.ThemeSelectionDialog"
+﻿<mahApp:MetroWindow x:Class="IRI.Maptor.Presentation.Wpf.Controls.Dialogs.ThemeSelectionDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -104,7 +104,7 @@
 
                                 <TextBlock x:Name="label" Grid.Row="1" Text="{Binding DisplayName}"
                                            Style="{StaticResource IRI.Maptor.Styles.TextBlock}"
-                                           FontSize="11" Margin="0,5,0,0"
+                                           FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Caption}" Margin="0,5,0,0"
                                            TextAlignment="Center"
                                            TextTrimming="CharacterEllipsis"/>
                             </Grid>

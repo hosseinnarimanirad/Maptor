@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 using IRI.Maptor.Extensions;
+using IRI.Maptor.Core.SpatialReferenceSystem.MapProjections.Mgrs;
 using IRI.Maptor.Presentation.Wpf;
 using IRI.Maptor.Presentation.Wpf.Controls;
 using IRI.Maptor.Presentation.Wpf.ViewModels.Map;
@@ -46,6 +47,24 @@ public partial class CoordinatePanelView : NotifiableUserControl
             return;
          
         Presenter.SelectedItem?.Update(geodeticPoint.AsPoint());
+
+        UpdateMgrs(geodeticPoint);
+    }
+
+    /// <summary>
+    /// Refreshes <see cref="CurrentMgrs"/> from the position the panel was just handed. Skipped
+    /// entirely while the option is off: this runs on every mouse move.
+    /// </summary>
+    private void UpdateMgrs(Point geodeticPoint)
+    {
+        if (!ShowMgrs)
+            return;
+
+        // MGRS covers 80 S to 84 N only; past that there is simply nothing to show, which is not
+        // an error worth surfacing on a mouse move.
+        CurrentMgrs = MgrsConverter.TryFromGeodetic(geodeticPoint.X, geodeticPoint.Y, MgrsPrecision.M1, out var mgrs)
+            ? mgrs
+            : string.Empty;
     }
 
 
@@ -87,6 +106,36 @@ public partial class CoordinatePanelView : NotifiableUserControl
 
     public static readonly DependencyProperty IsHeightAvailableProperty =
         DependencyProperty.Register(nameof(IsHeightAvailable), typeof(bool), typeof(CoordinatePanelView), new PropertyMetadata(false));
+
+
+    /// <summary>
+    /// Whether the MGRS reference is shown alongside the coordinates. Hosts bind this to
+    /// <c>GeneralSettings.CoordinatePanel_ShowMgrs</c>; it defaults to false, so a host that does
+    /// not bind it keeps the panel exactly as it was.
+    /// </summary>
+    public bool ShowMgrs
+    {
+        get { return (bool)GetValue(ShowMgrsProperty); }
+        set { SetValue(ShowMgrsProperty, value); }
+    }
+
+    public static readonly DependencyProperty ShowMgrsProperty =
+        DependencyProperty.Register(nameof(ShowMgrs), typeof(bool), typeof(CoordinatePanelView), new PropertyMetadata(false));
+
+
+    /// <summary>
+    /// The MGRS reference for the current position. Unlike <see cref="CurrentHeight"/>, which only
+    /// the host can supply, this is derived from the position the panel already receives, so it is
+    /// filled in by <see cref="SetCoordinates"/> rather than bound in from outside.
+    /// </summary>
+    public string CurrentMgrs
+    {
+        get { return (string)GetValue(CurrentMgrsProperty); }
+        set { SetValue(CurrentMgrsProperty, value); }
+    }
+
+    public static readonly DependencyProperty CurrentMgrsProperty =
+        DependencyProperty.Register(nameof(CurrentMgrs), typeof(string), typeof(CoordinatePanelView), new PropertyMetadata(string.Empty));
 
 
 

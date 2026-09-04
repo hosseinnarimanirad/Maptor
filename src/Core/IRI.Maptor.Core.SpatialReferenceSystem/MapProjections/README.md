@@ -49,6 +49,9 @@ Pick the property your map needs — that picks your projection: navigation and 
 | [`CylindricalEqualArea`](CylindricalEqualArea.cs) | Equal-area, cylindrical | Preserves areas instead of angles |
 | [`NoProjection`](NoProjection.cs) | — | Identity pass-through for unprojected geodetic data |
 
+MGRS lives in [`Mgrs/`](Mgrs/) and is **not** in that table, because it is not a projection — see
+[the section below](#mgrs--military-grid-reference-system).
+
 ---
 
 ## Mercator
@@ -157,6 +160,78 @@ var cea = new CylindricalEqualArea();               // WGS84 by default
 var xy  = cea.FromGeodetic(new Point(51.389, 35.689));
 var geo = cea.ToGeodetic(xy);
 ```
+
+---
+
+## MGRS — Military Grid Reference System
+
+MGRS is the odd one out in this folder: it is **not a projection**, it is a *text encoding of UTM
+coordinates*. There is no continuous x/y plane to project onto — only a square on the ground named
+by letters and digits — so [`MgrsConverter`](Mgrs/MgrsConverter.cs) is a static encoder/decoder
+rather than a [`MapProjectionBase`](MapProjectionBase.cs) subclass, and it has no SRID of its own.
+
+```
+39S WV 53516 39501
+│  │  │     └───── northing digits inside the 100 km square
+│  │  └─────────── easting digits (0–5 per axis; both axes always the same count)
+│  └────────────── 100 km square identifier — column letter, row letter
+└───────────────── grid zone designator — UTM zone number + latitude band letter
+```
+
+A reference names a **square, not a point**, and the square gets smaller as digits are added: no
+digits is the 100 km square, five digits per axis is a 1 m square. `ToGeodetic` therefore returns
+the square's south-west corner, or its centre when asked.
+
+```csharp
+using IRI.Maptor.Core.SpatialReferenceSystem.MapProjections.Mgrs;
+
+// (longitude, latitude) -> reference
+var reference = MgrsConverter.FromGeodetic(51.3380, 35.6997);           // "39S WV 30578 50694"
+var coarse    = MgrsConverter.FromGeodetic(51.3380, 35.6997, MgrsPrecision.Km1);   // "39S WV 30 50"
+
+// reference -> position (south-west corner of the named square)
+var corner = MgrsConverter.ToGeodetic("39S WV 30578 50694");
+var centre = MgrsConverter.ToGeodetic("39S WV", useSquareCentre: true);
+
+// straight to and from UTM, with no projection in between
+var (zone, isNorth, easting, northing) = MgrsConverter.ToUtm("18S UJ 23383 06479");
+var again = MgrsConverter.FromUtm(zone, isNorth, easting, northing);
+
+// tolerant parsing: spacing and case are presentation only
+MgrsConverter.TryParse("31udq4825111932", out var parsed);
+```
+
+### How the letters are chosen
+
+| Part | Rule |
+|---|---|
+| **Latitude band** | `C`–`X` skipping `I` and `O`, 8° each from 80°S — except `X`, which is 12° (72°–84°N) |
+| **Column letter** | one of three 8-letter sets by `(zone - 1) mod 3`: `A`–`H`, `J`–`R`, `S`–`Z`; index is `floor(easting / 100000) - 1` |
+| **Row letter** | the 20-letter alphabet `A`–`V` skipping `I` and `O`; index is `(floor(northing / 100000) + (zone even ? 5 : 0)) mod 20` |
+
+`I` and `O` are omitted everywhere so they cannot be misread as 1 and 0. The five-letter row offset
+on even zones is why the full column+row pattern repeats every **six** zones rather than three. And
+because `10 000 000 / 100 000 = 100` is a whole number of 20-letter cycles, the southern
+hemisphere's false northing does not disturb the sequence — the row lettering runs continuously
+across the equator.
+
+Decoding the northing is the only non-obvious direction: a row letter fixes it only modulo
+2 000 km, so the latitude band supplies a minimum northing and the candidate is raised by 2 000 km
+until it clears it.
+
+### Two places the grid is not regular
+
+`MgrsConverter` handles both, which is why it picks the zone itself rather than taking one:
+
+- **Norway** — over band V (56°–64°N) zone 32 is widened west to 3°E, so Bergen is not split.
+- **Svalbard** — over band X (72°–84°N) zones 31, 33, 35 and 37 are widened and 32, 34, 36 do
+  not exist.
+
+### Coverage
+
+80°S to 84°N — the UTM band. The polar caps (UPS, bands `A`/`B`/`Y`/`Z`) need a polar
+stereographic projection this library does not have, so positions outside that range are rejected:
+the `Try*` methods return `false`, the others throw.
 
 ---
 

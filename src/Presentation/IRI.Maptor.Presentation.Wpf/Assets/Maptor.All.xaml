@@ -1,0 +1,100 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core">
+
+    <!--The Maptor half of an application's resources, in one dictionary.
+
+        A host that shows Maptor WPF views merges the MahApps baseline and then this file:
+
+            <Application.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml"/>
+                        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml"/>
+                        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Amber.xaml"/>
+                        <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Maptor.All.xaml"/>
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+            </Application.Resources>
+
+        MahApps' Styles/Controls.xaml is its own bundle of every per control dictionary, so the
+        individual Controls.Slider / Controls.RadioButton / Controls.TabControl merges that some
+        applications still carry are redundant. Any accent and mode may be used in place of
+        Light.Amber, and ThemeHelper.ApplyTheme overrides the choice at runtime either way.
+
+        WHY THE MAHAPPS LINES ARE NOT INSIDE THIS FILE. Several Maptor styles are BasedOn a
+        MahApps key: IRI.Maptor.Styles.ButtonBase on MahApps.Styles.Button.Flat,
+        IRI.Maptor.Styles.PasswordBoxBase on MahApps.Styles.PasswordBox, and likewise the Slider,
+        ToggleSwitch and TextBox styles. A StaticResource inside a nested dictionary can reach
+        Application.Resources and the dictionaries merged directly there, but NOT a sibling that
+        is itself nested. Measured with the probe described in the design system README section 8:
+        with the three MahApps merges moved into this file,
+        IRI.Maptor.Styles.Button.Primary.Large throws "Cannot find resource named
+        MahApps.Styles.Button.Flat" the first time it is used, even though that same key resolves
+        fine through Application.TryFindResource in the same run. So the MahApps baseline has to
+        stay one level up, at the host's own top level, ahead of this file.
+
+        WHAT THIS FILE FIXES. Before it, every host hand assembled six to eight dictionaries and
+        had to know that the semantic status palette must be merged at application level (see the
+        note on Status.Light.xaml below). Two of the eight consumers in this repository, both
+        sample applications, had silently got that wrong: every status colour fell back to a
+        control default, with no crash and no warning, because status keys are consumed with
+        DynamicResource and a missing DynamicResource key just leaves the property alone.
+
+        WHAT THIS FILE LEAVES OUT, on purpose:
+
+        - Assets/Shapes/IriShapes.xaml and Assets/Shapes/IranBoundaries.xaml. Iran specific
+          geometry; merge them yourself if you draw them.
+        - Assets/Styles/Controls.SecurityInputs.xaml. IRI.Maptor.Styles.Security.FieldGroup binds
+          to an ancestor named "root", so it only works when merged by a view that has one. The
+          Security views merge it themselves.
+        - Assets/Styles/MenuIconStyles.xaml, MapOptionStyles.xaml and FeatureTableFilters.xaml.
+          The views that need these merge them into their own Resources.
+        - Fluent.Ribbon. A separate package that not every host references; ThemeHelper.ApplyTheme
+          re themes it at runtime when it is present.-->
+
+    <ResourceDictionary.MergedDictionaries>
+
+        <!--Maptor control styles, and the metric, effect and over map brush tokens they use.-->
+        <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+
+        <!--Converters, fonts, fixed brand colours, marker animations and the generic shape
+            geometries. Most views merge the ones they need into their own Resources as well;
+            having them at application level costs nothing and covers the views that do not.-->
+        <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Fonts.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Colors.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Animations.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Shapes/Others.xaml"/>
+
+        <!--Semantic status palette (valid / invalid / warning / muted), light variant.
+
+            It is deliberately NOT inside Controls.All.xaml. Views merge Controls.All into their
+            OWN Resources, and WPF resolves a resource by walking the element tree's dictionaries
+            before Application.Resources, so a status palette bundled there would always be found
+            first and the runtime dark swap could never take effect. See the design system README
+            section 4.4c.
+
+            Here it is safe, because this file is merged at application level only.
+            ThemeHelper.ApplyTheme appends Status.Light or Status.Dark to
+            Application.Resources.MergedDictionaries and a later sibling wins the lookup, so the
+            runtime variant shadows this one. ApplyTheme's removal pass only scans the top level of
+            that list and will not see this nested entry, which is intended: it is the fallback for
+            a host that never calls ApplyTheme at all.
+
+            Consume these keys with DynamicResource, never StaticResource, or the swap will not
+            reach you.-->
+        <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Status.Light.xaml"/>
+
+    </ResourceDictionary.MergedDictionaries>
+
+    <!--Twelve library views bind {StaticResource Localization} without declaring the provider
+        themselves, eight of them in the SLD editor. In a host that does not declare it at
+        application level those views throw when they load, because a StaticResource that cannot be
+        resolved is a hard failure rather than a silent default. Declaring it here means a host
+        cannot forget it. LocalizationManager is a singleton, so a host that already declares its
+        own Localization key keeps its own: entries declared directly on Application.Resources are
+        searched before any merged dictionary.-->
+    <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+
+</ResourceDictionary>

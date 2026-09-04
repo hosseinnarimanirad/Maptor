@@ -3,11 +3,18 @@
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls">
 
+
+    <!--for the IRI.Maptor.Styles.Size.Text.* type scale used below. A StaticResource
+        resolves only within its own dictionary and its merges, so this line is required,
+        not decorative.-->
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Common.Metrics.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
     <Style x:Key="IRI.Maptor.Styles.NumericUpDown.Normal" TargetType="mahApp:NumericUpDown" >
         <Setter Property="Margin" Value="4"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="MinHeight" Value="32"/>
-        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Body}"/>
         <Setter Property="BorderThickness" Value="0"/>
 
         <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="4"/>
@@ -26,7 +33,7 @@
 
         <Setter Property="BorderThickness" Value="1.5"/>
         <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"/>
     </Style>
 
 

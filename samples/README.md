@@ -1,4 +1,4 @@
-# Maptor samples
+﻿# Maptor samples
 
 Small, self-contained programs that each show one thing you can do with Maptor. Every sample
 has its own folder with a README next to the code, so a sample can be linked to directly —
@@ -39,6 +39,7 @@ base-map provider, so the WPF samples need internet access to show a background 
 | [Measurement](IRI.Maptor.Samples.Wpf.Gallery/Samples/Measurement/README.md) | `MeasureLengthCommand`, `MeasureAreaCommand` |
 | [Identify](IRI.Maptor.Samples.Wpf.Gallery/Samples/Identify/README.md) | `IdentifyModeCommand`, the Identify results window, overlapping layers |
 | [Delaunay and Voronoi](IRI.Maptor.Samples.Wpf.Gallery/Samples/DelaunayVoronoi/README.md) | `DelaunayTriangulation`, `VoronoiDiagram`, clipping unbounded cells, toggling layer visibility |
+| [Theme and controls](IRI.Maptor.Samples.Wpf.Gallery/Samples/ThemeAndControls/README.md) | Every design-system token over a live accent + light/dark switch; `ThemeHelper`, `FollowWindowsMode` |
 | [Localization and right-to-left](IRI.Maptor.Samples.Wpf.Gallery/Samples/Localization/README.md) | `LanguageCombo`, `LocalizationManager` bindings, `FlowDirection` |
 
 ## Conventions

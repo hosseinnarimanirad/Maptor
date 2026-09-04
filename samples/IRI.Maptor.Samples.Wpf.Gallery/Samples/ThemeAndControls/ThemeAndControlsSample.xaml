@@ -1,0 +1,343 @@
+﻿<UserControl x:Class="IRI.Maptor.Samples.Wpf.Gallery.Samples.ThemeAndControls.ThemeAndControlsSample"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             Loaded="OnLoaded" Unloaded="OnUnloaded">
+
+    <!--Every specimen below uses a real IRI.Maptor.Styles.* key. Nothing here is styled by hand:
+        if a token is missing, misnamed or theme-breaking, this page is where it shows.
+
+        Colours are DynamicResource on purpose. The status palette is swapped at run time by
+        ThemeHelper, and a StaticResource would freeze it at whatever was loaded first.-->
+
+    <!--An opaque themed background, not Transparent. A page that does not paint one composites
+        onto whatever the host happens to paint, and then a "dark mode" screenshot shows dark cards
+        floating on a white sheet and every contrast judgement made from it is wrong. This is the
+        same mistake that made the legend text invisible; see PROGRESS.md section 5.-->
+    <DockPanel Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
+
+        <Border DockPanel.Dock="Top" Style="{StaticResource IRI.Maptor.Styles.Border.Toolbar}">
+            <StackPanel Orientation="Horizontal" Margin="8,6">
+
+                <TextBlock Text="Accent" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                           VerticalAlignment="Center" Width="Auto" Margin="0,0,6,0" />
+                <ComboBox x:Name="accentCombo" MinWidth="150" DisplayMemberPath="DisplayName"
+                          Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal}"
+                          SelectionChanged="OnAccentChanged" />
+
+                <Border Style="{StaticResource IRI.Maptor.Styles.Border.Divider}" Width="1" Margin="12,4"
+                        HorizontalAlignment="Center" />
+
+                <mah:ToggleSwitch x:Name="darkSwitch" Header="Dark"
+                                  Style="{StaticResource IRI.Maptor.Styles.ToggleSwitch.Normal}"
+                                  Toggled="OnDarkToggled" VerticalAlignment="Center" Margin="4,0" />
+
+                <CheckBox x:Name="followWindows" Content="Follow Windows"
+                          Style="{StaticResource IRI.Maptor.Styles.CheckBox.Normal}"
+                          Checked="OnFollowWindowsChanged" Unchecked="OnFollowWindowsChanged"
+                          VerticalAlignment="Center" Margin="12,0,0,0" />
+
+                <Border Style="{StaticResource IRI.Maptor.Styles.Pill.Accent}" VerticalAlignment="Center" Margin="16,0,0,0">
+                    <TextBlock x:Name="currentTheme" Style="{StaticResource IRI.Maptor.Styles.Pill.Text.Accent}" />
+                </Border>
+
+                <TextBlock x:Name="windowsMode" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Hint}"
+                           VerticalAlignment="Center" Margin="12,0,0,0" />
+            </StackPanel>
+        </Border>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="{StaticResource IRI.Maptor.Styles.Thickness.ViewContent}">
+            <StackPanel MaxWidth="1000" HorizontalAlignment="Left">
+
+                <!-- ============ STATUS PALETTE ============ -->
+                <TextBlock Text="Semantic status palette" Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}" />
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.Note}"
+                           Text="MahApps has no valid/invalid pair, so these four are Maptor's own and ThemeHelper swaps the whole dictionary on a mode change. Flip Dark above: every swatch, pill and banner on this page has to move." />
+
+                <Border Style="{StaticResource IRI.Maptor.Styles.Border.Section}" Margin="0,8,0,0">
+                    <UniformGrid Columns="4" Margin="4">
+                        <StackPanel Margin="4">
+                            <Border Height="34" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"
+                                    Background="{DynamicResource IRI.Maptor.Brushes.Valid}" />
+                            <Border Height="34" Margin="0,4,0,0" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"
+                                    Background="{DynamicResource IRI.Maptor.Brushes.Valid.Fill}" />
+                            <TextBlock Text="Valid / Valid.Fill" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}" />
+                        </StackPanel>
+                        <StackPanel Margin="4">
+                            <Border Height="34" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"
+                                    Background="{DynamicResource IRI.Maptor.Brushes.Invalid}" />
+                            <Border Height="34" Margin="0,4,0,0" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"
+                                    Background="{DynamicResource IRI.Maptor.Brushes.Invalid.Fill}" />
+                            <TextBlock Text="Invalid / Invalid.Fill" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}" />
+                        </StackPanel>
+                        <StackPanel Margin="4">
+                            <Border Height="34" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"
+                                    Background="{DynamicResource IRI.Maptor.Brushes.Warning}" />
+                            <Border Height="34" Margin="0,4,0,0" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"
+                                    Background="{DynamicResource IRI.Maptor.Brushes.Warning.Fill}" />
+                            <TextBlock Text="Warning / Warning.Fill" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}" />
+                        </StackPanel>
+                        <StackPanel Margin="4">
+                            <Border Height="34" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"
+                                    Background="{DynamicResource IRI.Maptor.Brushes.Muted}" />
+                            <Border Height="34" Margin="0,4,0,0" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"
+                                    Background="{DynamicResource IRI.Maptor.Brushes.Muted.Fill}" />
+                            <TextBlock Text="Muted / Muted.Fill" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}" />
+                        </StackPanel>
+                    </UniformGrid>
+                </Border>
+
+                <!-- ============ TYPE SCALE ============ -->
+                <TextBlock Text="Type scale" Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}" />
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.Note}"
+                           Text="Eight steps. Never write a bare FontSize; if none of these fits, the element is probably mislabelled." />
+
+                <Border Style="{StaticResource IRI.Maptor.Styles.Border.Section}" Margin="0,8,0,0">
+                    <StackPanel Margin="8,4">
+                        <TextBlock Text="Micro 10 — pill counters, marker badges"
+                                   FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Micro}" Margin="0,3" />
+                        <TextBlock Text="Caption 11 — captions, hints, field sub-labels"
+                                   FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Caption}" Margin="0,3" />
+                        <TextBlock Text="Small 12 — grid cells, tab labels, helper text"
+                                   FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Small}" Margin="0,3" />
+                        <TextBlock Text="Body 13 — default body and form labels"
+                                   FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Body}" Margin="0,3" />
+                        <TextBlock Text="BodyLarge 14 — emphasised body, section headers"
+                                   FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.BodyLarge}" Margin="0,3" />
+                        <TextBlock Text="Input 15 — text the user types into"
+                                   FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Input}" Margin="0,3" />
+                        <TextBlock Text="Action 16 — large action buttons"
+                                   FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Action}" Margin="0,3" />
+                        <TextBlock Text="Title 20 — dialog and screen titles"
+                                   FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Title}" Margin="0,3" />
+                    </StackPanel>
+                </Border>
+
+                <!-- ============ TEXT ============ -->
+                <TextBlock Text="Text styles" Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}" />
+                <Border Style="{StaticResource IRI.Maptor.Styles.Border.Section}" Margin="0,8,0,0">
+                    <StackPanel Margin="8,4">
+                        <TextBlock Text="TextBlock.WindowTitle" Style="{StaticResource IRI.Maptor.Styles.TextBlock.WindowTitle}" />
+                        <!--TextBlock.HeaderTitle is NOT shown here on purpose: it binds
+                            MahApps.Brushes.IdealForeground, which is white in both modes, so on a
+                            themed surface it is white-on-white in light mode. Its home is the accent
+                            band in Surfaces below.-->
+                        <TextBlock Text="TextBlock.Title" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Title}" />
+                        <TextBlock Text="TextBlock.PanelTitle" Style="{StaticResource IRI.Maptor.Styles.TextBlock.PanelTitle}" />
+                        <TextBlock Text="TextBlock.CardTitle" Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardTitle}" />
+                        <TextBlock Text="TextBlock.Normal" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}" />
+                        <TextBlock Text="TextBlock.Normal.Bold" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal.Bold}" />
+                        <TextBlock Text="TextBlock.Caption" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}" />
+                        <TextBlock Text="TextBlock.Hint" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Hint}" />
+                        <TextBlock Text="TextBlock.Note" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Note}" />
+                        <TextBlock Text="TextBlock.Error — the one that must stay legible in both modes"
+                                   Style="{StaticResource IRI.Maptor.Styles.TextBlock.Error}" />
+                        <TextBlock Text="TextBlock.EmptyState" Style="{StaticResource IRI.Maptor.Styles.TextBlock.EmptyState}" />
+                    </StackPanel>
+                </Border>
+
+                <!-- ============ BUTTONS ============ -->
+                <TextBlock Text="Buttons" Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}" />
+                <Border Style="{StaticResource IRI.Maptor.Styles.Border.Section}" Margin="0,8,0,0">
+                    <StackPanel Margin="8,4">
+                        <WrapPanel>
+                            <Button Content="Primary.Large" Style="{StaticResource IRI.Maptor.Styles.Button.Primary.Large}" Margin="4" />
+                            <Button Content="Secondary.Large" Style="{StaticResource IRI.Maptor.Styles.Button.Secondary.Large}" Margin="4" />
+                            <Button Content="Primary" Style="{StaticResource IRI.Maptor.Styles.Button.Primary}" Margin="4" />
+                            <Button Content="Secondary" Style="{StaticResource IRI.Maptor.Styles.Button.Secondary}" Margin="4" />
+                            <Button Content="Primary.Small" Style="{StaticResource IRI.Maptor.Styles.Button.Primary.Small}" Margin="4" />
+                            <Button Content="Secondary.Small" Style="{StaticResource IRI.Maptor.Styles.Button.Secondary.Small}" Margin="4" />
+                        </WrapPanel>
+                        <WrapPanel Margin="0,4,0,0">
+                            <Button Content="Dialogs.Primary" Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}" Margin="4" />
+                            <Button Content="Dialogs.Secondary" Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Secondary}" Margin="4" />
+                            <Button Content="Disabled" Style="{StaticResource IRI.Maptor.Styles.Button.Primary}" Margin="4" IsEnabled="False" />
+                        </WrapPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- ============ PILLS ============ -->
+                <TextBlock Text="Status pills" Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}" />
+                <Border Style="{StaticResource IRI.Maptor.Styles.Border.Section}" Margin="0,8,0,0">
+                    <WrapPanel Margin="8,6">
+                        <Border Style="{StaticResource IRI.Maptor.Styles.Pill.Valid}" Margin="4">
+                            <TextBlock Text="Committed" Style="{StaticResource IRI.Maptor.Styles.Pill.Text.Valid}" />
+                        </Border>
+                        <Border Style="{StaticResource IRI.Maptor.Styles.Pill.Invalid}" Margin="4">
+                            <TextBlock Text="Rejected" Style="{StaticResource IRI.Maptor.Styles.Pill.Text.Invalid}" />
+                        </Border>
+                        <Border Style="{StaticResource IRI.Maptor.Styles.Pill.Warning}" Margin="4">
+                            <TextBlock Text="Stale base" Style="{StaticResource IRI.Maptor.Styles.Pill.Text.Warning}" />
+                        </Border>
+                        <Border Style="{StaticResource IRI.Maptor.Styles.Pill.Accent}" Margin="4">
+                            <TextBlock Text="Pending" Style="{StaticResource IRI.Maptor.Styles.Pill.Text.Accent}" />
+                        </Border>
+                        <Border Style="{StaticResource IRI.Maptor.Styles.Pill}" Margin="4">
+                            <TextBlock Text="Muted" Style="{StaticResource IRI.Maptor.Styles.Pill.Text}" />
+                        </Border>
+                        <Border Style="{StaticResource IRI.Maptor.Styles.Pill.Small}" Margin="4">
+                            <TextBlock Text="12" Style="{StaticResource IRI.Maptor.Styles.Pill.Text.Small}" />
+                        </Border>
+                    </WrapPanel>
+                </Border>
+
+                <!-- ============ BANNERS ============ -->
+                <TextBlock Text="Banners" Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}" />
+                <StackPanel Margin="0,8,0,0">
+                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Banner}" Margin="0,3">
+                        <TextBlock Text="Border.Banner — neutral information." Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}" />
+                    </Border>
+                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Banner.Accent}" Margin="0,3">
+                        <TextBlock Text="Border.Banner.Accent — the accent as a border with a themed surface behind the text, never as a fill under it." Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}" />
+                    </Border>
+                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Banner.Warning}" Margin="0,3">
+                        <TextBlock Text="Border.Banner.Warning — advisory, not failure." Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}" />
+                    </Border>
+                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Banner.Invalid}" Margin="0,3">
+                        <TextBlock Text="Border.Banner.Invalid — something is wrong." Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}" />
+                    </Border>
+                </StackPanel>
+
+                <!-- ============ INPUTS ============ -->
+                <TextBlock Text="Inputs" Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}" />
+                <Border Style="{StaticResource IRI.Maptor.Styles.Border.Section}" Margin="0,8,0,0">
+                    <StackPanel Margin="8,4">
+
+                        <Grid Style="{StaticResource IRI.Maptor.Styles.Grid.FieldRow}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="TextBox.Normal" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}" />
+                            <TextBox Grid.Column="1" Text="Cedar Lot" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}" />
+                        </Grid>
+
+                        <Grid Style="{StaticResource IRI.Maptor.Styles.Grid.FieldRow}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="TextBox.Large" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}" />
+                            <TextBox Grid.Column="1" Text="37.7749, -122.4194" Style="{StaticResource IRI.Maptor.Styles.TextBox.Large}" />
+                        </Grid>
+
+                        <Grid Style="{StaticResource IRI.Maptor.Styles.Grid.FieldRow}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="PasswordBox" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}" />
+                            <PasswordBox Grid.Column="1" Password="hunter2" Style="{StaticResource IRI.Maptor.Styles.PasswordBox.Normal}" />
+                        </Grid>
+
+                        <Grid Style="{StaticResource IRI.Maptor.Styles.Grid.FieldRow}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="ComboBox.Normal" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}" />
+                            <ComboBox Grid.Column="1" SelectedIndex="0" Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal}">
+                                <ComboBoxItem Content="Decimal degrees" />
+                                <ComboBoxItem Content="Degrees minutes seconds" />
+                                <ComboBoxItem Content="UTM" />
+                                <ComboBoxItem Content="MGRS" />
+                            </ComboBox>
+                        </Grid>
+
+                        <Grid Style="{StaticResource IRI.Maptor.Styles.Grid.FieldRow}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="NumericUpDown" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}" />
+                            <mah:NumericUpDown Grid.Column="1" Value="250" Minimum="0" Maximum="1000"
+                                               Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Normal}"
+                                               HorizontalAlignment="Left" MinWidth="140" />
+                        </Grid>
+
+                        <Grid Style="{StaticResource IRI.Maptor.Styles.Grid.FieldRow}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Slider.Normal" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}" />
+                            <Slider Grid.Column="1" Value="12" Minimum="0" Maximum="20"
+                                    Style="{StaticResource IRI.Maptor.Styles.Slider.Normal}" />
+                        </Grid>
+
+                        <WrapPanel Margin="0,6,0,0">
+                            <CheckBox Content="CheckBox.Normal" IsChecked="True"
+                                      Style="{StaticResource IRI.Maptor.Styles.CheckBox.Normal}" Margin="4,4,16,4" />
+                            <CheckBox Content="CheckBox.Small"
+                                      Style="{StaticResource IRI.Maptor.Styles.CheckBox.Small}" Margin="4,4,16,4" />
+                            <RadioButton Content="RadioButton.Form" IsChecked="True" GroupName="demo"
+                                         Style="{StaticResource IRI.Maptor.Styles.RadioButton.Form}" Margin="4,4,16,4" />
+                            <RadioButton Content="Other" GroupName="demo"
+                                         Style="{StaticResource IRI.Maptor.Styles.RadioButton.Form}" Margin="4,4,16,4" />
+                            <mah:ToggleSwitch Header="ToggleSwitch.Normal" IsOn="True"
+                                              Style="{StaticResource IRI.Maptor.Styles.ToggleSwitch.Normal}" Margin="4" />
+                        </WrapPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- ============ SURFACES ============ -->
+                <TextBlock Text="Surfaces" Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}" />
+                <Border Style="{StaticResource IRI.Maptor.Styles.Border.Panel}" Margin="0,8,0,0">
+                    <StackPanel>
+                        <!--The documented pair: Border.PanelHeader is an ACCENT band and
+                            TextBlock.HeaderTitle is the only caption style meant to sit on it.
+                            Watch this one as you change accent: IdealForeground is white in both
+                            modes, so a light accent (Amber, Lime, Yellow) leaves white on near-white
+                            and the pair fails. That is the rule recorded in PROGRESS.md section 5:
+                            use the accent as a border with a themed surface behind text. This band
+                            is here so the failure is visible rather than theoretical.-->
+                        <Border Style="{StaticResource IRI.Maptor.Styles.Border.PanelHeader}">
+                            <TextBlock Text="Border.PanelHeader + TextBlock.HeaderTitle" Style="{StaticResource IRI.Maptor.Styles.TextBlock.HeaderTitle}" />
+                        </Border>
+                        <StackPanel Margin="8">
+                            <Expander Header="Expander.Section" IsExpanded="True"
+                                      Style="{StaticResource IRI.Maptor.Styles.Expander.Section}">
+                                <StackPanel Margin="4">
+                                    <TextBlock Text="Sections collapse; the header keeps the same height whether or not it carries a control."
+                                               Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}" TextWrapping="Wrap" />
+                                    <Separator Style="{StaticResource IRI.Maptor.Styles.Separator.Horizontal}" />
+                                    <TextBlock Text="Separator.Horizontal above." Style="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}" />
+                                </StackPanel>
+                            </Expander>
+
+                            <TabControl Style="{StaticResource IRI.Maptor.Styles.TabControl.Form}" Margin="0,8,0,0" MinHeight="90">
+                                <TabItem Header="First" Style="{StaticResource IRI.Maptor.Styles.TabItem.Form}">
+                                    <TextBlock Text="TabControl.Form with TabItem.Form." Margin="8"
+                                               Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}" />
+                                </TabItem>
+                                <TabItem Header="Second" Style="{StaticResource IRI.Maptor.Styles.TabItem.Form}">
+                                    <TextBlock Text="The selected pill and the track round concentrically; that is what CornerRadius.TabTrack is for." Margin="8"
+                                               Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}" TextWrapping="Wrap" />
+                                </TabItem>
+                            </TabControl>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- ============ OVER-MAP CHROME ============ -->
+                <TextBlock Text="Over-map chrome" Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}" />
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.Note}"
+                           Text="IRI.Maptor.Brushes.OnMap.* is deliberately NOT theme-swapped: it sits on imagery, not on a themed surface, so it cannot follow light/dark. These stay put when you flip the switch above, and that is correct." />
+                <Border Margin="0,8,0,24" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"
+                        Background="#4A5D3A" Padding="16">
+                    <StackPanel HorizontalAlignment="Left">
+                        <Border Background="{StaticResource IRI.Maptor.Brushes.OnMap.Surface}"
+                                BorderBrush="{StaticResource IRI.Maptor.Brushes.OnMap.Border}"
+                                BorderThickness="1" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"
+                                Padding="10,6">
+                            <TextBlock Text="37°46′29.6″N  122°25′09.8″W"
+                                       Foreground="{StaticResource IRI.Maptor.Brushes.OnMap.Text}"
+                                       FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Small}" />
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

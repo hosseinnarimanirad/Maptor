@@ -1138,6 +1138,66 @@
   <data name="mapPanel_srs_title" xml:space="preserve">
     <value>Sistema di riferimento spaziale</value>
   </data>
+  <data name="dialog_mgrs_title" xml:space="preserve">
+    <value>Vai a MGRS</value>
+  </data>
+  <data name="dialog_mgrs_reference" xml:space="preserve">
+    <value>Riferimento</value>
+  </data>
+  <data name="dialog_mgrs_watermark" xml:space="preserve">
+    <value>39 · 39S · 39S WV · 39S WV 53516 39501</value>
+  </data>
+  <data name="dialog_mgrs_tooltip" xml:space="preserve">
+    <value>Una zona, una zona di griglia, un quadrato da 100 km o un riferimento completo. Più è breve, più ampia è la regione.</value>
+  </data>
+  <data name="layer_mgrsGrid_cells" xml:space="preserve">
+    <value>Quadrati</value>
+  </data>
+  <data name="layer_mgrsGrid_labels" xml:space="preserve">
+    <value>Valori della griglia</value>
+  </data>
+  <data name="layer_mgrsGrid_squares" xml:space="preserve">
+    <value>Nomi dei quadrati</value>
+  </data>
+  <data name="cmd_general_mapGrids" xml:space="preserve">
+    <value>Griglie</value>
+  </data>
+  <data name="layer_mapGrid_geodetic" xml:space="preserve">
+    <value>Griglia lat/long</value>
+  </data>
+  <data name="layer_mapGrid_utm" xml:space="preserve">
+    <value>Griglia UTM</value>
+  </data>
+  <data name="layer_mapGrid_lines" xml:space="preserve">
+    <value>Linee della griglia</value>
+  </data>
+  <data name="layer_mapGrid_labels" xml:space="preserve">
+    <value>Valori della griglia</value>
+  </data>
+  <data name="layer_mgrsGrid_title" xml:space="preserve">
+    <value>Griglia MGRS</value>
+  </data>
+  <data name="cmd_general_toggleMgrsGrid" xml:space="preserve">
+    <value>Griglia MGRS</value>
+  </data>
+  <data name="dialog_mgrs_currentPosition" xml:space="preserve">
+    <value>Sotto il puntatore</value>
+  </data>
+  <data name="dialog_mgrs_copyCurrentPosition" xml:space="preserve">
+    <value>Copia posizione</value>
+  </data>
+  <data name="dialog_mgrs_copy" xml:space="preserve">
+    <value>Copia riferimento</value>
+  </data>
+  <data name="dialog_mgrs_invalid" xml:space="preserve">
+    <value>Riferimento MGRS non valido</value>
+  </data>
+  <data name="dialog_mgrs_zoomTo" xml:space="preserve">
+    <value>Zoom su</value>
+  </data>
+  <data name="map_coordinatePanel_mgrs" xml:space="preserve">
+    <value>MGRS</value>
+  </data>
   <data name="map_coordinatePanel_height" xml:space="preserve">
     <value>Altezza</value>
   </data>

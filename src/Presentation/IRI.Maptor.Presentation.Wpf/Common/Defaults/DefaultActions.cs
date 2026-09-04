@@ -38,6 +38,26 @@ public static class DefaultActions
     }
 
 
+    /// <summary>
+    /// Opens the MGRS panel. Separate from the Go To window because an MGRS reference names a
+    /// region rather than a position, so the panel zooms to an extent instead of panning to a
+    /// point, and it takes no starting position.
+    /// </summary>
+    public static Action GetDefaultMgrsGoToAction(Window ownerWindow, MapViewModelBase mapPresenter)
+    {
+        return new Action(() =>
+        {
+            var presenter = MgrsGoToViewModel.Create(mapPresenter);
+
+            var view = new IRI.Maptor.Presentation.Wpf.Controls.MgrsGoToMetroWindow(presenter);
+
+            view.Owner = ownerWindow;
+            view.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            view.Show();
+        });
+    }
+
+
     public static void GetDefaultShowSymbologyView(Window ownerWindow, ILayer layer, MapViewModelBase viewModel)
     {
         if (layer is not SymbolizableLayer symbolizable)

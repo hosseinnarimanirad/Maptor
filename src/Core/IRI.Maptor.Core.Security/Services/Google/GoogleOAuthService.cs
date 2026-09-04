@@ -1,12 +1,7 @@
 ﻿using IRI.Maptor.Core.Common.Helpers;
 using IRI.Maptor.Core.Common.Contracts.Google;
-using IRI.Maptor.Core.Security;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using IRI.Maptor.Core.Common.Services;
 
 namespace IRI.Maptor.Core.Security.Services.Google
@@ -14,8 +9,8 @@ namespace IRI.Maptor.Core.Security.Services.Google
     public static class GoogleOAuthService
     {
 
-        const string _clientID = "525009601749-75ds9jtdar3pl2e5qn7hc58ooe8vqu6n.apps.googleusercontent.com";
-        const string _clientSecret = "Ucjud5t8GxbHZyL2HBrofSS_";
+        const string _clientID = "xxxx.apps.googleusercontent.com";
+        const string _clientSecret = "xxxx";
 
 
         const string authorizationEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";

@@ -1138,6 +1138,66 @@
   <data name="mapPanel_srs_title" xml:space="preserve">
     <value>Пространственная система отсчета</value>
   </data>
+  <data name="dialog_mgrs_title" xml:space="preserve">
+    <value>Перейти к MGRS</value>
+  </data>
+  <data name="dialog_mgrs_reference" xml:space="preserve">
+    <value>Обозначение</value>
+  </data>
+  <data name="dialog_mgrs_watermark" xml:space="preserve">
+    <value>39 · 39S · 39S WV · 39S WV 53516 39501</value>
+  </data>
+  <data name="dialog_mgrs_tooltip" xml:space="preserve">
+    <value>Зона, зона сетки, квадрат 100 км или полное обозначение. Чем короче, тем больше область.</value>
+  </data>
+  <data name="layer_mgrsGrid_cells" xml:space="preserve">
+    <value>Квадраты</value>
+  </data>
+  <data name="layer_mgrsGrid_labels" xml:space="preserve">
+    <value>Значения сетки</value>
+  </data>
+  <data name="layer_mgrsGrid_squares" xml:space="preserve">
+    <value>Имена квадратов</value>
+  </data>
+  <data name="cmd_general_mapGrids" xml:space="preserve">
+    <value>Сетки</value>
+  </data>
+  <data name="layer_mapGrid_geodetic" xml:space="preserve">
+    <value>Сетка широты/долготы</value>
+  </data>
+  <data name="layer_mapGrid_utm" xml:space="preserve">
+    <value>Сетка UTM</value>
+  </data>
+  <data name="layer_mapGrid_lines" xml:space="preserve">
+    <value>Линии сетки</value>
+  </data>
+  <data name="layer_mapGrid_labels" xml:space="preserve">
+    <value>Значения сетки</value>
+  </data>
+  <data name="layer_mgrsGrid_title" xml:space="preserve">
+    <value>Сетка MGRS</value>
+  </data>
+  <data name="cmd_general_toggleMgrsGrid" xml:space="preserve">
+    <value>Сетка MGRS</value>
+  </data>
+  <data name="dialog_mgrs_currentPosition" xml:space="preserve">
+    <value>Под курсором</value>
+  </data>
+  <data name="dialog_mgrs_copyCurrentPosition" xml:space="preserve">
+    <value>Копировать позицию</value>
+  </data>
+  <data name="dialog_mgrs_copy" xml:space="preserve">
+    <value>Копировать обозначение</value>
+  </data>
+  <data name="dialog_mgrs_invalid" xml:space="preserve">
+    <value>Неверное обозначение MGRS</value>
+  </data>
+  <data name="dialog_mgrs_zoomTo" xml:space="preserve">
+    <value>Приблизить</value>
+  </data>
+  <data name="map_coordinatePanel_mgrs" xml:space="preserve">
+    <value>MGRS</value>
+  </data>
   <data name="map_coordinatePanel_height" xml:space="preserve">
     <value>Высота</value>
   </data>

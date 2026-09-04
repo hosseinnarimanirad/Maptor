@@ -79,6 +79,26 @@ public class GeneralSettingsModel : Notifier, IGeneralSettings
         }
     }
 
+    public bool CoordinatePanel_ShowMgrs
+    {
+        get => _settings.CoordinatePanel_ShowMgrs;
+        set
+        {
+            _settings.CoordinatePanel_ShowMgrs = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    public string MapGrids_SelectedKeys
+    {
+        get => _settings.MapGrids_SelectedKeys;
+        set
+        {
+            _settings.MapGrids_SelectedKeys = value;
+            RaisePropertyChanged();
+        }
+    }
+
     public bool Legend_ShowLegendTools
     {
         get => _settings.Legend_ShowLegendTools;

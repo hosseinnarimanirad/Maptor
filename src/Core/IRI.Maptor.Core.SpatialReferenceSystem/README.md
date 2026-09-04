@@ -14,6 +14,7 @@ dotnet add package IRI.Maptor.Core.SpatialReferenceSystem
 ## Features
 
 - Map projections: Mercator, Web Mercator, Transverse Mercator, UTM, cylindrical equal-area, Lambert conformal conic (1- and 2-parallel), and Albers equal-area conic (function form in `MapProjects`)
+- MGRS (`MgrsConverter`): reads and writes Military Grid Reference System references such as `39S WV 53516 39501` at any of the six precisions, including the irregular Norway and Svalbard zones. Not a projection — a text encoding of UTM
 - Reference ellipsoids: predefined models (WGS84, GRS80, Clarke 1866/1880, Bessel 1841, International 1924, …) plus custom ellipsoids via semi-major/semi-minor axis parameters
 - Coordinate system transformations (`Transformations`): geodetic to geocentric Cartesian and back, datum change between ellipsoids (`ChangeDatum`), average/instantaneous terrestrial, local astronomic and local geodetic, horizontal angle, apparent place, and orbital conversions
 - Typed geodetic points (`GeodeticPoint<TLinear, TAngular>`) built on the unit types of `IRI.Maptor.Core.Common`
@@ -61,7 +62,7 @@ var cartesian = point.ToCartesian<Meter>();
 ## See also
 
 - [Coordinate systems](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.SpatialReferenceSystem/CoordinateSystems/README.md) — the geocentric/topocentric systems and how `Transformations` converts between them
-- [Map projections](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.SpatialReferenceSystem/MapProjections/README.md) — UTM, Web Mercator, and the other implemented projections
+- [Map projections](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.SpatialReferenceSystem/MapProjections/README.md) — UTM, Web Mercator, the other implemented projections, and MGRS
 - [Models](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.SpatialReferenceSystem/Models/README.md) — reference ellipsoids and horizontal datums
 
 ---

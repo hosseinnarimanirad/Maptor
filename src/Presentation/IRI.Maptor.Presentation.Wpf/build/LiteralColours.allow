@@ -1,0 +1,32 @@
+# Views that may contain a literal colour, and why.
+#
+# Anything under Views/ that is NOT listed here and contains a literal #RGB / #RRGGBB / #AARRGGBB
+# fails the build (see LiteralColourGuard.targets). The point is a ratchet: a NEW view cannot
+# quietly add a hardcoded colour. Colours belong on MahApps.Brushes.*, IRI.Maptor.Brushes.* or a
+# Maptor style -- see docs/features/design-system/AUTHORING.md section 4.
+#
+# To add a line you need a reason that is not "it was easier". A brand colour, a fixed paper
+# preview, or a WPF limitation are reasons. "This grey looked right" is not: that grey will be
+# wrong in the other theme.
+#
+# This list started at 13 files on 2026-08-31 and is down to 4. Three of the original entries were
+# wrong about their own file and are recorded here so the mistake is not repeated:
+#   MapLegendView.xaml      listed as "known debt, genuinely theme-breaking #F5F5F5/#999999".
+#                           Those setters are inside a commented-out block. Nothing to fix.
+#   ActiveExtentView.xaml   listed as "drawn over imagery". Its two literals were a fixed dodger
+#                           blue glow sitting beside Accent/Highlight setters; now on
+#                           MahApps.Colors.Highlight.
+#   FeatureChangesView.xaml listed as "over-map chrome". Not chrome at all: a WKT code block in a
+#                           dialog, with themed foreground over a fixed near-white plate, i.e. a
+#                           real dark-theme bug. Now on MahApps.Brushes.Gray10.
+# The lesson is the one PROGRESS.md section 5 already records: a register entry is wrong more often
+# than the code is. Re-read the file before trusting the reason next to it.
+#
+# Lines are project-relative, forward slashes, one per line, `path | reason`.
+# Lines starting with # and blank lines are ignored. XML comments in the views themselves are
+# stripped before scanning, so a commented-out colour never counts.
+
+Views/Dialogs/EmailSignUpDialogView.xaml | Google's own logo and button colours, fixed by Google's brand and not ours to theme. The defaultRed/defaultGreen keys at the top are NOT covered by that and should move onto Valid/Invalid when this signed-off screen is next opened.
+Views/Dialogs/PrintToPdfDialogView.xaml  | a preview of printed paper: black on white is the artefact, not the theme.
+Views/MultiSelectItem/SelectedItem.xaml  | lightRedColor, and it cannot move. ColorAnimation.To needs a Color rather than a Brush, a Storyboard is a Freezable so it cannot take DynamicResource, and the status palette defines brushes only. The file says so itself.
+Views/MapMarkers/CoordinateMarker.xaml   | #CCFFFFFF plate behind a coordinate readout drawn straight onto imagery. This is the natural first consumer of IRI.Maptor.Brushes.OnMap.Surface (#F2FFFFFF); held back only because that changes the plate's opacity, and map markers are already awaiting a visual review (PROGRESS.md section 6).

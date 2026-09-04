@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using IRI.Maptor.Samples.Wpf.Gallery.Samples.AttributeTable;
 using IRI.Maptor.Samples.Wpf.Gallery.Samples.BasicMap;
 using IRI.Maptor.Samples.Wpf.Gallery.Samples.DelaunayVoronoi;
@@ -9,6 +9,7 @@ using IRI.Maptor.Samples.Wpf.Gallery.Samples.Localization;
 using IRI.Maptor.Samples.Wpf.Gallery.Samples.MapLegend;
 using IRI.Maptor.Samples.Wpf.Gallery.Samples.MapMarkers;
 using IRI.Maptor.Samples.Wpf.Gallery.Samples.Measurement;
+using IRI.Maptor.Samples.Wpf.Gallery.Samples.ThemeAndControls;
 
 namespace IRI.Maptor.Samples.Wpf.Gallery.Shell;
 
@@ -55,6 +56,10 @@ public static class SampleCatalog
         new("Analysis", "Delaunay and Voronoi",
             "Scatter random points over Europe, then draw the Delaunay triangulation and the Voronoi diagram Maptor derives from them. Show either, or both.",
             "DelaunayVoronoi", () => new DelaunayVoronoiSample()),
+
+        new("UI", "Theme and controls",
+            "Every Maptor style token on one page, over a live accent + light/dark switch. Flip Dark and watch the status palette, pills and banners move; the over-map chrome deliberately does not.",
+            "ThemeAndControls", () => new ThemeAndControlsSample()),
 
         new("UI", "Localization and right-to-left",
             "Switch the UI language at run time; Maptor controls and your own localized bindings follow, including right-to-left flow.",

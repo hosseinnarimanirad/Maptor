@@ -1,4 +1,4 @@
-<mahApp:MetroWindow x:Class="IRI.Maptor.Presentation.Wpf.Controls.Dialogs.DxfOpenDialogView"
+﻿<mahApp:MetroWindow x:Class="IRI.Maptor.Presentation.Wpf.Controls.Dialogs.DxfOpenDialogView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
@@ -148,7 +148,7 @@
                   GridLinesVisibility="Horizontal"
                   BorderBrush="{DynamicResource MahApps.Brushes.Gray7}"
                   BorderThickness="1"
-                  FontSize="12">
+                  FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Small}">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Index}" Width="40">
                     <DataGridTextColumn.Header>

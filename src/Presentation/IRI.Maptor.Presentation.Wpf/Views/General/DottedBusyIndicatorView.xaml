@@ -1,4 +1,4 @@
-<UserControl x:Class="IRI.Maptor.Presentation.Wpf.Controls.DottedBusyIndicatorView"
+﻿<UserControl x:Class="IRI.Maptor.Presentation.Wpf.Controls.DottedBusyIndicatorView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,7 +7,15 @@
              xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
              Name="root">
     <UserControl.Resources>
-        <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+        <ResourceDictionary>
+            <!--for the IRI.Maptor.Styles.Size.Text.* type scale used below. A StaticResource
+                resolves only within its own scope chain, so declaring the merge here means this
+                view does not depend on the host having merged Maptor.All.xaml.-->
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Common.Metrics.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+        </ResourceDictionary>
     </UserControl.Resources>
     <StackPanel>
         <StackPanel Orientation="Horizontal"
@@ -59,7 +67,7 @@
         </StackPanel>
         <TextBlock Text="{Binding [common_loadingText], Source={StaticResource Localization}}"
                 Foreground="White"
-                FontSize="14"
+                FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.BodyLarge}"
                 FontWeight="SemiBold"
                 HorizontalAlignment="Center"
                 Margin="0,8,0,0"                

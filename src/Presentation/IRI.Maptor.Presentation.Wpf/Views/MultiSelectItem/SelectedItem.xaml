@@ -3,6 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  >
     <UserControl.Resources>
         <ResourceDictionary>
+            <!--for the IRI.Maptor.Styles.Size.Text.* type scale used below. A property element has
+                to come before or after the dictionary's content, never in the middle of it.-->
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Common.Metrics.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
             <!--This control used to carry its own private palette (#999999, #CCCCCC, #34495E,
                 #FFEA4333). Everything that could move to a theme brush has; what is left here is
                 only what cannot.
@@ -17,6 +23,7 @@
                 button, where red is semantic rather than thematic, and there is no theme Color
                 key for the status palette to point at (Status.Light/Dark define brushes only).-->
             <Color x:Key="lightRedColor">#FFEA4333</Color>
+
 
             <PathGeometry x:Key="cross">M1.442037,0L16.002031,14.585751 30.588022,0.025996563 32.001024,1.4409965 17.414783,16.001002 31.97503,30.587006 30.560022,32 15.999268,17.413969 1.4130009,31.973999 0,30.558998 14.586494,15.998742 0.027028472,1.4140019z</PathGeometry>
 
@@ -73,7 +80,7 @@
 
             </Style>
         </StackPanel.Resources>
-        <TextBlock Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" FlowDirection="RightToLeft" Foreground="{DynamicResource MahApps.Brushes.Gray3}" FontSize="11" Margin="5,0" VerticalAlignment="Center"/>
+        <TextBlock Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" FlowDirection="RightToLeft" Foreground="{DynamicResource MahApps.Brushes.Gray3}" FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Caption}" Margin="5,0" VerticalAlignment="Center"/>
 
         <Button Width="12" Height="12" Background="Transparent" Command="{Binding RemoveCommand}">
             <Path Data="{StaticResource cross}" Stretch="Uniform"  Fill="{DynamicResource MahApps.Brushes.Gray3}" Stroke="{DynamicResource MahApps.Brushes.Gray3}"/>

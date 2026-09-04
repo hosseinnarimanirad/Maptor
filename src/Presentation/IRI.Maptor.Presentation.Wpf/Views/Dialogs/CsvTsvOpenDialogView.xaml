@@ -1,4 +1,4 @@
-<mahApp:MetroWindow x:Class="IRI.Maptor.Presentation.Wpf.Controls.Dialogs.CsvTsvOpenDialogView"
+﻿<mahApp:MetroWindow x:Class="IRI.Maptor.Presentation.Wpf.Controls.Dialogs.CsvTsvOpenDialogView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
@@ -232,7 +232,7 @@
                 mahApp:TextBoxHelper.Watermark="{Binding [dialog_csvTsvOpen_pasteWatermark], Source={StaticResource Localization}}"
                 Text="{Binding RawText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 TextWrapping="NoWrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
-                HorizontalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="12"
+                HorizontalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"
                 Padding="4" FlowDirection="LeftToRight"
                 IsReadOnly="{Binding IsRawTextReadOnly}"/>
 

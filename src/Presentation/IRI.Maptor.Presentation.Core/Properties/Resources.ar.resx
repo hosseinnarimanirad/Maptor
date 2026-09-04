@@ -1138,6 +1138,66 @@
   <data name="mapPanel_srs_title" xml:space="preserve">
     <value>نظام الإسناد المكاني</value>
   </data>
+  <data name="dialog_mgrs_title" xml:space="preserve">
+    <value>الانتقال إلى MGRS</value>
+  </data>
+  <data name="dialog_mgrs_reference" xml:space="preserve">
+    <value>المرجع</value>
+  </data>
+  <data name="dialog_mgrs_watermark" xml:space="preserve">
+    <value>39 · 39S · 39S WV · 39S WV 53516 39501</value>
+  </data>
+  <data name="dialog_mgrs_tooltip" xml:space="preserve">
+    <value>منطقة أو منطقة شبكية أو مربع 100 كم أو مرجع كامل. كلما قصر المرجع اتسعت المنطقة.</value>
+  </data>
+  <data name="layer_mgrsGrid_cells" xml:space="preserve">
+    <value>المربعات</value>
+  </data>
+  <data name="layer_mgrsGrid_labels" xml:space="preserve">
+    <value>قيم الشبكة</value>
+  </data>
+  <data name="layer_mgrsGrid_squares" xml:space="preserve">
+    <value>أسماء المربعات</value>
+  </data>
+  <data name="cmd_general_mapGrids" xml:space="preserve">
+    <value>الشبكات</value>
+  </data>
+  <data name="layer_mapGrid_geodetic" xml:space="preserve">
+    <value>شبكة خطوط الطول والعرض</value>
+  </data>
+  <data name="layer_mapGrid_utm" xml:space="preserve">
+    <value>شبكة UTM</value>
+  </data>
+  <data name="layer_mapGrid_lines" xml:space="preserve">
+    <value>خطوط الشبكة</value>
+  </data>
+  <data name="layer_mapGrid_labels" xml:space="preserve">
+    <value>قيم الشبكة</value>
+  </data>
+  <data name="layer_mgrsGrid_title" xml:space="preserve">
+    <value>شبكة MGRS</value>
+  </data>
+  <data name="cmd_general_toggleMgrsGrid" xml:space="preserve">
+    <value>شبكة MGRS</value>
+  </data>
+  <data name="dialog_mgrs_currentPosition" xml:space="preserve">
+    <value>تحت المؤشر</value>
+  </data>
+  <data name="dialog_mgrs_copyCurrentPosition" xml:space="preserve">
+    <value>نسخ الموقع</value>
+  </data>
+  <data name="dialog_mgrs_copy" xml:space="preserve">
+    <value>نسخ المرجع</value>
+  </data>
+  <data name="dialog_mgrs_invalid" xml:space="preserve">
+    <value>مرجع MGRS غير صالح</value>
+  </data>
+  <data name="dialog_mgrs_zoomTo" xml:space="preserve">
+    <value>تكبير إلى</value>
+  </data>
+  <data name="map_coordinatePanel_mgrs" xml:space="preserve">
+    <value>MGRS</value>
+  </data>
   <data name="map_coordinatePanel_height" xml:space="preserve">
     <value>ارتفاع</value>
   </data>

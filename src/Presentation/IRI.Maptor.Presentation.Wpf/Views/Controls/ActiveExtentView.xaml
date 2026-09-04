@@ -22,7 +22,7 @@
                         <Setter Property="Stroke" Value="White"/>
                         <Setter Property="Effect">
                             <Setter.Value>
-                                <DropShadowEffect Color="#1E90FF" ShadowDepth="0" BlurRadius="8" Opacity="0.7"/>
+                                <DropShadowEffect Color="{StaticResource MahApps.Colors.Highlight}" ShadowDepth="0" BlurRadius="8" Opacity="0.7"/>
                             </Setter.Value>
                         </Setter>
                     </Trigger>
@@ -38,7 +38,7 @@
                         <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}" />
                         <Setter Property="Effect">
                             <Setter.Value>
-                                <DropShadowEffect Color="#1E90FF" ShadowDepth="0" BlurRadius="10" Opacity="0.5"/>
+                                <DropShadowEffect Color="{StaticResource MahApps.Colors.Highlight}" ShadowDepth="0" BlurRadius="10" Opacity="0.5"/>
                             </Setter.Value>
                         </Setter>
                     </Trigger>

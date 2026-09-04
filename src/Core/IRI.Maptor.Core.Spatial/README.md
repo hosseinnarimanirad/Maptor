@@ -22,6 +22,7 @@ dotnet add package IRI.Maptor.Core.Spatial
 - Space-filling curves: Hilbert and Z-order (Morton) point ordering
 - Spatial indexes: k-d tree (plain and balanced), R-tree, and space-filling-curve R-tree
 - Map sheet/tile indexes for geodetic and UTM grids
+- Cartographic map grids: a geographic graticule, a UTM grid cut at its zone seams, or a grid of any projection — drawn as polylines in two weights, with edge values, at an interval chosen from the view
 - Format I/O (see table below)
 
 ## Format I/O
@@ -72,6 +73,7 @@ var parsed = Geometry<Point>.FromWkt("POINT (51.39 35.69)", 4326);
 ## See also
 
 - [Analysis](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/Analysis/README.md) · [Digital terrain modeling](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/Analysis/DigitalTerrainModeling/README.md) · [Interpolation](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/Analysis/Interpolation/README.md) · [Space-filling curves](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/Analysis/SFC/README.md)
+- [Map grids](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/Helpers/MapGrids/README.md)
 - [Advanced structures](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/AdvancedStructures/README.md) · [K-d trees](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/AdvancedStructures/KdTrees/README.md) · [R-trees](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/AdvancedStructures/RTrees/README.md)
 - IO formats: [GeoJSON](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/IO/GeoJsonFormat/README.md) · [WKT/WKB](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/IO/OgcSFA/README.md) · [TopoJSON](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/IO/TopoJson/README.md) · [DXF](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/IO/Dxf/README.md) · [SVG](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/IO/Svg/README.md) · [EPS](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/IO/Eps/README.md) · [PMTiles](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/IO/PmTiles/README.md) · [Vector tiles](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/IO/VectorTiles/README.md) · [Cesium terrain](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/IO/CesiumTerrain/README.md) · [SQL Server native binary](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/IO/SqlServerNativeBinary/README.md) · [ESRI JSON](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/IO/EsriJson/README.md)
 

@@ -20,6 +20,10 @@ public class GeneralSettings : IGeneralSettings
 
     public bool CoordinatePanel_ShowCoordinatePanel { get; set; } = true;
 
+    public bool CoordinatePanel_ShowMgrs { get; set; } = false;
+
+    public string MapGrids_SelectedKeys { get; set; } = string.Empty;
+
     public bool Legend_ShowLegendTools { get; set; } = false;
 
     public bool Legend_ShowLayerColors { get; set; } = false;

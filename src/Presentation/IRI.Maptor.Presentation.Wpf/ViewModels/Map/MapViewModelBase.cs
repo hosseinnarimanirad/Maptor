@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -440,6 +440,16 @@ public abstract class MapViewModelBase : ViewModelBase
     private void Layers_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         UpdateAllNonGroupLayers();
+
+        // A grid or the MGRS overlay can leave the map by the legend as well as by its ribbon
+        // control, and the control has to notice: both are user-deletable group layers, and a
+        // toggle that kept claiming "on" after the layer was deleted would then remove nothing on
+        // the next click. Reconciled here rather than by subscribing from the view models, because
+        // Layers is replaced wholesale when the map view attaches and a subscription would be left
+        // on the old collection.
+        _mapGrids?.OnLayersChanged();
+
+        ReconcileMgrsGridLayer();
 
         var newItems = e.NewItems?.OfType<ILayer>()?.Where(l => /*l.ShowInToc && */l.CanReorderInToc) ?? Enumerable.Empty<ILayer>();
 
@@ -1606,6 +1616,12 @@ public abstract class MapViewModelBase : ViewModelBase
     public Action RequestCancelMeasure;
 
     public Action<Point> RequestShowGoToView;
+
+    /// <summary>
+    /// Opens the MGRS panel. Assigned after <see cref="Initialize"/> rather than through it, so
+    /// that adding it did not change a signature every application presenter overrides.
+    /// </summary>
+    public Action? RequestShowMgrsGoToView;
 
     public Action<ILayer> RequestShowSymbologyView;
 
@@ -7710,6 +7726,98 @@ public abstract class MapViewModelBase : ViewModelBase
             }
 
             return _goToCommand;
+        }
+    }
+
+    private RelayCommand _mgrsGoToCommand;
+    public RelayCommand MgrsGoToCommand
+    {
+        get
+        {
+            if (_mgrsGoToCommand == null)
+            {
+                _mgrsGoToCommand = new RelayCommand(param => RequestShowMgrsGoToView?.Invoke());
+            }
+
+            return _mgrsGoToCommand;
+        }
+    }
+
+    private ILayer? _mgrsGridLayer;
+
+    /// <summary>Whether the MGRS grid layer is on the map right now.</summary>
+    public bool IsMgrsGridVisible => _mgrsGridLayer is not null;
+
+    /// <summary>
+    /// Forgets the MGRS grid layer once it is no longer on the map.
+    /// </summary>
+    /// <remarks>
+    /// The group is <c>CanUserDelete = true</c>, so the legend can remove it behind the ribbon
+    /// toggle's back. Without this the field kept pointing at the removed layer, the toggle went on
+    /// reporting the grid as visible, and clicking it removed a layer that was already gone instead
+    /// of putting the grid back.
+    /// </remarks>
+    private void ReconcileMgrsGridLayer()
+    {
+        if (_mgrsGridLayer is null || Layers?.Contains(_mgrsGridLayer) == true)
+            return;
+
+        _mgrsGridLayer = null;
+
+        RaisePropertyChanged(nameof(IsMgrsGridVisible));
+    }
+
+    private MapGridsViewModel? _mapGrids;
+
+    /// <summary>
+    /// The map grids — geodetic, UTM and the named projected systems — and which are drawn.
+    /// </summary>
+    /// <remarks>
+    /// Built on first use rather than in the constructor, so the titles follow the UI language in
+    /// force when the ribbon first binds to it.
+    /// </remarks>
+    public MapGridsViewModel MapGrids => _mapGrids ??= new MapGridsViewModel(this);
+
+    /// <summary>The drop-down's items. A shorthand for <see cref="MapGrids"/>' collection.</summary>
+    public ObservableCollection<MapGridItemViewModel> MapGridItems => MapGrids.Items;
+
+    private RelayCommand _toggleMgrsGridCommand;
+
+    /// <summary>
+    /// Puts the MGRS grid layer on the map, or takes it off again. The layer is held by reference
+    /// rather than looked up by name, so one the user has renamed in the legend is still the one
+    /// this removes.
+    /// </summary>
+    public RelayCommand ToggleMgrsGridCommand
+    {
+        get
+        {
+            if (_toggleMgrsGridCommand == null)
+            {
+                _toggleMgrsGridCommand = new RelayCommand(param =>
+                {
+                    if (_mgrsGridLayer is null)
+                    {
+                        // fully qualified: `Layers` alone binds to this class's layer collection
+                        _mgrsGridLayer = global::IRI.Maptor.Presentation.Wpf.Layers.MgrsGridLayers.Create();
+
+                        AddLayer(_mgrsGridLayer);
+                    }
+                    else
+                    {
+                        // ClearLayer, not RequestRemoveLayer: the latter drops the layer from the
+                        // layer manager but leaves what is already drawn on the canvas, so the grid
+                        // stayed visible after being switched off.
+                        ClearLayer(_mgrsGridLayer, remove: true, forceRemove: true);
+
+                        _mgrsGridLayer = null;
+                    }
+
+                    RaisePropertyChanged(nameof(IsMgrsGridVisible));
+                });
+            }
+
+            return _toggleMgrsGridCommand;
         }
     }
 

@@ -2,5 +2,4 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <FontFamily x:Key="bYekan">pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Fonts/BYekan.ttf#B Yekan</FontFamily>
     <FontFamily x:Key="iranSans">/IRI.Maptor.Presentation.Wpf;component/Assets/Fonts/IRANSans.ttf#IRANSans</FontFamily>
-    <FontFamily x:Key="FontAwesome">/IRI.Maptor.Presentation.Wpf;component/Assets/Fonts/FontAwesome.ttf#FontAwesome</FontFamily>
 </ResourceDictionary>

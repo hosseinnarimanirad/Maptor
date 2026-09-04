@@ -57,9 +57,18 @@ public static class MapInitializationHelper
         // Initialize presenter with default services
         presenter.Initialize(dialogService, requestShowGoToView, requestShowSymbologyView, requestShowLayerSettingsView);
 
+        // not part of Initialize's signature, which every application presenter overrides
+        presenter.RequestShowMgrsGoToView = DefaultActions.GetDefaultMgrsGoToAction(ownerWindow, presenter);
+
 
         // Configure MapViewer with common settings
         ConfigureMapViewer(presenter, mapView/*, mapSettings*/);
+
+        // Put back the map grids that were on when the application last closed. Here rather than in
+        // the grids view model's constructor because that is built the first time the ribbon binds
+        // to it, which is not guaranteed to be after Register wired the layer delegates — and
+        // restoring a grid means adding a layer.
+        presenter.MapGrids.RestoreFromSettings();
 
         //// Configure presenter settings
         //ConfigurePresenterSettings(presenter, config);

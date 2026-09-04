@@ -168,42 +168,70 @@ public static class MapProjects
     }
 
     //*******************************Others
-    public static byte FindUtmZone(double lambda)
+
+    /// <summary>
+    /// Maps any longitude onto [-180, 180), so that values expressed as 0..360 (or shifted by any
+    /// number of whole turns) compare and arithmetic the same way as signed ones. A longitude that
+    /// is not a finite number comes back as NaN.
+    /// </summary>
+    /// <remarks>
+    /// Deliberately arithmetic rather than a subtract-until-in-range loop: such a loop never
+    /// terminates on an infinity, which is how the previous implementation of
+    /// <see cref="FindUtmZone"/> could hang.
+    /// </remarks>
+    public static double NormalizeLongitude(double longitude)
     {
-        while (lambda < 0)
-        {
-            lambda += 360;
-        }
+        if (double.IsNaN(longitude) || double.IsInfinity(longitude))
+            return double.NaN;
 
-        if (lambda >= 0 && lambda <= 180)
-        {
-            return (byte)(30 + Math.Ceiling(lambda / 6));
-        }
-        else if (lambda > 180 && lambda <= 360)
-        {
-            return (byte)(Math.Ceiling(lambda / 6) - 30);
-        }
-        else
-        {
-            throw new NotImplementedException();
-        }
+        var result = longitude % 360.0;
 
+        if (result < -180.0)
+            return result + 360.0;
+
+        if (result >= 180.0)
+            return result - 360.0;
+
+        return result;
     }
 
+    /// <summary>
+    /// The UTM zone containing a longitude. Zones are six degrees wide and half-open,
+    /// <c>[6n - 186, 6n - 180)</c>, so a longitude sitting exactly on a boundary belongs to the
+    /// zone to its <em>east</em>: 48 is zone 39, not 38.
+    /// </summary>
+    /// <param name="lambda">
+    /// Longitude in degrees. Any turn-shifted form is accepted, so a central meridian reported as
+    /// 183 resolves the same as -177.
+    /// </param>
+    /// <remarks>
+    /// This does not know about the two irregular areas of the grid (zone 32 widened over Norway,
+    /// zones 31/33/35/37 over Svalbard). MGRS does, and applies them on top of this.
+    /// </remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The longitude is not a finite number.</exception>
+    public static byte FindUtmZone(double lambda)
+    {
+        var normalized = NormalizeLongitude(lambda);
+
+        if (double.IsNaN(normalized))
+            throw new ArgumentOutOfRangeException(nameof(lambda), lambda, "Longitude must be a finite number.");
+
+        // Normalizing first bounds this to 1..60, so no clamp is needed: the antimeridian itself
+        // reads as -180 and therefore belongs to zone 1, the zone to its east.
+        return (byte)((int)Math.Floor(normalized / 6.0) + 31);
+    }
+
+    /// <summary>
+    /// The central meridian of a UTM zone, in degrees on [-177, 177]. Zone 1 is -177, zone 31 is
+    /// 3, zone 60 is 177.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">The zone is outside 1..60.</exception>
     public static int CalculateCentralMeridian(int zone)
     {
-        if (zone >= 0 && zone < 30)
-        {
-            return 180 + zone * 6 - 3;
-        }
-        else if (zone >= 30 && zone <= 60)
-        {
-            return (zone - 30) * 6 - 3;
-        }
-        else
-        {
-            throw new NotImplementedException();
-        }
+        if (zone < 1 || zone > 60)
+            throw new ArgumentOutOfRangeException(nameof(zone), zone, "UTM zones run from 1 to 60.");
+
+        return 6 * zone - 183;
     }
 
     private static bool CheckLongitude(double centralLongitude, double[] longitude)

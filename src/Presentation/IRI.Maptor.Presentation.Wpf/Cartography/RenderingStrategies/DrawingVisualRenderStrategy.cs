@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.IO;
 using System.Windows;
@@ -333,18 +333,20 @@ public class DrawingVisualRenderStrategy : RenderStrategy
 
                 WpfPoint location = mapCoordinates[i];
 
-                var temp = new WpfPoint(location.X - formattedText.Width * 1.5, location.Y - formattedText.Height / 2.0);
+                // The label is centred on its position. DrawText takes the top-LEFT corner for
+                // left-to-right text and the top-RIGHT for right-to-left, so the plate behind it
+                // has to be placed from the same origin or it drifts off the text: the
+                // left-to-right case used to draw the plate at the centre point itself, leaving a
+                // white box half a label down and to the right of what it was meant to back.
+                var textOrigin = new WpfPoint(location.X - formattedText.Width / 2.0, location.Y - formattedText.Height / 2.0);
 
-                if (flowDirection == FlowDirection.LeftToRight)
-                {
-                    drawingContext.DrawRectangle(backgroundBrush, null, new Rect(location, new Size(formattedText.Width, formattedText.Height)));
-                }
-                else
-                {
-                    drawingContext.DrawRectangle(backgroundBrush, null, new Rect(temp, new Size(formattedText.Width, formattedText.Height)));
-                }
+                var plateTopLeft = flowDirection == FlowDirection.LeftToRight
+                    ? textOrigin
+                    : new WpfPoint(textOrigin.X - formattedText.Width, textOrigin.Y);
 
-                drawingContext.DrawText(formattedText, new WpfPoint(location.X - formattedText.Width / 2.0, location.Y - formattedText.Height / 2.0));
+                drawingContext.DrawRectangle(backgroundBrush, null, new Rect(plateTopLeft, new Size(formattedText.Width, formattedText.Height)));
+
+                drawingContext.DrawText(formattedText, textOrigin);
             }
         }
 

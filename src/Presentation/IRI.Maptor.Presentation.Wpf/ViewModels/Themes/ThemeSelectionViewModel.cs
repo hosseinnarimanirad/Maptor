@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 
 using IRI.Maptor.Presentation.Wpf.Helpers;
@@ -9,8 +9,17 @@ namespace IRI.Maptor.Presentation.Wpf.ViewModels.Themes;
 
 public class ThemeSelectionViewModel : Notifier
 {
+    // What Cancel has to put back. Two different things, and they are not interchangeable:
+    // _originalSettings is what was persisted (either half may be null, meaning "never chosen"),
+    // while _appliedOnOpen is what the application was actually rendering when the dialog opened.
+    // Cancel restores the settings values verbatim and re-applies the rendered one, because
+    // ThemeHelper now reads a null argument as "keep what is applied" rather than "use the
+    // default" -- passing the nullable settings straight through would make Cancel a no-op for a
+    // user who had never picked a theme.
     private readonly MahAppsThemeColor? _originalTheme;
     private readonly ThemeMode? _originalMode;
+    private readonly AppliedTheme _appliedOnOpen;
+
     private readonly GeneralSettingsModel _generalSettings;
     private readonly Action<bool> _requestClose;
 
@@ -21,10 +30,12 @@ public class ThemeSelectionViewModel : Notifier
     {
         _originalTheme = generalSettings?.MahAppsTheme;
         _originalMode = generalSettings?.MahAppsThemeMode;
+        _appliedOnOpen = ThemeHelper.Current;
+
         _generalSettings = generalSettings ?? throw new ArgumentNullException(nameof(generalSettings));
         _requestClose = requestClose ?? throw new ArgumentNullException(nameof(requestClose));
 
-        _selectedMode = generalSettings?.MahAppsThemeMode ?? ThemeMode.Light;
+        _selectedMode = generalSettings?.MahAppsThemeMode ?? _appliedOnOpen.Mode;
 
         LoadThemes(generalSettings?.MahAppsTheme);
     }
@@ -48,7 +59,7 @@ public class ThemeSelectionViewModel : Notifier
                 theme.Mode = value;
 
             _generalSettings.MahAppsThemeMode = value;
-            ThemeHelper.ApplyTheme(SelectedTheme, value);
+            ThemeHelper.SetMode(value);
 
             RaisePropertyChanged();
             RaisePropertyChanged(nameof(IsDarkMode));
@@ -117,7 +128,7 @@ public class ThemeSelectionViewModel : Notifier
 
                         SelectedTheme = theme.Color;
                         _generalSettings.MahAppsTheme = SelectedTheme;
-                        ThemeHelper.ApplyTheme(theme.Color, SelectedMode);
+                        ThemeHelper.SetAccent(theme.Color);
                     }
                 });
             }
@@ -155,7 +166,7 @@ public class ThemeSelectionViewModel : Notifier
                 {
                     _generalSettings.MahAppsTheme = _originalTheme;
                     _generalSettings.MahAppsThemeMode = _originalMode;
-                    ThemeHelper.ApplyTheme(_originalTheme, _originalMode);
+                    ThemeHelper.ApplyTheme(_appliedOnOpen.Color, _appliedOnOpen.Mode);
                     _requestClose(false);
                 });
             }

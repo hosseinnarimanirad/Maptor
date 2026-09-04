@@ -1,7 +1,19 @@
-<Window x:Class="IRI.Maptor.Samples.Wpf.Gallery.MainWindow"
+﻿<Window x:Class="IRI.Maptor.Samples.Wpf.Gallery.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Maptor WPF gallery" Width="1280" Height="800" WindowStartupLocation="CenterScreen">
+        Title="Maptor WPF gallery" Width="1280" Height="800" WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+        TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
+    <!--Both of these are load-bearing, and neither is obvious.
+
+        Several Maptor text styles (TextBlock.WindowTitle, .Title, .PanelTitle, .CardTitle, .Hint)
+        set no Foreground of their own: they inherit TextElement.Foreground, which MahApps sets on
+        MetroWindow. A plain Window does not, so the inherited value falls back to the WPF default
+        of BLACK and those five render black on #252525 in the dark theme. Measured, in this
+        gallery, before this line existed.
+
+        The Background matters for the same reason in reverse: a window that paints nothing lets
+        dark cards float on a white sheet, and then every contrast judgement made from it is wrong.-->
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="260" />

@@ -1,4 +1,4 @@
-<mahApp:MetroWindow x:Class="IRI.Maptor.Presentation.Wpf.Controls.Dialogs.GeoJsonTopoJsonOpenDialogView"
+﻿<mahApp:MetroWindow x:Class="IRI.Maptor.Presentation.Wpf.Controls.Dialogs.GeoJsonTopoJsonOpenDialogView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
@@ -214,7 +214,7 @@
                 mahApp:TextBoxHelper.Watermark="{Binding [dialog_geoJsonTopoJsonOpen_pasteWatermark], Source={StaticResource Localization}}"
                 Text="{Binding RawJson, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 TextWrapping="NoWrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
-                HorizontalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="12"
+                HorizontalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"
                 Padding="4" FlowDirection="LeftToRight"
                 IsReadOnly="{Binding IsRawTextReadOnly}"/>
 
@@ -234,7 +234,7 @@
                   GridLinesVisibility="Horizontal"
                   BorderBrush="{DynamicResource MahApps.Brushes.Gray7}"
                   BorderThickness="1"
-                  FontSize="12">
+                  FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Small}">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Index}" Width="40">
                     <DataGridTextColumn.Header>

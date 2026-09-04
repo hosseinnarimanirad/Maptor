@@ -6,7 +6,10 @@ whole startup path of every Maptor app.
 
 ## What it shows
 
-- `App.xaml` — the MahApps.Metro and Maptor resource dictionaries a Maptor app merges.
+- `App.xaml` — the four dictionaries a Maptor app merges: the MahApps.Metro baseline (controls,
+  fonts, a theme) and then `Assets/Maptor.All.xaml`, which carries every Maptor dictionary, the
+  semantic status palette and the `Localization` provider. Copy this block verbatim; the MahApps
+  lines have to stay above `Maptor.All.xaml` and outside it.
 - `App.xaml.cs` — `Encoding.RegisterProvider`, needed to read legacy code pages in shapefile `.dbf` files.
 - `MainWindow.xaml` — `MapViewer`, `Scalebar`, `CoordinatePanelView`, and a `ComboBox` over `MapProviders`.
 - `MainWindow.xaml.cs` — the four initialization steps below.

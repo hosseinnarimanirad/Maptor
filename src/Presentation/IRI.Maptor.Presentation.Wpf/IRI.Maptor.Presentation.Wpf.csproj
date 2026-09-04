@@ -175,4 +175,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+
+  <!-- Fails the build on a NEW literal colour under Views\. Existing ones are listed, with
+       reasons, in build\LiteralColours.allow. Set MaptorLiteralColourGuard=Warning or None to
+       downgrade it. -->
+  <Import Project="build\LiteralColourGuard.targets" />
+
+  <ItemGroup>
+    <None Include="build\LiteralColourGuard.targets" />
+    <None Include="build\LiteralColours.allow" />
+  </ItemGroup>
 </Project>

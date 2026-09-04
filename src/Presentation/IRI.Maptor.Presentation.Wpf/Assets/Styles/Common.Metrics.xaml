@@ -55,6 +55,53 @@
     <!--gap above a new section within a scrolling column-->
     <Thickness x:Key="IRI.Maptor.Styles.Thickness.SectionGap">0,8,0,0</Thickness>
 
+    <!--Type scale.
+
+        Until 2026-08-31 there was no such thing: every font size in the system was a bare number
+        written into a Setter, 42 of them across 14 dictionaries, plus 37 more in views. Eleven
+        distinct values were in use (7, 8, 10, 11, 12, 13, 14, 15, 16, 18, 20), which is not a
+        scale, it is a continuum.
+
+        These eight are the values the LIBRARY's own styles were already using, named by role and
+        left at exactly the numbers they had. Nothing renders differently because of this block;
+        the point is that the numbers now exist once instead of forty-two times, which is what a
+        UI-scale or accessibility setting would have to multiply.
+
+        Three values were deliberately NOT given a token, so that reaching for one is a decision
+        rather than a reflex:
+          7 and 8  only appear in PrintToPdfDialogView's preview of a printed page. That is a
+                   picture of paper, not user-interface type, and it must not scale with the UI.
+          18       only appears on two Security dialog titles. Those screens are signed off and a
+                   token would invite someone to "tidy" them onto 20. See PROGRESS.md section 3,
+                   Step 4.
+
+        When adding a size, use an existing step. If none fits, the honest question is whether the
+        design needs a ninth step or whether the element is mislabelled.-->
+
+    <!--pill counters, map-marker badges: the smallest text the system sets-->
+    <sys:Double x:Key="IRI.Maptor.Styles.Size.Text.Micro">10</sys:Double>
+
+    <!--captions, hints, field sub-labels-->
+    <sys:Double x:Key="IRI.Maptor.Styles.Size.Text.Caption">11</sys:Double>
+
+    <!--secondary body: grid cells, tab labels, helper text-->
+    <sys:Double x:Key="IRI.Maptor.Styles.Size.Text.Small">12</sys:Double>
+
+    <!--default body and form labels-->
+    <sys:Double x:Key="IRI.Maptor.Styles.Size.Text.Body">13</sys:Double>
+
+    <!--emphasised body and section headers-->
+    <sys:Double x:Key="IRI.Maptor.Styles.Size.Text.BodyLarge">14</sys:Double>
+
+    <!--text the user types into: TextBox, PasswordBox, editable ComboBox-->
+    <sys:Double x:Key="IRI.Maptor.Styles.Size.Text.Input">15</sys:Double>
+
+    <!--large action buttons-->
+    <sys:Double x:Key="IRI.Maptor.Styles.Size.Text.Action">16</sys:Double>
+
+    <!--dialog and screen titles-->
+    <sys:Double x:Key="IRI.Maptor.Styles.Size.Text.Title">20</sys:Double>
+
     <!--Icon sizing. Written as raw Width/Height in nearly every view audited.-->
 
     <!--glyph inside a form field's adornment column-->
