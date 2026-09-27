@@ -1,4 +1,4 @@
-using Microsoft.SqlServer.Types;
+﻿using Microsoft.SqlServer.Types;
 
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Presentation.Wpf;
@@ -52,13 +52,9 @@ public class ApplicationPresenter : MapViewModelBase
     }
 
 
-    public ApplicationPresenter(/*MapViewer map*/)
+    public ApplicationPresenter()
     {
         this.SyntheticDataTrainingData = new SyntheticDataTrainingViewModel(this);
-
-        //this.Geometries = new ObservableCollection<Model.CustomSqlGeometry>();
-
-        //this.map = map;
     }
 
     public override async Task InitializeAsync()
@@ -95,10 +91,9 @@ public class ApplicationPresenter : MapViewModelBase
                     return;
                 }
 
-                //var toScreenMap = this.RequestGetToScreenMap?.Invoke();
                 var toScreenMap = this.CreateMapToScreenFunc();
 
-                var simplified = layer.Geometry.Simplify(this.LogisticGeometrySimplification, /*NearestGoogleZoomLevel,*/ toScreenMap, true);
+                var simplified = layer.Geometry.Simplify(this.LogisticGeometrySimplification, toScreenMap, true);
 
                 this.AddDrawingItem(simplified, $"{layer.LayerName} simplified by logistic-{this.LogisticGeometrySimplification.Title}-{this.NearestGoogleZoomLevel}");
             });
@@ -179,16 +174,7 @@ public class ApplicationPresenter : MapViewModelBase
                 var rwCompression = layer.Geometry.Compression(rwSimplified) * 100.0;
                 var rdpCompression = layer.Geometry.Compression(rdpSimplified) * 100.0;
 
-                var gray = VisualParameters.GetStroke("#ADADAD", 2);
-
-                //this.AddDrawingItem(lrsv7Simplified, $"{layer.LayerName}-LRSv7-{this.NearestGoogleZoomLevel}-{lrsv7Simplified.TotalNumberOfPoints}", VisualParameters.GetStroke("#38A6A5", 2));
-                //this.AddDrawingItem(lrsv4Simplified, $"{layer.LayerName}-LRSv4-{this.NearestGoogleZoomLevel}-{lrsv4Simplified.TotalNumberOfPoints}", VisualParameters.GetStroke("#CC503E", 2));
-
-                //this.AddDrawingItem(bopwSimplified, $"{layer.LayerName}-BOPW-{this.NearestGoogleZoomLevel}-{bopwSimplified.TotalNumberOfPoints}", VisualParameters.GetStroke("#EDAD08", 2));
-                //this.AddDrawingItem(nopwSimplified, $"{layer.LayerName}-NOPW-{this.NearestGoogleZoomLevel}-{nopwSimplified.TotalNumberOfPoints}", VisualParameters.GetStroke("#5F4690", 2));
-                //this.AddDrawingItem(rwSimplified, $"{layer.LayerName}-RW-{this.NearestGoogleZoomLevel}-{rwSimplified.TotalNumberOfPoints}", VisualParameters.GetStroke("#73AF48", 2));
-                //this.AddDrawingItem(rdpSimplified, $"{layer.LayerName}-RDP-{this.NearestGoogleZoomLevel}-{rdpSimplified.TotalNumberOfPoints}", VisualParameters.GetStroke("#0F8554", 2));
-
+                // all results in the same grey: the LoD figures of the paper were coloured afterwards
                 this.AddDrawingItem(lrsv7Simplified, $"{layer.LayerName}-LRSv7-{this.NearestGoogleZoomLevel}-#{lrsv7Simplified.TotalNumberOfPoints}-c{lrsv7Compression:N1}", VisualParameters.GetStroke("#ADADAD", 2));
                 this.AddDrawingItem(lrsv4lfSimplified, $"{layer.LayerName}-LRSv4lf-{this.NearestGoogleZoomLevel}-#{lrsv4lfSimplified.TotalNumberOfPoints}-c{lrsv4lfCompression:N1}", VisualParameters.GetStroke("#ADADAD", 2));
                 this.AddDrawingItem(lrsv4Simplified, $"{layer.LayerName}-LRSv4-{this.NearestGoogleZoomLevel}-#{lrsv4Simplified.TotalNumberOfPoints}-c{lrsv4Compression:N1}", VisualParameters.GetStroke("#ADADAD", 2));
@@ -364,13 +350,6 @@ public class ApplicationPresenter : MapViewModelBase
                     }
 
                     this.LogisticGeometrySimplification = LoadTrainingDate(fileName);
-                    //this.TrainingData = LRSimplificationTrainingData<Point>.LoadFromJson(fileName);
-
-                    //RaisePropertyChanged(nameof(TrainingData));
-
-                    //var title = System.IO.Path.GetFileNameWithoutExtension(fileName);
-
-                    //LogisticGeometrySimplification = LogisticSimplification<Point>.Create(this.TrainingData, title);
                 });
             }
 
@@ -426,6 +405,7 @@ public class ApplicationPresenter : MapViewModelBase
             {
                 _analyzeCommand = new RelayCommand(async param =>
                 {
+                    // the published LAS comparison; other experiments: LRHelper.GeneralTest(LrsExperiment.X)
                     await Common.LRHelper.GeneralTest();
                 });
             }
@@ -445,92 +425,5 @@ public class ApplicationPresenter : MapViewModelBase
         var geometry = SqlGeometry.Parse(new System.Data.SqlTypes.SqlString(this.NewWkt)).MakeValid();
 
         AddDrawingItem(geometry.AsGeometry());
-        //AddGeometry(geometry, $"Geometry # {this.Geometries.Count}");
     }
-
-    //public override void Initialize(
-    //    IDialogService dialogService,
-    //    Action<Point> requestShowGoToView,
-    //    Action<ILayer> requestShowSymbologyView)
-    //{
-    //    base.Initialize(dialogService, requestShowGoToView, requestShowSymbologyView);
-
-    //    if (this.BaseMapSettings is not null)
-    //    {
-    //        this.BaseMapSettings.OnBaseMapUrlChanged -= BaseMapSettings_OnBaseMapUrlChanged;
-    //        this.BaseMapSettings.OnBaseMapUrlChanged += BaseMapSettings_OnBaseMapUrlChanged;
-
-    //        this.BaseMapSettings.PropertyChanged -= BaseMapSettings_PropertyChanged;
-    //        this.BaseMapSettings.PropertyChanged += BaseMapSettings_PropertyChanged;
-    //    }
-
-    //    if (this.MapSettings is not null)
-    //    {
-    //        this.MapSettings.PropertyChanged -= MapSettings_PropertyChanged;
-    //        this.MapSettings.PropertyChanged += MapSettings_PropertyChanged;
-    //    }
-
-    //    if (this.GeneralSettings is not null)
-    //    {
-    //        this.GeneralSettings.PropertyChanged -= GeneralSettings_PropertyChanged;
-    //        this.GeneralSettings.PropertyChanged += GeneralSettings_PropertyChanged;
-    //    }
-    //}
-
-    //private void BaseMapSettings_OnBaseMapUrlChanged(object? sender, EventArgs e)
-    //{
-    //}
-
-    //private void BaseMapSettings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-    //{
-    //    if (e.PropertyName is null)
-    //        return;
-
-    //    if (e.PropertyName is not nameof(BaseMapSettingsModel.BaseMapOpacity)
-    //        and not nameof(BaseMapSettingsModel.SelectedTileMapAccessMode)
-    //        and not nameof(BaseMapSettingsModel.InitialBaseMap))
-    //        return;
-
-    //    var data = this.BaseMapSettings?.GetData();
-    //    if (data is not null)
-    //        SettingsHelper.SaveBaseMapSettings(data);
-    //}
-
-    //private void MapSettings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-    //{
-    //    if (e.PropertyName is null)
-    //        return;
-
-    //    var data = this.MapSettings?.GetData();
-    //    if (data is not null)
-    //        SettingsHelper.SaveMapSettings(data);
-    //}
-
-    //private void GeneralSettings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-    //{
-    //    if (e.PropertyName is null)
-    //        return;
-
-    //    if (e.PropertyName == nameof(GeneralSettingsModel.MahAppsTheme))
-    //    {
-    //        var theme = this.GeneralSettings?.MahAppsTheme;
-    //        if (theme.HasValue)
-    //            ThemeHelper.ApplyTheme(theme.Value);
-    //    }
-
-    //    if (e.PropertyName == nameof(GeneralSettingsModel.CurrentLanguage))
-    //    {
-    //        var culture = LanguageItem.Create(this.GeneralSettings?.CurrentLanguage ?? LanguageType.en_US).GetCultureInfo();
-    //        try
-    //        {
-    //            LocalizationManager.Instance.SetCulture(culture);
-    //        }
-    //        catch (CultureNotFoundException) { }
-    //    }
-
-    //    var data = this.GeneralSettings?.GetData();
-    //    if (data is not null)
-    //        SettingsHelper.SaveGeneralSettings(data);
-    //}
 }
-

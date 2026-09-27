@@ -1,7 +1,7 @@
-﻿using IRI.Maptor.Presentation.Wpf;
-using System;
-using System.Text;
+﻿using System.Text;
 using System.Windows;
+
+using IRI.Maptor.Presentation.Wpf;
 using IRI.Maptor.Presentation.Wpf.Models;
 using IRI.Maptor.Presentation.Core.Data;
 
@@ -10,8 +10,6 @@ namespace IRI.Maptor.Res.TrajectoryCompression;
 
 public partial class MainWindow : Window
 {
-    ApplicationPresenter? Presenter { get { return this.DataContext as ApplicationPresenter; } }
-
     public MainWindow()
     {
         InitializeComponent();
@@ -27,27 +25,14 @@ public partial class MainWindow : Window
 
         await MapInitializationHelper.InitializeMapAsync(this.map, this, presenter);
 
-        //new ApplicationPresenter(),
-        //ProxySettings.Default,
-        //BaseMapSettings.Default,
-        //MapSettings.Default,
-        //GeneralSettings.Default);
-
         this.DataContext = presenter;
 
         presenter.RemoveAllProviders();
     }
 
-
     private async void Button_Click(object sender, RoutedEventArgs e)
     {
-        // TestAlgo();
-        // TestThresholdChangesAlgo();
-        // await SimplificationHelper.GeneralTest();
-        // SimplificationHelper.TestAPSC();
-
-        //await LRHelper.GeneralTest();
-        //await LRHelper.InvestigateVisualDiff();
+        // the published assessment; other experiments: SimplificationHelper.GeneralTest(SimplificationHelper.Experiment.X)
+        await SimplificationHelper.GeneralTest();
     }
-
 }

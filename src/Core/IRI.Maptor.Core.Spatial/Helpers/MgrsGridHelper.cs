@@ -132,6 +132,14 @@ public static class MgrsGridHelper
     /// <summary>Samples per cell edge. Enough that the bow is invisible; small enough to stay cheap.</summary>
     private const int SamplesPerEdge = 4;
 
+    /// <summary>
+    /// How many cells may cross the view before the grid steps up to a coarser square. Declared
+    /// once and shared by <see cref="ChooseLevel"/>, <see cref="Create"/> and the data source's
+    /// own property: three copies of the same number are what let the property be silently
+    /// dropped on the way here and still produce exactly the grid it promised.
+    /// </summary>
+    public const int DefaultMaxCellsAcross = 12;
+
     /// <summary>The metric ladder, coarse to fine.</summary>
     private static readonly MgrsGridLevel[] MetricLevels =
     {
@@ -146,7 +154,7 @@ public static class MgrsGridHelper
     /// <paramref name="maxCellsAcross"/> cells across the view, falling back to grid zone cells
     /// when even 100 km squares would be too many.
     /// </summary>
-    public static MgrsGridLevel ChooseLevel(BoundingBox geodeticExtent, int maxCellsAcross = 12)
+    public static MgrsGridLevel ChooseLevel(BoundingBox geodeticExtent, int maxCellsAcross = DefaultMaxCellsAcross)
     {
         var span = GetSpanInMetres(geodeticExtent);
 
@@ -177,7 +185,15 @@ public static class MgrsGridHelper
     /// A ceiling on how many cells are produced, so a pathological extent cannot generate millions.
     /// The grid is returned truncated rather than throwing.
     /// </param>
-    public static MgrsGrid Create(BoundingBox webMercatorExtent, MgrsGridLevel? level = null, int maxCells = 4000)
+    /// <param name="maxCellsAcross">
+    /// How dense the grid may get before it steps up to a coarser square. Ignored when
+    /// <paramref name="level"/> pins the level, since then nothing is being chosen.
+    /// </param>
+    public static MgrsGrid Create(
+        BoundingBox webMercatorExtent,
+        MgrsGridLevel? level = null,
+        int maxCells = 4000,
+        int maxCellsAcross = DefaultMaxCellsAcross)
     {
         if (webMercatorExtent.IsNaN() || !webMercatorExtent.IsValid())
             return MgrsGrid.Empty(level ?? MgrsGridLevel.GridZone);
@@ -195,7 +211,7 @@ public static class MgrsGridHelper
 
         var clipped = new BoundingBox(west, south, east, north);
 
-        var theLevel = level ?? ChooseLevel(clipped);
+        var theLevel = level ?? ChooseLevel(clipped, maxCellsAcross);
 
         var cells = theLevel == MgrsGridLevel.GridZone
             ? CreateGridZoneCells(clipped, maxCells)

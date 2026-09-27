@@ -48,7 +48,7 @@
             </Path>
         </Viewbox>
         <Border Width="30" Height="40">
-            <TextBlock x:Name="numberBox" TextAlignment="Center" FontFamily="B Yekan" FontSize="20" Margin="0,-4,0,0"
+            <TextBlock x:Name="numberBox" TextAlignment="Center" FontFamily="{DynamicResource bYekan}" FontSize="20" Margin="0,-4,0,0"
                        HorizontalAlignment="Center" Text="{Binding ElementName=control, Path=Value}" Foreground="White"/>
         </Border>
     </Canvas>

@@ -69,6 +69,6 @@ public static class SyntheticDataHelper
         Print(04.0, SyntheticDataFactory.IsRetainedFunc4_0, $"{directory}\\{fileNameWithoutExtension}_4.0.jpg");
         Print(08.0, SyntheticDataFactory.IsRetainedFunc8_0, $"{directory}\\{fileNameWithoutExtension}_8.0.jpg");
         Print(16.0, SyntheticDataFactory.IsRetainedFunc16_0, $"{directory}\\{fileNameWithoutExtension}_16.0.jpg");
-        Print(32.0, SyntheticDataFactory.IsRetainedFunc16_0, $"{directory}\\{fileNameWithoutExtension}_32.0.jpg");
+        Print(32.0, SyntheticDataFactory.IsRetainedFunc32_0, $"{directory}\\{fileNameWithoutExtension}_32.0.jpg");
     }
 }

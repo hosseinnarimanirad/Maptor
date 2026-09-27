@@ -1,47 +1,22 @@
-﻿using IRI.Maptor.Core.Common.Primitives;
-using IRI.Maptor.Core.Spatial.GeoJsonFormat;
-using IRI.Maptor.Core.Spatial.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace IRI.Maptor.Core.MachineLearning;
 
-namespace IRI.Maptor.Core.MachineLearning;
-
+/// <summary>
+/// One synthetic training line: a three-point polyline in screen (pixel) coordinates and its labelled
+/// counterpart, which is the same line when the middle point is retained and the two-point line when
+/// it is removed. Produced by <see cref="SyntheticDataFactory"/> and by the labelling tool in
+/// research/IRI.Maptor.Res.LRSimplification.
+/// </summary>
 public class SyntheticDataItem
 {
-    // Screen 
+    /// <summary>WKT of the three-point line in screen coordinates (pixels).</summary>
     public string OriginalLineString { get; set; }
 
-    // Screen 
+    /// <summary>WKT of the labelled result in screen coordinates; equal to the original when retained.</summary>
     public string SimplifiedLineString { get; set; }
 
     public string Title { get; set; }
 
     public string Note { get; set; }
-    //public GeoJsonFeature Original { get; set; }
-
-
-    public static List<SyntheticDataItem> CreatePolar(double radius, int count)
-    {
-        Point center = new Point(0, 0);
-
-        Point first = new Point(radius, 0);
-
-        var dTheta = Math.PI / count;
-
-        List<Point> points = Enumerable.Range(1, count).Select(i => Point.FromPolar(radius, i * dTheta)).ToList();
-
-        Point last = new Point(-radius, 0);
-
-        if (!points.Contains(last))
-        {
-            points.Add(last);
-        }
-
-        return null;
-    }
 
     public override string ToString()
     {

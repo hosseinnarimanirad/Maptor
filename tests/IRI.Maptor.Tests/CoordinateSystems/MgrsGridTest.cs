@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 using IRI.Maptor.Core.Common.Primitives;
+using IRI.Maptor.Core.Persistence.DataSources;
 using IRI.Maptor.Core.Spatial.Helpers;
 using IRI.Maptor.Core.SpatialReferenceSystem;
 using IRI.Maptor.Core.SpatialReferenceSystem.MapProjections.Mgrs;
@@ -49,6 +51,47 @@ public class MgrsGridTest
         var extent = new BoundingBox(51.4 - degrees / 2, 35.7 - degrees / 2, 51.4 + degrees / 2, 35.7 + degrees / 2);
 
         Assert.Equal(expected, MgrsGridHelper.ChooseLevel(extent));
+    }
+
+    /// <summary>
+    /// The density budget is the other half of the decision: one extent, three budgets, three
+    /// answers. ~55 km across, so 0.55 hundred-km squares, 5.5 ten-km squares, 55 one-km squares.
+    /// </summary>
+    [Theory]
+    [InlineData(4, MgrsGridLevel.Km100)]
+    [InlineData(12, MgrsGridLevel.Km10)]
+    [InlineData(60, MgrsGridLevel.Km1)]
+    public void ChooseLevel_FollowsTheDensityBudget(int maxCellsAcross, MgrsGridLevel expected)
+    {
+        var extent = new BoundingBox(51.4 - 0.25, 35.7 - 0.25, 51.4 + 0.25, 35.7 + 0.25);
+
+        Assert.Equal(expected, MgrsGridHelper.ChooseLevel(extent, maxCellsAcross));
+    }
+
+    /// <summary>
+    /// And the budget survives the trip from <see cref="MgrsGridDataSource.MaxCellsAcross"/> to
+    /// the decision. It used not to: <c>Build</c> forwarded the sibling <c>MaxCells</c> and not
+    /// this one, so the property was written and never read. Nothing looked wrong, because
+    /// <c>ChooseLevel</c>'s own default was the same 12 the property defaulted to - the knob was
+    /// simply inert, and turning it changed nothing.
+    /// </summary>
+    [Theory]
+    [InlineData(4, MgrsGridLevel.Km100)]
+    [InlineData(12, MgrsGridLevel.Km10)]
+    [InlineData(60, MgrsGridLevel.Km1)]
+    public async Task DataSource_ForwardsTheDensityBudget(int maxCellsAcross, MgrsGridLevel expected)
+    {
+        var source = MgrsGridDataSource.Create();
+
+        source.MaxCellsAcross = maxCellsAcross;
+
+        var featureSet = await source.GetAsFeatureSetAsync(Around(51.4, 35.7, 0.5));
+
+        Assert.NotEmpty(featureSet.Features);
+
+        Assert.All(
+            featureSet.Features,
+            feature => Assert.Equal(expected.ToString(), feature.Attributes[MgrsGridDataSource.LevelFieldName]));
     }
 
     /// <summary>Zooming in never steps the grid back to a coarser square.</summary>

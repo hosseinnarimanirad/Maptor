@@ -1,5 +1,4 @@
 ﻿using IRI.Maptor.Extensions;
-using IRI.Maptor.Extensions;
 using IRI.Maptor.Core.Common.Mathematics;
 using System;
 using System.Collections.Generic;
@@ -11,6 +10,17 @@ public static class Normalization
 {
     public static Matrix NormalizeColumnsUsingZScore(Matrix values, VarianceCalculationMode mode)
     {
+        return NormalizeColumnsUsingZScore(values, mode, out _);
+    }
+
+    /// <summary>
+    /// Also returns the mean and standard deviation of every original column, computed with
+    /// <paramref name="mode"/>, i.e. exactly the values the normalization used.
+    /// </summary>
+    public static Matrix NormalizeColumnsUsingZScore(Matrix values, VarianceCalculationMode mode, out List<BasicStatisticsInfo> statistics)
+    {
+        statistics = null;
+
         if (values == null)
             return null;
 
@@ -18,11 +28,19 @@ public static class Normalization
 
         Matrix result = new Matrix(values.NumberOfRows, values.NumberOfColumns);
 
+        statistics = new List<BasicStatisticsInfo>(numberOfColumns);
+
         for (int i = 0; i < numberOfColumns; i++)
         {
             var columnValues = values.GetColumn(i);
 
-            result.SetColumn(i, NormalizeUsingZScore(columnValues, mode));
+            var mean = IRI.Maptor.Core.Common.Mathematics.Statistics.CalculateMean(columnValues);
+
+            var std = IRI.Maptor.Core.Common.Mathematics.Statistics.CalculateStandardDeviation(columnValues, mode);
+
+            statistics.Add(new BasicStatisticsInfo() { Mean = mean, StandardDeviation = std });
+
+            result.SetColumn(i, NormalizeUsingZScore(columnValues, mean, std));
         }
 
         return result;
@@ -42,22 +60,30 @@ public static class Normalization
             return null;
         }
 
-        double[] result = new double[values.Length];
-
-        //values.CopyTo(result, 0);
-
         var mean = IRI.Maptor.Core.Common.Mathematics.Statistics.CalculateMean(values);
 
         var std = IRI.Maptor.Core.Common.Mathematics.Statistics.CalculateStandardDeviation(values, mode);
 
+        return NormalizeUsingZScore(values, mean, std);
+    }
+
+    public static double[] NormalizeUsingZScore(double[] values, double mean, double standardDeviation)
+    {
+        if (values.IsNullOrEmpty())
+        {
+            return null;
+        }
+
+        double[] result = new double[values.Length];
+
         // 1399.12.12
         // to prevent divide by zero
-        if (std == 0)
-            std = 1;
+        if (standardDeviation == 0)
+            standardDeviation = 1;
 
         for (int i = 0; i < values.Length; i++)
         {
-            result[i] = (values[i] - mean) / std;
+            result[i] = (values[i] - mean) / standardDeviation;
         }
 
         return result;

@@ -17,14 +17,7 @@ public static class GeometryExtensions
     {
         Func<List<T>, List<T>> filter = pList => pList.SimplifyByLogisticRegression(model, toScreenMap, retain3Points);
 
-        var temp = geometry.FilterPoints(filter);
-
-        if (temp.NumberOfPoints > geometry.NumberOfPoints)
-        {
-
-        }
-
-        return temp;
+        return geometry.FilterPoints(filter);
     }
 
     public static List<T> SimplifyByLogisticRegression<T>(
@@ -37,7 +30,6 @@ public static class GeometryExtensions
             return points;
 
         return model.SimplifyByLogisticRegression(points, toScreenMap, retain3Points);
-        //return model.SimplifyByLogisticRegression_Fast_O_n(points, toScreenMap, retain3Points);
     }
 
 }

@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Diagnostics;
 using System.Windows.Media;
 
@@ -8,51 +8,55 @@ using IRI.Maptor.Presentation.Wpf.Helpers;
 using IRI.Maptor.Core.ShapefileFormat;
 using IRI.Maptor.Core.Spatial.Helpers;
 using IRI.Maptor.Core.Spatial.Analysis;
-using IRI.Maptor.Core.Spatial.GeoJsonFormat;
 using IRI.Maptor.Core.SpatialReferenceSystem;
 using IRI.Maptor.Core.Common.Enums;
 
 
 namespace IRI.Maptor.Res.FastSimplification;
 
+/// <summary>
+/// The visual experiment of the ISPRS 2025 paper (Figures 5–8): every feature with 40–500 points is
+/// rendered at the zoom levels where its bounding box (expanded by 10 %) fits 64², 128² and 256² screens,
+/// and simplified by RDP, VW, NOPW and CTR with a threshold of 4 pixels at that level (squared for the
+/// area-based VW and CTR). One PNG per method overlays the original (red) and the simplified (green)
+/// geometry; the file name records the scale, the compression and the TLVD per length.
+/// <para>
+/// CTR is <see cref="SimplificationType.CumulativeTriangleRoutine"/>, i.e. <c>Simplifications.SimplifyByCumulativeTriangleRoutine</c>.
+/// The published run is <c>5. ISPRS Conf Paper\AlgorithmRun\2025-05-25-fix colors</c>; the execution-time
+/// figures of the paper (Figures 9 and 10) were not produced by this project.
+/// </para>
+/// </summary>
 public static class SimplificationHelper
 {
-    private static bool retain3Points = false;
+    private const bool Retain3Points = false;
 
-    private static List<SimplificationType> methods = new List<SimplificationType>()
-        {
-            SimplificationType.RamerDouglasPeucker,
+    /// <summary>Screen pixels of the threshold: the smallest visually distinguishable change assumed by the paper.</summary>
+    private const double ThresholdInPixels = 4;
 
-            SimplificationType.VisvalingamWhyatt,
+    private static readonly List<SimplificationType> Methods = new()
+    {
+        SimplificationType.RamerDouglasPeucker,
+        SimplificationType.VisvalingamWhyatt,
+        SimplificationType.NormalOpeningWindow,
+        SimplificationType.CumulativeTriangleRoutine,
+    };
 
-            SimplificationType.NormalOpeningWindow,
-            //SimplificationType.BeforeOpeningWindow,
-
-            SimplificationType.CumulativeTriangleRoutine,
-            //SimplificationType.TriangleRoutine
-        };
+    private static readonly List<int> RenderSizes = new() { 64, 128, 256 };
 
     public async static Task GeneralTest()
     {
         // OSM dataset directory should be addressed here
         var dataFolder = @"E:\University.Ph.D\Sample Data\OSM-1401-03-03-WebMercator";
-        //var dataFolder = @"E:\University.Ph.D\Sample Data\OSM-1404-02-29-WebMercator-Lake";
 
         var files = Directory.EnumerateFiles(dataFolder, "*.shp", SearchOption.AllDirectories);
 
-        // Output directory should be addressed here
+        // Output directory should be addressed here; every run gets a dated folder
         var writeFolder = $@"E:\University.Ph.D\5. ISPRS Conf Paper\AlgorithmRun\{DateTime.Now.Date:yyyy-MM-dd}";
 
-        if (!Directory.Exists(writeFolder))
-            _ = Directory.CreateDirectory(writeFolder);
+        Directory.CreateDirectory(writeFolder);
 
-        StreamWriter writer = new StreamWriter($"{writeFolder}\\summary.txt", false);
-        writer.WriteLine(Log.GetHeader());
-
-        List<string> fileNames = ["AdminArea_WM", "Building_WM", "Landuse_WM", "Railway_WM", "Road_WM"];
-
-        var oldfiles = Directory.EnumerateFiles(writeFolder, "*.txt", SearchOption.AllDirectories)
-                                .Select(s => System.IO.Path.GetFileNameWithoutExtension(s).Replace("-summary", string.Empty));
+        // layers that already have an output folder are skipped, so an interrupted run can be resumed
+        var finishedLayers = Directory.EnumerateDirectories(writeFolder).Select(Path.GetFileName).ToHashSet();
 
         string logFile = $"{writeFolder}\\Log-Visual-{DateTime.Now:yyyy-MM-dd HH-mm-ss}.txt";
 
@@ -60,39 +64,30 @@ public static class SimplificationHelper
 
         foreach (var file in files)
         {
-            var fileName = System.IO.Path.GetFileNameWithoutExtension(file);
+            var fileName = Path.GetFileNameWithoutExtension(file);
 
-            if (fileNames.Contains(fileName) || oldfiles.Contains(fileName))
+            if (finishedLayers.Contains(fileName))
                 continue;
 
-            fileNames.Add(fileName);
+            watch.Restart();
 
-            ProcessVisualQuality(file, writer, writeFolder);
+            ProcessVisualQuality(file, writeFolder);
 
-            File.AppendAllLines(logFile, new List<string>() { $"Finished At: {DateTime.Now.ToLongTimeString()}; Elapsed: {watch.ElapsedMilliseconds / 1000.0:N0000} (s) - ({fileName})" });
+            File.AppendAllLines(logFile, new List<string>() { $"Finished At: {DateTime.Now.ToLongTimeString()}; Elapsed: {watch.ElapsedMilliseconds / 1000.0:N0} (s) - ({fileName})" });
         }
-
-        writer.Close();
-        writer.Dispose();
     }
-      
-    public static void ProcessVisualQuality(string shpFile, StreamWriter writer, string outputDirectory)
+
+    public static void ProcessVisualQuality(string shpFile, string outputDirectory)
     {
-        var fileName = $"{Path.GetFileNameWithoutExtension(shpFile)}";
+        var fileName = Path.GetFileNameWithoutExtension(shpFile);
 
-        List<int> renderSizes = [64, 128, 256];
-
-        //******************************************************
-        //***************** read features **********************
-        var shapes = Shapefile.ReadShapes(shpFile);
-
-        var features = shapes
+        var features = Shapefile.ReadShapes(shpFile)
                         .Select(g => g.AsGeometry())
                         .SelectMany(g => g.NumberOfGeometries > 1 ? g.Split(false) : [g])
                         .Where(g => !g.IsNullOrEmpty())
                         .Where(g => g.TotalNumberOfPoints > 40 && g.TotalNumberOfPoints < 500)
                         .ToList();
-         
+
         if (features.IsNullOrEmpty())
             return;
 
@@ -104,87 +99,57 @@ public static class SimplificationHelper
 
         features = features.Where(f => !f.HasDuplicatePoints()).ToList();
 
-        var colors = new Dictionary<SimplificationType, System.Windows.Media.Color>()
-        {
-            {SimplificationType.RamerDouglasPeucker, ColorHelper.ToWpfColor("#6B007B")}, //light blue
-            {SimplificationType.CumulativeTriangleRoutine, ColorHelper.ToWpfColor("#12239E")}, //light blue
-            {SimplificationType.VisvalingamWhyatt, ColorHelper.ToWpfColor("#E645AB")}, //light blue
-            {SimplificationType.NormalOpeningWindow, ColorHelper.ToWpfColor("#E66C37")}, //light blue
-            {SimplificationType.BeforeOpeningWindow, ColorHelper.ToWpfColor("#118DFF")}, //light blue
-            {SimplificationType.TriangleRoutine, System.Windows.Media.Colors.Green}, //light blue
-        };
-
-
-        var redColor = ColorHelper.ToWpfColor("#DE36A1");
-        var grayColor = ColorHelper.ToWpfColor("#ADADAD");
-        var greenColor = ColorHelper.ToWpfColor("#08686E");
+        var originalColor = ColorHelper.ToWpfColor("#DE36A1");
+        var simplifiedColor = ColorHelper.ToWpfColor("#08686E");
 
         int featureIndex = 0;
 
         foreach (var feature in features)
         {
             featureIndex++;
-             
+
             var outputDirectoryForFeature = $"{outputDirectory}\\{fileName}\\{featureIndex}";
 
-            if (!Directory.Exists(outputDirectoryForFeature))
-                Directory.CreateDirectory(outputDirectoryForFeature);
+            Directory.CreateDirectory(outputDirectoryForFeature);
 
             var boundingBox = feature.GetBoundingBox().Expand(1.1);
-             
-            foreach (var renderSize in renderSizes)
-            {
-                var estimatedZoomLevel = WebMercatorUtility.EstimateZoomLevel(boundingBox, /*34,*/ renderSize, renderSize);
-                 
-                var threshold = WebMercatorUtility.ToWebMercatorLength(estimatedZoomLevel, 4);
 
-                var screenSize = WebMercatorUtility.ToScreenSize(estimatedZoomLevel, boundingBox);
+            foreach (var renderSize in RenderSizes)
+            {
+                var zoomLevel = WebMercatorUtility.EstimateZoomLevel(boundingBox, renderSize, renderSize);
+
+                var threshold = WebMercatorUtility.ToWebMercatorLength(zoomLevel, ThresholdInPixels);
+
+                var screenSize = WebMercatorUtility.ToScreenSize(zoomLevel, boundingBox);
 
                 if (screenSize.Width * screenSize.Height <= 0)
                     continue;
 
-                var scale = Math.Floor((1.0 / WebMercatorUtility.GetGoogleMapScale(estimatedZoomLevel)) / 1000.0) * 1000;
+                // scale denominator rounded down to thousands, for the file name
+                var scale = Math.Floor((1.0 / WebMercatorUtility.GetGoogleMapScale(zoomLevel)) / 1000.0) * 1000;
 
-                var originalFrame = feature.AsDrawingVisual(VisualParameters.Get(Colors.Transparent, redColor /*ColorHelper.ToWpfColor("#C0C0C0")*/, 2, 1), screenSize.Width, screenSize.Height, boundingBox);
+                var originalFrame = feature.AsDrawingVisual(VisualParameters.Get(Colors.Transparent, originalColor, 2, 1), screenSize.Width, screenSize.Height, boundingBox);
 
-                GeoJsonFeatureSet originalFeatureSet = feature.AsGeoJsonFeatureSet();
+                var parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = Retain3Points };
 
-                //originalFeatureSet.Save($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-original.json", false, true);
-
-                var parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
-
-                List<DrawingVisual> drawingVisuals = [originalFrame!];
-
-                foreach (var method in methods)
+                foreach (var method in Methods)
                 {
                     var simplified = feature.Simplify(method, parameters);
 
-                    if (simplified.IsNullOrEmpty())
+                    if (simplified.IsNullOrEmpty() || simplified.Type == GeometryType.Point)
                         continue;
 
-                    if (simplified.Type == GeometryType.Point)
-                        continue;
-
-                    var simplifiedFrame = simplified.AsDrawingVisual(VisualParameters.Get(Colors.Transparent, greenColor /*colros[method]*/, 2, 1), screenSize.Width, screenSize.Height, boundingBox);
-
-                    drawingVisuals.Add(simplifiedFrame!);
-
-                    GeoJsonFeatureSet featureSet = simplified.AsGeoJsonFeatureSet();
+                    var simplifiedFrame = simplified.AsDrawingVisual(VisualParameters.Get(Colors.Transparent, simplifiedColor, 2, 1), screenSize.Width, screenSize.Height, boundingBox);
 
                     var compression = Math.Round(feature.Compression(simplified) * 100);
 
                     var tlvd = feature.CalculateTotalVectorDisplacementPerLength(simplified);
 
-                    var fullFileName = $"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-{renderSize}-{method.GetDescription()}-{scale:N0}-{compression}%-{tlvd:#.00}.png";
+                    var fullFileName = $"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{zoomLevel}-{renderSize}-{method.GetDescription()}-{scale:N0}-{compression}%-{tlvd:#.00}.png";
 
                     ImageUtility.MergeAndSave(fullFileName, [originalFrame!, simplifiedFrame!], screenSize.Width, screenSize.Height);
-
-                    //featureSet.Save($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-{renderSize}-{method}.json", false, true);
                 }
-                 
-                //IRI.Maptor.Presentation.Wpf.Helpers.ImageUtility.MergeAndSave($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-{renderSize}-{scale:N}.png", drawingVisuals, screenSize.Width, screenSize.Height);
             }
         }
     }
-
 }

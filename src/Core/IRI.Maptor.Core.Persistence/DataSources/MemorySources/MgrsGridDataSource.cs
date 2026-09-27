@@ -67,7 +67,7 @@ public class MgrsGridDataSource : VectorDataSource
     public MgrsGridLevel? Level { get; set; }
 
     /// <summary>How many cells may cross the view before the grid steps up to a coarser square.</summary>
-    public int MaxCellsAcross { get; set; } = 12;
+    public int MaxCellsAcross { get; set; } = MgrsGridHelper.DefaultMaxCellsAcross;
 
     /// <summary>A hard ceiling on the cells one request may produce.</summary>
     public int MaxCells { get; set; } = 4000;
@@ -121,7 +121,7 @@ public class MgrsGridDataSource : VectorDataSource
 
     private FeatureSet<Point> Build(BoundingBox webMercatorExtent)
     {
-        var grid = MgrsGridHelper.Create(webMercatorExtent, Level, MaxCells);
+        var grid = MgrsGridHelper.Create(webMercatorExtent, Level, MaxCells, MaxCellsAcross);
 
         var level = grid.Level.ToString();
 

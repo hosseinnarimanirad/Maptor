@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Media;
 
 using IRI.Maptor.Presentation.Wpf;
-using IRI.Maptor.Core.Common.Mathematics;
 using IRI.Maptor.Core.Spatial.Helpers;
 using IRI.Maptor.Core.Common.Primitives;
 using IRI.Maptor.Core.Spatial.Primitives;
@@ -14,6 +13,7 @@ namespace IRI.Maptor.Res.LRSimplification.Common;
 
 public static class GeneralHelper
 {
+    /// <summary>Renders the layer at the given level, saves it and its difference image against the original, returns the difference.</summary>
     public static async Task<(Bitmap image, double percent)> CreateImages(
         BoundingBox groundBoundingBox,
         int level,
@@ -42,8 +42,7 @@ public static class GeneralHelper
         return diff;
     }
 
-
-
+    /// <summary>A hidden 1-px blue stroke layer: the rendering used for every raster of the visual metric.</summary>
     public static VectorLayer GetAsLayer(string layerName, List<Geometry<IRI.Maptor.Core.Common.Primitives.Point>> geometries)
     {
         var vectorLayer = new VectorLayer(layerName,
@@ -55,34 +54,6 @@ public static class GeneralHelper
 
         vectorLayer.Visibility = Visibility.Hidden;
 
-        //this.Presenter.AddLayer(vectorLayer);
-
         return vectorLayer;
-    }
-
-    public static async Task<(Bitmap image, ConfusionMatrix confusionMatrix)> CreateImagesAndCM(
-      BoundingBox groundBoundingBox,
-      int level,
-      Bitmap originalBitmap,
-      VectorLayer vectorLayer,
-      string layerName,
-      string simplificationTypeMethod,
-      bool saveImages = true)
-    {
-        var currentScreenSize = WebMercatorUtility.ToScreenSize(level, groundBoundingBox);
-
-        var scale = WebMercatorUtility.GetGoogleMapScale(level);
-
-        var bitmap = await vectorLayer.AsGdiBitmapAsync(groundBoundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
-
-        var diff = IRI.Maptor.Infrastructure.GdiPlus.Helpers.ImageHelper.CalculateConfusionMatrixBitmaps(originalBitmap, bitmap);
-
-        if (saveImages)
-        {
-            bitmap.Save($"{layerName}-{simplificationTypeMethod}.png", System.Drawing.Imaging.ImageFormat.Tiff);
-            diff.image.Save($"{layerName}-{simplificationTypeMethod}-diff.png", System.Drawing.Imaging.ImageFormat.Tiff);
-        }
-
-        return diff;
     }
 }

@@ -73,7 +73,13 @@ public class LRSimplificationTrainingData<T> where T : IPoint, new()
     }
 
 
-    // ورودی این متد بایستی نقاط تمیز شده باشد
+    /// <summary>
+    /// Builds one training record per middle vertex of <paramref name="originalPoints"/>: the triad is
+    /// (last retained point, vertex, next original vertex) and the label is whether the vertex survives in
+    /// <paramref name="simplifiedPoints"/>. Input points must be free of consecutive duplicates. The middle
+    /// point is always paired with the next original vertex, whereas the traversal in
+    /// <see cref="LogisticSimplification{T}"/> also tests middles 2, 4, 8 ... vertices back.
+    /// </summary>
     public static LRSimplificationTrainingData<T> Create(
         List<T> originalPoints,
         List<T> simplifiedPoints,

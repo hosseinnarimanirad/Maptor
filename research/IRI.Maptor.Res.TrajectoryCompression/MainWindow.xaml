@@ -27,12 +27,7 @@
             </StackPanel.Resources>
             <Button Content="Add Shapefile ... " Command="{Binding AddShapefileCommand}"></Button>
             <Button Content="Full Extent" Command="{Binding FullExtentCommand}"/>
-
-            <Button Content="Simplify Angle" Command="{Binding SimplifyByAngleCommand}"></Button>
-            <Button Content="Simplify Area" Command="{Binding SimplifyByAreaCommand}"></Button>
-            <Button Content="Go" Click="Button_Click"></Button>
-            <telerik:RadNumericUpDown Minimum="0" Maximum="10000" Value="{Binding DistanceTolerance}"/>
-            <Button Content="visvalingam" Command="{Binding SimplifyVisvalingamCommand}"/>
+            <Button Content="Run assessment" ToolTip="SimplificationHelper.GeneralTest: ten algorithms, eleven thresholds, six measures per feature" Click="Button_Click"></Button>
 
         </StackPanel>
         <Grid Grid.Row="1" Grid.Column="0">
@@ -47,20 +42,12 @@
                         <TabItem Header="General">
                             <StackPanel Grid.Row="0" Grid.Column="2"  HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="{Binding IsDebugMode,Converter={StaticResource boolToVisibilityConverter}}" 
                         Margin="0">
-                                <ComboBox VerticalAlignment="Center" ItemsSource="{Binding GoogleScales}"
-                          SelectedItem="{Binding ElementName=map, Path=MapScale, Mode=TwoWay, Converter={StaticResource scaleToGoogleScaleConverter}}" MinWidth="120"/>
                                 <TextBlock Text="{Binding ElementName=map, Path=MapScale, Converter={StaticResource doubleInverseConverter}, StringFormat={}{0:N2}}" MinWidth="120" VerticalAlignment="Center" Margin="4"/>
                                 <TextBlock Text="{Binding NearestGoogleZoomLevel, StringFormat={}Zoom Level:{0}}" Background="White"  Margin="2" Padding="4" Opacity=".8"/>
                                 <TextBlock Text="{Binding InverseMapScale, StringFormat={}Map Scale(Eq):{0:n2}}" Background="White"  Margin="2" Padding="4" Opacity=".8"/>
                                 <TextBlock Text="{Binding InverseMapScale_CurrentPoint, StringFormat={}Map Scale:{0:n2}}" Background="White"  Margin="2" Padding="4" Opacity=".8"/>
                                 <TextBlock Text="{Binding CurrentPointGroundResolution, StringFormat={}Ground Resolution:{0:n2}}" Background="White"  Margin="2" Padding="4" Opacity=".8"/>
                             </StackPanel>
-                        </TabItem>
-                        <TabItem Header="Area Stat">
-                            <TextBlock   Grid.Row="3" Margin="8" Text="{Binding AreaStatistics.Description}" MinHeight="150" TextWrapping="Wrap"/>
-                        </TabItem>
-                        <TabItem Header="Angle Stat">
-                            <TextBlock   Grid.Row="3" Margin="8" Text="{Binding AngleStat.Description}" MinHeight="150" TextWrapping="Wrap"/>
                         </TabItem>
                     </TabControl.Items>
                 </TabControl>

@@ -43,6 +43,19 @@ namespace IRI.Maptor.Presentation.Wpf.Layers;
 public static class MgrsGridLayers
 {
     /// <summary>
+    /// The zoom level the grid starts writing at. Below it the view holds a continent, where even
+    /// the grid zone names run into each other, so nothing is written at all: the squares still
+    /// draw, they simply go unnamed until level <c>4</c>.
+    /// </summary>
+    private const int MinLabelZoomLevel = 4;
+
+    /// <summary>
+    /// <see cref="MinLabelZoomLevel"/> and in. A fresh interval per symbolizer - the type is
+    /// mutable, and two symbolizers sharing one instance would let a later edit move both.
+    /// </summary>
+    private static ScaleInterval LabelZoomRange => ScaleInterval.Create(MinLabelZoomLevel);
+
+    /// <summary>
     /// The grid: the squares, their names, and the numbers on their lines. Follows the zoom unless
     /// <paramref name="level"/> pins it.
     /// </summary>
@@ -100,7 +113,7 @@ public static class MgrsGridLayers
             foreground: new SolidColorBrush(Color.FromArgb(120, 234, 67, 51)),
             fontFamily: new FontFamily("Consolas"),
             positionFunc: geometry => geometry.GetCentroidPlusPoint(),
-            visibleRange: ScaleInterval.All,
+            visibleRange: LabelZoomRange,
             isRtl: false);
 
         symbolizer.IsFilterPassed = ByKind(MgrsGridDataSource.SquareIdKind);
@@ -119,7 +132,7 @@ public static class MgrsGridLayers
             foreground: Brushes.Red,
             fontFamily: new FontFamily("Consolas"),
             positionFunc: geometry => geometry.GetCentroidPlusPoint(),
-            visibleRange: ScaleInterval.All,
+            visibleRange: LabelZoomRange,
             isRtl: false);
 
         symbolizer.IsFilterPassed = ByKind(MgrsGridDataSource.AxisValueKind);

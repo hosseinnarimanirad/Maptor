@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Phase C harness: re-fit the v23 research models with the pre-fix and the fixed LogisticRegression,
+       and re-run the published "single feature multi threshold 128" comparison on the same features.
+       Not part of the solution; needs the research drive E:\University.Ph.D. Delete bin/ and obj/ after use. -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591;CS0618</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\research\IRI.Maptor.Res.LRSimplification\IRI.Maptor.Res.LRSimplification.csproj" />
+  </ItemGroup>
+
+</Project>

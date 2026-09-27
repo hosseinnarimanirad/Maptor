@@ -60,6 +60,21 @@ public class PersonalGdbDataSource : VectorDataSource
 
     public string? IdColumnName { get; set; }
 
+    private readonly List<string> _lastReadErrors = new List<string>();
+
+    /// <summary>
+    /// One entry for every source row the last read could not turn into a feature, cleared at the
+    /// start of each read.
+    /// </summary>
+    /// <remarks>
+    /// <see cref="Select"/> deliberately keeps swallowing per-row failures rather than throwing:
+    /// a map layer with one unreadable geometry must still draw the other ten thousand. But an
+    /// empty <c>catch</c> also meant a caller could not tell "this table is empty" from "every
+    /// geometry in it failed to parse" — an import tool reported a transfer of nothing as a
+    /// success. Rows read = <c>Features.Count</c> + <c>LastReadErrors.Count</c>.
+    /// </remarks>
+    public IReadOnlyList<string> LastReadErrors => _lastReadErrors;
+
     private int _srid;
     public override int Srid { get => _srid; /*protected set;*/ }
 
@@ -218,6 +233,10 @@ public class PersonalGdbDataSource : VectorDataSource
         var fields = new List<Field>();
         var featuresList = new List<Feature<Point>>();
 
+        _lastReadErrors.Clear();
+
+        var rowNumber = 0;
+
         using (var conn = new OleDbConnection(PersonalGdbInfrastructure.GetConnectionString(_mdbFileName)))
         {
             var commandString = string.IsNullOrEmpty(searchText) || string.IsNullOrEmpty(SearchColumn) ?
@@ -261,6 +280,8 @@ public class PersonalGdbDataSource : VectorDataSource
 
                     while (dataReader.Read())
                     {
+                        rowNumber++;
+
                         try
                         {
                             var dict = new Dictionary<string, object?>();
@@ -322,7 +343,8 @@ public class PersonalGdbDataSource : VectorDataSource
                         }
                         catch (Exception ex)
                         {
-                            //throw new NotImplementedException("PersonalGdbDataSource > Select");
+                            // still swallowed on purpose, see LastReadErrors
+                            _lastReadErrors.Add($"row {rowNumber}: {ex.Message}");
                         }
                     }
                 }

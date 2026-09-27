@@ -331,5 +331,236 @@ namespace IRI.Maptor.Tests.NetCore.MachineLearning
             Assert.Equal(0.0, Math.Round(lr.Predict(new List<double>() { newGmat[3], newGpa[3], newWork_experience[3] }).Value));
             Assert.Equal(1.0, Math.Round(lr.Predict(new List<double>() { newGmat[4], newGpa[4], newWork_experience[4] }).Value));
         }
+
+        // The tests below pin the defects listed in docs/future-improvements/LR/logistic-regression-bugs.md
+
+        // #5
+        [Fact]
+        public void TestPredictDoesNotChangeTheInput()
+        {
+            LogisticRegression lr = new LogisticRegression(new LogisticRegressionOptions() { RegularizationMethod = RegularizationMethods.None });
+            lr.Fit(_gmat_gpa_workExperience, _admitted);
+
+            var input = new List<double>() { 590, 2, 3 };
+
+            var first = lr.Predict(input);
+            var second = lr.Predict(input);
+
+            Assert.Equal(new List<double>() { 590, 2, 3 }, input);
+            Assert.Equal(first, second);
+        }
+
+        // #4
+        [Fact]
+        public void TestFitWithoutNormalizationDoesNotChangeTheInput()
+        {
+            var options = new LogisticRegressionOptions() { RegularizationMethod = RegularizationMethods.None, NormalizeFeatures = false };
+
+            LogisticRegression first = new LogisticRegression(options);
+            first.Fit(_gmat_gpa_workExperience, _admitted);
+
+            Assert.Equal(3, _gmat_gpa_workExperience.NumberOfColumns);
+
+            LogisticRegression second = new LogisticRegression(options);
+            second.Fit(_gmat_gpa_workExperience, _admitted);
+
+            Assert.Equal(4, second.Beta.Length);
+            Assert.Equal(first.Beta, second.Beta);
+            Assert.NotNull(second.Predict(new List<double>() { 590, 2, 3 }));
+        }
+
+        // #3
+        [Fact]
+        public void TestFitStoresTheStatisticsUsedForNormalization()
+        {
+            double[][] columns = [_gmat, _gpa, _work_experience];
+
+            var row = new List<double>() { _gmat[0], _gpa[0], _work_experience[0] };
+
+            foreach (var mode in new[] { IRI.Maptor.Core.Common.Mathematics.VarianceCalculationMode.Population, IRI.Maptor.Core.Common.Mathematics.VarianceCalculationMode.Sample })
+            {
+                LogisticRegression lr = new LogisticRegression(new LogisticRegressionOptions() { RegularizationMethod = RegularizationMethods.None, VarianceCalculationMode = mode });
+                lr.Fit(_gmat_gpa_workExperience, _admitted);
+
+                // index 0 is the placeholder for the intercept
+                Assert.Equal(columns.Length + 1, lr.xStatistics.Count);
+
+                var z = lr.Beta[0];
+
+                for (int j = 0; j < columns.Length; j++)
+                {
+                    var mean = IRI.Maptor.Core.Common.Mathematics.Statistics.CalculateMean(columns[j]);
+                    var std = IRI.Maptor.Core.Common.Mathematics.Statistics.CalculateStandardDeviation(columns[j], mode);
+
+                    Assert.Equal(mean, lr.xStatistics[j + 1].Mean);
+                    Assert.Equal(std, lr.xStatistics[j + 1].StandardDeviation);
+
+                    z += lr.Beta[j + 1] * (row[j] - mean) / std;
+                }
+
+                // a training row must get the probability the fit itself computed for it
+                Assert.Equal(Sigmoid.CalculateSigmoid(z), lr.Predict(row)!.Value, 12);
+            }
+        }
+
+        // #3
+        [Fact]
+        public void TestFitWithSingleRow()
+        {
+            IRI.Maptor.Core.Common.Mathematics.Matrix matrix = new IRI.Maptor.Core.Common.Mathematics.Matrix(1, 2);
+
+            matrix.SetColumn(0, [3.0]);
+            matrix.SetColumn(1, [4.0]);
+
+            LogisticRegression lr = new LogisticRegression(new LogisticRegressionOptions());
+            lr.Fit(matrix, [1]);
+
+            Assert.Equal(0, lr.xStatistics[1].StandardDeviation);
+            Assert.NotNull(lr.Predict(new List<double>() { 3, 4 }));
+        }
+
+        // #6
+        [Fact]
+        public void TestFitAfterCreatingFromCoefficients()
+        {
+            LogisticRegression lr = new LogisticRegression(new double[] { 0, 1, 1, 1 }, null!);
+            lr.Fit(_gmat_gpa_workExperience, _admitted);
+
+            LogisticRegression reference = new LogisticRegression(new LogisticRegressionOptions());
+            reference.Fit(_gmat_gpa_workExperience, _admitted);
+
+            Assert.Equal(reference.Beta, lr.Beta);
+        }
+
+        // #1
+        [Fact]
+        public void TestFitOnReplicatedRowsGivesTheSameCoefficients()
+        {
+            LogisticRegression lr = new LogisticRegression(new LogisticRegressionOptions() { RegularizationMethod = RegularizationMethods.None });
+            lr.Fit(_gmat_gpa_workExperience, _admitted);
+
+            // the same 40 rows 100 times: means, population standard deviations and the optimum do not change
+            var (replicated, replicatedAdmitted) = Replicate(100);
+
+            LogisticRegression replicatedLr = new LogisticRegression(new LogisticRegressionOptions() { RegularizationMethod = RegularizationMethods.None });
+            replicatedLr.Fit(replicated, replicatedAdmitted);
+
+            for (int i = 0; i < lr.Beta.Length; i++)
+            {
+                Assert.Equal(lr.Beta[i], replicatedLr.Beta[i], 3);
+            }
+        }
+
+        private (IRI.Maptor.Core.Common.Mathematics.Matrix x, double[] y) Replicate(int copies)
+        {
+            IRI.Maptor.Core.Common.Mathematics.Matrix x = new IRI.Maptor.Core.Common.Mathematics.Matrix(
+            [
+                Enumerable.Repeat(_gmat, copies).SelectMany(c => c).ToArray(),
+                Enumerable.Repeat(_gpa, copies).SelectMany(c => c).ToArray(),
+                Enumerable.Repeat(_work_experience, copies).SelectMany(c => c).ToArray()
+            ]);
+
+            return (x, Enumerable.Repeat(_admitted, copies).SelectMany(c => c).ToArray());
+        }
+
+        [Fact]
+        public void TestZeroRegularizationStrengthEqualsNoRegularization()
+        {
+            LogisticRegression reference = new LogisticRegression(new LogisticRegressionOptions() { RegularizationMethod = RegularizationMethods.None });
+            reference.Fit(_gmat_gpa_workExperience, _admitted);
+
+            foreach (var method in new[] { RegularizationMethods.L1, RegularizationMethods.L2 })
+            {
+                LogisticRegression lr = new LogisticRegression(new LogisticRegressionOptions() { RegularizationMethod = method, RegularizationStrength = 0 });
+                lr.Fit(_gmat_gpa_workExperience, _admitted);
+
+                for (int i = 0; i < reference.Beta.Length; i++)
+                {
+                    Assert.Equal(reference.Beta[i], lr.Beta[i], 8);
+                }
+            }
+        }
+
+        [Fact]
+        public void TestRegularizationStrengthIsRelativeToTheNumberOfRows()
+        {
+            // like scikit-learn's C, lambda weighs the penalty against the total log-likelihood:
+            // 10 copies of the rows with lambda = 10 is the same problem as the rows once with lambda = 1
+            var (replicated, replicatedAdmitted) = Replicate(10);
+
+            foreach (var method in new[] { RegularizationMethods.L1, RegularizationMethods.L2 })
+            {
+                LogisticRegression lr = new LogisticRegression(new LogisticRegressionOptions() { RegularizationMethod = method, RegularizationStrength = 1 });
+                lr.Fit(_gmat_gpa_workExperience, _admitted);
+
+                LogisticRegression replicatedLr = new LogisticRegression(new LogisticRegressionOptions() { RegularizationMethod = method, RegularizationStrength = 10 });
+                replicatedLr.Fit(replicated, replicatedAdmitted);
+
+                for (int i = 0; i < lr.Beta.Length; i++)
+                {
+                    Assert.Equal(lr.Beta[i], replicatedLr.Beta[i], 6);
+                }
+            }
+        }
+
+        [Fact]
+        public void TestMaxIterationsLimitsTheFit()
+        {
+            LogisticRegression lr = new LogisticRegression(new LogisticRegressionOptions() { MaxIterations = 0 });
+            lr.Fit(_gmat_gpa_workExperience, _admitted);
+
+            Assert.All(lr.Beta, b => Assert.Equal(0, b));
+        }
+
+        [Fact]
+        public void TestInvalidOptionsThrow()
+        {
+            var invalidOptions = new[]
+            {
+                new LogisticRegressionOptions() { RegularizationStrength = -1 },
+                new LogisticRegressionOptions() { RegularizationStrength = double.NaN },
+                new LogisticRegressionOptions() { MaxIterations = -1 },
+                new LogisticRegressionOptions() { Tolerance = -1 },
+                new LogisticRegressionOptions() { Tolerance = double.NaN },
+            };
+
+            foreach (var options in invalidOptions)
+            {
+                Assert.Throws<ArgumentOutOfRangeException>(() => new LogisticRegression(options).Fit(_gmat_gpa_workExperience, _admitted));
+            }
+        }
+
+        // #2
+        [Fact]
+        public void TestL1RegularizationIgnoresTheSignOfCoefficients()
+        {
+            IRI.Maptor.Core.Common.Mathematics.Matrix negated = new IRI.Maptor.Core.Common.Mathematics.Matrix([_gmat.Select(v => -v).ToArray(), _gpa, _work_experience]);
+
+            var options = new LogisticRegressionOptions() { RegularizationMethod = RegularizationMethods.L1 };
+
+            LogisticRegression lr = new LogisticRegression(options);
+            lr.Fit(_gmat_gpa_workExperience, _admitted);
+
+            LogisticRegression negatedLr = new LogisticRegression(options);
+            negatedLr.Fit(negated, _admitted);
+
+            // negating a feature must only flip the sign of its coefficient
+            Assert.Equal(lr.Beta[0], negatedLr.Beta[0], 6);
+            Assert.Equal(-lr.Beta[1], negatedLr.Beta[1], 6);
+            Assert.Equal(lr.Beta[2], negatedLr.Beta[2], 6);
+            Assert.Equal(lr.Beta[3], negatedLr.Beta[3], 6);
+        }
+
+        // #2
+        [Fact]
+        public void TestL1RegularizationKeepsAConstantFeatureAtZero()
+        {
+            IRI.Maptor.Core.Common.Mathematics.Matrix matrix = new IRI.Maptor.Core.Common.Mathematics.Matrix([_gmat, _gpa, Enumerable.Repeat(3.0, _gmat.Length).ToArray()]);
+
+            LogisticRegression lr = new LogisticRegression(new LogisticRegressionOptions() { RegularizationMethod = RegularizationMethods.L1 });
+            lr.Fit(matrix, _admitted);
+
+            Assert.Equal(0, lr.Beta[3]);
+        }
     }
 } 

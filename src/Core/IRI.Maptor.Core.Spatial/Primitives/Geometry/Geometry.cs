@@ -5615,88 +5615,19 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     //    return;
     //}
 
+    // Called after RemoveConsecutiveDuplicatePoints. Only a leaf can change its type: a line whose
+    // points collapsed to one is a point. Container types are kept as they are. Deriving them from
+    // the children is wrong because the rings of a Polygon are LineStrings, so a one-ring Polygon
+    // became a LineString (and threw, because Points cannot be set while Geometries is set) and a
+    // multi-ring Polygon became a MultiLineString (regression of 2026-05-22, found 2026-09-17).
     private void ReevaluateGeometryType()
     {
-        if (this == null || this.IsNullOrEmpty())
+        if (this.IsNullOrEmpty())
             return;
 
-        // If Points is non-null, we have a leaf geometry
-        if (this.Points != null)
+        if (this.IsLeafGeometry() && this.Points?.Count == 1)
         {
-            if (this.Points.Count == 1)
-            {
-                this.Type = GeometryType.Point;
-            }
-            else if (this.Points.Count > 1)
-            {
-                this.Type = GeometryType.LineString;
-            }
-            // No need to restructure – leaf geometries already have correct data layout.
-            return;
-        }
-
-        // If Geometries is null or empty, nothing to do
-        if (this.Geometries == null || this.Geometries.Count == 0)
-            return;
-
-        var types = this.Geometries.Select(g => g.Type).Distinct().ToList();
-        bool isHomogeneous = types.Count == 1;
-
-        if (!isHomogeneous)
-        {
-            // Mixed types -> GeometryCollection, data already correct
-            this.Type = GeometryType.GeometryCollection;
-            return;
-        }
-
-        var subType = types[0];
-        int geomCount = this.Geometries.Count;
-
-        switch (subType)
-        {
-            case GeometryType.Point when geomCount == 1:
-                // MultiPoint with one point -> convert to a single Point
-                var singlePoint = this.Geometries[0].Points[0];
-                this.Points = new List<T> { singlePoint };
-                this.Geometries = null;
-                this.Type = GeometryType.Point;
-                break;
-
-            case GeometryType.Point:
-                // Keep as MultiPoint
-                this.Type = GeometryType.MultiPoint;
-                // Data is already Geometries list of Points – correct.
-                break;
-
-            case GeometryType.LineString when geomCount == 1:
-                // MultiLineString with one line -> convert to a single LineString
-                var singleLine = this.Geometries[0];
-                this.Points = new List<T>(singleLine.Points);
-                this.Geometries = null;
-                this.Type = GeometryType.LineString;
-                break;
-
-            case GeometryType.LineString:
-                // Keep as MultiLineString
-                this.Type = GeometryType.MultiLineString;
-                break;
-
-            case GeometryType.Polygon when geomCount == 1:
-                // MultiPolygon with one polygon -> convert to a single Polygon
-                var singlePolygon = this.Geometries[0];
-                this.Geometries = new List<Geometry<T>>(singlePolygon.Geometries); // copy rings
-                this.Type = GeometryType.Polygon;
-                break;
-
-            case GeometryType.Polygon:
-                // Keep as MultiPolygon
-                this.Type = GeometryType.MultiPolygon;
-                break;
-
-            default:
-                // For any other case, default to GeometryCollection to be safe
-                this.Type = GeometryType.GeometryCollection;
-                break;
+            this.Type = GeometryType.Point;
         }
     }
 

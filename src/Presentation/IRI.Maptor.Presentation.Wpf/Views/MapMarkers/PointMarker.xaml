@@ -58,7 +58,7 @@
             </Ellipse>
         </Viewbox>
         <Border Width="20" Height="20" Margin="5">
-            <TextBlock x:Name="labelBox" TextAlignment="Center" FontFamily="B Yekan" FontSize="20" Margin="0" Height="Auto"                       
+            <TextBlock x:Name="labelBox" TextAlignment="Center" FontFamily="{DynamicResource bYekan}" FontSize="20" Margin="0" Height="Auto"                       
                        HorizontalAlignment="Center" VerticalAlignment="Center" Text="2" Foreground="White"/>
         </Border>
     </Canvas>

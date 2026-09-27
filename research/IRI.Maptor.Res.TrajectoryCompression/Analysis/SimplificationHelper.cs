@@ -22,37 +22,74 @@ using IRI.Maptor.Presentation.Core;
 
 namespace IRI.Maptor.Res.TrajectoryCompression;
 
+/// <summary>
+/// The assessment of the JSS paper: ten general-purpose algorithms, seven OSM layers, eleven threshold
+/// coefficients and six McMaster measures per feature (<see cref="TestSingleFeatures"/>, one TSV row per
+/// feature × coefficient × algorithm, the ">26 million records" of the paper). <see cref="StatisticsEnhancedTest"/>
+/// writes the same measures as one row per feature × coefficient with per-measure ranks, and
+/// <see cref="TestWithOutput"/> renders the hand-picked features of the paper's special-case figures.
+/// </summary>
 public static class SimplificationHelper
 {
-    private static bool retain3Points = false;
+    private const bool Retain3Points = false;
 
-    public async static Task GeneralTest()
+    /// <summary>Base threshold in screen pixels on the 256² virtual screen (JSS paper, Section 4).</summary>
+    private const double BaseThresholdInPixels = 10;
+
+    /// <summary>Multipliers of the base threshold: 60 px down to about 1.5 px.</summary>
+    private static readonly List<double> ThresholdCoefficients = new()
+    {
+        1.0 / 6, 1.0 / 5, 1.0 / 4, 1.0 / 3, 1.0 / 2, 1, 2, 3, 4, 5, 6
+    };
+
+    /// <summary>The ten algorithms of the paper, all accepting a length or area threshold.</summary>
+    private static readonly List<SimplificationType> Methods = new()
+    {
+        SimplificationType.EuclideanDistance,
+        SimplificationType.RamerDouglasPeucker,
+        SimplificationType.ReumannWitkam,
+        SimplificationType.PerpendicularDistance,
+        SimplificationType.VisvalingamWhyatt,
+        SimplificationType.SleeveFitting,
+        SimplificationType.NormalOpeningWindow,
+        SimplificationType.BeforeOpeningWindow,
+        SimplificationType.TriangleRoutine,
+        SimplificationType.APSC
+    };
+
+    public enum Experiment
+    {
+        /// <summary>One row per feature, coefficient and algorithm (the published assessment).</summary>
+        SingleFeatures,
+        /// <summary>One row per feature and coefficient with all algorithms and their ranks as columns.</summary>
+        PerFeatureRanks,
+        /// <summary>Rendered comparisons of the hand-picked features listed in <see cref="IsSpecialCase"/>.</summary>
+        VisualOutput,
+    }
+
+    public async static Task GeneralTest(Experiment experiment = Experiment.SingleFeatures)
     {
         // OSM dataset directory should be addressed here
         var dataFolder = @"E:\University.Ph.D\Sample Data\OSM-1401-03-03-WebMercator";
-        //var dataFolder = @"E:\University.Ph.D\Sample Data\OSM-1401-03-03-WebMercatorClipped";
 
         var files = Directory.EnumerateFiles(dataFolder, "*.shp", SearchOption.AllDirectories);
 
-        //files = files.Where(f => f.Contains("Water_WM")).ToList();
+        // Output directory should be addressed here; every run gets a dated folder
+        var writeFolder = $@"E:\University.Ph.D\3. Paper1_ReviewPaper\AlgorithmRun\{DateTime.Now:yyyy-MM-dd}-{experiment}";
 
-        // Output directory should be addressed here
-        var writeFolder = @"E:\University.Ph.D\4. Paper2\AlgorithmRun\1403-03-22";
+        Directory.CreateDirectory(writeFolder);
 
-        if (!Directory.Exists(writeFolder))
-            _ = Directory.CreateDirectory(writeFolder);
+        using var writer = new StreamWriter($"{writeFolder}\\All-summary.txt", false);
 
-        //StreamWriter writer = new StreamWriter($"{writeFolder}\\All-summary-PerFeature.txt", false);
-        StreamWriter writer = new StreamWriter($"{writeFolder}\\All-summary.txt", false);
-        writer.WriteLine(SingleSimplifiedGeometryLog.GetHeader());
-        //writer.WriteLine(GeometryStat.GetHeader());
+        if (experiment == Experiment.SingleFeatures)
+            writer.WriteLine(SingleSimplifiedGeometryLog.GetHeader());
 
-        List<string> fileNames = new List<string>();
+        // layers whose summary already exists in the output folder are skipped, so an interrupted run can be resumed
+        var finishedLayers = Directory.EnumerateFiles(writeFolder, "*.txt", SearchOption.AllDirectories)
+                                      .Select(s => System.IO.Path.GetFileNameWithoutExtension(s).Replace("-summary", string.Empty))
+                                      .ToHashSet();
 
-        var oldfiles = Directory.EnumerateFiles(writeFolder, "*.txt", SearchOption.AllDirectories)
-                                .Select(s => System.IO.Path.GetFileNameWithoutExtension(s).Replace("-summary", string.Empty));
-
-        string logFile = $"{writeFolder}\\Log-{DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss")}.txt";
+        string logFile = $"{writeFolder}\\Log-{DateTime.Now:yyyy-MM-dd HH-mm-ss}.txt";
 
         Stopwatch watch = Stopwatch.StartNew();
 
@@ -62,92 +99,46 @@ public static class SimplificationHelper
         {
             var fileName = System.IO.Path.GetFileNameWithoutExtension(file);
 
-            if (fileNames.Contains(fileName))
+            if (finishedLayers.Contains(fileName))
                 continue;
 
-            if (oldfiles.Contains(fileName))
-                continue;
-
-            fileNames.Add(fileName);
+            finishedLayers.Add(fileName);
 
             watch.Restart();
 
-            //StatisticsEnhancedTest(file, writer, includeHeader);
-            //includeHeader = false;
+            switch (experiment)
+            {
+                case Experiment.SingleFeatures:
+                    TestSingleFeatures(file, writer);
+                    break;
 
-            //await TestWithOutput(file, writer, includeHeader, writeFolder);
+                case Experiment.PerFeatureRanks:
+                    StatisticsEnhancedTest(file, writer, includeHeader);
+                    includeHeader = false;
+                    break;
 
-            TestSingleFeatures(file, writer);
+                case Experiment.VisualOutput:
+                    await TestWithOutput(file, writer, includeHeader, writeFolder);
+                    includeHeader = false;
+                    break;
+            }
 
-            File.AppendAllLines(logFile, new List<string>() { $"Finished At: {DateTime.Now.ToLongTimeString()}; Elapsed: {watch.ElapsedMilliseconds / 1000.0:N0000} (s) - ({fileName})" });
+            File.AppendAllLines(logFile, new List<string>() { $"Finished At: {DateTime.Now.ToLongTimeString()}; Elapsed: {watch.ElapsedMilliseconds / 1000.0:N0} (s) - ({fileName})" });
         }
-
-        writer.Close();
-        writer.Dispose();
-
     }
 
+    /// <summary>
+    /// The published assessment. Each feature (multi-part geometries split, 15 &lt; points &lt; 500) gets the zoom
+    /// level at which its bounding box fits a 256² screen; the base threshold is 10 px at that level and each of
+    /// the eleven coefficients is applied to it for the ten algorithms.
+    /// </summary>
     public static void TestSingleFeatures(string shpFile, StreamWriter writer)
     {
-        var fileName = $"{Path.GetFileNameWithoutExtension(shpFile)}";
+        var fileName = Path.GetFileNameWithoutExtension(shpFile);
 
-        var groundResolutionCoefs = new List<double>()
-            {
-                1.0 / 6,
-                1.0 / 5,
-                1.0 / 4,
-                1.0 / 3,
-                1.0 / 2,
-                1,
-                2,
-                3,
-                4,
-                5,
-                6
-            };
+        var features = LoadFeatures(shpFile, splitAllMultiParts: true);
 
-        var groundResolutionCoefs_Range = groundResolutionCoefs.Max() - groundResolutionCoefs.Min();
-        var groundResolutionCoefs_Min = groundResolutionCoefs.Min();
-
-        //******************************************************
-        //***************** read features **********************
-        var features = Shapefile.ReadShapes(shpFile)
-                                .Select(g => g.AsGeometry())
-                                .SelectMany(g => g.Split(false))
-                                .Where(g => !g.IsNullOrEmpty())
-                                .Where(g => g.TotalNumberOfPoints > 15 && g.TotalNumberOfPoints < 500)
-                                .ToList();
-
-        foreach (var feature in features)
-            feature.RemoveConsecutiveDuplicatePoints();
-
-        features = features.Where(f => !f.HasDuplicatePoints()).ToList();
-
-        List<SimplificationType> methods = new List<SimplificationType>()
-            {
-
-                SimplificationType.EuclideanDistance,
-                //SimplificationType.CumulativeEuclideanDistance,
-
-                SimplificationType.RamerDouglasPeucker,
-                SimplificationType.ReumannWitkam,
-
-                SimplificationType.PerpendicularDistance,
-                //SimplificationType.ModifiedPerpendicularDistance,
-
-                SimplificationType.VisvalingamWhyatt,
-                SimplificationType.SleeveFitting,
-
-                SimplificationType.NormalOpeningWindow,
-                SimplificationType.BeforeOpeningWindow,
-
-                SimplificationType.TriangleRoutine,
-                //SimplificationType.ModifiedTriangleRoutine,
-                //SimplificationType.CumulativeTriangleRoutine,
-                SimplificationType.APSC
-            };
-
-        Dictionary<SimplificationType, string> methodNames = methods.ToDictionary(m => m, m => m.GetDescription());
+        var methodNames = Methods.ToDictionary(m => m, m => m.GetDescription());
 
         Stopwatch stopwatch = Stopwatch.StartNew();
 
@@ -159,17 +150,17 @@ public static class SimplificationHelper
 
             var boundingBox = feature.GetBoundingBox();
 
-            var estimatedZoomLevel = WebMercatorUtility.EstimateZoomLevel(boundingBox, /*34,*/ 256, 256);
+            var estimatedZoomLevel = WebMercatorUtility.EstimateZoomLevel(boundingBox, 256, 256);
 
-            var webMercatorResolution = WebMercatorUtility.ToWebMercatorLength(estimatedZoomLevel, 10);
+            var baseThreshold = WebMercatorUtility.ToWebMercatorLength(estimatedZoomLevel, BaseThresholdInPixels);
 
-            foreach (var coef in groundResolutionCoefs)
+            foreach (var coef in ThresholdCoefficients)
             {
-                var threshold = webMercatorResolution * coef;
+                var threshold = baseThreshold * coef;
 
-                var parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
+                var parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = Retain3Points };
 
-                foreach (var method in methods)
+                foreach (var method in Methods)
                 {
                     stopwatch.Restart();
 
@@ -200,112 +191,39 @@ public static class SimplificationHelper
     }
 
 
-    //#region Feature/Geometry specification
-
-    //// count number of points in each feature, length, density, feature type, scale
-    //public static void AnalyzeSingleFeatureStats(string shpFile, StreamWriter writer)
-    //{
-    //    var fileName = $"{Path.GetFileNameWithoutExtension(shpFile)}";
-
-    //    //******************************************************
-    //    //***************** read features **********************
-    //    var features = Shapefile.ReadShapes(shpFile)
-    //                            .Select(g => g.AsGeometry())
-    //                            .SelectMany(g => g.Split(false))
-    //                            .Where(g => !g.IsNullOrEmpty())
-    //                            //.Where(g => g.TotalNumberOfPoints > 10 && g.TotalNumberOfPoints < 7000)
-    //                            .ToList();
-
-    //    foreach (var feature in features)
-    //        feature.RemoveConsecutiveDuplicatePoints();
-
-    //    features = features.Where(f => !f.HasDuplicatePoints()).ToList();
-
-    //    int featureIndex = 0;
-
-    //    foreach (var feature in features)
-    //    {
-    //        featureIndex++;
-
-    //        var boundingBox = feature.GetBoundingBox();
-
-    //        var estimatedZoomLevel = WebMercatorUtility.EstimateZoomLevel(boundingBox, /*34,*/ 256, 256);
-
-    //        var webMercatorResolution = WebMercatorUtility.ToWebMercatorLength(estimatedZoomLevel, 10);
-
-    //        writer.WriteLine(
-    //          new GeometryStat(fileName,
-    //                                boundingBox,
-    //                                featureIndex,
-    //                                feature,
-    //                                estimatedZoomLevel)
-    //          .ToTsv());
-    //    }
-    //}
-
-    //#endregion
-
-    #region Per Feature
-
-    // calculates ranks of each measure for each method for each feature
-    // based on NineAlgoSixMeasureLog
-    // in this structure we have columns for each method for each feature
-    // so each feature has just one row all info are stored in columns
-    public static void StatisticsEnhancedTest(string shpFile, StreamWriter writer, bool includeHeader)
+    /// <summary>
+    /// Reads the layer as single-part features with 15 &lt; points &lt; 500 (the filter of the published assessment),
+    /// removes consecutive duplicate points and drops features that still contain duplicates.
+    /// </summary>
+    private static List<Geometry<Point>> LoadFeatures(string shpFile, bool splitAllMultiParts)
     {
-        var fileName = $"{Path.GetFileNameWithoutExtension(shpFile)}";
-
-        var groundResolutionCoefs = new List<double>()
-        {
-            1.0 / 6,
-            1.0 / 5,
-            1.0 / 4,
-            1.0 / 3,
-            1.0 / 2,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6
-        };
-
-        var groundResolutionCoefs_Range = groundResolutionCoefs.Max() - groundResolutionCoefs.Min();
-        var groundResolutionCoefs_Min = groundResolutionCoefs.Min();
-
-        //******************************************************
-        //***************** read features **********************
         var features = Shapefile.ReadShapes(shpFile)
                                 .Select(g => g.AsGeometry())
-                                .SelectMany(g => g.Split(false))
+                                .SelectMany(g => splitAllMultiParts || g.NumberOfGeometries > 1 ? g.Split(false) : new List<Geometry<Point>>() { g })
                                 .Where(g => !g.IsNullOrEmpty())
                                 .Where(g => g.TotalNumberOfPoints > 15 && g.TotalNumberOfPoints < 500)
                                 .ToList();
 
         foreach (var feature in features)
-            feature.RemoveConsecutiveDuplicatePoints();
-
-        features = features.Where(f => !f.HasDuplicatePoints()).ToList();
-
-        List<SimplificationType> methods = new List<SimplificationType>()
         {
-            SimplificationType.EuclideanDistance,
+            feature.Srid = SridHelper.WebMercator;
+            feature.RemoveConsecutiveDuplicatePoints();
+        }
 
-            SimplificationType.RamerDouglasPeucker,
-            SimplificationType.ReumannWitkam,
+        return features.Where(f => !f.HasDuplicatePoints()).ToList();
+    }
 
-            SimplificationType.PerpendicularDistance,
+    #region Per Feature
 
-            SimplificationType.VisvalingamWhyatt,
-            SimplificationType.SleeveFitting,
+    /// <summary>
+    /// Same protocol as <see cref="TestSingleFeatures"/>, but one row per feature and coefficient: the six
+    /// measures of all ten algorithms are columns, each with its rank among the algorithms (<see cref="NineAlgoSixMeasureLog"/>).
+    /// </summary>
+    public static void StatisticsEnhancedTest(string shpFile, StreamWriter writer, bool includeHeader)
+    {
+        var fileName = Path.GetFileNameWithoutExtension(shpFile);
 
-            SimplificationType.NormalOpeningWindow,
-            SimplificationType.BeforeOpeningWindow,
-
-            SimplificationType.TriangleRoutine,
-
-            SimplificationType.APSC
-        };
+        var features = LoadFeatures(shpFile, splitAllMultiParts: true);
 
         int featureIndex = 0;
 
@@ -317,15 +235,15 @@ public static class SimplificationHelper
 
             var boundingBox = feature.GetBoundingBox();
 
-            var estimatedZoomLevel = WebMercatorUtility.EstimateZoomLevel(boundingBox, /*34,*/ 256, 256);
+            var estimatedZoomLevel = WebMercatorUtility.EstimateZoomLevel(boundingBox, 256, 256);
 
-            var webMercatorResolution = WebMercatorUtility.ToWebMercatorLength(estimatedZoomLevel, 10);
+            var baseThreshold = WebMercatorUtility.ToWebMercatorLength(estimatedZoomLevel, BaseThresholdInPixels);
 
-            foreach (var coef in groundResolutionCoefs)
+            foreach (var coef in ThresholdCoefficients)
             {
-                var threshold = webMercatorResolution * coef;
+                var threshold = baseThreshold * coef;
 
-                var parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
+                var parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = Retain3Points };
 
                 var temp = new NineAlgoSixMeasureLog
                             (fileName,
@@ -336,7 +254,7 @@ public static class SimplificationHelper
                                         parameters,
                                         coef);
 
-                foreach (var method in methods)
+                foreach (var method in Methods)
                 {
                     var simplified = feature.Simplify(method, parameters);
 
@@ -366,83 +284,30 @@ public static class SimplificationHelper
 
     #region Test with visual output
 
+    /// <summary>
+    /// Renders the hand-picked features of <see cref="IsSpecialCase"/> (the RDP-versus-SF cases of the JSS paper,
+    /// Figure 9) with RDP and SF at seven coefficients, as one PNG per coefficient plus the GeoJSON of every
+    /// result, and writes the per-feature rank rows.
+    /// </summary>
     public static async Task TestWithOutput(string shpFile, StreamWriter writer, bool includeHeader, string outputDirectory)
     {
-        var fileName = $"{Path.GetFileNameWithoutExtension(shpFile)}";
+        var fileName = Path.GetFileNameWithoutExtension(shpFile);
 
-        var groundResolutionCoefs = new List<double>()
+        var coefficients = new List<double> { 1.0 / 5, 1.0 / 4, 1.0 / 2, 1, 2, 4, 5 };
+
+        // only geometries that are actually multi-part are split, so the feature indices match the published run
+        var features = LoadFeatures(shpFile, splitAllMultiParts: false);
+
+        var methods = new List<SimplificationType>
         {
-            //1.0 / 6,
-            1.0 / 5,
-            1.0 / 4,
-            //1.0 / 3,
-            1.0 / 2,
-            1,
-            2,
-            //3,
-            4,
-            5,
-            //6
-        };
-
-        var groundResolutionCoefs_Range = groundResolutionCoefs.Max() - groundResolutionCoefs.Min();
-        var groundResolutionCoefs_Min = groundResolutionCoefs.Min();
-
-        //******************************************************
-        //***************** read features **********************
-        var shapes = Shapefile.ReadShapes(shpFile);
-
-        var features = shapes
-                                .Select(g => g.AsGeometry())
-                                .SelectMany(g => g.NumberOfGeometries > 1 ? g.Split(false) : new List<Geometry<Point>>() { g })
-                                .Where(g => !g.IsNullOrEmpty())
-                                .Where(g => g.TotalNumberOfPoints > 15 && g.TotalNumberOfPoints < 500)
-                                .ToList();
-
-        //var isRingbase = shapes[0].IsRingBase();
-
-        foreach (var feature in features)
-        {
-            //if (isRingbase)
-            //{
-            //    feature.CloseLineString();
-            //}
-
-            feature.Srid = SridHelper.WebMercator;
-            feature.RemoveConsecutiveDuplicatePoints();
-        }
-
-        features = features.Where(f => !f.HasDuplicatePoints()).ToList();
-
-        List<SimplificationType> methods = new List<SimplificationType>()
-        {
-            //SimplificationType.EuclideanDistance,
-
             SimplificationType.RamerDouglasPeucker,
-            //SimplificationType.ReumannWitkam,
-
-            //SimplificationType.PerpendicularDistance,
-
-            //SimplificationType.VisvalingamWhyatt,
             SimplificationType.SleeveFitting,
-
-            //SimplificationType.NormalOpeningWindow,
-            //SimplificationType.BeforeOpeningWindow,
-
-            //SimplificationType.TriangleRoutine,
         };
 
-        var colros = new Dictionary<SimplificationType, System.Windows.Media.Color>()
+        var colors = new Dictionary<SimplificationType, System.Windows.Media.Color>()
         {
-            {SimplificationType.EuclideanDistance, System.Windows.Media.Colors.DarkGray},
             {SimplificationType.RamerDouglasPeucker, IRI.Maptor.Presentation.Wpf.Helpers.ColorHelper.ToWpfColor("#E051AD")},
-            {SimplificationType.ReumannWitkam, System.Windows.Media.Colors.Navy},
-            {SimplificationType.PerpendicularDistance, System.Windows.Media.Colors.Blue},
-            {SimplificationType.VisvalingamWhyatt, System.Windows.Media.Colors.Yellow},
             {SimplificationType.SleeveFitting, IRI.Maptor.Presentation.Wpf.Helpers.ColorHelper.ToWpfColor("#3B878C")},
-            {SimplificationType.NormalOpeningWindow, System.Windows.Media.Colors.Brown},
-            {SimplificationType.BeforeOpeningWindow, System.Windows.Media.Colors.Orange},
-            {SimplificationType.TriangleRoutine, System.Windows.Media.Colors.Gray}
         };
 
         int featureIndex = 0;
@@ -453,7 +318,7 @@ public static class SimplificationHelper
         {
             featureIndex++;
 
-            if (!CheckZoom2(featureIndex, fileName)) continue;
+            if (!IsSpecialCase(featureIndex, fileName)) continue;
 
             var outputDirectoryForFeature = $"{outputDirectory}\\{fileName}\\{featureIndex}";
 
@@ -462,9 +327,9 @@ public static class SimplificationHelper
 
             var boundingBox = feature.GetBoundingBox().Expand(1.1);
 
-            var estimatedZoomLevel = WebMercatorUtility.EstimateZoomLevel(boundingBox, /*34,*/ 256, 256);
+            var estimatedZoomLevel = WebMercatorUtility.EstimateZoomLevel(boundingBox, 256, 256);
 
-            var webMercatorResolution = WebMercatorUtility.ToWebMercatorLength(estimatedZoomLevel, 10);
+            var baseThreshold = WebMercatorUtility.ToWebMercatorLength(estimatedZoomLevel, BaseThresholdInPixels);
 
             var originalFrame = await GetAsFrame(
                 "original",
@@ -480,33 +345,19 @@ public static class SimplificationHelper
             await originalFeatureSet.SaveAsync($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-original.json", false, true);
 
 
-            foreach (var coef in groundResolutionCoefs)
+            foreach (var coef in coefficients)
             {
-                var threshold = webMercatorResolution * coef;
+                var threshold = baseThreshold * coef;
 
-                var parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
+                var parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = Retain3Points };
 
-                var temp = new NineAlgoSixMeasureLog
-                            (fileName,
-                                        boundingBox,
-                                        featureIndex,
-                                        feature,
-                                        estimatedZoomLevel,
-                                        //methodNames[method],
-                                        //stopwatch.ElapsedMilliseconds,
-                                        parameters,
-                                        coef);
+                var temp = new NineAlgoSixMeasureLog(fileName, boundingBox, featureIndex, feature, estimatedZoomLevel, parameters, coef);
 
-                //List<System.Drawing.Bitmap> images = new List<System.Drawing.Bitmap>();
                 List<DrawingVisual> drawingVisuals = [.. originalFrame];
 
                 foreach (var method in methods)
                 {
-                    //stopwatch.Restart();
-
                     var simplified = feature.Simplify(method, parameters);
-
-                    //stopwatch.Stop();
 
                     if (simplified.IsNullOrEmpty())
                         continue;
@@ -516,7 +367,7 @@ public static class SimplificationHelper
 
                     temp.AddAlgoResult(method, feature, simplified);
 
-                    var simplifiedFrame = await GetAsFrame(method.ToString(), estimatedZoomLevel, boundingBox, simplified, colros[method], 2, 0.9);
+                    var simplifiedFrame = await GetAsFrame(method.ToString(), estimatedZoomLevel, boundingBox, simplified, colors[method], 2, 0.9);
 
                     drawingVisuals.AddRange(simplifiedFrame);
 
@@ -528,7 +379,6 @@ public static class SimplificationHelper
                 var screenSize = WebMercatorUtility.ToScreenSize(estimatedZoomLevel, boundingBox);
 
                 IRI.Maptor.Presentation.Wpf.Helpers.ImageUtility.MergeAndSave($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-{coef}.png", drawingVisuals, screenSize.Width, screenSize.Height);
-                //Save($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-{coef}.png", drawingVisuals, estimatedZoomLevel, boundingBox);
 
                 temp.UpdateAllRanks();
 
@@ -543,7 +393,8 @@ public static class SimplificationHelper
         }
     }
 
-    private static bool CheckZoom2(int featureIndex, string fileName)
+    /// <summary>Feature indices (in the order of <see cref="LoadFeatures"/>) of the JSS special cases, per layer.</summary>
+    private static bool IsSpecialCase(int featureIndex, string fileName)
     {
         var type = fileName.Split('_').First();
 
@@ -617,221 +468,6 @@ public static class SimplificationHelper
         return await vectorLayer.AsDrawingVisual(groundBoundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
     }
 
-    //private static void Save(string fileName, List<DrawingVisual> drawingVisuals, int level, BoundingBox groundBoundingBox)
-    //{
-    //    var currentScreenSize = WebMercatorUtility.ToScreenSize(level, groundBoundingBox);
-
-    //    RenderTargetBitmap image = new RenderTargetBitmap(currentScreenSize.Width, currentScreenSize.Height, 96, 96, PixelFormats.Pbgra32);
-
-    //    foreach (var drawingVisual in drawingVisuals)
-    //    {
-    //        image.Render(drawingVisual);
-    //    }
-
-    //    var frame = BitmapFrame.Create(image);
-
-    //    PngBitmapEncoder pngImage = new PngBitmapEncoder();
-
-    //    pngImage.Frames.Add(frame);
-
-    //    using (System.IO.Stream stream = System.IO.File.Create(fileName))
-    //    {
-    //        pngImage.Save(stream);
-    //    }
-    //}
-
     #endregion
-
-    //#region Print Sample Zoom levels
-
-    ////public static async Task Print(string shpFile)
-    ////{
-    ////    var fileName = $"{Path.GetFileNameWithoutExtension(shpFile)}";
-
-    ////    //******************************************************
-    ////    //***************** read features **********************
-    ////    var features = Shapefile.ReadShapes(shpFile)
-    ////                            .Select(g => g.AsGeometry())
-    ////                            .SelectMany(g => g.Split(false))
-    ////                            .Where(g => !g.IsNullOrEmpty())
-    ////                            .Where(g => g.TotalNumberOfPoints > 30 && g.TotalNumberOfPoints < 500)
-    ////                            .OrderBy(g => Guid.NewGuid())
-    ////                            .Take(100)
-    ////                            .ToList();
-
-    ////    int featureIndex = 0;
-
-    ////    foreach (var feature in features)
-    ////    {
-    ////        featureIndex++;
-
-    ////        var boundingBox = feature.GetBoundingBox();
-
-    ////        var estimatedZoomLevel = WebMercatorUtility.EstimateZoomLevel(boundingBox, 256, 256);
-
-    ////        var webMercatorResolution = WebMercatorUtility.ToWebMercatorLength(estimatedZoomLevel, 10);
-
-    ////        var originalFrame = await GetAsFrame(
-    ////            "original",
-    ////            estimatedZoomLevel,
-    ////            boundingBox,
-    ////            feature,
-    ////            Jab.Common.Helpers.ColorHelper.ToWpfColor("#C0C0C0"),
-    ////            4,
-    ////            1);
-
-    ////        GeoJsonFeatureSet originalFeatureSet = feature.AsGeoJsonFeatureSet();
-
-    ////        originalFeatureSet.Save($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-original.json", false, true);
-  
-    ////    }
-    ////}
-
-    //#endregion
-
-
-    // برای یک فایل مشخص به صورت خودکار
-    // زوم‌های مناسب فایل رو پیدا کرده و 
-    // برای هر زوم بر اساس حد آستانه‌های از پیش تعریف شده
-    // الگوریتم‌ها رو اجرا و اختلاف عکسی اون‌ها رو ذخیره می‌کنه
-    // نهایتا لاگ مقادیر محاسبه شده رو هم ذخیره می کنه
-    public static async Task TestThresholdChangesAlgo(string shpFile)
-    {
-        var outputDirectoryBase = @"E:\University.Ph.D\Paper1_ReviewPaper\AlgorithmRun\1401-03-13";
-        var fileName = $"{System.IO.Path.GetFileNameWithoutExtension(shpFile)}";
-        var outputDirectory = $"{outputDirectoryBase}\\{fileName}";
-        if (!Directory.Exists(outputDirectory))
-            Directory.CreateDirectory(outputDirectory);
-
-        var groundResolutionCoefs = new List<double>()
-            {
-                //1.0 / 6,
-                //1.0 / 5,
-                1.0 / 4,
-                1.0 / 3,
-                1.0 / 2,
-                1,
-                2,
-                3,
-                4,
-                //5,
-                //6
-            };
-
-        var groundResolutionCoefs_Range = groundResolutionCoefs.Max() - groundResolutionCoefs.Min();
-        var groundResolutionCoefs_Min = groundResolutionCoefs.Min();
-
-        foreach (var coef in groundResolutionCoefs)
-        {
-            if (!Directory.Exists($"{outputDirectory}\\{coef:N2}"))
-                Directory.CreateDirectory($"{outputDirectory}\\{coef:N2}");
-        }
-
-        //******************************************************
-        //***************** read features **********************
-        var features = Shapefile.ReadShapes(shpFile)
-                                .Select(g => g.AsGeometry())
-                                .Where(g => !g.IsNullOrEmpty())
-                                .ToList();
-
-        foreach (var feature in features)
-            feature.RemoveConsecutiveDuplicatePoints();
-
-        var totalNumberOfPoints = features.Sum(f => f.TotalNumberOfPoints);
-
-        var sqlFeatures = features.Select(f => f.AsSqlGeometry()).ToList();
-
-        var groundBoundingBox = sqlFeatures.GetBoundingBox();
-
-        var estimatedScale = WebMercatorUtility.EstimateZoomLevel(groundBoundingBox, /*34,*/ 900, 900);
-        var screenSize = WebMercatorUtility.ToScreenSize(estimatedScale, groundBoundingBox);
-
-        StringBuilder builder = new StringBuilder();
-        builder.AppendLine(LogStructure.GetHeader());
-        var originalVectorLayer = GeneralHelper.GetAsLayer("original", features);
-        builder.AppendLine(new LogStructure(fileName, totalNumberOfPoints, features, 0, 0, "original", 0, new SimplificationParameters(), 1).ToTsv());
-
-        var startIndex = Math.Max(3, estimatedScale - 5);
-        var count = Math.Max(estimatedScale - startIndex + 2, 3);
-        var groundLevels = Enumerable.Range(startIndex, count).ToList();
-
-        List<SimplificationType> methods = new List<SimplificationType>()
-            {
-                SimplificationType.TriangleRoutine,
-                SimplificationType.Angle,
-                SimplificationType.CumulativeAngle,
-                SimplificationType.EuclideanDistance,
-                SimplificationType.CumulativeEuclideanDistance,
-                SimplificationType.CumulativeAreaAngle,
-                SimplificationType.NthPoint,
-                SimplificationType.CumulativeTriangleRoutine,
-                SimplificationType.VisvalingamWhyatt,
-                SimplificationType.RamerDouglasPeucker,
-                SimplificationType.ReumannWitkam,
-                SimplificationType.Lang,
-                SimplificationType.PerpendicularDistance,
-                SimplificationType.NormalOpeningWindow,
-                SimplificationType.BeforeOpeningWindow,
-            };
-
-        Stopwatch stopwatch = Stopwatch.StartNew();
-
-        foreach (var level in groundLevels)
-        {
-            var currentScreenSize = WebMercatorUtility.ToScreenSize(level, groundBoundingBox);
-            var scale = WebMercatorUtility.GetGoogleMapScale(level);
-
-            var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(groundBoundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
-
-            originalBitmap.Save($"{outputDirectory}\\{fileName}-{level}-original.png", System.Drawing.Imaging.ImageFormat.Tiff);
-
-            var groundResolution = WebMercatorUtility.CalculateGroundResolution(level, 30); // mean latitude: 30
-
-            var webMercatorResolution = Math.Max(groundBoundingBox.Width / currentScreenSize.Width, groundBoundingBox.Height / currentScreenSize.Height);
-
-            foreach (var coef in groundResolutionCoefs)
-            {
-                foreach (var method in methods)
-                {
-                    //if (method != SimplificationType.DouglasPeucker)
-                    //    continue;
-
-                    var threshold = webMercatorResolution * coef;
-
-                    var n = Math.Max(2, (uint)(features.Sum(f => f.TotalNumberOfPoints) / features.Count() * (2 + 8 * (coef - groundResolutionCoefs_Min) / groundResolutionCoefs_Range)));
-
-                    var parameters = new SimplificationParameters()
-                    {
-                        N = n,
-                        AreaThreshold = threshold * threshold,
-                        DistanceThreshold = threshold,
-                        Retain3Points = retain3Points,
-                        LookAhead = (int)n,
-                        AngleThreshold = 0.98
-                    };
-
-                    stopwatch.Restart();
-
-                    var simplified = features.Select(f => f.Simplify(method, parameters)).Where(f => f.Type != GeometryType.Point).ToList();
-
-                    stopwatch.Stop();
-
-                    var vectorLayer = GeneralHelper.GetAsLayer($"S-{level}-{method}", simplified);
-
-                    var tempDirectory = $"{outputDirectory}\\{coef:N2}";
-
-                    var diff = await GeneralHelper.CreateImages(groundBoundingBox, level, originalBitmap, vectorLayer, tempDirectory, fileName, $"{method}"/*, coef*/);
-
-                    builder.AppendLine(new LogStructure(fileName, totalNumberOfPoints, simplified, level, diff.percent, $"{method.GetDescription()}", stopwatch.ElapsedMilliseconds, parameters, coef).ToTsv());
-
-                    diff.image.Dispose();
-                }
-            }
-
-            originalBitmap.Dispose();
-        }
-
-        File.WriteAllText($"{outputDirectory}\\{fileName}-summary.txt", builder.ToString());
-    }
 
 }
