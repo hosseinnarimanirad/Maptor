@@ -51,6 +51,9 @@ public class VectorLayer : SymbolizableLayer
 
     private IVectorDataSource? _vectorDataSource => _dataSource as IVectorDataSource;
 
+    /// <summary>A Live layer shows only part of its features somewhere at this zoom (too many): the legend says "zoom in".</summary>
+    public bool IsDataTruncatedInView => (_dataSource as IServerQueryableVectorDataSource)?.IsViewTruncated == true;
+
 
     protected LayerType _type;
     public override LayerType Type
@@ -162,6 +165,9 @@ public class VectorLayer : SymbolizableLayer
         LayerId = Guid.NewGuid();
 
         DataSource = dataSource;
+
+        if (dataSource is IServerQueryableVectorDataSource server)
+            server.ViewTruncatedChanged += (_, _) => InvokeOnUiThread(() => RaisePropertyChanged(nameof(IsDataTruncatedInView)));
 
         _rendering = rendering;
 

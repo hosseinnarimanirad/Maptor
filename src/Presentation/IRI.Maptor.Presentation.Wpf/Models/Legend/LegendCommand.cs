@@ -19,6 +19,7 @@ using System.Globalization;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using IRI.Maptor.Presentation.Core;
 using IRI.Maptor.Presentation.Core.Layers;
+using IRI.Maptor.Core.Persistence.Abstractions;
 
 namespace IRI.Maptor.Presentation.Wpf.Models.Legend;
 
@@ -186,6 +187,21 @@ public class LegendCommand : LegendCommandBase
         {
             if (layer == null || map == null)
                 return;
+
+            // A Live layer is not in memory: the table pages, filters and sorts on the server instead.
+            if (layer.DataSource is IServerQueryableVectorDataSource { CanQueryServer: true } server)
+            {
+                var pagedLayer = new SelectedLayer(map.DialogService, layer, layer.GetFields())
+                {
+                    Features = new System.Collections.ObjectModel.ObservableCollection<Feature<Point>>(),
+                };
+
+                pagedLayer.EnableServerPaging(server);
+
+                map.AddSelectedLayer(pagedLayer);
+
+                return;
+            }
 
             var features = await layer.GetFeaturesAsync();
 

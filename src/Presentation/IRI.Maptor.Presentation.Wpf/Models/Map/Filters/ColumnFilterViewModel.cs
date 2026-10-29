@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using IRI.Maptor.Core.Spatial.Dtos;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -37,6 +39,15 @@ public abstract class ColumnFilterViewModel : Notifier
 
     /// <summary>Evaluates the raw attribute value (may be null when the key is missing).</summary>
     public abstract bool Matches(object? rawValue);
+
+    /// <summary>
+    /// The same condition as <see cref="Matches"/>, as server query filters (Live layers), combined with AND.
+    /// Empty when the filter is inactive.
+    /// </summary>
+    public virtual IEnumerable<FeatureFilterDto> ToServerFilters() => Enumerable.Empty<FeatureFilterDto>();
+
+    /// <summary>True when the filter can match no value at all (a checklist with nothing checked): no query is needed.</summary>
+    public virtual bool MatchesNothing => false;
 
     public virtual void Clear()
     {

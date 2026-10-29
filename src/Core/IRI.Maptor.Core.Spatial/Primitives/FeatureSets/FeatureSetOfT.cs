@@ -158,6 +158,34 @@ public class FeatureSet<T> where T : IPoint, new()
         this._allFeatures.Add(feature);
     }
 
+    /// <summary>
+    /// Adds features as they are, without marking them New: for a source that loads its features in parts
+    /// (a Live web layer, tile by tile). The caller makes sure a feature is not attached twice.
+    /// </summary>
+    public void Attach(IEnumerable<Feature<T>> features)
+    {
+        if (ReferenceEquals(this, Empty))
+            throw new InvalidOperationException("FeatureSet.Empty is shared and cannot be changed; use CreateEmpty.");
+
+        foreach (var feature in features)
+        {
+            if (feature.Key == Guid.Empty)
+                feature.Key = Guid.NewGuid();
+
+            this._allFeatures.Add(feature);
+        }
+    }
+
+    /// <summary>A new, empty and changeable set (unlike the shared <see cref="Empty"/>).</summary>
+    public static FeatureSet<T> CreateEmpty(int srid, GeometryType geometryType, List<Field>? fields) => new FeatureSet<T>()
+    {
+        Title = string.Empty,
+        _allFeatures = new List<Feature<T>>(),
+        Fields = fields ?? new List<Field>(),
+        Srid = srid,
+        GeometryType = geometryType,
+    };
+
     public void Remove(Feature<T> feature)
     {
         feature.MarkAsRemoved();

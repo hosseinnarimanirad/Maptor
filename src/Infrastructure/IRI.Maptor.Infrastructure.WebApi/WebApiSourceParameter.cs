@@ -1,3 +1,4 @@
+using IRI.Maptor.Core.Common.Enums;
 using IRI.Maptor.Core.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Infrastructure.WebApi;
@@ -29,6 +30,25 @@ public class WebApiSourceParameter
     public string ListUrl { get; set; }
 
     public string SyncUrl { get; set; }
+
+    /// <summary>
+    /// Asks the list endpoint for <see cref="IRI.Maptor.Core.Spatial.Dtos.CompactFeatureSetDto"/> (attribute
+    /// names once instead of on every row). Off by default. A server that does not know the format
+    /// answers with the usual JSON, which is still read, so turning it on never breaks a layer.
+    /// Applies only with a shared <see cref="HttpClient"/>.
+    /// </summary>
+    public bool PreferCompactFormat { get; set; }
+
+    /// <summary>
+    /// How the layer gets its features, from the server's layer settings. <see cref="LayerLoadMode.Cache"/>
+    /// (default) downloads the whole layer once. <see cref="LayerLoadMode.Live"/> fetches the features of
+    /// the map's extent as it moves, through <see cref="QueryUrl"/>; it needs <see cref="HttpClient"/> and
+    /// <see cref="QueryUrl"/>, otherwise the layer loads like Cache.
+    /// </summary>
+    public LayerLoadMode LoadMode { get; set; } = LayerLoadMode.Cache;
+
+    /// <summary>The layer's query endpoint, <c>{base}/LayerQuery/{layerSettingId}</c>; used in Live mode.</summary>
+    public string? QueryUrl { get; set; }
 
     public WebApiSourceParameter(
         string listUrl,

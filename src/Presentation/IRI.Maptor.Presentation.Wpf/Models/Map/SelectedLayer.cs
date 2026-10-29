@@ -17,6 +17,9 @@ using System.Windows.Input;
 using IRI.Maptor.Presentation.Core.Layers;
 using IRI.Maptor.Presentation.Core;
 using IRI.Maptor.Presentation.Wpf.Models.Filters;
+using IRI.Maptor.Presentation.Core.Localization;
+using IRI.Maptor.Core.Spatial.Dtos;
+using System.ComponentModel;
 
 namespace IRI.Maptor.Presentation.Wpf.Models;
 
@@ -151,8 +154,159 @@ public class SelectedLayer : Notifier
     {
         _currentPageIndex = 0;
 
-        RefreshPageDeferred();
+        if (IsServerPaged && !ShowUnsavedChangesOnly)
+            _ = RequestServerPageAsync(includeCount: true);
+        else
+            RefreshPageDeferred();
     }
+
+    #region Server paging (Live layers)
+
+    private IServerQueryableVectorDataSource? _server;
+
+    private List<Feature<Point>> _serverPage = new();
+
+    private int _serverTotalCount;
+
+    private bool _hasServerCount;
+
+    /// <summary>Only the latest request may change the table: answers to older ones are dropped.</summary>
+    private int _serverRequestVersion;
+
+    /// <summary>
+    /// The table pages, filters, sorts and counts on the server (a Live layer): <see cref="Features"/> is the
+    /// current page, and the totals are the server's. Unsaved edits are shown on the rows they belong to, and
+    /// listed in full with <see cref="ShowUnsavedChangesOnly"/>; the server's totals do not include them.
+    /// </summary>
+    public bool IsServerPaged => _server is not null;
+
+    private bool _isLoadingPage;
+    public bool IsLoadingPage
+    {
+        get => _isLoadingPage;
+        private set
+        {
+            if (_isLoadingPage == value)
+                return;
+
+            _isLoadingPage = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    private bool _showUnsavedChangesOnly;
+    /// <summary>Server-paged tables: list only the unsaved changes (from memory) instead of the server's pages.</summary>
+    public bool ShowUnsavedChangesOnly
+    {
+        get => _showUnsavedChangesOnly;
+        set => SetShowUnsavedChangesOnly(value, refresh: true);
+    }
+
+    private void SetShowUnsavedChangesOnly(bool value, bool refresh)
+    {
+        if (_showUnsavedChangesOnly == value)
+            return;
+
+        _showUnsavedChangesOnly = value;
+        _currentPageIndex = 0;
+        RaisePropertyChanged(nameof(ShowUnsavedChangesOnly));
+
+        if (!refresh)
+            return;
+
+        if (!value && IsServerPaged)
+            _ = RequestServerPageAsync(includeCount: true);
+        else
+            RefreshPagingView(preserveSelection: false);
+    }
+
+    public int UnsavedChangesCount => (AssociatedLayer?.DataSource as IEditableVectorDataSource)?.GetCurrentChanges().Count ?? 0;
+
+    /// <summary>Shown under a server-paged table while edits are pending: the server's totals do not count them.</summary>
+    public bool ShowUnsavedChangesNote => IsServerPaged && (UnsavedChangesCount > 0 || ShowUnsavedChangesOnly);
+
+    public string UnsavedChangesNote => string.Format(LocalizationManager.Instance["featureTable_unsavedChangesNote"] ?? "{0}", UnsavedChangesCount);
+
+    /// <summary>Switches the table to server paging and loads the first page with the count.</summary>
+    public void EnableServerPaging(IServerQueryableVectorDataSource server)
+    {
+        _server = server;
+
+        FilterManager.UseServerDistinctValues(async field => (await server.GetDistinctValuesAsync(field)).Values);
+
+        RaisePropertyChanged(nameof(IsServerPaged));
+
+        _ = RequestServerPageAsync(includeCount: true);
+    }
+
+    private async Task RequestServerPageAsync(bool includeCount)
+    {
+        if (_server is null || ShowUnsavedChangesOnly)
+            return;
+
+        var version = ++_serverRequestVersion;
+
+        if (FilterManager.MatchesNothing)
+        {
+            ApplyServerPage(new List<Feature<Point>>(), 0);
+            return;
+        }
+
+        var query = new FeatureQueryDto
+        {
+            Filters = FilterManager.ToServerFilters(),
+            SortField = FilterManager.SortFieldName,
+            SortDescending = FilterManager.SortDirection == ListSortDirection.Descending,
+            PageIndex = _currentPageIndex,
+            PageSize = SelectedPageSize,
+            IncludeCount = includeCount || !_hasServerCount,
+        };
+
+        IsLoadingPage = true;
+
+        try
+        {
+            var page = await _server.QueryPageAsync(query);
+
+            if (version != _serverRequestVersion)
+                return;
+
+            ApplyServerPage(page.Features.ToList(), page.TotalCount);
+
+            // the count shrank under the current page (e.g. rows deleted by others): go to the last page
+            if (_serverPage.Count == 0 && _currentPageIndex > 0 && TotalPages > 0)
+            {
+                _currentPageIndex = TotalPages - 1;
+                await RequestServerPageAsync(includeCount: false);
+            }
+        }
+        catch (Exception ex)
+        {
+            if (version == _serverRequestVersion)
+                await _dialogService.ShowErrorMessage(new MaptorUnknownException(ex.Message));
+        }
+        finally
+        {
+            if (version == _serverRequestVersion)
+                IsLoadingPage = false;
+        }
+    }
+
+    private void ApplyServerPage(List<Feature<Point>> features, int? totalCount)
+    {
+        if (totalCount is int total)
+        {
+            _serverTotalCount = total;
+            _hasServerCount = true;
+        }
+
+        _serverPage = features;
+
+        // Features is the page, so selection, zoom-to and show-on-map work on it; the setter rebinds the grid
+        Features = new ObservableCollection<Feature<Point>>(features);
+    }
+
+    #endregion
 
     private async void highlightedFeatures_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
@@ -236,7 +390,14 @@ public class SelectedLayer : Notifier
 
             _selectedPageSize = value;
             RaisePropertyChanged();
-            RefreshPagingView();
+
+            if (IsServerPaged && !ShowUnsavedChangesOnly)
+            {
+                _currentPageIndex = 0;
+                _ = RequestServerPageAsync(includeCount: false);
+            }
+            else
+                RefreshPagingView();
         }
     }
 
@@ -257,14 +418,19 @@ public class SelectedLayer : Notifier
             // navigating to another page drops the row selection so that
             // delete/edit never target rows that are no longer visible
             RefreshPagingView(preserveSelection: false);
+
+            if (IsServerPaged && !ShowUnsavedChangesOnly)
+                _ = RequestServerPageAsync(includeCount: false);
         }
     }
 
     public int CurrentPageNumber => TotalPages == 0 ? 0 : CurrentPageIndex + 1;
 
-    public int TotalPages => ViewFeatures.Count == 0
-                                ? 0
-                                : (int)Math.Ceiling(ViewFeatures.Count / (double)SelectedPageSize);
+    public int TotalPages => IsServerPaged && !ShowUnsavedChangesOnly
+                                ? (_serverTotalCount == 0 ? 0 : (int)Math.Ceiling(_serverTotalCount / (double)SelectedPageSize))
+                                : ViewFeatures.Count == 0
+                                    ? 0
+                                    : (int)Math.Ceiling(ViewFeatures.Count / (double)SelectedPageSize);
 
     private IReadOnlyList<Feature<Point>>? _viewFeatures;
 
@@ -273,20 +439,28 @@ public class SelectedLayer : Notifier
 
     private IReadOnlyList<Feature<Point>> ComputeViewFeatures()
     {
-        if (Features is null || Features.Count == 0)
+        // server-paged: the page as the server sent it (already filtered and sorted there)
+        if (IsServerPaged && !ShowUnsavedChangesOnly)
+            return _serverPage;
+
+        var source = IsServerPaged
+            ? (AssociatedLayer?.DataSource as IEditableVectorDataSource)?.GetCurrentChanges() ?? new List<Feature<Point>>()
+            : (IList<Feature<Point>>?)Features;
+
+        if (source is null || source.Count == 0)
             return Array.Empty<Feature<Point>>();
 
-        IEnumerable<Feature<Point>> result = Features;
+        IEnumerable<Feature<Point>> result = source;
 
         if (FilterManager.HasActiveFilter)
             result = result.Where(FilterManager.Matches);
 
         result = FilterManager.ApplySort(result);
 
-        return ReferenceEquals(result, Features) ? Features : result.ToList();
+        return ReferenceEquals(result, source) && source is IReadOnlyList<Feature<Point>> list ? list : result.ToList();
     }
 
-    public int CountOfFilteredFeatures => ViewFeatures.Count;
+    public int CountOfFilteredFeatures => IsServerPaged && !ShowUnsavedChangesOnly ? _serverTotalCount : ViewFeatures.Count;
 
     public ObservableCollection<Feature<Point>> CurrentPageFeatures
     {
@@ -294,6 +468,10 @@ public class SelectedLayer : Notifier
         {
             if (ViewFeatures.Count == 0)
                 return new ObservableCollection<Feature<Point>>();
+
+            // a server page is already the page
+            if (IsServerPaged && !ShowUnsavedChangesOnly)
+                return new ObservableCollection<Feature<Point>>(ViewFeatures);
 
             return new ObservableCollection<Feature<Point>>(ViewFeatures.Skip(CurrentPageIndex * SelectedPageSize).Take(SelectedPageSize));
         }
@@ -346,6 +524,9 @@ public class SelectedLayer : Notifier
         RaisePropertyChanged(nameof(TotalPages));
         RaisePropertyChanged(nameof(CountOfSelectedFeatures));
         RaisePropertyChanged(nameof(CountOfFilteredFeatures));
+        RaisePropertyChanged(nameof(UnsavedChangesCount));
+        RaisePropertyChanged(nameof(ShowUnsavedChangesNote));
+        RaisePropertyChanged(nameof(UnsavedChangesNote));
 
         var page = CurrentPageFeatures;
 
@@ -462,6 +643,9 @@ public class SelectedLayer : Notifier
         RaisePropertyChanged(nameof(CanUndo));
         RaisePropertyChanged(nameof(CanViewChanges));
         RaisePropertyChanged(nameof(HasPendingChanges));
+        RaisePropertyChanged(nameof(UnsavedChangesCount));
+        RaisePropertyChanged(nameof(ShowUnsavedChangesNote));
+        RaisePropertyChanged(nameof(UnsavedChangesNote));
 
         CommandManager.InvalidateRequerySuggested();
     }
@@ -578,6 +762,10 @@ public class SelectedLayer : Notifier
             Features ??= new ObservableCollection<Feature<Point>>();
 
             Features.Add(newFeature);
+
+            // server-paged: the new row is on no server page yet; it is in the unsaved changes
+            if (IsServerPaged)
+                SetShowUnsavedChangesOnly(true, refresh: false);
 
             // an active filter could hide the just-added row, and an active sort would not
             // place it on the last page; clear both so it is guaranteed visible
@@ -738,6 +926,13 @@ public class SelectedLayer : Notifier
                 RefreshPagingView();
 
                 NotifyAll();
+
+                // server-paged: the saved rows are now the server's; reload the page and the count
+                if (IsServerPaged)
+                {
+                    SetShowUnsavedChangesOnly(false, refresh: false);
+                    _ = RequestServerPageAsync(includeCount: true);
+                }
             });
 
             await this._dialogService?.ShowMessage_DoneSuccessfully();
@@ -872,6 +1067,11 @@ public class SelectedLayer : Notifier
             return _zoomToCommand;
         }
     }
+
+
+    private RelayCommand? _toggleUnsavedChangesCommand;
+    public RelayCommand ToggleUnsavedChangesCommand =>
+        _toggleUnsavedChangesCommand ??= new RelayCommand(param => ShowUnsavedChangesOnly = !ShowUnsavedChangesOnly);
 
 
     private RelayCommand? _goToNextPageCommand;

@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Collections.Generic;
 
 using IRI.Maptor.Core.Common.Primitives;
+using IRI.Maptor.Core.Spatial.Dtos;
 using IRI.Maptor.Core.Spatial.Primitives;
 
 using Point = IRI.Maptor.Core.Common.Primitives.Point;
@@ -82,6 +83,37 @@ public class NumericColumnFilter : ColumnFilterViewModel
     public bool IsBetween => Operator == NumericFilterOperator.Between;
 
     public override bool IsActive => Value.HasValue || (IsBetween && ValueTo.HasValue);
+
+    public override IEnumerable<FeatureFilterDto> ToServerFilters()
+    {
+        if (!IsActive)
+            yield break;
+
+        if (Operator == NumericFilterOperator.Between)
+        {
+            yield return new FeatureFilterDto { Field = FieldName, Operator = FeatureFilterOperator.Between, Value = Value, ValueTo = ValueTo };
+            yield break;
+        }
+
+        yield return new FeatureFilterDto
+        {
+            Field = FieldName,
+            Value = Value,
+            Operator = Operator switch
+            {
+                NumericFilterOperator.NotEqual => FeatureFilterOperator.Ne,
+                NumericFilterOperator.LessThan => FeatureFilterOperator.Lt,
+                NumericFilterOperator.LessThanOrEqual => FeatureFilterOperator.Le,
+                NumericFilterOperator.GreaterThan => FeatureFilterOperator.Gt,
+                NumericFilterOperator.GreaterThanOrEqual => FeatureFilterOperator.Ge,
+                _ => FeatureFilterOperator.Eq,
+            },
+        };
+
+        // as in Matches: an empty value never matches, NotEqual included (SQL's <> would keep NULLs)
+        if (Operator == NumericFilterOperator.NotEqual)
+            yield return new FeatureFilterDto { Field = FieldName, Operator = FeatureFilterOperator.NotNull };
+    }
 
     // null or unparseable attribute values never match an active numeric filter,
     // including NotEqual: comparisons are only meaningful for actual numbers

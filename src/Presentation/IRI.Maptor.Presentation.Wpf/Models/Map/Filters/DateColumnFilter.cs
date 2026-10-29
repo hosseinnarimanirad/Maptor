@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Collections.Generic;
 
 using IRI.Maptor.Core.Common.Primitives;
+using IRI.Maptor.Core.Spatial.Dtos;
 using IRI.Maptor.Core.Spatial.Primitives;
 
 using Point = IRI.Maptor.Core.Common.Primitives.Point;
@@ -54,6 +55,21 @@ public class DateColumnFilter : ColumnFilterViewModel
     }
 
     public override bool IsActive => FromDate.HasValue || ToDate.HasValue;
+
+    // date-only, as in Matches: the whole To day is included
+    public override IEnumerable<FeatureFilterDto> ToServerFilters()
+    {
+        if (!IsActive)
+            yield break;
+
+        yield return new FeatureFilterDto
+        {
+            Field = FieldName,
+            Operator = FeatureFilterOperator.Between,
+            Value = FromDate?.Date,
+            ValueTo = ToDate?.Date.AddDays(1).AddTicks(-1),
+        };
+    }
 
     public override bool Matches(object? rawValue)
     {

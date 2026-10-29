@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using IRI.Maptor.Extensions;
@@ -14,7 +15,7 @@ using IRI.Maptor.Core.Spatial.Dtos;
 
 namespace IRI.Maptor.Infrastructure.WebApi;
 
-public class WebApiDataSource : MemoryDataSource
+public partial class WebApiDataSource : MemoryDataSource
 {
     public override DataSourceKind DataSourceKind => DataSourceKind.WebApi;
 
@@ -85,11 +86,23 @@ public class WebApiDataSource : MemoryDataSource
         {
             HasError = false;
 
+            // Live mode: no download of the layer; features come per map extent (WebApiDataSource.Live.cs).
+            if (IsLive)
+            {
+                await LoadLiveAsync(cancellationToken);
+                IsLoaded = true;
+                return;
+            }
+
             //var listEndpoint = !string.IsNullOrWhiteSpace(_parameters.CustomListPath)
             //    ? _parameters.CustomListPath.TrimStart('/')
             //    : _listEndPoint;
 
+            var stopwatch = Stopwatch.StartNew();
+
             var featureSetDto = await FetchFeaturesAsync(queryParams, cancellationToken);
+
+            var fetchElapsed = stopwatch.ElapsedMilliseconds;
 
             if (featureSetDto == null || featureSetDto.Features == null || featureSetDto.Features.Count == 0)
             {
@@ -117,6 +130,11 @@ public class WebApiDataSource : MemoryDataSource
 
             UpdateHasPendingChanges();
             IsLoaded = true;
+
+            // Fetch = waiting for the gate + server + download + JSON parse; convert = WKB parse + projection.
+            Trace.TraceInformation(
+                $"Loaded {featureSetDto?.Features?.Count ?? 0} features from '{_parameters.ListUrl}': " +
+                $"fetch {fetchElapsed} ms, convert {stopwatch.ElapsedMilliseconds - fetchElapsed} ms, total {stopwatch.ElapsedMilliseconds} ms");
         }
         catch
         {
@@ -156,7 +174,8 @@ public class WebApiDataSource : MemoryDataSource
                     _parameters.BearerToken,
                     _parameters.Headers,
                     _parameters.HttpClient,
-                    cancellationToken);
+                    cancellationToken,
+                    _parameters.PreferCompactFormat);
 
                 if (response.IsSuccess)
                     return response.Result;
@@ -198,6 +217,9 @@ public class WebApiDataSource : MemoryDataSource
 
     public override async Task<FeatureSet<Point>> GetAsFeatureSetAsync(Geometry<Point>? geometry)
     {
+        if (IsLive)
+            return await GetLiveAsync(geometry);
+
         if (_webMercatorFeatureSet?.Features == null || _webMercatorFeatureSet.Features.Count == 0)
             return FeatureSet<Point>.Empty;
 
@@ -280,6 +302,9 @@ public class WebApiDataSource : MemoryDataSource
                 //_deletedIds.Clear();
                 _webMercatorFeatureSet.ApplyChanges();
                 UpdateHasPendingChanges();
+
+                // Live mode: saved new features now have server ids; a later tile must not add them twice.
+                RegisterSavedLiveFeatures();
             }
             else
             {
@@ -309,6 +334,10 @@ public class WebApiDataSource : MemoryDataSource
 
     public override Task<FeatureSet<Point>> SearchAsync(string searchText)
     {
+        // Live mode searches the server (WebApiDataSource.Live.cs); Cache mode the features in memory.
+        if (IsLive)
+            return LiveSearchAsync(searchText);
+
         if (string.IsNullOrWhiteSpace(searchText))
             return Task.FromResult(FeatureSet<Point>.Empty);
 
