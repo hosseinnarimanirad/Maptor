@@ -13,9 +13,8 @@
     <Style x:Key="IRI.Maptor.Styles.ButtonBase"
            TargetType="{x:Type Button}"
            BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
-        <!--<Setter Property="MinHeight" Value="35" />-->
-        <Setter Property="Height" Value="32"/>
-        <Setter Property="MinHeight" Value="32"/>
+        <Setter Property="Height" Value="{StaticResource IRI.Maptor.Styles.Size.Control.Default}"/>
+        <Setter Property="MinHeight" Value="{StaticResource IRI.Maptor.Styles.Size.Control.Default}"/>
         <Setter Property="MinWidth" Value="100" />
 
         <Setter Property="Cursor" Value="Hand"/>
@@ -25,7 +24,7 @@
         <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}"/>
         <Setter Property="mahApp:ControlsHelper.ContentCharacterCasing" Value="Normal" />
 
-        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="BorderThickness" Value="{StaticResource IRI.Maptor.Styles.Thickness.Border}"/>
 
         <Style.Triggers>
             <DataTrigger Binding="{Binding Source={StaticResource Localization}, Path=IsPersian}" Value="True">
@@ -39,9 +38,13 @@
            TargetType="{x:Type Button}"
            BasedOn="{StaticResource IRI.Maptor.Styles.ButtonBase}">
 
+        <!--Filled with the theme's darker accent shade (Highlight), not Accent. Accent is the base
+            colour at 80% opacity, and white text on it measured 1.8:1 on Amber (Saba) and 2.3:1
+            on Green (Gas); on Highlight it is 3.8:1 and 5.0:1, 9.3:1 on Cobalt. Every app keeps its
+            own colour, one shade deeper. (Step 3 of the 2026-10-24 review.)-->
         <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
-        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
 
         <!--<Setter Property="FocusVisualStyle" Value="{StaticResource IRI.Maptor.Styles.Button.Primary.FocusVisual}"/>-->
         <Setter Property="FocusVisualStyle">
@@ -51,11 +54,14 @@
                         <Setter.Value>
                             <ControlTemplate>
                                 <Border>
+                                    <!--white dashes inside the button: a Highlight stroke vanished
+                                        into the Highlight fill. Same geometry as Button.Secondary's
+                                        focus marker, so focus looks the same on both.-->
                                     <Rectangle Margin="2"
                                                 StrokeThickness="2"
                                                 RadiusX="6"
                                                 RadiusY="6"
-                                                Stroke="{DynamicResource MahApps.Brushes.Highlight}"
+                                                Stroke="{DynamicResource MahApps.Brushes.IdealForeground}"
                                                 StrokeDashArray="2 2"
                                                 SnapsToDevicePixels="True"/>
                                 </Border>
@@ -68,28 +74,36 @@
         </Setter>
 
         <Style.Triggers>
-            <!-- Hover -->
+            <!--Hover keeps the fill and fades it slightly (95%: at 90% white-on-Amber fell to 2.9:1),
+                as Windows 11 accent buttons do; pressed
+                returns to the full shade, so a click reads as a press back in. Fading further when
+                pressed would lighten the fill again and drop white-on-Amber below 3:1 (measured
+                2.3:1 at 80%). The old pressed state inverted to a white fill with accent text,
+                which read as a flicker. The fill and text colours are
+                restated here because MahApps.Styles.Button.Flat's own triggers would otherwise
+                paint its grey hover and pressed fills.-->
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}"/>
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                <Setter Property="Opacity" Value="0.95"/>
             </Trigger>
-            <!-- Pressed -->
             <Trigger Property="IsPressed" Value="True">
                 <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}"/>
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-            </Trigger>
-            <!--Disabled-->
-            <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Opacity" Value="0.5"/>
                 <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
-                <!--<Setter Property="Opacity" Value="1"/>
+                <Setter Property="Opacity" Value="1"/>
+            </Trigger>
+            <!--Disabled: the same quiet surface as Button.Secondary's disabled state. Half-opacity
+                accent with white text measured 1.2:1 in every light theme.-->
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="1"/>
                 <Setter Property="Cursor" Value="Arrow"/>
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray7}"/>
-                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray7}"/>
-                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray3}"/>-->
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray3}"/>
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -98,9 +112,11 @@
            TargetType="{x:Type Button}"
            BasedOn="{StaticResource IRI.Maptor.Styles.ButtonBase}">
 
+        <!--Neutral: a grey outline, so the accent is reserved for the one primary action and the
+            primary button stands out next to it, as in Windows 11 dialogs.-->
         <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Control.Border}"/>
         <Setter Property="FocusVisualStyle">
             <Setter.Value>
                 <Style>
@@ -124,28 +140,30 @@
             </Setter.Value>
         </Setter>
         <Style.Triggers>
-            <!-- Hover: slightly darker background, deeper accent border -->
+            <!-- Hover: a light grey wash, darker outline. Gray9 is semi-transparent, so it reads in both themes. -->
             <Trigger Property="IsMouseOver" Value="True">
-                <!--<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>-->
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray9}"/>
-                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border.MouseOver}"/>
             </Trigger>
 
-            <!-- Pressed: even darker background, keep accent border -->
+            <!-- Pressed: a deeper grey with the theme's text colour. It used to fill with the dark
+                 accent, which turned a quiet button into a primary one for the length of a click. -->
             <Trigger Property="IsPressed" Value="True">
-                <!--<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Button.Flat.Foreground}"/>-->
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border.MouseOver}"/>
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
             </Trigger>
 
-            <!-- Disabled: lower contrast, grayed out -->
+            <!-- Disabled: a muted surface with readable secondary text, in both themes. Gray7 under the
+                 MahApps disabled text was #7E7E7E behind #7F7F7F in the dark theme (1.4:1, the label
+                 vanished) and 1.9:1 in the light one. Subtle fill + secondary text + quiet border instead,
+                 at full opacity so nothing is composited onto the page. -->
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Opacity" Value="0.6"/>
-                <!--<Setter Property="Opacity" Value="1"/>-->
+                <Setter Property="Opacity" Value="1"/>
                 <Setter Property="Cursor" Value="Arrow"/>
-                <!--<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray3}"/>-->
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray7}"/>
-                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray3}"/>
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray3}"/>
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
             </Trigger>
 
             <!-- Focus: optional, keep consistent -->
@@ -362,7 +380,7 @@
                                  Stroke="{TemplateBinding BorderBrush}"
                                  StrokeThickness="{TemplateBinding BorderThickness}">
                             <Ellipse.Effect>
-                                <DropShadowEffect BlurRadius="2" ShadowDepth="1" Opacity="0.25" Color="Black"/>
+                                <DynamicResource ResourceKey="IRI.Maptor.Effects.Elevation1"/>
                             </Ellipse.Effect>
                         </Ellipse>
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -444,7 +462,7 @@
                               Stroke="{TemplateBinding BorderBrush}"
                               StrokeThickness="{TemplateBinding BorderThickness}">
                             <Ellipse.Effect>
-                                <DropShadowEffect BlurRadius="2" ShadowDepth="1" Opacity="0.25" Color="Black"/>
+                                <DynamicResource ResourceKey="IRI.Maptor.Effects.Elevation1"/>
                             </Ellipse.Effect>
                         </Ellipse>
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>

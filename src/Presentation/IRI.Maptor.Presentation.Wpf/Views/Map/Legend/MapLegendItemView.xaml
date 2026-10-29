@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="IRI.Maptor.Presentation.Wpf.Controls.MapLegendItemView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:helpers="clr-namespace:IRI.Maptor.Presentation.Wpf.Helpers"
              x:Name="root"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:model="clr-namespace:IRI.Maptor.Presentation.Wpf.Models.Legend" 
@@ -14,8 +15,8 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
 
@@ -42,7 +43,7 @@
                                                      Stroke="{TemplateBinding Property=BorderBrush}"
                                                      StrokeThickness="{TemplateBinding Property=BorderThickness}">
                                                 <Ellipse.Effect>
-                                                    <DropShadowEffect BlurRadius="2" ShadowDepth="1" Opacity="0.25" Color="Black"/>
+                                                    <StaticResource ResourceKey="IRI.Maptor.Effects.Elevation1"/>
                                                 </Ellipse.Effect>
                                             </Ellipse>
                                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -448,17 +449,17 @@
                             <!--Visibility="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"-->
                             <CheckBox.Visibility>
                                 <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
-                                    <Binding Path="IsNotBusy"/>
+                                    <Binding Path="HideLoadingIndicator"/>
                                     <Binding Path="IsInScaleRange"/>
                                 </MultiBinding>
                             </CheckBox.Visibility>
                         </CheckBox>
 
-                        <!--loading layer #1-->
+                        <!--loading layer #1: also while a Live layer downloads the view's features-->
                         <iconPacks:PackIconPhosphorIcons DockPanel.Dock="Left" Kind="SpinnerGapBold" Spin="True" Width="18" Height="18"                    
                             VerticalAlignment="Center"
                             Foreground="{DynamicResource MahApps.Brushes.Accent}" Margin="2,0"
-                            Visibility="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}">
+                            Visibility="{Binding ShowLoadingIndicator, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}">
 
                             <!--<iconPacks:PackIconPhosphorIcons.RenderTransform>
                         <RotateTransform Angle="0"/>
@@ -513,7 +514,7 @@
                             <!--Visibility="{Binding IsInScaleRange, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"-->
                             <iconPacks:PackIconMaterial.Visibility>
                                 <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
-                                    <Binding Path="IsNotBusy"/>
+                                    <Binding Path="HideLoadingIndicator"/>
                                     <Binding Path="IsNotInScaleRange"/>
                                 </MultiBinding>
                             </iconPacks:PackIconMaterial.Visibility>
@@ -649,6 +650,14 @@
                             FontSize="{Binding ElementName=root, Path=TitleFontSize}"
                             Visibility="{Binding NumberOfSelectedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}"/>
 
+                        <!--Live layer: too many features in part of the view, only some are drawn there.
+                            After the title, away from the controls; Background makes the whole icon hoverable.-->
+                        <iconPacks:PackIconMaterial DockPanel.Dock="Left" Kind="ProgressAlert" Width="16" Height="16"
+                                                    VerticalAlignment="Center" Margin="4,0" Background="Transparent"
+                                                    Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                                    ToolTip="{Binding [legendItem_zoomInToSeeAllFeatures], Source={StaticResource Localization}}"
+                                                    Visibility="{Binding IsDataTruncatedInView, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"/>
+
                         <!--layer title (textbox)-->
                         <TextBox x:Name="layerTitle" DockPanel.Dock="Left" 
                             BorderThickness="1" Padding="0" VerticalAlignment="Center" MinWidth="70"
@@ -746,7 +755,7 @@
                             AllowsTransparency="True" VerticalOffset="-10">
                             <!--Loaded="pendingChangesPopup_Loaded" Opened="pendingChangesPopup_Opened">-->
                             <Popup.Effect>
-                                <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.4" Color="Black" Direction="270"/>
+                                <StaticResource ResourceKey="IRI.Maptor.Effects.Elevation3"/>
                             </Popup.Effect>
                             <Popup.Style>
                                 <Style TargetType="Popup"  >
@@ -856,7 +865,7 @@
                         <ToggleButton ClickMode="Release" DockPanel.Dock="Left" Name="palette" Margin="4 0 4 0" Padding="0" Cursor="Hand" Background="Transparent" VerticalAlignment="Center"
                               IsChecked="{Binding IsSymbologyDetailsOpen, Mode=TwoWay}"
                               ToolTip="Symbology details"
-                              Width="16" Height="16" Visibility="{Binding HasMultiSymbolizers, Converter={StaticResource boolToVisibilityConverter}}">
+                              Width="16" Height="16" Visibility="{Binding ShowSymbologyDetails, Converter={StaticResource boolToVisibilityConverter}}">
                             <ToggleButton.Style>
                                 <Style TargetType="ToggleButton">
                                     <Setter Property="UIElement.Focusable" Value="false" />
@@ -895,7 +904,7 @@
                                IsOpen="{Binding IsSymbologyDetailsOpen, Mode=TwoWay}"
                                AllowsTransparency="True" HorizontalOffset="4" VerticalOffset="-10">
                             <Popup.Effect>
-                                <DropShadowEffect BlurRadius="12" ShadowDepth="2" Opacity="0.25" Color="Black" Direction="270"/>
+                                <StaticResource ResourceKey="IRI.Maptor.Effects.Elevation2"/>
                             </Popup.Effect>
                             <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                                     BorderBrush="{DynamicResource MahApps.Brushes.Gray8}"
@@ -916,6 +925,15 @@
                                         <TextBlock Text="{Binding LayerName}" FontWeight="SemiBold" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
                                                    Style="{StaticResource IRI.Maptor.Styles.TextBlock}"/>
                                     </DockPanel>
+
+                                    <!--the layer's styles (named symbologies from the server): pick the one the map draws-->
+                                    <ComboBox DockPanel.Dock="Top" Margin="0,8,0,0"
+                                              ItemsSource="{Binding Styles}" DisplayMemberPath="DisplayTitle" SelectedValuePath="Name"
+                                              SelectedValue="{Binding SelectedStyleName, Mode=TwoWay}"
+                                              FlowDirection="{Binding Source={StaticResource Localization}, Path=CurrentFlowDirection}"
+                                              Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal}"
+                                              ToolTip="{Binding [layerStyles_legend_pick], Source={StaticResource Localization}}"
+                                              Visibility="{Binding HasMultipleStyles, Converter={StaticResource boolToVisibilityConverter}}"/>
 
                                     <Border DockPanel.Dock="Top" Height="1" Background="{DynamicResource MahApps.Brushes.Gray8}" Margin="0,8,0,6"/>
 

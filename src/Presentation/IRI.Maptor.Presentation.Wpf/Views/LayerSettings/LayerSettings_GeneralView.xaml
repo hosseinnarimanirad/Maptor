@@ -1,6 +1,7 @@
 <UserControl x:Class="IRI.Maptor.Presentation.Wpf.Controls.LayerSettings.LayerSettings_GeneralView"
                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:helpers="clr-namespace:IRI.Maptor.Presentation.Wpf.Helpers"
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                 xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
@@ -11,12 +12,14 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries> 
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
+            <!--labels size to their text (a fixed 50 cut "Layer Name" to "Layer Nar"); the minimum
+                keeps the values of the short labels roughly lined up-->
             <Style TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}">
-                <Setter Property="Width" Value="50"/>
+                <Setter Property="MinWidth" Value="90"/>
             </Style>
 
         </ResourceDictionary>
@@ -99,7 +102,7 @@
                             <Setter Property="StrokeThickness" Value="1"/>
                             <Setter Property="Effect">
                                 <Setter.Value>
-                                    <DropShadowEffect BlurRadius="2" ShadowDepth="1" Opacity="0.25" Color="Black"/>
+                                    <StaticResource ResourceKey="IRI.Maptor.Effects.Elevation1"/>
                                 </Setter.Value>
                             </Setter>
                             <!-- Default fill (deselected) -->
@@ -183,6 +186,126 @@
                         Minimum="0" Maximum="1" SmallChange="0.01" LargeChange="0.01" Value="{Binding Opacity}"
                         TickPlacement="Both" TickFrequency="0.05"  
                         Style="{StaticResource MahApps.Styles.Slider}"/>
+            </DockPanel>
+        </Border>
+
+        <!--layer summary: read-only facts (pending edits are on their own tab)-->
+        <Border Grid.Row="5" Style="{StaticResource IRI.Maptor.Styles.Border.Card}"
+                DataContext="{Binding DataContext.Summary, RelativeSource={RelativeSource AncestorType=mahApp:MetroWindow}}">
+            <Border.Resources>
+                <!--every TextBlock sets its own Foreground: tab content inherits the selected header's white-->
+                <Style x:Key="SummaryLabel" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}">
+                    <Setter Property="Width" Value="Auto"/>
+                    <Setter Property="Margin" Value="0,3,12,3"/>
+                </Style>
+                <!--numbers and codes stay left-to-right inside the RTL page; auto width keeps them on the start side-->
+                <Style x:Key="SummaryValue" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.FieldValue}">
+                    <Setter Property="Width" Value="Auto"/>
+                    <Setter Property="Margin" Value="0,3"/>
+                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                    <Setter Property="FlowDirection" Value="LeftToRight"/>
+                    <Setter Property="FontFamily" Value="Segoe UI"/>
+                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Text}"/>
+                </Style>
+                <!--a localized value (mode, "not available"): follows the page direction and font-->
+                <Style x:Key="SummaryText" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.FieldValue}">
+                    <Setter Property="Width" Value="Auto"/>
+                    <Setter Property="Margin" Value="0,3"/>
+                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Text}"/>
+                </Style>
+            </Border.Resources>
+            <DockPanel>
+                <iconPacks:PackIconMaterial Kind="InformationOutline" VerticalAlignment="Top"
+                                            Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.FieldAdornment}"/>
+                <StackPanel>
+                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardTitle}" Width="Auto"
+                               Foreground="{DynamicResource MahApps.Brushes.Text}"
+                               Text="{Binding [layerSettings_general_summary], Source={StaticResource Localization}}"/>
+                    <!--two label/value columns of short facts, then the two extents side by side.
+                        Optional rows (load mode, source SRS) sit in the right column so a missing
+                        one leaves a blank on the end side, not a hole on the start side.-->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!--feature count | field count-->
+                        <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource SummaryLabel}"
+                                   Text="{Binding [layerSettings_general_featureCount], Source={StaticResource Localization}}"
+                                   Visibility="{Binding IsVector, Converter={StaticResource boolToVisibilityConverter}}"/>
+                        <StackPanel Grid.Row="0" Grid.Column="1"
+                                    Visibility="{Binding IsVector, Converter={StaticResource boolToVisibilityConverter}}">
+                            <TextBlock Style="{StaticResource SummaryValue}" Text="{Binding FeatureCountText}"/>
+                            <!--Live: counted by the server, over all the features-->
+                            <TextBlock Style="{StaticResource SummaryText}" Text="{Binding LiveFeatureCountText}" TextWrapping="Wrap"
+                                       Visibility="{Binding IsLive, Converter={StaticResource boolToVisibilityConverter}}"/>
+                        </StackPanel>
+
+                        <TextBlock Grid.Row="0" Grid.Column="2" Style="{StaticResource SummaryLabel}" Margin="16,3,12,3"
+                                   Text="{Binding [layerSettings_general_fieldCount], Source={StaticResource Localization}}"
+                                   Visibility="{Binding IsVector, Converter={StaticResource boolToVisibilityConverter}}"/>
+                        <TextBlock Grid.Row="0" Grid.Column="3" Style="{StaticResource SummaryValue}" Text="{Binding FieldCountText}"
+                                   Visibility="{Binding IsVector, Converter={StaticResource boolToVisibilityConverter}}"/>
+
+                        <!--geometry type | load mode (Web API layers only)-->
+                        <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource SummaryLabel}"
+                                   Text="{Binding [layerSettings_general_geometryType], Source={StaticResource Localization}}"
+                                   Visibility="{Binding IsVector, Converter={StaticResource boolToVisibilityConverter}}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource SummaryValue}" Text="{Binding GeometryTypeText}"
+                                   Visibility="{Binding IsVector, Converter={StaticResource boolToVisibilityConverter}}"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource SummaryLabel}" Margin="16,3,12,3"
+                                   Text="{Binding [layerSettings_general_loadMode], Source={StaticResource Localization}}"
+                                   Visibility="{Binding HasLoadMode, Converter={StaticResource boolToVisibilityConverter}}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="3" Style="{StaticResource SummaryText}" Text="{Binding LoadModeText}"
+                                   Visibility="{Binding HasLoadMode, Converter={StaticResource boolToVisibilityConverter}}"/>
+
+                        <!--SRS | source SRS (when it differs)-->
+                        <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource SummaryLabel}"
+                                   Text="{Binding [layerSettings_general_srs], Source={StaticResource Localization}}"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Style="{StaticResource SummaryValue}" Text="{Binding SrsText}"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="2" Style="{StaticResource SummaryLabel}" Margin="16,3,12,3"
+                                   Text="{Binding [layerSettings_general_originalSrs], Source={StaticResource Localization}}"
+                                   Visibility="{Binding HasOriginalSrs, Converter={StaticResource boolToVisibilityConverter}}"/>
+                        <TextBlock Grid.Row="2" Grid.Column="3" Style="{StaticResource SummaryValue}" Text="{Binding OriginalSrsText}"
+                                   Visibility="{Binding HasOriginalSrs, Converter={StaticResource boolToVisibilityConverter}}"/>
+
+                        <!--extents: WGS84 (longitude, latitude) | UTM zone of the extent centre (easting, northing)-->
+                        <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,8,0,0"
+                                    Visibility="{Binding HasExtent, Converter={StaticResource boolToVisibilityConverter}}">
+                            <TextBlock Style="{StaticResource SummaryLabel}"
+                                       Text="{Binding [layerSettings_general_extentWgs84], Source={StaticResource Localization}}"/>
+                            <TextBlock Style="{StaticResource SummaryValue}">
+                                <Run Text="λ "/><Run Text="{Binding Wgs84LongitudeRange, Mode=OneWay}"/>
+                            </TextBlock>
+                            <TextBlock Style="{StaticResource SummaryValue}">
+                                <Run Text="φ "/><Run Text="{Binding Wgs84LatitudeRange, Mode=OneWay}"/>
+                            </TextBlock>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Margin="16,8,0,0"
+                                    Visibility="{Binding HasExtent, Converter={StaticResource boolToVisibilityConverter}}">
+                            <TextBlock Style="{StaticResource SummaryLabel}" Text="{Binding UtmExtentLabel}"/>
+                            <TextBlock Style="{StaticResource SummaryValue}">
+                                <Run Text="E "/><Run Text="{Binding UtmXRange, Mode=OneWay}"/>
+                            </TextBlock>
+                            <TextBlock Style="{StaticResource SummaryValue}">
+                                <Run Text="N "/><Run Text="{Binding UtmYRange, Mode=OneWay}"/>
+                            </TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
             </DockPanel>
         </Border>
 

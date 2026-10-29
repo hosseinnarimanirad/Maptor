@@ -1,0 +1,38 @@
+# Literal-value debt recorded by LiteralColourGuard.targets. Counts may only go down.
+# Regenerate after a clean-up: dotnet build -p:MaptorLiteralBaselineUpdate=true
+# Never regenerate to silence a new violation; fix the view instead.
+# path | hex=N named=N fontsize=N
+Views/Controls/ActiveExtentView.xaml | hex=0 named=5 fontsize=0
+Views/Controls/InputCoordinate.xaml | hex=0 named=1 fontsize=1
+Views/Dialogs/ChangePasswordDialogView.xaml | hex=0 named=1 fontsize=1
+Views/Dialogs/EmailSignUpDialogView.xaml | hex=0 named=3 fontsize=4
+Views/Dialogs/GeometryDetailsDialogView.xaml | hex=0 named=0 fontsize=2
+Views/Dialogs/PrintToPdfDialogView.xaml | hex=0 named=19 fontsize=4
+Views/General/DottedBusyIndicatorView.xaml | hex=0 named=1 fontsize=0
+Views/General/FeatureTable.xaml | hex=0 named=1 fontsize=0
+Views/LayerSettings/LayerSettings_ExportView.xaml | hex=0 named=2 fontsize=0
+Views/LayerSettings/LayerSettings_StatisticsView.xaml | hex=0 named=0 fontsize=1
+Views/Map/FeatureChangesView.xaml | hex=0 named=4 fontsize=0
+Views/Map/Legend/MapDrawingLegendView.xaml | hex=0 named=1 fontsize=0
+Views/Map/Legend/MapLegendItemView.xaml | hex=0 named=4 fontsize=0
+Views/Map/Legend/MapLegendView.xaml | hex=0 named=2 fontsize=2
+Views/Map/MapExtentPanelView.xaml | hex=0 named=6 fontsize=2
+Views/Map/SketchBarView.xaml | hex=0 named=2 fontsize=1
+Views/MapMarkers/Circle.xaml | hex=0 named=2 fontsize=0
+Views/MapMarkers/CircleImageMarker.xaml | hex=0 named=1 fontsize=0
+Views/MapMarkers/CoordinateMarker.xaml | hex=0 named=0 fontsize=2
+Views/MapMarkers/CountableImageMarker.xaml | hex=0 named=1 fontsize=1
+Views/MapMarkers/CountableShapeMarker.xaml | hex=0 named=2 fontsize=1
+Views/MapMarkers/LabelMarker.xaml | hex=0 named=2 fontsize=1
+Views/MapMarkers/LocationMarker.xaml | hex=0 named=2 fontsize=1
+Views/MapMarkers/PointMarker.xaml | hex=0 named=1 fontsize=1
+Views/MapMarkers/RectangleLabelMarker.xaml | hex=0 named=2 fontsize=1
+Views/MapMarkers/RectangleMarker.xaml | hex=0 named=2 fontsize=0
+Views/MapMarkers/ShapeWithLabelMarker.xaml | hex=0 named=2 fontsize=1
+Views/MapMarkers/TextboxMarker.xaml | hex=0 named=5 fontsize=0
+Views/MapOptions/MapFiveOptions.xaml | hex=0 named=1 fontsize=0
+Views/MapOptions/MapFourOptions.xaml | hex=0 named=1 fontsize=0
+Views/MapOptions/MapThreeOptions.xaml | hex=0 named=1 fontsize=0
+Views/MapOptions/MapTwoOptions.xaml | hex=0 named=1 fontsize=0
+Views/MultiSelectItem/MultiSelectItem.xaml | hex=0 named=3 fontsize=0
+Views/MultiSelectItem/SelectedItem.xaml | hex=0 named=1 fontsize=0

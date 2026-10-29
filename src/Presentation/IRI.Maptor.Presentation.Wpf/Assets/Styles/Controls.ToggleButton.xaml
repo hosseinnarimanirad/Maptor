@@ -24,7 +24,7 @@
                                   Stroke="{TemplateBinding BorderBrush}"
                                   StrokeThickness="{TemplateBinding BorderThickness}">
                             <Ellipse.Effect>
-                                <DropShadowEffect BlurRadius="2" ShadowDepth="1" Opacity="0.25" Color="Black"/>
+                                <DynamicResource ResourceKey="IRI.Maptor.Effects.Elevation1"/>
                             </Ellipse.Effect>
                         </Ellipse>
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -74,7 +74,7 @@
                                 Stroke="{TemplateBinding BorderBrush}"
                                 StrokeThickness="{TemplateBinding BorderThickness}">
                             <Ellipse.Effect>
-                                <DropShadowEffect BlurRadius="2" ShadowDepth="1" Opacity="0.25" Color="Black"/>
+                                <DynamicResource ResourceKey="IRI.Maptor.Effects.Elevation1"/>
                             </Ellipse.Effect>
                         </Ellipse>
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>

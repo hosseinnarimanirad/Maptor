@@ -7,7 +7,7 @@
              Width="auto" Height="Auto" Opacity=".8">
     <Border Padding="4" >
         <Border.Effect>
-            <DropShadowEffect Opacity="0.5"></DropShadowEffect>
+            <DynamicResource ResourceKey="IRI.Maptor.Effects.Elevation2"/>
         </Border.Effect>
 
         <Grid>

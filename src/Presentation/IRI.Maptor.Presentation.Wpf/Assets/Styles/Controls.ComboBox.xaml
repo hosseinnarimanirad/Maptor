@@ -23,7 +23,7 @@
         <Setter Property="Margin" Value="4"/>
         <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.BodyLarge}"/>
-        <Setter Property="MinHeight" Value="32"/>
+        <Setter Property="MinHeight" Value="{StaticResource IRI.Maptor.Styles.Size.Control.Default}"/>
         <Setter Property="MinWidth" Value="150"/>
         <Setter Property="Cursor" Value="Hand"/>
 
@@ -32,8 +32,13 @@
         <Setter Property="VerticalContentAlignment" Value="Center"/>
 
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Control.Background}"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="6"/>
+        <!--A visible 1 px frame: grey at rest, darker on hover, accent when focused. Until
+            2026-10-25 Normal inputs were borderless, so on a white surface only their text showed.-->
+        <Setter Property="BorderThickness" Value="{StaticResource IRI.Maptor.Styles.Thickness.Border}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border}"/>
+        <Setter Property="mahApp:ControlsHelper.MouseOverBorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border.MouseOver}"/>
+        <Setter Property="mahApp:ControlsHelper.FocusBorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}"/>
     </Style>
 
     <Style x:Key="IRI.Maptor.Styles.ComboBox.Normal" TargetType="ComboBox" BasedOn="{StaticResource IRI.Maptor.Styles.ComboBox.Base}">
@@ -55,8 +60,9 @@
 
     <Style x:Key="IRI.Maptor.Styles.ComboBox.Small.Latin" TargetType="ComboBox" BasedOn="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}">
         <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"/>
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="MinHeight" Value="24"/>
+        <Setter Property="MinHeight" Value="{StaticResource IRI.Maptor.Styles.Size.Control.Compact}"/>
+        <!--MahApps pads 4 all round; 3 top and bottom lands 12 px text on Size.Control.Compact (24)-->
+        <Setter Property="Padding" Value="4,3"/>
     </Style>
     
     <Style x:Key="IRI.Maptor.Styles.ComboBox.Large.Latin" TargetType="ComboBox" BasedOn="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}">

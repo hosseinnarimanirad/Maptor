@@ -61,7 +61,7 @@
                     <Border Background="White" BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
                             BorderThickness="1" Padding="6" CornerRadius="4" MinWidth="180">
                         <Border.Effect>
-                            <DropShadowEffect BlurRadius="8" Color="Gray" Opacity="0.5" ShadowDepth="2"/>
+                            <StaticResource ResourceKey="IRI.Maptor.Effects.Elevation2"/>
                         </Border.Effect>
                         <ContentControl Content="{Binding}" Focusable="False"/>
                     </Border>

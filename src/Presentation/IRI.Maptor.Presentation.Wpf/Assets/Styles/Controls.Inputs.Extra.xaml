@@ -33,43 +33,48 @@
         pass-through to the MahApps look.-->
     <Style x:Key="IRI.Maptor.Styles.Slider.Normal" TargetType="Slider" BasedOn="{StaticResource MahApps.Styles.Slider}">
         <Setter Property="Margin" Value="4"/>
-        <Setter Property="MinHeight" Value="32"/>
+        <Setter Property="MinHeight" Value="{StaticResource IRI.Maptor.Styles.Size.Control.Default}"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="IsMoveToPointEnabled" Value="True"/>
     </Style>
 
     <Style x:Key="IRI.Maptor.Styles.Slider.Small" TargetType="Slider" BasedOn="{StaticResource IRI.Maptor.Styles.Slider.Normal}">
-        <Setter Property="MinHeight" Value="26"/>
+        <Setter Property="MinHeight" Value="{StaticResource IRI.Maptor.Styles.Size.Control.Compact}"/>
     </Style>
 
     <!--ColorPicker. No BasedOn: MahApps does not publish a stable keyed base for this control
         across the versions we build against, so we set metrics on top of the theme default.-->
     <Style x:Key="IRI.Maptor.Styles.ColorPicker.Normal" TargetType="mahApp:ColorPicker">
         <Setter Property="Margin" Value="4"/>
-        <Setter Property="MinHeight" Value="32"/>
+        <Setter Property="MinHeight" Value="{StaticResource IRI.Maptor.Styles.Size.Control.Default}"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="4"/>
+        <!--A visible 1 px frame: grey at rest, darker on hover, accent when focused. Until
+            2026-10-25 Normal inputs were borderless, so on a white surface only their text showed.-->
+        <Setter Property="BorderThickness" Value="{StaticResource IRI.Maptor.Styles.Thickness.Border}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border}"/>
+        <Setter Property="mahApp:ControlsHelper.MouseOverBorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border.MouseOver}"/>
+        <Setter Property="mahApp:ControlsHelper.FocusBorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}"/>
     </Style>
 
     <Style x:Key="IRI.Maptor.Styles.ColorPicker.Small" TargetType="mahApp:ColorPicker" BasedOn="{StaticResource IRI.Maptor.Styles.ColorPicker.Normal}">
-        <Setter Property="MinHeight" Value="26"/>
-        <Setter Property="BorderThickness" Value="1.5"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="MinHeight" Value="{StaticResource IRI.Maptor.Styles.Size.Control.Compact}"/>
+        <!--MahApps pads 4 all round; 3 top and bottom lands 12 px text on Size.Control.Compact (24)-->
+        <Setter Property="Padding" Value="4,3"/>
     </Style>
 
     <Style x:Key="IRI.Maptor.Styles.DatePicker.Normal" TargetType="DatePicker">
         <Setter Property="Margin" Value="4"/>
-        <Setter Property="MinHeight" Value="32"/>
+        <Setter Property="MinHeight" Value="{StaticResource IRI.Maptor.Styles.Size.Control.Default}"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="FlowDirection" Value="LeftToRight"/>
-        <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="4"/>
+        <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}"/>
     </Style>
 
     <Style x:Key="IRI.Maptor.Styles.DatePicker.Small" TargetType="DatePicker" BasedOn="{StaticResource IRI.Maptor.Styles.DatePicker.Normal}">
-        <Setter Property="MinHeight" Value="26"/>
+        <Setter Property="MinHeight" Value="{StaticResource IRI.Maptor.Styles.Size.Control.Compact}"/>
         <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"/>
     </Style>
 

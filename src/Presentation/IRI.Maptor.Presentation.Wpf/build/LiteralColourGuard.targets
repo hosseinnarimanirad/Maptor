@@ -1,114 +1,238 @@
 <Project>
 
-  <!--Fails the build when a view under Views/ gains a literal colour.
+  <!--Stops new hard-coded colours and font sizes appearing in XAML views.
 
-      Step 7 of the design-system remediation listed this as "optionally add a build check that
-      fails on new literal hex under Views/". It was never built, and by 2026-08-31 there were 39
-      literals across 13 views. Most have a real reason; the point of this guard is not to remove
-      them but to stop the next one appearing, so it works off an explicit allow list
-      (LiteralColours.allow) rather than a count. A file on that list is exempt entirely; anything
-      else under Views/ must use MahApps.Brushes.*, IRI.Maptor.Brushes.* or a Maptor style.
+      Three checks, each a ratchet rather than a clean-up: existing cases are recorded, new ones are
+      reported, and the recorded debt can only go down.
 
-      Severity is controlled by $(MaptorLiteralColourGuard): Error (default), Warning, or None.
-      Pass -p:MaptorLiteralColourGuard=Warning for a build that must not fail on this.
+        MAPTOR001  a hex colour (#RGB / #RRGGBB / #AARRGGBB).
+        MAPTOR002  a named colour (White, Black, Gray, ...) in a colour property: Foreground,
+                   Background, Fill, Stroke, BorderBrush, Color, ... Transparent is allowed.
+                   Added 2026-10-25: the legend's import menu had Foreground="Black" and its text
+                   vanished in the dark theme, and MAPTOR001 could not see it.
+        MAPTOR003  a literal FontSize ("13" instead of a Size.Text.* token). Added 2026-10-25.
+
+      Two lists, both optional, both next to the project being checked (see the properties below):
+
+        $(MaptorLiteralAllowFile)     whole files exempt from MAPTOR001, each with a reason. The
+                                      library uses it (build/LiteralColours.allow); apps do not.
+        $(MaptorLiteralBaselineFile)  per-file counts that may not grow:
+                                          path | hex=N named=N fontsize=N
+                                      A file not listed has a baseline of zero for each. In the
+                                      library, hex is governed by the allow list instead, so its
+                                      hex count is not recorded there.
+
+      When a file gets cleaner, regenerate the baseline so the gain is locked in:
+          dotnet build -p:MaptorLiteralBaselineUpdate=true
+      That rewrites the baseline from the current files and reports nothing. Never use it to
+      silence a new violation; fix the view instead.
+
+      Severity: $(MaptorLiteralColourGuard) = Error (default), Warning, or None. The applications
+      import this file with Warning, so a literal never stops an app from building.
 
       XML comments are stripped before scanning, replaced by the same number of newlines so that
-      reported line numbers stay true. Without that the guard would flag the commented-out
-      Shape.Fill values in MapLegendView.xaml and the palette described in SelectedItem.xaml's
-      header comment, neither of which renders anything.-->
+      reported line numbers stay true. Without that the guard would flag commented-out setters,
+      which render nothing.-->
 
   <PropertyGroup>
     <MaptorLiteralColourGuard Condition="'$(MaptorLiteralColourGuard)' == ''">Error</MaptorLiteralColourGuard>
+    <MaptorLiteralBaselineUpdate Condition="'$(MaptorLiteralBaselineUpdate)' == ''">false</MaptorLiteralBaselineUpdate>
+    <MaptorLiteralAllowFile Condition="'$(MaptorLiteralAllowFile)' == ''"></MaptorLiteralAllowFile>
+    <MaptorLiteralBaselineFile Condition="'$(MaptorLiteralBaselineFile)' == ''">$(MSBuildProjectDirectory)/build/LiteralBaseline.txt</MaptorLiteralBaselineFile>
   </PropertyGroup>
 
-  <UsingTask TaskName="FindLiteralColours"
+  <UsingTask TaskName="FindLiterals"
              TaskFactory="RoslynCodeTaskFactory"
              AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
     <ParameterGroup>
       <Files ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
-      <AllowFile ParameterType="System.String" Required="true" />
+      <AllowFile ParameterType="System.String" />
+      <BaselineFile ParameterType="System.String" Required="true" />
       <ProjectDir ParameterType="System.String" Required="true" />
-      <Violations ParameterType="System.String[]" Output="true" />
+      <UpdateBaseline ParameterType="System.Boolean" />
+      <HexViolations ParameterType="System.String[]" Output="true" />
+      <NamedViolations ParameterType="System.String[]" Output="true" />
+      <FontSizeViolations ParameterType="System.String[]" Output="true" />
     </ParameterGroup>
     <Task>
       <Code Type="Fragment" Language="cs"><![CDATA[
-        var allowed = new System.Collections.Generic.HashSet<string>(System.StringComparer.OrdinalIgnoreCase);
+        var ci = System.StringComparer.OrdinalIgnoreCase;
 
-        if (System.IO.File.Exists(AllowFile))
+        var allowed = new System.Collections.Generic.HashSet<string>(ci);
+        if (!string.IsNullOrEmpty(AllowFile) && System.IO.File.Exists(AllowFile))
         {
             foreach (var raw in System.IO.File.ReadAllLines(AllowFile))
             {
                 var line = raw.Trim();
                 if (line.Length == 0 || line.StartsWith("#")) continue;
-
                 var bar = line.IndexOf('|');
                 var path = (bar < 0 ? line : line.Substring(0, bar)).Trim();
                 if (path.Length > 0) allowed.Add(path.Replace('\\', '/'));
             }
         }
+        var useAllowList = !string.IsNullOrEmpty(AllowFile);
+
+        // path -> [hex, named, fontsize]
+        var baseline = new System.Collections.Generic.Dictionary<string, int[]>(ci);
+        if (System.IO.File.Exists(BaselineFile))
+        {
+            foreach (var raw in System.IO.File.ReadAllLines(BaselineFile))
+            {
+                var line = raw.Trim();
+                if (line.Length == 0 || line.StartsWith("#")) continue;
+                var bar = line.IndexOf('|');
+                if (bar < 0) continue;
+                var counts = new int[3];
+                foreach (System.Text.RegularExpressions.Match kv in System.Text.RegularExpressions.Regex.Matches(line.Substring(bar + 1), @"(hex|named|fontsize)=(\d+)"))
+                    counts[kv.Groups[1].Value == "hex" ? 0 : kv.Groups[1].Value == "named" ? 1 : 2] = int.Parse(kv.Groups[2].Value);
+                baseline[line.Substring(0, bar).Trim().Replace('\\', '/')] = counts;
+            }
+        }
 
         // a complete hex token: not part of a longer word, so a font URI like ".ttf#B Yekan"
         // and a resource key like "#FontAwesome" do not match
-        var pattern = new System.Text.RegularExpressions.Regex(
-            @"#[0-9A-Fa-f]{3,8}(?![0-9A-Za-z])");
-        var comments = new System.Text.RegularExpressions.Regex(
-            @"<!--.*?-->", System.Text.RegularExpressions.RegexOptions.Singleline);
+        var hex = new System.Text.RegularExpressions.Regex(@"#[0-9A-Fa-f]{3,8}(?![0-9A-Za-z])");
+        const string props = "(?:Foreground|Background|Fill|Stroke|BorderBrush|Color|CaretBrush|SelectionBrush|OpacityMask)";
+        var named = new System.Text.RegularExpressions.Regex(
+            @"(?:\b" + props + @"\s*=\s*""([A-Za-z]+)""|Property\s*=\s*""" + props + @"""\s+Value\s*=\s*""([A-Za-z]+)"")");
+        var fontSize = new System.Text.RegularExpressions.Regex(
+            @"(?:\bFontSize\s*=\s*""(\d+(?:\.\d+)?)""|Property\s*=\s*""FontSize""\s+Value\s*=\s*""(\d+(?:\.\d+)?)"")");
+        var comments = new System.Text.RegularExpressions.Regex(@"<!--.*?-->", System.Text.RegularExpressions.RegexOptions.Singleline);
 
-        var found = new System.Collections.Generic.List<string>();
+        var hexOut = new System.Collections.Generic.List<string>();
+        var namedOut = new System.Collections.Generic.List<string>();
+        var fontOut = new System.Collections.Generic.List<string>();
+        var current = new System.Collections.Generic.SortedDictionary<string, int[]>(ci);
+
+        var root = ProjectDir.Replace('\\', '/');
+        if (!root.EndsWith("/")) root += "/";
 
         foreach (var item in Files)
         {
             var full = item.GetMetadata("FullPath");
-
             var relative = full.Replace('\\', '/');
-            var root = ProjectDir.Replace('\\', '/');
-            if (!root.EndsWith("/")) root += "/";
             if (relative.StartsWith(root, System.StringComparison.OrdinalIgnoreCase))
                 relative = relative.Substring(root.Length);
-
-            if (allowed.Contains(relative)) continue;
+            if (relative.Contains("/obj/") || relative.Contains("/bin/") || relative.StartsWith("obj/") || relative.StartsWith("bin/"))
+                continue;
 
             var text = System.IO.File.ReadAllText(full);
+            text = comments.Replace(text, m => new string('\n', m.Value.Split('\n').Length - 1));
 
-            // blank out comments but keep their newlines, so line numbers stay true
-            text = comments.Replace(text, m =>
-                new string('\n', m.Value.Split('\n').Length - 1));
-
-            foreach (System.Text.RegularExpressions.Match m in pattern.Matches(text))
+            System.Func<int, int> lineOf = index =>
             {
-                var line = 1;
-                for (var i = 0; i < m.Index; i++) if (text[i] == '\n') line++;
+                var n = 1;
+                for (var i = 0; i < index; i++) if (text[i] == '\n') n++;
+                return n;
+            };
 
-                found.Add(full + "(" + line + "): literal colour " + m.Value);
+            var hexHits = new System.Collections.Generic.List<System.Text.RegularExpressions.Match>();
+            if (!(useAllowList && allowed.Contains(relative)))
+                foreach (System.Text.RegularExpressions.Match m in hex.Matches(text)) hexHits.Add(m);
+
+            var namedHits = new System.Collections.Generic.List<System.Text.RegularExpressions.Match>();
+            foreach (System.Text.RegularExpressions.Match m in named.Matches(text))
+            {
+                var v = m.Groups[1].Success ? m.Groups[1].Value : m.Groups[2].Value;
+                if (v == "Transparent") continue;
+                namedHits.Add(m);
             }
+
+            var fontHits = new System.Collections.Generic.List<System.Text.RegularExpressions.Match>();
+            foreach (System.Text.RegularExpressions.Match m in fontSize.Matches(text)) fontHits.Add(m);
+
+            // in the library the allow list owns hex (a file is exempt or must have none), so its
+            // hex count is not recorded
+            var counts = new[] { useAllowList ? 0 : hexHits.Count, namedHits.Count, fontHits.Count };
+            if (counts[0] + counts[1] + counts[2] > 0) current[relative] = counts;
+
+            if (UpdateBaseline) continue;
+
+            int[] allowance;
+            if (!baseline.TryGetValue(relative, out allowance)) allowance = new int[3];
+
+            // hex in the library: allow list only, no counted allowance
+            var hexAllowance = useAllowList ? 0 : allowance[0];
+            if (hexHits.Count > hexAllowance)
+                foreach (var m in hexHits)
+                    hexOut.Add(full + "(" + lineOf(m.Index) + "): literal colour " + m.Value + (hexAllowance > 0 ? " (file is at " + hexHits.Count + ", baseline " + hexAllowance + ")" : ""));
+            if (namedHits.Count > allowance[1])
+                foreach (var m in namedHits)
+                    namedOut.Add(full + "(" + lineOf(m.Index) + "): named colour " + (m.Groups[1].Success ? m.Groups[1].Value : m.Groups[2].Value) + (allowance[1] > 0 ? " (file is at " + namedHits.Count + ", baseline " + allowance[1] + ")" : ""));
+            if (fontHits.Count > allowance[2])
+                foreach (var m in fontHits)
+                    fontOut.Add(full + "(" + lineOf(m.Index) + "): literal FontSize " + (m.Groups[1].Success ? m.Groups[1].Value : m.Groups[2].Value) + (allowance[2] > 0 ? " (file is at " + fontHits.Count + ", baseline " + allowance[2] + ")" : ""));
         }
 
-        Violations = found.ToArray();
+        if (UpdateBaseline)
+        {
+            var lines = new System.Collections.Generic.List<string>();
+            lines.Add("# Literal-value debt recorded by LiteralColourGuard.targets. Counts may only go down.");
+            lines.Add("# Regenerate after a clean-up: dotnet build -p:MaptorLiteralBaselineUpdate=true");
+            lines.Add("# Never regenerate to silence a new violation; fix the view instead.");
+            lines.Add("# path | hex=N named=N fontsize=N");
+            foreach (var kv in current)
+                lines.Add(kv.Key + " | hex=" + kv.Value[0] + " named=" + kv.Value[1] + " fontsize=" + kv.Value[2]);
+            System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(System.IO.Path.GetFullPath(BaselineFile)));
+            System.IO.File.WriteAllText(BaselineFile, string.Join("\n", lines) + "\n");
+            Log.LogMessage(Microsoft.Build.Framework.MessageImportance.High, "MaptorLiteralGuard: baseline rewritten, " + current.Count + " files: " + BaselineFile);
+        }
+
+        HexViolations = hexOut.ToArray();
+        NamedViolations = namedOut.ToArray();
+        FontSizeViolations = fontOut.ToArray();
       ]]></Code>
     </Task>
   </UsingTask>
 
+  <!--The library checks Views/ (its styles legitimately define colours); an application sets
+      MaptorGuardedXaml itself before importing this file to choose what to scan.-->
+  <ItemGroup Condition="'@(MaptorGuardedXaml)' == ''">
+    <MaptorGuardedXaml Include="$(MSBuildProjectDirectory)/Views/**/*.xaml" />
+  </ItemGroup>
+
+  <!--Incremental. Running the check costs ~0.45 s per build, nearly all of it MSBuild compiling the
+      inline task above (the scan itself is 5-20 ms), so the target is skipped while no scanned file,
+      list or this file has changed since the last clean pass. The stamp is written only when nothing
+      was found, so a reported literal keeps being reported until it is fixed.-->
+  <PropertyGroup>
+    <!--BaseIntermediateOutputPath, not IntermediateOutputPath: the latter is only defined by the SDK
+        targets, which are imported after a project's own body and so after this file.-->
+    <_MaptorLiteralGuardStamp>$([System.IO.Path]::Combine($(MSBuildProjectDirectory), $(BaseIntermediateOutputPath), $(Configuration), 'maptor.literalguard.stamp'))</_MaptorLiteralGuardStamp>
+    <_MaptorLiteralGuardStamp Condition="'$(MaptorLiteralBaselineUpdate)' == 'true'">$([System.IO.Path]::Combine($(MSBuildProjectDirectory), $(BaseIntermediateOutputPath), $(Configuration), 'maptor.literalguard.always-run'))</_MaptorLiteralGuardStamp>
+  </PropertyGroup>
+
   <Target Name="MaptorLiteralColourGuard"
           BeforeTargets="CoreCompile"
-          Condition="'$(MaptorLiteralColourGuard)' != 'None'">
+          Condition="'$(MaptorLiteralColourGuard)' != 'None'"
+          Inputs="@(MaptorGuardedXaml);$(MaptorLiteralAllowFile);$(MaptorLiteralBaselineFile);$(MSBuildThisFileFullPath)"
+          Outputs="$(_MaptorLiteralGuardStamp)">
 
-    <ItemGroup>
-      <MaptorGuardedView Include="$(MSBuildProjectDirectory)/Views/**/*.xaml" />
-    </ItemGroup>
+    <FindLiterals Files="@(MaptorGuardedXaml)"
+                  AllowFile="$(MaptorLiteralAllowFile)"
+                  BaselineFile="$(MaptorLiteralBaselineFile)"
+                  ProjectDir="$(MSBuildProjectDirectory)"
+                  UpdateBaseline="$(MaptorLiteralBaselineUpdate)">
+      <Output TaskParameter="HexViolations" ItemName="MaptorHexLiteral" />
+      <Output TaskParameter="NamedViolations" ItemName="MaptorNamedLiteral" />
+      <Output TaskParameter="FontSizeViolations" ItemName="MaptorFontSizeLiteral" />
+    </FindLiterals>
 
-    <FindLiteralColours Files="@(MaptorGuardedView)"
-                        AllowFile="$(MSBuildThisFileDirectory)LiteralColours.allow"
-                        ProjectDir="$(MSBuildProjectDirectory)">
-      <Output TaskParameter="Violations" ItemName="MaptorLiteralColour" />
-    </FindLiteralColours>
+    <PropertyGroup>
+      <_MaptorColourHelp>use a MahApps.Brushes.*, IRI.Maptor.Brushes.* or Maptor style token. See docs/features/design-system/AUTHORING.md section 4.</_MaptorColourHelp>
+      <_MaptorFontHelp>use an IRI.Maptor.Styles.Size.Text.* token. See docs/features/design-system/AUTHORING.md, "Type scale".</_MaptorFontHelp>
+    </PropertyGroup>
 
-    <Warning Condition="'$(MaptorLiteralColourGuard)' == 'Warning' and '@(MaptorLiteralColour)' != ''"
-             Code="MAPTOR001"
-             Text="%(MaptorLiteralColour.Identity) - use a MahApps.Brushes.*, IRI.Maptor.Brushes.* or Maptor style token, or add this file to build/LiteralColours.allow with a reason. See docs/features/design-system/AUTHORING.md section 4." />
+    <Warning Condition="'$(MaptorLiteralColourGuard)' == 'Warning' and '@(MaptorHexLiteral)' != ''" Code="MAPTOR001" Text="%(MaptorHexLiteral.Identity) - $(_MaptorColourHelp)" />
+    <Warning Condition="'$(MaptorLiteralColourGuard)' == 'Warning' and '@(MaptorNamedLiteral)' != ''" Code="MAPTOR002" Text="%(MaptorNamedLiteral.Identity) - $(_MaptorColourHelp)" />
+    <Warning Condition="'$(MaptorLiteralColourGuard)' == 'Warning' and '@(MaptorFontSizeLiteral)' != ''" Code="MAPTOR003" Text="%(MaptorFontSizeLiteral.Identity) - $(_MaptorFontHelp)" />
 
-    <Error Condition="'$(MaptorLiteralColourGuard)' == 'Error' and '@(MaptorLiteralColour)' != ''"
-           Code="MAPTOR001"
-           Text="%(MaptorLiteralColour.Identity) - use a MahApps.Brushes.*, IRI.Maptor.Brushes.* or Maptor style token, or add this file to build/LiteralColours.allow with a reason. See docs/features/design-system/AUTHORING.md section 4." />
+    <Error ContinueOnError="ErrorAndContinue" Condition="'$(MaptorLiteralColourGuard)' == 'Error' and '@(MaptorHexLiteral)' != ''" Code="MAPTOR001" Text="%(MaptorHexLiteral.Identity) - $(_MaptorColourHelp) Or add the file to build/LiteralColours.allow with a reason." />
+    <Error ContinueOnError="ErrorAndContinue" Condition="'$(MaptorLiteralColourGuard)' == 'Error' and '@(MaptorNamedLiteral)' != ''" Code="MAPTOR002" Text="%(MaptorNamedLiteral.Identity) - $(_MaptorColourHelp)" />
+    <Error ContinueOnError="ErrorAndContinue" Condition="'$(MaptorLiteralColourGuard)' == 'Error' and '@(MaptorFontSizeLiteral)' != ''" Code="MAPTOR003" Text="%(MaptorFontSizeLiteral.Identity) - $(_MaptorFontHelp)" />
+
+    <Touch Condition="'$(MaptorLiteralBaselineUpdate)' != 'true' and '@(MaptorHexLiteral)' == '' and '@(MaptorNamedLiteral)' == '' and '@(MaptorFontSizeLiteral)' == ''"
+           Files="$(_MaptorLiteralGuardStamp)" AlwaysCreate="true" />
   </Target>
 
 </Project>

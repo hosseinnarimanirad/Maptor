@@ -1,4 +1,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    mc:Ignorable="po"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!--Fixed, non-theme-aware colours. Anything that should follow the light/dark theme belongs
@@ -22,15 +25,15 @@
     <Color x:Key="mapTehranIrLightRedColor">#FFC75050</Color>
     <Color x:Key="mapTehranIrNormalRedColor">#FFAD0000</Color>
 
-    <SolidColorBrush x:Key="mapTehranIrDarkRedBrush" Color="{StaticResource mapTehranIrDarkRedColor}"/>
-    <SolidColorBrush x:Key="mapTehranIrLightRedBrush" Color="{StaticResource mapTehranIrLightRedColor}"/>
-    <SolidColorBrush x:Key="mapTehranIrNormalRedBrush" Color="{StaticResource mapTehranIrNormalRedColor}"/>
+    <SolidColorBrush x:Key="mapTehranIrDarkRedBrush" Color="{StaticResource mapTehranIrDarkRedColor}" po:Freeze="True"/>
+    <SolidColorBrush x:Key="mapTehranIrLightRedBrush" Color="{StaticResource mapTehranIrLightRedColor}" po:Freeze="True"/>
+    <SolidColorBrush x:Key="mapTehranIrNormalRedBrush" Color="{StaticResource mapTehranIrNormalRedColor}" po:Freeze="True"/>
 
     <!--External brand colours. These are fixed by the brands themselves and must never be
         theme-swapped or tokenised into the semantic palette.-->
-    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Brand.LinkedIn">#0077B5</SolidColorBrush>
-    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Brand.StackOverflow">#F48024</SolidColorBrush>
-    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Brand.GitHub">#24292E</SolidColorBrush>
-    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Brand.MakanNegar">#B8D135</SolidColorBrush>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Brand.LinkedIn" po:Freeze="True">#0077B5</SolidColorBrush>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Brand.StackOverflow" po:Freeze="True">#F48024</SolidColorBrush>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Brand.GitHub" po:Freeze="True">#24292E</SolidColorBrush>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Brand.MakanNegar" po:Freeze="True">#B8D135</SolidColorBrush>
 
 </ResourceDictionary>

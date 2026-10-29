@@ -1,20 +1,22 @@
 <maptor:NotifiableUserControl x:Class="IRI.Maptor.Presentation.Wpf.Controls.MapLegendView"
             x:Name="root" 
             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:helpers="clr-namespace:IRI.Maptor.Presentation.Wpf.Helpers"  
             xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls"
             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
             xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
             xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
             xmlns:sta="clr-namespace:IRI.Maptor.Core.Common.Enums;assembly=IRI.Maptor.Core.Common"
+            xmlns:behaviors="clr-namespace:IRI.Maptor.Presentation.Wpf.Behaviors"
             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
             Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
     <maptor:NotifiableUserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/> 
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/MenuIconStyles.xaml"/>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/> 
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/MenuIconStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
@@ -116,58 +118,215 @@
                 </Grid>
             </HierarchicalDataTemplate>
 
-            <Style  x:Key="menuButton" TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
-                <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                <Setter Property="Padding" Value="8,6"/>
-                <Setter Property="Margin" Value="0,1"/>
-                <Setter Property="Focusable" Value="True"/>
-                <Setter Property="Foreground" Value="Black"/>
-                <Setter Property="Cursor" Value="Hand"/>
-                <Style.Triggers>
-                    <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-            <Style x:Key="menuTextBlock" TargetType="TextBlock">
-                <Setter Property="FontSize" Value="12"/>
-                <Setter Property="FontFamily" Value="{DynamicResource iranSans}"/>
-                <Setter Property="Margin" Value="6,0"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                <Setter Property="TextWrapping" Value="NoWrap"/>
-                <Setter Property="Width" Value="120"/>
-                <!--<Setter Property="Foreground" Value="White"/>-->
-            </Style>
-            <Style x:Key="menuLabel" TargetType="Label">
-                <Setter Property="FontSize" Value="12"/>
-                <Setter Property="Margin" Value="6,0"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            </Style>
-            <Style x:Key="menuRectangle" TargetType="Rectangle">
-                <Setter Property="Visibility" Value="Collapsed"/>
-                <Setter Property="Width" Value="6"/>
-                <Setter Property="Height" Value="18"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="Margin" Value="0,0,8,0"/>
-            </Style>
-            <Style x:Key="dataSourceKindFilterItemToggleStyle" TargetType="ToggleButton">
+            <!--import-layer popup row. Tag carries the DataSourceKind: its colour and glyph form the
+                chip, the same chip the legend shows beside a layer of that kind, so the colour is
+                learned here and recognised there. Content is the format name + its extensions.-->
+            <Style x:Key="importMenuItem" TargetType="Button">
                 <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="Cursor" Value="Hand"/>
-                <Setter Property="Padding" Value="0"/>
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="MinWidth" Value="220"/>
+                <Setter Property="Cursor" Value="Hand"/>
                 <Setter Property="Template">
                     <Setter.Value>
-                        <ControlTemplate TargetType="ToggleButton">
-                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="6,4" Margin="0,1">
+                                <DockPanel>
+                                    <Border DockPanel.Dock="Left" VerticalAlignment="Center"
+                                            Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
+                                            Background="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource dataSourceKindToBrushConverter}}">
+                                        <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}"
+                                              Data="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource dataSourceKindToGeometryConverter}}"/>
+                                    </Border>
+                                    <ContentPresenter Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                </DockPanel>
+                            </Border>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                    </Trigger>
+                    <Trigger Property="IsKeyboardFocused" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="importMenuName" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"/>
+                <Setter Property="FontFamily" Value="{DynamicResource iranSans}"/>
+                <Setter Property="Margin" Value="0,0,16,0"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="TextWrapping" Value="NoWrap"/>
+            </Style>
+            <!--secondary text: inherits the row foreground (so it also turns white on hover) at lower opacity-->
+            <Style x:Key="importMenuExtension" TargetType="TextBlock">
+                <Setter Property="DockPanel.Dock" Value="Right"/>
+                <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Caption}"/>
+                <Setter Property="Opacity" Value=".65"/>
+                <Setter Property="FlowDirection" Value="LeftToRight"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+            <Style x:Key="importMenuGroup" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}">
+                <Setter Property="Margin" Value="6,8,6,2"/>
+            </Style>
+            <!--layer-type filter row: checkbox + kind chip + name, plus an "Only" link on hover/focus.
+                The chip is the same one the legend shows beside a layer of that kind; it fades when
+                the kind is filtered out so the hidden kinds stand out at a glance.-->
+            <Style x:Key="kindFilterRow" TargetType="ToggleButton">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="MinWidth" Value="240"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ToggleButton">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="6,3" Margin="0,1">
+                                <DockPanel>
+                                    <iconPacks:PackIconMaterial x:Name="check" DockPanel.Dock="Left" Kind="CheckboxBlankOutline"
+                                                                Width="16" Height="16" Margin="0" VerticalAlignment="Center"
+                                                                Foreground="{TemplateBinding Foreground}"/>
+                                    <Border x:Name="chip" DockPanel.Dock="Left" Margin="8,0,0,0" VerticalAlignment="Center"
+                                            Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
+                                            Background="{Binding Kind, Converter={StaticResource dataSourceKindToBrushConverter}}">
+                                        <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}"
+                                              Data="{Binding Kind, Converter={StaticResource dataSourceKindToGeometryConverter}}"/>
+                                    </Border>
+                                    <ContentPresenter Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                </DockPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="check" Property="Kind" Value="CheckboxMarked"/>
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="False">
+                                    <Setter TargetName="chip" Property="Opacity" Value=".35"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                    </Trigger>
+                    <Trigger Property="IsKeyboardFocused" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                    </Trigger>
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Setter Property="Opacity" Value=".4"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <!--format names come from the converter; the kinds that are not file formats get a localized name-->
+            <Style x:Key="kindFilterName" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"/>
+                <Setter Property="FontFamily" Value="{DynamicResource iranSans}"/>
+                <Setter Property="Margin" Value="0,0,12,0"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="TextWrapping" Value="NoWrap"/>
+                <Setter Property="Text" Value="{Binding Kind, Converter={StaticResource dataSourceKindToDisplayNameConverter}}"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Kind}" Value="{x:Static sta:DataSourceKind.WebApi}">
+                        <Setter Property="Text" Value="{Binding [legend_filter_kindRest], Source={StaticResource Localization}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Kind}" Value="{x:Static sta:DataSourceKind.GRPC}">
+                        <Setter Property="Text" Value="{Binding [legend_filter_kindGrpc], Source={StaticResource Localization}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Kind}" Value="{x:Static sta:DataSourceKind.Worldfile}">
+                        <Setter Property="Text" Value="{Binding [legend_filter_kindWorldfile], Source={StaticResource Localization}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Kind}" Value="{x:Static sta:DataSourceKind.ZippedImagePyramid}">
+                        <Setter Property="Text" Value="{Binding [legend_filter_kindImagePyramid], Source={StaticResource Localization}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Kind}" Value="{x:Static sta:DataSourceKind.Other}">
+                        <Setter Property="Text" Value="{Binding [legend_filter_kindOther], Source={StaticResource Localization}}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <!--small text action ("Select all", "Clear all", "Only")-->
+            <Style x:Key="kindFilterLink" TargetType="Button">
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Caption}"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="Transparent" Padding="4,1">
+                                <TextBlock x:Name="text" Text="{TemplateBinding Content}" FontFamily="{DynamicResource iranSans}"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="text" Property="TextDecorations" Value="Underline"/>
+                                </Trigger>
+                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                    <Setter TargetName="text" Property="TextDecorations" Value="Underline"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!--"Only" shows while its row is hovered or holds keyboard focus; Hidden, not Collapsed, so
+                rows do not change width as the pointer moves-->
+            <Style x:Key="kindFilterOnly" TargetType="Button" BasedOn="{StaticResource kindFilterLink}">
+                <!--follows its row, which turns white on the hover highlight-->
+                <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
+                <Setter Property="Visibility" Value="Hidden"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ToggleButton}}" Value="True">
+                        <Setter Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsKeyboardFocusWithin, RelativeSource={RelativeSource AncestorType=ToggleButton}}" Value="True">
+                        <Setter Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <!--layer count at the row's end; gives way to "Only" while the row is hovered or focused-->
+            <Style x:Key="kindFilterCount" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Caption}"/>
+                <Setter Property="Opacity" Value=".65"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="Margin" Value="4,0"/>
+                <Setter Property="FontFamily" Value="{DynamicResource iranSans}"/>
+                <Setter Property="Text" Value="{Binding LayerCount, Converter={StaticResource localizedNumberConverter}, ConverterParameter=N0}"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ToggleButton}}" Value="True">
+                        <Setter Property="Visibility" Value="Hidden"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsKeyboardFocusWithin, RelativeSource={RelativeSource AncestorType=ToggleButton}}" Value="True">
+                        <Setter Property="Visibility" Value="Hidden"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="kindFilterGroupHeader" TargetType="TextBlock" BasedOn="{StaticResource importMenuGroup}">
+                <Setter Property="Text" Value="{Binding [legend_filter_groupOther], Source={StaticResource Localization}}"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Category}" Value="{x:Static sta:DataSourceCategory.Vector}">
+                        <Setter Property="Text" Value="{Binding [legend_filter_groupVector], Source={StaticResource Localization}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Category}" Value="{x:Static sta:DataSourceCategory.Raster}">
+                        <Setter Property="Text" Value="{Binding [legend_filter_groupRaster], Source={StaticResource Localization}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Category}" Value="{x:Static sta:DataSourceCategory.Service}">
+                        <Setter Property="Text" Value="{Binding [legend_filter_groupService], Source={StaticResource Localization}}"/>
+                    </DataTrigger>
+                </Style.Triggers>
             </Style>
         </ResourceDictionary>
     </maptor:NotifiableUserControl.Resources>
@@ -192,7 +351,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBox Grid.Column="0"  
-                      Text="{Binding ElementName=root, Path=LegendViewModel.LayerNameFilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                      Text="{Binding ElementName=root, Path=LegendViewModel.LayerNameFilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=300}" 
                       mahApp:TextBoxHelper.Watermark="{Binding [legend_filter_searchLayerWatermark], Source={StaticResource Localization}}" 
                       mahApp:TextBoxHelper.ClearTextButton="True"
                       Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"/>
@@ -203,102 +362,107 @@
                     VerticalAlignment="Center" >
                     <iconPacks:PackIconMaterial Kind="FilterOff"/>
                 </Button>
-                <ToggleButton Grid.Column="2" x:Name="dataSourceKindFilterToggle"  
-                          Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
+                <!--outline funnel while nothing is hidden; filled funnel on the full accent while the
+                    layer-type filter hides layers (the open/hover states of the template still win)-->
+                <ToggleButton Grid.Column="2" x:Name="dataSourceKindFilterToggle"
                           VerticalAlignment="Center" Margin="4,0"
                           ToolTip="{Binding [legend_filter_filterByLayerType], Source={StaticResource Localization}}">
-                    <iconPacks:PackIconMaterial Kind="Filter"/>
+                    <ToggleButton.Style>
+                        <Style TargetType="ToggleButton" BasedOn="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding LegendViewModel.IsDataSourceKindFilterActive, ElementName=root}" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                                    <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+                    <iconPacks:PackIconMaterial>
+                        <iconPacks:PackIconMaterial.Style>
+                            <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}">
+                                <Setter Property="Kind" Value="FilterOutline"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding LegendViewModel.IsDataSourceKindFilterActive, ElementName=root}" Value="True">
+                                        <Setter Property="Kind" Value="Filter"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </iconPacks:PackIconMaterial.Style>
+                    </iconPacks:PackIconMaterial>
                 </ToggleButton>
+                <!--number of layer types that have layers but are filtered out; only shown while > 0.
+                    Not hit-testable: it sits over the button and must not swallow its clicks.-->
                 <mahApp:Badged Grid.Column="2" BadgePlacementMode="BottomLeft" BadgeMargin="0"
-                                Margin="0" Padding="0" Width="24" Height="22"
+                                Margin="0" Padding="0" Width="24" Height="22" IsHitTestVisible="False"
                                FontFamily="{StaticResource iranSans}"
-                                Badge="{Binding LegendViewModel.SelectedDataSourceKindCount, ElementName=root, Converter={StaticResource localizedNumberConverter}, ConverterParameter=N0}"
-                                Visibility="{Binding LegendViewModel.ShowSelectedDataSourceKindCount, ElementName=root, Converter={StaticResource boolToVisibilityConverter}}"/>
+                                Badge="{Binding LegendViewModel.HiddenDataSourceKindCount, ElementName=root, Converter={StaticResource localizedNumberConverter}, ConverterParameter=N0}"
+                                Visibility="{Binding LegendViewModel.IsDataSourceKindFilterActive, ElementName=root, Converter={StaticResource boolToVisibilityConverter}}"/>
                 <!--{Binding IsChecked, ElementName=dataSourceKindFilterToggle}-->
                 <Popup IsOpen="{Binding IsChecked, ElementName=dataSourceKindFilterToggle}"
-                   PlacementTarget="{Binding ElementName=dataSourceKindFilterToggle}"
-                   Placement="Bottom" StaysOpen="False" AllowsTransparency="True"
-                   PopupAnimation="Slide">
+                       PlacementTarget="{Binding ElementName=dataSourceKindFilterToggle}"
+                       Placement="Bottom" StaysOpen="False" AllowsTransparency="True"
+                       PopupAnimation="Slide"
+                       behaviors:PopupMenuBehavior.IsMenu="True"
+                       behaviors:PopupMenuBehavior.CloseOnClick="False">
                     <!--was Background="White": this is a flyout inside the docked legend panel,
                         i.e. ordinary chrome, so it must follow the theme. It is not an over-map
                         surface.-->
                     <Border Style="{StaticResource IRI.Maptor.Styles.Border.Popup}"
                         DataContext="{Binding LegendViewModel, ElementName=root}">
                         <Border.Effect>
-                            <DropShadowEffect BlurRadius="8" Color="Gray" Opacity="0.5" ShadowDepth="2"/>
+                            <StaticResource ResourceKey="IRI.Maptor.Effects.Elevation2"/>
                         </Border.Effect>
-                        <StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Center">
-                                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" ToolTip="{Binding [legend_selectAll], Source={StaticResource Localization}}"
-                                    Command="{Binding SelectAllDataSourceKindsCommand}">
-                                    <iconPacks:PackIconMaterial Kind="SelectAll"/>
-                                </Button>
-                                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" ToolTip="{Binding [legend_clearAll], Source={StaticResource Localization}}"
-                                    Command="{Binding ClearAllDataSourceKindsCommand}" Margin="4,0,0,0">
-                                    <iconPacks:PackIconMaterial Kind="SelectionRemove"/>
-                                </Button>
-                            </StackPanel>
-                            <Separator/>
-                            <ListBox ItemsSource="{Binding DataSourceKindFilterItems}"
-                                 SelectionMode="Extended" MaxHeight="280" FlowDirection="LeftToRight"
-                                 BorderThickness="0" Background="Transparent"  Padding="0,0,8,0" >
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <ToggleButton Style="{StaticResource dataSourceKindFilterItemToggleStyle}"
-                                                      IsChecked="{Binding IsSelected, Mode=TwoWay}" 
-                                                      ToolTip="{Binding DisplayName}" Background="Transparent">
-                                            <Border Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
-                                                    Background="{Binding Kind, Converter={StaticResource dataSourceKindToBrushConverter}}">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}"
-                                                          Data="{Binding Kind, Converter={StaticResource dataSourceKindToGeometryConverter}}"/>
-                                                    <iconPacks:PackIconMaterial Kind="CheckBold" Margin="2,0,0,0" VerticalAlignment="Center" >
-                                                        <iconPacks:PackIconMaterial.Style>
-                                                            <Style TargetType="iconPacks:PackIconMaterial">
-                                                                <Setter Property="Foreground" Value="Transparent"/>
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
-                                                                                 Value="True">
-                                                                        <Setter Property="Foreground" Value="White"/>
-                                                                    </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
-                                                                                 Value="True">
-                                                                        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </iconPacks:PackIconMaterial.Style>
-                                                    </iconPacks:PackIconMaterial>
-                                                    <!--<Path Width="16" Height="16" VerticalAlignment="Center" Margin="2,0,0,0"
-                                                          Stroke="White" StrokeThickness="1" Stretch="Uniform">
-                                                        <Path.Data>
-                                                            <EllipseGeometry Center="8,8" RadiusX="6" RadiusY="6"/>
-                                                        </Path.Data>
-                                                        <Path.Style>
-                                                            <Style TargetType="Path">
-                                                                <Setter Property="Fill" Value="White"/>
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
-                                                                                  Value="True">
-                                                                        <Setter Property="Fill"
-                                                                                Value="{DynamicResource MahApps.Brushes.Accent}"/>
-                                                                    </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
-                                                                                Value="True">
-                                                                        <Setter Property="Fill"
-                                                                                Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Path.Style>
-                                                    </Path>-->
-                                                </StackPanel>
-                                            </Border>
-                                        </ToggleButton>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </StackPanel>
+                        <DockPanel>
+                            <Border DockPanel.Dock="Top" Padding="2,0,2,4" Margin="0,0,0,2"
+                                    BorderThickness="0,0,0,1" BorderBrush="{DynamicResource MahApps.Brushes.Gray8}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Style="{StaticResource kindFilterLink}" FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"
+                                            Content="{Binding [legend_selectAll], Source={StaticResource Localization}}"
+                                            Command="{Binding SelectAllDataSourceKindsCommand}"/>
+                                    <TextBlock Text="·" VerticalAlignment="Center" Opacity=".6"/>
+                                    <Button Style="{StaticResource kindFilterLink}" FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"
+                                            Content="{Binding [legend_clearAll], Source={StaticResource Localization}}"
+                                            Command="{Binding ClearAllDataSourceKindsCommand}"/>
+                                </StackPanel>
+                            </Border>
+
+                            <ScrollViewer MaxHeight="360" VerticalScrollBarVisibility="Auto"
+                                          HorizontalScrollBarVisibility="Disabled" Focusable="False">
+                                <ItemsControl ItemsSource="{Binding DataSourceKindFilterGroups}" Focusable="False">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <TextBlock Style="{StaticResource kindFilterGroupHeader}"/>
+                                                <ItemsControl ItemsSource="{Binding Items}" Focusable="False">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <!--disabled when the map has no layer of this kind-->
+                                                            <ToggleButton Style="{StaticResource kindFilterRow}"
+                                                                          IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                                                          IsEnabled="{Binding IsAvailable}"
+                                                                          AutomationProperties.LabeledBy="{Binding ElementName=kindName}">
+                                                                <DockPanel>
+                                                                    <!--count and "Only" share the end slot; the outer ItemsControl
+                                                                        (level 2) carries the LegendViewModel-->
+                                                                    <Grid DockPanel.Dock="Right">
+                                                                        <TextBlock Style="{StaticResource kindFilterCount}"/>
+                                                                        <Button Style="{StaticResource kindFilterOnly}"
+                                                                                Content="{Binding [legend_filter_only], Source={StaticResource Localization}}"
+                                                                                Command="{Binding DataContext.ShowOnlyDataSourceKindCommand, RelativeSource={RelativeSource AncestorType=ItemsControl, AncestorLevel=2}}"
+                                                                                CommandParameter="{Binding}"/>
+                                                                    </Grid>
+                                                                    <TextBlock x:Name="kindName" Style="{StaticResource kindFilterName}"/>
+                                                                </DockPanel>
+                                                            </ToggleButton>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </DockPanel>
                     </Border>
                 </Popup>
 
@@ -313,183 +477,105 @@
                        PlacementTarget="{Binding ElementName=importLayerToggle}"
                        Placement="Bottom" StaysOpen="False" AllowsTransparency="True"
                        PopupAnimation="Slide"
+                       behaviors:PopupMenuBehavior.IsMenu="True"
                        x:Name="importLayerPopup">
                     <!--was Background="White"; see the note on the filter popup above-->
                     <Border Style="{StaticResource IRI.Maptor.Styles.Border.Popup}"
                             DataContext="{Binding DataContext, ElementName=root}"
                             x:Name="importLayerBorder">
                         <Border.Effect>
-                            <DropShadowEffect BlurRadius="8" Color="Gray" Opacity="0.5" ShadowDepth="2"/>
+                            <StaticResource ResourceKey="IRI.Maptor.Effects.Elevation2"/>
                         </Border.Effect>
+                        <!--format names and extensions stay untranslated: they are what the user sees on the file-->
                         <StackPanel>
-
-                            <!--shapefile-->
-                            <Button Style="{StaticResource menuButton}" Command="{Binding AddShapefileCommand}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
-                                            Background="{Binding Source={x:Static sta:DataSourceKind.Shapefile}, Converter={StaticResource dataSourceKindToBrushConverter}}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.Menu}"/>
-                                            <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}" Data="{StaticResource shp}"/>
-                                        </StackPanel>
-                                    </Border>
-                                    <TextBlock Text="{Binding [cmd_general_addShapefile], Source={StaticResource Localization}}"
-                                                Style="{StaticResource menuTextBlock}"/>
-                                </StackPanel>
+                            <TextBlock Style="{StaticResource importMenuGroup}" Margin="6,2,6,2"
+                                       Text="{Binding [legend_import_gisFiles], Source={StaticResource Localization}}"/>
+                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static sta:DataSourceKind.Shapefile}" Command="{Binding AddShapefileCommand}"
+                                    ToolTip="{Binding [cmd_general_addShapefile], Source={StaticResource Localization}}"
+                                    AutomationProperties.Name="{Binding [cmd_general_addShapefile], Source={StaticResource Localization}}">
+                                <DockPanel>
+                                    <TextBlock Style="{StaticResource importMenuExtension}" Text=".shp"/>
+                                    <TextBlock Style="{StaticResource importMenuName}" Text="Shapefile"/>
+                                </DockPanel>
                             </Button>
-
-                            <!--KMZ-->
-                            <Button Style="{StaticResource menuButton}" Command="{Binding AddKmzfileCommand}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
-                                            Background="{Binding Source={x:Static sta:DataSourceKind.Kmz}, Converter={StaticResource dataSourceKindToBrushConverter}}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.Menu}"/>
-                                            <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}" Data="{StaticResource kmz}"/>
-                                        </StackPanel>
-                                    </Border>
-                                    <TextBlock Style="{StaticResource menuTextBlock}"
-                                               Text="{Binding [cmd_legend_addKmz], Source={StaticResource Localization}}"/>
-                                </StackPanel>
+                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static sta:DataSourceKind.Dxf}" Command="{Binding AddDxffileCommand}"
+                                    ToolTip="{Binding [cmd_legend_addDxf], Source={StaticResource Localization}}"
+                                    AutomationProperties.Name="{Binding [cmd_legend_addDxf], Source={StaticResource Localization}}">
+                                <DockPanel>
+                                    <TextBlock Style="{StaticResource importMenuExtension}" Text=".dxf"/>
+                                    <TextBlock Style="{StaticResource importMenuName}" Text="DXF"/>
+                                </DockPanel>
                             </Button>
-
-                            <!--KML-->
-                            <Button Style="{StaticResource menuButton}" Command="{Binding AddKmlfileCommand}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Rectangle Style="{StaticResource menuRectangle}"
-                                               Fill="{Binding Source={x:Static sta:DataSourceKind.Kml}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
-                                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
-                                            Background="{Binding Source={x:Static sta:DataSourceKind.Kml}, Converter={StaticResource dataSourceKindToBrushConverter}}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.Menu}"/>
-                                            <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}" Data="{StaticResource kml}"/>
-                                        </StackPanel>
-                                    </Border>
-                                    <TextBlock Text="{Binding [cmd_legend_addKml], Source={StaticResource Localization}}"
-                                               Style="{StaticResource menuTextBlock}" />
-                                </StackPanel>
+                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static sta:DataSourceKind.Gpx}" Command="{Binding AddGpxfileCommand}"
+                                    ToolTip="{Binding [cmd_legend_addGpx], Source={StaticResource Localization}}"
+                                    AutomationProperties.Name="{Binding [cmd_legend_addGpx], Source={StaticResource Localization}}">
+                                <DockPanel>
+                                    <TextBlock Style="{StaticResource importMenuExtension}" Text=".gpx"/>
+                                    <TextBlock Style="{StaticResource importMenuName}" Text="GPX"/>
+                                </DockPanel>
                             </Button>
-
-                            <!--DXF-->
-                            <Button Style="{StaticResource menuButton}" Command="{Binding AddDxffileCommand}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Rectangle Style="{StaticResource menuRectangle}"
-                                               Fill="{Binding Source={x:Static sta:DataSourceKind.Dxf}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
-                                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
-                                            Background="{Binding Source={x:Static sta:DataSourceKind.Dxf}, Converter={StaticResource dataSourceKindToBrushConverter}}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.Menu}"/>
-                                            <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}" Data="{StaticResource dxf}"/>
-                                        </StackPanel>
-                                    </Border>
-                                    <TextBlock Text="{Binding [cmd_legend_addDxf], Source={StaticResource Localization}}"
-                                               Style="{StaticResource menuTextBlock}" />
-                                </StackPanel>
+                            <TextBlock Style="{StaticResource importMenuGroup}"
+                                       Text="{Binding [legend_import_googleEarth], Source={StaticResource Localization}}"/>
+                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static sta:DataSourceKind.Kml}" Command="{Binding AddKmlfileCommand}"
+                                    ToolTip="{Binding [cmd_legend_addKml], Source={StaticResource Localization}}"
+                                    AutomationProperties.Name="{Binding [cmd_legend_addKml], Source={StaticResource Localization}}">
+                                <DockPanel>
+                                    <TextBlock Style="{StaticResource importMenuExtension}" Text=".kml"/>
+                                    <TextBlock Style="{StaticResource importMenuName}" Text="KML"/>
+                                </DockPanel>
                             </Button>
-
-                            <!--CSV-->
-                            <Button Style="{StaticResource menuButton}" Command="{Binding AddCsvCommand}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Rectangle Style="{StaticResource menuRectangle}"
-                                               Fill="{Binding Source={x:Static sta:DataSourceKind.Csv}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
-                                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
-                                            Background="{Binding Source={x:Static sta:DataSourceKind.Csv}, Converter={StaticResource dataSourceKindToBrushConverter}}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.Menu}"/>
-                                            <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}" Data="{StaticResource csv}"/>
-                                        </StackPanel>
-                                    </Border>
-                                    <TextBlock Text="{Binding [cmd_legend_addCsv], Source={StaticResource Localization}}"
-                                               Style="{StaticResource menuTextBlock}" />
-                                </StackPanel>
+                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static sta:DataSourceKind.Kmz}" Command="{Binding AddKmzfileCommand}"
+                                    ToolTip="{Binding [cmd_legend_addKmz], Source={StaticResource Localization}}"
+                                    AutomationProperties.Name="{Binding [cmd_legend_addKmz], Source={StaticResource Localization}}">
+                                <DockPanel>
+                                    <TextBlock Style="{StaticResource importMenuExtension}" Text=".kmz"/>
+                                    <TextBlock Style="{StaticResource importMenuName}" Text="KMZ"/>
+                                </DockPanel>
                             </Button>
-
-                            <!--TSV-->
-                            <Button Style="{StaticResource menuButton}" Command="{Binding AddTsvCommand}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Rectangle Style="{StaticResource menuRectangle}"
-                                               Fill="{Binding Source={x:Static sta:DataSourceKind.Tsv}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
-                                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
-                                            Background="{Binding Source={x:Static sta:DataSourceKind.Tsv}, Converter={StaticResource dataSourceKindToBrushConverter}}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.Menu}"/>
-                                            <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}" Data="{StaticResource tsv}"/>
-                                        </StackPanel>
-                                    </Border>
-                                    <TextBlock Text="{Binding [cmd_legend_addTsv], Source={StaticResource Localization}}"
-                                               Style="{StaticResource menuTextBlock}" />
-                                </StackPanel>
+                            <TextBlock Style="{StaticResource importMenuGroup}"
+                                       Text="{Binding [legend_import_tables], Source={StaticResource Localization}}"/>
+                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static sta:DataSourceKind.Csv}" Command="{Binding AddCsvCommand}"
+                                    ToolTip="{Binding [cmd_legend_addCsv], Source={StaticResource Localization}}"
+                                    AutomationProperties.Name="{Binding [cmd_legend_addCsv], Source={StaticResource Localization}}">
+                                <DockPanel>
+                                    <TextBlock Style="{StaticResource importMenuExtension}" Text=".csv  .txt"/>
+                                    <TextBlock Style="{StaticResource importMenuName}" Text="CSV"/>
+                                </DockPanel>
                             </Button>
-
-                            <!--GeoJson-->
-                            <Button Style="{StaticResource menuButton}" Command="{Binding AddGeoJSONfileCommand}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Rectangle Style="{StaticResource menuRectangle}"
-                                               Fill="{Binding Source={x:Static sta:DataSourceKind.GeoJson}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
-                                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
-                                            Background="{Binding Source={x:Static sta:DataSourceKind.GeoJson}, Converter={StaticResource dataSourceKindToBrushConverter}}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.Menu}"/>
-                                            <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}" Data="{StaticResource json}"/>
-                                        </StackPanel>
-                                    </Border>
-                                    <TextBlock Text="{Binding [cmd_general_addGeoJson], Source={StaticResource Localization}}"
-                                               Style="{StaticResource menuTextBlock}" />
-                                </StackPanel>
+                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static sta:DataSourceKind.Tsv}" Command="{Binding AddTsvCommand}"
+                                    ToolTip="{Binding [cmd_legend_addTsv], Source={StaticResource Localization}}"
+                                    AutomationProperties.Name="{Binding [cmd_legend_addTsv], Source={StaticResource Localization}}">
+                                <DockPanel>
+                                    <TextBlock Style="{StaticResource importMenuExtension}" Text=".tsv  .txt"/>
+                                    <TextBlock Style="{StaticResource importMenuName}" Text="TSV"/>
+                                </DockPanel>
                             </Button>
-
-                            <!--TopoJson-->
-                            <Button Style="{StaticResource menuButton}" Command="{Binding AddTopoJsonCommand}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Rectangle Style="{StaticResource menuRectangle}"
-                                               Fill="{Binding Source={x:Static sta:DataSourceKind.TopoJson}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
-                                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
-                                            Background="{Binding Source={x:Static sta:DataSourceKind.TopoJson}, Converter={StaticResource dataSourceKindToBrushConverter}}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.Menu}"/>
-                                            <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}" Data="{StaticResource topo}"/>
-                                        </StackPanel>
-                                    </Border>
-                                    <TextBlock Text="{Binding [cmd_legend_addTopoJson], Source={StaticResource Localization}}"
-                                               Style="{StaticResource menuTextBlock}" />
-                                </StackPanel>
+                            <TextBlock Style="{StaticResource importMenuGroup}"
+                                       Text="{Binding [legend_import_json], Source={StaticResource Localization}}"/>
+                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static sta:DataSourceKind.GeoJson}" Command="{Binding AddGeoJSONfileCommand}"
+                                    ToolTip="{Binding [cmd_general_addGeoJson], Source={StaticResource Localization}}"
+                                    AutomationProperties.Name="{Binding [cmd_general_addGeoJson], Source={StaticResource Localization}}">
+                                <DockPanel>
+                                    <TextBlock Style="{StaticResource importMenuExtension}" Text=".geojson  .json"/>
+                                    <TextBlock Style="{StaticResource importMenuName}" Text="GeoJSON"/>
+                                </DockPanel>
                             </Button>
-
-                            <!--EsriJson-->
-                            <Button Style="{StaticResource menuButton}" Command="{Binding AddEsriJsonCommand}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Rectangle Style="{StaticResource menuRectangle}"
-                                               Fill="{Binding Source={x:Static sta:DataSourceKind.EsriJson}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
-                                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
-                                            Background="{Binding Source={x:Static sta:DataSourceKind.EsriJson}, Converter={StaticResource dataSourceKindToBrushConverter}}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.Menu}"/>
-                                            <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}" Data="{StaticResource json}"/>
-                                        </StackPanel>
-                                    </Border>
-                                    <TextBlock Text="{Binding [cmd_legend_addEsriJson], Source={StaticResource Localization}}"
-                                               Style="{StaticResource menuTextBlock}" />
-                                </StackPanel>
+                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static sta:DataSourceKind.TopoJson}" Command="{Binding AddTopoJsonCommand}"
+                                    ToolTip="{Binding [cmd_legend_addTopoJson], Source={StaticResource Localization}}"
+                                    AutomationProperties.Name="{Binding [cmd_legend_addTopoJson], Source={StaticResource Localization}}">
+                                <DockPanel>
+                                    <TextBlock Style="{StaticResource importMenuExtension}" Text=".topojson  .json"/>
+                                    <TextBlock Style="{StaticResource importMenuName}" Text="TopoJSON"/>
+                                </DockPanel>
                             </Button>
-                            
-                            <!--GPX-->
-                            <Button Style="{StaticResource menuButton}" Command="{Binding AddGpxfileCommand}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Rectangle Style="{StaticResource menuRectangle}"
-                                               Fill="{Binding Source={x:Static sta:DataSourceKind.Gpx}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
-                                    <Border Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
-                                            Background="{Binding Source={x:Static sta:DataSourceKind.Gpx}, Converter={StaticResource dataSourceKindToBrushConverter}}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.Menu}"/>
-                                            <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}" Data="{StaticResource gpx}"/>
-                                        </StackPanel>
-                                    </Border>
-                                    <TextBlock Text="{Binding [cmd_legend_addGpx], Source={StaticResource Localization}}"
-                                               Style="{StaticResource menuTextBlock}" />
-                                </StackPanel>
+                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static sta:DataSourceKind.EsriJson}" Command="{Binding AddEsriJsonCommand}"
+                                    ToolTip="{Binding [cmd_legend_addEsriJson], Source={StaticResource Localization}}"
+                                    AutomationProperties.Name="{Binding [cmd_legend_addEsriJson], Source={StaticResource Localization}}">
+                                <DockPanel>
+                                    <TextBlock Style="{StaticResource importMenuExtension}" Text=".json"/>
+                                    <TextBlock Style="{StaticResource importMenuName}" Text="EsriJSON"/>
+                                </DockPanel>
                             </Button>
-
-
                         </StackPanel>
                     </Border>
                 </Popup>

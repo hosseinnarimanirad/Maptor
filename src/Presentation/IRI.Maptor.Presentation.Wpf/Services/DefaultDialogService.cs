@@ -26,8 +26,32 @@ public class DefaultDialogService : IDialogService
 {
     private const int DefaultBlurRadius = 4;
 
+    private DialogBackdrop _backdrop = DialogBackdrop.Dim;
+
     /// <summary>
-    /// Gets or sets the blur radius applied to the owner window when showing dialogs.
+    /// How the owner window is marked as inactive while a dialog is open. Defaults to
+    /// <see cref="DialogBackdrop.Dim"/>; see <see cref="DialogBackdrop"/> for why the blur is no
+    /// longer the default.
+    /// </summary>
+    /// <remarks>
+    /// While this is <see cref="DialogBackdrop.Dim"/>, the dim also covers windows the host opens
+    /// with a plain <see cref="Window.ShowDialog"/> (settings, user management and the like), not
+    /// only dialogs opened through this service. The setting is process-wide: the service
+    /// constructed or configured last decides it, which is fine for a host with one service.
+    /// </remarks>
+    public DialogBackdrop Backdrop
+    {
+        get => _backdrop;
+        set
+        {
+            _backdrop = value;
+            DimBackdrop.ShadeModalWindows = value == DialogBackdrop.Dim;
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the blur radius applied to the owner window when <see cref="Backdrop"/> is
+    /// <see cref="DialogBackdrop.Blur"/>.
     /// </summary>
     public int BlurRadius { get; set; } = DefaultBlurRadius;
 
@@ -40,6 +64,7 @@ public class DefaultDialogService : IDialogService
     public DefaultDialogService(object? defaultOwnerWindow)
     {
         _defaultOwnerWindow = defaultOwnerWindow;
+        DimBackdrop.ShadeModalWindows = _backdrop == DialogBackdrop.Dim;
     }
 
     #region Helper Methods
@@ -102,7 +127,8 @@ public class DefaultDialogService : IDialogService
     }
 
     /// <summary>
-    /// Applies blur effect to the owner window and returns a disposable that restores the original effect.
+    /// Marks the owner window as inactive according to <see cref="Backdrop"/> (a dim shade by
+    /// default, or a blur) and returns a disposable that removes it. The name predates the dim.
     /// Ensures proper cleanup even if exceptions occur.
     /// </summary>
     /// <param name="owner">The owner window to apply blur effect to, or null.</param>
@@ -112,11 +138,23 @@ public class DefaultDialogService : IDialogService
         if (owner == null)
             return null;
 
-        var originalEffect = owner.Effect;
+        switch (Backdrop)
+        {
+            case DialogBackdrop.None:
+                return null;
 
-        owner.Effect = new BlurEffect() { Radius = BlurRadius };
+            case DialogBackdrop.Blur:
+                var originalEffect = owner.Effect;
 
-        return new BlurEffectDisposable(owner, originalEffect);
+                owner.Effect = new BlurEffect() { Radius = BlurRadius };
+
+                return new BlurEffectDisposable(owner, originalEffect);
+
+            default:
+                // falls back to no backdrop when the owner has no adorner layer, rather than to
+                // the blur: the blur is the cost this default exists to avoid
+                return DimBackdrop.TryApply(owner);
+        }
     }
 
     /// <summary>

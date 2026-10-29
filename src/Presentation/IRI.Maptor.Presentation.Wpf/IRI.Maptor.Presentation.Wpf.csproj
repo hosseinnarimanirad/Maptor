@@ -176,13 +176,18 @@
     </Page>
   </ItemGroup>
 
-  <!-- Fails the build on a NEW literal colour under Views\. Existing ones are listed, with
-       reasons, in build\LiteralColours.allow. Set MaptorLiteralColourGuard=Warning or None to
-       downgrade it. -->
+  <!-- Fails the build on a NEW literal colour or font size under Views\ (MAPTOR001-003). Hex
+       colours are exempt per file, with reasons, in build\LiteralColours.allow; existing named
+       colours and font sizes are counted in build\LiteralBaseline.txt and may only go down. Set
+       MaptorLiteralColourGuard=Warning or None to downgrade it. -->
+  <PropertyGroup>
+    <MaptorLiteralAllowFile>$(MSBuildProjectDirectory)\build\LiteralColours.allow</MaptorLiteralAllowFile>
+  </PropertyGroup>
   <Import Project="build\LiteralColourGuard.targets" />
 
   <ItemGroup>
     <None Include="build\LiteralColourGuard.targets" />
     <None Include="build\LiteralColours.allow" />
+    <None Include="build\LiteralBaseline.txt" />
   </ItemGroup>
 </Project>

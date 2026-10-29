@@ -3,6 +3,10 @@
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Common.Metrics.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
     <!--A collapsible section that looks like the rest of our cards: a bordered surface with a
         clickable header and a chevron that turns. The stock MahApps expander paints a heavy
         accent header bar, which reads as a banner rather than as a section of a dialog.-->
@@ -13,7 +17,8 @@
                 <ControlTemplate TargetType="{x:Type Expander}">
                     <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                             BorderBrush="{DynamicResource MahApps.Brushes.Gray8}"
-                            BorderThickness="1" CornerRadius="6">
+                            BorderThickness="{StaticResource IRI.Maptor.Styles.Thickness.Border}"
+                            CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -25,7 +30,7 @@
                                 <ToggleButton.Template>
                                     <ControlTemplate TargetType="ToggleButton">
                                         <Border x:Name="headerRoot" Background="Transparent"
-                                                Padding="12,7" MinHeight="38">
+                                                Padding="12,7" MinHeight="{StaticResource IRI.Maptor.Styles.Size.Control.Large}">
                                             <DockPanel>
                                                 <iconPacks:PackIconMaterial x:Name="chevron" DockPanel.Dock="Right"
                                                                             Kind="ChevronDown" Width="12" Height="12"

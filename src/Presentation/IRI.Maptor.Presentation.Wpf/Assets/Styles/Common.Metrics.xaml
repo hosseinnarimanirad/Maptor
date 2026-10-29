@@ -15,14 +15,24 @@
     <!--gap above the action-button row, see IRI.Maptor.Styles.Border.DialogFooter-->
     <Thickness x:Key="IRI.Maptor.Styles.Thickness.DialogFooter">0,8,0,0</Thickness>
 
-    <!--Shared corner rounding. Controls (buttons, tab pills) and surfaces (cards, panels)
-        round by slightly different amounts, so they are two tokens rather than one.-->
+    <!--Shared corner rounding. Three steps, each larger than the one it sits inside of:
+        Small (4) for chips and pop-up menus, Control (6) for anything the user clicks or types
+        into, Surface (8) for the card or panel that holds those controls. A rounder outside and
+        a tighter inside is what makes nested corners read as deliberate. Pills and circular
+        buttons round to half their height and are not on this scale. (Scale pass, 2026-10-25.)-->
 
-    <!--buttons, tab pills, inline controls-->
+    <!--menus, filter pop-ups, small chips-->
+    <CornerRadius x:Key="IRI.Maptor.Styles.CornerRadius.Small">4</CornerRadius>
+
+    <!--buttons, inputs, combo boxes, tab pills: every control-->
     <CornerRadius x:Key="IRI.Maptor.Styles.CornerRadius.Control">6</CornerRadius>
 
-    <!--cards and other content surfaces-->
-    <CornerRadius x:Key="IRI.Maptor.Styles.CornerRadius.Surface">5</CornerRadius>
+    <!--cards, panels, section expanders-->
+    <CornerRadius x:Key="IRI.Maptor.Styles.CornerRadius.Surface">8</CornerRadius>
+
+    <!--a title band across the top of a Surface: same radius on top, square below, so the band
+        follows the panel's corner exactly. Keep its value in step with Surface.-->
+    <CornerRadius x:Key="IRI.Maptor.Styles.CornerRadius.SurfaceTop">8,8,0,0</CornerRadius>
 
     <!--the tab strip's rounded track. Must stay equal to Control + TabTrackPadding, or the
         track's curve and the selected pill's curve will not be concentric.-->
@@ -115,6 +125,22 @@
 
     <!--square command-bar button, e.g. the SLD editor's rule toolbar-->
     <sys:Double x:Key="IRI.Maptor.Styles.Size.Button.IconSquare">32</sys:Double>
+
+    <!--Control heights. Three steps; every button, input and combo box uses one of them, so
+        controls placed side by side line up. Before 2026-10-25 inputs also used 26, 35, 38 and
+        39. The 35-high Large inputs of the signed-off Security screens are deliberately still 35.-->
+
+    <!--dense rows: grid toolbars, filter bars, the Small input variants-->
+    <sys:Double x:Key="IRI.Maptor.Styles.Size.Control.Compact">24</sys:Double>
+
+    <!--the default for every control-->
+    <sys:Double x:Key="IRI.Maptor.Styles.Size.Control.Default">32</sys:Double>
+
+    <!--large action buttons, card and section-header rows-->
+    <sys:Double x:Key="IRI.Maptor.Styles.Size.Control.Large">40</sys:Double>
+
+    <!--the one border width for inputs and surfaces. Focus may be thicker; nothing else is.-->
+    <Thickness x:Key="IRI.Maptor.Styles.Thickness.Border">1</Thickness>
 
     <!--opacity of a disabled affordance-->
     <sys:Double x:Key="IRI.Maptor.Styles.Opacity.Disabled">0.5</sys:Double>
