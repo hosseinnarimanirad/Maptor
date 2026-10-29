@@ -9,7 +9,7 @@ namespace IRI.Maptor.Core.MachineLearning;
 
 // David Cox in 1958
 // The logistic regression is a form of supervised learning
-public class LogisticRegression
+public class LogisticRegression : IBinaryClassifier
 {
     // coordinate-descent sweeps for one Newton step
     private readonly int _maxSweep = 10_000;

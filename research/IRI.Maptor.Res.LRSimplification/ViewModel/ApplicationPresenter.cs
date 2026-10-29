@@ -55,7 +55,11 @@ public class ApplicationPresenter : MapViewModelBase
     public ApplicationPresenter()
     {
         this.SyntheticDataTrainingData = new SyntheticDataTrainingViewModel(this);
+        this.Comparison = new ComparisonViewModel(this);
     }
+
+    /// <summary>The "Compare simplifications" panel.</summary>
+    public ComparisonViewModel Comparison { get; }
 
     public override async Task InitializeAsync()
     {

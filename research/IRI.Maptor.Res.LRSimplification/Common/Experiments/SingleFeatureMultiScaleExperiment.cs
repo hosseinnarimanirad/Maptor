@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Diagnostics;
 
 using IRI.Maptor.Extensions;
@@ -51,8 +51,6 @@ public static class SingleFeatureMultiScaleExperiment
 
             var baseZoomLevel = WebMercatorUtility.EstimateZoomLevel(boundingBox, 512, 512);
 
-            var originalVectorLayer = GeneralHelper.GetAsLayer("original", new() { feature });
-
             await feature.AsGeoJsonFeatureSet().SaveAsync($"{outputDirectory}\\{fileName}-F{featureIndex}.json", false, true);
 
             foreach (var offset in LevelOffsets)
@@ -66,12 +64,11 @@ public static class SingleFeatureMultiScaleExperiment
 
                 var currentScreenSize = WebMercatorUtility.ToScreenSize(zoomLevel, boundingBox);
 
-                var scale = WebMercatorUtility.GetGoogleMapScale(zoomLevel);
 
                 if (currentScreenSize.Width <= 0 || currentScreenSize.Height <= 0 || currentScreenSize.Width > 10000 || currentScreenSize.Height > 10000)
                     continue;
 
-                var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
+                var originalBitmap = SimplificationHelper.RenderForMetric(new() { feature }, boundingBox, currentScreenSize);
 
                 originalBitmap.Save($"{outputDirectory}\\{fileName}-{zoomLevel}-F{featureIndex}-original.png", System.Drawing.Imaging.ImageFormat.Tiff);
 

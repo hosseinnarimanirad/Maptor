@@ -22,4 +22,17 @@ public class SimplificationParameters
     public int? LookAhead { get; set; }
 
     public double? AverageLatitude { get; set; }
+
+    /// <summary>
+    /// The point list is a closed ring stored without its repeated closing vertex (the convention of polygon rings in
+    /// <see cref="Primitives.Geometry{T}"/>): the last point is joined back to the first. Used by Visvalingam-Whyatt
+    /// (every vertex but the first may be eliminated) and Ramer-Douglas-Peucker (the ring is divided at the vertex
+    /// farthest from the first one, Douglas and Peucker 1973, p. 117). <see cref="Primitives.Geometry{T}.Simplify(SimplificationType, SimplificationParameters)"/>
+    /// sets it for the rings of polygons on its own copy of the parameters; callers of <see cref="Simplifications"/>
+    /// set it themselves. Added 1405.07.14 (2026-10-06).
+    /// </summary>
+    public bool IsRing { get; set; } = false;
+
+    /// <summary>A shallow copy, so that a caller's parameters object is never changed.</summary>
+    public SimplificationParameters Clone() => (SimplificationParameters)MemberwiseClone();
 }

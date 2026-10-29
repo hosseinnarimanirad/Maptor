@@ -1,35 +1,29 @@
-﻿using System.Drawing;
-using System.Windows;
-using System.Windows.Media;
+using System.Drawing;
 
-using IRI.Maptor.Presentation.Wpf;
 using IRI.Maptor.Core.Spatial.Helpers;
 using IRI.Maptor.Core.Common.Primitives;
 using IRI.Maptor.Core.Spatial.Primitives;
-using IRI.Maptor.Presentation.Wpf.Layers;
-using IRI.Maptor.Presentation.Core;
+using IRI.Maptor.Presentation.Wpf.Helpers;
+
+using Point = IRI.Maptor.Core.Common.Primitives.Point;
 
 namespace IRI.Maptor.Res.LRSimplification.Common;
 
 public static class GeneralHelper
 {
-    /// <summary>Renders the layer at the given level, saves it and its difference image against the original, returns the difference.</summary>
-    public static async Task<(Bitmap image, double percent)> CreateImages(
+    /// <summary>Renders the geometries at the given level, saves them and their difference image against the original, returns the difference.</summary>
+    public static (Bitmap image, double percent) CreateImages(
         BoundingBox groundBoundingBox,
         int level,
         Bitmap originalBitmap,
-        VectorLayer vectorLayer,
+        List<Geometry<Point>> geometries,
         string outputDirectory,
         string fileName,
         string simplificationTypeMethod,
         double coef = 1,
         bool saveImages = true)
     {
-        var currentScreenSize = WebMercatorUtility.ToScreenSize(level, groundBoundingBox);
-
-        var scale = WebMercatorUtility.GetGoogleMapScale(level);
-
-        var bitmap = await vectorLayer.AsGdiBitmapAsync(groundBoundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
+        var bitmap = Render(geometries, groundBoundingBox, level);
 
         var diff = IRI.Maptor.Infrastructure.GdiPlus.Helpers.ImageHelper.CalculateDifPlusBitmaps(originalBitmap, bitmap, true);
 
@@ -42,18 +36,14 @@ public static class GeneralHelper
         return diff;
     }
 
-    /// <summary>A hidden 1-px blue stroke layer: the rendering used for every raster of the visual metric.</summary>
-    public static VectorLayer GetAsLayer(string layerName, List<Geometry<IRI.Maptor.Core.Common.Primitives.Point>> geometries)
+    /// <summary>
+    /// The raster of the visual metric: <paramref name="geometries"/> drawn on the screen of zoom level
+    /// <paramref name="level"/> with <see cref="SimplificationHelper.RenderOptions"/> (not with the map renderer).
+    /// </summary>
+    public static Bitmap Render(List<Geometry<Point>> geometries, BoundingBox groundBoundingBox, int level)
     {
-        var vectorLayer = new VectorLayer(layerName,
-                                            geometries,
-                                            VisualParameters.GetStroke(Colors.Blue, 1),
-                                            LayerType.VectorLayer,
-                                            RenderMode.Default,
-                                            RasterizationMethod.DrawingVisual);
+        var screenSize = WebMercatorUtility.ToScreenSize(level, groundBoundingBox);
 
-        vectorLayer.Visibility = Visibility.Hidden;
-
-        return vectorLayer;
+        return SimplificationHelper.RenderForMetric(geometries, groundBoundingBox, screenSize);
     }
 }

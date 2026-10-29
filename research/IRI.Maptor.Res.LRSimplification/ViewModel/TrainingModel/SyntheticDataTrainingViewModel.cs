@@ -34,6 +34,7 @@ public class SyntheticDataTrainingViewModel : Notifier
             LRSimplificationFeatures.DistanceToPrevious,
             LRSimplificationFeatures.SquareCosineOfAngle,
             LRSimplificationFeatures.VerticalDistance,
+            LRSimplificationFeatures.Overhang,
             LRSimplificationFeatures.dX12,
             LRSimplificationFeatures.dX13,
             LRSimplificationFeatures.dX23,

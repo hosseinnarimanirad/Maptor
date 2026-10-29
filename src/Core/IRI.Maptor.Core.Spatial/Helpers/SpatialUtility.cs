@@ -1160,6 +1160,20 @@ public static class SpatialUtility
         return result;
     }
 
+    /// <summary>
+    /// cos² of the turning angle at <paramref name="middlePoint"/> carrying the sign of the cosine: 1 for a straight run,
+    /// 0 for a right angle, negative for a turn sharper than 90° (-1 for a full reversal). Unlike
+    /// <see cref="GetSquareCosineOfAngle{T}"/>, which drops the sign, it tells a hairpin from a straight run while keeping
+    /// the scale of cos², so a cos² threshold keeps its meaning. Identical points count as a straight run.
+    /// Used by the angle-based simplifications (Tobler 1966) since 1405.07.14 (2026-10-06).
+    /// </summary>
+    public static double SignedSquareCosineOfTurn<T>(T firstPoint, T middlePoint, T lastPoint) where T : IPoint
+    {
+        var cosine = GetCosineOfOuterAngle(firstPoint, middlePoint, lastPoint);
+
+        return cosine * Math.Abs(cosine);
+    }
+
     #endregion
 
 
@@ -1274,25 +1288,77 @@ public static class SpatialUtility
     #endregion
 
 
-    #region Point-Line 
+    #region Point-Line
 
-    public static double GetPointToLineSegmentDistance<T>(T lineSegmentStart, T lineSegmentEnd, T targetPoint) where T : IPoint, new()
+    /// <summary>
+    /// Perpendicular distance from <paramref name="targetPoint"/> to the infinite line through <paramref name="linePoint1"/>
+    /// and <paramref name="linePoint2"/> (|cross product| / |linePoint2 - linePoint1|). Not clamped to the segment between
+    /// the two points: a point projecting beyond an end still gets its distance to the line (for the distance to the
+    /// segment see <see cref="TopologyUtility.GetPointToLineSegmentDistance{T}(T, T, T)"/>). If the two points coincide,
+    /// the distance to that point is returned. This is the distance of Ramer (1972) and Douglas and Peucker (1973), the
+    /// "vertical distance" feature of the LRS model and the distance used by RDP and the other algorithms.
+    /// Named <c>GetPointToLineSegmentDistance</c> until 2026-10-06.
+    /// </summary>
+    public static double GetPointToLineDistance<T>(T linePoint1, T linePoint2, T targetPoint) where T : IPoint, new()
     {
-        var dySegment = lineSegmentEnd.Y - lineSegmentStart.Y;
+        var dyLine = linePoint2.Y - linePoint1.Y;
 
-        var dxSegment = lineSegmentEnd.X - lineSegmentStart.X;
+        var dxLine = linePoint2.X - linePoint1.X;
 
         //اگر دو نقطه پاره خط منطبق بودند
         //فاصله بین آن‌ها تا نقطه هدف در 
         //نظر گرفته می‌شود.
-        if (dxSegment == 0 && dySegment == 0)
+        if (dxLine == 0 && dyLine == 0)
+        {
+            return SpatialUtility.GetEuclideanLength(linePoint1, targetPoint);
+        }
+
+        return Math.Abs(dyLine * targetPoint.X - dxLine * targetPoint.Y + linePoint2.X * linePoint1.Y - linePoint2.Y * linePoint1.X)
+                /
+                Math.Sqrt(dyLine * dyLine + dxLine * dxLine);
+    }
+
+    /// <summary>
+    /// Whether any interior point of <paramref name="pointList"/> lies at least <paramref name="threshold"/> away from the
+    /// infinite line through its first and last points (<see cref="GetPointToLineDistance{T}(T, T, T)"/>). False for lists
+    /// of fewer than three points. Used by the Lang simplification.
+    /// </summary>
+    public static bool AnyPerpendicularDistanceExceedTolerance<T>(List<T> pointList, double threshold) where T : IPoint, new()
+    {
+        for (int i = 1; i < pointList.Count - 1; i++)
+        {
+            var perpendicularDistance = GetPointToLineDistance(pointList[0], pointList[pointList.Count - 1], pointList[i]);
+
+            if (perpendicularDistance >= threshold)
+                return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// How far the projection of <paramref name="targetPoint"/> onto the line through the segment falls
+    /// outside the segment, measured along the segment: 0 when it projects between the two end points,
+    /// otherwise the distance from the nearer end point to the projection. Invariant to translation,
+    /// rotation and reflection. Zero-length segments return the distance to the (single) end point.
+    /// </summary>
+    public static double GetProjectionOverhang<T>(T lineSegmentStart, T lineSegmentEnd, T targetPoint) where T : IPoint, new()
+    {
+        var dxSegment = lineSegmentEnd.X - lineSegmentStart.X;
+
+        var dySegment = lineSegmentEnd.Y - lineSegmentStart.Y;
+
+        var length = Math.Sqrt(dxSegment * dxSegment + dySegment * dySegment);
+
+        if (length == 0)
         {
             return SpatialUtility.GetEuclideanLength(lineSegmentStart, targetPoint);
         }
 
-        return Math.Abs(dySegment * targetPoint.X - dxSegment * targetPoint.Y + lineSegmentEnd.X * lineSegmentStart.Y - lineSegmentEnd.Y * lineSegmentStart.X)
-                /
-                Math.Sqrt(dySegment * dySegment + dxSegment * dxSegment);
+        // position of the projection along the segment, from 0 at the start to `length` at the end
+        var t = ((targetPoint.X - lineSegmentStart.X) * dxSegment + (targetPoint.Y - lineSegmentStart.Y) * dySegment) / length;
+
+        return Math.Max(0, Math.Max(-t, t - length));
     }
 
     public static double GetPointToLineSegmentSquareDistance<T>(T lineSegmentStart, T lineSegmentEnd, T targetPoint) where T : IPoint, new()
@@ -1359,7 +1425,7 @@ public static class SpatialUtility
             }
             //else
             //{ 
-            var distance = GetPointToLineSegmentDistance(simplifiedPoints[currentSimplifiedIndex_Start], simplifiedPoints[currentSimplifiedIndex_End], currentPoint);
+            var distance = GetPointToLineDistance(simplifiedPoints[currentSimplifiedIndex_Start], simplifiedPoints[currentSimplifiedIndex_End], currentPoint);
 
             result += distance;
             //}

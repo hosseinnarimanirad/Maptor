@@ -604,6 +604,41 @@ public static class ImageHelper
         return (result, differentPixels / totalPixels /** 100.0*/);
     }
 
+    /// <summary>
+    /// Drawn pixels of a rendered layer: every pixel that is neither transparent (ARGB 0) nor white, the rule of
+    /// <see cref="CalculateConfusionMatrixBitmaps"/>. Indexed [x, y].
+    /// </summary>
+    public static bool[,] ToMask(Bitmap bitmap)
+    {
+        var whiteColor = Color.White.ToArgb();
+
+        var result = new bool[bitmap.Width, bitmap.Height];
+
+        for (int x = 0; x < bitmap.Width; x++)
+        {
+            for (int y = 0; y < bitmap.Height; y++)
+            {
+                var argb = bitmap.GetPixel(x, y).ToArgb();
+
+                result[x, y] = argb != 0 && argb != whiteColor;
+            }
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Pixel confusion matrix plus the distance-aware measures of <see cref="RasterComparison"/> between the
+    /// rendering of the original and that of the simplified geometry.
+    /// </summary>
+    public static RasterComparison CompareRasters(Bitmap originalImage, Bitmap secondImage, int tolerancePixels = 1)
+    {
+        if (originalImage.Width != secondImage.Width || originalImage.Height != secondImage.Height)
+            throw new Exception("Sizes must be equal.");
+
+        return RasterComparison.Compare(ToMask(originalImage), ToMask(secondImage), tolerancePixels);
+    }
+
     public static (Bitmap image, ConfusionMatrix confusionMatrix) CalculateConfusionMatrixBitmaps(Bitmap originalImage, Bitmap secondImage)
     {
         if (originalImage.Width != secondImage.Width || originalImage.Height != secondImage.Height)

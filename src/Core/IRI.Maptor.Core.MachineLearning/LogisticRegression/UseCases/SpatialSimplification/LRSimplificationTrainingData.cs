@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Core.Common.Helpers;
 using IRI.Maptor.Core.Common.Primitives;
-using IRI.Maptor.Core.Common.Abstractions; 
+using IRI.Maptor.Core.Common.Abstractions;
+using IRI.Maptor.Core.Common.Mathematics;
 
 namespace IRI.Maptor.Core.MachineLearning;
 
@@ -47,6 +48,32 @@ public class LRSimplificationTrainingData<T> where T : IPoint, new()
     public int GetCountOfRecords()
     {
         return Records?.Count ?? 0;
+    }
+
+    /// <summary>The feature values as a matrix (one row per record, columns in the order of <see cref="Features"/>) and the labels (retained = true).</summary>
+    public Matrix ToMatrix(out bool[] labels)
+    {
+        var rows = GetCountOfRecords();
+
+        var columns = GetCountOfFeatures();
+
+        var result = new Matrix(rows, columns);
+
+        labels = new bool[rows];
+
+        for (int i = 0; i < rows; i++)
+        {
+            var values = Records[i].FeatureValues;
+
+            for (int j = 0; j < columns; j++)
+            {
+                result[i, j] = values[j];
+            }
+
+            labels[i] = Records[i].IsRetained;
+        }
+
+        return result;
     }
 
     public void SaveAsJson(string fileName)

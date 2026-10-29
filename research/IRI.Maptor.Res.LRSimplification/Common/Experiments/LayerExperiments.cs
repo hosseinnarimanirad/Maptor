@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Diagnostics;
 
 using IRI.Maptor.Extensions;
@@ -47,9 +47,7 @@ public static class LayerExperiments
 
         var currentScreenSize = WebMercatorUtility.ToScreenSize(zoomLevel, boundingBox);
 
-        var scale = WebMercatorUtility.GetGoogleMapScale(zoomLevel);
-
-        var originalBitmap = await GeneralHelper.GetAsLayer("original", features).AsGdiBitmapAsync(boundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
+        var originalBitmap = SimplificationHelper.RenderForMetric(features, boundingBox, currentScreenSize);
 
         originalBitmap.Save($"{outputDirectory}\\{fileName}-{zoomLevel}-original.png", System.Drawing.Imaging.ImageFormat.Png);
 
@@ -117,9 +115,7 @@ public static class LayerExperiments
 
             var currentScreenSize = WebMercatorUtility.ToScreenSize(zoomLevel, boundingBox);
 
-            var scale = WebMercatorUtility.GetGoogleMapScale(zoomLevel);
-
-            var originalBitmap = await GeneralHelper.GetAsLayer("original", features).AsGdiBitmapAsync(boundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
+            var originalBitmap = SimplificationHelper.RenderForMetric(features, boundingBox, currentScreenSize);
 
             originalBitmap.Save($"{outputDirectory}\\{fileName}-{zoomLevel}-original.png", System.Drawing.Imaging.ImageFormat.Png);
 
@@ -135,7 +131,7 @@ public static class LayerExperiments
 
                 stopwatch.Stop();
 
-                await GeneralHelper.CreateImages(boundingBox, zoomLevel, originalBitmap, GeneralHelper.GetAsLayer($"S-{zoomLevel}-{lrModel.Title}", simplified), outputDirectory, fileName, lrModel.Title);
+                GeneralHelper.CreateImages(boundingBox, zoomLevel, originalBitmap, simplified, outputDirectory, fileName, lrModel.Title);
 
                 writer.WriteLine(new VisualSimplificationLog(fileName, boundingBox, features, simplified, zoomLevel, lrModel.Title, stopwatch.ElapsedMilliseconds, 1, parameters).ToTsv());
             }
@@ -148,7 +144,7 @@ public static class LayerExperiments
 
                 stopwatch.Stop();
 
-                await GeneralHelper.CreateImages(boundingBox, zoomLevel, originalBitmap, GeneralHelper.GetAsLayer($"S-{zoomLevel}-{method}", simplified), outputDirectory, fileName, $"{method}");
+                GeneralHelper.CreateImages(boundingBox, zoomLevel, originalBitmap, simplified, outputDirectory, fileName, $"{method}");
 
                 writer.WriteLine(new VisualSimplificationLog(fileName, boundingBox, features, simplified, zoomLevel, methodNames[method], stopwatch.ElapsedMilliseconds, 1, parameters).ToTsv());
             }

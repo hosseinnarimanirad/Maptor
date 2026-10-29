@@ -84,9 +84,9 @@ public static class Simplifications
 
         while (thirdIndex < pointList.Count)
         {
-            var angle = SpatialUtility.GetSquareCosineOfAngle(pointList[firstIndex], pointList[secondIndex], pointList[thirdIndex]);
+            var angle = SpatialUtility.SignedSquareCosineOfTurn(pointList[firstIndex], pointList[secondIndex], pointList[thirdIndex]);
 
-            if (angle < 0 || angle < parameters.AngleThreshold)
+            if (angle < 0 || angle < parameters.AngleThreshold.Value)
             {
                 filtered.Add(secondIndex);
 
@@ -134,7 +134,7 @@ public static class Simplifications
 
         while (thirdIndex < pointList.Count)
         {
-            var angle = SpatialUtility.GetSquareCosineOfAngle(pointList[firstIndex], pointList[secondIndex], pointList[thirdIndex]);
+            var angle = SpatialUtility.SignedSquareCosineOfTurn(pointList[firstIndex], pointList[secondIndex], pointList[thirdIndex]);
 
             var area = SpatialUtility.GetUnsignedEuclideanArea(pointList[firstIndex], pointList[secondIndex], pointList[thirdIndex]);
 
@@ -180,23 +180,21 @@ public static class Simplifications
 
         List<int> filtered = new List<int> { 0 };
 
-        int firstIndex = 0, secondIndex = 1;
+        int secondIndex = 1;
 
+        // length of the path walked since the last retained point; until 1405.07.14 (2026-10-06) the squared
+        // distance to the last retained point was summed instead and compared with the (linear) distance threshold
         var temp = 0.0;
 
         while (secondIndex < pointList.Count - 1)
         {
-            var semiDistance = SpatialUtility.GetSquareEuclideanLength(pointList[firstIndex], pointList[secondIndex]);
-
-            temp += semiDistance;
+            temp += SpatialUtility.GetEuclideanLength(pointList[secondIndex - 1], pointList[secondIndex]);
 
             if (temp > parameters.DistanceThreshold.Value)
             {
                 temp = 0;
 
                 filtered.Add(secondIndex);
-
-                firstIndex = secondIndex;
             }
 
             secondIndex++;
@@ -232,13 +230,13 @@ public static class Simplifications
 
         for (int i = 0; i < pointList.Count - 2; i++)
         {
-            var angle = SpatialUtility.GetSquareCosineOfAngle(pointList[i], pointList[i + 1], pointList[i + 2]);
+            var angle = SpatialUtility.SignedSquareCosineOfTurn(pointList[i], pointList[i + 1], pointList[i + 2]);
 
             angles.Add((index: i + 1, angle: angle));
         }
 
         //When i.Item2 ~ 1 it means points are on a line
-        var filter1 = angles.Where(i => i.angle < parameters.AngleThreshold).Select(i => i.index).ToList();
+        var filter1 = angles.Where(i => i.angle < parameters.AngleThreshold.Value).Select(i => i.index).ToList();
 
         filter1.Insert(0, 0);
 
@@ -308,6 +306,9 @@ public static class Simplifications
         else if (pointList.Count < 3)
             return pointList;
 
+        if (parameters.N == 0)
+            throw new ArgumentOutOfRangeException(nameof(parameters), "SimplificationParameters.N must be at least 1 for the n-th point routine.");
+
         var numberOfPoints = pointList.Count;
 
         result.Add(pointList[0]);
@@ -350,18 +351,25 @@ public static class Simplifications
         else if (pointList.Count < 3)
             return pointList;
 
+        if (parameters.N == 0)
+            throw new ArgumentOutOfRangeException(nameof(parameters), "SimplificationParameters.N must be at least 1 for the random point routine.");
+
         var numberOfPoints = pointList.Count;
 
         result.Add(pointList[0]);
 
-        for (int i = 1; i < numberOfPoints; i++)
-        {
-            var random = RandomHelper.GetBetweenZeroAndOne();
+        // 1405.07.14 (2026-10-06)
+        // "for every fixed number of consecutive points along the line, ... one random point among a set of these
+        // consecutive points [is] retained" (Shi and Cheung 2006, p. 28): the interior points are split into sets of
+        // N consecutive points (1..N, N+1..2N, ...) and one point of each set is kept; the n-th point routine keeps
+        // the last point of each set instead. Before this date every point was kept with probability 0.5.
+        var n = (int)parameters.N;
 
-            if (random > 0.5)
-            {
-                result.Add(pointList[i]);
-            }
+        for (int setStart = 1; setStart < numberOfPoints - 1; setStart += n)
+        {
+            var setEnd = Math.Min(setStart + n, numberOfPoints - 1); // exclusive
+
+            result.Add(pointList[RandomHelper.Get(setStart, setEnd)]);
         }
 
         if (parameters.Retain3Points && result.Count == 1)
@@ -393,10 +401,9 @@ public static class Simplifications
             return pointList;
 
 
-        if (parameters.LookAhead == null)
-        {
-            parameters.LookAhead = Math.Max(3, pointList.Count / 10);
-        }
+        // the default is local: writing it back into parameters made every later ring or part simplified with the
+        // same parameters object inherit the look-ahead of the first one (fixed 1405.07.14, 2026-10-06)
+        var lookAhead = parameters.LookAhead ?? Math.Max(3, pointList.Count / 10);
 
         var numberOfPoints = pointList.Count;
 
@@ -413,7 +420,7 @@ public static class Simplifications
 
         result.Add(pointList[0]);
 
-        int endIndex = Math.Min(numberOfPoints - 1, parameters.LookAhead.Value);
+        int endIndex = Math.Min(numberOfPoints - 1, lookAhead);
 
         while (true)
         {
@@ -425,12 +432,12 @@ public static class Simplifications
             {
                 result.Add(pointList[endIndex]);
                 startIndex = endIndex;
-                endIndex = Math.Min(numberOfPoints - 1, endIndex + parameters.LookAhead.Value);
+                endIndex = Math.Min(numberOfPoints - 1, endIndex + lookAhead);
 
                 continue;
             }
 
-            if (AnyPerpendicularDistanceExceedTolerance(pointList.Skip(startIndex).Take(endIndex - startIndex + 1).ToList(), distanceThreshold))
+            if (SpatialUtility.AnyPerpendicularDistanceExceedTolerance(pointList.Skip(startIndex).Take(endIndex - startIndex + 1).ToList(), distanceThreshold))
             {
                 endIndex--;
             }
@@ -438,7 +445,7 @@ public static class Simplifications
             {
                 result.Add(pointList[endIndex]);
                 startIndex = endIndex;
-                endIndex = Math.Min(numberOfPoints - 1, endIndex + parameters.LookAhead.Value);
+                endIndex = Math.Min(numberOfPoints - 1, endIndex + lookAhead);
             }
         }
 
@@ -469,13 +476,16 @@ public static class Simplifications
         else if (pointList.Count < 3)
             return pointList;
 
+        if (parameters.IsRing)
+            return SimplifyRingAsClosedLine(pointList, parameters, SimplifyByRamerDouglasPeucker);
 
-        //to handle lines with the same start and end
-        if (pointList.First().Equals(pointList.Last()))
-        {
-            //return DivideForDouglasPeucker(pointList, threshold, pointList.Count / 2);
-            return DivideForDouglasPeucker(pointList, parameters, pointList.Count / 2);
-        }
+        // 1405.07.14 (2026-10-06)
+        // Closed line (first point = last point): "In the case of closed loops, where the first and the last point
+        // do not define a line then the maximum perpendicular distance from the segment is replaced with the maximum
+        // distance from the point" (Douglas and Peucker 1973, p. 117). GetPointToLineDistance returns exactly that
+        // distance for a zero-length chord, so the loop below splits a closed line at the point farthest from its
+        // start. Until this date a closed line was always split at its middle index (Count / 2), keeping that point
+        // untested.
 
         var numberOfPoints = pointList.Count;
 
@@ -493,7 +503,7 @@ public static class Simplifications
 
         for (int i = 1; i < numberOfPoints - 1; i++)
         {
-            var perpendicularDistance = SpatialUtility.GetPointToLineSegmentDistance(pointList[0], pointList[numberOfPoints - 1], pointList[i]);
+            var perpendicularDistance = SpatialUtility.GetPointToLineDistance(pointList[0], pointList[numberOfPoints - 1], pointList[i]);
 
             if (perpendicularDistance > maxPerpendicularDistance)
             {
@@ -547,7 +557,7 @@ public static class Simplifications
 
         for (int i = 2; i < numberOfPoints; i++)
         {
-            var temporaryDistance = SpatialUtility.GetPointToLineSegmentDistance(pointList[startIndex], pointList[middleIndex], pointList[i]);
+            var temporaryDistance = SpatialUtility.GetPointToLineDistance(pointList[startIndex], pointList[middleIndex], pointList[i]);
 
             if (temporaryDistance > effectiveThreshold)
             {
@@ -612,7 +622,7 @@ public static class Simplifications
 
         for (int i = 0; i < pointList.Count - 2; i++)
         {
-            var perpendicularDistance = SpatialUtility.GetPointToLineSegmentDistance(pointList[i], pointList[i + 2], pointList[i + 1]);
+            var perpendicularDistance = SpatialUtility.GetPointToLineDistance(pointList[i], pointList[i + 2], pointList[i + 1]);
 
             if (perpendicularDistance > distanceThreshold)
                 result.Add(pointList[i + 1]);
@@ -676,7 +686,9 @@ public static class Simplifications
                 throw new NotImplementedException();
             }
 
-            var perpendicularDistance = SpatialUtility.GetPointToLineSegmentDistance(pointList[startIndex], pointList[midIndex], pointList[endIndex]);
+            // distance of the middle point to the line start-end (until 1405.07.14, 2026-10-06 the end point's distance to
+            // the line start-middle was measured)
+            var perpendicularDistance = SpatialUtility.GetPointToLineDistance(pointList[startIndex], pointList[endIndex], pointList[midIndex]);
 
             if (perpendicularDistance > distanceThreshold)
             {
@@ -696,7 +708,7 @@ public static class Simplifications
         //        throw new NotImplementedException();
         //    }
 
-        //    var perpendicularDistance = SpatialUtility.GetPointToLineSegmentDistance(pointList[startIndex], pointList[midIndex/*i + 2*/], pointList[i + 1]);
+        //    var perpendicularDistance = SpatialUtility.GetPointToLineDistance(pointList[startIndex], pointList[midIndex/*i + 2*/], pointList[i + 1]);
 
         //    if (perpendicularDistance > distanceThreshold)
         //    {
@@ -727,8 +739,10 @@ public static class Simplifications
     // ref: Visvalingam, M. and Whyatt, J. D. (1993). ‘Line generalization by repeated elimination
     //      of points’, The Cartographic Journal, 30, 46–51
     // link: https://www.tandfonline.com/doi/abs/10.1179/000870493786962263
-    public static List<T> SimplifyByVisvalingamWhyatt<T>(List<T> pointList, SimplificationParameters parameters, bool isRing) where T : IPoint
+    public static List<T> SimplifyByVisvalingamWhyatt<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint
     {
+        var isRing = parameters.IsRing;
+
         if (pointList.IsNullOrEmpty())
             return new List<T>();
 
@@ -746,7 +760,8 @@ public static class Simplifications
 
         List<T> pList = pointList.ToList();
 
-        while (areas.Count > 0)
+        // with Retain3Points the elimination stops when three points are left
+        while (areas.Count > 0 && !(parameters.Retain3Points && pList.Count <= 3))
         {
             var minArea = Statistics.GetMin(areas);
 
@@ -806,17 +821,12 @@ public static class Simplifications
         }
 
 
-        if (parameters.Retain3Points && pList.Count == 1)
-        {
-            pList.Add(pointList[pointList.Count() / 2]);
-        }
-
-        if (SpatialUtility.GetEuclideanLength(pList.Last(), pointList.Last()) != 0)
-        {
-            pList.Add(pointList.Last());
-        }
-
-        return pList.ToList();
+        // 1405.07.14 (2026-10-06)
+        // An open line never loses its last point (it has no effective area), so nothing has to be appended.
+        // A ring is stored without the closing vertex and its last stored vertex can be eliminated like any
+        // other; the former "append pointList.Last() if missing" step put that eliminated vertex back at the
+        // end of the ring (Visvalingam 2015 Koch island at T = 2: the square plus (1, 0)).
+        return pList;
     }
 
 
@@ -853,7 +863,7 @@ public static class Simplifications
         {
             for (int middleIndex = endIndex - 1; middleIndex > startIndex; middleIndex--)
             {
-                var temporaryDistance = SpatialUtility.GetPointToLineSegmentDistance(pointList[startIndex], pointList[endIndex], pointList[middleIndex]);
+                var temporaryDistance = SpatialUtility.GetPointToLineDistance(pointList[startIndex], pointList[endIndex], pointList[middleIndex]);
 
                 if (temporaryDistance > effectiveThreshold)
                 {
@@ -911,7 +921,7 @@ public static class Simplifications
         {
             while (middleIndex < endIndex)
             {
-                var semiDistance = SpatialUtility.GetPointToLineSegmentDistance(pointList[startIndex], pointList[endIndex], pointList[middleIndex]);
+                var semiDistance = SpatialUtility.GetPointToLineDistance(pointList[startIndex], pointList[endIndex], pointList[middleIndex]);
 
                 if (semiDistance > effectiveThreshold)
                 {
@@ -978,7 +988,7 @@ public static class Simplifications
         {
             while (middleIndex < endIndex)
             {
-                var semiDistance = SpatialUtility.GetPointToLineSegmentDistance(pointList[startIndex], pointList[endIndex], pointList[middleIndex]);
+                var semiDistance = SpatialUtility.GetPointToLineDistance(pointList[startIndex], pointList[endIndex], pointList[middleIndex]);
 
                 if (semiDistance > effectiveThreshold)
                 {
@@ -1261,6 +1271,169 @@ public static class Simplifications
 
     #region Private Methods
 
+    /// <summary>
+    /// RDP measuring the distance of every vertex to the chord <em>segment</em> (clamped to its end points) instead of
+    /// the infinite line through it, which <see cref="SimplifyByRamerDouglasPeucker{T}"/> uses as in the original papers.
+    /// With the line distance a thin arm whose tip lies near the extension of the chord measures as close and is dropped;
+    /// with the segment distance it is kept. Added 2026-10-05 for the thin-part ablation (E12); not used by any published run.
+    /// </summary>
+    public static List<T> SimplifyByRamerDouglasPeuckerSegment<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint, new()
+    {
+        if (pointList.IsNullOrEmpty())
+            return new List<T>();
+
+        else if (pointList.Count < 3)
+            return pointList;
+
+        if (parameters.IsRing)
+            return SimplifyRingAsClosedLine(pointList, parameters, SimplifyByRamerDouglasPeuckerSegment);
+
+        // closed line: split at the point farthest from the start (Douglas and Peucker 1973, p. 117); the segment
+        // distance of a zero-length chord is the distance to its point (see SimplifyByRamerDouglasPeucker)
+
+        var numberOfPoints = pointList.Count;
+
+        double maxDistance = 0;
+        int maxIndex = 0;
+
+        for (int i = 1; i < numberOfPoints - 1; i++)
+        {
+            var distance = Helpers.TopologyUtility.GetPointToLineSegmentDistance(pointList[i], pointList[0], pointList[numberOfPoints - 1]);
+
+            if (distance > maxDistance)
+            {
+                maxIndex = i;
+                maxDistance = distance;
+            }
+        }
+
+        if (maxDistance > parameters.DistanceThreshold.Value)
+            return DivideForDouglasPeuckerSegment(pointList, parameters, maxIndex);
+
+        return new List<T> { pointList[0], pointList[numberOfPoints - 1] };
+    }
+
+    private static List<T> DivideForDouglasPeuckerSegment<T>(List<T> pointList, SimplificationParameters parameters, int divideIndex) where T : IPoint, new()
+    {
+        var result = SimplifyByRamerDouglasPeuckerSegment(pointList.Take(divideIndex + 1).ToList(), parameters);
+
+        result.AddRange(SimplifyByRamerDouglasPeuckerSegment(pointList.Skip(divideIndex).ToList(), parameters).Skip(1));
+
+        return result;
+    }
+
+    /// <summary>
+    /// BOPW measuring the distance to the chord <em>segment</em> instead of the infinite line through it (see
+    /// <see cref="SimplifyByRamerDouglasPeuckerSegment{T}"/>); otherwise identical to <see cref="SimplifyByBeforeOpeningWindow{T}"/>.
+    /// Added 2026-10-05 for the thin-part ablation (E12); not used by any published run.
+    /// </summary>
+    public static List<T> SimplifyByBeforeOpeningWindowSegment<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint, new()
+    {
+        var result = new List<T>();
+
+        if (pointList.IsNullOrEmpty())
+            return result;
+
+        else if (pointList.Count < 3)
+            return pointList;
+
+        result.Add(pointList.First());
+
+        double effectiveThreshold = parameters.DistanceThreshold.Value;
+
+        int startIndex = 0, middleIndex = 1, endIndex = 2;
+
+        while (endIndex < pointList.Count)
+        {
+            while (middleIndex < endIndex)
+            {
+                var distance = Helpers.TopologyUtility.GetPointToLineSegmentDistance(pointList[middleIndex], pointList[startIndex], pointList[endIndex]);
+
+                if (distance > effectiveThreshold)
+                {
+                    result.Add(pointList[endIndex - 1]);
+
+                    startIndex = endIndex - 1;
+
+                    endIndex = middleIndex;
+
+                    break;
+                }
+
+                middleIndex++;
+            }
+
+            middleIndex = startIndex + 1;
+            endIndex++;
+        }
+
+        if (parameters.Retain3Points && result.Count == 1)
+            result.Add(pointList[pointList.Count() / 2]);
+
+        if (SpatialUtility.GetEuclideanLength(result.Last(), pointList.Last()) != 0)
+            result.Add(pointList.Last());
+
+        return result;
+    }
+
+    /// <summary>
+    /// Ramer-Douglas-Peucker for a ring stored without its closing vertex (<see cref="SimplificationParameters.IsRing"/>):
+    /// the ring is closed by repeating its first vertex, simplified as a closed line (divided at the vertex farthest
+    /// from the first one, Douglas and Peucker 1973, p. 117) and returned again without the closing vertex. A ring that
+    /// already repeats its first vertex is simplified as it is.
+    /// </summary>
+    private static List<T> SimplifyRingAsClosedLine<T>(List<T> ring, SimplificationParameters parameters, Func<List<T>, SimplificationParameters, List<T>> simplify) where T : IPoint, new()
+    {
+        // the parts of a ring are open lines
+        var lineParameters = parameters.Clone();
+
+        lineParameters.IsRing = false;
+
+        if (ring.First().Equals(ring.Last()))
+            return simplify(ring, lineParameters);
+
+        var result = simplify(ring.Append(ring[0]).ToList(), lineParameters);
+
+        result.RemoveAt(result.Count - 1);
+
+        // 2026-10-06: Retain3Points, as the other algorithms honour it. A ring divided at its farthest vertex keeps only
+        // two vertices when both halves fit within the tolerance (a long thin polygon), which is no polygon any more;
+        // keep the vertex farthest from the line through the two, i.e. the next one RDP itself would keep.
+        // a tolerance larger than the whole ring leaves only the first vertex: keep the one farthest from it as well
+        if (parameters.Retain3Points && result.Count == 1 && ring.Count >= 3)
+        {
+            var farthestFromFirst = Enumerable.Range(1, ring.Count - 1).OrderByDescending(i => SpatialUtility.GetEuclideanLength(ring[0], ring[i])).First();
+
+            result.Add(ring[farthestFromFirst]);
+        }
+
+        if (parameters.Retain3Points && result.Count == 2 && ring.Count >= 3)
+        {
+            var second = ring.IndexOf(result[1]);
+
+            int farthest = -1;
+            double maxDistance = -1;
+
+            for (int i = 1; i < ring.Count; i++)
+            {
+                if (i == second)
+                    continue;
+
+                var distance = SpatialUtility.GetPointToLineDistance(result[0], result[1], ring[i]);
+
+                if (distance > maxDistance)
+                {
+                    maxDistance = distance;
+                    farthest = i;
+                }
+            }
+
+            result.Insert(farthest < second ? 1 : 2, ring[farthest]);
+        }
+
+        return result;
+    }
+
     private static List<T> DivideForDouglasPeucker<T>(List<T> pointList, SimplificationParameters parameters, int divideIndex) where T : IPoint, new()
     {
         var leftList = pointList.Take(divideIndex + 1).ToList();
@@ -1278,17 +1451,162 @@ public static class Simplifications
 
 
 
-    private static bool AnyPerpendicularDistanceExceedTolerance<T>(List<T> pointList, double threshold) where T : IPoint, new()
+    // ***********************************************************************************************
+    // ***********************************************************************************************
+    // ref: Li, Z. and Openshaw, S., 1992, Algorithms for automated line generalization based on a
+    //      natural principle of objective generalization. IJGIS, 6(5), 373-389.
+    // The "natural principle": everything inside the smallest visible object (SVO) of the target scale
+    // collapses to one point. Two of the paper's three modes are implemented; neither returns a
+    // subsequence of the input, both generate new points, so they are not candidates for the LRS
+    // training labels. Not used by any research experiment.
+    //
+    // Vector mode: the SVO is a circle of diameter F (DistanceThreshold) centred at the point where the
+    // line enters it; the line is followed to where it leaves the circle, and the midpoint of entry and
+    // exit replaces everything in between; the exit point is the entry of the next SVO. First and last
+    // points are kept.
+    public static List<T> SimplifyByLiOpenshaw<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint, new()
     {
-        for (int i = 1; i < pointList.Count - 1; i++)
-        {
-            var perpendicularDistance = SpatialUtility.GetPointToLineSegmentDistance(pointList[0], pointList[pointList.Count - 1], pointList[i]);
+        var result = new List<T>();
 
-            if (perpendicularDistance >= threshold)
-                return true;
+        if (pointList.IsNullOrEmpty())
+            return result;
+
+        else if (pointList.Count < 3)
+            return pointList;
+
+        var radius = parameters.DistanceThreshold.Value / 2;
+
+        if (!(radius > 0))
+            throw new ArgumentOutOfRangeException(nameof(parameters), "DistanceThreshold (the SVO diameter) must be positive");
+
+        result.Add(pointList[0]);
+
+        // the entry point of the current SVO (a vertex or an interpolated point on segment [segment, segment + 1])
+        double cx = pointList[0].X, cy = pointList[0].Y;
+
+        int segment = 0;
+
+        while (true)
+        {
+            // first vertex outside the SVO
+            int exit = -1;
+
+            for (int k = segment + 1; k < pointList.Count; k++)
+            {
+                var dx = pointList[k].X - cx;
+                var dy = pointList[k].Y - cy;
+
+                if (dx * dx + dy * dy > radius * radius)
+                {
+                    exit = k;
+                    break;
+                }
+            }
+
+            if (exit < 0)
+                break;
+
+            // the segment that leaves the circle runs from the inside point (the previous vertex, or the entry
+            // point when it lies on this segment) to pointList[exit]
+            double ix = exit - 1 == segment ? cx : pointList[exit - 1].X;
+            double iy = exit - 1 == segment ? cy : pointList[exit - 1].Y;
+
+            var ex = pointList[exit].X;
+            var ey = pointList[exit].Y;
+
+            // |I + t (E - I) - C| = r, the root with t in [0, 1]
+            double vx = ex - ix, vy = ey - iy, wx = ix - cx, wy = iy - cy;
+            double a = vx * vx + vy * vy, b = 2 * (vx * wx + vy * wy), c = wx * wx + wy * wy - radius * radius;
+            double t = (-b + Math.Sqrt(Math.Max(b * b - 4 * a * c, 0))) / (2 * a);
+
+            double bx = ix + t * vx, by = iy + t * vy;
+
+            result.Add(new T() { X = (cx + bx) / 2, Y = (cy + by) / 2 });
+
+            cx = bx;
+            cy = by;
+            segment = exit - 1;
         }
 
-        return false;
+        if (parameters.Retain3Points && result.Count == 1)
+        {
+            result.Add(pointList[pointList.Count / 2]);
+        }
+
+        if (SpatialUtility.GetEuclideanLength(result.Last(), pointList.Last()) != 0)
+        {
+            result.Add(pointList.Last());
+        }
+
+        return result;
+    }
+
+    // Raster mode: the plane is divided into square cells of side F (DistanceThreshold) anchored at the
+    // origin; a run of consecutive vertices falling into the same cell is replaced by its centroid. The
+    // first and last vertices are kept as they are (the rest of their runs is dropped).
+    public static List<T> SimplifyByLiOpenshawRaster<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint, new()
+    {
+        var result = new List<T>();
+
+        if (pointList.IsNullOrEmpty())
+            return result;
+
+        else if (pointList.Count < 3)
+            return pointList;
+
+        var cell = parameters.DistanceThreshold.Value;
+
+        if (!(cell > 0))
+            throw new ArgumentOutOfRangeException(nameof(parameters), "DistanceThreshold (the cell size) must be positive");
+
+        (long, long) Cell(T p) => ((long)Math.Floor(p.X / cell), (long)Math.Floor(p.Y / cell));
+
+        var last = pointList.Count - 1;
+
+        result.Add(pointList[0]);
+
+        int start = 0;
+
+        var firstCell = Cell(pointList[0]);
+
+        // skip the rest of the first point's run
+        while (start + 1 < last && Cell(pointList[start + 1]) == firstCell)
+            start++;
+
+        int i = start + 1;
+
+        while (i < last)
+        {
+            var key = Cell(pointList[i]);
+
+            int j = i;
+
+            double sx = 0, sy = 0;
+
+            while (j < last && Cell(pointList[j]) == key)
+            {
+                sx += pointList[j].X;
+                sy += pointList[j].Y;
+                j++;
+            }
+
+            // a run that reaches the last point is represented by the last point itself
+            if (j == last && Cell(pointList[last]) == key)
+                break;
+
+            result.Add(new T() { X = sx / (j - i), Y = sy / (j - i) });
+
+            i = j;
+        }
+
+        if (parameters.Retain3Points && result.Count == 1)
+        {
+            result.Add(pointList[pointList.Count / 2]);
+        }
+
+        result.Add(pointList[last]);
+
+        return result;
     }
 
     #endregion

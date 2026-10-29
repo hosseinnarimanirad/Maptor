@@ -15,6 +15,10 @@ public enum LRSimplificationFeatures
     // فاصله نقطه اول تا سوم
     BaseLength = 7,
 
+    // how far the projection of the middle point onto the base line falls outside the base segment
+    // (0 when it projects between the two ends); rotation-invariant. Not part of the published LRSv4/LRSv7.
+    Overhang = 8,
+
     // abs(x1 - x2)
     dX12 = 10,
     

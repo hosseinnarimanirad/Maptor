@@ -1,4 +1,4 @@
-﻿using IRI.Maptor.Core.Spatial.Analysis;
+using IRI.Maptor.Core.Spatial.Analysis;
 using IRI.Maptor.Core.Spatial.Primitives;
 using IRI.Maptor.Core.Common.Mathematics;
 using System;
@@ -10,6 +10,11 @@ using IRI.Maptor.Core.Common.Primitives;
 
 namespace IRI.Maptor.Res.LRSimplification;
 
+/// <summary>
+/// One row of an experiment summary: a feature (or a layer) simplified by one method at one threshold, with
+/// compression, TLVD per length, the exact pixel confusion matrix and, since 2026-09-28, the distance-aware
+/// raster measures of <see cref="RasterComparison"/> (blank for the layer-level experiments).
+/// </summary>
 public class VisualSimplificationLog
 {
     // e.g. AdminArea_WM
@@ -30,13 +35,11 @@ public class VisualSimplificationLog
 
     public string MethodName { get; set; }
 
-    public long ElapsedMilliseconds { get; set; }
+    /// <summary>Simplification time in milliseconds; fractional since 2026-09-28 (the features take microseconds).</summary>
+    public double ElapsedMilliseconds { get; set; }
 
     // Max(With, Height)
     public double MaxExtent { get; set; }
-
-    //public double ImageDifInPercent { get; set; }
-
 
     public int NumberOfPoints_Original { get; set; }
     public int NumberOfPoints_Simplified { get; set; }
@@ -49,16 +52,23 @@ public class VisualSimplificationLog
 
     public ConfusionMatrix? ConfusionMatrix { get; set; }
 
+    public RasterComparison? Raster { get; set; }
+
+    /// <summary>Rings of the simplified polygon with fewer than three distinct vertices (<see cref="Common.TopologyCounts"/>).</summary>
+    public int CollapsedRings { get; set; }
+
+    /// <summary>Proper crossings between non-adjacent edges of the simplified geometry (<see cref="Common.TopologyCounts"/>).</summary>
+    public int SelfIntersections { get; set; }
+
 
     public VisualSimplificationLog(
         string fileName,
         BoundingBox originalBoundingBox,
-        //int featureIndex,
         List<Geometry<Point>> original,
         List<Geometry<Point>> simplified,
         int level,
         string methodName,
-        long elapsedMilliseconds,
+        double elapsedMilliseconds,
         double coef,
         SimplificationParameters parameters,
         double tlvdPerLength = 0,
@@ -68,8 +78,6 @@ public class VisualSimplificationLog
 
         this.Type = fileName.Split('_').First();
 
-        //this.FeatureIndex = featureIndex;
-
         this.Level = level;
 
         this.AreaThreshold = parameters.AreaThreshold ?? 0;
@@ -77,8 +85,6 @@ public class VisualSimplificationLog
         this.DistanceThreshold = parameters.DistanceThreshold ?? 0;
 
         this.Coef = coef;
-
-        //this.ImageDifInPercent = imageDifferenceInPercent;
 
         this.MethodName = methodName;
 
@@ -94,11 +100,6 @@ public class VisualSimplificationLog
         this.ConfusionMatrix = confusionMatrix;
 
         this.TlvdPerLength = tlvdPerLength;
-
-        if (Compression < 0)
-        {
-
-        }
     }
 
     public VisualSimplificationLog(
@@ -106,15 +107,15 @@ public class VisualSimplificationLog
         BoundingBox originalBoundingBox,
         int featureIndex,
         Geometry<Point> original,
-        Geometry<Point> simplified, 
+        Geometry<Point> simplified,
         int level,
         string methodName,
-        long elapsedMilliseconds,
+        double elapsedMilliseconds,
         double coef,
         SimplificationParameters parameters,
         double tlvdPerLength = 0,
-        ConfusionMatrix? confusionMatrix = null)
-    //,double coef)
+        ConfusionMatrix? confusionMatrix = null,
+        RasterComparison? raster = null)
     {
         this.FileName = fileName;
 
@@ -130,8 +131,6 @@ public class VisualSimplificationLog
 
         this.Coef = coef;
 
-        //this.ImageDifInPercent = imageDifferenceInPercent;
-
         this.MethodName = methodName;
 
         this.ElapsedMilliseconds = elapsedMilliseconds;
@@ -145,12 +144,13 @@ public class VisualSimplificationLog
 
         this.ConfusionMatrix = confusionMatrix;
 
+        this.Raster = raster;
+
         this.TlvdPerLength = tlvdPerLength;
 
-        if (Compression < 0)
-        {
+        this.CollapsedRings = Common.TopologyCounts.CollapsedRings(simplified);
 
-        }
+        this.SelfIntersections = Common.TopologyCounts.SelfIntersections(simplified);
     }
 
     public static string GetHeader()
@@ -169,15 +169,13 @@ public class VisualSimplificationLog
 
             nameof(MaxExtent),
 
-            //nameof(ImageDifInPercent),
-
             nameof(NumberOfPoints_Original),
             nameof(NumberOfPoints_Simplified),
             nameof(Compression),
             nameof(TlvdPerLength),
         };
 
-        return string.Join("\t", headers) + "\t" + ConfusionMatrix.GetTsvHeader();
+        return string.Join("\t", headers) + "\t" + ConfusionMatrix.GetTsvHeader() + "\t" + RasterComparison.GetTsvHeader() + "\tCollapsedRings\tSelfIntersections";
     }
 
     public string ToTsv()
@@ -193,11 +191,9 @@ public class VisualSimplificationLog
             DistanceThreshold.ToString(),
 
             MethodName,
-            ElapsedMilliseconds.ToString(),
+            ElapsedMilliseconds.ToString("0.###"),
 
             MaxExtent.ToString("N1"),
-
-            //ImageDifInPercent.ToString("N4"),
 
             NumberOfPoints_Original.ToString(),
             NumberOfPoints_Simplified.ToString(),
@@ -205,6 +201,6 @@ public class VisualSimplificationLog
             TlvdPerLength.ToString("N4")
         };
 
-        return string.Join("\t", values) + "\t" + ConfusionMatrix.AsTsv();
+        return string.Join("\t", values) + "\t" + ConfusionMatrix.AsTsv() + "\t" + (Raster?.AsTsv() ?? RasterComparison.EmptyTsv()) + $"\t{CollapsedRings}\t{SelfIntersections}";
     }
 }

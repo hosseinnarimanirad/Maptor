@@ -29,7 +29,7 @@ public static class GeometryExtensions
         if (points.IsNullOrEmpty())
             return points;
 
-        return model.SimplifyByLogisticRegression(points, toScreenMap, retain3Points);
+        return model.Simplify(points, toScreenMap, retain3Points);
     }
 
 }

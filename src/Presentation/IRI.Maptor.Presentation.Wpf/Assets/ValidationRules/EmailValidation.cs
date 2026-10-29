@@ -20,7 +20,9 @@ namespace IRI.Maptor.Presentation.Wpf.ValidationRules
 
                 if (!string.IsNullOrWhiteSpace(stringValue))
                 {
-                    Regex regex = new Regex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
+                    // No upper bound on the top-level domain: {2,4} rejected valid addresses such
+                    // as admin@gas.local, and a failed rule keeps the value from reaching the source.
+                    Regex regex = new Regex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$");
 
                     var isValid = regex.IsMatch(stringValue);
 

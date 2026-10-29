@@ -24,19 +24,17 @@ namespace IRI.Maptor.Presentation.Wpf.Helpers;
 
 public static class SimplificationHelper
 {
-    private static VectorLayer GetAsLayer(string layerName, List<Geometry<Point>> geometries)
+    /// <summary>
+    /// How the original and the simplified geometries are drawn for the visual metric. The default is the
+    /// rendering of the published LAS run (aliased 1-pixel pen); the map renderer is not used, so the metric does
+    /// not change when map styling changes.
+    /// </summary>
+    public static MetricRenderOptions RenderOptions { get; set; } = MetricRenderOptions.Published;
+
+    /// <summary>Draws <paramref name="geometries"/> for the visual metric with <see cref="RenderOptions"/>.</summary>
+    public static System.Drawing.Bitmap RenderForMetric(List<Geometry<Point>> geometries, BoundingBox boundingBox, System.Drawing.Size screenSize)
     {
-        var vectorLayer = new VectorLayer(layerName,
-                                            geometries,
-                                            VisualParameters.GetStroke(Colors.Blue, 1),
-                                            LayerType.VectorLayer,
-                                            RenderMode.Default,
-                                            RasterizationMethod.DrawingVisual,
-                                            LegendViewModel.DefaultTocGroup);
-
-        vectorLayer.Visibility = System.Windows.Visibility.Hidden;
-
-        return vectorLayer;
+        return MetricRasterizer.Render(geometries, boundingBox, screenSize.Width, screenSize.Height, RenderOptions);
     }
 
     public static async Task<List<SimplificationAccuracy>> Compare(
@@ -56,13 +54,9 @@ public static class SimplificationHelper
 
         var currentScreenSize = WebMercatorUtility.ToScreenSize(estimatedZoomLevel, boundingBox);
 
-        var scale = WebMercatorUtility.GetGoogleMapScale(estimatedZoomLevel);
-
-        var originalVectorLayer = GetAsLayer("original", new() { feature });
-
         var layerName = $"{outputDirectory}\\{featureName}-{estimatedZoomLevel}-{featureIndex}-";
 
-        var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
+        var originalBitmap = RenderForMetric(new() { feature }, boundingBox, currentScreenSize);
 
         originalBitmap.Save($"{layerName}-original.png", System.Drawing.Imaging.ImageFormat.Png);
 
@@ -90,9 +84,7 @@ public static class SimplificationHelper
             if (simplified.Type == GeometryType.Point)
                 continue;
 
-            var vectorLayer = GetAsLayer($"{estimatedZoomLevel}-{lrModel.Title}", new List<Geometry<Point>>() { simplified });
-
-            var simplifiedBitmap = await vectorLayer.AsGdiBitmapAsync(boundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
+            var simplifiedBitmap = RenderForMetric(new List<Geometry<Point>>() { simplified }, boundingBox, currentScreenSize);
 
             var diff = ImageHelper.CalculateConfusionMatrixBitmaps(originalBitmap, simplifiedBitmap);
 
@@ -122,9 +114,7 @@ public static class SimplificationHelper
             if (simplified.Type == GeometryType.Point)
                 continue;
 
-            var vectorLayer = GetAsLayer($"{estimatedZoomLevel}-{methodNames[method]}", new List<Geometry<Point>>() { simplified });
-
-            var simplifiedBitmap = await vectorLayer.AsGdiBitmapAsync(boundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
+            var simplifiedBitmap = RenderForMetric(new List<Geometry<Point>>() { simplified }, boundingBox, currentScreenSize);
 
             var diff = ImageHelper.CalculateConfusionMatrixBitmaps(originalBitmap, simplifiedBitmap);
 
@@ -162,6 +152,16 @@ public static class SimplificationHelper
         return result;
     }
      
+    /// <summary>Buffer half-width of the tolerant pixel measures (<see cref="RasterComparison"/>): one pixel.</summary>
+    public const int RasterTolerancePixels = 1;
+
+    /// <summary>
+    /// Simplifies one feature, renders it on the screen of the original and measures it against the
+    /// original raster: exact confusion matrix and F1, tolerant F1, pixel displacement, Hausdorff distance,
+    /// compression and TLVD per length. The original is expected to have been rendered alone (no neighbours).
+    /// </summary>
+    /// <param name="stopwatch">When given, the simplification alone is timed and the milliseconds are recorded.</param>
+    /// <param name="saveFiles">Write the original as GeoJSON and the simplified and difference rasters as images.</param>
     public static async Task<(SimplificationAccuracy, Geometry<Point> simplified)> CompareBySingleFeature(
        Geometry<Point> feature,
        Func<Geometry<Point>, Geometry<Point>> simplifyFunc,
@@ -170,33 +170,57 @@ public static class SimplificationHelper
        System.Drawing.Bitmap originalBitmap,
        string layerName,
        string methodName,
-       int estimatedZoomLevel)
+       int estimatedZoomLevel,
+       System.Diagnostics.Stopwatch stopwatch = null,
+       bool saveFiles = true,
+       bool measureCollapsed = false)
     {
-        var scale = WebMercatorUtility.GetGoogleMapScale(estimatedZoomLevel);
-          
+        stopwatch?.Restart();
+
         var simplified = simplifyFunc(feature);
 
-        if (simplified.Type != feature.Type)
+        stopwatch?.Stop();
+
+        // a result of another geometry type (e.g. a polygon whose ring collapsed to a line) used to be skipped, which
+        // hides a visible failure; measureCollapsed (2026-10-06, resubmission sweeps) measures it like any other result;
+        // the published drivers keep the skip so that their numbers reproduce
+        if (simplified.Type != feature.Type && !measureCollapsed)
             return (null, null);
 
         var length = feature.GetEuclideanLength();
 
-        var tlvdPerLength = feature.CalculateTotalVectorDisplacement(simplified) / length;
+        // 2026-10-06: a part or ring that collapses (e.g. RDP on a ring at a threshold larger than the feature) changes
+        // the structure; TLVD is undefined then (it used to throw and stop the run); the raster measures still apply
+        double tlvdPerLength;
+
+        try
+        {
+            tlvdPerLength = feature.CalculateTotalVectorDisplacement(simplified) / length;
+        }
+        catch (NotImplementedException)
+        {
+            // the structures differ (at any level: parts or rings)
+            tlvdPerLength = double.NaN;
+        }
         var compression = feature.Compression(simplified);
 
         GeoJsonFeatureSet originalFeatureSet = feature.AsGeoJsonFeatureSet();
 
-        await originalFeatureSet.SaveAsync($"{layerName}-original.json", false, true);
+        if (saveFiles)
+            await originalFeatureSet.SaveAsync($"{layerName}-original.json", false, true);
 
-        var vectorLayer = GetAsLayer($"{estimatedZoomLevel}-{methodName}", new List<Geometry<Point>>() { simplified });
-
-        var simplifiedBitmap = await vectorLayer.AsGdiBitmapAsync(boundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
+        var simplifiedBitmap = RenderForMetric(new List<Geometry<Point>>() { simplified }, boundingBox, currentScreenSize);
 
         var diff = ImageHelper.CalculateConfusionMatrixBitmaps(originalBitmap, simplifiedBitmap);
 
-        simplifiedBitmap.Save($"{layerName}-{methodName}.png", System.Drawing.Imaging.ImageFormat.Tiff);
+        if (saveFiles)
+        {
+            simplifiedBitmap.Save($"{layerName}-{methodName}.png", System.Drawing.Imaging.ImageFormat.Tiff);
 
-        diff.image.Save($"{layerName}-{methodName}-diff.png", System.Drawing.Imaging.ImageFormat.Tiff);
+            diff.image.Save($"{layerName}-{methodName}-diff.png", System.Drawing.Imaging.ImageFormat.Tiff);
+        }
+
+        var raster = ImageHelper.CompareRasters(originalBitmap, simplifiedBitmap, RasterTolerancePixels);
 
         var info = new SimplificationAccuracy()
         {
@@ -205,7 +229,9 @@ public static class SimplificationHelper
             Algorithm = methodName,
             Compression = compression,
             ConfusionMatrix = diff.confusionMatrix,
+            Raster = raster,
             TlvdPerLength = tlvdPerLength,
+            ElapsedMilliseconds = stopwatch?.Elapsed.TotalMilliseconds ?? -1,
         };
 
         return (info, simplified);
@@ -222,8 +248,6 @@ public static class SimplificationHelper
        string methodName,
        int estimatedZoomLevel)
     {
-        var scale = WebMercatorUtility.GetGoogleMapScale(estimatedZoomLevel);
-
         List<double> tlvdPerLengths = new List<double>();
         List<double> compressions = new List<double>();
         List<double> lengths = new List<double>();
@@ -245,9 +269,7 @@ public static class SimplificationHelper
             simplifieds.Add(simplified);
         }
 
-        var vectorLayer = GetAsLayer($"{estimatedZoomLevel}-{methodName}", simplifieds);
-
-        var simplifiedBitmap = await vectorLayer.AsGdiBitmapAsync(boundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
+        var simplifiedBitmap = RenderForMetric(simplifieds, boundingBox, currentScreenSize);
 
         var diff = ImageHelper.CalculateConfusionMatrixBitmaps(originalBitmap, simplifiedBitmap);
 

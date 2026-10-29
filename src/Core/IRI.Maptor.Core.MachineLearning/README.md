@@ -16,7 +16,8 @@ dotnet add package IRI.Maptor.Core.MachineLearning
 - DBSCAN density-based clustering (`Dbscan.Cluster<T>`) with a caller-supplied distance function
 - Apriori frequent-itemset mining (`AprioriAlgorithm`, `Itemset`)
 - Binary logistic regression (`LogisticRegression`) with configurable options: feature normalization, regularization method, variance calculation mode
-- Logistic-regression-based line simplification use case (`LogisticSimplification` with synthetic training data helpers)
+- Binary classification tree (`DecisionTree`, CART-style greedy growth, Gini or entropy, depth-limited, printable as rules via `ToText`)
+- Logistic-regression-based line simplification use case (`LogisticSimplification` with synthetic training data helpers); any `IBinaryClassifier` can replace the logistic regression
 - Descriptive statistics (`GeneralStatistics.CalculateSummary`)
 - Shared building blocks: sigmoid, normalization, and regularization helpers
 

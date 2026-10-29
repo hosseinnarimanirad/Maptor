@@ -33,6 +33,9 @@ public class LRSimplificationParameters<T> where T : IPoint, new()
     public double? BaseLength { get; private set; }
 
     [JsonInclude]
+    public double? Overhang { get; private set; }
+
+    [JsonInclude]
     public double? dX12 { get; private set; }
     [JsonInclude]
     public double? dX13 { get; private set; }
@@ -80,6 +83,7 @@ public class LRSimplificationParameters<T> where T : IPoint, new()
                 LRSimplificationFeatures.DistanceToPrevious => this.DistanceToPrevious,
                 LRSimplificationFeatures.VerticalDistance => this.VerticalDistance,
                 LRSimplificationFeatures.BaseLength => this.BaseLength,
+                LRSimplificationFeatures.Overhang => this.Overhang,
                 LRSimplificationFeatures.CosineOfAngle => this.CosineOfAngle,
                 LRSimplificationFeatures.SquareCosineOfAngle => this.SquareCosineOfAngle,
                 LRSimplificationFeatures.Area => this.Area,
@@ -134,10 +138,13 @@ public class LRSimplificationParameters<T> where T : IPoint, new()
         //this.SquareCosineOfAngle = CosineOfAngle * CosineOfAngle;
 
         if (Features.Contains(LRSimplificationFeatures.VerticalDistance))
-            this.VerticalDistance = SpatialUtility.GetPointToLineSegmentDistance(firstScreenPoint, lastScreenPoint, middleScreenPoint);
+            this.VerticalDistance = SpatialUtility.GetPointToLineDistance(firstScreenPoint, lastScreenPoint, middleScreenPoint);
 
         if (Features.Contains(LRSimplificationFeatures.BaseLength))
             this.BaseLength = SpatialUtility.GetEuclideanLength(firstScreenPoint, lastScreenPoint);
+
+        if (Features.Contains(LRSimplificationFeatures.Overhang))
+            this.Overhang = SpatialUtility.GetProjectionOverhang(firstScreenPoint, lastScreenPoint, middleScreenPoint);
 
         if (Features.Contains(LRSimplificationFeatures.dX12))
             this.dX12 = Math.Abs(middleScreenPoint.X - firstScreenPoint.X);

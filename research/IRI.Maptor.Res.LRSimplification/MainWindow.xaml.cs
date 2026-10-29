@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 
 using IRI.Maptor.Core.MachineLearning;
 using IRI.Maptor.Res.LRSimplification.Common;
@@ -17,6 +17,41 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+    }
+
+    private readonly TaskCompletionSource _ready = new();
+
+    /// <summary>Completes when the map and the presenter are initialized (end of <see cref="Window_Loaded"/>).</summary>
+    public Task Ready => _ready.Task;
+
+    /// <summary>
+    /// `--snapshot` mode (2026-10-08): loads a feature into the comparison panel, runs it at <paramref name="level"/> (or the
+    /// feature's natural LoD for a 256-px screen), waits for the map to draw and saves the window as a PNG at twice the screen
+    /// resolution. Used for the manuscript's figure of the application.
+    /// </summary>
+    public async Task SnapshotAsync(string geoJsonFile, string pngFile, int? level)
+    {
+        await Ready;
+        Width = 1450; Height = 820;
+        await Presenter.Comparison.LoadAsync(geoJsonFile);
+        if (level.HasValue)
+            Presenter.Comparison.Level = level.Value;
+        await Presenter.Comparison.RunAsync();
+        Presenter.Comparison.ShowOnly("LRS", "RW");
+        drawingsExpander.IsExpanded = true;
+        await Task.Delay(8000);
+        UpdateLayout();
+
+        var dpi = 192.0;
+        var visual = (System.Windows.Media.Visual)Content;
+        var element = (FrameworkElement)Content;
+        var bitmap = new System.Windows.Media.Imaging.RenderTargetBitmap((int)(element.ActualWidth * dpi / 96), (int)(element.ActualHeight * dpi / 96),
+            dpi, dpi, System.Windows.Media.PixelFormats.Pbgra32);
+        bitmap.Render(visual);
+        var encoder = new System.Windows.Media.Imaging.PngBitmapEncoder();
+        encoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(bitmap));
+        using var stream = System.IO.File.Create(pngFile);
+        encoder.Save(stream);
     }
 
 
@@ -43,6 +78,7 @@ public partial class MainWindow : Window
                 LRSimplificationFeatures.DistanceToPrevious,
                 LRSimplificationFeatures.SquareCosineOfAngle,
                 LRSimplificationFeatures.VerticalDistance,
+                LRSimplificationFeatures.Overhang,
                 LRSimplificationFeatures.dX12,
                 LRSimplificationFeatures.dX13,
                 LRSimplificationFeatures.dX23,
@@ -81,5 +117,6 @@ public partial class MainWindow : Window
 
         System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
+        _ready.TrySetResult();
     }
 }
