@@ -2,6 +2,8 @@
 
 Every Maptor style token on one page, over a live accent + light/dark switch.
 
+![Theme and controls](screenshot.png)
+
 This is two things at once: the reference a view author looks at to see what a token actually looks
 like, and the cheapest visual-regression surface the design system has. Flip **Dark** and the
 status palette, pills and banners all have to move; the over-map chrome deliberately does not.

@@ -291,3 +291,5 @@ secrets.json
 .env
 .env.*
 /Data/GOOGLE/Terrain
+/Data/GOOGLE
+/samples/IRI.Maptor.Samples.Wpf.Gallery/Data/GOOGLE
