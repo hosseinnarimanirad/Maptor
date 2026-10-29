@@ -44,8 +44,10 @@
     <PackageVersion Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.6" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.2" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.2" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.2" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.2" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="8.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="9.0.2" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
@@ -63,7 +65,7 @@
 
     <!-- Still referenced only by the pre-existing the host application migration files (to be re-scaffolded); no runtime use. -->
     <PackageVersion Include="NetTopologySuite" Version="2.5.0" />
-    <PackageVersion Include="Npgsql" Version="9.0.2" />
+    <PackageVersion Include="Npgsql" Version="9.0.3" />
 
     <PackageVersion Include="Parquet.Net" Version="4.15.0" />
 

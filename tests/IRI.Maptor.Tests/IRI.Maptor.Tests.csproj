@@ -53,11 +53,15 @@
     <!-- The ruling-span calculator lives in the Saba client (the analysis is client-side
          by design) and is pure, UI-free arithmetic, so it is unit-tested from here. -->
     <ProjectReference Include="..\..\src\Presentation\IRI.Maptor.Presentation.Wpf\IRI.Maptor.Presentation.Wpf.csproj" />
-    <ProjectReference Include="..\..\src\Infrastructure\IRI.Maptor.Infrastructure.EfCore\IRI.Maptor.Infrastructure.EfCore.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure\IRI.Maptor.Infrastructure.EfCore.SqlServer\IRI.Maptor.Infrastructure.EfCore.SqlServer.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure\IRI.Maptor.Infrastructure.EfCore.PostgreSql\IRI.Maptor.Infrastructure.EfCore.PostgreSql.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure\IRI.Maptor.Infrastructure.Versioning\IRI.Maptor.Infrastructure.Versioning.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure\IRI.Maptor.Infrastructure.PersonalGdb\IRI.Maptor.Infrastructure.PersonalGdb.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure\IRI.Maptor.Infrastructure.SqlServerSpatialExtension\IRI.Maptor.Infrastructure.SqlServerSpatialExtension.csproj" />
+    <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.Astronomy\IRI.Maptor.Core.Astronomy.csproj" />
+    <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.Satellite\IRI.Maptor.Core.Satellite.csproj" />
     <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.Common\IRI.Maptor.Core.Common.csproj" />
+    <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.FileGdb\IRI.Maptor.Core.FileGdb.csproj" />
     <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.Graph\IRI.Maptor.Core.Graph.csproj" />
     <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.MachineLearning\IRI.Maptor.Core.MachineLearning.csproj" />
     <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.Ogc\IRI.Maptor.Core.Ogc.csproj" />
@@ -85,6 +89,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Assets\Sgp4\SGP4-VER.TLE">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Sgp4\tmatverDec2015.out">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\MbTilesSamples\countries_z0_x0_y0.mvt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -290,3 +290,4 @@ appsettings.Staging.json
 secrets.json
 .env
 .env.*
+/Data/GOOGLE/Terrain
