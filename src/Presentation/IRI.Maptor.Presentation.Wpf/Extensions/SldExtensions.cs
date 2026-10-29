@@ -18,11 +18,17 @@ namespace IRI.Maptor.Extensions;
 
 public static class SldExtensions
 {
-    public static List<ISymbolizer> ParseToSymbolizers(this StyledLayerDescriptor sld)
+    /// <summary>
+    /// The runtime symbolizers of the SLD. Each SLD layer is drawn with ONE of its styles: the one named
+    /// <paramref name="styleName"/>, else the one marked IsDefault, else the first (see
+    /// <see cref="SldStyleExtensions.FindStyleIndex"/>); the other styles are alternatives, not overlays.
+    /// </summary>
+    public static List<ISymbolizer> ParseToSymbolizers(this StyledLayerDescriptor sld, string? styleName = null)
     {
         var result = new List<ISymbolizer>();
 
-        var featureTypeStyles = sld.UserLayers.SelectMany(u => u.UserStyles.SelectMany(us => us.FeatureTypeStyles)).ToList();
+        var featureTypeStyles = sld.UserLayers.Select(u => SldStyleExtensions.SelectStyle(u.UserStyles, styleName))
+            .Where(us => us is not null).SelectMany(us => us!.FeatureTypeStyles).ToList();
 
         if (!featureTypeStyles.IsNullOrEmpty())
         {
@@ -32,7 +38,8 @@ public static class SldExtensions
             }
         }
 
-        featureTypeStyles = sld.NamedLayers.SelectMany(n => n.UserStyles.SelectMany(us => us.FeatureTypeStyles)).ToList();
+        featureTypeStyles = sld.NamedLayers.Select(n => SldStyleExtensions.SelectStyle(n.UserStyles, styleName))
+            .Where(us => us is not null).SelectMany(us => us!.FeatureTypeStyles).ToList();
 
         if (!featureTypeStyles.IsNullOrEmpty())
         {
@@ -52,6 +59,16 @@ public static class SldExtensions
 
         if (featureTypeStyle is null || featureTypeStyle.Rules.IsNullOrEmpty())
             return result;
+
+        // each rule's condition, built once; a rule without a filter applies to every feature
+        var conditions = featureTypeStyle.Rules.ToDictionary(r => r, r => r.Filter is null ? (Func<Feature<Point>, bool>)(_ => true) : r.Filter.ParseFilter());
+
+        // SLD 1.0: an ElseFilter rule applies to the features no other rule of the style applies to.
+        // Scale ranges are not taken into account (a feature matched by a rule hidden at this scale is
+        // still "matched").
+        var otherConditions = featureTypeStyle.Rules.Where(r => r.ElseFilter is null).Select(r => conditions[r]).ToList();
+
+        Func<Feature<Point>, bool> elseCondition = feature => !otherConditions.Any(condition => condition(feature));
 
         foreach (var rule in featureTypeStyle.Rules)
         {
@@ -73,14 +90,7 @@ public static class SldExtensions
                 symbolizer.MaxScaleDenominator = rule.MaxScaleDenominator;
                 symbolizer.MinScaleDenominator = rule.MinScaleDenominator;
 
-                if (rule.Filter is null)
-                {
-                    symbolizer.IsFilterPassed = f => true;
-                }
-                else
-                {
-                    symbolizer.IsFilterPassed = rule.Filter.ParseFilter();
-                }
+                symbolizer.IsFilterPassed = rule.ElseFilter is not null ? elseCondition : conditions[rule];
 
 
                 result.Add(symbolizer);

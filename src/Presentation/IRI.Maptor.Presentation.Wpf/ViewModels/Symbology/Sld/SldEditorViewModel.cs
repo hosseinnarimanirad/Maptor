@@ -1,13 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Threading;
 using Microsoft.Win32;
 using IRI.Maptor.Presentation.Core;
 using IRI.Maptor.Presentation.Core.Localization;
+using IRI.Maptor.Presentation.Wpf.Helpers;
 using IRI.Maptor.Core.Ogc.SLD;
+using IRI.Maptor.Core.Common.Primitives;
 
 namespace IRI.Maptor.Presentation.Wpf.ViewModels.Symbology;
 
@@ -50,6 +57,7 @@ public class SldEditorViewModel : Notifier
         {
             _layerName = value;
             RaisePropertyChanged();
+            OnDocumentChanged();
         }
     }
 
@@ -61,6 +69,7 @@ public class SldEditorViewModel : Notifier
         {
             _styleName = value;
             RaisePropertyChanged();
+            OnDocumentChanged();
         }
     }
 
@@ -72,6 +81,7 @@ public class SldEditorViewModel : Notifier
         {
             _styleTitle = value;
             RaisePropertyChanged();
+            OnDocumentChanged();
         }
     }
 
@@ -83,6 +93,7 @@ public class SldEditorViewModel : Notifier
         {
             _styleAbstract = value;
             RaisePropertyChanged();
+            OnDocumentChanged();
         }
     }
 
@@ -91,6 +102,27 @@ public class SldEditorViewModel : Notifier
     /// filter/label property pickers. Empty when the editor is opened without layer context.
     /// </summary>
     public ObservableCollection<string> FieldNames { get; } = new ObservableCollection<string>();
+
+    /// <summary>
+    /// The layer's fields with their types and domains, for generating rules from a field's values; empty when the
+    /// host gave names only (the generator is then not offered).
+    /// </summary>
+    public List<Field> Fields { get; } = new();
+
+    /// <summary>The values present in the layer with their counts; null when the host has no data at hand.</summary>
+    public Func<string, CancellationToken, Task<IReadOnlyList<SldValueCount>>>? ValuesProvider { get; set; }
+
+    /// <summary>The data model's colours of a domain's values; null takes <see cref="DefaultDomainColorsProvider"/>.</summary>
+    public Func<FieldDomain, CancellationToken, Task<IReadOnlyDictionary<string, string>?>>? DomainColorsProvider { get; set; }
+
+    /// <summary>
+    /// The application's source of domain colours (e.g. the Gas server's data-model domains), set once at start-up;
+    /// null when the application has none.
+    /// </summary>
+    public static Func<FieldDomain, CancellationToken, Task<IReadOnlyDictionary<string, string>?>>? DefaultDomainColorsProvider { get; set; }
+
+    /// <summary>Shows the rule generator modally; true when rules were generated. Wired by the hosting window.</summary>
+    public Func<SldRuleGeneratorViewModel, bool>? RequestShowRuleGenerator;
 
     private SpatialModelMode? _geometryType;
     /// <summary>Geometry type of the layer being styled; null when unknown.</summary>
@@ -102,8 +134,25 @@ public class SldEditorViewModel : Notifier
             _geometryType = value;
             RaisePropertyChanged();
             RaisePropertyChanged(nameof(CanAddRasterSymbolizer));
+            RaisePropertyChanged(nameof(CanAddPointSymbolizer));
+            RaisePropertyChanged(nameof(CanAddLineSymbolizer));
+            RaisePropertyChanged(nameof(CanAddPolygonSymbolizer));
+            RaisePropertyChanged(nameof(CanAddTextSymbolizer));
         }
     }
+
+    // The "Add" buttons offer what draws sensibly on the layer's geometry: markers on points, lines on
+    // lines, fills and outlines on polygons, labels on any vector layer. Unknown geometry offers all of
+    // them. Symbolizers already in the SLD are shown and edited whatever their kind.
+    private bool IsVectorOrUnknown => GeometryType is null or SpatialModelMode.None or SpatialModelMode.Complex;
+
+    public bool CanAddPointSymbolizer => IsVectorOrUnknown || GeometryType == SpatialModelMode.Point;
+
+    public bool CanAddLineSymbolizer => IsVectorOrUnknown || GeometryType is SpatialModelMode.Polyline or SpatialModelMode.Polygon;
+
+    public bool CanAddPolygonSymbolizer => IsVectorOrUnknown || GeometryType == SpatialModelMode.Polygon;
+
+    public bool CanAddTextSymbolizer => GeometryType != SpatialModelMode.Raster;
 
     /// <summary>
     /// Raster symbolizers have no runtime renderer for vector layers (the parser skips
@@ -115,6 +164,17 @@ public class SldEditorViewModel : Notifier
     // (UserLayers, additional NamedLayers/UserStyles/FeatureTypeStyles, constraints)
     // is carried through ToStyledLayerDescriptor() unchanged instead of being dropped.
     private StyledLayerDescriptor? _sourceSld;
+
+    // Position of the edited UserStyle in the primary NamedLayer of _sourceSld (-1: none yet). Kept as
+    // an index, not a name, so renaming the style in the style panel still saves into the same style.
+    private int _editedStyleIndex = -1;
+
+    /// <summary>
+    /// The style to edit when the SLD holds several (a layer's alternative symbologies): the layer's
+    /// active style. Null, or a name the SLD does not have, edits the default style. The other styles
+    /// round-trip unchanged. Set before <see cref="FromStyledLayerDescriptor"/>.
+    /// </summary>
+    public string? TargetStyleName { get; set; }
 
     private bool _hasPreservedContent;
     /// <summary>
@@ -142,6 +202,51 @@ public class SldEditorViewModel : Notifier
         {
             _selectedRule = value;
             RaisePropertyChanged();
+            RaisePropertyChanged(nameof(HasSelectedRule));
+        }
+    }
+
+    public bool HasSelectedRule => SelectedRule is not null;
+
+    public bool HasRules => Rules.Count > 0;
+
+    /// <summary>"Rules: 3" under the layer name in the window's header.</summary>
+    public string RulesCaption => string.Format(LocalizationManager.Instance["sldEditor_rules_count"], Rules.Count);
+
+    private bool _isStylePanelOpen;
+
+    /// <summary>The bottom panel with the style's name, title and abstract. Opening it closes the XML panel.</summary>
+    public bool IsStylePanelOpen
+    {
+        get => _isStylePanelOpen;
+        set
+        {
+            _isStylePanelOpen = value;
+            RaisePropertyChanged();
+
+            if (value && IsXmlPanelOpen)
+                IsXmlPanelOpen = false;
+        }
+    }
+
+    private bool _isXmlPanelOpen;
+
+    /// <summary>The bottom panel with the SLD as XML, kept current while open. Opening it closes the style panel.</summary>
+    public bool IsXmlPanelOpen
+    {
+        get => _isXmlPanelOpen;
+        set
+        {
+            _isXmlPanelOpen = value;
+            RaisePropertyChanged();
+
+            if (value)
+            {
+                if (IsStylePanelOpen)
+                    IsStylePanelOpen = false;
+
+                RefreshPreview();
+            }
         }
     }
 
@@ -157,7 +262,15 @@ public class SldEditorViewModel : Notifier
     }
 
     public ICommand AddRuleCommand { get; }
+
+    /// <summary>One rule per value of a field (categorized symbology), from the generator dialog.</summary>
+    public ICommand GenerateRulesCommand { get; }
+    public ICommand DuplicateRuleCommand { get; }
     public ICommand RemoveRuleCommand { get; }
+    public ICommand CopyXmlCommand { get; }
+
+    /// <summary>Selects the rule passed as the parameter (the preview's legend rows).</summary>
+    public ICommand SelectRuleCommand { get; }
     public ICommand MoveRuleUpCommand { get; }
     public ICommand MoveRuleDownCommand { get; }
     public ICommand ImportSldCommand { get; }
@@ -171,6 +284,10 @@ public class SldEditorViewModel : Notifier
     public SldEditorViewModel()
     {
         AddRuleCommand = new RelayCommand(_ => AddRule());
+        GenerateRulesCommand = new RelayCommand(_ => GenerateRules(), _ => Fields.Any(SldRuleGeneratorViewModel.IsCategorizable) && RequestShowRuleGenerator is not null);
+        DuplicateRuleCommand = new RelayCommand(_ => DuplicateRule(), _ => SelectedRule != null);
+        CopyXmlCommand = new RelayCommand(_ => CopyXml());
+        SelectRuleCommand = new RelayCommand(p => { if (p is RuleViewModel rule) SelectedRule = rule; });
         RemoveRuleCommand = new RelayCommand(_ => RemoveRule(), _ => SelectedRule != null);
         MoveRuleUpCommand = new RelayCommand(_ => MoveRuleUp(), _ => SelectedRule != null && Rules.IndexOf(SelectedRule) > 0);
         MoveRuleDownCommand = new RelayCommand(_ => MoveRuleDown(), _ => SelectedRule != null && Rules.IndexOf(SelectedRule) < Rules.Count - 1);
@@ -186,22 +303,79 @@ public class SldEditorViewModel : Notifier
         CancelCommand = new RelayCommand(_ => RequestCloseAction?.Invoke());
         ResetToDefaultCommand = new RelayCommand(_ => RequestResetToDefaultAction?.Invoke());
 
+        Rules.CollectionChanged += OnRulesCollectionChanged;
+
         // Initialize with default values
         LayerName = "NewLayer";
         StyleName = "default";
         StyleTitle = "Default Style";
     }
 
+    #region Change tracking (XML panel)
+
+    private const int XmlRefreshDebounceMilliseconds = 400;
+
+    private readonly System.Collections.Generic.List<RuleViewModel> _observedRules = new();
+    private DispatcherTimer? _xmlRefreshTimer;
+
+    private void OnRulesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        // a Reset (Rules.Clear on import) carries no OldItems, so track subscriptions ourselves
+        foreach (var rule in _observedRules)
+            rule.Changed -= OnRuleChanged;
+
+        _observedRules.Clear();
+
+        foreach (var rule in Rules)
+        {
+            rule.Changed += OnRuleChanged;
+            _observedRules.Add(rule);
+        }
+
+        RaisePropertyChanged(nameof(HasRules));
+        RaisePropertyChanged(nameof(RulesCaption));
+        OnDocumentChanged();
+    }
+
+    private void OnRuleChanged(object? sender, EventArgs e) => OnDocumentChanged();
+
+    // Refreshing the XML on every keystroke would serialize the whole document each time; a short
+    // debounce keeps the panel current without that cost, and nothing runs while the panel is closed.
+    private void OnDocumentChanged()
+    {
+        if (!IsXmlPanelOpen || Application.Current is null)
+            return;
+
+        if (_xmlRefreshTimer is null)
+        {
+            _xmlRefreshTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(XmlRefreshDebounceMilliseconds) };
+            _xmlRefreshTimer.Tick += (_, _) =>
+            {
+                _xmlRefreshTimer.Stop();
+                RefreshPreview();
+            };
+        }
+
+        _xmlRefreshTimer.Stop();
+        _xmlRefreshTimer.Start();
+    }
+
+    #endregion
+
     /// <summary>
     /// Creates an editor seeded with a layer's current SLD and context. The layer name
     /// falls back to <paramref name="layerName"/> when the SLD carries none, and the
     /// first rule is pre-selected so the editor never opens on a disabled detail pane.
     /// </summary>
-    public static SldEditorViewModel Create(string? layerName, StyledLayerDescriptor? sld, IEnumerable<string>? fieldNames = null, SpatialModelMode? geometryType = null)
+    public static SldEditorViewModel Create(string? layerName, StyledLayerDescriptor? sld, IEnumerable<string>? fieldNames = null, SpatialModelMode? geometryType = null, IEnumerable<Field>? fields = null, string? styleName = null)
     {
-        var result = new SldEditorViewModel() { GeometryType = geometryType };
+        var result = new SldEditorViewModel() { GeometryType = geometryType, TargetStyleName = styleName };
 
-        foreach (var fieldName in fieldNames ?? Enumerable.Empty<string>())
+        var fieldList = fields?.ToList() ?? new List<Field>();
+
+        result.Fields.AddRange(fieldList);
+
+        foreach (var fieldName in fieldNames ?? fieldList.Select(f => f.Name).Where(n => !string.IsNullOrWhiteSpace(n)))
         {
             result.FieldNames.Add(fieldName);
         }
@@ -229,10 +403,83 @@ public class SldEditorViewModel : Notifier
         var rule = new RuleViewModel
         {
             Name = $"Rule{Rules.Count + 1}",
-            Title = $"Rule {Rules.Count + 1}"
+            Title = string.Format(LocalizationManager.Instance["sldEditor_rule_newTitle"], Rules.Count + 1)
         };
         Rules.Add(rule);
         SelectedRule = rule;
+    }
+
+    private void GenerateRules()
+    {
+        var geometry = SldRuleGeneratorViewModel.ToGeometryKind(GeometryType);
+
+        var generator = new SldRuleGeneratorViewModel(Fields, geometry, GetTemplate(geometry), ValuesProvider, DomainColorsProvider ?? DefaultDomainColorsProvider);
+
+        if (RequestShowRuleGenerator?.Invoke(generator) != true || generator.Result is null)
+            return;
+
+        if (generator.ReplaceExisting)
+            Rules.Clear();
+
+        RuleViewModel? first = null;
+
+        foreach (var rule in generator.Result)
+        {
+            // -1: the last FeatureTypeStyle (see ToStyledLayerDescriptor)
+            var ruleVm = new RuleViewModel { SourceFeatureTypeStyleIndex = -1 };
+            ruleVm.FromRule(rule);
+            Rules.Add(ruleVm);
+            first ??= ruleVm;
+        }
+
+        SelectedRule = first;
+        RefreshPreview();
+    }
+
+    // the style to repeat per value: the selected rule's symbolizer of the layer's kind, else any rule's
+    private Symbolizer? GetTemplate(SldGeometryKind? geometry)
+    {
+        bool Fits(Symbolizer s) => geometry switch
+        {
+            SldGeometryKind.Point => s is PointSymbolizer,
+            SldGeometryKind.Line => s is LineSymbolizer,
+            SldGeometryKind.Polygon => s is PolygonSymbolizer,
+            _ => s is PointSymbolizer or LineSymbolizer or PolygonSymbolizer,
+        };
+
+        var candidates = (SelectedRule is null ? Enumerable.Empty<RuleViewModel>() : new[] { SelectedRule }).Concat(Rules);
+
+        return candidates.SelectMany(r => r.ToRule().Symbolizers ?? new List<Symbolizer>()).FirstOrDefault(Fits);
+    }
+
+    private void DuplicateRule()
+    {
+        if (SelectedRule is null)
+            return;
+
+        var copy = SelectedRule.Clone();
+        var suffix = LocalizationManager.Instance["sldEditor_rule_copySuffix"];
+
+        copy.Name = string.IsNullOrWhiteSpace(SelectedRule.Name) ? null : $"{SelectedRule.Name}_copy";
+        copy.Title = $"{SelectedRule.DisplayTitle} ({suffix})";
+
+        Rules.Insert(Rules.IndexOf(SelectedRule) + 1, copy);
+        SelectedRule = copy;
+    }
+
+    private void CopyXml()
+    {
+        RefreshPreview();
+
+        try
+        {
+            Clipboard.SetText(XmlPreview ?? string.Empty);
+        }
+        catch (Exception ex)
+        {
+            // the clipboard can be held open by another process
+            RequestShowError?.Invoke(ex.Message, LocalizationManager.Instance["sldEditor_xml_copy"]);
+        }
     }
 
     private void RemoveRule()
@@ -288,7 +535,10 @@ public class SldEditorViewModel : Notifier
         }
         namedLayer.Name = LayerName;
 
-        var userStyle = namedLayer.UserStyles.FirstOrDefault();
+        // the style loaded for editing; the document's other styles stay as they were
+        var userStyle = _editedStyleIndex >= 0 && _editedStyleIndex < namedLayer.UserStyles.Count
+            ? namedLayer.UserStyles[_editedStyleIndex]
+            : namedLayer.UserStyles.FirstOrDefault();
         if (userStyle is null)
         {
             userStyle = new UserStyle { IsDefault = true };
@@ -338,6 +588,8 @@ public class SldEditorViewModel : Notifier
 
         _sourceSld = CloneSld(sld);
 
+        _editedStyleIndex = -1;
+
         HasPreservedContent = CountPreservedParts(sld) > 0;
 
         Rules.Clear();
@@ -348,9 +600,11 @@ public class SldEditorViewModel : Notifier
 
         LayerName = namedLayer.Name;
 
-        var userStyle = namedLayer.UserStyles.FirstOrDefault();
-        if (userStyle is null)
+        _editedStyleIndex = IRI.Maptor.Extensions.SldStyleExtensions.FindStyleIndex(namedLayer.UserStyles, TargetStyleName);
+        if (_editedStyleIndex < 0)
             return;
+
+        var userStyle = namedLayer.UserStyles[_editedStyleIndex];
 
         StyleName = userStyle.Name;
         StyleTitle = userStyle.Title;
@@ -376,7 +630,7 @@ public class SldEditorViewModel : Notifier
         => sld is null ? null : SldHelper.Parse(SldHelper.Serialize(sld, indented: false));
 
     // Parts of the document the editor does not surface: everything beyond the first
-    // NamedLayer → first UserStyle (whose FeatureTypeStyles are ALL editable).
+    // NamedLayer → the edited UserStyle (whose FeatureTypeStyles are ALL editable).
     private static int CountPreservedParts(StyledLayerDescriptor sld)
     {
         var count = sld.UserLayers?.Count ?? 0;

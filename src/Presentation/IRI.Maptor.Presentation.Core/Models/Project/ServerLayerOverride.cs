@@ -17,4 +17,10 @@ public class ServerLayerOverride
     /// Optional symbology override as SLD XML; null keeps the server-provided symbology.
     /// </summary>
     public string? SldXml { get; set; }
+
+    /// <summary>
+    /// The SLD style the layer was drawn with (one of the named styles of its SLD); null for the default.
+    /// Restored when the SLD still has it, else the default style is drawn.
+    /// </summary>
+    public string? ActiveStyleName { get; set; }
 }

@@ -23,4 +23,10 @@ public class LayerStateEntry
     /// Symbology as SLD XML, when the layer supports it; null for raster layers.
     /// </summary>
     public string? SldXml { get; set; }
+
+    /// <summary>
+    /// The SLD style the layer was drawn with (one of the named styles of its SLD); null for the default.
+    /// Restored when the SLD still has it, else the default style is drawn.
+    /// </summary>
+    public string? ActiveStyleName { get; set; }
 }
