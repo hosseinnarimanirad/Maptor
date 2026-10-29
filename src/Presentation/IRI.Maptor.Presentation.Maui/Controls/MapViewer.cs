@@ -33,13 +33,17 @@ public class MapViewer : ContentView
     // Guards property write-back from re-triggering the bindable-property handlers.
     private bool _suppress;
 
-    // Gesture scratch state.
-    private double _panStartCenterX;
-    private double _panStartCenterY;
-    private int _pinchStartZoom;
-    private double _pinchLastScale = 1;
-    private double _pinchOriginX = 0.5;
-    private double _pinchOriginY = 0.5;
+    // Gesture scratch state. Pan applies the change since the last update (not the total since
+    // the start), so a pinch in the middle of a pan cannot make the map jump.
+    private double _panLastTotalX;
+    private double _panLastTotalY;
+    private bool _isPinching;
+
+    // A double tap also delivers single taps; a single tap is reported only after this delay
+    // has passed without a double tap.
+    private const int DoubleTapWaitMilliseconds = 260;
+    private CancellationTokenSource? _singleTapDelay;
+    private DateTime _lastDoubleTapUtc;
 
     // Extent requested before the control had a size; applied on first layout.
     private BoundingBox? _pendingExtent;
@@ -62,6 +66,9 @@ public class MapViewer : ContentView
         _drawable.Layers = Layers;
         Layers.CollectionChanged += OnLayersCollectionChanged;
 
+        _drawable.Overlays = Overlays;
+        Overlays.CollectionChanged += OnOverlaysCollectionChanged;
+
         AddGestures();
     }
 
@@ -75,6 +82,7 @@ public class MapViewer : ContentView
         }
 
         RefreshDrawable();
+        ViewportChanged?.Invoke(this, EventArgs.Empty);
     }
 
     #region Bindable properties
@@ -126,6 +134,7 @@ public class MapViewer : ContentView
 
         map.UpdateCenterFromLatLon();
         map.RefreshDrawable();
+        map.ViewportChanged?.Invoke(map, EventArgs.Empty);
     }
 
     private static void OnZoomChanged(BindableObject bindable, object oldValue, object newValue)
@@ -139,6 +148,7 @@ public class MapViewer : ContentView
 
         map._resolution = MapViewerMath.ZoomToResolution(map.ZoomLevel);
         map.RefreshDrawable();
+        map.ViewportChanged?.Invoke(map, EventArgs.Empty);
     }
 
     private static void OnBaseMapChanged(BindableObject bindable, object oldValue, object newValue)
@@ -232,7 +242,7 @@ public class MapViewer : ContentView
         _drawable.Layers = Layers;
 
         // Auto-zoom to a freshly added layer so the user sees the data.
-        if (e.Action == NotifyCollectionChangedAction.Add)
+        if (e.Action == NotifyCollectionChangedAction.Add && ZoomToAddedLayers)
         {
             var added = e.NewItems?.OfType<MapLayer>().LastOrDefault();
 
@@ -250,6 +260,102 @@ public class MapViewer : ContentView
     {
         UpdateDynamicLayers();
         InvalidateCanvas();
+    }
+
+    /// <summary>
+    /// When true (the default), adding a layer that has an extent zooms the map to it. Apps that
+    /// add their layers empty and fill them per view (server layers) turn it off.
+    /// </summary>
+    public bool ZoomToAddedLayers { get; set; } = true;
+
+    /// <summary>
+    /// Sketches and highlights drawn above every layer (measure lines, the identified feature, ...).
+    /// Not hit-tested and not listed in the legend.
+    /// </summary>
+    public ObservableCollection<MapGraphic> Overlays { get; } = new();
+
+    // The overlays currently subscribed to. Clear() reports no removed items, so the subscriptions
+    // are rebuilt from this list rather than from the event's item lists.
+    private readonly List<MapGraphic> _subscribedOverlays = new();
+
+    private void OnOverlaysCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        foreach (var graphic in _subscribedOverlays)
+        {
+            graphic.PropertyChanged -= OnOverlayPropertyChanged;
+        }
+
+        _subscribedOverlays.Clear();
+        _subscribedOverlays.AddRange(Overlays);
+
+        foreach (var graphic in _subscribedOverlays)
+        {
+            graphic.PropertyChanged += OnOverlayPropertyChanged;
+        }
+
+        InvalidateCanvas();
+    }
+
+    private void OnOverlayPropertyChanged(object? sender, PropertyChangedEventArgs e) => InvalidateCanvas();
+
+    #endregion
+
+    #region View state
+
+    /// <summary>The current zoom level with its fraction (e.g. 14.6 after a pinch). <see cref="ZoomLevel"/> is this rounded.</summary>
+    public double Zoom => MapViewerMath.ResolutionToExactZoom(_resolution);
+
+    /// <summary>WebMercator units per device-independent pixel.</summary>
+    public double Resolution => _resolution;
+
+    /// <summary>The visible area in WebMercator; null before the control has a size.</summary>
+    public BoundingBox? ViewExtent
+    {
+        get
+        {
+            double width = _canvas.Width;
+            double height = _canvas.Height;
+
+            if (width <= 0 || height <= 0)
+            {
+                return null;
+            }
+
+            double halfWidthWorld = width / 2.0 * _resolution;
+            double halfHeightWorld = height / 2.0 * _resolution;
+
+            return new BoundingBox(
+                _centerX - halfWidthWorld, _centerY - halfHeightWorld,
+                _centerX + halfWidthWorld, _centerY + halfHeightWorld);
+        }
+    }
+
+    /// <summary>
+    /// Raised when a pan, pinch, zoom or programmatic move has finished (not on every frame of a
+    /// gesture), and when the control is resized. The place to fetch data for <see cref="ViewExtent"/>.
+    /// </summary>
+    public event EventHandler? ViewportChanged;
+
+    /// <summary>WebMercator location under a point of the control (device-independent pixels).</summary>
+    public StaPoint ScreenToMap(Microsoft.Maui.Graphics.Point screen)
+        => new(_centerX + (screen.X - _canvas.Width / 2.0) * _resolution,
+               _centerY - (screen.Y - _canvas.Height / 2.0) * _resolution);
+
+    /// <summary>Point of the control (device-independent pixels) where a WebMercator location is drawn.</summary>
+    public Microsoft.Maui.Graphics.Point MapToScreen(StaPoint webMercator)
+        => new(_canvas.Width / 2.0 + (webMercator.X - _centerX) / _resolution,
+               _canvas.Height / 2.0 - (webMercator.Y - _centerY) / _resolution);
+
+    /// <summary>
+    /// The features drawn under a point of the control, top layer first and nearest first within a
+    /// layer. Hidden layers and layers outside their zoom range are skipped.
+    /// </summary>
+    /// <param name="screen">Point of the control, device-independent pixels (e.g. <see cref="MapTappedEventArgs.Screen"/>).</param>
+    /// <param name="tolerancePixels">How far from a line or point symbol a touch still counts; a fingertip needs about 12.</param>
+    public IReadOnlyList<MapHitResult> HitTest(Microsoft.Maui.Graphics.Point screen, double tolerancePixels = 12)
+    {
+        var location = ScreenToMap(screen);
+        return MapHitTester.HitTest(Layers, location.X, location.Y, _resolution, Zoom, tolerancePixels);
     }
 
     #endregion
@@ -342,6 +448,8 @@ public class MapViewer : ContentView
         Latitude = geodetic.Y;
         ZoomLevel = MapViewerMath.ResolutionToZoom(_resolution);
         _suppress = false;
+
+        ViewportChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private void UpdateDrawableState()
@@ -436,8 +544,12 @@ public class MapViewer : ContentView
 
     #endregion
 
-    /// <summary>Raised when the map is single-tapped (e.g. to dismiss overlays).</summary>
-    public event EventHandler? MapTapped;
+    /// <summary>
+    /// Raised when the map is single-tapped (e.g. to identify, or to dismiss overlays), with the
+    /// tapped location. Comes about a quarter of a second after the tap, and not at all when the
+    /// tap turns out to be the first of a double tap (which zooms in).
+    /// </summary>
+    public event EventHandler<MapTappedEventArgs>? MapTapped;
 
     private void AddGestures()
     {
@@ -458,91 +570,110 @@ public class MapViewer : ContentView
         _canvas.GestureRecognizers.Add(singleTap);
     }
 
-    private void OnSingleTapped(object? sender, TappedEventArgs e) => MapTapped?.Invoke(this, EventArgs.Empty);
+    private async void OnSingleTapped(object? sender, TappedEventArgs e)
+    {
+        // The second tap of a double tap may arrive after the double tap itself.
+        if ((DateTime.UtcNow - _lastDoubleTapUtc).TotalMilliseconds < DoubleTapWaitMilliseconds)
+        {
+            return;
+        }
+
+        var position = e.GetPosition(_canvas);
+
+        _singleTapDelay?.Cancel();
+        var delay = _singleTapDelay = new CancellationTokenSource();
+
+        try
+        {
+            await Task.Delay(DoubleTapWaitMilliseconds, delay.Token);
+        }
+        catch (TaskCanceledException)
+        {
+            return;
+        }
+
+        if (MapTapped is not { } handler)
+        {
+            return;
+        }
+
+        var screen = position ?? new Microsoft.Maui.Graphics.Point(_canvas.Width / 2.0, _canvas.Height / 2.0);
+        var location = ScreenToMap(screen);
+        var geodetic = MapProjects.WebMercatorToGeodeticWgs84(location);
+
+        handler(this, new MapTappedEventArgs(screen, location, geodetic.Y, geodetic.X, position.HasValue));
+    }
 
     private void OnPanUpdated(object? sender, PanUpdatedEventArgs e)
     {
         switch (e.StatusType)
         {
             case GestureStatus.Started:
-                _panStartCenterX = _centerX;
-                _panStartCenterY = _centerY;
+                _panLastTotalX = 0;
+                _panLastTotalY = 0;
                 break;
 
             case GestureStatus.Running:
-                _centerX = _panStartCenterX - e.TotalX * _resolution;
-                _centerY = _panStartCenterY + e.TotalY * _resolution;
+                double dx = e.TotalX - _panLastTotalX;
+                double dy = e.TotalY - _panLastTotalY;
+                _panLastTotalX = e.TotalX;
+                _panLastTotalY = e.TotalY;
+
+                // Two fingers also report a pan; while pinching, the pinch moves the map.
+                if (_isPinching)
+                {
+                    break;
+                }
+
+                _centerX -= dx * _resolution;
+                _centerY += dy * _resolution;
                 RefreshDrawable();
                 break;
 
             case GestureStatus.Completed:
             case GestureStatus.Canceled:
-                WriteBackState();
-                RefreshDrawable();
+                if (!_isPinching)
+                {
+                    WriteBackState();
+                    RefreshDrawable();
+                }
+
                 break;
         }
     }
-
-    // A pinch must change the apparent size by at least this fraction to count as a
-    // zoom in/out; below it the gesture is treated as noise and the level is unchanged.
-    private const double PinchThreshold = 0.15;
 
     private void OnPinchUpdated(object? sender, PinchGestureUpdatedEventArgs e)
     {
         switch (e.Status)
         {
             case GestureStatus.Started:
-                _pinchStartZoom = MapViewerMath.ResolutionToZoom(_resolution);
-                _pinchLastScale = 1;
-                _pinchOriginX = e.ScaleOrigin.X;
-                _pinchOriginY = e.ScaleOrigin.Y;
+                _isPinching = true;
                 break;
 
             case GestureStatus.Running:
-                // Track the gesture but defer the actual zoom to a single discrete step on
-                // completion, so one pinch moves exactly one zoom level.
+                // MAUI reports the scale change since the previous update; apply it at once,
+                // keeping the point between the fingers fixed, so the map follows the fingers.
                 if (e.Scale > 0)
                 {
-                    _pinchLastScale = e.Scale;
-                    _pinchOriginX = e.ScaleOrigin.X;
-                    _pinchOriginY = e.ScaleOrigin.Y;
+                    ZoomAboutNormalizedPoint(e.ScaleOrigin.X, e.ScaleOrigin.Y, _resolution / e.Scale);
                 }
 
                 break;
 
             case GestureStatus.Completed:
             case GestureStatus.Canceled:
-                ApplyPinchStep();
+                _isPinching = false;
+                WriteBackState();
+                RefreshDrawable();
                 break;
         }
     }
 
-    private void ApplyPinchStep()
-    {
-        var targetZoom = _pinchStartZoom;
-
-        if (_pinchLastScale > 1 + PinchThreshold)
-        {
-            targetZoom = _pinchStartZoom + 1; // fingers spread → zoom in
-        }
-        else if (_pinchLastScale < 1 - PinchThreshold)
-        {
-            targetZoom = _pinchStartZoom - 1; // fingers pinch → zoom out
-        }
-
-        targetZoom = Math.Clamp(targetZoom, MapViewerMath.MinZoom, MapViewerMath.MaxZoom);
-
-        if (targetZoom != _pinchStartZoom)
-        {
-            ZoomAboutNormalizedPoint(_pinchOriginX, _pinchOriginY, MapViewerMath.ZoomToResolution(targetZoom));
-        }
-
-        WriteBackState();
-        RefreshDrawable();
-    }
-
     private void OnDoubleTapped(object? sender, TappedEventArgs e)
     {
+        _lastDoubleTapUtc = DateTime.UtcNow;
+        _singleTapDelay?.Cancel();
+
         var width = _canvas.Width;
         var height = _canvas.Height;
         var position = e.GetPosition(_canvas);

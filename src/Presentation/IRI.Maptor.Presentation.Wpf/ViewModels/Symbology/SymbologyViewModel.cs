@@ -17,6 +17,44 @@ public class SymbologyViewModel : Notifier
         }
     }
 
+    private string? _layerName;
+
+    /// <summary>The layer being styled, shown in the dialog's header.</summary>
+    public string? LayerName
+    {
+        get { return _layerName; }
+        set
+        {
+            _layerName = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    private SpatialModelMode? _geometryType;
+
+    /// <summary>
+    /// The layer's geometry: picks the preview's shape and hides the fill for line layers, which have
+    /// none. Null (unknown) shows everything.
+    /// </summary>
+    public SpatialModelMode? GeometryType
+    {
+        get { return _geometryType; }
+        set
+        {
+            _geometryType = value;
+            RaisePropertyChanged();
+            RaisePropertyChanged(nameof(HasFill));
+            RaisePropertyChanged(nameof(IsLineLayer));
+            RaisePropertyChanged(nameof(IsPointLayer));
+        }
+    }
+
+    public bool HasFill => GeometryType != SpatialModelMode.Polyline;
+
+    public bool IsLineLayer => GeometryType == SpatialModelMode.Polyline;
+
+    public bool IsPointLayer => GeometryType == SpatialModelMode.Point;
+
     public Action RequestCloseAction;
 
     public Action<SymbologyViewModel> RequestApplyAction;
@@ -73,6 +111,19 @@ public class SymbologyViewModel : Notifier
         set
         {
             _showResetOption = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    private bool _isUserModified;
+
+    /// <summary>The user already changed this layer's symbology on this computer (the dialog says so).</summary>
+    public bool IsUserModified
+    {
+        get { return _isUserModified; }
+        set
+        {
+            _isUserModified = value;
             RaisePropertyChanged();
         }
     }

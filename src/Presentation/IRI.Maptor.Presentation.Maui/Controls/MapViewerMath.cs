@@ -31,6 +31,17 @@ internal static class MapViewerMath
         return Math.Clamp((int)Math.Round(zoom), MinZoom, MaxZoom);
     }
 
+    /// <summary>The fractional zoom level of a resolution (e.g. 14.6 in the middle of a pinch).</summary>
+    public static double ResolutionToExactZoom(double resolution)
+    {
+        if (resolution <= 0)
+        {
+            return MaxZoom;
+        }
+
+        return Math.Log(EarthCircumference / (TileSize * resolution), 2);
+    }
+
     public static double ClampResolution(double resolution)
     {
         // Smaller resolution == more zoomed in (higher zoom level).

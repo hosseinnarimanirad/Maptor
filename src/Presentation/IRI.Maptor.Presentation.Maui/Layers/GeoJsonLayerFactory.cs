@@ -25,6 +25,7 @@ public static class GeoJsonLayerFactory
         var featureSet = GeoJsonFeatureSet.Parse(geoJsonText);
 
         var parts = new List<RenderPart>();
+        var features = new List<MapFeature>();
 
         double xMin = double.MaxValue, yMin = double.MaxValue;
         double xMax = double.MinValue, yMax = double.MinValue;
@@ -41,6 +42,13 @@ public static class GeoJsonLayerFactory
         {
             foreach (var feature in featureSet.Features)
             {
+                var mapFeature = new MapFeature(
+                    int.TryParse(feature.Id, out var id) ? id : features.Count,
+                    Guid.Empty,
+                    (IReadOnlyDictionary<string, object?>?)(object?)feature.Properties);
+
+                features.Add(mapFeature);
+
                 if (feature.Geometry is null)
                 {
                     continue;
@@ -58,7 +66,7 @@ public static class GeoJsonLayerFactory
 
                 if (geometry != null)
                 {
-                    RenderPartBuilder.Build(geometry, ProjectToWebMercator, parts, Track);
+                    RenderPartBuilder.Build(geometry, ProjectToWebMercator, parts, Track, mapFeature);
                 }
             }
         }
@@ -67,13 +75,17 @@ public static class GeoJsonLayerFactory
             ? new BoundingBox(xMin, yMin, xMax, yMax)
             : null;
 
-        return new MapLayer(name, color)
+        var layer = new MapLayer(name, color)
         {
             Parts = parts,
             Extent = extent,
             Description = DescribeParts(parts, LayerSource.GeoJson),
             SourceGeoJson = geoJsonText,
         };
+
+        layer.SetFeaturesSilently(features);
+
+        return layer;
     }
 
     /// <summary>

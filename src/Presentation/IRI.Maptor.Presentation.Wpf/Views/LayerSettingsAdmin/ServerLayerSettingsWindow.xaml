@@ -1,0 +1,49 @@
+<mahApp:MetroWindow x:Class="IRI.Maptor.Presentation.Wpf.Controls.LayerSettingsAdmin.ServerLayerSettingsWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
+    xmlns:dialogs="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls.Dialogs"
+    xmlns:admin="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls.LayerSettingsAdmin"
+
+    Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Localized}"
+    Title="{Binding [serverLayerSettings_title], Source={StaticResource Localization}}"
+    Width="1040" Height="680" MinWidth="760" MinHeight="480"
+    SizeToContent="Manual" ResizeMode="CanResizeWithGrip"
+    ShowInTaskbar="False" ShowMinButton="False" ShowMaxRestoreButton="True"
+    GlowBrush="{DynamicResource MahApps.Brushes.Highlight}"
+    WindowStartupLocation="CenterOwner">
+
+    <!--Modal host for ServerLayerSettingsView. Not on MetroWindow.Dialog: that style pins MaxWidth 550 and
+        SizeToContent, which is wrong for a resizable master–detail editor.-->
+
+    <mahApp:MetroWindow.Resources>
+        <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+    </mahApp:MetroWindow.Resources>
+
+    <mahApp:MetroWindow.InputBindings>
+        <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding SaveCommand}"/>
+    </mahApp:MetroWindow.InputBindings>
+
+    <Grid Margin="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <admin:ServerLayerSettingsView x:Name="editor" Grid.Row="0"/>
+
+        <!--Close is IsCancel (Esc too); the window asks before it drops unsaved changes-->
+        <dialogs:DialogFooterView Grid.Row="1"
+                                  StatusText="{Binding StatusText}"
+                                  ShowTertiary="True"
+                                  TertiaryCommand="{Binding RevertCommand}"
+                                  TertiaryText="{Binding [serverLayerSettings_revert], Source={StaticResource Localization}}"
+                                  TertiaryIconKind="Undo"
+                                  SecondaryText="{Binding [dialog_common_close], Source={StaticResource Localization}}"
+                                  SecondaryIconKind="Close"
+                                  PrimaryCommand="{Binding SaveCommand}"
+                                  PrimaryText="{Binding [dialog_common_save], Source={StaticResource Localization}}"
+                                  PrimaryIconKind="ContentSave"/>
+    </Grid>
+</mahApp:MetroWindow>

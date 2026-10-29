@@ -3,11 +3,13 @@
 [![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Infrastructure.EfCore?logo=nuget)](https://www.nuget.org/packages/IRI.Maptor.Infrastructure.EfCore/)
 [![Target](https://img.shields.io/badge/net8.0-512BD4)](https://dotnet.microsoft.com/download/dotnet/8.0)
 
-EF Core persistence support for materializing SQL Server spatial columns directly into
-IRI.Maptor `Geometry<Point>` — a drop-in replacement for `UseNetTopologySuite()` that removes the
-NetTopologySuite and Microsoft.SqlServer.Types dependencies from applications. Geometry is
-read/written using the SQL Server native binary (MS-SSCLRT) format via `IRI.Maptor.Core.Spatial`'s
-`SqlServerSpatialNativeBinary` serializer, so no NTS object graph or WKB round-trip is involved.
+Provider-neutral EF Core support for IRI.Maptor `Geometry<Point>` properties. This package holds what the database
+provider plugins share. To use it, reference the plugin for your database, which brings this package in:
+
+| Database | Package | Plugin call |
+|---|---|---|
+| SQL Server | [IRI.Maptor.Infrastructure.EfCore.SqlServer](../IRI.Maptor.Infrastructure.EfCore.SqlServer/README.md) | `UseSqlServer(cs, x => x.UseMaptor())` |
+| PostgreSQL / PostGIS | [IRI.Maptor.Infrastructure.EfCore.PostgreSql](../IRI.Maptor.Infrastructure.EfCore.PostgreSql/README.md) | `UseNpgsql(cs, x => x.UseMaptor())` |
 
 ## Installation
 
@@ -17,54 +19,51 @@ dotnet add package IRI.Maptor.Infrastructure.EfCore
 
 ## Features
 
-- Provider plugin for the SQL Server EF Core provider: `UseMaptorGeometry()` replaces `UseNetTopologySuite()`
-- Reads/writes `geometry` and `geography` columns (points, lines, polygons, multi-* and geometry collections; 2D)
-- `SqlServerMaptorGeometryTypeMapping` — the `RelationalTypeMapping` for `Geometry<Point>`
-- `SqlServerSpatialPassThroughTypeMapping` — pass-through mapping for spatial columns in models compiled
-  from migration snapshots/designers (`SqlBytes` provider-typed, or legacy NetTopologySuite `Geometry`),
-  so `dotnet ef migrations add`/`remove` keep working after switching from `UseNetTopologySuite()`
-- `SqlServerMaptorGeometryTypeMappingSourcePlugin` / `SqlServerMaptorGeometryOptionsExtension` — provider wiring
-- `MaptorGeometryValueComparer` — reusable change-tracking comparer (SRID + WKB)
-- `ConfigureMaptorGeometry()` convention and per-property `IsGeography()` / `IsGeometry()` configuration
+- `ConfigureMaptorGeometry()` — a convention that maps every `Geometry<Point>` property to a `geography` (default) or
+  `geometry` column
+- `IsGeography()` / `IsGeometry()` — per-property column-type configuration
+- `MaptorGeometryValueComparer` — a reusable change-tracking comparer (SRID + WKB)
+- `Querying.FeatureQueryExecutor` — runs a `FeatureQueryDto` (Core.Spatial: bounding box, filters, sort,
+  page or extent mode, count) on any entity set, on SQL Server or PostgreSQL. The spatial condition is raw SQL
+  per provider (`STIntersects` / `ST_Intersects`, every mapped column selected by name so PostgreSQL's `xmin`
+  comes along); filters, sort and paging are composed LINQ. Field names must be scalar properties of the
+  entity, values become SQL parameters, and an invalid query throws `FeatureQueryException` (Core.Spatial).
+  Limits (`FeatureQueryLimits`: page size 1,000, extent cap 100,000, In values 1,000) bind from `LayerQuery`.
+  Used by the Gas and Barg `LayerQuery` endpoints for layers in Live mode.
+- `Importing.ImportModelBuilder` (2026-10-23) — an app's import model (`Core.Spatial/Importing/ImportModelDto`: tables,
+  columns, types, required, defaults, domains, column roles) from its EF model and entity attributes, for the
+  `LayerSetting/Admin/ImportModel` endpoint of Gas and Saba and the import tool. See
+  `docs/future-improvements/layer-data-import.md`.
+- `Querying.FeatureStatisticsExecutor` (2026-10-23) — whole-layer statistics computed by the database for the
+  Statistics tab of a Live layer: one attribute (counts, values with their counts up to `MaxDistinctValues`, numeric
+  min/max/sum/mean/exact median/standard deviation with histogram, date range), features grouped by an attribute
+  (count, total of a numeric field, geodesic length/area per group via `STLength`/`STArea` or `ST_Length`/`ST_Area`
+  on geography) and the geometries (empty, unmeasured, per-feature measure summary). Raw SQL per provider with
+  identifiers from the EF model only; DTOs in Core.Spatial (`LayerStatisticsDto.cs`); histogram bins from
+  `Core.Spatial.Analysis.HistogramLayout`, shared with the client. Tested against LocalDB and PostGIS
+  (`tests/.../Querying/FeatureStatisticsExecutorTest.cs`) by comparing with the client's in-memory calculators.
+
+SQL Server and PostGIS both call their spatial types `geometry` and `geography`, so a `DbContext` configured with
+these helpers works unchanged with either provider plugin.
 
 ## Usage
 
-Enable the provider plugin where you configure the context (replaces `x.UseNetTopologySuite()`):
-
 ```csharp
-options.UseSqlServer(connectionString, x => x.UseMaptorGeometry());
-```
+using IRI.Maptor.Infrastructure.EfCore.Extensions;
 
-Declare geometry properties on your entities using `Geometry<Point>`:
-
-```csharp
-using IRI.Maptor.Core.Spatial.Primitives;
-using IRI.Maptor.Core.Common.Primitives;
-
-public Geometry<Point> SHAPE { get; set; }
-```
-
-Choose the column type — either set a default for all geometry properties in
-`ConfigureConventions`:
-
-```csharp
 protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     => configurationBuilder.ConfigureMaptorGeometry();          // maps Geometry<Point> -> geography
+
+protected override void OnModelCreating(ModelBuilder modelBuilder)
+    => modelBuilder.Entity<Parcel>().Property(e => e.LocalShape).IsGeometry();
 ```
 
-or per property in `OnModelCreating`:
+## Upgrading from 3.0
 
-```csharp
-entity.Property(e => e.SHAPE).IsGeography();   // or .IsGeometry()
-```
-
-If no column type is configured, `Geometry<Point>` defaults to `geography`.
-
-## Limitations
-
-- Z/M columns are rejected with a clear error — store 2D data.
-- Server-side spatial operators are expected via raw SQL (`FromSql` / `FromSqlRaw`, e.g.
-  `SHAPE.STIntersects(...)`); LINQ spatial method translation is intentionally not provided.
+Before the split, the SQL Server plugin (`UseMaptor()` and its type mappings) shipped in this package. It has moved to
+`IRI.Maptor.Infrastructure.EfCore.SqlServer`. Reference that package and change
+`using IRI.Maptor.Infrastructure.EfCore.Extensions;` to `using IRI.Maptor.Infrastructure.EfCore.SqlServer.Extensions;`
+wherever `UseMaptor()` is called.
 
 ---
 [NuGet package](https://www.nuget.org/packages/IRI.Maptor.Infrastructure.EfCore/) ·

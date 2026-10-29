@@ -41,6 +41,9 @@ internal sealed class TileMapDrawable : IDrawable
     // Vector layers drawn on top of the basemap (in draw order).
     public IReadOnlyList<MapLayer>? Layers { get; set; }
 
+    // Sketches and highlights drawn above every layer (in draw order).
+    public IReadOnlyList<MapGraphic>? Overlays { get; set; }
+
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
         canvas.FillColor = Colors.WhiteSmoke;
@@ -82,7 +85,9 @@ internal sealed class TileMapDrawable : IDrawable
             }
         }
 
-        DrawLayers(canvas, viewBox, viewXMin, viewYMax, zoom);
+        DrawLayers(canvas, viewBox, viewXMin, viewYMax, zoom, MapViewerMath.ResolutionToExactZoom(Resolution));
+
+        DrawOverlays(canvas, viewBox, viewXMin, viewYMax);
 
         DrawMarker(canvas, viewXMin, viewYMax);
     }
@@ -120,7 +125,7 @@ internal sealed class TileMapDrawable : IDrawable
         canvas.RestoreState();
     }
 
-    private void DrawLayers(ICanvas canvas, BoundingBox viewBox, double viewXMin, double viewYMax, int mapZoom)
+    private void DrawLayers(ICanvas canvas, BoundingBox viewBox, double viewXMin, double viewYMax, int mapZoom, double exactZoom)
     {
         var layers = Layers;
 
@@ -131,7 +136,7 @@ internal sealed class TileMapDrawable : IDrawable
 
         foreach (var layer in layers)
         {
-            if (!layer.IsVisible)
+            if (!layer.IsVisibleAt(exactZoom))
             {
                 continue;
             }
@@ -142,34 +147,75 @@ internal sealed class TileMapDrawable : IDrawable
                 continue;
             }
 
-            if (layer.Parts.Count == 0)
+            // One read: SetFeatures may swap the list in from another thread.
+            var parts = layer.Parts;
+
+            if (parts.Count == 0)
             {
                 continue;
             }
 
-            var stroke = layer.Color;
-            var fill = layer.Color.WithAlpha(0.30f);
-            var strokeWidth = (float)layer.StrokeWidth;
-            var pointRadius = (float)(layer.PointSize / 2.0);
+            var style = new PartStyle(
+                layer.Color,
+                layer.FillColor ?? layer.Color.WithAlpha(0.30f),
+                layer.FillColor ?? layer.Color,
+                (float)layer.StrokeWidth,
+                layer.DashPattern,
+                (float)(layer.PointSize / 2.0),
+                layer.PointShape,
+                layer.OutlineColor,
+                (float)layer.OutlineWidth);
 
             canvas.SaveState();
             canvas.Alpha = (float)layer.Opacity;
 
-            foreach (var part in layer.Parts)
+            DrawParts(canvas, parts, viewBox, viewXMin, viewYMax, style);
+
+            canvas.RestoreState();
+        }
+    }
+
+    private void DrawOverlays(ICanvas canvas, BoundingBox viewBox, double viewXMin, double viewYMax)
+    {
+        var overlays = Overlays;
+
+        if (overlays is null)
+        {
+            return;
+        }
+
+        foreach (var graphic in overlays)
+        {
+            var parts = graphic.Parts;
+
+            if (!graphic.IsVisible || parts.Count == 0)
             {
-                switch (part.Kind)
+                continue;
+            }
+
+            var style = new PartStyle(
+                graphic.StrokeColor,
+                graphic.FillColor ?? graphic.StrokeColor.WithAlpha(0.25f),
+                graphic.FillColor ?? graphic.StrokeColor,
+                (float)graphic.StrokeWidth,
+                graphic.DashPattern,
+                (float)(graphic.VertexSize / 2.0),
+                PointShape.Circle,
+                Colors.White,
+                2);
+
+            canvas.SaveState();
+
+            DrawParts(canvas, parts, viewBox, viewXMin, viewYMax, style);
+
+            if (graphic.ShowVertices)
+            {
+                foreach (var part in parts)
                 {
-                    case RenderKind.Point:
-                        DrawPointPart(canvas, part, viewXMin, viewYMax, stroke, pointRadius);
-                        break;
-
-                    case RenderKind.Line:
-                        DrawLinePart(canvas, part, viewXMin, viewYMax, stroke, strokeWidth);
-                        break;
-
-                    case RenderKind.Polygon:
-                        DrawPolygonPart(canvas, part, viewXMin, viewYMax, stroke, fill, strokeWidth);
-                        break;
+                    if (part.Kind != RenderKind.Point)
+                    {
+                        DrawPointPart(canvas, part, viewXMin, viewYMax, style);
+                    }
                 }
             }
 
@@ -177,10 +223,57 @@ internal sealed class TileMapDrawable : IDrawable
         }
     }
 
-    private void DrawPointPart(ICanvas canvas, RenderPart part, double viewXMin, double viewYMax, Color stroke, float radius)
+    private readonly record struct PartStyle(
+        Color Stroke,
+        Color PolygonFill,
+        Color PointFill,
+        float StrokeWidth,
+        float[]? DashPattern,
+        float PointRadius,
+        PointShape PointShape,
+        Color Outline,
+        float OutlineWidth);
+
+    private void DrawParts(ICanvas canvas, IReadOnlyList<RenderPart> parts, BoundingBox viewBox, double viewXMin, double viewYMax, PartStyle style)
     {
-        canvas.StrokeColor = Colors.White;
-        canvas.StrokeSize = 1;
+        // Parts wholly outside the view (plus a symbol's reach) are skipped: a layer may hold far
+        // more than the screen shows.
+        double margin = (style.PointRadius + style.StrokeWidth + style.OutlineWidth) * Resolution;
+        double xMin = viewBox.XMin - margin, yMin = viewBox.YMin - margin;
+        double xMax = viewBox.XMax + margin, yMax = viewBox.YMax + margin;
+
+        foreach (var part in parts)
+        {
+            if (!part.Intersects(xMin, yMin, xMax, yMax))
+            {
+                continue;
+            }
+
+            switch (part.Kind)
+            {
+                case RenderKind.Point:
+                    DrawPointPart(canvas, part, viewXMin, viewYMax, style);
+                    break;
+
+                case RenderKind.Line:
+                    DrawLinePart(canvas, part, viewXMin, viewYMax, style);
+                    break;
+
+                case RenderKind.Polygon:
+                    DrawPolygonPart(canvas, part, viewXMin, viewYMax, style);
+                    break;
+            }
+        }
+    }
+
+    private void DrawPointPart(ICanvas canvas, RenderPart part, double viewXMin, double viewYMax, PartStyle style)
+    {
+        canvas.StrokeDashPattern = null;
+        canvas.StrokeColor = style.Outline;
+        canvas.StrokeSize = style.OutlineWidth;
+        canvas.FillColor = style.PointFill;
+
+        float radius = style.PointRadius;
 
         foreach (var (xs, ys) in part.Rings)
         {
@@ -189,14 +282,60 @@ internal sealed class TileMapDrawable : IDrawable
                 float sx = (float)((xs[i] - viewXMin) / Resolution);
                 float sy = (float)((viewYMax - ys[i]) / Resolution);
 
-                canvas.FillColor = stroke;
-                canvas.FillCircle(sx, sy, radius);
-                canvas.DrawCircle(sx, sy, radius);
+                switch (style.PointShape)
+                {
+                    case PointShape.Square:
+                        canvas.FillRectangle(sx - radius, sy - radius, radius * 2, radius * 2);
+                        if (style.OutlineWidth > 0) canvas.DrawRectangle(sx - radius, sy - radius, radius * 2, radius * 2);
+                        break;
+
+                    case PointShape.Triangle:
+                        DrawSymbolPath(canvas, style, PointPath(sx, sy, radius, 3));
+                        break;
+
+                    case PointShape.Diamond:
+                        DrawSymbolPath(canvas, style, PointPath(sx, sy, radius, 4));
+                        break;
+
+                    default:
+                        canvas.FillCircle(sx, sy, radius);
+                        if (style.OutlineWidth > 0) canvas.DrawCircle(sx, sy, radius);
+                        break;
+                }
             }
         }
     }
 
-    private void DrawLinePart(ICanvas canvas, RenderPart part, double viewXMin, double viewYMax, Color stroke, float strokeWidth)
+    private static void DrawSymbolPath(ICanvas canvas, PartStyle style, PathF path)
+    {
+        canvas.FillPath(path);
+
+        if (style.OutlineWidth > 0)
+        {
+            canvas.DrawPath(path);
+        }
+    }
+
+    // A regular polygon around (cx, cy) with a corner on top; enlarged a little so it looks as big as a circle.
+    private static PathF PointPath(float cx, float cy, float radius, int corners)
+    {
+        float r = corners == 3 ? radius * 1.25f : radius * 1.15f;
+        var path = new PathF();
+
+        for (int i = 0; i < corners; i++)
+        {
+            double angle = -Math.PI / 2 + i * 2 * Math.PI / corners;
+            float x = cx + (float)(r * Math.Cos(angle));
+            float y = cy + (float)(r * Math.Sin(angle));
+
+            if (i == 0) path.MoveTo(x, y); else path.LineTo(x, y);
+        }
+
+        path.Close();
+        return path;
+    }
+
+    private void DrawLinePart(ICanvas canvas, RenderPart part, double viewXMin, double viewYMax, PartStyle style)
     {
         var path = BuildPath(part, viewXMin, viewYMax, close: false);
 
@@ -205,13 +344,15 @@ internal sealed class TileMapDrawable : IDrawable
             return;
         }
 
-        canvas.StrokeColor = stroke;
-        canvas.StrokeSize = strokeWidth;
+        canvas.StrokeColor = style.Stroke;
+        canvas.StrokeSize = style.StrokeWidth;
+        canvas.StrokeDashPattern = style.DashPattern;
         canvas.StrokeLineJoin = LineJoin.Round;
+        canvas.StrokeLineCap = LineCap.Round;
         canvas.DrawPath(path);
     }
 
-    private void DrawPolygonPart(ICanvas canvas, RenderPart part, double viewXMin, double viewYMax, Color stroke, Color fill, float strokeWidth)
+    private void DrawPolygonPart(ICanvas canvas, RenderPart part, double viewXMin, double viewYMax, PartStyle style)
     {
         var path = BuildPath(part, viewXMin, viewYMax, close: true);
 
@@ -220,11 +361,12 @@ internal sealed class TileMapDrawable : IDrawable
             return;
         }
 
-        canvas.FillColor = fill;
+        canvas.FillColor = style.PolygonFill;
         canvas.FillPath(path, WindingMode.EvenOdd);
 
-        canvas.StrokeColor = stroke;
-        canvas.StrokeSize = strokeWidth;
+        canvas.StrokeColor = style.Stroke;
+        canvas.StrokeSize = style.StrokeWidth;
+        canvas.StrokeDashPattern = style.DashPattern;
         canvas.StrokeLineJoin = LineJoin.Round;
         canvas.DrawPath(path);
     }

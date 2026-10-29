@@ -24,7 +24,27 @@ dotnet add package IRI.Maptor.Infrastructure.WebApi
 - Optional shared `HttpClient` (`WebApiSourceParameter.HttpClient`) so many sources reuse pooled
   connections and the client's handler policies (TLS, certificate validation, proxy) instead of a
   throwaway client per request; loads are throttled library-wide and retried on transient failures,
-  and a failed load surfaces as `HasError` rather than an empty layer
+  and a failed load surfaces as `HasError` rather than an empty layer. With a shared client the
+  feature set is parsed straight from the response stream (`HttpTransport.GetJsonStreamAsync`),
+  never read into one string, and each load writes its fetch/convert times to `Trace`
+- Optional compact list format (`WebApiSourceParameter.PreferCompactFormat`, off by default, shared
+  client only): asks for `application/vnd.maptor.featureset.compact+json` (`CompactFeatureSetDto`
+  in Core.Spatial: attribute names once, each feature a positional array). A server that does not
+  know it answers with plain JSON, which is still read; both give the same `FeatureSetDto`, values
+  with the same .NET types. The server side is an output formatter that answers only clients that
+  ask for it (Gas: `CompactFeatureSetOutputFormatter`); add the media type to the server's
+  response-compression MIME types, which do not include it by default
+- Live mode (`WebApiSourceParameter.LoadMode = Live`, with `QueryUrl` = `{base}/LayerQuery/{layerSettingId}` and a
+  shared client; otherwise the layer loads like Cache): `LoadAsync` only reads the fields, and every read fetches
+  the web-mercator tiles covering it (`POST LayerQuery`, extent mode), once per tile, a loaded tile also covering
+  its smaller tiles. Fetched features are only ever added, by id, to the one feature set that edits and
+  `SaveChangesAsync` use, so pending edits survive panning and zooming and are saved wherever they are; merges run
+  on the creating (UI) thread. A tile beyond the server's cap is kept but not counted as loaded
+  (`HasTruncatedLiveTiles`). See `WebApiDataSource.Live.cs`. Server-side queries of a Live layer
+  (`IServerQueryableVectorDataSource`): `QueryPageAsync` (attribute table), `GetDistinctValuesAsync`, and since
+  2026-10-23 `GetFieldStatisticsAsync` / `GetGroupStatisticsAsync` / `GetGeometryStatisticsAsync`
+  (`GET {QueryUrl}/Statistics/Field/{field}`, `/Statistics/Group/{field}?sumField=&measure=`,
+  `/Statistics/Geometry?measure=`), all GETs going through one helper that throws with the server's message
 - `WebApiInfrastructure` — static HTTP helpers: `GetFeaturesAsync`, `SaveChangesAsync`, `AddFeatureAsync`, `UpdateFeatureAsync`, `DeleteFeatureAsync`
 - `ListFeaturesQueryParams` — explicit query model for the list endpoint (`GeometryWkbHex`, `SearchText`)
 

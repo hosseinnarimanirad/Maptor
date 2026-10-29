@@ -84,6 +84,7 @@ internal sealed class MbTilesVectorLayer : MapLayer
             }
 
             var parts = new List<RenderPart>();
+            var features = new List<MapFeature>();
 
             foreach (var feature in featureSet.Features)
             {
@@ -94,7 +95,10 @@ internal sealed class MbTilesVectorLayer : MapLayer
                     continue;
                 }
 
-                RenderPartBuilder.Build(geometry, Identity, parts, NoTrack);
+                var mapFeature = MapFeature.From(feature);
+                features.Add(mapFeature);
+
+                RenderPartBuilder.Build(geometry, Identity, parts, NoTrack, mapFeature);
             }
 
             if (version != Volatile.Read(ref _version))
@@ -103,6 +107,7 @@ internal sealed class MbTilesVectorLayer : MapLayer
             }
 
             Parts = parts;
+            SetFeaturesSilently(features);
             onUpdated?.Invoke();
         }
         catch

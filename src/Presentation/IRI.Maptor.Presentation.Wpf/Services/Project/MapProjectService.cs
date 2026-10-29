@@ -119,6 +119,7 @@ public class MapProjectService
                     IsVisible = candidate.IsVisible,
                     Opacity = candidate.Opacity,
                     SldXml = GetSldXml(candidate),
+                    ActiveStyleName = (candidate as SymbolizableLayer)?.ActiveStyleName,
                 });
             }
 
@@ -492,7 +493,7 @@ public class MapProjectService
             var sld = SldHelper.Parse(state.SldXml);
 
             if (sld is not null)
-                symbolizable.ReplaceSymbolizers(sld.ParseToSymbolizers(), sld);
+                symbolizable.ApplySavedSld(sld, state.ActiveStyleName);
         }
     }
 

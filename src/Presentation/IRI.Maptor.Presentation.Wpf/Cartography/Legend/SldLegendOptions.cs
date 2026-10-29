@@ -40,6 +40,12 @@ public class SldLegendOptions
     /// <summary>Legend title (typically the layer name) drawn at the top of the composed PNG; null for none.</summary>
     public string? Title { get; set; }
 
+    /// <summary>
+    /// The row text of a rule with neither title nor name, e.g. the layer name for a layer drawn with
+    /// simple colours (its one rule is unnamed); empty for a bare swatch.
+    /// </summary>
+    public string UntitledRuleText { get; set; } = "(unnamed)";
+
     /// <summary>Draw a bold group header (layer / style title) above each group of rules.</summary>
     public bool ShowGroupHeaders { get; set; } = true;
 

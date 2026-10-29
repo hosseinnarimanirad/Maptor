@@ -71,7 +71,7 @@ public static class SldLegendBuilder
     {
         var row = new LegendRuleRow
         {
-            Title = FirstNonEmpty(rule.Title, rule.Name) ?? "(unnamed)",
+            Title = FirstNonEmpty(rule.Title, rule.Name) ?? options.UntitledRuleText,
             FieldText = FilterTextFormatter.FormatFieldNames(rule.Filter, options.FieldAliasResolver),
             ScaleText = FilterTextFormatter.FormatScale(rule.MinScaleDenominator, rule.MaxScaleDenominator),
             Rule = rule
