@@ -1,4 +1,4 @@
-using IRI.Maptor.Extensions;
+﻿using IRI.Maptor.Extensions;
 using IRI.Maptor.Core.Common.Mathematics;
 using IRI.Maptor.Core.Spatial.Helpers;
 using IRI.Maptor.Core.Spatial.Analysis;
@@ -564,6 +564,11 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     /// <returns></returns>
     public Geometry<T> Simplify(SimplificationType type, SimplificationParameters parameter)
     {
+        // the rings of a polygon are closed; a copy, because callers share one parameters object between geometries
+        parameter = parameter.Clone();
+
+        parameter.IsRing = parameter.IsRing || this.IsRingBase();
+
         Func<List<T>, List<T>> filter;
 
         switch (type)
@@ -588,6 +593,10 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
                 filter = pList => Simplifications.SimplifyByCumulativeTriangleRoutine(pList, parameter);
                 break;
 
+            case SimplificationType.CumulativeTriangleRoutine2:
+                filter = pList => Simplifications.SimplifyByCumulativeTriangleRoutine2(pList, parameter);
+                break;
+
             case SimplificationType.ModifiedTriangleRoutine:
                 filter = pList => Simplifications.SimplifyByModifiedTriangleRoutine(pList, parameter);
                 break;
@@ -605,7 +614,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
                 break;
 
             case SimplificationType.VisvalingamWhyatt:
-                filter = pList => Simplifications.SimplifyByVisvalingamWhyatt(pList, parameter, this.IsRingBase());
+                filter = pList => Simplifications.SimplifyByVisvalingamWhyatt(pList, parameter);
                 break;
 
             case SimplificationType.RamerDouglasPeucker:
@@ -651,6 +660,14 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
             case SimplificationType.APSC:
                 filter = pList => Simplifications.SimplifyByAPSC(pList, parameter);
+                break;
+
+            case SimplificationType.LiOpenshaw:
+                filter = pList => Simplifications.SimplifyByLiOpenshaw(pList, parameter);
+                break;
+
+            case SimplificationType.LiOpenshawRaster:
+                filter = pList => Simplifications.SimplifyByLiOpenshawRaster(pList, parameter);
                 break;
 
             default:
@@ -3487,6 +3504,427 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     #endregion
 
 
+    #region Offset Curve
+
+    /// <summary>
+    /// The line parallel to this line string at <paramref name="distance"/>: to the LEFT of the
+    /// direction of travel for a positive distance, to the RIGHT for a negative one. Each part of
+    /// a MultiLineString is offset on its own.
+    /// </summary>
+    /// <remarks>
+    /// Planar only: the distance is in coordinate units, so a geodetic (SRID 4326) geometry must
+    /// be projected first, e.g. to UTM. The result is always open, also for a closed line string.
+    /// <para>
+    /// The result is the single-sided offset: every point of it keeps at least the distance from
+    /// this line (round joins are drawn as chords, which sag up to 0.5 % of the distance inside
+    /// the arc). Where the distance exceeds the local feature size — the inner side of a tight
+    /// bend, or a stretch of the line that comes back near itself — the parts that would come
+    /// closer are removed, so one line string can give several pieces (a MultiLineString), and a
+    /// side that collapses entirely gives an empty geometry. This also cuts the offset of a line
+    /// that crosses itself where the offset passes over the line.
+    /// </para>
+    /// </remarks>
+    /// <param name="distance">Offset distance in coordinate units; positive = left, negative = right</param>
+    /// <param name="join">Join style on the outer side of a bend</param>
+    /// <returns>A LineString or MultiLineString, or an empty geometry when nothing is left</returns>
+    public Geometry<T> OffsetCurve(double distance, OffsetCurveJoin join = OffsetCurveJoin.Round)
+    {
+        if (this.IsNullOrEmpty())
+            return Geometry<T>.Empty;
+
+        if (this.Srid == SridHelper.GeodeticWGS84)
+            throw new InvalidOperationException("OffsetCurve works on planar coordinates; project a geodetic geometry (e.g. to UTM) first");
+
+        if (Math.Abs(distance) < SpatialUtility.EpsilonDistance && (this.Type == GeometryType.LineString || this.Type == GeometryType.MultiLineString))
+            return this.Clone();
+
+        List<List<T>> pieces;
+
+        switch (this.Type)
+        {
+            case GeometryType.LineString:
+                pieces = OffsetCurvePieces(this.Points, distance, join);
+                break;
+
+            case GeometryType.MultiLineString:
+                pieces = this.Geometries.SelectMany(g => OffsetCurvePieces(g.Points, distance, join)).ToList();
+                break;
+
+            default:
+                throw new NotImplementedException($"OffsetCurve not implemented for {this.Type}");
+        }
+
+        if (pieces.Count == 0)
+            return Geometry<T>.Empty;
+
+        if (pieces.Count == 1)
+            return Geometry<T>.Create(pieces[0], GeometryType.LineString, this.Srid);
+
+        return Geometry<T>.Create(
+            pieces.Select(p => Geometry<T>.Create(p, GeometryType.LineString, this.Srid)).ToList(),
+            GeometryType.MultiLineString,
+            this.Srid);
+    }
+
+    /// <summary>
+    /// The offset of one line string: the raw single-sided offset (swallowtails removed), then the
+    /// folds cut out, then whatever still comes closer than the distance clipped away.
+    /// </summary>
+    private static List<List<T>> OffsetCurvePieces(List<T> linePoints, double distance, OffsetCurveJoin join)
+    {
+        var points = RemoveConsecutiveDuplicatePoints(linePoints, isRing: false);
+
+        if (points.Count < 2)
+            return new List<List<T>>();
+
+        bool roundJoins = join == OffsetCurveJoin.Round;
+
+        // a round join is drawn as chords of at most π/16, which sag up to d·(1 − cos π/32) inside
+        // the arc; mitre points on the inner side lie at exactly the distance, up to rounding
+        double clearance = Math.Abs(distance) * (roundJoins ? Math.Cos(Math.PI / 32) : 1);
+        double limit = clearance * (1 - 1e-9) - SpatialUtility.EpsilonDistance;
+
+        var offset = OffsetOpenPolyline(points, distance, roundJoins);
+
+        offset = RemoveOffsetFolds(offset, points, limit);
+
+        return ClipCloserThan(offset, points, limit);
+    }
+
+    /// <summary>
+    /// Offsets an open polyline to the LEFT of travel by <paramref name="distance"/> (negative =
+    /// right), built from the offset lines of its segments. Consecutive offset lines meet at their
+    /// intersection on the inner side of a bend; on the outer side they meet with an arc around
+    /// the vertex (<paramref name="roundJoins"/>) or at their intersection, bevelled beyond
+    /// 4·|distance|. Where a bend is tighter than the distance, the offset of a short segment
+    /// runs backwards (a swallowtail); such a segment is dropped and its neighbours re-joined,
+    /// one at a time, until every remaining segment runs the way its source does.
+    /// </summary>
+    /// <remarks>
+    /// Unlike <see cref="OffsetLineSegment"/> (Buffer's routine, which keeps swallowtails because
+    /// the polygon union absorbs them), this yields a usable single-sided curve. Global
+    /// collapses — the offset of one part reaching too close to a distant part of the line —
+    /// are left to <see cref="RemoveOffsetCollapse"/>.
+    /// </remarks>
+    private static List<T> OffsetOpenPolyline(List<T> points, double distance, bool roundJoins)
+    {
+        int segmentCount = points.Count - 1;
+
+        var directions = new (double X, double Y)[segmentCount];
+
+        for (int i = 0; i < segmentCount; i++)
+            directions[i] = GetUnitDirection(points[i], points[i + 1]);
+
+        // the point of segment's offset line beside the given source vertex
+        T Foot(int segment, int vertex)
+            => new T() { X = points[vertex].X - directions[segment].Y * distance, Y = points[vertex].Y + directions[segment].X * distance };
+
+        // the points joining the offset of segment a to the offset of a later segment b
+        List<T> Join(int a, int b)
+        {
+            var incoming = directions[a];
+            var outgoing = directions[b];
+
+            double cross = incoming.X * outgoing.Y - incoming.Y * outgoing.X;
+            double dot = incoming.X * outgoing.X + incoming.Y * outgoing.Y;
+
+            var endOfA = Foot(a, a + 1);
+            var startOfB = Foot(b, b);
+
+            bool adjacent = b == a + 1;
+
+            // parallel: one line continuing (collinear neighbours) or a step between two lines
+            if (Math.Abs(cross) < 1e-12)
+                return adjacent && dot > 0 ? new List<T> { endOfA } : new List<T> { endOfA, startOfB };
+
+            bool convex = cross * distance < 0;
+
+            if (convex && adjacent && roundJoins)
+            {
+                var arc = new List<T> { endOfA };
+
+                var vertex = points[b];
+
+                AddArcPoints(arc, vertex, Math.Abs(distance), Math.Atan2(endOfA.Y - vertex.Y, endOfA.X - vertex.X), Math.Atan2(cross, dot));
+
+                return arc;
+            }
+
+            // the two offset lines meet at endOfA + t·incoming
+            double t = ((startOfB.X - endOfA.X) * outgoing.Y - (startOfB.Y - endOfA.Y) * outgoing.X) / cross;
+
+            var corner = new T() { X = endOfA.X + t * incoming.X, Y = endOfA.Y + t * incoming.Y };
+
+            // a mitre longer than 4·|distance| on the outer side is a spike: bevel it
+            if (convex && SpatialUtility.GetEuclideanLength(corner, points[a + 1]) > 4 * Math.Abs(distance))
+                return new List<T> { endOfA, startOfB };
+
+            return new List<T> { corner };
+        }
+
+        var kept = Enumerable.Range(0, segmentCount).ToList();
+
+        while (kept.Count > 0)
+        {
+            var joins = new List<List<T>>(kept.Count);
+
+            for (int k = 0; k < kept.Count - 1; k++)
+                joins.Add(Join(kept[k], kept[k + 1]));
+
+            int backwards = -1;
+
+            for (int k = 0; k < kept.Count && backwards < 0; k++)
+            {
+                var start = k == 0 ? Foot(kept[0], kept[0]) : joins[k - 1][joins[k - 1].Count - 1];
+                var end = k == kept.Count - 1 ? Foot(kept[k], kept[k] + 1) : joins[k][0];
+
+                var direction = directions[kept[k]];
+
+                if ((end.X - start.X) * direction.X + (end.Y - start.Y) * direction.Y <= SpatialUtility.EpsilonDistance)
+                    backwards = k;
+            }
+
+            if (backwards < 0)
+            {
+                var result = new List<T> { Foot(kept[0], kept[0]) };
+
+                foreach (var join in joins)
+                    result.AddRange(join);
+
+                result.Add(Foot(kept[kept.Count - 1], kept[kept.Count - 1] + 1));
+
+                return RemoveConsecutiveDuplicatePoints(result, isRing: false);
+            }
+
+            kept.RemoveAt(backwards);
+        }
+
+        return new List<T>();
+    }
+
+    /// <summary>
+    /// Cuts the folds out of a raw offset. Where the offset crosses itself and the stretch
+    /// between the two crossing segments comes closer to the source than <paramref name="limit"/>,
+    /// that stretch is a collapse and is replaced by the crossing point, which keeps the curve
+    /// continuous through it. A stretch that keeps its distance is a real loop of a self-crossing
+    /// source and stays.
+    /// </summary>
+    /// <remarks>O(n²) in the offset's vertex count, plus O(n) per crossing found.</remarks>
+    private static List<T> RemoveOffsetFolds(List<T> offset, List<T> source, double limit)
+    {
+        bool IsTooClose(T point)
+        {
+            for (int s = 0; s < source.Count - 1; s++)
+            {
+                if (TopologyUtility.GetPointToLineSegmentDistance(point, source[s], source[s + 1]) < limit)
+                    return true;
+            }
+
+            return false;
+        }
+
+        var result = new List<T>(offset);
+
+        for (int i = 0; i < result.Count - 3; i++)
+        {
+            // farthest crossing first, so one cut removes a whole fold rather than nibbling at it
+            for (int j = result.Count - 2; j >= i + 2; j--)
+            {
+                if (!TryGetSegmentCrossing(result[i], result[i + 1], result[j], result[j + 1], out var crossing))
+                    continue;
+
+                bool collapsed = false;
+
+                for (int k = i + 1; k <= j && !collapsed; k++)
+                    collapsed = IsTooClose(result[k]);
+
+                if (!collapsed)
+                    continue;
+
+                result.RemoveRange(i + 1, j - i);
+                result.Insert(i + 1, crossing);
+
+                // the shortened offset may cross itself again from the same segment
+                i--;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Removes every stretch of <paramref name="line"/> closer than <paramref name="limit"/> to
+    /// <paramref name="source"/> and returns the pieces that remain, in order. Exact per segment:
+    /// along a straight segment the distance to a source segment is a convex function, so the
+    /// stretch within the limit of one source segment is a single interval, found by ternary
+    /// search for the closest point and bisection for the two ends.
+    /// </summary>
+    private static List<List<T>> ClipCloserThan(List<T> line, List<T> source, double limit)
+    {
+        var pieces = new List<List<T>>();
+        var current = new List<T>();
+
+        void ClosePiece()
+        {
+            var piece = RemoveConsecutiveDuplicatePoints(current, isRing: false);
+
+            if (piece.Count >= 2)
+                pieces.Add(piece);
+
+            current = new List<T>();
+        }
+
+        for (int i = 0; i < line.Count - 1; i++)
+        {
+            var a = line[i];
+            var b = line[i + 1];
+
+            T At(double t) => new T() { X = a.X + t * (b.X - a.X), Y = a.Y + t * (b.Y - a.Y) };
+
+            var removed = new List<(double From, double To)>();
+
+            for (int s = 0; s < source.Count - 1; s++)
+            {
+                var q1 = source[s];
+                var q2 = source[s + 1];
+
+                // the segment cannot come within the limit of a source segment whose box, grown
+                // by the limit, it does not reach
+                if (Math.Max(a.X, b.X) < Math.Min(q1.X, q2.X) - limit || Math.Min(a.X, b.X) > Math.Max(q1.X, q2.X) + limit ||
+                    Math.Max(a.Y, b.Y) < Math.Min(q1.Y, q2.Y) - limit || Math.Min(a.Y, b.Y) > Math.Max(q1.Y, q2.Y) + limit)
+                    continue;
+
+                double DistanceAt(double t) => TopologyUtility.GetPointToLineSegmentDistance(At(t), q1, q2);
+
+                double low = 0, high = 1;
+
+                for (int iteration = 0; iteration < 80; iteration++)
+                {
+                    double m1 = low + (high - low) / 3;
+                    double m2 = high - (high - low) / 3;
+
+                    if (DistanceAt(m1) <= DistanceAt(m2))
+                        high = m2;
+                    else
+                        low = m1;
+                }
+
+                double closest = (low + high) / 2;
+
+                if (DistanceAt(closest) >= limit)
+                    continue;
+
+                double from = DistanceAt(0) < limit ? 0 : EdgeOfLimit(DistanceAt, 0, closest, limit);
+                double to = DistanceAt(1) < limit ? 1 : EdgeOfLimit(DistanceAt, 1, closest, limit);
+
+                removed.Add((from, to));
+            }
+
+            // what is left of [0, 1] once the removed stretches are taken out
+            var keptStretches = new List<(double From, double To)>();
+            double cursor = 0;
+
+            foreach (var (from, to) in removed.OrderBy(r => r.From))
+            {
+                if (from > cursor)
+                    keptStretches.Add((cursor, from));
+
+                cursor = Math.Max(cursor, to);
+            }
+
+            if (cursor < 1)
+                keptStretches.Add((cursor, 1));
+
+            if (keptStretches.Count == 0)
+            {
+                ClosePiece();
+                continue;
+            }
+
+            foreach (var (from, to) in keptStretches)
+            {
+                // a removed stretch before this one ends the running piece
+                if (from > 0)
+                    ClosePiece();
+
+                if (current.Count == 0)
+                    current.Add(At(from));
+
+                current.Add(to >= 1 ? b : At(to));
+
+                if (to < 1)
+                    ClosePiece();
+            }
+        }
+
+        ClosePiece();
+
+        return pieces;
+    }
+
+    /// <summary>
+    /// Bisects between <paramref name="outside"/> (distance ≥ limit) and <paramref name="inside"/>
+    /// (distance &lt; limit) for the parameter where the distance reaches the limit, returning the
+    /// last parameter on the outside.
+    /// </summary>
+    private static double EdgeOfLimit(Func<double, double> distanceAt, double outside, double inside, double limit)
+    {
+        for (int iteration = 0; iteration < 60; iteration++)
+        {
+            double middle = (inside + outside) / 2;
+
+            if (distanceAt(middle) < limit)
+                inside = middle;
+            else
+                outside = middle;
+        }
+
+        return outside;
+    }
+
+    /// <summary>
+    /// The point where segment p1-p2 meets segment q1-q2 (end points included); false when they
+    /// are parallel or do not meet.
+    /// </summary>
+    private static bool TryGetSegmentCrossing(T p1, T p2, T q1, T q2, out T crossing)
+    {
+        crossing = default!;
+
+        if (Math.Max(p1.X, p2.X) < Math.Min(q1.X, q2.X) || Math.Max(q1.X, q2.X) < Math.Min(p1.X, p2.X) ||
+            Math.Max(p1.Y, p2.Y) < Math.Min(q1.Y, q2.Y) || Math.Max(q1.Y, q2.Y) < Math.Min(p1.Y, p2.Y))
+            return false;
+
+        double rx = p2.X - p1.X;
+        double ry = p2.Y - p1.Y;
+        double sx = q2.X - q1.X;
+        double sy = q2.Y - q1.Y;
+
+        double denominator = rx * sy - ry * sx;
+        double scale = Math.Sqrt(rx * rx + ry * ry) * Math.Sqrt(sx * sx + sy * sy);
+
+        if (scale == 0 || Math.Abs(denominator) <= 1e-12 * scale)
+            return false;
+
+        double qpx = q1.X - p1.X;
+        double qpy = q1.Y - p1.Y;
+
+        double t = (qpx * sy - qpy * sx) / denominator;
+        double u = (qpx * ry - qpy * rx) / denominator;
+
+        const double slack = 1e-12;
+
+        if (t < -slack || t > 1 + slack || u < -slack || u > 1 + slack)
+            return false;
+
+        crossing = new T() { X = p1.X + t * rx, Y = p1.Y + t * ry };
+
+        return true;
+    }
+
+    #endregion
+
+
     #region Simplification Measures
     // ref: McMaster, R. B. (1986). A statistical analysis of mathematical measures for linear simplification. The American Cartographer, 13(2), 103-116.
 
@@ -4391,6 +4829,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         return result ?? Geometry<T>.Empty;
     }
 
+    /// <summary>Parses ISO/OGC WKB or PostGIS EWKB; an SRID embedded in EWKB takes precedence over <paramref name="srid"/>.</summary>
     public static Geometry<T> FromWkb(byte[] bytes, int srid)
     {
         var result = WkbReader.Parse(bytes, srid) as Geometry<T>;
@@ -4403,6 +4842,9 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     public string AsWkt(int? coordinateDecimalPlaces) => WktWriter.AsWkt(this, coordinateDecimalPlaces);
 
     public byte[]? AsWkb() => WkbWriter.AsWkb(this);
+
+    /// <summary>PostGIS EWKB: WKB with Z/M flags and, when <see cref="Srid"/> is positive, the SRID embedded.</summary>
+    public byte[]? AsEwkb() => WkbWriter.AsEwkb(this);
 
     public string AsWkbHexString()
     {
@@ -4739,7 +5181,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         var points = geometries.Select(g => g.AsPoint()).ToList();
 
         return CreatePointOrLineString(points, geometries?.FirstOrDefault()?.Srid ?? 0);
-    }
+    } 
 
     public static Geometry<T> CreatePolygonOrMultiPolygon(List<Geometry<T>> rings, int srid, bool fixOrientation = true)
     {
@@ -4751,9 +5193,19 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
             return Geometry<T>.CreateEmpty(GeometryType.Polygon, srid);
 
         if (rings.Count == 1)
-            return Create(rings, GeometryType.Polygon, srid);
+        {
+            // outer ring must be CCW, as in the multi-ring path below
+            if (fixOrientation && SpatialUtility.IsClockwise(rings[0].Points))
+            {
+                rings[0].Reverse();
+            }
 
-        var orderedRings = rings.Select(p => (area: p.EuclideanArea, geo: p)).OrderByDescending(i => i.area).ToList();
+            return Create(rings, GeometryType.Polygon, srid);
+        }
+
+        // Largest rings first, so an outer ring is always seen before the holes it contains. The
+        // area comes from the ring's points: EuclideanArea of a LineString ring is always 0.
+        var orderedRings = rings.Select(p => (area: SpatialUtility.GetUnsignedEuclideanArea(p.Points), geo: p)).OrderByDescending(i => i.area).ToList();
 
         var ringBboxes = orderedRings.Select(r => BoundingBox.CalculateBoundingBox(r.geo.GetAllPoints())).ToList();
 
@@ -4770,25 +5222,16 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
             bool isMasterRing = true;
 
-            var testPoint = currentRing.Points.First();
-
             for (int p = 0; p < masterPolygons.Count; p++)
             {
-                if (!masterOuterBboxes[p].Covers(testPoint))
-                    continue;
-
-                if (!TopologyUtility.IsPointInRing(masterPolygons[p].Geometries[0], testPoint, masterOuterBboxes[p]))
+                if (!IsRingInsideRing(currentRing, masterPolygons[p].Geometries[0], masterOuterBboxes[p]))
                     continue;
 
                 bool inAnyHole = false;
 
                 for (int h = 1; h < masterPolygons[p].Geometries.Count; h++)
                 {
-                    var holeBbox = masterHoleBboxes[p][h - 1];
-                    if (!holeBbox.Covers(testPoint))
-                        continue;
-
-                    if (TopologyUtility.IsPointInRing(masterPolygons[p].Geometries[h], testPoint, holeBbox))
+                    if (IsRingInsideRing(currentRing, masterPolygons[p].Geometries[h], masterHoleBboxes[p][h - 1]))
                     {
                         inAnyHole = true;
                         break;
@@ -4829,6 +5272,29 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
             masterPolygons.First() :
             Create(masterPolygons, GeometryType.MultiPolygon, srid);
         //new Geometry<T>(masterPolygons, GeometryType.MultiPolygon, srid);
+    }
+
+    /// <summary>
+    /// Whether <paramref name="ring"/> lies inside <paramref name="container"/>, judged by its first
+    /// vertex that is not on the container's boundary. A hole may touch its outer ring (and an
+    /// island its hole) at a vertex, so the first vertex alone is not enough. Rings are assumed
+    /// not to cross each other.
+    /// </summary>
+    private static bool IsRingInsideRing(Geometry<T> ring, Geometry<T> container, BoundingBox containerBbox)
+    {
+        foreach (var point in ring.Points)
+        {
+            if (!containerBbox.Covers(point))
+                return false;
+
+            if (TopologyUtility.IsPointOnRing(container, point))
+                continue;
+
+            return TopologyUtility.IsPointInRing(container, point, containerBbox);
+        }
+
+        // every vertex is on the container's boundary (e.g. the same ring twice)
+        return false;
     }
 
     public static Geometry<T> Create(List<Geometry<T>> geometries, GeometryType type, int srid)
