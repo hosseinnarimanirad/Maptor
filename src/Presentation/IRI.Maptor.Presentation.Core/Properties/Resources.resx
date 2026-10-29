@@ -1856,7 +1856,7 @@
     <value>Browse Folder...</value>
   </data>
   <data name="layerSettings_general_sourceAddress" xml:space="preserve">
-    <value>Source Address</value>
+    <value>Source Address:</value>
   </data>
   <data name="common_squareMeter" xml:space="preserve">
     <value>Square Meter</value>
@@ -2553,5 +2553,1075 @@
   </data>
   <data name="dialog_goto_coordinateSystem" xml:space="preserve">
     <value>Coordinate system</value>
+  </data>
+  <data name="featureTable_unsavedChangesNote" xml:space="preserve">
+    <value>{0} unsaved changes (not included in the totals)</value>
+  </data>
+  <data name="featureTable_showUnsavedChanges" xml:space="preserve">
+    <value>Show only the unsaved changes</value>
+  </data>
+  <data name="legendItem_zoomInToSeeAllFeatures" xml:space="preserve">
+    <value>Not all features are shown: this area has more features than can be loaded at once. Zoom in to see all of them</value>
+  </data>
+  <data name="serverLayerSettings_title" xml:space="preserve">
+    <value>Server layer settings</value>
+  </data>
+  <data name="serverLayerSettings_searchPlaceholder" xml:space="preserve">
+    <value>Search layers and groups</value>
+  </data>
+  <data name="serverLayerSettings_noMatch" xml:space="preserve">
+    <value>No layer or group matches the search.</value>
+  </data>
+  <data name="serverLayerSettings_noSelection" xml:space="preserve">
+    <value>Select a layer or group to edit it.</value>
+  </data>
+  <data name="serverLayerSettings_loadFailed" xml:space="preserve">
+    <value>The layer settings could not be loaded from the server.</value>
+  </data>
+  <data name="serverLayerSettings_saveFailed" xml:space="preserve">
+    <value>The changes could not be sent to the server.</value>
+  </data>
+  <data name="serverLayerSettings_retry" xml:space="preserve">
+    <value>Try again</value>
+  </data>
+  <data name="serverLayerSettings_reload" xml:space="preserve">
+    <value>Reload from server</value>
+  </data>
+  <data name="serverLayerSettings_revert" xml:space="preserve">
+    <value>Revert</value>
+  </data>
+  <data name="serverLayerSettings_topLevel" xml:space="preserve">
+    <value>Top level</value>
+  </data>
+  <data name="serverLayerSettings_layerCount" xml:space="preserve">
+    <value>Layers: {0}</value>
+  </data>
+  <data name="serverLayerSettings_badge_unsaved" xml:space="preserve">
+    <value>Unsaved</value>
+  </data>
+  <data name="serverLayerSettings_badge_inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="serverLayerSettings_badge_group" xml:space="preserve">
+    <value>Group</value>
+  </data>
+  <data name="serverLayerSettings_badge_live" xml:space="preserve">
+    <value>Live</value>
+  </data>
+  <data name="serverLayerSettings_tab_general" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="serverLayerSettings_tab_display" xml:space="preserve">
+    <value>Display</value>
+  </data>
+  <data name="serverLayerSettings_tab_labels" xml:space="preserve">
+    <value>Labels</value>
+  </data>
+  <data name="serverLayerSettings_tab_loading" xml:space="preserve">
+    <value>Loading</value>
+  </data>
+  <data name="serverLayerSettings_section_visibility" xml:space="preserve">
+    <value>Visibility</value>
+  </data>
+  <data name="serverLayerSettings_section_source" xml:space="preserve">
+    <value>Data source</value>
+  </data>
+  <data name="serverLayerSettings_section_zoom" xml:space="preserve">
+    <value>Visible zoom range</value>
+  </data>
+  <data name="serverLayerSettings_section_style" xml:space="preserve">
+    <value>Style</value>
+  </data>
+  <data name="serverLayerSettings_field_title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="serverLayerSettings_field_group" xml:space="preserve">
+    <value>Group</value>
+  </data>
+  <data name="serverLayerSettings_field_active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="serverLayerSettings_hint_active" xml:space="preserve">
+    <value>An inactive layer or group is hidden from every user.</value>
+  </data>
+  <data name="serverLayerSettings_field_onByDefault" xml:space="preserve">
+    <value>Visible when the map opens</value>
+  </data>
+  <data name="serverLayerSettings_field_expanded" xml:space="preserve">
+    <value>Expanded in the layer list</value>
+  </data>
+  <data name="serverLayerSettings_field_searchable" xml:space="preserve">
+    <value>Included in map search</value>
+  </data>
+  <data name="serverLayerSettings_field_table" xml:space="preserve">
+    <value>Table</value>
+  </data>
+  <data name="serverLayerSettings_field_serviceUrl" xml:space="preserve">
+    <value>Service URL</value>
+  </data>
+  <data name="serverLayerSettings_field_id" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="serverLayerSettings_field_zoomFrom" xml:space="preserve">
+    <value>From level</value>
+  </data>
+  <data name="serverLayerSettings_field_zoomTo" xml:space="preserve">
+    <value>to level</value>
+  </data>
+  <data name="serverLayerSettings_noLimit" xml:space="preserve">
+    <value>No limit</value>
+  </data>
+  <data name="serverLayerSettings_hint_zoom" xml:space="preserve">
+    <value>Leave a level empty for no limit. Level 0 shows the whole world; level 18 shows street detail.</value>
+  </data>
+  <data name="serverLayerSettings_sld_none" xml:space="preserve">
+    <value>Drawn with the simple style below.</value>
+  </data>
+  <data name="serverLayerSettings_sld_active" xml:space="preserve">
+    <value>Drawn with an SLD style. The colours below are not used while it is set.</value>
+  </data>
+  <data name="serverLayerSettings_sld_edit" xml:space="preserve">
+    <value>Edit SLD…</value>
+  </data>
+  <data name="serverLayerSettings_sld_remove" xml:space="preserve">
+    <value>Remove SLD</value>
+  </data>
+  <data name="serverLayerSettings_field_fill" xml:space="preserve">
+    <value>Fill</value>
+  </data>
+  <data name="serverLayerSettings_field_stroke" xml:space="preserve">
+    <value>Outline</value>
+  </data>
+  <data name="serverLayerSettings_field_strokeWidth" xml:space="preserve">
+    <value>Outline width</value>
+  </data>
+  <data name="serverLayerSettings_field_opacity" xml:space="preserve">
+    <value>Opacity</value>
+  </data>
+  <data name="serverLayerSettings_field_preview" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="serverLayerSettings_field_hasLabels" xml:space="preserve">
+    <value>This layer has labels</value>
+  </data>
+  <data name="serverLayerSettings_field_labelsOn" xml:space="preserve">
+    <value>Show labels when the map opens</value>
+  </data>
+  <data name="serverLayerSettings_field_labelColumn" xml:space="preserve">
+    <value>Label field</value>
+  </data>
+  <data name="serverLayerSettings_field_labelSize" xml:space="preserve">
+    <value>Font size</value>
+  </data>
+  <data name="serverLayerSettings_field_labelColor" xml:space="preserve">
+    <value>Colour</value>
+  </data>
+  <data name="serverLayerSettings_mode_cache" xml:space="preserve">
+    <value>Load all at once (Cache)</value>
+  </data>
+  <data name="serverLayerSettings_mode_cacheDescription" xml:space="preserve">
+    <value>The whole layer is downloaded once, when the map opens. Best for small and medium layers.</value>
+  </data>
+  <data name="serverLayerSettings_mode_live" xml:space="preserve">
+    <value>Load by map view (Live)</value>
+  </data>
+  <data name="serverLayerSettings_mode_liveDescription" xml:space="preserve">
+    <value>Only the features in the visible area are downloaded, as the map moves; the attribute table and search ask the server. Best for very large layers.</value>
+  </data>
+  <data name="serverLayerSettings_hint_appliesNext" xml:space="preserve">
+    <value>Saved changes reach other users the next time they sign in or reload the layers.</value>
+  </data>
+  <data name="serverLayerSettings_status_noChanges" xml:space="preserve">
+    <value>No unsaved changes</value>
+  </data>
+  <data name="serverLayerSettings_status_changes" xml:space="preserve">
+    <value>Unsaved changes: {0}</value>
+  </data>
+  <data name="serverLayerSettings_status_invalid" xml:space="preserve">
+    <value>With errors: {0}</value>
+  </data>
+  <data name="serverLayerSettings_result_saved" xml:space="preserve">
+    <value>Changes saved ({0}).</value>
+  </data>
+  <data name="serverLayerSettings_result_partial" xml:space="preserve">
+    <value>Saved: {0} · Not saved: {1}</value>
+  </data>
+  <data name="serverLayerSettings_conflict" xml:space="preserve">
+    <value>Someone else saved this item after you opened the window. Reload to get the latest version; your changes to it will be lost.</value>
+  </data>
+  <data name="serverLayerSettings_notFound" xml:space="preserve">
+    <value>This item no longer exists on the server.</value>
+  </data>
+  <data name="serverLayerSettings_serverRejected" xml:space="preserve">
+    <value>The server did not accept these changes.</value>
+  </data>
+  <data name="serverLayerSettings_confirmDiscard" xml:space="preserve">
+    <value>There are unsaved changes. Discard them?</value>
+  </data>
+  <data name="serverLayerSettings_error_titleRequired" xml:space="preserve">
+    <value>Enter a title.</value>
+  </data>
+  <data name="serverLayerSettings_error_titleTooLong" xml:space="preserve">
+    <value>The title is too long.</value>
+  </data>
+  <data name="serverLayerSettings_error_layerZoomOutOfRange" xml:space="preserve">
+    <value>Zoom levels must be between 0 and 24.</value>
+  </data>
+  <data name="serverLayerSettings_error_layerZoomRangeInverted" xml:space="preserve">
+    <value>The first zoom level must not be greater than the second.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelZoomOutOfRange" xml:space="preserve">
+    <value>Label zoom levels must be between 0 and 24.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelZoomRangeInverted" xml:space="preserve">
+    <value>The first label zoom level must not be greater than the second.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidFillColor" xml:space="preserve">
+    <value>The fill colour is not valid.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidStrokeColor" xml:space="preserve">
+    <value>The outline colour is not valid.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidLabelColor" xml:space="preserve">
+    <value>The label colour is not valid.</value>
+  </data>
+  <data name="serverLayerSettings_error_opacityOutOfRange" xml:space="preserve">
+    <value>Opacity must be between 0% and 100%.</value>
+  </data>
+  <data name="serverLayerSettings_error_strokeThicknessOutOfRange" xml:space="preserve">
+    <value>The outline width must be between 0 and 50.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelSizeOutOfRange" xml:space="preserve">
+    <value>The label font size must be between 1 and 72.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelColumnRequired" xml:space="preserve">
+    <value>Choose the field the labels show.</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownLabelColumn" xml:space="preserve">
+    <value>The label field is not a field of this layer.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidSld" xml:space="preserve">
+    <value>The SLD style cannot be read.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidLoadMode" xml:space="preserve">
+    <value>Choose how the layer loads.</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownRow" xml:space="preserve">
+    <value>An item no longer exists on the server.</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownGroup" xml:space="preserve">
+    <value>The target group no longer exists.</value>
+  </data>
+  <data name="serverLayerSettings_error_groupInGroup" xml:space="preserve">
+    <value>A group cannot be placed inside another group.</value>
+  </data>
+  <data name="serverLayerSettings_error_duplicateRow" xml:space="preserve">
+    <value>An item appears twice in the request.</value>
+  </data>
+  <data name="serverLayerSettings_cmd_newGroup" xml:space="preserve">
+    <value>New group</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveUp" xml:space="preserve">
+    <value>Move up</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveDown" xml:space="preserve">
+    <value>Move down</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveTo" xml:space="preserve">
+    <value>Move to</value>
+  </data>
+  <data name="serverLayerSettings_cmd_rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="serverLayerSettings_cmd_deleteGroup" xml:space="preserve">
+    <value>Delete group</value>
+  </data>
+  <data name="serverLayerSettings_moveTo_topLevel" xml:space="preserve">
+    <value>Top level (no group)</value>
+  </data>
+  <data name="serverLayerSettings_newGroup_title" xml:space="preserve">
+    <value>New group</value>
+  </data>
+  <data name="serverLayerSettings_group_created" xml:space="preserve">
+    <value>Group "{0}" created.</value>
+  </data>
+  <data name="serverLayerSettings_group_deleted" xml:space="preserve">
+    <value>Group "{0}" deleted.</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_confirm" xml:space="preserve">
+    <value>Delete the group "{0}"?</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_notEmpty" xml:space="preserve">
+    <value>Only an empty group can be deleted. Move its layers to another group first.</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_pendingMoves" xml:space="preserve">
+    <value>Save or revert the moved layers before deleting a group.</value>
+  </data>
+  <data name="serverLayerSettings_orderRejected" xml:space="preserve">
+    <value>The server did not accept the new order.</value>
+  </data>
+  <data name="serverLayerSettings_hint_dragDrop" xml:space="preserve">
+    <value>Drag layers to reorder them or to move them into another group.</value>
+  </data>
+  <data name="serverLayerSettings_cmd_open" xml:space="preserve">
+    <value>Server settings…</value>
+  </data>
+  <data name="serverLayerSettings_reloadMapConfirm" xml:space="preserve">
+    <value>The layer settings were saved. Reload the map's server layers now to see them? Unsaved feature edits will be lost.</value>
+  </data>
+  <data name="dialog_symbology_noFill" xml:space="preserve">
+    <value>No fill</value>
+  </data>
+  <data name="dialog_symbology_noStroke" xml:space="preserve">
+    <value>No outline</value>
+  </data>
+  <data name="sldEditor_badge_filter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="sldEditor_badge_scale" xml:space="preserve">
+    <value>Scale range</value>
+  </data>
+  <data name="sldEditor_cap_butt" xml:space="preserve">
+    <value>Flat</value>
+  </data>
+  <data name="sldEditor_cap_round" xml:space="preserve">
+    <value>Round</value>
+  </data>
+  <data name="sldEditor_cap_square" xml:space="preserve">
+    <value>Square</value>
+  </data>
+  <data name="sldEditor_dash_dashDot" xml:space="preserve">
+    <value>Dash-dot</value>
+  </data>
+  <data name="sldEditor_dash_dashed" xml:space="preserve">
+    <value>Dashed</value>
+  </data>
+  <data name="sldEditor_dash_dotted" xml:space="preserve">
+    <value>Dotted</value>
+  </data>
+  <data name="sldEditor_dash_longDash" xml:space="preserve">
+    <value>Long dash</value>
+  </data>
+  <data name="sldEditor_dash_solid" xml:space="preserve">
+    <value>Solid</value>
+  </data>
+  <data name="sldEditor_field_bold" xml:space="preserve">
+    <value>Bold</value>
+  </data>
+  <data name="sldEditor_field_cap" xml:space="preserve">
+    <value>Line ends</value>
+  </data>
+  <data name="sldEditor_field_color" xml:space="preserve">
+    <value>Colour</value>
+  </data>
+  <data name="sldEditor_field_dashOffset" xml:space="preserve">
+    <value>Pattern offset</value>
+  </data>
+  <data name="sldEditor_field_dashPattern" xml:space="preserve">
+    <value>Dash pattern</value>
+  </data>
+  <data name="sldEditor_field_font" xml:space="preserve">
+    <value>Font</value>
+  </data>
+  <data name="sldEditor_field_geometryDefault" xml:space="preserve">
+    <value>The layer's geometry</value>
+  </data>
+  <data name="sldEditor_field_haloOn" xml:space="preserve">
+    <value>Draw a halo around the text</value>
+  </data>
+  <data name="sldEditor_field_italic" xml:space="preserve">
+    <value>Italic</value>
+  </data>
+  <data name="sldEditor_field_join" xml:space="preserve">
+    <value>Corners</value>
+  </data>
+  <data name="sldEditor_field_labelField" xml:space="preserve">
+    <value>Text from field</value>
+  </data>
+  <data name="sldEditor_field_labelFieldWatermark" xml:space="preserve">
+    <value>Choose or type a field</value>
+  </data>
+  <data name="sldEditor_field_opacity" xml:space="preserve">
+    <value>Opacity</value>
+  </data>
+  <data name="sldEditor_field_rotation" xml:space="preserve">
+    <value>Rotation</value>
+  </data>
+  <data name="sldEditor_field_shape" xml:space="preserve">
+    <value>Shape</value>
+  </data>
+  <data name="sldEditor_field_size" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="sldEditor_field_width" xml:space="preserve">
+    <value>Width</value>
+  </data>
+  <data name="sldEditor_filter_advancedNotice" xml:space="preserve">
+    <value>This rule has a filter that cannot be shown here. It is kept as it is unless you choose a field above.</value>
+  </data>
+  <data name="sldEditor_filter_onlyMatching" xml:space="preserve">
+    <value>Draw only features that match a condition</value>
+  </data>
+  <data name="sldEditor_join_bevel" xml:space="preserve">
+    <value>Bevelled</value>
+  </data>
+  <data name="sldEditor_join_mitre" xml:space="preserve">
+    <value>Sharp</value>
+  </data>
+  <data name="sldEditor_join_round" xml:space="preserve">
+    <value>Round</value>
+  </data>
+  <data name="sldEditor_mark_circle" xml:space="preserve">
+    <value>Circle</value>
+  </data>
+  <data name="sldEditor_mark_cross" xml:space="preserve">
+    <value>Cross</value>
+  </data>
+  <data name="sldEditor_mark_square" xml:space="preserve">
+    <value>Square</value>
+  </data>
+  <data name="sldEditor_mark_star" xml:space="preserve">
+    <value>Star</value>
+  </data>
+  <data name="sldEditor_mark_triangle" xml:space="preserve">
+    <value>Triangle</value>
+  </data>
+  <data name="sldEditor_mark_x" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="sldEditor_op_equal" xml:space="preserve">
+    <value>equals</value>
+  </data>
+  <data name="sldEditor_op_greaterThan" xml:space="preserve">
+    <value>greater than</value>
+  </data>
+  <data name="sldEditor_op_greaterThanOrEqual" xml:space="preserve">
+    <value>at least</value>
+  </data>
+  <data name="sldEditor_op_lessThan" xml:space="preserve">
+    <value>less than</value>
+  </data>
+  <data name="sldEditor_op_lessThanOrEqual" xml:space="preserve">
+    <value>at most</value>
+  </data>
+  <data name="sldEditor_op_notEqual" xml:space="preserve">
+    <value>is not</value>
+  </data>
+  <data name="sldEditor_preview_labelSample" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="sldEditor_preview_legend" xml:space="preserve">
+    <value>Legend</value>
+  </data>
+  <data name="sldEditor_preview_none" xml:space="preserve">
+    <value>Select a rule to preview it.</value>
+  </data>
+  <data name="sldEditor_preview_title" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="sldEditor_rule_copySuffix" xml:space="preserve">
+    <value>copy</value>
+  </data>
+  <data name="sldEditor_rule_detailsHint" xml:space="preserve">
+    <value>The title is the text the map legend shows. The name identifies the rule inside the SLD.</value>
+  </data>
+  <data name="sldEditor_rule_titleHint" xml:space="preserve">
+    <value>The text the map legend shows for this rule</value>
+  </data>
+  <data name="sldEditor_rule_titleWatermark" xml:space="preserve">
+    <value>Legend text</value>
+  </data>
+  <data name="sldEditor_rules_count" xml:space="preserve">
+    <value>Rules: {0}</value>
+  </data>
+  <data name="sldEditor_rules_delete" xml:space="preserve">
+    <value>Delete rule (Del)</value>
+  </data>
+  <data name="sldEditor_rules_duplicate" xml:space="preserve">
+    <value>Duplicate rule (Ctrl+D)</value>
+  </data>
+  <data name="sldEditor_rules_empty" xml:space="preserve">
+    <value>Draws nothing</value>
+  </data>
+  <data name="sldEditor_rules_hint" xml:space="preserve">
+    <value>A feature is drawn by every rule it matches; lower rules draw on top.</value>
+  </data>
+  <data name="sldEditor_rules_moveDown" xml:space="preserve">
+    <value>Move down (Alt+Down)</value>
+  </data>
+  <data name="sldEditor_rules_moveUp" xml:space="preserve">
+    <value>Move up (Alt+Up)</value>
+  </data>
+  <data name="sldEditor_rules_noSelection" xml:space="preserve">
+    <value>Select a rule on the left to edit it, or add a new one.</value>
+  </data>
+  <data name="sldEditor_rules_none" xml:space="preserve">
+    <value>This style has no rules yet.</value>
+  </data>
+  <data name="sldEditor_scale_all" xml:space="preserve">
+    <value>All scales</value>
+  </data>
+  <data name="sldEditor_scale_between" xml:space="preserve">
+    <value>Between 1:{0} and 1:{1}</value>
+  </data>
+  <data name="sldEditor_scale_closerThan" xml:space="preserve">
+    <value>Closer than 1:{0}</value>
+  </data>
+  <data name="sldEditor_scale_fartherThan" xml:space="preserve">
+    <value>From 1:{0} outwards</value>
+  </data>
+  <data name="sldEditor_scale_hint" xml:space="preserve">
+    <value>The rule is drawn only between the two limits. Leave a limit empty for none. 1:5,000 is closer in than 1:50,000.</value>
+  </data>
+  <data name="sldEditor_scale_inverted" xml:space="preserve">
+    <value>The zoomed-in limit must be smaller than the zoomed-out limit, or the rule is never drawn.</value>
+  </data>
+  <data name="sldEditor_scale_maxLabel" xml:space="preserve">
+    <value>Zoomed-out limit</value>
+  </data>
+  <data name="sldEditor_scale_minLabel" xml:space="preserve">
+    <value>Zoomed-in limit</value>
+  </data>
+  <data name="sldEditor_scale_noLimit" xml:space="preserve">
+    <value>No limit</value>
+  </data>
+  <data name="sldEditor_section_ends" xml:space="preserve">
+    <value>Ends and corners</value>
+  </data>
+  <data name="sldEditor_section_fill" xml:space="preserve">
+    <value>Fill</value>
+  </data>
+  <data name="sldEditor_section_geometry" xml:space="preserve">
+    <value>Geometry</value>
+  </data>
+  <data name="sldEditor_section_halo" xml:space="preserve">
+    <value>Halo</value>
+  </data>
+  <data name="sldEditor_section_outline" xml:space="preserve">
+    <value>Outline</value>
+  </data>
+  <data name="sldEditor_section_pattern" xml:space="preserve">
+    <value>Pattern</value>
+  </data>
+  <data name="sldEditor_style_panel" xml:space="preserve">
+    <value>Style name and description</value>
+  </data>
+  <data name="sldEditor_symbolizer_add" xml:space="preserve">
+    <value>Add a symbol:</value>
+  </data>
+  <data name="sldEditor_symbolizer_line" xml:space="preserve">
+    <value>Line</value>
+  </data>
+  <data name="sldEditor_symbolizer_moveDown" xml:space="preserve">
+    <value>Move down</value>
+  </data>
+  <data name="sldEditor_symbolizer_moveUp" xml:space="preserve">
+    <value>Move up</value>
+  </data>
+  <data name="sldEditor_symbolizer_none" xml:space="preserve">
+    <value>This rule draws nothing yet. Add a symbol below.</value>
+  </data>
+  <data name="sldEditor_symbolizer_orderHint" xml:space="preserve">
+    <value>Symbols are drawn in list order: lower ones are drawn on top.</value>
+  </data>
+  <data name="sldEditor_symbolizer_point" xml:space="preserve">
+    <value>Marker</value>
+  </data>
+  <data name="sldEditor_symbolizer_polygon" xml:space="preserve">
+    <value>Fill</value>
+  </data>
+  <data name="sldEditor_symbolizer_raster" xml:space="preserve">
+    <value>Raster</value>
+  </data>
+  <data name="sldEditor_symbolizer_remove" xml:space="preserve">
+    <value>Remove symbol</value>
+  </data>
+  <data name="sldEditor_symbolizer_text" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="sldEditor_tab_details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="sldEditor_tab_filterScale" xml:space="preserve">
+    <value>Filter and scale</value>
+  </data>
+  <data name="sldEditor_tab_symbology" xml:space="preserve">
+    <value>Symbology</value>
+  </data>
+  <data name="sldEditor_xml_copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="sldEditor_xml_live" xml:space="preserve">
+    <value>Updates as you edit. This is what Apply and OK save.</value>
+  </data>
+  <data name="sldEditor_rule_newTitle" xml:space="preserve">
+    <value>Rule {0}</value>
+  </data>
+  <data name="layerSettings_statistics_field" xml:space="preserve">
+    <value>Field</value>
+  </data>
+  <data name="layerSettings_statistics_compute" xml:space="preserve">
+    <value>Compute</value>
+  </data>
+  <data name="layerSettings_statistics_liveNotSupported" xml:space="preserve">
+    <value>This layer is in Live mode: its features stay on the server, so its statistics are not available yet. Switch the layer to Cache mode to see them.</value>
+  </data>
+  <data name="layerSettings_statistics_emptyState" xml:space="preserve">
+    <value>Pick a field and press Compute</value>
+  </data>
+  <data name="layerSettings_statistics_failed" xml:space="preserve">
+    <value>Computing the statistics failed:</value>
+  </data>
+  <data name="layerSettings_statistics_summary" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="layerSettings_statistics_topValues" xml:space="preserve">
+    <value>Most frequent values</value>
+  </data>
+  <data name="layerSettings_statistics_value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="layerSettings_statistics_count" xml:space="preserve">
+    <value>Count</value>
+  </data>
+  <data name="layerSettings_statistics_featureCount" xml:space="preserve">
+    <value>Features</value>
+  </data>
+  <data name="layerSettings_statistics_emptyCount" xml:space="preserve">
+    <value>Empty values</value>
+  </data>
+  <data name="layerSettings_statistics_distinctCount" xml:space="preserve">
+    <value>Distinct values</value>
+  </data>
+  <data name="layerSettings_statistics_min" xml:space="preserve">
+    <value>Minimum</value>
+  </data>
+  <data name="layerSettings_statistics_max" xml:space="preserve">
+    <value>Maximum</value>
+  </data>
+  <data name="layerSettings_statistics_sum" xml:space="preserve">
+    <value>Sum</value>
+  </data>
+  <data name="layerSettings_statistics_mean" xml:space="preserve">
+    <value>Mean</value>
+  </data>
+  <data name="layerSettings_statistics_median" xml:space="preserve">
+    <value>Median</value>
+  </data>
+  <data name="layerSettings_statistics_standardDeviation" xml:space="preserve">
+    <value>Standard deviation</value>
+  </data>
+  <data name="layerSettings_statistics_minDate" xml:space="preserve">
+    <value>Earliest</value>
+  </data>
+  <data name="layerSettings_statistics_maxDate" xml:space="preserve">
+    <value>Latest</value>
+  </data>
+  <data name="layerSettings_statistics_emptyValue" xml:space="preserve">
+    <value>(empty)</value>
+  </data>
+  <data name="layerSettings_statistics_modeField" xml:space="preserve">
+    <value>Field statistics</value>
+  </data>
+  <data name="layerSettings_statistics_modeGroupBy" xml:space="preserve">
+    <value>Group by field</value>
+  </data>
+  <data name="layerSettings_statistics_groupByField" xml:space="preserve">
+    <value>Group by</value>
+  </data>
+  <data name="layerSettings_statistics_sumField" xml:space="preserve">
+    <value>Total of</value>
+  </data>
+  <data name="layerSettings_statistics_none" xml:space="preserve">
+    <value>(none)</value>
+  </data>
+  <data name="layerSettings_statistics_groupCount" xml:space="preserve">
+    <value>Groups</value>
+  </data>
+  <data name="layerSettings_statistics_totalLength" xml:space="preserve">
+    <value>Total length</value>
+  </data>
+  <data name="layerSettings_statistics_totalArea" xml:space="preserve">
+    <value>Total area</value>
+  </data>
+  <data name="layerSettings_statistics_sumOf" xml:space="preserve">
+    <value>Total of {0}</value>
+  </data>
+  <data name="layerSettings_statistics_groups" xml:space="preserve">
+    <value>Groups</value>
+  </data>
+  <data name="layerSettings_statistics_groupsTruncated" xml:space="preserve">
+    <value>Showing the first {0} of {1} groups.</value>
+  </data>
+  <data name="layerSettings_statistics_invalidNote" xml:space="preserve">
+    <value>{0} values could not be read as the field's type and are left out.</value>
+  </data>
+  <data name="layerSettings_statistics_total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="layerSettings_statistics_topOfDistinct" xml:space="preserve">
+    <value>{0} of {1} values</value>
+  </data>
+  <data name="layerSettings_statistics_sortedByCount" xml:space="preserve">
+    <value>Sorted by count</value>
+  </data>
+  <data name="layerSettings_statistics_modeGeometry" xml:space="preserve">
+    <value>Geometry</value>
+  </data>
+  <data name="layerSettings_statistics_emptyGeometryCount" xml:space="preserve">
+    <value>Empty geometries</value>
+  </data>
+  <data name="layerSettings_statistics_distribution" xml:space="preserve">
+    <value>Distribution</value>
+  </data>
+  <data name="layerSettings_statistics_lengthPerFeature" xml:space="preserve">
+    <value>Length per feature ({0})</value>
+  </data>
+  <data name="layerSettings_statistics_areaPerFeature" xml:space="preserve">
+    <value>Area per feature ({0})</value>
+  </data>
+  <data name="layerSettings_statistics_binCount" xml:space="preserve">
+    <value>{0} bins</value>
+  </data>
+  <data name="layerSettings_statistics_noMeasureNote" xml:space="preserve">
+    <value>Length and area apply to line and polygon layers only.</value>
+  </data>
+  <data name="layerSettings_statistics_unmeasuredNote" xml:space="preserve">
+    <value>{0} geometries could not be measured and are left out.</value>
+  </data>
+  <data name="layerSettings_statistics_viewHistogram" xml:space="preserve">
+    <value>Chart</value>
+  </data>
+  <data name="layerSettings_statistics_viewTable" xml:space="preserve">
+    <value>Top values</value>
+  </data>
+  <data name="layerSettings_statistics_geometryHint" xml:space="preserve">
+    <value>Geodesic length (line layers) or area (polygon layers) of every feature, on the WGS84 ellipsoid.</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainCount" xml:space="preserve">
+    <value>Outside the domain</value>
+  </data>
+  <data name="layerSettings_statistics_domainUsage" xml:space="preserve">
+    <value>{0} of {1} domain values used</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainNote" xml:space="preserve">
+    <value>{0} features have a value outside the field's domain.</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainTooltip" xml:space="preserve">
+    <value>Not a value of the field's domain</value>
+  </data>
+  <data name="sldGenerator_title" xml:space="preserve">
+    <value>Generate rules from field values</value>
+  </data>
+  <data name="sldGenerator_field" xml:space="preserve">
+    <value>Field</value>
+  </data>
+  <data name="sldGenerator_geometry" xml:space="preserve">
+    <value>Geometry</value>
+  </data>
+  <data name="sldGenerator_geometryPoint" xml:space="preserve">
+    <value>Point</value>
+  </data>
+  <data name="sldGenerator_geometryLine" xml:space="preserve">
+    <value>Line</value>
+  </data>
+  <data name="sldGenerator_geometryPolygon" xml:space="preserve">
+    <value>Polygon</value>
+  </data>
+  <data name="sldGenerator_values" xml:space="preserve">
+    <value>Values</value>
+  </data>
+  <data name="sldGenerator_valuesData" xml:space="preserve">
+    <value>Values in the layer</value>
+  </data>
+  <data name="sldGenerator_valuesDomain" xml:space="preserve">
+    <value>All domain values</value>
+  </data>
+  <data name="sldGenerator_colors" xml:space="preserve">
+    <value>Colors</value>
+  </data>
+  <data name="sldGenerator_colorsPalette" xml:space="preserve">
+    <value>Built-in palette</value>
+  </data>
+  <data name="sldGenerator_colorsDomain" xml:space="preserve">
+    <value>Domain colors</value>
+  </data>
+  <data name="sldGenerator_includeOther" xml:space="preserve">
+    <value>Add a rule for other values</value>
+  </data>
+  <data name="sldGenerator_replaceExisting" xml:space="preserve">
+    <value>Replace the current rules</value>
+  </data>
+  <data name="sldGenerator_preview" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="sldGenerator_noField" xml:space="preserve">
+    <value>No field to categorize by</value>
+  </data>
+  <data name="sldGenerator_noValues" xml:space="preserve">
+    <value>The field has no values</value>
+  </data>
+  <data name="sldGenerator_ruleCount" xml:space="preserve">
+    <value>{0} rules</value>
+  </data>
+  <data name="sldGenerator_previewCut" xml:space="preserve">
+    <value>(the first {0} are shown)</value>
+  </data>
+  <data name="sldGenerator_failed" xml:space="preserve">
+    <value>Reading the values failed:</value>
+  </data>
+  <data name="sldGenerator_generate" xml:space="preserve">
+    <value>Generate</value>
+  </data>
+  <data name="sldGenerator_otherValues" xml:space="preserve">
+    <value>Other values</value>
+  </data>
+  <data name="layerSettings_general_summary" xml:space="preserve">
+    <value>Layer summary</value>
+  </data>
+  <data name="layerSettings_general_loadMode" xml:space="preserve">
+    <value>Loading mode:</value>
+  </data>
+  <data name="layerSettings_general_loadModeCache" xml:space="preserve">
+    <value>Load all at once (Cache)</value>
+  </data>
+  <data name="layerSettings_general_loadModeLive" xml:space="preserve">
+    <value>Load by map view (Live)</value>
+  </data>
+  <data name="layerSettings_general_featureCount" xml:space="preserve">
+    <value>Features:</value>
+  </data>
+  <data name="layerSettings_general_featureCountLive" xml:space="preserve">
+    <value>Not available in Live mode (only the visible area is loaded)</value>
+  </data>
+  <data name="layerSettings_general_fieldCount" xml:space="preserve">
+    <value>Fields:</value>
+  </data>
+  <data name="layerSettings_general_geometryType" xml:space="preserve">
+    <value>Geometry type:</value>
+  </data>
+  <data name="layerSettings_general_srs" xml:space="preserve">
+    <value>Spatial reference:</value>
+  </data>
+  <data name="layerSettings_general_originalSrs" xml:space="preserve">
+    <value>Source spatial reference:</value>
+  </data>
+  <data name="layerSettings_general_extentWgs84" xml:space="preserve">
+    <value>Extent (WGS84):</value>
+  </data>
+  <data name="layerSettings_general_extentUtm" xml:space="preserve">
+    <value>Extent (UTM {0}):</value>
+  </data>
+  <data name="layerSettings_general_unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="layerStyles_ruleCount" xml:space="preserve">
+    <value>{0} rules</value>
+  </data>
+  <data name="layerStyles_untitled" xml:space="preserve">
+    <value>Untitled style</value>
+  </data>
+  <data name="layerStyles_newTitle" xml:space="preserve">
+    <value>Style {0}</value>
+  </data>
+  <data name="layerStyles_copyTitle" xml:space="preserve">
+    <value>{0} (copy)</value>
+  </data>
+  <data name="layerStyles_addFirst" xml:space="preserve">
+    <value>Add a style</value>
+  </data>
+  <data name="layerStyles_adminBanner" xml:space="preserve">
+    <value>Users start on the default style and can switch to the others in the Symbology tab or from the map legend.</value>
+  </data>
+  <data name="layerStyles_add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="layerStyles_copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="layerStyles_edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="layerStyles_setDefault" xml:space="preserve">
+    <value>Set as default</value>
+  </data>
+  <data name="layerStyles_moveUp" xml:space="preserve">
+    <value>Move up</value>
+  </data>
+  <data name="layerStyles_moveDown" xml:space="preserve">
+    <value>Move down</value>
+  </data>
+  <data name="layerStyles_delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="layerStyles_defaultBadge" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="layerStyles_titleWatermark" xml:space="preserve">
+    <value>Style title</value>
+  </data>
+  <data name="layerStyles_legend_pick" xml:space="preserve">
+    <value>Style</value>
+  </data>
+  <data name="layerStyles_tab_notAvailable" xml:space="preserve">
+    <value>This layer has no symbology to set.</value>
+  </data>
+  <data name="layerStyles_tab_styles" xml:space="preserve">
+    <value>Styles</value>
+  </data>
+  <data name="layerStyles_tab_singleStyle" xml:space="preserve">
+    <value>This layer has one style. The administrator can add more in the server layer settings.</value>
+  </data>
+  <data name="layerStyles_tab_legend" xml:space="preserve">
+    <value>Legend</value>
+  </data>
+  <data name="layerStyles_tab_exportLegend" xml:space="preserve">
+    <value>Export the legend as PNG</value>
+  </data>
+  <data name="layerStyles_tab_quickEdit" xml:space="preserve">
+    <value>Quick edit</value>
+  </data>
+  <data name="layerStyles_tab_myChanges" xml:space="preserve">
+    <value>My changes</value>
+  </data>
+  <data name="layerStyles_tab_noChanges" xml:space="preserve">
+    <value>None: the layer is drawn as the server defines it.</value>
+  </data>
+  <data name="layerStyles_tab_hasChanges" xml:space="preserve">
+    <value>You changed this layer's symbology. The change is kept in your project; Restore admin styles brings back the server's styles.</value>
+  </data>
+  <data name="serverLayerSettings_error_styleTitleRequired" xml:space="preserve">
+    <value>When a layer has several styles, each needs a title.</value>
+  </data>
+  <data name="serverLayerSettings_error_duplicateStyleTitle" xml:space="preserve">
+    <value>Two styles have the same title.</value>
+  </data>
+  <data name="layerStyles_wholeLayer" xml:space="preserve">
+    <value>Whole layer</value>
+  </data>
+  <data name="layerStyles_wholeLayerHint" xml:space="preserve">
+    <value>The zoom range and the opacity apply to the layer whatever its symbology.</value>
+  </data>
+  <data name="layerStyles_modeSimple" xml:space="preserve">
+    <value>Simple</value>
+  </data>
+  <data name="layerStyles_modeStyles" xml:space="preserve">
+    <value>Styles (SLD)</value>
+  </data>
+  <data name="layerStyles_simpleHint" xml:space="preserve">
+    <value>One simple style from the colours below. Switch to Styles for rules by attribute and for several symbologies users can choose from.</value>
+  </data>
+  <data name="layerStyles_previewOf" xml:space="preserve">
+    <value>Legend: {0}</value>
+  </data>
+  <data name="layerStyles_switchToSimpleConfirm" xml:space="preserve">
+    <value>Remove the {0} style(s) of this layer? The simple colours will be used instead.</value>
+  </data>
+  <data name="layerStyles_labelsNote" xml:space="preserve">
+    <value>This layer is drawn with SLD styles: this label is drawn on top of whichever style is active.</value>
+  </data>
+  <data name="layerStyles_tab_changedStyles" xml:space="preserve">
+    <value>You changed these styles on this computer: {0}. The changes are kept in your project; Restore admin styles brings back the server's styles.</value>
+  </data>
+  <data name="layerStyles_tab_simpleHint" xml:space="preserve">
+    <value>This layer is drawn with simple colours; use Quick edit to change them.</value>
+  </data>
+  <data name="layerStyles_tab_editInSld" xml:space="preserve">
+    <value>Edit style in SLD editor</value>
+  </data>
+  <data name="layerStyles_tab_restore" xml:space="preserve">
+    <value>Restore admin styles</value>
+  </data>
+  <data name="layerStyles_tab_restoreTip" xml:space="preserve">
+    <value>Undo your changes to every style of this layer and draw it as the server defines it.</value>
+  </data>
+  <data name="layerStyles_tab_changedMark" xml:space="preserve">
+    <value>Changed by you</value>
+  </data>
+  <data name="dialog_symbology_restoreAdmin" xml:space="preserve">
+    <value>Restore admin style</value>
+  </data>
+  <data name="dialog_symbology_userChanged" xml:space="preserve">
+    <value>You changed this layer's colours on this computer.</value>
+  </data>
+  <data name="dialog_symbology_editInSld" xml:space="preserve">
+    <value>Edit in SLD editor</value>
+  </data>
+  <data name="dialog_symbology_advancedHint" xml:space="preserve">
+    <value>The SLD editor adds rules by attribute, labels and more. Once you save there, this layer opens in the SLD editor; Restore admin style brings the quick colours back.</value>
+  </data>
+  <data name="layerSettings_statistics_liveOnServer" xml:space="preserve">
+    <value>This layer is in Live mode: its statistics are computed by the server over all its features. Edits you have not saved are not included.</value>
+  </data>
+  <data name="layerSettings_general_featureCountServer" xml:space="preserve">
+    <value>Counted on the server, over all the features (edits you have not saved are not included)</value>
+  </data>
+  <data name="serverLayerSettings_importModel_export" xml:space="preserve">
+    <value>Export import model…</value>
+  </data>
+  <data name="serverLayerSettings_importModel_exportTip" xml:space="preserve">
+    <value>Export import model: save the data model of every active layer (tables, columns, types, domains) as the file the import tool reads</value>
+  </data>
+  <data name="serverLayerSettings_importModel_saved" xml:space="preserve">
+    <value>Import model of {0} layers saved in {1}.</value>
+  </data>
+  <data name="serverLayerSettings_importModel_failed" xml:space="preserve">
+    <value>The import model could not be saved.</value>
+  </data>
+  <data name="legend_import_gisFiles" xml:space="preserve">
+    <value>GIS/CAD files</value>
+    <comment>import-layer popup group header: Shapefile, DXF, GPX</comment>
+  </data>
+  <data name="legend_import_googleEarth" xml:space="preserve">
+    <value>Google Earth</value>
+    <comment>import-layer popup group header: KML, KMZ</comment>
+  </data>
+  <data name="legend_import_tables" xml:space="preserve">
+    <value>Tables</value>
+    <comment>import-layer popup group header: CSV, TSV</comment>
+  </data>
+  <data name="legend_import_json" xml:space="preserve">
+    <value>JSON</value>
+    <comment>import-layer popup group header: GeoJSON, TopoJSON, EsriJSON</comment>
+  </data>
+  <data name="legend_filter_groupVector" xml:space="preserve">
+    <value>Vector</value>
+    <comment>layer-type filter popup group header</comment>
+  </data>
+  <data name="legend_filter_groupRaster" xml:space="preserve">
+    <value>Raster</value>
+    <comment>layer-type filter popup group header</comment>
+  </data>
+  <data name="legend_filter_groupService" xml:space="preserve">
+    <value>Services</value>
+    <comment>layer-type filter popup group header</comment>
+  </data>
+  <data name="legend_filter_groupOther" xml:space="preserve">
+    <value>Other</value>
+    <comment>layer-type filter popup group header</comment>
+  </data>
+  <data name="legend_filter_kindRest" xml:space="preserve">
+    <value>REST service</value>
+    <comment>layer-type filter row: REST web service layers</comment>
+  </data>
+  <data name="legend_filter_kindGrpc" xml:space="preserve">
+    <value>gRPC service</value>
+    <comment>layer-type filter row: gRPC service layers</comment>
+  </data>
+  <data name="legend_filter_kindWorldfile" xml:space="preserve">
+    <value>World file</value>
+    <comment>layer-type filter row: image + world file rasters</comment>
+  </data>
+  <data name="legend_filter_kindImagePyramid" xml:space="preserve">
+    <value>Image pyramid</value>
+    <comment>layer-type filter row: zipped image pyramid rasters</comment>
+  </data>
+  <data name="legend_filter_kindOther" xml:space="preserve">
+    <value>Unspecified</value>
+    <comment>layer-type filter row: layers whose source kind is not known</comment>
+  </data>
+  <data name="legend_filter_only" xml:space="preserve">
+    <value>Only</value>
+    <comment>layer-type filter row action: show only this type</comment>
   </data>
 </root>

@@ -36,10 +36,12 @@ public class FilteredSubLayersConverter : IMultiValueConverter
 
         var view = GetSortedView(layers);
 
+        // assigning Filter refreshes the view by itself; a second Refresh() was a second pass
+        // over the group's items on every key typed in the legend's filter box
         if (!hasNameFilter && !hasKindFilter)
         {
-            view.Filter = null;
-            return layers;
+            if (view.Filter is not null)
+                view.Filter = null;
         }
         else
         {
@@ -50,7 +52,8 @@ public class FilteredSubLayersConverter : IMultiValueConverter
             };
         }
 
-        view.Refresh();
+        // always the view, never the bare collection: a target that switches between the two is
+        // a new ItemsSource, and the group's sub-tree is generated again from scratch
         return view;
     }
 
@@ -63,6 +66,13 @@ public class FilteredSubLayersConverter : IMultiValueConverter
     private static ICollectionView GetSortedView(IEnumerable collection)
     {
         var view = CollectionViewSource.GetDefaultView(collection);
+
+        // set once per collection: clearing and re-adding the sort on each conversion re-sorted
+        // the group every time the filter text changed
+        if (view.SortDescriptions.Count == 1 &&
+            view.SortDescriptions[0].PropertyName == "TocOrder" &&
+            view.SortDescriptions[0].Direction == ListSortDirection.Descending)
+            return view;
 
         using (view.DeferRefresh())  // Prevents multiple refreshes
         {

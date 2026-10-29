@@ -227,7 +227,8 @@ public static class OgcFilterExtensions
             {
                 if (propertyName is null || !f.Attributes.ContainsKey(propertyName)) return false;
 
-                var attribute = f.Attributes[propertyName]?.ToString();
+                // invariant: the literal is written that way (a decimal under a Persian UI would read "0/75")
+                var attribute = System.Convert.ToString(f.Attributes[propertyName], System.Globalization.CultureInfo.InvariantCulture);
 
                 if (literal is null) return attribute is null;
 
@@ -245,7 +246,8 @@ public static class OgcFilterExtensions
             {
                 if (propertyName is null || !f.Attributes.ContainsKey(propertyName)) return false;
 
-                var attribute = f.Attributes[propertyName]?.ToString();
+                // invariant: the literal is written that way (a decimal under a Persian UI would read "0/75")
+                var attribute = System.Convert.ToString(f.Attributes[propertyName], System.Globalization.CultureInfo.InvariantCulture);
 
                 if (literal is null) return attribute is not null;
 

@@ -103,5 +103,6 @@ public struct DbfFieldDescriptor
         Precision = this.DecimalCount,
         Scale = this.Length,
         TypeFullName = DbfFile.GetType(this).FullName/*.ToString()*/,       
+        DataType = FieldDataTypes.FromClrType(DbfFile.GetType(this)),
     };
 }

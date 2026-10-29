@@ -15,6 +15,7 @@ public class FieldAttribute : Attribute
 
 	public bool CanWrite { get; set; } = true;
 
+	/// <summary>Declares a plain domain (a list of allowed values); it reaches clients as <see cref="Primitives.Field.Domain"/>.</summary>
 	public object[] AllowedValues { get; set; } = [];
 
 	public string? DisplayFormat { get; set; }

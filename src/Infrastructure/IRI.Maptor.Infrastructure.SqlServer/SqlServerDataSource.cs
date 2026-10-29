@@ -419,7 +419,7 @@ public class SqlServerDataSource : VectorDataSource, IEditableVectorDataSource
 
             if (type != typeof(SqlGeometry))
             {
-                fields.Add(new Field() { Name = reader.GetName(i), TypeFullName = type?.FullName ?? "object"/*type.ToString()*/ });
+                fields.Add(new Field() { Name = reader.GetName(i), TypeFullName = type?.FullName ?? "object"/*type.ToString()*/, DataType = FieldDataTypes.FromClrType(type) });
             }
         }
 

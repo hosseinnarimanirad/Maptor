@@ -6,6 +6,7 @@ using System.Linq;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Presentation.Wpf.Converters;
 using IRI.Maptor.Presentation.Wpf.Models.Identify;
+using IRI.Maptor.Core.Common.Enums;
 using IRI.Maptor.Core.Common.Primitives;
 using IRI.Maptor.Core.Spatial.Primitives;
 
@@ -130,16 +131,15 @@ public static class IdentifyAttributeHelper
 
     private static IdentifyAttributeRow CreateRow(string name, Field? field, object? value)
     {
-        Type? type = null;
+        var dataType = field?.ResolveDataType() ?? FieldDataType.Unknown;
 
-        if (field is not null && !string.IsNullOrWhiteSpace(field.TypeFullName))
-            type = Type.GetType(field.TypeFullName);
+        // a field that does not say: the value does
+        if (dataType == FieldDataType.Unknown)
+            dataType = FieldDataTypes.FromClrType(value?.GetType());
 
-        type ??= value?.GetType();
+        var isNumeric = dataType.IsNumeric();
 
-        var isNumeric = type?.IsNumeric() == true;
-
-        var isDateTime = type?.IsDateTime() == true || value is DateTime || value is DateTimeOffset;
+        var isDateTime = dataType == FieldDataType.DateTime || value is DateTime || value is DateTimeOffset;
 
         var displayName = string.IsNullOrWhiteSpace(field?.Alias) ? name : field!.Alias!;
 

@@ -64,15 +64,22 @@ All inherit from `SymbolizerViewModelBase`:
 ### Views (`Views/Symbology/Sld/`)
 
 #### Main views
-- **`SldEditorView`** - Main composite view showing the full editor
-  - Style information panel (layer name, style name, title, abstract)
-  - Rules list with toolbar
-  - Tabbed interface for rule properties and symbolizers
-  - Live XML preview (regenerated when the tab is opened or refreshed)
+- **`SldEditorView`** - Main composite view, in three panes
+  - Rules: live swatch, legend text and scale/filter markers per rule; add, duplicate, move, delete
+    (keys Del, Ctrl+D, Alt+Up/Down)
+  - Rule editor: the legend text in a header, then tabs *Symbology* (one collapsible card per symbolizer,
+    with move/remove and a geometry-aware "Add" row), *Filter and scale*, *Details* (name, abstract)
+  - Preview: the selected rule drawn large (`RuleViewModel.PreviewImage`, label drawn by `HaloTextBlock`),
+    its scale range and filter in words, and the whole style as the legend lists it
+  - Bottom panels on demand: the style's name/title/abstract, and the SLD as XML (kept current while open,
+    with Copy)
 
-- **`SldEditorWindow`** - Standalone window wrapping `SldEditorView`
-  - Toolbar with import/export buttons
-  - Status bar showing rule count and selection
+- **`SldEditorWindow`** - Window wrapping `SldEditorView`
+  - Header with the layer name and rule count; Import, Export, Reset to default
+  - Footer Apply / Cancel / OK; F2 edits the selected rule's legend text
+
+- **`SldEditorStyles.xaml`** - Styles, converters and item templates shared by the editor and every sub-view
+  (each merges it: a UserControl's StaticResources resolve before it has a parent)
 
 #### Symbolizer editors
 - **`PointSymbolizerView`** - Edit point symbolizer properties
@@ -199,6 +206,11 @@ window.Show();
 - Editable single-condition OGC filter (property / operator / value); more complex loaded filters are preserved on round-trip
 - Multiple symbolizers per rule
 - Rule ordering (move up/down)
+- **Generate rules from field values** (2026-10-22): `GenerateRulesCommand` opens `SldRuleGeneratorWindow`
+  (`SldRuleGeneratorViewModel`) — field, values (present in the layer / all domain values), colours
+  (palette / domain), "other values" rule, replace or append. Offered when the host passed `Field` objects
+  (`SldEditorViewModel.Create(..., fields)`); the host may also set `ValuesProvider` and
+  `DomainColorsProvider` (or the static `DefaultDomainColorsProvider`).
 
 ### File operations
 - Export to SLD XML file (via `SldHelper.Save`)

@@ -2,11 +2,14 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Presentation.Core;
 using IRI.Maptor.Presentation.Wpf.Helpers;
+using IRI.Maptor.Core.Common.Enums;
 using IRI.Maptor.Core.Common.Primitives;
+using IRI.Maptor.Core.Spatial.Dtos;
 using IRI.Maptor.Core.Spatial.Primitives;
 
 using Point = IRI.Maptor.Core.Common.Primitives.Point;
@@ -87,6 +90,19 @@ public class FeatureTableFilterManager : Notifier
         RaisePropertyChanged(nameof(HasActiveFilter));
 
         FilterChanged?.Invoke();
+    }
+
+    /// <summary>The active filters as one server query condition list (Live layers).</summary>
+    public List<FeatureFilterDto> ToServerFilters() => ColumnFilters.Where(f => f.IsActive).SelectMany(f => f.ToServerFilters()).ToList();
+
+    /// <summary>Some active filter matches nothing, so the result is empty without asking the server.</summary>
+    public bool MatchesNothing => ColumnFilters.Any(f => f.IsActive && f.MatchesNothing);
+
+    /// <summary>Live layers: value checklists come from the server's distinct values of the whole layer.</summary>
+    public void UseServerDistinctValues(Func<string, Task<IReadOnlyList<object?>>> provider)
+    {
+        foreach (var filter in ColumnFilters.OfType<DistinctValuesColumnFilter>().Where(f => f.IsDynamic))
+            filter.ServerValuesProvider = provider;
     }
 
     public bool Matches(Feature<Point> feature)
@@ -215,7 +231,7 @@ public class FeatureTableFilterManager : Notifier
         if (field is null || string.IsNullOrEmpty(field.Name))
             return false;
 
-        if (field.TypeFullName?.ContainsIgnoreCase(FeatureTableHelper.NetTopologySuiteColumnName) == true)
+        if (FeatureTableHelper.IsGeometryField(field))
             return false;
 
         if (field.Name.EqualsIgnoreCase("rowversion"))
@@ -227,9 +243,11 @@ public class FeatureTableFilterManager : Notifier
     // mirrors the column-type dispatch of DataGridDictionaryBehavior, in the same order
     private static ColumnFilterViewModel CreateFor(Field field, Func<IEnumerable<Feature<Point>>> featuresProvider)
     {
-        if (field.AllowedValues != null && field.AllowedValues.Length > 0)
+        var domain = field.Domain;
+
+        if (domain is not null)
         {
-            var values = field.AllowedValues.Cast<object?>().ToList();
+            var values = domain.GetStoredValues().ToList();
 
             if (field.IsNullable)
                 values.Insert(0, null);
@@ -237,12 +255,12 @@ public class FeatureTableFilterManager : Notifier
             return new DistinctValuesColumnFilter(field, featuresProvider, DistinctValuesSeedMode.Fixed, values);
         }
 
-        var fieldType = field.TypeFullName is null ? null : Type.GetType(field.TypeFullName);
+        var dataType = field.ResolveDataType();
 
-        if (fieldType is null)
+        if (dataType == FieldDataType.Unknown)
             return new DistinctValuesColumnFilter(field, featuresProvider, DistinctValuesSeedMode.Dynamic);
 
-        if (fieldType.IsBool())
+        if (dataType == FieldDataType.Boolean)
         {
             var values = new List<object?> { true, false };
 
@@ -252,10 +270,10 @@ public class FeatureTableFilterManager : Notifier
             return new DistinctValuesColumnFilter(field, featuresProvider, DistinctValuesSeedMode.Fixed, values, isSearchVisible: false);
         }
 
-        if (fieldType.IsDateTime())
+        if (dataType == FieldDataType.DateTime)
             return new DateColumnFilter(field, featuresProvider);
 
-        if (fieldType.IsNumeric())
+        if (dataType.IsNumeric())
             return new NumericColumnFilter(field, featuresProvider);
 
         return new DistinctValuesColumnFilter(field, featuresProvider, DistinctValuesSeedMode.Dynamic);

@@ -33,6 +33,22 @@ SldHelper.Save("example.sld", sld);                       // straight to a file
 
 The namespace prefixes (`sld`, `ogc`, `xlink`, `xsi`) are emitted automatically from the declarations `StyledLayerDescriptor` carries, so no `XmlSerializerNamespaces` setup is required.
 
+## Categorized rules (one rule per value)
+
+`SldCategoryRules` builds the rules of categorized symbology: a `PropertyIsEqualTo` rule per value, each in
+its own colour, optionally followed by an "other values" rule (`ElseFilter`). A template symbolizer keeps
+the style (widths, dashes, mark, sizes); only the colours change.
+
+```csharp
+var rules = SldCategoryRules.Create(
+    new[] { new SldCategory { Value = "PE" }, new SldCategory { Value = "Steel", Title = "فولاد", Color = "rgba(79,6,250,1)" } },
+    new SldCategoryOptions { FieldName = "Material", Geometry = SldGeometryKind.Line, Template = currentLineSymbolizer });
+```
+
+Values without a colour take `SldCategoryRules.Palette` (12 distinct colours, then lighter and darker
+variants); `ParseColor` reads `#rgb`, `#rrggbb` and `rgb(...)`/`rgba(...)`. Literals are written as invariant
+text.
+
 ## References
 
 - [OGC Styled Layer Descriptor Specification 1.0.0](https://portal.ogc.org/files/?artifact_id=1188)

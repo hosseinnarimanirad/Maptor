@@ -56,6 +56,22 @@ using IRI.Maptor.Core.Common.Mathematics;
 var m = new Matrix(new double[,] { { 1, 2 }, { 3, 4 } });
 ```
 
+Describing a layer's fields (`Field`): the logical type and the allowed values travel with every field.
+
+```csharp
+using IRI.Maptor.Core.Common.Primitives;
+
+List<Field> fields = Field.GetFields<Pipe>();       // from [Field(...)] and domain attributes
+
+FieldDataType type = fields[0].ResolveDataType();   // DataType, else what TypeFullName names, else Unknown
+FieldDomain? domain = fields[0].Domain;             // values (+ codes) from a FieldDomainAttribute or [Field(AllowedValues = ...)]
+bool allowed = domain?.Contains(4) == true;         // numbers compare by value whatever their CLR type
+```
+
+`TypeFullName` keeps the producer's native name (a .NET type name, or an SQL type name in the SQL Server
+schema readers); read the type with `ResolveDataType()`. Applications attach their own domains by deriving
+from `FieldDomainAttribute`.
+
 ## See also
 
 - [Algebra: Matrix and Vector](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Common/Mathematics/Algebra/README.md)

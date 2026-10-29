@@ -3,10 +3,13 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows.Data;
 
 using IRI.Maptor.Presentation.Core;
+using IRI.Maptor.Core.Common.Enums;
 using IRI.Maptor.Core.Common.Primitives;
+using IRI.Maptor.Core.Spatial.Dtos;
 using IRI.Maptor.Core.Spatial.Primitives;
 
 using Point = IRI.Maptor.Core.Common.Primitives.Point;
@@ -61,13 +64,13 @@ public enum DistinctValuesSeedMode
     /// <summary>Distinct values computed from the data, lazily when the popup opens.</summary>
     Dynamic,
 
-    /// <summary>Fixed list (AllowedValues fields, booleans).</summary>
+    /// <summary>Fixed list (domain fields, booleans).</summary>
     Fixed,
 }
 
 /// <summary>
 /// Checklist filter over the distinct values of a column. Used for string columns,
-/// AllowedValues columns, booleans and any column whose type cannot be resolved.
+/// domain columns, booleans and any column whose type cannot be resolved.
 /// </summary>
 public class DistinctValuesColumnFilter : ColumnFilterViewModel
 {
@@ -132,6 +135,42 @@ public class DistinctValuesColumnFilter : ColumnFilterViewModel
         return _selectedKeys.Contains(GetKey(rawValue));
     }
 
+    public override bool MatchesNothing => _selectedKeys is { Count: 0 };
+
+    // the checked keys as an In list; the empty key stands for null (and "" on text columns), as GetKey does
+    public override IEnumerable<FeatureFilterDto> ToServerFilters()
+    {
+        if (_selectedKeys is null || _selectedKeys.Count == 0)
+            yield break;
+
+        var values = new List<object?>();
+
+        foreach (var key in _selectedKeys)
+        {
+            if (key.Length > 0)
+            {
+                values.Add(key);
+                continue;
+            }
+
+            values.Add(null);
+
+            // a text column (or one of unknown type) may hold "" where another holds null
+            if (Field.ResolveDataType() is FieldDataType.Text or FieldDataType.Unknown)
+                values.Add(string.Empty);
+        }
+
+        yield return new FeatureFilterDto { Field = FieldName, Operator = FeatureFilterOperator.In, Values = values };
+    }
+
+    /// <summary>
+    /// Live layers: the checklist comes from the server's distinct values of the whole layer instead of the
+    /// rows in memory (which are one page). Set by the feature table when it pages on the server.
+    /// </summary>
+    public Func<string, Task<IReadOnlyList<object?>>>? ServerValuesProvider { get; set; }
+
+    public bool IsDynamic => _seedMode == DistinctValuesSeedMode.Dynamic;
+
     public override void Clear()
     {
         _suppressItemEvents = true;
@@ -163,8 +202,26 @@ public class DistinctValuesColumnFilter : ColumnFilterViewModel
 
     protected override void OnPopupOpened()
     {
-        if (_seedMode == DistinctValuesSeedMode.Dynamic)
+        if (_seedMode != DistinctValuesSeedMode.Dynamic)
+            return;
+
+        if (ServerValuesProvider is null)
             RecomputeDistinctValues();
+        else
+            _ = LoadServerValuesAsync(ServerValuesProvider);
+    }
+
+    private async Task LoadServerValuesAsync(Func<string, Task<IReadOnlyList<object?>>> provider)
+    {
+        try
+        {
+            FillItems(await provider(FieldName));
+        }
+        catch (Exception ex)
+        {
+            // keep the current checklist; the table still works with it
+            System.Diagnostics.Trace.TraceWarning($"Distinct values of '{FieldName}' failed: {ex.Message}");
+        }
     }
 
     private void SetAll(bool selected)
@@ -198,6 +255,15 @@ public class DistinctValuesColumnFilter : ColumnFilterViewModel
 
     private void RecomputeDistinctValues()
     {
+        FillItems(FeaturesProvider().Select(feature =>
+        {
+            feature.Attributes.TryGetValue(FieldName, out var raw);
+            return raw;
+        }));
+    }
+
+    private void FillItems(IEnumerable<object?> rawValues)
+    {
         // preserve what the user unchecked; new values default to checked so
         // edits never get silently filtered out
         var uncheckedKeys = new HashSet<string>(
@@ -208,10 +274,8 @@ public class DistinctValuesColumnFilter : ColumnFilterViewModel
 
         var hasEmpty = false;
 
-        foreach (var feature in FeaturesProvider())
+        foreach (var raw in rawValues)
         {
-            feature.Attributes.TryGetValue(FieldName, out var raw);
-
             if (IsEmptyValue(raw))
             {
                 hasEmpty = true;

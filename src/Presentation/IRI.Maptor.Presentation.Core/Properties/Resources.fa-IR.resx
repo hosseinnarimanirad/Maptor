@@ -887,7 +887,7 @@
     <value>شفافیت:</value>
   </data>
   <data name="layerSettings_general_sourceAddress" xml:space="preserve">
-    <value>منبع داده</value>
+    <value>منبع داده:</value>
   </data>
   <data name="layerSettings_general_sourceType" xml:space="preserve">
     <value>نوع فایل:</value>
@@ -2460,5 +2460,1061 @@
   </data>
   <data name="dialog_goto_coordinateSystem" xml:space="preserve">
     <value>سیستم مختصات</value>
+  </data>
+  <data name="featureTable_unsavedChangesNote" xml:space="preserve">
+    <value>{0} تغییر ذخیره نشده (در شمارش‌ها نیامده است)</value>
+  </data>
+  <data name="featureTable_showUnsavedChanges" xml:space="preserve">
+    <value>نمایش فقط تغییرات ذخیره نشده</value>
+  </data>
+  <data name="legendItem_zoomInToSeeAllFeatures" xml:space="preserve">
+    <value>همهٔ عوارض نمایش داده نشده است: تعداد عوارض این محدوده بیش از حدی است که یکجا بارگذاری می‌شود. برای دیدن همهٔ عوارض بزرگ‌نمایی کنید</value>
+  </data>
+  <data name="serverLayerSettings_title" xml:space="preserve">
+    <value>تنظیمات لایه‌های سرور</value>
+  </data>
+  <data name="serverLayerSettings_searchPlaceholder" xml:space="preserve">
+    <value>جستجوی لایه‌ها و گروه‌ها</value>
+  </data>
+  <data name="serverLayerSettings_noMatch" xml:space="preserve">
+    <value>هیچ لایه یا گروهی با جستجو مطابقت ندارد.</value>
+  </data>
+  <data name="serverLayerSettings_noSelection" xml:space="preserve">
+    <value>برای ویرایش، یک لایه یا گروه را انتخاب کنید.</value>
+  </data>
+  <data name="serverLayerSettings_loadFailed" xml:space="preserve">
+    <value>تنظیمات لایه‌ها از سرور دریافت نشد.</value>
+  </data>
+  <data name="serverLayerSettings_saveFailed" xml:space="preserve">
+    <value>تغییرات به سرور ارسال نشد.</value>
+  </data>
+  <data name="serverLayerSettings_retry" xml:space="preserve">
+    <value>تلاش دوباره</value>
+  </data>
+  <data name="serverLayerSettings_reload" xml:space="preserve">
+    <value>دریافت دوباره از سرور</value>
+  </data>
+  <data name="serverLayerSettings_revert" xml:space="preserve">
+    <value>بازگردانی</value>
+  </data>
+  <data name="serverLayerSettings_topLevel" xml:space="preserve">
+    <value>سطح اصلی</value>
+  </data>
+  <data name="serverLayerSettings_layerCount" xml:space="preserve">
+    <value>تعداد لایه‌ها: {0}</value>
+  </data>
+  <data name="serverLayerSettings_badge_unsaved" xml:space="preserve">
+    <value>ذخیره‌نشده</value>
+  </data>
+  <data name="serverLayerSettings_badge_inactive" xml:space="preserve">
+    <value>غیرفعال</value>
+  </data>
+  <data name="serverLayerSettings_badge_group" xml:space="preserve">
+    <value>گروه</value>
+  </data>
+  <data name="serverLayerSettings_badge_live" xml:space="preserve">
+    <value>برخط</value>
+  </data>
+  <data name="serverLayerSettings_tab_general" xml:space="preserve">
+    <value>عمومی</value>
+  </data>
+  <data name="serverLayerSettings_tab_display" xml:space="preserve">
+    <value>نمایش</value>
+  </data>
+  <data name="serverLayerSettings_tab_labels" xml:space="preserve">
+    <value>برچسب‌ها</value>
+  </data>
+  <data name="serverLayerSettings_tab_loading" xml:space="preserve">
+    <value>بارگذاری</value>
+  </data>
+  <data name="serverLayerSettings_section_visibility" xml:space="preserve">
+    <value>وضعیت نمایش</value>
+  </data>
+  <data name="serverLayerSettings_section_source" xml:space="preserve">
+    <value>منبع داده</value>
+  </data>
+  <data name="serverLayerSettings_section_zoom" xml:space="preserve">
+    <value>محدوده بزرگ‌نمایی نمایش</value>
+  </data>
+  <data name="serverLayerSettings_section_style" xml:space="preserve">
+    <value>سبک نمایش</value>
+  </data>
+  <data name="serverLayerSettings_field_title" xml:space="preserve">
+    <value>عنوان</value>
+  </data>
+  <data name="serverLayerSettings_field_group" xml:space="preserve">
+    <value>گروه</value>
+  </data>
+  <data name="serverLayerSettings_field_active" xml:space="preserve">
+    <value>فعال</value>
+  </data>
+  <data name="serverLayerSettings_hint_active" xml:space="preserve">
+    <value>لایه یا گروه غیرفعال از دید همه کاربران پنهان است.</value>
+  </data>
+  <data name="serverLayerSettings_field_onByDefault" xml:space="preserve">
+    <value>روشن هنگام باز شدن نقشه</value>
+  </data>
+  <data name="serverLayerSettings_field_expanded" xml:space="preserve">
+    <value>باز در فهرست لایه‌ها</value>
+  </data>
+  <data name="serverLayerSettings_field_searchable" xml:space="preserve">
+    <value>قابل جستجو در نقشه</value>
+  </data>
+  <data name="serverLayerSettings_field_table" xml:space="preserve">
+    <value>جدول</value>
+  </data>
+  <data name="serverLayerSettings_field_serviceUrl" xml:space="preserve">
+    <value>نشانی سرویس</value>
+  </data>
+  <data name="serverLayerSettings_field_id" xml:space="preserve">
+    <value>شناسه</value>
+  </data>
+  <data name="serverLayerSettings_field_zoomFrom" xml:space="preserve">
+    <value>از سطح</value>
+  </data>
+  <data name="serverLayerSettings_field_zoomTo" xml:space="preserve">
+    <value>تا سطح</value>
+  </data>
+  <data name="serverLayerSettings_noLimit" xml:space="preserve">
+    <value>بدون محدودیت</value>
+  </data>
+  <data name="serverLayerSettings_hint_zoom" xml:space="preserve">
+    <value>برای نداشتن محدودیت، سطح را خالی بگذارید. سطح ۰ کل جهان و سطح ۱۸ جزئیات خیابان‌ها را نشان می‌دهد.</value>
+  </data>
+  <data name="serverLayerSettings_sld_none" xml:space="preserve">
+    <value>با سبک ساده زیر رسم می‌شود.</value>
+  </data>
+  <data name="serverLayerSettings_sld_active" xml:space="preserve">
+    <value>با سبک SLD رسم می‌شود. تا وقتی SLD تعریف شده است، رنگ‌های زیر به کار نمی‌روند.</value>
+  </data>
+  <data name="serverLayerSettings_sld_edit" xml:space="preserve">
+    <value>ویرایش SLD…</value>
+  </data>
+  <data name="serverLayerSettings_sld_remove" xml:space="preserve">
+    <value>حذف SLD</value>
+  </data>
+  <data name="serverLayerSettings_field_fill" xml:space="preserve">
+    <value>رنگ داخل</value>
+  </data>
+  <data name="serverLayerSettings_field_stroke" xml:space="preserve">
+    <value>رنگ مرز</value>
+  </data>
+  <data name="serverLayerSettings_field_strokeWidth" xml:space="preserve">
+    <value>ضخامت مرز</value>
+  </data>
+  <data name="serverLayerSettings_field_opacity" xml:space="preserve">
+    <value>شفافیت</value>
+  </data>
+  <data name="serverLayerSettings_field_preview" xml:space="preserve">
+    <value>پیش‌نمایش</value>
+  </data>
+  <data name="serverLayerSettings_field_hasLabels" xml:space="preserve">
+    <value>این لایه برچسب دارد</value>
+  </data>
+  <data name="serverLayerSettings_field_labelsOn" xml:space="preserve">
+    <value>نمایش برچسب‌ها هنگام باز شدن نقشه</value>
+  </data>
+  <data name="serverLayerSettings_field_labelColumn" xml:space="preserve">
+    <value>فیلد برچسب</value>
+  </data>
+  <data name="serverLayerSettings_field_labelSize" xml:space="preserve">
+    <value>اندازه قلم</value>
+  </data>
+  <data name="serverLayerSettings_field_labelColor" xml:space="preserve">
+    <value>رنگ</value>
+  </data>
+  <data name="serverLayerSettings_mode_cache" xml:space="preserve">
+    <value>بارگذاری یکجا (Cache)</value>
+  </data>
+  <data name="serverLayerSettings_mode_cacheDescription" xml:space="preserve">
+    <value>کل لایه یک بار، هنگام باز شدن نقشه، دریافت می‌شود. مناسب لایه‌های کوچک و متوسط.</value>
+  </data>
+  <data name="serverLayerSettings_mode_live" xml:space="preserve">
+    <value>بارگذاری برخط (Live)</value>
+  </data>
+  <data name="serverLayerSettings_mode_liveDescription" xml:space="preserve">
+    <value>فقط عوارض محدوده دیده‌شده، همراه با جابه‌جایی نقشه، دریافت می‌شوند؛ جدول توصیفی و جستجو از سرور پرس‌وجو می‌کنند. مناسب لایه‌های بسیار بزرگ.</value>
+  </data>
+  <data name="serverLayerSettings_hint_appliesNext" xml:space="preserve">
+    <value>تغییرات ذخیره‌شده دفعه بعد که کاربران وارد سامانه شوند یا لایه‌ها را دوباره دریافت کنند، اعمال می‌شود.</value>
+  </data>
+  <data name="serverLayerSettings_status_noChanges" xml:space="preserve">
+    <value>تغییر ذخیره‌نشده‌ای وجود ندارد</value>
+  </data>
+  <data name="serverLayerSettings_status_changes" xml:space="preserve">
+    <value>تغییرات ذخیره‌نشده: {0}</value>
+  </data>
+  <data name="serverLayerSettings_status_invalid" xml:space="preserve">
+    <value>دارای خطا: {0}</value>
+  </data>
+  <data name="serverLayerSettings_result_saved" xml:space="preserve">
+    <value>تغییرات ذخیره شد ({0}).</value>
+  </data>
+  <data name="serverLayerSettings_result_partial" xml:space="preserve">
+    <value>ذخیره‌شده: {0} · ذخیره‌نشده: {1}</value>
+  </data>
+  <data name="serverLayerSettings_conflict" xml:space="preserve">
+    <value>کاربر دیگری پس از باز شدن این پنجره، این مورد را ذخیره کرده است. برای دریافت آخرین نسخه، دوباره از سرور دریافت کنید؛ تغییرات شما روی این مورد از دست می‌رود.</value>
+  </data>
+  <data name="serverLayerSettings_notFound" xml:space="preserve">
+    <value>این مورد دیگر روی سرور وجود ندارد.</value>
+  </data>
+  <data name="serverLayerSettings_serverRejected" xml:space="preserve">
+    <value>سرور این تغییرات را نپذیرفت.</value>
+  </data>
+  <data name="serverLayerSettings_confirmDiscard" xml:space="preserve">
+    <value>تغییرات ذخیره‌نشده وجود دارد. از آن‌ها صرف‌نظر شود؟</value>
+  </data>
+  <data name="serverLayerSettings_error_titleRequired" xml:space="preserve">
+    <value>عنوان را وارد کنید.</value>
+  </data>
+  <data name="serverLayerSettings_error_titleTooLong" xml:space="preserve">
+    <value>عنوان بیش از حد طولانی است.</value>
+  </data>
+  <data name="serverLayerSettings_error_layerZoomOutOfRange" xml:space="preserve">
+    <value>سطح بزرگ‌نمایی باید بین ۰ تا ۲۴ باشد.</value>
+  </data>
+  <data name="serverLayerSettings_error_layerZoomRangeInverted" xml:space="preserve">
+    <value>سطح اول بزرگ‌نمایی نباید از سطح دوم بیشتر باشد.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelZoomOutOfRange" xml:space="preserve">
+    <value>سطح بزرگ‌نمایی برچسب باید بین ۰ تا ۲۴ باشد.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelZoomRangeInverted" xml:space="preserve">
+    <value>سطح اول بزرگ‌نمایی برچسب نباید از سطح دوم بیشتر باشد.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidFillColor" xml:space="preserve">
+    <value>رنگ داخل معتبر نیست.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidStrokeColor" xml:space="preserve">
+    <value>رنگ مرز معتبر نیست.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidLabelColor" xml:space="preserve">
+    <value>رنگ برچسب معتبر نیست.</value>
+  </data>
+  <data name="serverLayerSettings_error_opacityOutOfRange" xml:space="preserve">
+    <value>شفافیت باید بین ۰٪ تا ۱۰۰٪ باشد.</value>
+  </data>
+  <data name="serverLayerSettings_error_strokeThicknessOutOfRange" xml:space="preserve">
+    <value>ضخامت مرز باید بین ۰ تا ۵۰ باشد.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelSizeOutOfRange" xml:space="preserve">
+    <value>اندازه قلم برچسب باید بین ۱ تا ۷۲ باشد.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelColumnRequired" xml:space="preserve">
+    <value>فیلدی را که برچسب‌ها نشان می‌دهند انتخاب کنید.</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownLabelColumn" xml:space="preserve">
+    <value>فیلد برچسب از فیلدهای این لایه نیست.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidSld" xml:space="preserve">
+    <value>سبک SLD قابل خواندن نیست.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidLoadMode" xml:space="preserve">
+    <value>نحوه بارگذاری لایه را انتخاب کنید.</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownRow" xml:space="preserve">
+    <value>یکی از موارد دیگر روی سرور وجود ندارد.</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownGroup" xml:space="preserve">
+    <value>گروه مقصد دیگر وجود ندارد.</value>
+  </data>
+  <data name="serverLayerSettings_error_groupInGroup" xml:space="preserve">
+    <value>یک گروه را نمی‌توان درون گروه دیگری قرار داد.</value>
+  </data>
+  <data name="serverLayerSettings_error_duplicateRow" xml:space="preserve">
+    <value>یک مورد دو بار در درخواست آمده است.</value>
+  </data>
+  <data name="serverLayerSettings_cmd_newGroup" xml:space="preserve">
+    <value>گروه جدید</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveUp" xml:space="preserve">
+    <value>انتقال به بالا</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveDown" xml:space="preserve">
+    <value>انتقال به پایین</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveTo" xml:space="preserve">
+    <value>انتقال به</value>
+  </data>
+  <data name="serverLayerSettings_cmd_rename" xml:space="preserve">
+    <value>تغییر نام</value>
+  </data>
+  <data name="serverLayerSettings_cmd_deleteGroup" xml:space="preserve">
+    <value>حذف گروه</value>
+  </data>
+  <data name="serverLayerSettings_moveTo_topLevel" xml:space="preserve">
+    <value>سطح اصلی (بدون گروه)</value>
+  </data>
+  <data name="serverLayerSettings_newGroup_title" xml:space="preserve">
+    <value>گروه جدید</value>
+  </data>
+  <data name="serverLayerSettings_group_created" xml:space="preserve">
+    <value>گروه «{0}» ایجاد شد.</value>
+  </data>
+  <data name="serverLayerSettings_group_deleted" xml:space="preserve">
+    <value>گروه «{0}» حذف شد.</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_confirm" xml:space="preserve">
+    <value>گروه «{0}» حذف شود؟</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_notEmpty" xml:space="preserve">
+    <value>فقط گروه خالی حذف می‌شود. ابتدا لایه‌های آن را به گروه دیگری منتقل کنید.</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_pendingMoves" xml:space="preserve">
+    <value>پیش از حذف گروه، جابه‌جایی لایه‌ها را ذخیره یا بازگردانی کنید.</value>
+  </data>
+  <data name="serverLayerSettings_orderRejected" xml:space="preserve">
+    <value>سرور ترتیب جدید را نپذیرفت.</value>
+  </data>
+  <data name="serverLayerSettings_hint_dragDrop" xml:space="preserve">
+    <value>برای تغییر ترتیب لایه‌ها یا انتقال آن‌ها به گروه دیگر، آن‌ها را بکشید و رها کنید.</value>
+  </data>
+  <data name="serverLayerSettings_cmd_open" xml:space="preserve">
+    <value>تنظیمات سرور…</value>
+  </data>
+  <data name="serverLayerSettings_reloadMapConfirm" xml:space="preserve">
+    <value>تنظیمات لایه‌ها ذخیره شد. لایه‌های سرور نقشه اکنون دوباره دریافت شوند تا تغییرات دیده شوند؟ ویرایش‌های ذخیره‌نشده عوارض از دست می‌روند.</value>
+  </data>
+  <data name="dialog_symbology_noFill" xml:space="preserve">
+    <value>بدون رنگ داخل</value>
+  </data>
+  <data name="dialog_symbology_noStroke" xml:space="preserve">
+    <value>بدون حاشیه</value>
+  </data>
+  <data name="sldEditor_badge_filter" xml:space="preserve">
+    <value>فیلتر</value>
+  </data>
+  <data name="sldEditor_badge_scale" xml:space="preserve">
+    <value>بازهٔ مقیاس</value>
+  </data>
+  <data name="sldEditor_cap_butt" xml:space="preserve">
+    <value>صاف</value>
+  </data>
+  <data name="sldEditor_cap_round" xml:space="preserve">
+    <value>گرد</value>
+  </data>
+  <data name="sldEditor_cap_square" xml:space="preserve">
+    <value>مربعی</value>
+  </data>
+  <data name="sldEditor_dash_dashDot" xml:space="preserve">
+    <value>خط‌نقطه</value>
+  </data>
+  <data name="sldEditor_dash_dashed" xml:space="preserve">
+    <value>خط‌چین</value>
+  </data>
+  <data name="sldEditor_dash_dotted" xml:space="preserve">
+    <value>نقطه‌چین</value>
+  </data>
+  <data name="sldEditor_dash_longDash" xml:space="preserve">
+    <value>خط‌چین بلند</value>
+  </data>
+  <data name="sldEditor_dash_solid" xml:space="preserve">
+    <value>پیوسته</value>
+  </data>
+  <data name="sldEditor_field_bold" xml:space="preserve">
+    <value>پررنگ</value>
+  </data>
+  <data name="sldEditor_field_cap" xml:space="preserve">
+    <value>انتهای خط</value>
+  </data>
+  <data name="sldEditor_field_color" xml:space="preserve">
+    <value>رنگ</value>
+  </data>
+  <data name="sldEditor_field_dashOffset" xml:space="preserve">
+    <value>جابه‌جایی الگو</value>
+  </data>
+  <data name="sldEditor_field_dashPattern" xml:space="preserve">
+    <value>الگوی خط‌چین</value>
+  </data>
+  <data name="sldEditor_field_font" xml:space="preserve">
+    <value>قلم</value>
+  </data>
+  <data name="sldEditor_field_geometryDefault" xml:space="preserve">
+    <value>هندسهٔ لایه</value>
+  </data>
+  <data name="sldEditor_field_haloOn" xml:space="preserve">
+    <value>دور متن هاله رسم شود</value>
+  </data>
+  <data name="sldEditor_field_italic" xml:space="preserve">
+    <value>کج</value>
+  </data>
+  <data name="sldEditor_field_join" xml:space="preserve">
+    <value>گوشه‌ها</value>
+  </data>
+  <data name="sldEditor_field_labelField" xml:space="preserve">
+    <value>متن از فیلد</value>
+  </data>
+  <data name="sldEditor_field_labelFieldWatermark" xml:space="preserve">
+    <value>فیلدی را انتخاب یا وارد کنید</value>
+  </data>
+  <data name="sldEditor_field_opacity" xml:space="preserve">
+    <value>شفافیت</value>
+  </data>
+  <data name="sldEditor_field_rotation" xml:space="preserve">
+    <value>چرخش</value>
+  </data>
+  <data name="sldEditor_field_shape" xml:space="preserve">
+    <value>شکل</value>
+  </data>
+  <data name="sldEditor_field_size" xml:space="preserve">
+    <value>اندازه</value>
+  </data>
+  <data name="sldEditor_field_width" xml:space="preserve">
+    <value>پهنا</value>
+  </data>
+  <data name="sldEditor_filter_advancedNotice" xml:space="preserve">
+    <value>این قاعده فیلتری دارد که اینجا نمایش داده نمی‌شود. تا وقتی فیلدی را در بالا انتخاب نکنید، همان‌طور که هست نگه داشته می‌شود.</value>
+  </data>
+  <data name="sldEditor_filter_onlyMatching" xml:space="preserve">
+    <value>فقط عارضه‌هایی رسم شوند که با یک شرط جور باشند</value>
+  </data>
+  <data name="sldEditor_join_bevel" xml:space="preserve">
+    <value>پخ</value>
+  </data>
+  <data name="sldEditor_join_mitre" xml:space="preserve">
+    <value>تیز</value>
+  </data>
+  <data name="sldEditor_join_round" xml:space="preserve">
+    <value>گرد</value>
+  </data>
+  <data name="sldEditor_mark_circle" xml:space="preserve">
+    <value>دایره</value>
+  </data>
+  <data name="sldEditor_mark_cross" xml:space="preserve">
+    <value>به‌علاوه</value>
+  </data>
+  <data name="sldEditor_mark_square" xml:space="preserve">
+    <value>مربع</value>
+  </data>
+  <data name="sldEditor_mark_star" xml:space="preserve">
+    <value>ستاره</value>
+  </data>
+  <data name="sldEditor_mark_triangle" xml:space="preserve">
+    <value>مثلث</value>
+  </data>
+  <data name="sldEditor_mark_x" xml:space="preserve">
+    <value>ضربدر</value>
+  </data>
+  <data name="sldEditor_op_equal" xml:space="preserve">
+    <value>برابر با</value>
+  </data>
+  <data name="sldEditor_op_greaterThan" xml:space="preserve">
+    <value>بزرگ‌تر از</value>
+  </data>
+  <data name="sldEditor_op_greaterThanOrEqual" xml:space="preserve">
+    <value>دست‌کم</value>
+  </data>
+  <data name="sldEditor_op_lessThan" xml:space="preserve">
+    <value>کوچک‌تر از</value>
+  </data>
+  <data name="sldEditor_op_lessThanOrEqual" xml:space="preserve">
+    <value>حداکثر</value>
+  </data>
+  <data name="sldEditor_op_notEqual" xml:space="preserve">
+    <value>نابرابر با</value>
+  </data>
+  <data name="sldEditor_preview_labelSample" xml:space="preserve">
+    <value>برچسب</value>
+  </data>
+  <data name="sldEditor_preview_legend" xml:space="preserve">
+    <value>راهنمای نقشه</value>
+  </data>
+  <data name="sldEditor_preview_none" xml:space="preserve">
+    <value>برای پیش‌نمایش، یک قاعده را انتخاب کنید.</value>
+  </data>
+  <data name="sldEditor_preview_title" xml:space="preserve">
+    <value>پیش‌نمایش</value>
+  </data>
+  <data name="sldEditor_rule_copySuffix" xml:space="preserve">
+    <value>رونوشت</value>
+  </data>
+  <data name="sldEditor_rule_detailsHint" xml:space="preserve">
+    <value>عنوان، متنی است که راهنمای نقشه نشان می‌دهد. نام، قاعده را درون SLD مشخص می‌کند.</value>
+  </data>
+  <data name="sldEditor_rule_titleHint" xml:space="preserve">
+    <value>متنی که راهنمای نقشه برای این قاعده نشان می‌دهد</value>
+  </data>
+  <data name="sldEditor_rule_titleWatermark" xml:space="preserve">
+    <value>متن راهنما</value>
+  </data>
+  <data name="sldEditor_rules_count" xml:space="preserve">
+    <value>قاعده‌ها: {0}</value>
+  </data>
+  <data name="sldEditor_rules_delete" xml:space="preserve">
+    <value>حذف قاعده (Del)</value>
+  </data>
+  <data name="sldEditor_rules_duplicate" xml:space="preserve">
+    <value>رونوشت از قاعده (Ctrl+D)</value>
+  </data>
+  <data name="sldEditor_rules_empty" xml:space="preserve">
+    <value>چیزی رسم نمی‌کند</value>
+  </data>
+  <data name="sldEditor_rules_hint" xml:space="preserve">
+    <value>هر عارضه با همهٔ قاعده‌هایی که با آن جورند رسم می‌شود؛ قاعده‌های پایین‌تر رویِ بقیه رسم می‌شوند.</value>
+  </data>
+  <data name="sldEditor_rules_moveDown" xml:space="preserve">
+    <value>انتقال به پایین (Alt+Down)</value>
+  </data>
+  <data name="sldEditor_rules_moveUp" xml:space="preserve">
+    <value>انتقال به بالا (Alt+Up)</value>
+  </data>
+  <data name="sldEditor_rules_noSelection" xml:space="preserve">
+    <value>برای ویرایش، قاعده‌ای را از فهرست انتخاب کنید یا قاعدهٔ تازه‌ای بیفزایید.</value>
+  </data>
+  <data name="sldEditor_rules_none" xml:space="preserve">
+    <value>این سبک هنوز قاعده‌ای ندارد.</value>
+  </data>
+  <data name="sldEditor_scale_all" xml:space="preserve">
+    <value>همهٔ مقیاس‌ها</value>
+  </data>
+  <data name="sldEditor_scale_between" xml:space="preserve">
+    <value>بین 1:{0} و 1:{1}</value>
+  </data>
+  <data name="sldEditor_scale_closerThan" xml:space="preserve">
+    <value>نزدیک‌تر از 1:{0}</value>
+  </data>
+  <data name="sldEditor_scale_fartherThan" xml:space="preserve">
+    <value>از 1:{0} به دورتر</value>
+  </data>
+  <data name="sldEditor_scale_hint" xml:space="preserve">
+    <value>قاعده فقط بین این دو حد رسم می‌شود. برای نداشتن حد، آن را خالی بگذارید. مقیاس 1:5,000 از 1:50,000 نزدیک‌تر است.</value>
+  </data>
+  <data name="sldEditor_scale_inverted" xml:space="preserve">
+    <value>حدِ بزرگ‌نمایی باید از حدِ کوچک‌نمایی کوچک‌تر باشد؛ وگرنه قاعده هیچ‌وقت رسم نمی‌شود.</value>
+  </data>
+  <data name="sldEditor_scale_maxLabel" xml:space="preserve">
+    <value>حد کوچک‌نمایی</value>
+  </data>
+  <data name="sldEditor_scale_minLabel" xml:space="preserve">
+    <value>حد بزرگ‌نمایی</value>
+  </data>
+  <data name="sldEditor_scale_noLimit" xml:space="preserve">
+    <value>بدون حد</value>
+  </data>
+  <data name="sldEditor_section_ends" xml:space="preserve">
+    <value>انتها و گوشه‌ها</value>
+  </data>
+  <data name="sldEditor_section_fill" xml:space="preserve">
+    <value>رنگ داخل</value>
+  </data>
+  <data name="sldEditor_section_geometry" xml:space="preserve">
+    <value>هندسه</value>
+  </data>
+  <data name="sldEditor_section_halo" xml:space="preserve">
+    <value>هاله</value>
+  </data>
+  <data name="sldEditor_section_outline" xml:space="preserve">
+    <value>حاشیه</value>
+  </data>
+  <data name="sldEditor_section_pattern" xml:space="preserve">
+    <value>الگو</value>
+  </data>
+  <data name="sldEditor_style_panel" xml:space="preserve">
+    <value>نام و توضیح سبک</value>
+  </data>
+  <data name="sldEditor_symbolizer_add" xml:space="preserve">
+    <value>افزودن نماد:</value>
+  </data>
+  <data name="sldEditor_symbolizer_line" xml:space="preserve">
+    <value>خط</value>
+  </data>
+  <data name="sldEditor_symbolizer_moveDown" xml:space="preserve">
+    <value>انتقال به پایین</value>
+  </data>
+  <data name="sldEditor_symbolizer_moveUp" xml:space="preserve">
+    <value>انتقال به بالا</value>
+  </data>
+  <data name="sldEditor_symbolizer_none" xml:space="preserve">
+    <value>این قاعده هنوز چیزی رسم نمی‌کند. از پایین یک نماد بیفزایید.</value>
+  </data>
+  <data name="sldEditor_symbolizer_orderHint" xml:space="preserve">
+    <value>نمادها به ترتیب فهرست رسم می‌شوند: پایین‌تری‌ها رویِ بقیه رسم می‌شوند.</value>
+  </data>
+  <data name="sldEditor_symbolizer_point" xml:space="preserve">
+    <value>نشانه</value>
+  </data>
+  <data name="sldEditor_symbolizer_polygon" xml:space="preserve">
+    <value>رنگ داخل</value>
+  </data>
+  <data name="sldEditor_symbolizer_raster" xml:space="preserve">
+    <value>رستر</value>
+  </data>
+  <data name="sldEditor_symbolizer_remove" xml:space="preserve">
+    <value>حذف نماد</value>
+  </data>
+  <data name="sldEditor_symbolizer_text" xml:space="preserve">
+    <value>برچسب</value>
+  </data>
+  <data name="sldEditor_tab_details" xml:space="preserve">
+    <value>جزئیات</value>
+  </data>
+  <data name="sldEditor_tab_filterScale" xml:space="preserve">
+    <value>فیلتر و مقیاس</value>
+  </data>
+  <data name="sldEditor_tab_symbology" xml:space="preserve">
+    <value>نمادشناسی</value>
+  </data>
+  <data name="sldEditor_xml_copy" xml:space="preserve">
+    <value>رونوشت</value>
+  </data>
+  <data name="sldEditor_xml_live" xml:space="preserve">
+    <value>همزمان با ویرایش به‌روز می‌شود. همین است که «اعمال» و «تأیید» ذخیره می‌کنند.</value>
+  </data>
+  <data name="sldEditor_rule_newTitle" xml:space="preserve">
+    <value>قاعدهٔ {0}</value>
+  </data>
+  <data name="layerSettings_statistics_field" xml:space="preserve">
+    <value>فیلد</value>
+  </data>
+  <data name="layerSettings_statistics_compute" xml:space="preserve">
+    <value>محاسبه</value>
+  </data>
+  <data name="layerSettings_statistics_liveNotSupported" xml:space="preserve">
+    <value>این لایه در حالت بارگذاری برخط (Live) است و عارضه‌های آن روی سرور می‌مانند، بنابراین آمار آن فعلاً در دسترس نیست. برای دیدن آمار، لایه را به حالت بارگذاری یکجا (Cache) ببرید.</value>
+  </data>
+  <data name="layerSettings_statistics_emptyState" xml:space="preserve">
+    <value>یک فیلد انتخاب کنید و «محاسبه» را بزنید</value>
+  </data>
+  <data name="layerSettings_statistics_failed" xml:space="preserve">
+    <value>محاسبهٔ آمار ناموفق بود:</value>
+  </data>
+  <data name="layerSettings_statistics_summary" xml:space="preserve">
+    <value>جزئیات</value>
+  </data>
+  <data name="layerSettings_statistics_topValues" xml:space="preserve">
+    <value>پرتکرارترین مقادیر</value>
+  </data>
+  <data name="layerSettings_statistics_value" xml:space="preserve">
+    <value>مقدار</value>
+  </data>
+  <data name="layerSettings_statistics_count" xml:space="preserve">
+    <value>تعداد</value>
+  </data>
+  <data name="layerSettings_statistics_featureCount" xml:space="preserve">
+    <value>تعداد عارضه‌ها</value>
+  </data>
+  <data name="layerSettings_statistics_emptyCount" xml:space="preserve">
+    <value>مقادیر خالی</value>
+  </data>
+  <data name="layerSettings_statistics_distinctCount" xml:space="preserve">
+    <value>مقادیر یکتا</value>
+  </data>
+  <data name="layerSettings_statistics_min" xml:space="preserve">
+    <value>کمینه</value>
+  </data>
+  <data name="layerSettings_statistics_max" xml:space="preserve">
+    <value>بیشینه</value>
+  </data>
+  <data name="layerSettings_statistics_sum" xml:space="preserve">
+    <value>مجموع</value>
+  </data>
+  <data name="layerSettings_statistics_mean" xml:space="preserve">
+    <value>میانگین</value>
+  </data>
+  <data name="layerSettings_statistics_median" xml:space="preserve">
+    <value>میانه</value>
+  </data>
+  <data name="layerSettings_statistics_standardDeviation" xml:space="preserve">
+    <value>انحراف معیار</value>
+  </data>
+  <data name="layerSettings_statistics_minDate" xml:space="preserve">
+    <value>قدیمی‌ترین</value>
+  </data>
+  <data name="layerSettings_statistics_maxDate" xml:space="preserve">
+    <value>جدیدترین</value>
+  </data>
+  <data name="layerSettings_statistics_emptyValue" xml:space="preserve">
+    <value>(خالی)</value>
+  </data>
+  <data name="layerSettings_statistics_modeField" xml:space="preserve">
+    <value>آمار فیلد</value>
+  </data>
+  <data name="layerSettings_statistics_modeGroupBy" xml:space="preserve">
+    <value>گروه‌بندی بر اساس فیلد</value>
+  </data>
+  <data name="layerSettings_statistics_groupByField" xml:space="preserve">
+    <value>گروه‌بندی بر اساس</value>
+  </data>
+  <data name="layerSettings_statistics_sumField" xml:space="preserve">
+    <value>جمع فیلد</value>
+  </data>
+  <data name="layerSettings_statistics_none" xml:space="preserve">
+    <value>(هیچ)</value>
+  </data>
+  <data name="layerSettings_statistics_groupCount" xml:space="preserve">
+    <value>تعداد گروه‌ها</value>
+  </data>
+  <data name="layerSettings_statistics_totalLength" xml:space="preserve">
+    <value>طول کل</value>
+  </data>
+  <data name="layerSettings_statistics_totalArea" xml:space="preserve">
+    <value>مساحت کل</value>
+  </data>
+  <data name="layerSettings_statistics_sumOf" xml:space="preserve">
+    <value>جمع {0}</value>
+  </data>
+  <data name="layerSettings_statistics_groups" xml:space="preserve">
+    <value>گروه‌ها</value>
+  </data>
+  <data name="layerSettings_statistics_groupsTruncated" xml:space="preserve">
+    <value>{0} گروه اول از {1} گروه نمایش داده شده است.</value>
+  </data>
+  <data name="layerSettings_statistics_invalidNote" xml:space="preserve">
+    <value>{0} مقدار با نوع فیلد خوانا نبود و کنار گذاشته شد.</value>
+  </data>
+  <data name="layerSettings_statistics_total" xml:space="preserve">
+    <value>جمع کل</value>
+  </data>
+  <data name="layerSettings_statistics_topOfDistinct" xml:space="preserve">
+    <value>{0} از {1} مقدار</value>
+  </data>
+  <data name="layerSettings_statistics_sortedByCount" xml:space="preserve">
+    <value>مرتب‌شده بر اساس تعداد</value>
+  </data>
+  <data name="layerSettings_statistics_modeGeometry" xml:space="preserve">
+    <value>آمار هندسی</value>
+  </data>
+  <data name="layerSettings_statistics_emptyGeometryCount" xml:space="preserve">
+    <value>هندسه‌های خالی</value>
+  </data>
+  <data name="layerSettings_statistics_distribution" xml:space="preserve">
+    <value>توزیع مقادیر</value>
+  </data>
+  <data name="layerSettings_statistics_lengthPerFeature" xml:space="preserve">
+    <value>طول هر عارضه ({0})</value>
+  </data>
+  <data name="layerSettings_statistics_areaPerFeature" xml:space="preserve">
+    <value>مساحت هر عارضه ({0})</value>
+  </data>
+  <data name="layerSettings_statistics_binCount" xml:space="preserve">
+    <value>{0} بازه</value>
+  </data>
+  <data name="layerSettings_statistics_noMeasureNote" xml:space="preserve">
+    <value>طول و مساحت فقط برای لایه‌های خطی و سطحی محاسبه می‌شود.</value>
+  </data>
+  <data name="layerSettings_statistics_unmeasuredNote" xml:space="preserve">
+    <value>{0} هندسه قابل اندازه‌گیری نبود و کنار گذاشته شد.</value>
+  </data>
+  <data name="layerSettings_statistics_viewHistogram" xml:space="preserve">
+    <value>نمودار</value>
+  </data>
+  <data name="layerSettings_statistics_viewTable" xml:space="preserve">
+    <value>پرتکرارها</value>
+  </data>
+  <data name="layerSettings_statistics_geometryHint" xml:space="preserve">
+    <value>طول ژئودتیک (لایه‌های خطی) یا مساحت (لایه‌های سطحی) هر عارضه، روی بیضوی WGS84</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainCount" xml:space="preserve">
+    <value>خارج از دامنه</value>
+  </data>
+  <data name="layerSettings_statistics_domainUsage" xml:space="preserve">
+    <value>{0} از {1} مقدار دامنه استفاده شده</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainNote" xml:space="preserve">
+    <value>{0} عارضه مقداری خارج از دامنهٔ فیلد دارند.</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainTooltip" xml:space="preserve">
+    <value>این مقدار در دامنهٔ فیلد نیست</value>
+  </data>
+  <data name="sldGenerator_title" xml:space="preserve">
+    <value>ساخت قواعد از مقادیر فیلد</value>
+  </data>
+  <data name="sldGenerator_field" xml:space="preserve">
+    <value>فیلد</value>
+  </data>
+  <data name="sldGenerator_geometry" xml:space="preserve">
+    <value>نوع هندسه</value>
+  </data>
+  <data name="sldGenerator_geometryPoint" xml:space="preserve">
+    <value>نقطه</value>
+  </data>
+  <data name="sldGenerator_geometryLine" xml:space="preserve">
+    <value>خط</value>
+  </data>
+  <data name="sldGenerator_geometryPolygon" xml:space="preserve">
+    <value>چندضلعی</value>
+  </data>
+  <data name="sldGenerator_values" xml:space="preserve">
+    <value>مقادیر</value>
+  </data>
+  <data name="sldGenerator_valuesData" xml:space="preserve">
+    <value>مقادیر موجود در لایه</value>
+  </data>
+  <data name="sldGenerator_valuesDomain" xml:space="preserve">
+    <value>همهٔ مقادیر دامنه</value>
+  </data>
+  <data name="sldGenerator_colors" xml:space="preserve">
+    <value>رنگ‌ها</value>
+  </data>
+  <data name="sldGenerator_colorsPalette" xml:space="preserve">
+    <value>پالت پیش‌فرض</value>
+  </data>
+  <data name="sldGenerator_colorsDomain" xml:space="preserve">
+    <value>رنگ‌های دامنه</value>
+  </data>
+  <data name="sldGenerator_includeOther" xml:space="preserve">
+    <value>افزودن قاعده برای سایر مقادیر</value>
+  </data>
+  <data name="sldGenerator_replaceExisting" xml:space="preserve">
+    <value>جایگزینی قواعد فعلی</value>
+  </data>
+  <data name="sldGenerator_preview" xml:space="preserve">
+    <value>پیش‌نمایش</value>
+  </data>
+  <data name="sldGenerator_noField" xml:space="preserve">
+    <value>فیلدی برای دسته‌بندی وجود ندارد</value>
+  </data>
+  <data name="sldGenerator_noValues" xml:space="preserve">
+    <value>این فیلد مقداری ندارد</value>
+  </data>
+  <data name="sldGenerator_ruleCount" xml:space="preserve">
+    <value>{0} قاعده</value>
+  </data>
+  <data name="sldGenerator_previewCut" xml:space="preserve">
+    <value>({0} مورد اول نمایش داده شده است)</value>
+  </data>
+  <data name="sldGenerator_failed" xml:space="preserve">
+    <value>خواندن مقادیر ناموفق بود:</value>
+  </data>
+  <data name="sldGenerator_generate" xml:space="preserve">
+    <value>ساخت قواعد</value>
+  </data>
+  <data name="sldGenerator_otherValues" xml:space="preserve">
+    <value>سایر مقادیر</value>
+  </data>
+  <data name="layerSettings_general_summary" xml:space="preserve">
+    <value>خلاصهٔ لایه</value>
+  </data>
+  <data name="layerSettings_general_loadMode" xml:space="preserve">
+    <value>حالت بارگذاری:</value>
+  </data>
+  <data name="layerSettings_general_loadModeCache" xml:space="preserve">
+    <value>بارگذاری یکجا (Cache)</value>
+  </data>
+  <data name="layerSettings_general_loadModeLive" xml:space="preserve">
+    <value>بارگذاری برخط (Live)</value>
+  </data>
+  <data name="layerSettings_general_featureCount" xml:space="preserve">
+    <value>تعداد عارضه‌ها:</value>
+  </data>
+  <data name="layerSettings_general_featureCountLive" xml:space="preserve">
+    <value>در حالت برخط (Live) در دسترس نیست (فقط محدودهٔ دیده‌شده بارگذاری می‌شود)</value>
+  </data>
+  <data name="layerSettings_general_fieldCount" xml:space="preserve">
+    <value>تعداد فیلدها:</value>
+  </data>
+  <data name="layerSettings_general_geometryType" xml:space="preserve">
+    <value>نوع هندسه:</value>
+  </data>
+  <data name="layerSettings_general_srs" xml:space="preserve">
+    <value>سیستم مختصات لایه:</value>
+  </data>
+  <data name="layerSettings_general_originalSrs" xml:space="preserve">
+    <value>سیستم مختصات منبع:</value>
+  </data>
+  <data name="layerSettings_general_extentWgs84" xml:space="preserve">
+    <value>محدوده (WGS84):</value>
+  </data>
+  <data name="layerSettings_general_extentUtm" xml:space="preserve">
+    <value>محدوده (UTM {0}):</value>
+  </data>
+  <data name="layerSettings_general_unknown" xml:space="preserve">
+    <value>نامشخص</value>
+  </data>
+  <data name="layerStyles_ruleCount" xml:space="preserve">
+    <value>{0} قاعده</value>
+  </data>
+  <data name="layerStyles_untitled" xml:space="preserve">
+    <value>سبک بی‌عنوان</value>
+  </data>
+  <data name="layerStyles_newTitle" xml:space="preserve">
+    <value>سبک {0}</value>
+  </data>
+  <data name="layerStyles_copyTitle" xml:space="preserve">
+    <value>{0} (کپی)</value>
+  </data>
+  <data name="layerStyles_addFirst" xml:space="preserve">
+    <value>افزودن سبک</value>
+  </data>
+  <data name="layerStyles_adminBanner" xml:space="preserve">
+    <value>کاربران با سبک پیش‌فرض شروع می‌کنند و در زبانهٔ سمبل‌گذاری یا از راهنمای نقشه می‌توانند سبک دیگری انتخاب کنند.</value>
+  </data>
+  <data name="layerStyles_add" xml:space="preserve">
+    <value>افزودن</value>
+  </data>
+  <data name="layerStyles_copy" xml:space="preserve">
+    <value>کپی</value>
+  </data>
+  <data name="layerStyles_edit" xml:space="preserve">
+    <value>ویرایش</value>
+  </data>
+  <data name="layerStyles_setDefault" xml:space="preserve">
+    <value>پیش‌فرض شود</value>
+  </data>
+  <data name="layerStyles_moveUp" xml:space="preserve">
+    <value>انتقال به بالا</value>
+  </data>
+  <data name="layerStyles_moveDown" xml:space="preserve">
+    <value>انتقال به پایین</value>
+  </data>
+  <data name="layerStyles_delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="layerStyles_defaultBadge" xml:space="preserve">
+    <value>پیش‌فرض</value>
+  </data>
+  <data name="layerStyles_titleWatermark" xml:space="preserve">
+    <value>عنوان سبک</value>
+  </data>
+  <data name="layerStyles_legend_pick" xml:space="preserve">
+    <value>سبک</value>
+  </data>
+  <data name="layerStyles_tab_notAvailable" xml:space="preserve">
+    <value>این لایه سمبل‌گذاری ندارد.</value>
+  </data>
+  <data name="layerStyles_tab_styles" xml:space="preserve">
+    <value>سبک‌ها</value>
+  </data>
+  <data name="layerStyles_tab_singleStyle" xml:space="preserve">
+    <value>این لایه یک سبک دارد. مدیر سامانه می‌تواند در تنظیمات لایه‌های سرور سبک‌های دیگری اضافه کند.</value>
+  </data>
+  <data name="layerStyles_tab_legend" xml:space="preserve">
+    <value>راهنما</value>
+  </data>
+  <data name="layerStyles_tab_exportLegend" xml:space="preserve">
+    <value>خروجی راهنما به PNG</value>
+  </data>
+  <data name="layerStyles_tab_quickEdit" xml:space="preserve">
+    <value>ویرایش سریع</value>
+  </data>
+  <data name="layerStyles_tab_myChanges" xml:space="preserve">
+    <value>تغییرات من</value>
+  </data>
+  <data name="layerStyles_tab_noChanges" xml:space="preserve">
+    <value>هیچ؛ لایه همان‌طور که سرور تعریف کرده رسم می‌شود.</value>
+  </data>
+  <data name="layerStyles_tab_hasChanges" xml:space="preserve">
+    <value>سمبل‌گذاری این لایه را تغییر داده‌اید. این تغییر در پروژهٔ شما نگه داشته می‌شود و «بازگرداندن سبک‌های مدیر» سبک‌های سرور را برمی‌گرداند.</value>
+  </data>
+  <data name="serverLayerSettings_error_styleTitleRequired" xml:space="preserve">
+    <value>وقتی لایه چند سبک دارد، هر سبک باید عنوان داشته باشد.</value>
+  </data>
+  <data name="serverLayerSettings_error_duplicateStyleTitle" xml:space="preserve">
+    <value>دو سبک عنوان یکسان دارند.</value>
+  </data>
+  <data name="layerStyles_wholeLayer" xml:space="preserve">
+    <value>کل لایه</value>
+  </data>
+  <data name="layerStyles_wholeLayerHint" xml:space="preserve">
+    <value>محدودهٔ بزرگ‌نمایی و شفافیت، صرف‌نظر از سمبل‌گذاری، روی کل لایه اعمال می‌شوند.</value>
+  </data>
+  <data name="layerStyles_modeSimple" xml:space="preserve">
+    <value>ساده</value>
+  </data>
+  <data name="layerStyles_modeStyles" xml:space="preserve">
+    <value>سبک‌ها (SLD)</value>
+  </data>
+  <data name="layerStyles_simpleHint" xml:space="preserve">
+    <value>یک سبک ساده از رنگ‌های زیر. برای قاعده‌های مبتنی بر فیلدها و چند سمبل‌گذاری که کاربران از میان آن‌ها انتخاب کنند، به «سبک‌ها» بروید.</value>
+  </data>
+  <data name="layerStyles_previewOf" xml:space="preserve">
+    <value>راهنمای سبک {0}</value>
+  </data>
+  <data name="layerStyles_switchToSimpleConfirm" xml:space="preserve">
+    <value>{0} سبک این لایه حذف شود؟ به جای آن‌ها رنگ‌های ساده به کار می‌روند.</value>
+  </data>
+  <data name="layerStyles_labelsNote" xml:space="preserve">
+    <value>این لایه با سبک‌های SLD رسم می‌شود و این برچسب روی هر سبکی که فعال باشد رسم می‌شود.</value>
+  </data>
+  <data name="layerStyles_tab_changedStyles" xml:space="preserve">
+    <value>این تغییرات در پروژهٔ شما نگه داشته می‌شوند و «بازگرداندن سبک‌های مدیر» سبک‌های سرور را برمی‌گرداند. سبک‌هایی که در این رایانه تغییر داده‌اید: {0}</value>
+  </data>
+  <data name="layerStyles_tab_simpleHint" xml:space="preserve">
+    <value>این لایه با رنگ‌های ساده رسم می‌شود؛ برای تغییر آن‌ها «ویرایش سریع» را بزنید.</value>
+  </data>
+  <data name="layerStyles_tab_editInSld" xml:space="preserve">
+    <value>ویرایش سبک در ویرایشگر SLD</value>
+  </data>
+  <data name="layerStyles_tab_restore" xml:space="preserve">
+    <value>بازگرداندن سبک‌های مدیر</value>
+  </data>
+  <data name="layerStyles_tab_restoreTip" xml:space="preserve">
+    <value>تغییرات شما در همهٔ سبک‌های این لایه برداشته می‌شود و لایه همان‌طور که سرور تعریف کرده رسم می‌شود.</value>
+  </data>
+  <data name="layerStyles_tab_changedMark" xml:space="preserve">
+    <value>تغییر داده شده توسط شما</value>
+  </data>
+  <data name="dialog_symbology_restoreAdmin" xml:space="preserve">
+    <value>بازگرداندن سبک مدیر</value>
+  </data>
+  <data name="dialog_symbology_userChanged" xml:space="preserve">
+    <value>رنگ‌های این لایه را در این رایانه تغییر داده‌اید.</value>
+  </data>
+  <data name="dialog_symbology_editInSld" xml:space="preserve">
+    <value>ویرایش در ویرایشگر SLD</value>
+  </data>
+  <data name="dialog_symbology_advancedHint" xml:space="preserve">
+    <value>ویرایشگر SLD امکان قاعده‌های مبتنی بر فیلدها، برچسب و موارد دیگر را می‌دهد. پس از ذخیره در آن‌جا، این لایه در ویرایشگر SLD باز می‌شود و «بازگرداندن سبک مدیر» رنگ‌های ساده را برمی‌گرداند.</value>
+  </data>
+  <data name="layerSettings_statistics_liveOnServer" xml:space="preserve">
+    <value>این لایه در حالت برخط است: آمار آن روی سرور و از همهٔ عوارض لایه محاسبه می‌شود. ویرایش‌هایی که ذخیره نکرده‌اید در آن نیستند.</value>
+  </data>
+  <data name="layerSettings_general_featureCountServer" xml:space="preserve">
+    <value>شمارش روی سرور، از همهٔ عوارض لایه (ویرایش‌های ذخیره‌نشده در آن نیستند)</value>
+  </data>
+  <data name="serverLayerSettings_importModel_export" xml:space="preserve">
+    <value>خروجی مدل ورود داده…</value>
+  </data>
+  <data name="serverLayerSettings_importModel_exportTip" xml:space="preserve">
+    <value>خروجی مدل ورود داده: ذخیرهٔ مدل داده همهٔ لایه‌های فعال (جدول‌ها، ستون‌ها، نوع داده‌ها و دامنه‌ها) در فایلی که ابزار ورود داده می‌خواند</value>
+  </data>
+  <data name="serverLayerSettings_importModel_saved" xml:space="preserve">
+    <value>مدل ورود داده با {0} لایه در {1} ذخیره شد.</value>
+  </data>
+  <data name="serverLayerSettings_importModel_failed" xml:space="preserve">
+    <value>ذخیرهٔ مدل ورود داده انجام نشد.</value>
+  </data>
+  <data name="legend_import_gisFiles" xml:space="preserve">
+    <value>فایل‌های GIS/CAD</value>
+  </data>
+  <data name="legend_import_googleEarth" xml:space="preserve">
+    <value>Google Earth</value>
+  </data>
+  <data name="legend_import_tables" xml:space="preserve">
+    <value>جدول‌ها</value>
+  </data>
+  <data name="legend_import_json" xml:space="preserve">
+    <value>JSON</value>
+  </data>
+  <data name="legend_filter_groupVector" xml:space="preserve">
+    <value>برداری</value>
+  </data>
+  <data name="legend_filter_groupRaster" xml:space="preserve">
+    <value>رستری</value>
+  </data>
+  <data name="legend_filter_groupService" xml:space="preserve">
+    <value>سرویس‌ها</value>
+  </data>
+  <data name="legend_filter_groupOther" xml:space="preserve">
+    <value>سایر</value>
+  </data>
+  <data name="legend_filter_kindRest" xml:space="preserve">
+    <value>سرویس REST</value>
+  </data>
+  <data name="legend_filter_kindGrpc" xml:space="preserve">
+    <value>سرویس gRPC</value>
+  </data>
+  <data name="legend_filter_kindWorldfile" xml:space="preserve">
+    <value>فایل World</value>
+  </data>
+  <data name="legend_filter_kindImagePyramid" xml:space="preserve">
+    <value>هرم تصویر</value>
+  </data>
+  <data name="legend_filter_kindOther" xml:space="preserve">
+    <value>نامشخص</value>
+  </data>
+  <data name="legend_filter_only" xml:space="preserve">
+    <value>فقط</value>
   </data>
 </root>

@@ -9,7 +9,7 @@ namespace IRI.Maptor.Core.Common.Common.JsonConverters;
 /// Deserializes a JSON array into an <see cref="object"/>[] whose elements are real CLR
 /// primitives (string, int, long, double, decimal, bool, null) instead of <see cref="JsonElement"/>.
 /// Mirrors <see cref="DictionaryStringObjectConverter"/> so that values surviving an API round-trip
-/// (e.g. <c>Field.AllowedValues</c>) compare equal to the equally-typed cell values they are matched
+/// compare equal to the equally-typed cell values they are matched
 /// against in the UI (e.g. a combobox SelectedItem bound to a string attribute).
 /// </summary>
 public class ObjectArrayConverter : JsonConverter<object[]>
@@ -36,7 +36,7 @@ public class ObjectArrayConverter : JsonConverter<object[]>
         return list.ToArray()!;
     }
 
-    private static object? ConvertElement(JsonElement element)
+    internal static object? ConvertElement(JsonElement element)
     {
         return element.ValueKind switch
         {
@@ -64,5 +64,29 @@ public class ObjectArrayConverter : JsonConverter<object[]>
         JsonSerializerOptions options)
     {
         JsonSerializer.Serialize(writer, value, options);
+    }
+}
+
+/// <summary>
+/// One value of the same kinds as <see cref="ObjectArrayConverter"/>: a JSON string, number or boolean read as the
+/// CLR primitive (not a <see cref="JsonElement"/>), so it compares equal to attribute values (e.g. a domain value).
+/// </summary>
+public class ObjectValueConverter : JsonConverter<object?>
+{
+    public override bool HandleNull => true;
+
+    public override object? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        using var doc = JsonDocument.ParseValue(ref reader);
+
+        return ObjectArrayConverter.ConvertElement(doc.RootElement);
+    }
+
+    public override void Write(Utf8JsonWriter writer, object? value, JsonSerializerOptions options)
+    {
+        if (value is null)
+            writer.WriteNullValue();
+        else
+            JsonSerializer.Serialize(writer, value, value.GetType(), options);
     }
 }

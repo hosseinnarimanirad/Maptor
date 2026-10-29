@@ -63,11 +63,22 @@ public static class DefaultActions
         if (layer is not SymbolizableLayer symbolizable)
             return;
 
+        // an SLD-styled layer has rules, filters and styles the simple dialog cannot show: go to the SLD editor
+        if (symbolizable.SourceSld is not null)
+        {
+            ShowSldEditorView(ownerWindow, layer, viewModel);
+            return;
+        }
+
         var view = new IRI.Maptor.Presentation.Wpf.Controls.Symbology.SymbologyView();
 
         var presenter = new SymbologyViewModel();
 
         presenter.Symbology = symbolizable.GetMainOrDefaultSymbology().Clone();
+
+        presenter.LayerName = layer.LayerName;
+
+        presenter.GeometryType = symbolizable.SpatialModelMode;
 
         presenter.RequestCloseAction = view.Close;
 
@@ -82,6 +93,8 @@ public static class DefaultActions
 
         presenter.ShowResetOption = symbolizable.CanResetSymbology;
 
+        presenter.IsUserModified = symbolizable.IsSymbologyUserModified;
+
         presenter.RequestResetAction = () =>
         {
             if (!symbolizable.ResetSymbologyToDefault())
@@ -89,6 +102,8 @@ public static class DefaultActions
 
             // re-seed the dialog fields from the restored symbology
             presenter.Symbology = symbolizable.GetMainOrDefaultSymbology().Clone();
+
+            presenter.IsUserModified = false;
 
             viewModel.Refresh(false);
         };
@@ -100,6 +115,9 @@ public static class DefaultActions
             param.Fill = p.Symbology.Fill;
             param.Stroke = p.Symbology.Stroke;
             param.StrokeThickness = p.Symbology.StrokeThickness;
+
+            // changed in place: the legend (and the Symbology tab behind this dialog) must be rebuilt
+            symbolizable.RaiseSymbologyChanged();
 
             symbolizable.IsSymbologyUserModified = true;
 
@@ -128,14 +146,17 @@ public static class DefaultActions
     /// Opens the full SLD editor for a layer, seeded with its current symbology
     /// (the pristine <see cref="SymbolizableLayer.SourceSld"/> when the layer was styled
     /// from an SLD, otherwise the <see cref="SymbolizableLayer.GetSld"/> reconstruction).
-    /// Apply/OK pushes the edited SLD back onto the layer and repaints the map.
+    /// Apply/OK pushes the edited SLD back onto the layer and repaints the map. When the SLD holds
+    /// several styles, the editor works on the layer's active style and keeps the others unchanged.
     /// </summary>
     public static void ShowSldEditorView(Window ownerWindow, ILayer layer, MapViewModelBase viewModel)
     {
         if (layer is not SymbolizableLayer symbolizable)
             return;
 
-        var fieldNames = symbolizable.GetFields()?
+        var fields = symbolizable.GetFields();
+
+        var fieldNames = fields?
             .Select(f => f.Name)
             .Where(name => !string.IsNullOrWhiteSpace(name))
             .ToList();
@@ -144,7 +165,12 @@ public static class DefaultActions
             layer.LayerName,
             symbolizable.SourceSld ?? symbolizable.GetSld(),
             fieldNames,
-            symbolizable.SpatialModelMode);
+            symbolizable.SpatialModelMode,
+            fields,
+            symbolizable.ActiveStyleName);
+
+        // the generator's "values in the layer": only when the layer holds all its features (not Live)
+        presenter.ValuesProvider = SldRuleGeneratorViewModel.ValuesProviderFor(layer);
 
         var view = new IRI.Maptor.Presentation.Wpf.Controls.Symbology.Sld.SldEditorWindow(presenter)
         {
@@ -156,7 +182,8 @@ public static class DefaultActions
         {
             var sld = p.ToStyledLayerDescriptor();
 
-            symbolizable.ReplaceSymbolizers(sld.ParseToSymbolizers(), sld);
+            // keep drawing the edited style (its name may have been changed in the style panel)
+            symbolizable.ApplySld(sld, p.StyleName);
 
             symbolizable.IsSymbologyUserModified = true;
 
@@ -175,6 +202,7 @@ public static class DefaultActions
                 return;
 
             // re-seed the editor from the restored symbology
+            presenter.TargetStyleName = symbolizable.ActiveStyleName;
             presenter.FromStyledLayerDescriptor(symbolizable.SourceSld ?? symbolizable.GetSld());
             presenter.RefreshPreview();
             presenter.SelectedRule = presenter.Rules.FirstOrDefault();
@@ -195,7 +223,19 @@ public static class DefaultActions
             //SelectedDataSourceKind = /*layer.DataSource?.DataSourceKind ??*/ DataSourceKind.Shapefile
         };
 
-        LayerSettingsViewModel layerSettingsViewModel = new LayerSettingsViewModel(layer, exportViewModel);
+        LayerSettings_StatisticsViewModel statisticsViewModel = new LayerSettings_StatisticsViewModel(layer as VectorLayer);
+
+        // the quick and SLD editors open over the settings dialog (it is modal), not over the main window
+        var symbologyViewModel = new LayerSettings_SymbologyViewModel(layer as SymbolizableLayer)
+        {
+            RequestQuickEdit = () => GetDefaultShowSymbologyView(view, layer, viewModel),
+            RequestAdvancedEdit = () => ShowSldEditorView(view, layer, viewModel),
+        };
+
+        LayerSettingsViewModel layerSettingsViewModel = new LayerSettingsViewModel(layer, exportViewModel, statisticsViewModel)
+        {
+            Symbology = symbologyViewModel,
+        };
 
         await dialogService.ShowDialogAsync(ownerWindow, view, layerSettingsViewModel);
 

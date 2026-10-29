@@ -8,6 +8,8 @@ using IRI.Maptor.Extensions;
 using IRI.Maptor.Presentation.Wpf.Helpers;
 using IRI.Maptor.Presentation.Wpf.Converters;
 using IRI.Maptor.Presentation.Wpf.Models;
+using IRI.Maptor.Core.Common.Enums;
+using IRI.Maptor.Core.Common.Primitives;
 using IRI.Maptor.Core.Common.Attributes;
 
 namespace IRI.Maptor.Presentation.Wpf.Behaviors;
@@ -76,34 +78,23 @@ public static class DataGridDictionaryBehavior
             if (field == null)
                 continue;
 
-            var fieldType = System.Type.GetType(field.TypeFullName);
-
-            if (fieldType is null)
+            // geometry, types the client cannot name, rowversion and unreadable fields have no column
+            if (!FeatureTableHelper.IsDisplayableField(field))
                 continue;
 
-            if (field.TypeFullName.ContainsIgnoreCase(FeatureTableHelper.NetTopologySuiteColumnName))
-                continue;
-
-            // todo: Consider adding a field in Field class to
-            //       identify which fields can be shown on the
-            //       attribute table
-            if (field.Name.EqualsIgnoreCase("rowversion"))
-                continue;
-
-            if (!field.CanRead)
-                continue;
+            var dataType = field.ResolveDataType();
 
             DataGridColumn? column = null;
             var isColumnReadOnly = !field.CanWrite;
 
-            var typeName = field.TypeFullName; // e.g. "System.Int32"
+            var domain = field.Domain;
 
-            if (field.AllowedValues != null && field.AllowedValues.Length > 0)
+            if (domain is not null)
             {
                 column = new DataGridComboBoxColumn
                 {
                     Header = field.Alias,
-                    ItemsSource = field.AllowedValues,
+                    ItemsSource = domain.GetStoredValues().ToList(),
                     SelectedItemBinding = new Binding($"Attributes[{key}]")
                     {
                         Mode = BindingMode.TwoWay,
@@ -112,7 +103,7 @@ public static class DataGridDictionaryBehavior
                 };
             }
             //if (string.Equals(typeName, "System.Boolean", StringComparison.OrdinalIgnoreCase))
-            else if (fieldType.IsBool())
+            else if (dataType == FieldDataType.Boolean)
             {
                 column = new DataGridCheckBoxColumn
                 {
@@ -124,7 +115,7 @@ public static class DataGridDictionaryBehavior
                     }
                 };
             }
-            else if (fieldType.IsDateTime())
+            else if (dataType == FieldDataType.DateTime)
             //else if (string.Equals(typeName, "System.DateTime", StringComparison.OrdinalIgnoreCase))
             {
                 column = new DataGridTemplateColumn
@@ -138,7 +129,7 @@ public static class DataGridDictionaryBehavior
             //         typeName.StartsWith("System.Decimal", StringComparison.OrdinalIgnoreCase) ||
             //         typeName.StartsWith("System.Double", StringComparison.OrdinalIgnoreCase) ||
             //         typeName.StartsWith("System.Single", StringComparison.OrdinalIgnoreCase))
-            else if (fieldType.IsNumeric())
+            else if (dataType.IsNumeric())
             {
                 column = new DataGridTextColumn
                 {
@@ -160,7 +151,7 @@ public static class DataGridDictionaryBehavior
                 };
             }
             //else if (string.Equals(typeName, "System.String", StringComparison.OrdinalIgnoreCase))
-            else if (fieldType == typeof(string))
+            else if (dataType == FieldDataType.Text)
             {
                 column = new DataGridTextColumn
                 {

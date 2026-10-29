@@ -1,8 +1,10 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
+using IRI.Maptor.Core.Common.Enums;
 using IRI.Maptor.Core.Common.Attributes;
 using IRI.Maptor.Core.Common.Common.JsonConverters;
 
@@ -12,7 +14,16 @@ public class Field
 {
     public string Name { get; set; }
 
+    /// <summary>
+    /// The producer's native type name: a .NET type name from the servers and the WPF sources, but an SQL type
+    /// name (e.g. "geometry", "nvarchar") in the SQL Server / Personal GDB schema readers. Kept as is for them;
+    /// clients ask <see cref="ResolveDataType"/> instead of parsing it.
+    /// </summary>
     public string TypeFullName { get; set; }
+
+    /// <summary>The logical type of the values; <see cref="FieldDataType.Unknown"/> when the producer did not say.</summary>
+    [JsonConverter(typeof(FieldDataTypeJsonConverter))]
+    public FieldDataType DataType { get; set; }
 
     public string? Alias { get; set; }
 
@@ -30,12 +41,24 @@ public class Field
 
     public bool CanWrite { get; set; } = true;
 
-    [JsonConverter(typeof(ObjectArrayConverter))]
-    public object[] AllowedValues { get; set; } = [];
+    /// <summary>
+    /// The values the field may hold, with their codes; null for a free field. Declared with a
+    /// <see cref="FieldDomainAttribute"/> or <see cref="FieldAttribute.AllowedValues"/>.
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public FieldDomain? Domain { get; set; }
 
     public string? DisplayFormat { get; set; }
 
     public FieldTextDirection TextDirection { get; set; } = FieldTextDirection.Auto;
+
+    /// <summary>
+    /// The field's logical type: <see cref="DataType"/> when the producer sent it, else what
+    /// <see cref="TypeFullName"/> names (an older server, a source that only typed by .NET name), else
+    /// <see cref="FieldDataType.Unknown"/>.
+    /// </summary>
+    public FieldDataType ResolveDataType() =>
+        DataType != FieldDataType.Unknown ? DataType : FieldDataTypes.FromTypeName(TypeFullName);
 
     public override string ToString()
     {
@@ -115,16 +138,20 @@ public class Field
             // Determine if the property is nullable
             bool isNullable = Nullable.GetUnderlyingType(propertyType) != null || !propertyType.IsValueType;
 
+            // an application's domain (e.g. coded values) wins; a plain AllowedValues list is a domain too
+            var domain = property.GetCustomAttribute<FieldDomainAttribute>()?.GetDomain() ?? FieldDomain.FromValues(fieldAttribute?.AllowedValues);
+
             fields.Add(new Field
             {
                 Name = property.Name,
                 Alias = fieldAttribute?.Alias ?? property.Name, // Use property name if no alias
                 TypeFullName = propertyType.FullName/*.ToString()*/,
+                DataType = FieldDataTypes.FromClrType(propertyType),
                 IsNullable = isNullable,
                 Length = fieldAttribute?.Length ?? 0,
                 CanRead = fieldAttribute?.CanRead ?? true,
                 CanWrite = fieldAttribute?.CanWrite ?? true,
-                AllowedValues = fieldAttribute?.AllowedValues ?? [],
+                Domain = domain,
                 DisplayFormat = fieldAttribute?.DisplayFormat,
                 TextDirection = fieldAttribute?.TextDirection ?? FieldTextDirection.Auto,
                 Precision = GetDefaultPrecision(underlyingType),
@@ -175,6 +202,8 @@ public class Field
                 Name = kvp.Key,
                 Alias = kvp.Key,
                 TypeFullName = kvp.Value?.GetType().FullName/*Name*/ ?? "object",
+                // an empty value says nothing: Unknown, and readers look at the data
+                DataType = FieldDataTypes.FromClrType(kvp.Value?.GetType()),
                 IsNullable = isNullable
             });
         }

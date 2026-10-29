@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Input;
 using IRI.Maptor.Presentation.Wpf.ViewModels.Symbology;
 
 namespace IRI.Maptor.Presentation.Wpf.Controls.Symbology.Sld;
@@ -24,10 +25,15 @@ public partial class SldEditorWindow : LocalizedMetroWindow
 
         viewModel.RequestCloseAction ??= Close;
 
+        viewModel.RequestShowRuleGenerator ??= generator => new SldRuleGeneratorWindow(generator) { Owner = this }.ShowDialog() == true;
+
         viewModel.RequestShowWarning ??= (message, title) =>
             MessageBox.Show(this, message, title, MessageBoxButton.OK, MessageBoxImage.Warning);
 
         viewModel.RequestShowError ??= (message, title) =>
             MessageBox.Show(this, message, title, MessageBoxButton.OK, MessageBoxImage.Error);
+
+        // F2: edit the selected rule's legend text
+        InputBindings.Add(new KeyBinding(new RelayCommand(_ => editor.FocusRuleTitle()), Key.F2, ModifierKeys.None));
     }
 }

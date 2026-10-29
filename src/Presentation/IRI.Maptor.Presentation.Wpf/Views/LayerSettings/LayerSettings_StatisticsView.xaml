@@ -1,0 +1,548 @@
+<UserControl x:Class="IRI.Maptor.Presentation.Wpf.Controls.LayerSettings.LayerSettings_StatisticsView"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:helpers="clr-namespace:IRI.Maptor.Presentation.Wpf.Helpers"
+                xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+                xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                xmlns:viewModels="clr-namespace:IRI.Maptor.Presentation.Wpf.ViewModels.LayerSettings"
+                xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core" >
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+
+            <!--every text sets its Foreground: the tab content otherwise inherits the selected tab header's white-->
+            <Style TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}"/>
+
+            <!--column widths of the result table, shared by its header, rows and totals line-->
+            <GridLength x:Key="Statistics.CountWidth">76</GridLength>
+            <GridLength x:Key="Statistics.ShareWidth">136</GridLength>
+            <sys:Double x:Key="Statistics.MeasureWidth">108</sys:Double>
+
+            <!--result surfaces: plain background with a hairline border, apart from the grey input card-->
+            <Style x:Key="Statistics.Panel" TargetType="Border">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"/>
+                <Setter Property="Margin" Value="4"/>
+                <Setter Property="Padding" Value="10,8"/>
+            </Style>
+
+            <Style x:Key="Statistics.PanelTitle" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}">
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Text}"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Body}"/>
+            </Style>
+
+            <Style x:Key="Statistics.Caption" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}">
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray3}"/>
+                <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"/>
+                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            </Style>
+
+            <Style x:Key="Statistics.Label" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}">
+                <Setter Property="Margin" Value="0,0,8,0"/>
+                <Setter Property="MinWidth" Value="96"/>
+            </Style>
+
+            <!--numbers stay left-to-right in a right-to-left page, or "4.6%" turns into "%4.6"-->
+            <Style x:Key="Statistics.Number" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}">
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Text}"/>
+                <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"/>
+                <Setter Property="FlowDirection" Value="LeftToRight"/>
+                <Setter Property="TextAlignment" Value="Right"/>
+                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            </Style>
+
+            <!--a headline number under its caption: the text box is left-to-right, so its start side
+                (where the caption starts) has to follow the page direction explicitly-->
+            <Style x:Key="Statistics.TileValue" TargetType="TextBlock" BasedOn="{StaticResource Statistics.Number}">
+                <Setter Property="FontSize" Value="18"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="TextAlignment" Value="Left"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsRightToLeft, Source={StaticResource Localization}}" Value="True">
+                        <Setter Property="TextAlignment" Value="Right"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="Statistics.ColumnHeader" TargetType="TextBlock" BasedOn="{StaticResource Statistics.Caption}">
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Margin" Value="8,0"/>
+                <Setter Property="ToolTip" Value="{Binding Text, RelativeSource={RelativeSource Self}}"/>
+            </Style>
+
+            <!--segmented switch: one pill per choice, the checked one filled with the accent-->
+            <Style x:Key="Statistics.Segment" TargetType="RadioButton">
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Text}"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Padding" Value="14,5"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="RadioButton">
+                            <Border x:Name="segment" Background="Transparent" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                <TextBlock Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}"
+                                           FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"
+                                           Style="{StaticResource IRI.Maptor.Styles.TextBlock}"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="segment" Property="Background" Value="{DynamicResource MahApps.Brushes.Gray9}"/>
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="segment" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.5"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!--the compact switch in a panel header-->
+            <Style x:Key="Statistics.Segment.Small" TargetType="RadioButton" BasedOn="{StaticResource Statistics.Segment}">
+                <Setter Property="Padding" Value="10,2"/>
+            </Style>
+
+            <Style x:Key="Statistics.SegmentGroup" TargetType="Border">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="CornerRadius" Value="6"/>
+                <Setter Property="Padding" Value="2"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+            </Style>
+
+            <!--histogram axis labels: plain numbers under the plot-->
+            <Style x:Key="Statistics.AxisLabel" TargetType="TextBlock" BasedOn="{StaticResource Statistics.Number}">
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray3}"/>
+                <Setter Property="Margin" Value="0,4,0,0"/>
+            </Style>
+
+            <!--one line of the result table; the totals line reuses it in bold-->
+            <DataTemplate x:Key="Statistics.TableRowContent" DataType="{x:Type viewModels:StatisticsTableRow}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="{StaticResource Statistics.CountWidth}"/>
+                        <ColumnDefinition Width="{StaticResource Statistics.ShareWidth}"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <DockPanel Grid.Column="0" Margin="8,0">
+                        <!--a value the field's domain does not allow-->
+                        <iconPacks:PackIconMaterial x:Name="outOfDomain" DockPanel.Dock="Left" Kind="AlertOutline" Width="13" Height="13"
+                                                    Margin="0,0,6,0" VerticalAlignment="Center" Visibility="Collapsed"
+                                                    Foreground="{DynamicResource IRI.Maptor.Brushes.Warning}"
+                                                    ToolTip="{Binding [layerSettings_statistics_outOfDomainTooltip], Source={StaticResource Localization}}"/>
+                        <TextBlock x:Name="value" Text="{Binding Value}" ToolTip="{Binding Value}"
+                                   Foreground="{DynamicResource MahApps.Brushes.Text}"
+                                   FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"
+                                   TextTrimming="CharacterEllipsis"/>
+                    </DockPanel>
+                    <TextBlock Grid.Column="1" Margin="8,0" Text="{Binding Count}" Style="{StaticResource Statistics.Number}"/>
+                    <!--share: a bar scaled to the largest row, then the percentage-->
+                    <Grid Grid.Column="2" Margin="8,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="46"/>
+                        </Grid.ColumnDefinitions>
+                        <Border x:Name="track" Grid.Column="0" Height="6" CornerRadius="3" VerticalAlignment="Center"
+                                Background="{DynamicResource MahApps.Brushes.Gray9}">
+                            <Border HorizontalAlignment="Left" CornerRadius="3" Background="{DynamicResource MahApps.Brushes.Accent}"
+                                    Width="{Binding ActualWidth, ElementName=track}">
+                                <Border.RenderTransform>
+                                    <ScaleTransform ScaleX="{Binding Bar}"/>
+                                </Border.RenderTransform>
+                            </Border>
+                        </Border>
+                        <TextBlock Grid.Column="1" Text="{Binding Percent}" Style="{StaticResource Statistics.Number}"
+                                   Foreground="{DynamicResource MahApps.Brushes.Gray3}"/>
+                    </Grid>
+                    <TextBlock Grid.Column="3" Width="{StaticResource Statistics.MeasureWidth}" Margin="8,0"
+                               Text="{Binding Measure}" Style="{StaticResource Statistics.Number}"
+                               Visibility="{Binding DataContext.MeasureHeader, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource stringNotNullOrEmptyToVisibilityConverter}}"/>
+                    <TextBlock Grid.Column="4" Width="{StaticResource Statistics.MeasureWidth}" Margin="8,0"
+                               Text="{Binding Sum}" Style="{StaticResource Statistics.Number}"
+                               Visibility="{Binding DataContext.SumHeader, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource stringNotNullOrEmptyToVisibilityConverter}}"/>
+                </Grid>
+                <DataTemplate.Triggers>
+                    <!--the empty features read as a remark, not as a value-->
+                    <DataTrigger Binding="{Binding IsEmptyValue}" Value="True">
+                        <Setter TargetName="value" Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray3}"/>
+                        <Setter TargetName="value" Property="FontStyle" Value="Italic"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsOutOfDomain}" Value="True">
+                        <Setter TargetName="outOfDomain" Property="Visibility" Value="Visible"/>
+                        <Setter TargetName="value" Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Warning}"/>
+                    </DataTrigger>
+                    <!--the totals line has no share to draw-->
+                    <DataTrigger Binding="{Binding Bar}" Value="0">
+                        <Setter TargetName="track" Property="Visibility" Value="Hidden"/>
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Margin="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--Live layer: the client holds only part of the features, so the server computes the statistics over all of them-->
+        <Border Grid.Row="0" Margin="4" Style="{StaticResource IRI.Maptor.Styles.Border.Banner.Accent}"
+                Visibility="{Binding IsLiveLayer, Converter={StaticResource boolToVisibilityConverter}}">
+            <DockPanel>
+                <iconPacks:PackIconMaterial Kind="CloudOutline" Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                            Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.FieldAdornment}"/>
+                <TextBlock TextWrapping="Wrap" Text="{Binding [layerSettings_statistics_liveOnServer], Source={StaticResource Localization}}"/>
+            </DockPanel>
+        </Border>
+
+        <!--inputs: what to compute, on which field-->
+        <Border Grid.Row="1" Style="{StaticResource IRI.Maptor.Styles.Border.Card}" Padding="10,8"
+                IsEnabled="{Binding CanCompute}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Row="0" Grid.ColumnSpan="3" Margin="0,0,0,8" Style="{StaticResource Statistics.SegmentGroup}"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource notConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton GroupName="StatisticsMode" Style="{StaticResource Statistics.Segment}"
+                                     IsChecked="{Binding Mode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static viewModels:StatisticsMode.Field}}"
+                                     Content="{Binding [layerSettings_statistics_modeField], Source={StaticResource Localization}}"/>
+                        <RadioButton GroupName="StatisticsMode" Style="{StaticResource Statistics.Segment}"
+                                     IsChecked="{Binding Mode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static viewModels:StatisticsMode.GroupBy}}"
+                                     Content="{Binding [layerSettings_statistics_modeGroupBy], Source={StaticResource Localization}}"/>
+                        <RadioButton GroupName="StatisticsMode" Style="{StaticResource Statistics.Segment}"
+                                     IsChecked="{Binding Mode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static viewModels:StatisticsMode.Geometry}}"
+                                     Content="{Binding [layerSettings_statistics_modeGeometry], Source={StaticResource Localization}}"/>
+                    </StackPanel>
+                </Border>
+
+                <!--the field (group-by mode: the field to group by)-->
+                <TextBlock Grid.Row="1" Grid.Column="0"
+                           Visibility="{Binding IsGeometryMode, Converter={StaticResource boolToInverseVisibilityConverter}}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource Statistics.Label}">
+                            <Setter Property="Text" Value="{Binding [layerSettings_statistics_field], Source={StaticResource Localization}}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsGroupByMode}" Value="True">
+                                    <Setter Property="Text" Value="{Binding [layerSettings_statistics_groupByField], Source={StaticResource Localization}}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <ComboBox Grid.Row="1" Grid.Column="1" Margin="0"
+                          Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal}"
+                          ItemsSource="{Binding Fields}"
+                          DisplayMemberPath="DisplayName"
+                          SelectedItem="{Binding SelectedField, Mode=TwoWay}"
+                          IsEnabled="{Binding IsBusy, Converter={StaticResource notConverter}}"
+                          Visibility="{Binding IsGeometryMode, Converter={StaticResource boolToInverseVisibilityConverter}}"/>
+
+                <!--geometry mode has no input: say what it measures instead-->
+                <DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center"
+                           Visibility="{Binding IsGeometryMode, Converter={StaticResource boolToVisibilityConverter}}">
+                    <iconPacks:PackIconMaterial DockPanel.Dock="Left" Kind="RulerSquare" Width="16" Height="16" Margin="0,0,8,0"
+                                                VerticalAlignment="Center" Foreground="{DynamicResource MahApps.Brushes.Gray3}"/>
+                    <TextBlock TextWrapping="Wrap" Style="{StaticResource Statistics.Caption}"
+                               Text="{Binding [layerSettings_statistics_geometryHint], Source={StaticResource Localization}}"/>
+                </DockPanel>
+
+                <!--group-by only: a numeric field to total per group-->
+                <TextBlock Grid.Row="2" Grid.Column="0" Margin="0,8,8,0" Style="{StaticResource Statistics.Label}"
+                           Text="{Binding [layerSettings_statistics_sumField], Source={StaticResource Localization}}"
+                           Visibility="{Binding IsGroupByMode, Converter={StaticResource boolToVisibilityConverter}}"/>
+                <ComboBox Grid.Row="2" Grid.Column="1" Margin="0,8,0,0"
+                          Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal}"
+                          ItemsSource="{Binding SumFields}"
+                          DisplayMemberPath="DisplayName"
+                          SelectedItem="{Binding SelectedSumField, Mode=TwoWay}"
+                          IsEnabled="{Binding IsBusy, Converter={StaticResource notConverter}}"
+                          Visibility="{Binding IsGroupByMode, Converter={StaticResource boolToVisibilityConverter}}"/>
+
+                <!--compute sits at the end of the last input row-->
+                <StackPanel Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="8,0,0,0">
+                    <mahApp:ProgressRing IsActive="{Binding IsBusy}" Margin="0,0,8,0"
+                                         Style="{StaticResource IRI.Maptor.Styles.ProgressRing.Inline}"
+                                         Visibility="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}}"/>
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Secondary}" Margin="0,0,8,0"
+                            Command="{Binding CancelCommand}"
+                            Visibility="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}}">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="Close" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                            <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent}"
+                                       Text="{Binding [dialog_common_cancel], Source={StaticResource Localization}}"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}" Margin="0"
+                            Command="{Binding ComputeCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="Calculator" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                            <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent}"
+                                       Text="{Binding [layerSettings_statistics_compute], Source={StaticResource Localization}}"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <TextBlock Grid.Row="2" Margin="8,4" TextWrapping="Wrap"
+                   Style="{StaticResource IRI.Maptor.Styles.TextBlock.Error}"
+                   Text="{Binding ErrorMessage}"
+                   Visibility="{Binding ErrorMessage, Converter={StaticResource stringNotNullOrEmptyToVisibilityConverter}}"/>
+
+        <!--nothing computed yet-->
+        <StackPanel Grid.Row="3" Margin="16,28" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel.Visibility>
+                <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
+                    <Binding Path="HasResult" Converter="{StaticResource notConverter}"/>
+                    <Binding Path="IsBusy" Converter="{StaticResource notConverter}"/>
+                    <Binding Path="CanCompute"/>
+                </MultiBinding>
+            </StackPanel.Visibility>
+            <iconPacks:PackIconMaterial Kind="ChartBoxOutline" Width="40" Height="40" HorizontalAlignment="Center"
+                                        Foreground="{DynamicResource MahApps.Brushes.Gray7}"/>
+            <TextBlock Margin="0,8,0,0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.EmptyState}"
+                       Text="{Binding [layerSettings_statistics_emptyState], Source={StaticResource Localization}}"/>
+        </StackPanel>
+
+        <!--result-->
+        <Grid Grid.Row="3" Visibility="{Binding HasResult, Converter={StaticResource boolToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!--headline numbers-->
+            <ItemsControl Grid.Row="0" Grid.ColumnSpan="2" ItemsSource="{Binding Tiles}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="1"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type viewModels:StatisticsTile}">
+                        <Border Style="{StaticResource Statistics.Panel}" Padding="0,6,10,6">
+                            <DockPanel>
+                                <!--accent edge on the start side-->
+                                <Border DockPanel.Dock="Left" Width="3" CornerRadius="2" Margin="0,0,10,0"
+                                        Background="{DynamicResource MahApps.Brushes.Accent}"/>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Caption}" Style="{StaticResource Statistics.Caption}" ToolTip="{Binding Caption}"/>
+                                    <TextBlock Text="{Binding Value}" Margin="0,2,0,0" Style="{StaticResource Statistics.TileValue}"/>
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!--field mode: min, max, mean, ...-->
+            <Border Grid.Row="1" Grid.Column="0" MinWidth="190" VerticalAlignment="Top"
+                    Style="{StaticResource Statistics.Panel}"
+                    Visibility="{Binding DetailRows.Count, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}">
+                <StackPanel>
+                    <TextBlock Margin="0,0,0,6" Style="{StaticResource Statistics.PanelTitle}"
+                               Text="{Binding [layerSettings_statistics_summary], Source={StaticResource Localization}}"/>
+                    <ItemsControl ItemsSource="{Binding DetailRows}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type viewModels:StatisticsRow}">
+                                <Border BorderBrush="{DynamicResource MahApps.Brushes.Gray9}" BorderThickness="0,1,0,0" Padding="0,6">
+                                    <DockPanel>
+                                        <TextBlock DockPanel.Dock="Left" Text="{Binding Label}" Style="{StaticResource Statistics.Caption}" Margin="0,0,16,0"/>
+                                        <TextBlock Text="{Binding Value}" Style="{StaticResource Statistics.Number}" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                                    </DockPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!--most frequent values / groups / histogram-->
+            <Border Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" Style="{StaticResource Statistics.Panel}"
+                    Visibility="{Binding IsResultPanelVisible, Converter={StaticResource boolToVisibilityConverter}}">
+                <DockPanel>
+                    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                        <TextBlock DockPanel.Dock="Left" Style="{StaticResource Statistics.PanelTitle}" Text="{Binding ResultPanelTitle}"/>
+                        <!--numeric field: chart or most frequent values-->
+                        <Border DockPanel.Dock="Right" Margin="12,0,0,0" Style="{StaticResource Statistics.SegmentGroup}"
+                                Visibility="{Binding IsResultViewSwitchVisible, Converter={StaticResource boolToVisibilityConverter}}">
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton GroupName="StatisticsResultView" Style="{StaticResource Statistics.Segment.Small}"
+                                             IsChecked="{Binding ResultView, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static viewModels:StatisticsResultView.Histogram}}"
+                                             Content="{Binding [layerSettings_statistics_viewHistogram], Source={StaticResource Localization}}"/>
+                                <RadioButton GroupName="StatisticsResultView" Style="{StaticResource Statistics.Segment.Small}"
+                                             IsChecked="{Binding ResultView, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static viewModels:StatisticsResultView.Table}}"
+                                             Content="{Binding [layerSettings_statistics_viewTable], Source={StaticResource Localization}}"/>
+                            </StackPanel>
+                        </Border>
+                        <TextBlock Style="{StaticResource Statistics.Caption}" HorizontalAlignment="Right" Margin="12,0,0,0"
+                                   Text="{Binding ResultPanelSubtitle}"/>
+                    </DockPanel>
+
+                    <Grid>
+                        <DockPanel Visibility="{Binding IsTableVisible, Converter={StaticResource boolToVisibilityConverter}}">
+                        <!--column headers on a shaded band-->
+                        <Border DockPanel.Dock="Top" Background="{DynamicResource MahApps.Brushes.Gray10}" CornerRadius="4" Padding="0,6">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="{StaticResource Statistics.CountWidth}"/>
+                                    <ColumnDefinition Width="{StaticResource Statistics.ShareWidth}"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Style="{StaticResource Statistics.ColumnHeader}"
+                                           Text="{Binding [layerSettings_statistics_value], Source={StaticResource Localization}}"/>
+                                <TextBlock Grid.Column="1" Style="{StaticResource Statistics.ColumnHeader}" TextAlignment="Right"
+                                           Text="{Binding [layerSettings_statistics_count], Source={StaticResource Localization}}"/>
+                                <TextBlock Grid.Column="2" Style="{StaticResource Statistics.ColumnHeader}" TextAlignment="Right" Text="%"/>
+                                <TextBlock Grid.Column="3" Style="{StaticResource Statistics.ColumnHeader}" TextAlignment="Right"
+                                           Width="{StaticResource Statistics.MeasureWidth}"
+                                           Text="{Binding MeasureHeader}"
+                                           Visibility="{Binding MeasureHeader, Converter={StaticResource stringNotNullOrEmptyToVisibilityConverter}}"/>
+                                <TextBlock Grid.Column="4" Style="{StaticResource Statistics.ColumnHeader}" TextAlignment="Right"
+                                           Width="{StaticResource Statistics.MeasureWidth}"
+                                           Text="{Binding SumHeader}"
+                                           Visibility="{Binding SumHeader, Converter={StaticResource stringNotNullOrEmptyToVisibilityConverter}}"/>
+                            </Grid>
+                        </Border>
+
+                        <!--totals line (group-by mode)-->
+                        <Border DockPanel.Dock="Bottom" BorderBrush="{DynamicResource MahApps.Brushes.Gray7}" BorderThickness="0,1,0,0" Padding="0,6"
+                                TextElement.FontWeight="SemiBold">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding TableFooter}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <ContentPresenter Content="{Binding TableFooter}" ContentTemplate="{StaticResource Statistics.TableRowContent}"/>
+                        </Border>
+
+                        <ItemsControl ItemsSource="{Binding TableRows}" MaxHeight="330"
+                                      VirtualizingPanel.IsVirtualizing="True" ScrollViewer.CanContentScroll="True">
+                            <ItemsControl.Template>
+                                <ControlTemplate TargetType="ItemsControl">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Focusable="False">
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </ControlTemplate>
+                            </ItemsControl.Template>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type viewModels:StatisticsTableRow}">
+                                    <Border x:Name="row" Padding="0,5" Background="Transparent"
+                                            BorderBrush="{DynamicResource MahApps.Brushes.Gray9}" BorderThickness="0,0,0,1">
+                                        <ContentPresenter Content="{Binding}" ContentTemplate="{StaticResource Statistics.TableRowContent}"/>
+                                    </Border>
+                                    <DataTemplate.Triggers>
+                                        <Trigger SourceName="row" Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="row" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
+                                        </Trigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        </DockPanel>
+
+                        <!--histogram: drawn left to right in both languages, like any chart-->
+                        <Grid FlowDirection="LeftToRight" Margin="4,0"
+                              Visibility="{Binding IsHistogramVisible, Converter={StaticResource boolToVisibilityConverter}}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!--plot: a dashed line at the tallest bin, labelled with its count-->
+                            <Grid Grid.Row="0" Height="{x:Static viewModels:LayerSettings_StatisticsViewModel.HistogramHeight}" Margin="0,14,0,0">
+                                <Line X1="0" X2="1" Stretch="Fill" VerticalAlignment="Top" StrokeThickness="1" StrokeDashArray="3 3"
+                                      Stroke="{DynamicResource MahApps.Brushes.Gray8}"/>
+                                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,-16,0,0"
+                                           Style="{StaticResource Statistics.AxisLabel}" Text="{Binding HistogramMaxCount}"/>
+                                <ItemsControl ItemsSource="{Binding HistogramBins}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <UniformGrid Rows="1"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type viewModels:StatisticsHistogramBin}">
+                                            <!--the full-height cell carries the tooltip, so a short bar is easy to hover-->
+                                            <Grid x:Name="cell" Background="Transparent" ToolTip="{Binding ToolTip}">
+                                                <Border x:Name="bar" Margin="1,0" VerticalAlignment="Bottom" CornerRadius="2,2,0,0"
+                                                        Height="{Binding BarHeight}" Background="{DynamicResource MahApps.Brushes.Accent}"/>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <Trigger SourceName="cell" Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="bar" Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                                                    <Setter TargetName="cell" Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}"/>
+                                                </Trigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+
+                            <!--baseline-->
+                            <Border Grid.Row="1" Height="1" Background="{DynamicResource MahApps.Brushes.Gray7}"/>
+
+                            <!--edges: first, middle, last-->
+                            <Grid Grid.Row="2">
+                                <TextBlock HorizontalAlignment="Left" TextAlignment="Left" Style="{StaticResource Statistics.AxisLabel}" Text="{Binding HistogramAxisStart}"/>
+                                <TextBlock HorizontalAlignment="Center" TextAlignment="Center" Style="{StaticResource Statistics.AxisLabel}" Text="{Binding HistogramAxisMiddle}"/>
+                                <TextBlock HorizontalAlignment="Right" TextAlignment="Right" Style="{StaticResource Statistics.AxisLabel}" Text="{Binding HistogramAxisEnd}"/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </DockPanel>
+            </Border>
+
+            <DockPanel Grid.Row="2" Grid.ColumnSpan="2" Margin="8,2"
+                       Visibility="{Binding ResultNote, Converter={StaticResource stringNotNullOrEmptyToVisibilityConverter}}">
+                <iconPacks:PackIconMaterial DockPanel.Dock="Left" Kind="InformationOutline" Width="14" Height="14" Margin="0,0,6,0"
+                                            VerticalAlignment="Center" Foreground="{DynamicResource MahApps.Brushes.Gray3}"/>
+                <TextBlock TextWrapping="Wrap" Style="{StaticResource Statistics.Caption}" Text="{Binding ResultNote}"/>
+            </DockPanel>
+        </Grid>
+    </Grid>
+</UserControl>

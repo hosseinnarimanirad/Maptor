@@ -26,12 +26,31 @@ public class LayerSettingsViewModel : DialogViewModelBase
             RaisePropertyChanged();
         }
     }
-     
 
-    public LayerSettingsViewModel(ILayer layer, LayerSettings_VectorExportViewModel exportViewModel)
+    private LayerSettings_StatisticsViewModel _statistics;
+    public LayerSettings_StatisticsViewModel Statistics
+    {
+        get { return _statistics; }
+        set
+        {
+            _statistics = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    /// <summary>The Symbology tab: the layer's styles, switching, and the user's own changes.</summary>
+    public LayerSettings_SymbologyViewModel? Symbology { get; init; }
+
+    /// <summary>The read-only layer facts shown on the General tab.</summary>
+    public LayerSettings_GeneralSummaryViewModel Summary { get; }
+
+    public LayerSettingsViewModel(ILayer layer, LayerSettings_VectorExportViewModel exportViewModel, LayerSettings_StatisticsViewModel statisticsViewModel)
     {
         this.Layer = layer;
+        this.Summary = new LayerSettings_GeneralSummaryViewModel(layer);
         this.Export = exportViewModel;
+        this.Statistics = statisticsViewModel;
     }
 
 }

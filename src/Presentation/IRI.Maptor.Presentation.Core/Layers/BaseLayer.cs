@@ -117,12 +117,22 @@ public abstract class BaseLayer : Notifier, ILayer
             _isBusy = value;
             RaisePropertyChanged();
             RaisePropertyChanged(nameof(IsNotBusy));
+            RaisePropertyChanged(nameof(ShowLoadingIndicator));
+            RaisePropertyChanged(nameof(HideLoadingIndicator));
         }
     }
 
     public virtual bool IsInitializing => DataSource?.IsInitializing ?? false;
 
     public virtual bool IsProcessing => DataSource?.IsProcessing ?? false;
+
+    public virtual bool IsFetching => DataSource?.IsFetching ?? false;
+
+    /// <summary>The legend's loading spinner: busy, or downloading in the background (which leaves the controls usable).</summary>
+    public bool ShowLoadingIndicator => IsBusy || IsFetching;
+
+    /// <summary>The legend shows the visibility checkbox (and the out-of-scale lock) only while no spinner is shown.</summary>
+    public bool HideLoadingIndicator => !ShowLoadingIndicator;
 
     public virtual bool IsLoaded => DataSource?.IsLoaded ?? false;
 
@@ -158,6 +168,7 @@ public abstract class BaseLayer : Notifier, ILayer
             return;
         dataSource.IsInitializingChanged -= DataSource_IsInitializingChanged;
         dataSource.IsProcessingChanged -= DataSource_IsProcessingChanged;
+        dataSource.IsFetchingChanged -= DataSource_IsFetchingChanged;
         dataSource.IsLoadedChanged -= DataSource_IsLoadedChanged;
         dataSource.HasPendingChangesChanged -= DataSource_HasPendingChangesChanged;
         dataSource.IsClientFilteredChanged -= DataSource_IsClientFilteredChanged;
@@ -171,6 +182,7 @@ public abstract class BaseLayer : Notifier, ILayer
             return;
         dataSource.IsInitializingChanged += DataSource_IsInitializingChanged;
         dataSource.IsProcessingChanged += DataSource_IsProcessingChanged;
+        dataSource.IsFetchingChanged += DataSource_IsFetchingChanged;
         dataSource.IsLoadedChanged += DataSource_IsLoadedChanged;
         dataSource.HasPendingChangesChanged += DataSource_HasPendingChangesChanged;
         dataSource.IsClientFilteredChanged += DataSource_IsClientFilteredChanged;
@@ -196,6 +208,8 @@ public abstract class BaseLayer : Notifier, ILayer
         RaisePropertyChanged(nameof(IsInitializing));
         RaisePropertyChanged(nameof(IsBusy));
         RaisePropertyChanged(nameof(IsNotBusy));
+        RaisePropertyChanged(nameof(ShowLoadingIndicator));
+        RaisePropertyChanged(nameof(HideLoadingIndicator));
         OnIsInitializingChanged();
     });
 
@@ -206,6 +220,15 @@ public abstract class BaseLayer : Notifier, ILayer
         RaisePropertyChanged(nameof(IsProcessing));
         RaisePropertyChanged(nameof(IsBusy));
         RaisePropertyChanged(nameof(IsNotBusy));
+        RaisePropertyChanged(nameof(ShowLoadingIndicator));
+        RaisePropertyChanged(nameof(HideLoadingIndicator));
+    });
+
+    private void DataSource_IsFetchingChanged(object? sender, bool e) => InvokeOnUiThread(() =>
+    {
+        RaisePropertyChanged(nameof(IsFetching));
+        RaisePropertyChanged(nameof(ShowLoadingIndicator));
+        RaisePropertyChanged(nameof(HideLoadingIndicator));
     });
 
     protected virtual void DataSource_IsLoadedChanged(object? sender, bool e)
