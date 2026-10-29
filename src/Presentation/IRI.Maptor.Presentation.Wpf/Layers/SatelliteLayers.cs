@@ -70,8 +70,10 @@ public static class SatelliteLayers
         var selected = new VisualParameters(style.SelectedFill, style.SelectedStroke, 2, 1);
         selected.PointSymbol.SymbolWidth = selected.PointSymbol.SymbolHeight = style.SelectedSize;
 
+        // The renderer centres a label on the point it is given, and gives it the features in screen
+        // pixels: the name goes a fixed number of pixels above the marker, not across it
         var labels = LabelSymbolizer.Create(style.LabelSize, Brush(style.LabelColor), style.LabelFont,
-            geometry => geometry.GetCentroidPlusPoint(), ScaleInterval.All, isRtl: false);
+            geometry => Above(geometry.GetCentroidPlusPoint(), style.LabelOffset), ScaleInterval.All, isRtl: false);
 
         // the source names only the satellites its LabelMode asks for
         labels.IsFilterPassed = feature => feature?.LabelAttribute == SatellitesDataSource.NameFieldName;
@@ -130,6 +132,9 @@ public static class SatelliteLayers
             return new Point(screen.X, screen.Y);
         }, tolerance);
     }
+
+    /// <summary>The point <paramref name="pixels"/> above <paramref name="point"/> on screen (y grows downwards).</summary>
+    private static Point Above(Point point, double pixels) => new(point.X, point.Y - pixels);
 
     private static Func<Feature<Point>, bool> Kind(string kind) => feature =>
         feature?.Attributes is not null
@@ -195,7 +200,11 @@ public sealed class SatelliteLayerStyle
 
     public int LabelSize { get; set; } = 12;
 
-    public Color LabelColor { get; set; } = Colors.White;
+    /// <summary>The renderer backs every label with a translucent white plate, so the text is dark slate.</summary>
+    public Color LabelColor { get; set; } = Color.FromRgb(0x1F, 0x29, 0x37);
+
+    /// <summary>How far above the marker's centre the name sits, in pixels; clear of the selected marker.</summary>
+    public double LabelOffset { get; set; } = 26;
 
     public FontFamily LabelFont { get; set; } = new("Segoe UI Semibold");
 }

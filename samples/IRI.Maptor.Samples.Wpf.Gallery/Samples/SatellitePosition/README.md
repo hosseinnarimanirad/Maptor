@@ -23,7 +23,7 @@ Shows where satellites are right now. The sample reads their orbital elements an
   - **Offline:** the last copy is used, and the line under the buttons says so.
   - **Opened files** are kept in the same store.
 - **The time bar** at the bottom is the same as in Day and night: Now, Live, Play at a speed, a date picker, months and a 24-hour timeline. Drag the timeline to see where a satellite was or will be. **Live positions update every** 1, 5, 10 or 30 seconds; this sets how often the clock ticks while live. Space plays and pauses.
-- **Passes over a region** (the second tab of the card):
+- **Passes over a region** (the second tab of the panel beside the map):
   - **Pick a region:** **Point** takes one click, **Rectangle** a drag, **Polygon** clicks on the corners (double-click to finish). The region is drawn on the map with a magenta edge.
   - **Visible** lists when each listed satellite is above the minimum elevation (0–30°) from somewhere in the region. For a point it also gives the rise and set directions. An eye icon marks passes visible to the naked eye: the satellite is in sunlight against a dark sky.
   - **Imaged** lists when the swath of Landsat, Sentinel-2 or Terra reaches the region, with the share of the region covered. A sun or moon icon shows whether the region is in daylight, which an optical imager needs.
