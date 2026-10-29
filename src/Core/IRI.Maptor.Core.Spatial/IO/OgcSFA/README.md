@@ -10,6 +10,8 @@ OGC Simple Feature Access (ISO 19125) serialization for `Geometry<T>` — one ge
 | OGC WKT write | Yes — `geometry.AsWkt()` |
 | WKB read | Yes — `Geometry<T>.FromWkb` / `WkbReader.Parse` |
 | WKB write | Yes — `geometry.AsWkb()` |
+| PostGIS EWKB read | Yes — same `FromWkb` / `WkbReader.Parse` (detected automatically) |
+| PostGIS EWKB write | Yes — `geometry.AsEwkb()` |
 | SQL Server WKT read | Yes — `SqlServerWktReader.Parse` |
 | SQL Server WKT write | Yes — `geometry.AsSqlServerWkt()` |
 | Z / M / ZM dimensions | Yes (WKT dimension suffixes) |
@@ -53,6 +55,18 @@ var restored = Geometry<Point>.FromWkb(wkb, srid: 4326);
 ```
 
 Byte-level layout of every geometry type: [WKB_Binary_Structure.md](WKB_Binary_Structure.md).
+
+### The PostGIS dialect (EWKB)
+
+PostGIS sends and receives `geometry`/`geography` values as EWKB. Instead of the ISO `+1000`/`+2000`/`+3000` type offsets, EWKB sets flags in the type code: `0x80000000` for Z, `0x40000000` for M and `0x20000000` for an embedded SRID. When the SRID flag is set, an `int32` SRID follows the type code. The reader accepts both forms, in either byte order. An SRID embedded in EWKB takes precedence over the `srid` argument.
+
+```csharp
+byte[] ewkb = geometry.AsEwkb();             // SRID=4326;POINT: 25 bytes = order(1) + type(4) + srid(4) + x(8) + y(8)
+
+var restored = Geometry<Point>.FromWkb(ewkb, srid: 0);   // restored.Srid == 4326
+```
+
+`AsEwkb()` embeds the SRID only when it is positive, and it always writes little-endian output. The output matches PostGIS's `ST_AsEWKB(g, 'NDR')` byte for byte.
 
 ### The SQL Server dialect
 

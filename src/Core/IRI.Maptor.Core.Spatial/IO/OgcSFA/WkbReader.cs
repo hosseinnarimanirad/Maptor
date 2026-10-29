@@ -56,6 +56,48 @@ public static class WkbReader
 
     #endregion
 
+    #region Geometry Type Header
+
+    // PostGIS EWKB flags, OR-ed into the 2D base type code (ISO WKB uses +1000/+2000/+3000 offsets instead)
+    private const uint EwkbZFlag = 0x80000000;
+    private const uint EwkbMFlag = 0x40000000;
+    private const uint EwkbSridFlag = 0x20000000;
+
+    /// <summary>
+    /// Reads the geometry type code, accepting both ISO WKB codes and PostGIS EWKB flags. EWKB codes are
+    /// normalized to the ISO <see cref="WkbGeometryType"/> values; an embedded EWKB SRID replaces <paramref name="srid"/>.
+    /// </summary>
+    private static WkbGeometryType ReadGeometryType(BinaryReader reader, WkbByteOrder byteOrder, ref int srid)
+    {
+        var rawType = (uint)ReadInt32(reader, byteOrder);
+
+        if ((rawType & EwkbSridFlag) != 0)
+            srid = ReadInt32(reader, byteOrder);
+
+        var type = rawType & ~(EwkbZFlag | EwkbMFlag | EwkbSridFlag);
+
+        if ((rawType & EwkbZFlag) != 0)
+            type += 1000;
+
+        if ((rawType & EwkbMFlag) != 0)
+            type += 2000;
+
+        return (WkbGeometryType)type;
+    }
+
+    /// <summary>
+    /// Reads the type code of a member of a multi-geometry. Any SRID embedded there is ignored; members take the
+    /// SRID of their parent.
+    /// </summary>
+    private static WkbGeometryType ReadGeometryType(BinaryReader reader, WkbByteOrder byteOrder)
+    {
+        var ignoredSrid = 0;
+
+        return ReadGeometryType(reader, byteOrder, ref ignoredSrid);
+    }
+
+    #endregion
+
     #region LineString/Ring Reading Helper
 
     /// <summary>
@@ -122,6 +164,10 @@ public static class WkbReader
 
     #region Main Parse Method
 
+    /// <summary>
+    /// Parses ISO/OGC WKB or PostGIS EWKB. For EWKB that carries an SRID, that SRID is used and
+    /// <paramref name="srid"/> is ignored; otherwise the result gets <paramref name="srid"/>.
+    /// </summary>
     public static IGeometry? Parse(byte[] wkb, int srid)
     {
         if (wkb.IsNullOrEmpty())
@@ -131,7 +177,7 @@ public static class WkbReader
         {
             var byteOrderByte = stream.ReadByte();
             var byteOrder = (WkbByteOrder)byteOrderByte;
-            var type = (WkbGeometryType)ReadInt32(stream, byteOrder);
+            var type = ReadGeometryType(stream, byteOrder, ref srid);
 
             switch (type)
             {
@@ -261,7 +307,7 @@ public static class WkbReader
         for (int i = 0; i < numberOfGeometries; i++)
         {
             var childByteOrder = (WkbByteOrder)reader.ReadByte();
-            var type = (WkbGeometryType)ReadInt32(reader, childByteOrder);
+            var type = ReadGeometryType(reader, childByteOrder);
 
             if (type == WkbGeometryType.Point)
             {
@@ -285,7 +331,7 @@ public static class WkbReader
         for (int i = 0; i < numberOfGeometries; i++)
         {
             var childByteOrder = (WkbByteOrder)reader.ReadByte();
-            var type = (WkbGeometryType)ReadInt32(reader, childByteOrder);
+            var type = ReadGeometryType(reader, childByteOrder);
 
             if (type == WkbGeometryType.LineString)
             {
@@ -309,7 +355,7 @@ public static class WkbReader
         for (int i = 0; i < numberOfGeometries; i++)
         {
             var childByteOrder = (WkbByteOrder)reader.ReadByte();
-            var type = (WkbGeometryType)ReadInt32(reader, childByteOrder);
+            var type = ReadGeometryType(reader, childByteOrder);
 
             if (type == WkbGeometryType.Polygon)
             {
@@ -370,7 +416,7 @@ public static class WkbReader
         for (int i = 0; i < numberOfGeometries; i++)
         {
             var childByteOrder = (WkbByteOrder)reader.ReadByte();
-            var type = (WkbGeometryType)ReadInt32(reader, childByteOrder);
+            var type = ReadGeometryType(reader, childByteOrder);
 
             if (type == WkbGeometryType.PointZ)
             {
@@ -394,7 +440,7 @@ public static class WkbReader
         for (int i = 0; i < numberOfGeometries; i++)
         {
             var childByteOrder = (WkbByteOrder)reader.ReadByte();
-            var type = (WkbGeometryType)ReadInt32(reader, childByteOrder);
+            var type = ReadGeometryType(reader, childByteOrder);
 
             if (type == WkbGeometryType.LineStringZ)
             {
@@ -418,7 +464,7 @@ public static class WkbReader
         for (int i = 0; i < numberOfGeometries; i++)
         {
             var childByteOrder = (WkbByteOrder)reader.ReadByte();
-            var type = (WkbGeometryType)ReadInt32(reader, childByteOrder);
+            var type = ReadGeometryType(reader, childByteOrder);
 
             if (type == WkbGeometryType.PolygonZ)
             {
@@ -479,7 +525,7 @@ public static class WkbReader
         for (int i = 0; i < numberOfGeometries; i++)
         {
             var childByteOrder = (WkbByteOrder)reader.ReadByte();
-            var type = (WkbGeometryType)ReadInt32(reader, childByteOrder);
+            var type = ReadGeometryType(reader, childByteOrder);
 
             if (type == WkbGeometryType.PointM)
             {
@@ -503,7 +549,7 @@ public static class WkbReader
         for (int i = 0; i < numberOfGeometries; i++)
         {
             var childByteOrder = (WkbByteOrder)reader.ReadByte();
-            var type = (WkbGeometryType)ReadInt32(reader, childByteOrder);
+            var type = ReadGeometryType(reader, childByteOrder);
 
             if (type == WkbGeometryType.LineStringM)
             {
@@ -527,7 +573,7 @@ public static class WkbReader
         for (int i = 0; i < numberOfGeometries; i++)
         {
             var childByteOrder = (WkbByteOrder)reader.ReadByte();
-            var type = (WkbGeometryType)ReadInt32(reader, childByteOrder);
+            var type = ReadGeometryType(reader, childByteOrder);
 
             if (type == WkbGeometryType.PolygonM)
             {
@@ -589,7 +635,7 @@ public static class WkbReader
         for (int i = 0; i < numberOfGeometries; i++)
         {
             var childByteOrder = (WkbByteOrder)reader.ReadByte();
-            var type = (WkbGeometryType)ReadInt32(reader, childByteOrder);
+            var type = ReadGeometryType(reader, childByteOrder);
 
             if (type == WkbGeometryType.PointZM)
             {
@@ -613,7 +659,7 @@ public static class WkbReader
         for (int i = 0; i < numberOfGeometries; i++)
         {
             var childByteOrder = (WkbByteOrder)reader.ReadByte();
-            var type = (WkbGeometryType)ReadInt32(reader, childByteOrder);
+            var type = ReadGeometryType(reader, childByteOrder);
 
             if (type == WkbGeometryType.LineStringZM)
             {
@@ -637,7 +683,7 @@ public static class WkbReader
         for (int i = 0; i < numberOfGeometries; i++)
         {
             var childByteOrder = (WkbByteOrder)reader.ReadByte();
-            var type = (WkbGeometryType)ReadInt32(reader, childByteOrder);
+            var type = ReadGeometryType(reader, childByteOrder);
 
             if (type == WkbGeometryType.PolygonZM)
             {

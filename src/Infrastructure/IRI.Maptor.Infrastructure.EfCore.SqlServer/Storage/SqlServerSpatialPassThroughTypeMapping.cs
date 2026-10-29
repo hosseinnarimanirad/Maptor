@@ -6,7 +6,7 @@ using System.Reflection;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace IRI.Maptor.Infrastructure.EfCore.Storage;
+namespace IRI.Maptor.Infrastructure.EfCore.SqlServer.Storage;
 
 /// <summary>
 /// Maps a SQL Server <c>geometry</c>/<c>geography</c> column to the given CLR type as-is, with no conversion.

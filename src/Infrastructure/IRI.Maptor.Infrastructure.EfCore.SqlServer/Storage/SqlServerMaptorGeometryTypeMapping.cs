@@ -12,7 +12,7 @@ using IRI.Maptor.Core.Common.Primitives;
 using IRI.Maptor.Core.Spatial.Primitives;
 using IRI.Maptor.Core.Spatial.IO.SqlServerNativeBinary;
 
-namespace IRI.Maptor.Infrastructure.EfCore.Storage;
+namespace IRI.Maptor.Infrastructure.EfCore.SqlServer.Storage;
 
 /// <summary>
 /// Maps <see cref="Geometry{Point}"/> to a SQL Server <c>geometry</c> or <c>geography</c> column using the

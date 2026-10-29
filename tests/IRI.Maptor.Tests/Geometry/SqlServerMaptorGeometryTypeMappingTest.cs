@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Data.SqlTypes;
 
-using IRI.Maptor.Infrastructure.EfCore.Storage;
+using IRI.Maptor.Infrastructure.EfCore.SqlServer.Storage;
 using IRI.Maptor.Infrastructure.EfCore.ValueConversion;
 using IRI.Maptor.Core.Common.Enums;
 using IRI.Maptor.Core.Common.Primitives;

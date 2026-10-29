@@ -2,10 +2,10 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 
-using IRI.Maptor.Infrastructure.EfCore.Infrastructure;
-using IRI.Maptor.Infrastructure.EfCore.Storage;
+using IRI.Maptor.Infrastructure.EfCore.SqlServer.Infrastructure;
+using IRI.Maptor.Infrastructure.EfCore.SqlServer.Storage;
 
-namespace IRI.Maptor.Infrastructure.EfCore.Extensions;
+namespace IRI.Maptor.Infrastructure.EfCore.SqlServer.Extensions;
 
 /// <summary>
 /// Entry points that wire IRI.Maptor <c>Geometry&lt;Point&gt;</c> support into the SQL Server EF Core provider.

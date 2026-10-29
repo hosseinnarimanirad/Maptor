@@ -15,7 +15,7 @@ namespace IRI.Maptor.Infrastructure.EfCore.ValueConversion;
 /// <remarks>
 /// Comparison serializes to WKB per call, which is acceptable for typical feature entities (queries are mostly
 /// <c>AsNoTracking</c>). It is exposed publicly so applications can reuse it with a plain
-/// <c>HasConversion(..., new MaptorGeometryValueComparer())</c> when not going through the SQL Server type-mapping plugin.
+/// <c>HasConversion(..., new MaptorGeometryValueComparer())</c> when not going through one of the provider type-mapping plugins.
 /// </remarks>
 public sealed class MaptorGeometryValueComparer : ValueComparer<Geometry<Point>>
 {

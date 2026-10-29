@@ -1,24 +1,23 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
-using IRI.Maptor.Infrastructure.EfCore.Extensions;
+using IRI.Maptor.Infrastructure.EfCore.PostgreSql.Extensions;
 
-namespace IRI.Maptor.Infrastructure.EfCore.Infrastructure;
+namespace IRI.Maptor.Infrastructure.EfCore.PostgreSql.Infrastructure;
 
 /// <summary>
 /// The <see cref="IDbContextOptionsExtension"/> registered by
-/// <see cref="SqlServerMaptorGeometryDbContextOptionsExtensions.UseMaptor"/>. It registers the
-/// <see cref="Storage.SqlServerMaptorGeometryTypeMappingSourcePlugin"/> with the internal service provider.
+/// <see cref="NpgsqlMaptorGeometryDbContextOptionsExtensions.UseMaptor"/>. It registers the Maptor type-mapping,
+/// data-source and convention plugins with the internal service provider.
 /// </summary>
-public class SqlServerMaptorGeometryOptionsExtension : IDbContextOptionsExtension
+public class NpgsqlMaptorGeometryOptionsExtension : IDbContextOptionsExtension
 {
     private DbContextOptionsExtensionInfo? _info;
 
     public DbContextOptionsExtensionInfo Info => _info ??= new ExtensionInfo(this);
 
     public void ApplyServices(IServiceCollection services)
-        => services.AddEntityFrameworkSqlServerMaptorGeometry();
+        => services.AddEntityFrameworkNpgsqlMaptorGeometry();
 
     public void Validate(IDbContextOptions options)
     {
@@ -41,6 +40,6 @@ public class SqlServerMaptorGeometryOptionsExtension : IDbContextOptionsExtensio
             => other is ExtensionInfo;
 
         public override void PopulateDebugInfo(IDictionary<string, string> debugInfo)
-            => debugInfo["SqlServer:" + nameof(SqlServerMaptorGeometryDbContextOptionsExtensions.UseMaptor)] = "1";
+            => debugInfo["Npgsql:" + nameof(NpgsqlMaptorGeometryDbContextOptionsExtensions.UseMaptor)] = "1";
     }
 }

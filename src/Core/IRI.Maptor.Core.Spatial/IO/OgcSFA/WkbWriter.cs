@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Core.Common.Abstractions;
@@ -274,6 +275,127 @@ public static class WkbWriter
             or GeometryType.CurvePolygon
             or _ => throw new NotImplementedException($"WKB conversion not supported for geometry type: {geometry.Type}")
         };
+    }
+
+    #endregion
+
+    #region EWKB (PostGIS)
+
+    // PostGIS EWKB flags, OR-ed into the 2D base type code (ISO WKB uses +1000/+2000/+3000 offsets instead)
+    private const uint EwkbZFlag = 0x80000000;
+    private const uint EwkbMFlag = 0x40000000;
+    private const uint EwkbSridFlag = 0x20000000;
+
+    /// <summary>
+    /// Writes the geometry as PostGIS EWKB (little-endian): Z/M are flagged in the type code and, when
+    /// <see cref="IGeometry.Srid"/> is positive, the SRID is embedded in the top-level header. This is the binary
+    /// form PostGIS uses on the wire for <c>geometry</c>/<c>geography</c> and returns from <c>ST_AsEWKB</c>.
+    /// </summary>
+    internal static byte[]? AsEwkb(IGeometry geometry)
+    {
+        var wkb = AsWkb(geometry);
+
+        if (wkb is null)
+            return null;
+
+        int? srid = geometry.Srid > 0 ? geometry.Srid : null;
+
+        var ewkb = new byte[wkb.Length + (srid.HasValue ? sizeof(int) : 0)];
+
+        int readOffset = 0, writeOffset = 0;
+
+        TranscodeIsoWkbToEwkb(wkb, ref readOffset, ewkb, ref writeOffset, srid);
+
+        return ewkb;
+    }
+
+    /// <summary>
+    /// Copies one geometry (recursively for multi-geometries) from the little-endian ISO WKB produced by
+    /// <see cref="AsWkb(IGeometry)"/> into EWKB, rewriting each type code; <paramref name="srid"/> is only
+    /// written for the top-level geometry.
+    /// </summary>
+    private static void TranscodeIsoWkbToEwkb(ReadOnlySpan<byte> source, ref int readOffset, Span<byte> target, ref int writeOffset, int? srid)
+    {
+        target[writeOffset++] = source[readOffset++]; // byte order (always NDR from AsWkb)
+
+        var isoType = BinaryPrimitives.ReadUInt32LittleEndian(source.Slice(readOffset));
+        readOffset += WkbGeometryTypeSize;
+
+        var dimensionBlock = isoType / 1000;
+        var baseType = isoType % 1000;
+        var hasZ = dimensionBlock == 1 || dimensionBlock == 3;
+        var hasM = dimensionBlock == 2 || dimensionBlock == 3;
+
+        var ewkbType = baseType
+            | (hasZ ? EwkbZFlag : 0)
+            | (hasM ? EwkbMFlag : 0)
+            | (srid.HasValue ? EwkbSridFlag : 0);
+
+        BinaryPrimitives.WriteUInt32LittleEndian(target.Slice(writeOffset), ewkbType);
+        writeOffset += WkbGeometryTypeSize;
+
+        if (srid.HasValue)
+        {
+            BinaryPrimitives.WriteInt32LittleEndian(target.Slice(writeOffset), srid.Value);
+            writeOffset += sizeof(int);
+        }
+
+        var coordinateSize = (2 + (hasZ ? 1 : 0) + (hasM ? 1 : 0)) * WkbDoubleSize;
+
+        switch ((WkbGeometryType)baseType)
+        {
+            case WkbGeometryType.Point:
+                Copy(source, ref readOffset, target, ref writeOffset, coordinateSize);
+                break;
+
+            case WkbGeometryType.LineString:
+                CopyPointSequence(source, ref readOffset, target, ref writeOffset, coordinateSize);
+                break;
+
+            case WkbGeometryType.Polygon:
+                var ringCount = CopyCount(source, ref readOffset, target, ref writeOffset);
+
+                for (int i = 0; i < ringCount; i++)
+                    CopyPointSequence(source, ref readOffset, target, ref writeOffset, coordinateSize);
+
+                break;
+
+            case WkbGeometryType.MultiPoint:
+            case WkbGeometryType.MultiLineString:
+            case WkbGeometryType.MultiPolygon:
+                var memberCount = CopyCount(source, ref readOffset, target, ref writeOffset);
+
+                for (int i = 0; i < memberCount; i++)
+                    TranscodeIsoWkbToEwkb(source, ref readOffset, target, ref writeOffset, srid: null);
+
+                break;
+
+            default:
+                throw new NotImplementedException($"EWKB conversion not supported for WKB type: {isoType}");
+        }
+    }
+
+    private static int CopyCount(ReadOnlySpan<byte> source, ref int readOffset, Span<byte> target, ref int writeOffset)
+    {
+        var count = (int)BinaryPrimitives.ReadUInt32LittleEndian(source.Slice(readOffset));
+
+        Copy(source, ref readOffset, target, ref writeOffset, WkbCountSize);
+
+        return count;
+    }
+
+    private static void CopyPointSequence(ReadOnlySpan<byte> source, ref int readOffset, Span<byte> target, ref int writeOffset, int coordinateSize)
+    {
+        var pointCount = CopyCount(source, ref readOffset, target, ref writeOffset);
+
+        Copy(source, ref readOffset, target, ref writeOffset, pointCount * coordinateSize);
+    }
+
+    private static void Copy(ReadOnlySpan<byte> source, ref int readOffset, Span<byte> target, ref int writeOffset, int length)
+    {
+        source.Slice(readOffset, length).CopyTo(target.Slice(writeOffset));
+        readOffset += length;
+        writeOffset += length;
     }
 
     #endregion

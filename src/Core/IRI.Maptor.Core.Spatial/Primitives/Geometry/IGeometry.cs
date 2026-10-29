@@ -32,6 +32,8 @@ public interface IGeometry
 
     byte[]? AsWkb();
 
+    byte[]? AsEwkb();
+
     byte[]? AsSqlServerNativeBinary();
 
     string AsSqlServerWkt();

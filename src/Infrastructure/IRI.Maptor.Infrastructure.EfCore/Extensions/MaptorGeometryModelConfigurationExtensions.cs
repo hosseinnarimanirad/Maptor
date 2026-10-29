@@ -7,7 +7,10 @@ using IRI.Maptor.Core.Spatial.Primitives;
 namespace IRI.Maptor.Infrastructure.EfCore.Extensions;
 
 /// <summary>
-/// Model-building helpers that hide the SQL Server spatial column-type strings from application <c>DbContext</c>s.
+/// Model-building helpers that hide the spatial column-type strings from application <c>DbContext</c>s. Both SQL Server
+/// and PostGIS name their spatial types <c>geometry</c> and <c>geography</c>, so the same configuration works with the
+/// SQL Server (<c>IRI.Maptor.Infrastructure.EfCore.SqlServer</c>) and PostgreSQL
+/// (<c>IRI.Maptor.Infrastructure.EfCore.PostgreSql</c>) provider plugins.
 /// </summary>
 public static class MaptorGeometryModelConfigurationExtensions
 {
@@ -16,7 +19,7 @@ public static class MaptorGeometryModelConfigurationExtensions
 
     /// <summary>
     /// Call from <c>DbContext.ConfigureConventions</c> to map every <see cref="Geometry{Point}"/> property to the
-    /// given SQL Server spatial column type (defaults to <c>geography</c>). Replaces per-context
+    /// given spatial column type (defaults to <c>geography</c>). Replaces per-context
     /// <c>Properties&lt;NetTopologySuite.Geometries.Geometry&gt;().HaveColumnType("GEOGRAPHY")</c> conventions.
     /// </summary>
     public static ModelConfigurationBuilder ConfigureMaptorGeometry(
@@ -30,11 +33,11 @@ public static class MaptorGeometryModelConfigurationExtensions
         return configurationBuilder;
     }
 
-    /// <summary>Maps a single <see cref="Geometry{Point}"/> property to a SQL Server <c>geography</c> column.</summary>
+    /// <summary>Maps a single <see cref="Geometry{Point}"/> property to a <c>geography</c> column.</summary>
     public static PropertyBuilder<Geometry<Point>> IsGeography(this PropertyBuilder<Geometry<Point>> propertyBuilder)
         => propertyBuilder.HasColumnType(GeographyStoreType);
 
-    /// <summary>Maps a single <see cref="Geometry{Point}"/> property to a SQL Server <c>geometry</c> column.</summary>
+    /// <summary>Maps a single <see cref="Geometry{Point}"/> property to a <c>geometry</c> column.</summary>
     public static PropertyBuilder<Geometry<Point>> IsGeometry(this PropertyBuilder<Geometry<Point>> propertyBuilder)
         => propertyBuilder.HasColumnType(GeometryStoreType);
 }

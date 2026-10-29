@@ -10,7 +10,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 }
 ```
 
-The provider plugin from `IRI.Maptor.Infrastructure.EfCore` (`UseMaptorGeometry()`) must
+The SQL Server provider plugin from `IRI.Maptor.Infrastructure.EfCore.SqlServer` (`UseMaptor()`) must
 be active on the context — proposal/history geometry columns are typed `geography`
 (matching typical live SHAPE columns byte-for-byte, and letting the overlap scan run
 STIntersects directly against live data) and materialize into `Geometry<Point>` through it.

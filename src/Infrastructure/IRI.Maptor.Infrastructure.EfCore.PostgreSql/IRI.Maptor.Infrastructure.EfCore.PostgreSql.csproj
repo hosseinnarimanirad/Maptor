@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageTags>GIS;spatial;EntityFrameworkCore;EFCore;PostgreSQL;PostGIS;Npgsql;geometry;ORM</PackageTags>
+    <TargetFramework>net8.0</TargetFramework>
+    <Description>EF Core PostgreSQL/PostGIS support for IRI.Maptor Geometry&lt;Point&gt;: maps geometry/geography columns via EWKB with an Npgsql type plugin and an EF Core provider plugin, replacing NetTopologySuite.</Description>
+    <!-- NPG9001: the Npgsql type-resolver API (Npgsql.Internal) is marked experimental. The plugin is built on it, as Npgsql's own NetTopologySuite plugin is. -->
+    <NoWarn>$(NoWarn);NPG9001</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Npgsql" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IRI.Maptor.Infrastructure.EfCore\IRI.Maptor.Infrastructure.EfCore.csproj" />
+  </ItemGroup>
+
+</Project>

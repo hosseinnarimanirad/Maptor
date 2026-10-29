@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using IRI.Maptor.Core.Common.Primitives;
 using IRI.Maptor.Core.Spatial.Primitives;
 
-namespace IRI.Maptor.Infrastructure.EfCore.Storage;
+namespace IRI.Maptor.Infrastructure.EfCore.SqlServer.Storage;
 
 /// <summary>
 /// Supplies the <see cref="SqlServerMaptorGeometryTypeMapping"/> to the SQL Server provider's type-mapping source.
