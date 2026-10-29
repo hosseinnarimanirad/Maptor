@@ -257,6 +257,8 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             _legendViewModel = value;
             RaisePropertyChanged();
+
+            _legendViewModel?.UpdateLayerCounts(Layers ?? Enumerable.Empty<ILayer>());
         }
     }
 
@@ -428,6 +430,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
             // Update AllNonGroupLayers
             UpdateAllNonGroupLayers();
+
+            LegendViewModel?.UpdateLayerCounts(_layers ?? Enumerable.Empty<ILayer>());
         }
     }
 
@@ -440,6 +444,9 @@ public abstract class MapViewModelBase : ViewModelBase
     private void Layers_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         UpdateAllNonGroupLayers();
+
+        // per-kind counts behind the legend's layer-type filter (kinds with no layer are disabled there)
+        LegendViewModel?.UpdateLayerCounts(Layers);
 
         // A grid or the MGRS overlay can leave the map by the legend as well as by its ribbon
         // control, and the control has to notice: both are user-deletable group layers, and a
@@ -3355,6 +3362,9 @@ public abstract class MapViewModelBase : ViewModelBase
                 (layer as VectorLayer).RequestChangeSymbology = l => RequestShowSymbologyView?.Invoke(l);
             }
 
+            // switching among the layer's SLD styles (Symbology tab, legend) repaints the map
+            (layer as VectorLayer)!.RequestRepaint ??= _ => Refresh(false);
+
             if (layer is IRI.Maptor.Presentation.Wpf.Layers.BaseLayer baseLayer)
             {
                 baseLayer.RequestSaveChanges = async layer => await HandleRequestSaveChanges(layer);
@@ -5675,21 +5685,15 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public virtual async Task AddDxffile(int? maxSizeInKB)
     {
-        IsBusy = true;
-
+        // IsBusy is raised only after the dialog returns: the busy overlay animates under the
+        // blurred owner window, and that full-window re-render per frame slowed the dialog's open.
         var result = await DialogService.ShowDxfOpenDialogAsync(ownerWindow: null);
 
         if (result == null)
-        {
-            IsBusy = false;
             return;
-        }
 
         if (!File.Exists(result.FilePath))
-        {
-            IsBusy = false;
             return;
-        }
 
         FileInfo info = new FileInfo(result.FilePath);
 
@@ -5697,10 +5701,10 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             await ShowExceptionMessageAsync(MaptorFileSizeExceedToOpenException.Instance);
             //await DialogService.ShowMessageAsync("حجم فایل انتخابی بیش از حد مجاز است", "خطا", ownerWindow: null);
-            IsBusy = false;
-
             return;
         }
+
+        IsBusy = true;
 
         await AddDxffile(result.FilePath, owner: null, result.SelectedSrid);
     }
@@ -6224,15 +6228,11 @@ public abstract class MapViewModelBase : ViewModelBase
     /// </summary>
     public virtual async Task AddDelimitedTextFile(object owner, bool initialIsCsv)
     {
-        IsBusy = true;
-
+        // No IsBusy before the dialog (see AddDxffile); the overload below raises it.
         var result = await DialogService.ShowCsvTsvOpenDialogAsync(ownerWindow: null, initialIsCsv: initialIsCsv, initialSrid: null);
 
         if (result == null || string.IsNullOrWhiteSpace(result.RawText))
-        {
-            IsBusy = false;
             return;
-        }
 
         await AddDelimitedTextFile(
             result.IsFileSelected ? result.FilePath : null,
@@ -6320,15 +6320,11 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public virtual async Task AddGeoJson(object owner)
     {
-        IsBusy = true;
-
+        // No IsBusy before the dialog (see AddDxffile); the overload below raises it.
         var result = await DialogService.ShowGeoJsonTopoJsonOpenDialogAsync(owner, isGeoJson: true, null);
 
         if (result == null || string.IsNullOrWhiteSpace(result.RawJson))
-        {
-            IsBusy = false;
             return;
-        }
 
         await AddGeoJson(
             result.IsFileSelected ? result.FilePath : null,
@@ -7360,15 +7356,13 @@ public abstract class MapViewModelBase : ViewModelBase
                 {
                     try
                     {
-                        IsBusy = true;
-
+                        // No IsBusy before the dialog (see AddDxffile).
                         var result = await DialogService.ShowCsvTsvOpenDialogAsync(ownerWindow: null, initialIsCsv: true, initialSrid: null);
 
                         if (result == null || string.IsNullOrWhiteSpace(result.RawText))
-                        {
-                            IsBusy = false;
                             return;
-                        }
+
+                        IsBusy = true;
 
                         DataSourceKind dataSourceKind = result.IsCsv ? DataSourceKind.Csv : DataSourceKind.Tsv;
 

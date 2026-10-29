@@ -43,6 +43,7 @@
 
     <converters:DataSourceKindToBrushConverter x:Key="dataSourceKindToBrushConverter"/>
     <converters:DataSourceKindToGeometryConverter x:Key="dataSourceKindToGeometryConverter"/>
+    <converters:DataSourceKindToDisplayNameConverter x:Key="dataSourceKindToDisplayNameConverter"/>
     <!--<converters:DataSourceKindToVisibilityConverter x:Key="dataSourceKindToVisibilityConverter"/>-->
     <converters:ILayerToLegendConverter x:Key="iLayerToLegendConverter"/>
     <converters:IndexToBoolConverter x:Key="indexToBoolConverter"/>

@@ -1,6 +1,7 @@
 ﻿<mahApp:MetroWindow x:Class="IRI.Maptor.Presentation.Wpf.Controls.Dialogs.DxfOpenDialogView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:helpers="clr-namespace:IRI.Maptor.Presentation.Wpf.Helpers"
     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls"
     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
@@ -17,8 +18,8 @@
     <mahApp:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
         </ResourceDictionary>
@@ -29,17 +30,12 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}"
-                   Text="{Binding [dialog_common_fileWatermark], Source={StaticResource Localization}}"/>
-
         <!-- File -->
-        <Border Grid.Row="1" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
+        <Border Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
             <Grid Margin="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
@@ -69,11 +65,8 @@
             </Grid>
         </Border>
 
-        <TextBlock Grid.Row="2" Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}"
-                   Text="{Binding [dialog_common_sectionCoordinateSystem], Source={StaticResource Localization}}"/>
-
         <!-- Spatial Reference -->
-        <Border Grid.Row="3" Style="{StaticResource IRI.Maptor.Styles.Border.Card}" IsEnabled="{Binding CanUserChooseSrs}">
+        <Border Grid.Row="1" Style="{StaticResource IRI.Maptor.Styles.Border.Card}" IsEnabled="{Binding CanUserChooseSrs}">
             <Grid Margin="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
@@ -89,7 +82,7 @@
         </Border>
 
         <!-- UTM Zone (visible when UTM selected) -->
-        <Border Grid.Row="4" Style="{StaticResource IRI.Maptor.Styles.Border.Card}" IsEnabled="{Binding CanUserChooseSrs}"
+        <Border Grid.Row="2" Style="{StaticResource IRI.Maptor.Styles.Border.Card}" IsEnabled="{Binding CanUserChooseSrs}"
                 Visibility="{Binding IsUtmSelected, Converter={StaticResource boolToVisibilityConverter}}">
             <Grid Margin="0">
                 <Grid.ColumnDefinitions>
@@ -134,9 +127,9 @@
 
 
         <!-- Sample points -->
-        <TextBlock Grid.Row="5" Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}"
+        <TextBlock Grid.Row="3" Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}"
                    Text="{Binding [dialog_dxfOpen_samplePoints], Source={StaticResource Localization}}"/>
-        <DataGrid Grid.Row="6" Margin="4,0,4,8"
+        <DataGrid Grid.Row="4" Margin="4,0,4,8"
                   ItemsSource="{Binding SamplePoints}"
                   IsReadOnly="True"
                   AutoGenerateColumns="False"
@@ -169,7 +162,7 @@
         </DataGrid>
 
         <!-- Buttons -->
-        <dialogs:DialogFooterView Grid.Row="7"
+        <dialogs:DialogFooterView Grid.Row="5"
                                   StatusText="{Binding ValidationMessage}"
                                   SecondaryText="{Binding [dialog_common_cancel], Source={StaticResource Localization}}"
                                   SecondaryCommand="{Binding CancelCommand}"

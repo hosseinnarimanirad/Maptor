@@ -47,7 +47,7 @@
     <Style x:Key="IRI.Maptor.Styles.TextBlock.SectionHeader"
            TargetType="TextBlock"
            BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}">
-        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Muted}"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"/>
         <Setter Property="Margin" Value="8,10,8,2"/>

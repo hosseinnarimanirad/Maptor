@@ -3562,6 +3562,132 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Vector.
+        /// </summary>
+        public static string legend_filter_groupVector {
+            get {
+                return ResourceManager.GetString("legend_filter_groupVector", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Raster.
+        /// </summary>
+        public static string legend_filter_groupRaster {
+            get {
+                return ResourceManager.GetString("legend_filter_groupRaster", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Services.
+        /// </summary>
+        public static string legend_filter_groupService {
+            get {
+                return ResourceManager.GetString("legend_filter_groupService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Other.
+        /// </summary>
+        public static string legend_filter_groupOther {
+            get {
+                return ResourceManager.GetString("legend_filter_groupOther", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to REST service.
+        /// </summary>
+        public static string legend_filter_kindRest {
+            get {
+                return ResourceManager.GetString("legend_filter_kindRest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to gRPC service.
+        /// </summary>
+        public static string legend_filter_kindGrpc {
+            get {
+                return ResourceManager.GetString("legend_filter_kindGrpc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to World file.
+        /// </summary>
+        public static string legend_filter_kindWorldfile {
+            get {
+                return ResourceManager.GetString("legend_filter_kindWorldfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Image pyramid.
+        /// </summary>
+        public static string legend_filter_kindImagePyramid {
+            get {
+                return ResourceManager.GetString("legend_filter_kindImagePyramid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unspecified.
+        /// </summary>
+        public static string legend_filter_kindOther {
+            get {
+                return ResourceManager.GetString("legend_filter_kindOther", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only.
+        /// </summary>
+        public static string legend_filter_only {
+            get {
+                return ResourceManager.GetString("legend_filter_only", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GIS/CAD files.
+        /// </summary>
+        public static string legend_import_gisFiles {
+            get {
+                return ResourceManager.GetString("legend_import_gisFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Google Earth.
+        /// </summary>
+        public static string legend_import_googleEarth {
+            get {
+                return ResourceManager.GetString("legend_import_googleEarth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tables.
+        /// </summary>
+        public static string legend_import_tables {
+            get {
+                return ResourceManager.GetString("legend_import_tables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to JSON.
+        /// </summary>
+        public static string legend_import_json {
+            get {
+                return ResourceManager.GetString("legend_import_json", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Filter By Layer Type.
         /// </summary>
         public static string legend_filter_filterByLayerType {

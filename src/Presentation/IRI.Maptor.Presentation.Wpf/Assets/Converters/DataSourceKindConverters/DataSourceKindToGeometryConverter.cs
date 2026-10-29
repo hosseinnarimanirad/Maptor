@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -9,6 +10,10 @@ namespace IRI.Maptor.Presentation.Wpf.Converters;
 
 public class DataSourceKindToGeometryConverter : IValueConverter
 {
+    // kinds without a hand-drawn glyph in the Shapes dictionaries get their short code drawn from
+    // a condensed bold font instead of an empty chip
+    private static readonly ConcurrentDictionary<DataSourceKind, Geometry> _textGlyphs = new();
+
     //private const string FallbackKey = "otherInfo";
 
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -37,6 +42,9 @@ public class DataSourceKindToGeometryConverter : IValueConverter
             DataSourceKind.Other or _ => string.Empty,
         };
 
+        if (string.IsNullOrEmpty(key))
+            return GetTextGlyph(kind);
+
         try
         {
             // this method throws exception if key not found
@@ -46,13 +54,39 @@ public class DataSourceKindToGeometryConverter : IValueConverter
                 return geometry;
 
             else
-                return Geometry.Empty;
+                return GetTextGlyph(kind);
         }
         catch (Exception)
         {
-            return Geometry.Empty;
+            return GetTextGlyph(kind);
         }
 
+    }
+
+    private static Geometry GetTextGlyph(DataSourceKind kind)
+    {
+        var code = kind switch
+        {
+            DataSourceKind.MBTiles => "MBT",
+            DataSourceKind.GeoPackage => "GPKG",
+            _ => string.Empty
+        };
+
+        if (code.Length == 0)
+            return Geometry.Empty;
+
+        return _textGlyphs.GetOrAdd(kind, _ =>
+        {
+            var typeface = new Typeface(new FontFamily("Bahnschrift, Segoe UI"), FontStyles.Normal, FontWeights.Bold, FontStretches.Condensed);
+
+            // pixelsPerDip only affects hinting; the Path stretches the geometry anyway
+            var text = new FormattedText(code, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, 36, Brushes.Black, 1.0);
+
+            var geometry = text.BuildGeometry(new Point(0, 0));
+            geometry.Freeze();
+
+            return geometry;
+        });
     }
 
     //private static Geometry GetFallbackGeometry()
