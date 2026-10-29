@@ -1,10 +1,10 @@
 using System.Windows.Controls;
-using IRI.Maptor.Presentation.Wpf.ViewModels.Symbology;
 
 namespace IRI.Maptor.Presentation.Wpf.Controls.Symbology.Sld;
 
 /// <summary>
-/// Interaction logic for SldEditorView.xaml
+/// The SLD editor's three panes (rules, rule editor, preview) and its bottom panels. All state lives in
+/// <see cref="ViewModels.Symbology.SldEditorViewModel"/>; the XML panel refreshes itself while open.
 /// </summary>
 public partial class SldEditorView : UserControl
 {
@@ -13,17 +13,13 @@ public partial class SldEditorView : UserControl
         InitializeComponent();
     }
 
-    private void OnTabChanged(object sender, SelectionChangedEventArgs e)
+    /// <summary>Puts the cursor in the selected rule's legend text (the window's F2).</summary>
+    public void FocusRuleTitle()
     {
-        // TabControl.SelectionChanged bubbles from inner selectors (e.g. list boxes);
-        // only react to the tab control's own selection change.
-        if (!ReferenceEquals(e.Source, RuleTabControl))
-            return;
-
-        if (ReferenceEquals(RuleTabControl.SelectedItem, XmlPreviewTab)
-            && DataContext is SldEditorViewModel viewModel)
+        if (ruleTitleBox.IsVisible)
         {
-            viewModel.RefreshPreview();
+            ruleTitleBox.Focus();
+            ruleTitleBox.SelectAll();
         }
     }
 }

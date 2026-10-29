@@ -887,7 +887,7 @@
     <value>Opacidad:</value>
   </data>
   <data name="layerSettings_general_sourceAddress" xml:space="preserve">
-    <value>Dirección de origen</value>
+    <value>Dirección de origen:</value>
   </data>
   <data name="layerSettings_general_sourceType" xml:space="preserve">
     <value>Tipo de fuente:</value>
@@ -1950,5 +1950,650 @@
   </data>
   <data name="identify_featuresFound" xml:space="preserve">
     <value>Entidades encontradas</value>
+  </data>
+  <data name="featureTable_unsavedChangesNote" xml:space="preserve">
+    <value>{0} cambios sin guardar (no incluidos en los totales)</value>
+  </data>
+  <data name="featureTable_showUnsavedChanges" xml:space="preserve">
+    <value>Mostrar solo los cambios sin guardar</value>
+  </data>
+  <data name="legendItem_zoomInToSeeAllFeatures" xml:space="preserve">
+    <value>No se muestran todos los elementos: esta zona tiene más de los que se pueden cargar a la vez. Acerque el mapa para verlos todos</value>
+  </data>
+  <data name="serverLayerSettings_title" xml:space="preserve">
+    <value>Configuración de capas del servidor</value>
+  </data>
+  <data name="serverLayerSettings_searchPlaceholder" xml:space="preserve">
+    <value>Buscar capas y grupos</value>
+  </data>
+  <data name="serverLayerSettings_noMatch" xml:space="preserve">
+    <value>Ninguna capa ni grupo coincide con la búsqueda.</value>
+  </data>
+  <data name="serverLayerSettings_noSelection" xml:space="preserve">
+    <value>Seleccione una capa o un grupo para editarlo.</value>
+  </data>
+  <data name="serverLayerSettings_loadFailed" xml:space="preserve">
+    <value>No se pudo cargar la configuración de capas desde el servidor.</value>
+  </data>
+  <data name="serverLayerSettings_saveFailed" xml:space="preserve">
+    <value>No se pudieron enviar los cambios al servidor.</value>
+  </data>
+  <data name="serverLayerSettings_retry" xml:space="preserve">
+    <value>Reintentar</value>
+  </data>
+  <data name="serverLayerSettings_reload" xml:space="preserve">
+    <value>Recargar desde el servidor</value>
+  </data>
+  <data name="serverLayerSettings_revert" xml:space="preserve">
+    <value>Revertir</value>
+  </data>
+  <data name="serverLayerSettings_topLevel" xml:space="preserve">
+    <value>Nivel superior</value>
+  </data>
+  <data name="serverLayerSettings_layerCount" xml:space="preserve">
+    <value>Capas: {0}</value>
+  </data>
+  <data name="serverLayerSettings_badge_unsaved" xml:space="preserve">
+    <value>Sin guardar</value>
+  </data>
+  <data name="serverLayerSettings_badge_inactive" xml:space="preserve">
+    <value>Inactivo</value>
+  </data>
+  <data name="serverLayerSettings_badge_group" xml:space="preserve">
+    <value>Grupo</value>
+  </data>
+  <data name="serverLayerSettings_badge_live" xml:space="preserve">
+    <value>En vivo</value>
+  </data>
+  <data name="serverLayerSettings_tab_general" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="serverLayerSettings_tab_display" xml:space="preserve">
+    <value>Visualización</value>
+  </data>
+  <data name="serverLayerSettings_tab_labels" xml:space="preserve">
+    <value>Etiquetas</value>
+  </data>
+  <data name="serverLayerSettings_tab_loading" xml:space="preserve">
+    <value>Carga</value>
+  </data>
+  <data name="serverLayerSettings_section_visibility" xml:space="preserve">
+    <value>Visibilidad</value>
+  </data>
+  <data name="serverLayerSettings_section_source" xml:space="preserve">
+    <value>Origen de datos</value>
+  </data>
+  <data name="serverLayerSettings_section_zoom" xml:space="preserve">
+    <value>Rango de zoom visible</value>
+  </data>
+  <data name="serverLayerSettings_section_style" xml:space="preserve">
+    <value>Estilo</value>
+  </data>
+  <data name="serverLayerSettings_field_title" xml:space="preserve">
+    <value>Título</value>
+  </data>
+  <data name="serverLayerSettings_field_group" xml:space="preserve">
+    <value>Grupo</value>
+  </data>
+  <data name="serverLayerSettings_field_active" xml:space="preserve">
+    <value>Activo</value>
+  </data>
+  <data name="serverLayerSettings_hint_active" xml:space="preserve">
+    <value>Una capa o un grupo inactivo queda oculto para todos los usuarios.</value>
+  </data>
+  <data name="serverLayerSettings_field_onByDefault" xml:space="preserve">
+    <value>Visible al abrir el mapa</value>
+  </data>
+  <data name="serverLayerSettings_field_expanded" xml:space="preserve">
+    <value>Expandido en la lista de capas</value>
+  </data>
+  <data name="serverLayerSettings_field_searchable" xml:space="preserve">
+    <value>Incluido en la búsqueda del mapa</value>
+  </data>
+  <data name="serverLayerSettings_field_table" xml:space="preserve">
+    <value>Tabla</value>
+  </data>
+  <data name="serverLayerSettings_field_serviceUrl" xml:space="preserve">
+    <value>URL del servicio</value>
+  </data>
+  <data name="serverLayerSettings_field_id" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="serverLayerSettings_field_zoomFrom" xml:space="preserve">
+    <value>Desde el nivel</value>
+  </data>
+  <data name="serverLayerSettings_field_zoomTo" xml:space="preserve">
+    <value>hasta el nivel</value>
+  </data>
+  <data name="serverLayerSettings_noLimit" xml:space="preserve">
+    <value>Sin límite</value>
+  </data>
+  <data name="serverLayerSettings_hint_zoom" xml:space="preserve">
+    <value>Deje un nivel vacío para no poner límite. El nivel 0 muestra el mundo entero; el nivel 18, el detalle de las calles.</value>
+  </data>
+  <data name="serverLayerSettings_sld_none" xml:space="preserve">
+    <value>Se dibuja con el estilo simple de abajo.</value>
+  </data>
+  <data name="serverLayerSettings_sld_active" xml:space="preserve">
+    <value>Se dibuja con un estilo SLD. Mientras esté definido, no se usan los colores de abajo.</value>
+  </data>
+  <data name="serverLayerSettings_sld_edit" xml:space="preserve">
+    <value>Editar SLD…</value>
+  </data>
+  <data name="serverLayerSettings_sld_remove" xml:space="preserve">
+    <value>Quitar SLD</value>
+  </data>
+  <data name="serverLayerSettings_field_fill" xml:space="preserve">
+    <value>Relleno</value>
+  </data>
+  <data name="serverLayerSettings_field_stroke" xml:space="preserve">
+    <value>Contorno</value>
+  </data>
+  <data name="serverLayerSettings_field_strokeWidth" xml:space="preserve">
+    <value>Grosor del contorno</value>
+  </data>
+  <data name="serverLayerSettings_field_opacity" xml:space="preserve">
+    <value>Opacidad</value>
+  </data>
+  <data name="serverLayerSettings_field_preview" xml:space="preserve">
+    <value>Vista previa</value>
+  </data>
+  <data name="serverLayerSettings_field_hasLabels" xml:space="preserve">
+    <value>Esta capa tiene etiquetas</value>
+  </data>
+  <data name="serverLayerSettings_field_labelsOn" xml:space="preserve">
+    <value>Mostrar etiquetas al abrir el mapa</value>
+  </data>
+  <data name="serverLayerSettings_field_labelColumn" xml:space="preserve">
+    <value>Campo de etiqueta</value>
+  </data>
+  <data name="serverLayerSettings_field_labelSize" xml:space="preserve">
+    <value>Tamaño de fuente</value>
+  </data>
+  <data name="serverLayerSettings_field_labelColor" xml:space="preserve">
+    <value>Color</value>
+  </data>
+  <data name="serverLayerSettings_mode_cache" xml:space="preserve">
+    <value>Cargar todo de una vez (Cache)</value>
+  </data>
+  <data name="serverLayerSettings_mode_cacheDescription" xml:space="preserve">
+    <value>La capa completa se descarga una vez, al abrir el mapa. Ideal para capas pequeñas y medianas.</value>
+  </data>
+  <data name="serverLayerSettings_mode_live" xml:space="preserve">
+    <value>Cargar según la vista del mapa (Live)</value>
+  </data>
+  <data name="serverLayerSettings_mode_liveDescription" xml:space="preserve">
+    <value>Solo se descargan los elementos del área visible a medida que se mueve el mapa; la tabla de atributos y la búsqueda consultan al servidor. Ideal para capas muy grandes.</value>
+  </data>
+  <data name="serverLayerSettings_hint_appliesNext" xml:space="preserve">
+    <value>Los cambios guardados llegan a los demás usuarios la próxima vez que inicien sesión o recarguen las capas.</value>
+  </data>
+  <data name="serverLayerSettings_status_noChanges" xml:space="preserve">
+    <value>No hay cambios sin guardar</value>
+  </data>
+  <data name="serverLayerSettings_status_changes" xml:space="preserve">
+    <value>Cambios sin guardar: {0}</value>
+  </data>
+  <data name="serverLayerSettings_status_invalid" xml:space="preserve">
+    <value>Con errores: {0}</value>
+  </data>
+  <data name="serverLayerSettings_result_saved" xml:space="preserve">
+    <value>Cambios guardados ({0}).</value>
+  </data>
+  <data name="serverLayerSettings_result_partial" xml:space="preserve">
+    <value>Guardados: {0} · No guardados: {1}</value>
+  </data>
+  <data name="serverLayerSettings_conflict" xml:space="preserve">
+    <value>Otra persona guardó este elemento después de que usted abriera la ventana. Recargue para obtener la última versión; sus cambios en él se perderán.</value>
+  </data>
+  <data name="serverLayerSettings_notFound" xml:space="preserve">
+    <value>Este elemento ya no existe en el servidor.</value>
+  </data>
+  <data name="serverLayerSettings_serverRejected" xml:space="preserve">
+    <value>El servidor no aceptó estos cambios.</value>
+  </data>
+  <data name="serverLayerSettings_confirmDiscard" xml:space="preserve">
+    <value>Hay cambios sin guardar. ¿Descartarlos?</value>
+  </data>
+  <data name="serverLayerSettings_error_titleRequired" xml:space="preserve">
+    <value>Escriba un título.</value>
+  </data>
+  <data name="serverLayerSettings_error_titleTooLong" xml:space="preserve">
+    <value>El título es demasiado largo.</value>
+  </data>
+  <data name="serverLayerSettings_error_layerZoomOutOfRange" xml:space="preserve">
+    <value>Los niveles de zoom deben estar entre 0 y 24.</value>
+  </data>
+  <data name="serverLayerSettings_error_layerZoomRangeInverted" xml:space="preserve">
+    <value>El primer nivel de zoom no debe ser mayor que el segundo.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelZoomOutOfRange" xml:space="preserve">
+    <value>Los niveles de zoom de las etiquetas deben estar entre 0 y 24.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelZoomRangeInverted" xml:space="preserve">
+    <value>El primer nivel de zoom de las etiquetas no debe ser mayor que el segundo.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidFillColor" xml:space="preserve">
+    <value>El color de relleno no es válido.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidStrokeColor" xml:space="preserve">
+    <value>El color del contorno no es válido.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidLabelColor" xml:space="preserve">
+    <value>El color de la etiqueta no es válido.</value>
+  </data>
+  <data name="serverLayerSettings_error_opacityOutOfRange" xml:space="preserve">
+    <value>La opacidad debe estar entre 0 % y 100 %.</value>
+  </data>
+  <data name="serverLayerSettings_error_strokeThicknessOutOfRange" xml:space="preserve">
+    <value>El grosor del contorno debe estar entre 0 y 50.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelSizeOutOfRange" xml:space="preserve">
+    <value>El tamaño de fuente de la etiqueta debe estar entre 1 y 72.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelColumnRequired" xml:space="preserve">
+    <value>Elija el campo que muestran las etiquetas.</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownLabelColumn" xml:space="preserve">
+    <value>El campo de etiqueta no es un campo de esta capa.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidSld" xml:space="preserve">
+    <value>No se puede leer el estilo SLD.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidLoadMode" xml:space="preserve">
+    <value>Elija cómo se carga la capa.</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownRow" xml:space="preserve">
+    <value>Un elemento ya no existe en el servidor.</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownGroup" xml:space="preserve">
+    <value>El grupo de destino ya no existe.</value>
+  </data>
+  <data name="serverLayerSettings_error_groupInGroup" xml:space="preserve">
+    <value>No se puede colocar un grupo dentro de otro grupo.</value>
+  </data>
+  <data name="serverLayerSettings_error_duplicateRow" xml:space="preserve">
+    <value>Un elemento aparece dos veces en la solicitud.</value>
+  </data>
+  <data name="serverLayerSettings_cmd_newGroup" xml:space="preserve">
+    <value>Nuevo grupo</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveUp" xml:space="preserve">
+    <value>Subir</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveDown" xml:space="preserve">
+    <value>Bajar</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveTo" xml:space="preserve">
+    <value>Mover a</value>
+  </data>
+  <data name="serverLayerSettings_cmd_rename" xml:space="preserve">
+    <value>Cambiar nombre</value>
+  </data>
+  <data name="serverLayerSettings_cmd_deleteGroup" xml:space="preserve">
+    <value>Eliminar grupo</value>
+  </data>
+  <data name="serverLayerSettings_moveTo_topLevel" xml:space="preserve">
+    <value>Nivel superior (sin grupo)</value>
+  </data>
+  <data name="serverLayerSettings_newGroup_title" xml:space="preserve">
+    <value>Nuevo grupo</value>
+  </data>
+  <data name="serverLayerSettings_group_created" xml:space="preserve">
+    <value>Grupo "{0}" creado.</value>
+  </data>
+  <data name="serverLayerSettings_group_deleted" xml:space="preserve">
+    <value>Grupo "{0}" eliminado.</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_confirm" xml:space="preserve">
+    <value>¿Eliminar el grupo "{0}"?</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_notEmpty" xml:space="preserve">
+    <value>Solo se puede eliminar un grupo vacío. Mueva antes sus capas a otro grupo.</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_pendingMoves" xml:space="preserve">
+    <value>Guarde o revierta las capas movidas antes de eliminar un grupo.</value>
+  </data>
+  <data name="serverLayerSettings_orderRejected" xml:space="preserve">
+    <value>El servidor no aceptó el nuevo orden.</value>
+  </data>
+  <data name="serverLayerSettings_hint_dragDrop" xml:space="preserve">
+    <value>Arrastre las capas para reordenarlas o moverlas a otro grupo.</value>
+  </data>
+  <data name="serverLayerSettings_cmd_open" xml:space="preserve">
+    <value>Configuración del servidor…</value>
+  </data>
+  <data name="serverLayerSettings_reloadMapConfirm" xml:space="preserve">
+    <value>Se guardó la configuración de capas. ¿Recargar ahora las capas del servidor en el mapa para verla? Se perderán las ediciones de elementos sin guardar.</value>
+  </data>
+  <data name="dialog_symbology_noFill" xml:space="preserve">
+    <value>Sin relleno</value>
+  </data>
+  <data name="dialog_symbology_noStroke" xml:space="preserve">
+    <value>Sin contorno</value>
+  </data>
+  <data name="sldEditor_badge_filter" xml:space="preserve">
+    <value>Filtro</value>
+  </data>
+  <data name="sldEditor_badge_scale" xml:space="preserve">
+    <value>Rango de escala</value>
+  </data>
+  <data name="sldEditor_cap_butt" xml:space="preserve">
+    <value>Plano</value>
+  </data>
+  <data name="sldEditor_cap_round" xml:space="preserve">
+    <value>Redondo</value>
+  </data>
+  <data name="sldEditor_cap_square" xml:space="preserve">
+    <value>Cuadrado</value>
+  </data>
+  <data name="sldEditor_dash_dashDot" xml:space="preserve">
+    <value>Raya y punto</value>
+  </data>
+  <data name="sldEditor_dash_dashed" xml:space="preserve">
+    <value>Discontinua</value>
+  </data>
+  <data name="sldEditor_dash_dotted" xml:space="preserve">
+    <value>Punteada</value>
+  </data>
+  <data name="sldEditor_dash_longDash" xml:space="preserve">
+    <value>Raya larga</value>
+  </data>
+  <data name="sldEditor_dash_solid" xml:space="preserve">
+    <value>Continua</value>
+  </data>
+  <data name="sldEditor_field_bold" xml:space="preserve">
+    <value>Negrita</value>
+  </data>
+  <data name="sldEditor_field_cap" xml:space="preserve">
+    <value>Extremos de línea</value>
+  </data>
+  <data name="sldEditor_field_color" xml:space="preserve">
+    <value>Color</value>
+  </data>
+  <data name="sldEditor_field_dashOffset" xml:space="preserve">
+    <value>Desplazamiento del patrón</value>
+  </data>
+  <data name="sldEditor_field_dashPattern" xml:space="preserve">
+    <value>Patrón de trazos</value>
+  </data>
+  <data name="sldEditor_field_font" xml:space="preserve">
+    <value>Fuente</value>
+  </data>
+  <data name="sldEditor_field_geometryDefault" xml:space="preserve">
+    <value>La geometría de la capa</value>
+  </data>
+  <data name="sldEditor_field_haloOn" xml:space="preserve">
+    <value>Dibujar un halo alrededor del texto</value>
+  </data>
+  <data name="sldEditor_field_italic" xml:space="preserve">
+    <value>Cursiva</value>
+  </data>
+  <data name="sldEditor_field_join" xml:space="preserve">
+    <value>Esquinas</value>
+  </data>
+  <data name="sldEditor_field_labelField" xml:space="preserve">
+    <value>Texto del campo</value>
+  </data>
+  <data name="sldEditor_field_labelFieldWatermark" xml:space="preserve">
+    <value>Elija o escriba un campo</value>
+  </data>
+  <data name="sldEditor_field_opacity" xml:space="preserve">
+    <value>Opacidad</value>
+  </data>
+  <data name="sldEditor_field_rotation" xml:space="preserve">
+    <value>Rotación</value>
+  </data>
+  <data name="sldEditor_field_shape" xml:space="preserve">
+    <value>Forma</value>
+  </data>
+  <data name="sldEditor_field_size" xml:space="preserve">
+    <value>Tamaño</value>
+  </data>
+  <data name="sldEditor_field_width" xml:space="preserve">
+    <value>Ancho</value>
+  </data>
+  <data name="sldEditor_filter_advancedNotice" xml:space="preserve">
+    <value>Esta regla tiene un filtro que no se puede mostrar aquí. Se conserva tal cual salvo que elija un campo arriba.</value>
+  </data>
+  <data name="sldEditor_filter_onlyMatching" xml:space="preserve">
+    <value>Dibujar solo los elementos que cumplan una condición</value>
+  </data>
+  <data name="sldEditor_join_bevel" xml:space="preserve">
+    <value>Biselada</value>
+  </data>
+  <data name="sldEditor_join_mitre" xml:space="preserve">
+    <value>En punta</value>
+  </data>
+  <data name="sldEditor_join_round" xml:space="preserve">
+    <value>Redonda</value>
+  </data>
+  <data name="sldEditor_mark_circle" xml:space="preserve">
+    <value>Círculo</value>
+  </data>
+  <data name="sldEditor_mark_cross" xml:space="preserve">
+    <value>Cruz</value>
+  </data>
+  <data name="sldEditor_mark_square" xml:space="preserve">
+    <value>Cuadrado</value>
+  </data>
+  <data name="sldEditor_mark_star" xml:space="preserve">
+    <value>Estrella</value>
+  </data>
+  <data name="sldEditor_mark_triangle" xml:space="preserve">
+    <value>Triángulo</value>
+  </data>
+  <data name="sldEditor_mark_x" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="sldEditor_op_equal" xml:space="preserve">
+    <value>es igual a</value>
+  </data>
+  <data name="sldEditor_op_greaterThan" xml:space="preserve">
+    <value>mayor que</value>
+  </data>
+  <data name="sldEditor_op_greaterThanOrEqual" xml:space="preserve">
+    <value>al menos</value>
+  </data>
+  <data name="sldEditor_op_lessThan" xml:space="preserve">
+    <value>menor que</value>
+  </data>
+  <data name="sldEditor_op_lessThanOrEqual" xml:space="preserve">
+    <value>como máximo</value>
+  </data>
+  <data name="sldEditor_op_notEqual" xml:space="preserve">
+    <value>distinto de</value>
+  </data>
+  <data name="sldEditor_preview_labelSample" xml:space="preserve">
+    <value>Etiqueta</value>
+  </data>
+  <data name="sldEditor_preview_legend" xml:space="preserve">
+    <value>Leyenda</value>
+  </data>
+  <data name="sldEditor_preview_none" xml:space="preserve">
+    <value>Seleccione una regla para previsualizarla.</value>
+  </data>
+  <data name="sldEditor_preview_title" xml:space="preserve">
+    <value>Vista previa</value>
+  </data>
+  <data name="sldEditor_rule_copySuffix" xml:space="preserve">
+    <value>copia</value>
+  </data>
+  <data name="sldEditor_rule_detailsHint" xml:space="preserve">
+    <value>El título es el texto que muestra la leyenda del mapa. El nombre identifica la regla dentro del SLD.</value>
+  </data>
+  <data name="sldEditor_rule_titleHint" xml:space="preserve">
+    <value>El texto que muestra la leyenda del mapa para esta regla</value>
+  </data>
+  <data name="sldEditor_rule_titleWatermark" xml:space="preserve">
+    <value>Texto de la leyenda</value>
+  </data>
+  <data name="sldEditor_rules_count" xml:space="preserve">
+    <value>Reglas: {0}</value>
+  </data>
+  <data name="sldEditor_rules_delete" xml:space="preserve">
+    <value>Eliminar regla (Supr)</value>
+  </data>
+  <data name="sldEditor_rules_duplicate" xml:space="preserve">
+    <value>Duplicar regla (Ctrl+D)</value>
+  </data>
+  <data name="sldEditor_rules_empty" xml:space="preserve">
+    <value>No dibuja nada</value>
+  </data>
+  <data name="sldEditor_rules_hint" xml:space="preserve">
+    <value>Un elemento se dibuja con cada regla que cumple; las reglas de más abajo se dibujan encima.</value>
+  </data>
+  <data name="sldEditor_rules_moveDown" xml:space="preserve">
+    <value>Bajar (Alt+Abajo)</value>
+  </data>
+  <data name="sldEditor_rules_moveUp" xml:space="preserve">
+    <value>Subir (Alt+Arriba)</value>
+  </data>
+  <data name="sldEditor_rules_noSelection" xml:space="preserve">
+    <value>Seleccione una regla a la izquierda para editarla o añada una nueva.</value>
+  </data>
+  <data name="sldEditor_rules_none" xml:space="preserve">
+    <value>Este estilo aún no tiene reglas.</value>
+  </data>
+  <data name="sldEditor_scale_all" xml:space="preserve">
+    <value>Todas las escalas</value>
+  </data>
+  <data name="sldEditor_scale_between" xml:space="preserve">
+    <value>Entre 1:{0} y 1:{1}</value>
+  </data>
+  <data name="sldEditor_scale_closerThan" xml:space="preserve">
+    <value>Más cerca que 1:{0}</value>
+  </data>
+  <data name="sldEditor_scale_fartherThan" xml:space="preserve">
+    <value>Desde 1:{0} hacia fuera</value>
+  </data>
+  <data name="sldEditor_scale_hint" xml:space="preserve">
+    <value>La regla solo se dibuja entre los dos límites. Deje un límite vacío para no tenerlo. 1:5.000 está más cerca que 1:50.000.</value>
+  </data>
+  <data name="sldEditor_scale_inverted" xml:space="preserve">
+    <value>El límite de acercamiento debe ser menor que el de alejamiento; si no, la regla nunca se dibuja.</value>
+  </data>
+  <data name="sldEditor_scale_maxLabel" xml:space="preserve">
+    <value>Límite de alejamiento</value>
+  </data>
+  <data name="sldEditor_scale_minLabel" xml:space="preserve">
+    <value>Límite de acercamiento</value>
+  </data>
+  <data name="sldEditor_scale_noLimit" xml:space="preserve">
+    <value>Sin límite</value>
+  </data>
+  <data name="sldEditor_section_ends" xml:space="preserve">
+    <value>Extremos y esquinas</value>
+  </data>
+  <data name="sldEditor_section_fill" xml:space="preserve">
+    <value>Relleno</value>
+  </data>
+  <data name="sldEditor_section_geometry" xml:space="preserve">
+    <value>Geometría</value>
+  </data>
+  <data name="sldEditor_section_halo" xml:space="preserve">
+    <value>Halo</value>
+  </data>
+  <data name="sldEditor_section_outline" xml:space="preserve">
+    <value>Contorno</value>
+  </data>
+  <data name="sldEditor_section_pattern" xml:space="preserve">
+    <value>Patrón</value>
+  </data>
+  <data name="sldEditor_style_panel" xml:space="preserve">
+    <value>Nombre y descripción del estilo</value>
+  </data>
+  <data name="sldEditor_symbolizer_add" xml:space="preserve">
+    <value>Añadir un símbolo:</value>
+  </data>
+  <data name="sldEditor_symbolizer_line" xml:space="preserve">
+    <value>Línea</value>
+  </data>
+  <data name="sldEditor_symbolizer_moveDown" xml:space="preserve">
+    <value>Bajar</value>
+  </data>
+  <data name="sldEditor_symbolizer_moveUp" xml:space="preserve">
+    <value>Subir</value>
+  </data>
+  <data name="sldEditor_symbolizer_none" xml:space="preserve">
+    <value>Esta regla aún no dibuja nada. Añada un símbolo abajo.</value>
+  </data>
+  <data name="sldEditor_symbolizer_orderHint" xml:space="preserve">
+    <value>Los símbolos se dibujan en el orden de la lista: los de abajo quedan encima.</value>
+  </data>
+  <data name="sldEditor_symbolizer_point" xml:space="preserve">
+    <value>Marcador</value>
+  </data>
+  <data name="sldEditor_symbolizer_polygon" xml:space="preserve">
+    <value>Relleno</value>
+  </data>
+  <data name="sldEditor_symbolizer_raster" xml:space="preserve">
+    <value>Ráster</value>
+  </data>
+  <data name="sldEditor_symbolizer_remove" xml:space="preserve">
+    <value>Quitar símbolo</value>
+  </data>
+  <data name="sldEditor_symbolizer_text" xml:space="preserve">
+    <value>Etiqueta</value>
+  </data>
+  <data name="sldEditor_tab_details" xml:space="preserve">
+    <value>Detalles</value>
+  </data>
+  <data name="sldEditor_tab_filterScale" xml:space="preserve">
+    <value>Filtro y escala</value>
+  </data>
+  <data name="sldEditor_tab_symbology" xml:space="preserve">
+    <value>Simbología</value>
+  </data>
+  <data name="sldEditor_xml_copy" xml:space="preserve">
+    <value>Copiar</value>
+  </data>
+  <data name="sldEditor_xml_live" xml:space="preserve">
+    <value>Se actualiza mientras edita. Es lo que guardan Aplicar y Aceptar.</value>
+  </data>
+  <data name="sldEditor_rule_newTitle" xml:space="preserve">
+    <value>Regla {0}</value>
+  </data>
+  <data name="legend_import_gisFiles" xml:space="preserve">
+    <value>Archivos SIG/CAD</value>
+  </data>
+  <data name="legend_import_googleEarth" xml:space="preserve">
+    <value>Google Earth</value>
+  </data>
+  <data name="legend_import_tables" xml:space="preserve">
+    <value>Tablas</value>
+  </data>
+  <data name="legend_import_json" xml:space="preserve">
+    <value>JSON</value>
+  </data>
+  <data name="legend_filter_groupVector" xml:space="preserve">
+    <value>Vectorial</value>
+  </data>
+  <data name="legend_filter_groupRaster" xml:space="preserve">
+    <value>Ráster</value>
+  </data>
+  <data name="legend_filter_groupService" xml:space="preserve">
+    <value>Servicios</value>
+  </data>
+  <data name="legend_filter_groupOther" xml:space="preserve">
+    <value>Otros</value>
+  </data>
+  <data name="legend_filter_kindRest" xml:space="preserve">
+    <value>Servicio REST</value>
+  </data>
+  <data name="legend_filter_kindGrpc" xml:space="preserve">
+    <value>Servicio gRPC</value>
+  </data>
+  <data name="legend_filter_kindWorldfile" xml:space="preserve">
+    <value>Archivo World</value>
+  </data>
+  <data name="legend_filter_kindImagePyramid" xml:space="preserve">
+    <value>Pirámide de imágenes</value>
+  </data>
+  <data name="legend_filter_kindOther" xml:space="preserve">
+    <value>Sin especificar</value>
+  </data>
+  <data name="legend_filter_only" xml:space="preserve">
+    <value>Solo</value>
   </data>
 </root>

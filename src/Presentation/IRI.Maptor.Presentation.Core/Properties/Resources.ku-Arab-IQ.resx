@@ -887,7 +887,7 @@
     <value>ڕووناکی:</value>
   </data>
   <data name="layerSettings_general_sourceAddress" xml:space="preserve">
-    <value>ناونیشانی سەرچاوە</value>
+    <value>ناونیشانی سەرچاوە:</value>
   </data>
   <data name="layerSettings_general_sourceType" xml:space="preserve">
     <value>جۆری سەرچاوە:</value>
@@ -1950,5 +1950,650 @@
   </data>
   <data name="identify_featuresFound" xml:space="preserve">
     <value>دیاردە دۆزراوەکان</value>
+  </data>
+  <data name="featureTable_unsavedChangesNote" xml:space="preserve">
+    <value>{0} گۆڕانکاریی پاشەکەوتنەکراو (لە کۆکان دانەنراوە)</value>
+  </data>
+  <data name="featureTable_showUnsavedChanges" xml:space="preserve">
+    <value>تەنها گۆڕانکارییە پاشەکەوتنەکراوەکان پیشان بدە</value>
+  </data>
+  <data name="legendItem_zoomInToSeeAllFeatures" xml:space="preserve">
+    <value>هەموو تایبەتمەندییەکان پیشان نادرێن: لەم ناوچەیەدا زیاترن لەوەی بە یەکجار باربکرێن. بۆ بینینی هەموویان نزیک بکەرەوە</value>
+  </data>
+  <data name="serverLayerSettings_title" xml:space="preserve">
+    <value>ڕێکخستنەکانی چینەکانی ڕاژەکار</value>
+  </data>
+  <data name="serverLayerSettings_searchPlaceholder" xml:space="preserve">
+    <value>گەڕان لە چین و گرووپەکان</value>
+  </data>
+  <data name="serverLayerSettings_noMatch" xml:space="preserve">
+    <value>هیچ چین یان گرووپێک لەگەڵ گەڕانەکە ناگونجێت.</value>
+  </data>
+  <data name="serverLayerSettings_noSelection" xml:space="preserve">
+    <value>چینێک یان گرووپێک هەڵبژێرە بۆ دەستکاریکردن.</value>
+  </data>
+  <data name="serverLayerSettings_loadFailed" xml:space="preserve">
+    <value>ڕێکخستنەکانی چینەکان لە ڕاژەکار بار نەکران.</value>
+  </data>
+  <data name="serverLayerSettings_saveFailed" xml:space="preserve">
+    <value>گۆڕانکارییەکان نەنێردران بۆ ڕاژەکار.</value>
+  </data>
+  <data name="serverLayerSettings_retry" xml:space="preserve">
+    <value>دووبارە هەوڵبدەرەوە</value>
+  </data>
+  <data name="serverLayerSettings_reload" xml:space="preserve">
+    <value>دووبارە بارکردن لە ڕاژەکار</value>
+  </data>
+  <data name="serverLayerSettings_revert" xml:space="preserve">
+    <value>گەڕاندنەوە</value>
+  </data>
+  <data name="serverLayerSettings_topLevel" xml:space="preserve">
+    <value>ئاستی سەرەکی</value>
+  </data>
+  <data name="serverLayerSettings_layerCount" xml:space="preserve">
+    <value>چینەکان: {0}</value>
+  </data>
+  <data name="serverLayerSettings_badge_unsaved" xml:space="preserve">
+    <value>پاشەکەوت نەکراو</value>
+  </data>
+  <data name="serverLayerSettings_badge_inactive" xml:space="preserve">
+    <value>ناچالاک</value>
+  </data>
+  <data name="serverLayerSettings_badge_group" xml:space="preserve">
+    <value>گرووپ</value>
+  </data>
+  <data name="serverLayerSettings_badge_live" xml:space="preserve">
+    <value>ڕاستەوخۆ</value>
+  </data>
+  <data name="serverLayerSettings_tab_general" xml:space="preserve">
+    <value>گشتی</value>
+  </data>
+  <data name="serverLayerSettings_tab_display" xml:space="preserve">
+    <value>پیشاندان</value>
+  </data>
+  <data name="serverLayerSettings_tab_labels" xml:space="preserve">
+    <value>ناونیشانەکان</value>
+  </data>
+  <data name="serverLayerSettings_tab_loading" xml:space="preserve">
+    <value>بارکردن</value>
+  </data>
+  <data name="serverLayerSettings_section_visibility" xml:space="preserve">
+    <value>دەرکەوتن</value>
+  </data>
+  <data name="serverLayerSettings_section_source" xml:space="preserve">
+    <value>سەرچاوەی داتا</value>
+  </data>
+  <data name="serverLayerSettings_section_zoom" xml:space="preserve">
+    <value>مەودای زووم بۆ دەرکەوتن</value>
+  </data>
+  <data name="serverLayerSettings_section_style" xml:space="preserve">
+    <value>شێواز</value>
+  </data>
+  <data name="serverLayerSettings_field_title" xml:space="preserve">
+    <value>ناونیشان</value>
+  </data>
+  <data name="serverLayerSettings_field_group" xml:space="preserve">
+    <value>گرووپ</value>
+  </data>
+  <data name="serverLayerSettings_field_active" xml:space="preserve">
+    <value>چالاک</value>
+  </data>
+  <data name="serverLayerSettings_hint_active" xml:space="preserve">
+    <value>چین یان گرووپی ناچالاک لە هەموو بەکارهێنەران شاراوەیە.</value>
+  </data>
+  <data name="serverLayerSettings_field_onByDefault" xml:space="preserve">
+    <value>دیار لە کاتی کردنەوەی نەخشە</value>
+  </data>
+  <data name="serverLayerSettings_field_expanded" xml:space="preserve">
+    <value>کراوە لە لیستی چینەکان</value>
+  </data>
+  <data name="serverLayerSettings_field_searchable" xml:space="preserve">
+    <value>بەشداری لە گەڕانی نەخشە</value>
+  </data>
+  <data name="serverLayerSettings_field_table" xml:space="preserve">
+    <value>خشتە</value>
+  </data>
+  <data name="serverLayerSettings_field_serviceUrl" xml:space="preserve">
+    <value>ناونیشانی خزمەتگوزاری</value>
+  </data>
+  <data name="serverLayerSettings_field_id" xml:space="preserve">
+    <value>ناسنامە</value>
+  </data>
+  <data name="serverLayerSettings_field_zoomFrom" xml:space="preserve">
+    <value>لە ئاستی</value>
+  </data>
+  <data name="serverLayerSettings_field_zoomTo" xml:space="preserve">
+    <value>بۆ ئاستی</value>
+  </data>
+  <data name="serverLayerSettings_noLimit" xml:space="preserve">
+    <value>بێ سنوور</value>
+  </data>
+  <data name="serverLayerSettings_hint_zoom" xml:space="preserve">
+    <value>ئاست بەتاڵ بهێڵەوە بۆ بێ سنووری. ئاستی 0 هەموو جیهان پیشان دەدات؛ ئاستی 18 وردەکاری شەقامەکان.</value>
+  </data>
+  <data name="serverLayerSettings_sld_none" xml:space="preserve">
+    <value>بە شێوازی سادەی خوارەوە دەکێشرێت.</value>
+  </data>
+  <data name="serverLayerSettings_sld_active" xml:space="preserve">
+    <value>بە شێوازی SLD دەکێشرێت. تا ئەو کاتەی دیاریکراوە ڕەنگەکانی خوارەوە بەکارنایەن.</value>
+  </data>
+  <data name="serverLayerSettings_sld_edit" xml:space="preserve">
+    <value>دەستکاریکردنی SLD…</value>
+  </data>
+  <data name="serverLayerSettings_sld_remove" xml:space="preserve">
+    <value>لابردنی SLD</value>
+  </data>
+  <data name="serverLayerSettings_field_fill" xml:space="preserve">
+    <value>پڕکردنەوە</value>
+  </data>
+  <data name="serverLayerSettings_field_stroke" xml:space="preserve">
+    <value>سنوور</value>
+  </data>
+  <data name="serverLayerSettings_field_strokeWidth" xml:space="preserve">
+    <value>پانی سنوور</value>
+  </data>
+  <data name="serverLayerSettings_field_opacity" xml:space="preserve">
+    <value>ناڕوونی</value>
+  </data>
+  <data name="serverLayerSettings_field_preview" xml:space="preserve">
+    <value>پێشبینین</value>
+  </data>
+  <data name="serverLayerSettings_field_hasLabels" xml:space="preserve">
+    <value>ئەم چینە ناونیشانی هەیە</value>
+  </data>
+  <data name="serverLayerSettings_field_labelsOn" xml:space="preserve">
+    <value>پیشاندانی ناونیشانەکان لە کاتی کردنەوەی نەخشە</value>
+  </data>
+  <data name="serverLayerSettings_field_labelColumn" xml:space="preserve">
+    <value>خانەی ناونیشان</value>
+  </data>
+  <data name="serverLayerSettings_field_labelSize" xml:space="preserve">
+    <value>قەبارەی فۆنت</value>
+  </data>
+  <data name="serverLayerSettings_field_labelColor" xml:space="preserve">
+    <value>ڕەنگ</value>
+  </data>
+  <data name="serverLayerSettings_mode_cache" xml:space="preserve">
+    <value>بارکردنی هەموو بە یەکجار (Cache)</value>
+  </data>
+  <data name="serverLayerSettings_mode_cacheDescription" xml:space="preserve">
+    <value>هەموو چینەکە یەکجار، لە کاتی کردنەوەی نەخشە، دادەبەزێنرێت. باشترە بۆ چینە بچووک و مامناوەندەکان.</value>
+  </data>
+  <data name="serverLayerSettings_mode_live" xml:space="preserve">
+    <value>بارکردن بەپێی دیمەنی نەخشە (Live)</value>
+  </data>
+  <data name="serverLayerSettings_mode_liveDescription" xml:space="preserve">
+    <value>تەنها تایبەتمەندییەکانی ناوچەی دیار دادەبەزێنرێن کاتێک نەخشە دەجووڵێت؛ خشتەی تایبەتمەندی و گەڕان لە ڕاژەکار دەپرسن. باشترە بۆ چینە زۆر گەورەکان.</value>
+  </data>
+  <data name="serverLayerSettings_hint_appliesNext" xml:space="preserve">
+    <value>گۆڕانکارییە پاشەکەوتکراوەکان دەگەنە بەکارهێنەرانی تر لە چوونەژوورەوەی داهاتوویان یان دووبارە بارکردنی چینەکان.</value>
+  </data>
+  <data name="serverLayerSettings_status_noChanges" xml:space="preserve">
+    <value>هیچ گۆڕانکارییەکی پاشەکەوت نەکراو نییە</value>
+  </data>
+  <data name="serverLayerSettings_status_changes" xml:space="preserve">
+    <value>گۆڕانکاریی پاشەکەوت نەکراو: {0}</value>
+  </data>
+  <data name="serverLayerSettings_status_invalid" xml:space="preserve">
+    <value>بە هەڵەوە: {0}</value>
+  </data>
+  <data name="serverLayerSettings_result_saved" xml:space="preserve">
+    <value>گۆڕانکارییەکان پاشەکەوت کران ({0}).</value>
+  </data>
+  <data name="serverLayerSettings_result_partial" xml:space="preserve">
+    <value>پاشەکەوتکراو: {0} · پاشەکەوت نەکراو: {1}</value>
+  </data>
+  <data name="serverLayerSettings_conflict" xml:space="preserve">
+    <value>کەسێکی تر دوای کردنەوەی پەنجەرەکە ئەم بڕگەیەی پاشەکەوت کرد. دووبارە بار بکە بۆ وەرگرتنی نوێترین وەشان؛ گۆڕانکارییەکانت لەسەری لەدەست دەچن.</value>
+  </data>
+  <data name="serverLayerSettings_notFound" xml:space="preserve">
+    <value>ئەم بڕگەیە چیتر لەسەر ڕاژەکار بوونی نییە.</value>
+  </data>
+  <data name="serverLayerSettings_serverRejected" xml:space="preserve">
+    <value>ڕاژەکار ئەم گۆڕانکارییانەی قبوڵ نەکرد.</value>
+  </data>
+  <data name="serverLayerSettings_confirmDiscard" xml:space="preserve">
+    <value>گۆڕانکاریی پاشەکەوت نەکراو هەیە. وازیان لێ بهێنرێت؟</value>
+  </data>
+  <data name="serverLayerSettings_error_titleRequired" xml:space="preserve">
+    <value>ناونیشانێک بنووسە.</value>
+  </data>
+  <data name="serverLayerSettings_error_titleTooLong" xml:space="preserve">
+    <value>ناونیشانەکە زۆر درێژە.</value>
+  </data>
+  <data name="serverLayerSettings_error_layerZoomOutOfRange" xml:space="preserve">
+    <value>ئاستەکانی زووم دەبێت لە نێوان 0 و 24 بن.</value>
+  </data>
+  <data name="serverLayerSettings_error_layerZoomRangeInverted" xml:space="preserve">
+    <value>ئاستی یەکەمی زووم نابێت لە دووەم گەورەتر بێت.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelZoomOutOfRange" xml:space="preserve">
+    <value>ئاستەکانی زوومی ناونیشان دەبێت لە نێوان 0 و 24 بن.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelZoomRangeInverted" xml:space="preserve">
+    <value>ئاستی یەکەمی زوومی ناونیشان نابێت لە دووەم گەورەتر بێت.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidFillColor" xml:space="preserve">
+    <value>ڕەنگی پڕکردنەوە دروست نییە.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidStrokeColor" xml:space="preserve">
+    <value>ڕەنگی سنوور دروست نییە.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidLabelColor" xml:space="preserve">
+    <value>ڕەنگی ناونیشان دروست نییە.</value>
+  </data>
+  <data name="serverLayerSettings_error_opacityOutOfRange" xml:space="preserve">
+    <value>ناڕوونی دەبێت لە نێوان 0% و 100% بێت.</value>
+  </data>
+  <data name="serverLayerSettings_error_strokeThicknessOutOfRange" xml:space="preserve">
+    <value>پانی سنوور دەبێت لە نێوان 0 و 50 بێت.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelSizeOutOfRange" xml:space="preserve">
+    <value>قەبارەی فۆنتی ناونیشان دەبێت لە نێوان 1 و 72 بێت.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelColumnRequired" xml:space="preserve">
+    <value>ئەو خانەیە هەڵبژێرە کە ناونیشانەکان پیشانی دەدەن.</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownLabelColumn" xml:space="preserve">
+    <value>خانەی ناونیشان خانەیەکی ئەم چینە نییە.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidSld" xml:space="preserve">
+    <value>شێوازی SLD ناخوێندرێتەوە.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidLoadMode" xml:space="preserve">
+    <value>شێوازی بارکردنی چینەکە هەڵبژێرە.</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownRow" xml:space="preserve">
+    <value>بڕگەیەک چیتر لەسەر ڕاژەکار بوونی نییە.</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownGroup" xml:space="preserve">
+    <value>گرووپی مەبەست چیتر بوونی نییە.</value>
+  </data>
+  <data name="serverLayerSettings_error_groupInGroup" xml:space="preserve">
+    <value>ناتوانرێت گرووپێک بخرێتە ناو گرووپێکی ترەوە.</value>
+  </data>
+  <data name="serverLayerSettings_error_duplicateRow" xml:space="preserve">
+    <value>بڕگەیەک دوو جار لە داواکارییەکەدا هاتووە.</value>
+  </data>
+  <data name="serverLayerSettings_cmd_newGroup" xml:space="preserve">
+    <value>گرووپی نوێ</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveUp" xml:space="preserve">
+    <value>بۆ سەرەوە</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveDown" xml:space="preserve">
+    <value>بۆ خوارەوە</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveTo" xml:space="preserve">
+    <value>گواستنەوە بۆ</value>
+  </data>
+  <data name="serverLayerSettings_cmd_rename" xml:space="preserve">
+    <value>گۆڕینی ناو</value>
+  </data>
+  <data name="serverLayerSettings_cmd_deleteGroup" xml:space="preserve">
+    <value>سڕینەوەی گرووپ</value>
+  </data>
+  <data name="serverLayerSettings_moveTo_topLevel" xml:space="preserve">
+    <value>ئاستی سەرەکی (بێ گرووپ)</value>
+  </data>
+  <data name="serverLayerSettings_newGroup_title" xml:space="preserve">
+    <value>گرووپی نوێ</value>
+  </data>
+  <data name="serverLayerSettings_group_created" xml:space="preserve">
+    <value>گرووپی «{0}» دروست کرا.</value>
+  </data>
+  <data name="serverLayerSettings_group_deleted" xml:space="preserve">
+    <value>گرووپی «{0}» سڕایەوە.</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_confirm" xml:space="preserve">
+    <value>گرووپی «{0}» بسڕدرێتەوە؟</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_notEmpty" xml:space="preserve">
+    <value>تەنها گرووپی بەتاڵ دەسڕدرێتەوە. سەرەتا چینەکانی بگوازەوە بۆ گرووپێکی تر.</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_pendingMoves" xml:space="preserve">
+    <value>پێش سڕینەوەی گرووپ، گواستنەوەی چینەکان پاشەکەوت بکە یان بیگەڕێنەوە.</value>
+  </data>
+  <data name="serverLayerSettings_orderRejected" xml:space="preserve">
+    <value>ڕاژەکار ڕیزبەندییە نوێیەکەی قبوڵ نەکرد.</value>
+  </data>
+  <data name="serverLayerSettings_hint_dragDrop" xml:space="preserve">
+    <value>چینەکان ڕابکێشە بۆ گۆڕینی ڕیزبەندییان یان گواستنەوەیان بۆ گرووپێکی تر.</value>
+  </data>
+  <data name="serverLayerSettings_cmd_open" xml:space="preserve">
+    <value>ڕێکخستنەکانی ڕاژەکار…</value>
+  </data>
+  <data name="serverLayerSettings_reloadMapConfirm" xml:space="preserve">
+    <value>ڕێکخستنەکانی چین پاشەکەوت کران. ئێستا چینەکانی ڕاژەکاری نەخشە دووبارە بار بکرێنەوە بۆ بینینیان؟ دەستکارییە پاشەکەوت نەکراوەکانی تایبەتمەندییەکان لەدەست دەچن.</value>
+  </data>
+  <data name="dialog_symbology_noFill" xml:space="preserve">
+    <value>بێ پڕکردنەوە</value>
+  </data>
+  <data name="dialog_symbology_noStroke" xml:space="preserve">
+    <value>بێ لێوار</value>
+  </data>
+  <data name="sldEditor_badge_filter" xml:space="preserve">
+    <value>فلتەر</value>
+  </data>
+  <data name="sldEditor_badge_scale" xml:space="preserve">
+    <value>مەودای پێوەر</value>
+  </data>
+  <data name="sldEditor_cap_butt" xml:space="preserve">
+    <value>تەخت</value>
+  </data>
+  <data name="sldEditor_cap_round" xml:space="preserve">
+    <value>خڕ</value>
+  </data>
+  <data name="sldEditor_cap_square" xml:space="preserve">
+    <value>چوارگۆشە</value>
+  </data>
+  <data name="sldEditor_dash_dashDot" xml:space="preserve">
+    <value>هێڵ و خاڵ</value>
+  </data>
+  <data name="sldEditor_dash_dashed" xml:space="preserve">
+    <value>هێڵ‌هێڵ</value>
+  </data>
+  <data name="sldEditor_dash_dotted" xml:space="preserve">
+    <value>خاڵ‌خاڵ</value>
+  </data>
+  <data name="sldEditor_dash_longDash" xml:space="preserve">
+    <value>هێڵی درێژ</value>
+  </data>
+  <data name="sldEditor_dash_solid" xml:space="preserve">
+    <value>بەردەوام</value>
+  </data>
+  <data name="sldEditor_field_bold" xml:space="preserve">
+    <value>ئەستوور</value>
+  </data>
+  <data name="sldEditor_field_cap" xml:space="preserve">
+    <value>کۆتایی هێڵ</value>
+  </data>
+  <data name="sldEditor_field_color" xml:space="preserve">
+    <value>ڕەنگ</value>
+  </data>
+  <data name="sldEditor_field_dashOffset" xml:space="preserve">
+    <value>جووڵاندنی نەخشە</value>
+  </data>
+  <data name="sldEditor_field_dashPattern" xml:space="preserve">
+    <value>نەخشەی هێڵ‌هێڵ</value>
+  </data>
+  <data name="sldEditor_field_font" xml:space="preserve">
+    <value>فۆنت</value>
+  </data>
+  <data name="sldEditor_field_geometryDefault" xml:space="preserve">
+    <value>جیۆمەتری چین</value>
+  </data>
+  <data name="sldEditor_field_haloOn" xml:space="preserve">
+    <value>هاڵە بە دەوری دەقدا بکێشە</value>
+  </data>
+  <data name="sldEditor_field_italic" xml:space="preserve">
+    <value>لار</value>
+  </data>
+  <data name="sldEditor_field_join" xml:space="preserve">
+    <value>گۆشەکان</value>
+  </data>
+  <data name="sldEditor_field_labelField" xml:space="preserve">
+    <value>دەق لە خانە</value>
+  </data>
+  <data name="sldEditor_field_labelFieldWatermark" xml:space="preserve">
+    <value>خانەیەک هەڵبژێرە یان بنووسە</value>
+  </data>
+  <data name="sldEditor_field_opacity" xml:space="preserve">
+    <value>ناڕوونی</value>
+  </data>
+  <data name="sldEditor_field_rotation" xml:space="preserve">
+    <value>سووڕانەوە</value>
+  </data>
+  <data name="sldEditor_field_shape" xml:space="preserve">
+    <value>شێوە</value>
+  </data>
+  <data name="sldEditor_field_size" xml:space="preserve">
+    <value>قەبارە</value>
+  </data>
+  <data name="sldEditor_field_width" xml:space="preserve">
+    <value>پانی</value>
+  </data>
+  <data name="sldEditor_filter_advancedNotice" xml:space="preserve">
+    <value>ئەم یاسایە فلتەرێکی هەیە کە لێرە پیشان نادرێت. وەک خۆی دەمێنێتەوە مەگەر لە سەرەوە خانەیەک هەڵبژێریت.</value>
+  </data>
+  <data name="sldEditor_filter_onlyMatching" xml:space="preserve">
+    <value>تەنها ئەو تایبەتمەندییانە بکێشە کە لەگەڵ مەرجێک دەگونجێن</value>
+  </data>
+  <data name="sldEditor_join_bevel" xml:space="preserve">
+    <value>لێوارکراو</value>
+  </data>
+  <data name="sldEditor_join_mitre" xml:space="preserve">
+    <value>تیژ</value>
+  </data>
+  <data name="sldEditor_join_round" xml:space="preserve">
+    <value>خڕ</value>
+  </data>
+  <data name="sldEditor_mark_circle" xml:space="preserve">
+    <value>بازنە</value>
+  </data>
+  <data name="sldEditor_mark_cross" xml:space="preserve">
+    <value>خاچ</value>
+  </data>
+  <data name="sldEditor_mark_square" xml:space="preserve">
+    <value>چوارگۆشە</value>
+  </data>
+  <data name="sldEditor_mark_star" xml:space="preserve">
+    <value>ئەستێرە</value>
+  </data>
+  <data name="sldEditor_mark_triangle" xml:space="preserve">
+    <value>سێگۆشە</value>
+  </data>
+  <data name="sldEditor_mark_x" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="sldEditor_op_equal" xml:space="preserve">
+    <value>یەکسانە بە</value>
+  </data>
+  <data name="sldEditor_op_greaterThan" xml:space="preserve">
+    <value>گەورەترە لە</value>
+  </data>
+  <data name="sldEditor_op_greaterThanOrEqual" xml:space="preserve">
+    <value>لانیکەم</value>
+  </data>
+  <data name="sldEditor_op_lessThan" xml:space="preserve">
+    <value>بچووکترە لە</value>
+  </data>
+  <data name="sldEditor_op_lessThanOrEqual" xml:space="preserve">
+    <value>لانی زۆر</value>
+  </data>
+  <data name="sldEditor_op_notEqual" xml:space="preserve">
+    <value>یەکسان نییە بە</value>
+  </data>
+  <data name="sldEditor_preview_labelSample" xml:space="preserve">
+    <value>ناونیشان</value>
+  </data>
+  <data name="sldEditor_preview_legend" xml:space="preserve">
+    <value>ڕێبەری نەخشە</value>
+  </data>
+  <data name="sldEditor_preview_none" xml:space="preserve">
+    <value>یاسایەک هەڵبژێرە بۆ پێشبینین.</value>
+  </data>
+  <data name="sldEditor_preview_title" xml:space="preserve">
+    <value>پێشبینین</value>
+  </data>
+  <data name="sldEditor_rule_copySuffix" xml:space="preserve">
+    <value>لەبەرگیراوە</value>
+  </data>
+  <data name="sldEditor_rule_detailsHint" xml:space="preserve">
+    <value>سەردێڕ ئەو دەقەیە کە ڕێبەری نەخشە پیشانی دەدات. ناو یاساکە لە ناو SLD دیاری دەکات.</value>
+  </data>
+  <data name="sldEditor_rule_titleHint" xml:space="preserve">
+    <value>ئەو دەقەی ڕێبەری نەخشە بۆ ئەم یاسایە پیشانی دەدات</value>
+  </data>
+  <data name="sldEditor_rule_titleWatermark" xml:space="preserve">
+    <value>دەقی ڕێبەر</value>
+  </data>
+  <data name="sldEditor_rules_count" xml:space="preserve">
+    <value>یاساکان: {0}</value>
+  </data>
+  <data name="sldEditor_rules_delete" xml:space="preserve">
+    <value>سڕینەوەی یاسا (Del)</value>
+  </data>
+  <data name="sldEditor_rules_duplicate" xml:space="preserve">
+    <value>لەبەرگرتنەوەی یاسا (Ctrl+D)</value>
+  </data>
+  <data name="sldEditor_rules_empty" xml:space="preserve">
+    <value>هیچ ناکێشێت</value>
+  </data>
+  <data name="sldEditor_rules_hint" xml:space="preserve">
+    <value>هەر تایبەتمەندییەک بە هەموو ئەو یاسایانە دەکێشرێت کە لەگەڵیدا دەگونجێن؛ یاسا خوارترەکان لە سەرەوە دەکێشرێن.</value>
+  </data>
+  <data name="sldEditor_rules_moveDown" xml:space="preserve">
+    <value>بۆ خوارەوە (Alt+Down)</value>
+  </data>
+  <data name="sldEditor_rules_moveUp" xml:space="preserve">
+    <value>بۆ سەرەوە (Alt+Up)</value>
+  </data>
+  <data name="sldEditor_rules_noSelection" xml:space="preserve">
+    <value>یاسایەک لە لیستەکە هەڵبژێرە بۆ دەستکاری، یان یاسایەکی نوێ زیاد بکە.</value>
+  </data>
+  <data name="sldEditor_rules_none" xml:space="preserve">
+    <value>ئەم شێوازە هێشتا هیچ یاسایەکی نییە.</value>
+  </data>
+  <data name="sldEditor_scale_all" xml:space="preserve">
+    <value>هەموو پێوەرەکان</value>
+  </data>
+  <data name="sldEditor_scale_between" xml:space="preserve">
+    <value>لە نێوان 1:{0} و 1:{1}</value>
+  </data>
+  <data name="sldEditor_scale_closerThan" xml:space="preserve">
+    <value>نزیکتر لە 1:{0}</value>
+  </data>
+  <data name="sldEditor_scale_fartherThan" xml:space="preserve">
+    <value>لە 1:{0} بەرەو دوور</value>
+  </data>
+  <data name="sldEditor_scale_hint" xml:space="preserve">
+    <value>یاساکە تەنها لە نێوان ئەم دوو سنوورەدا دەکێشرێت. سنوور بەتاڵ بهێڵە بۆ بێ سنوور. 1:5,000 نزیکترە لە 1:50,000.</value>
+  </data>
+  <data name="sldEditor_scale_inverted" xml:space="preserve">
+    <value>سنووری نزیککردنەوە دەبێت بچووکتر بێت لە سنووری دوورخستنەوە، دەنا یاساکە هەرگیز ناکێشرێت.</value>
+  </data>
+  <data name="sldEditor_scale_maxLabel" xml:space="preserve">
+    <value>سنووری دوورخستنەوە</value>
+  </data>
+  <data name="sldEditor_scale_minLabel" xml:space="preserve">
+    <value>سنووری نزیککردنەوە</value>
+  </data>
+  <data name="sldEditor_scale_noLimit" xml:space="preserve">
+    <value>بێ سنوور</value>
+  </data>
+  <data name="sldEditor_section_ends" xml:space="preserve">
+    <value>کۆتایی و گۆشەکان</value>
+  </data>
+  <data name="sldEditor_section_fill" xml:space="preserve">
+    <value>پڕکردنەوە</value>
+  </data>
+  <data name="sldEditor_section_geometry" xml:space="preserve">
+    <value>جیۆمەتری</value>
+  </data>
+  <data name="sldEditor_section_halo" xml:space="preserve">
+    <value>هاڵە</value>
+  </data>
+  <data name="sldEditor_section_outline" xml:space="preserve">
+    <value>لێوار</value>
+  </data>
+  <data name="sldEditor_section_pattern" xml:space="preserve">
+    <value>نەخشە</value>
+  </data>
+  <data name="sldEditor_style_panel" xml:space="preserve">
+    <value>ناو و وەسفی شێواز</value>
+  </data>
+  <data name="sldEditor_symbolizer_add" xml:space="preserve">
+    <value>زیادکردنی هێما:</value>
+  </data>
+  <data name="sldEditor_symbolizer_line" xml:space="preserve">
+    <value>هێڵ</value>
+  </data>
+  <data name="sldEditor_symbolizer_moveDown" xml:space="preserve">
+    <value>بۆ خوارەوە</value>
+  </data>
+  <data name="sldEditor_symbolizer_moveUp" xml:space="preserve">
+    <value>بۆ سەرەوە</value>
+  </data>
+  <data name="sldEditor_symbolizer_none" xml:space="preserve">
+    <value>ئەم یاسایە هێشتا هیچ ناکێشێت. لە خوارەوە هێمایەک زیاد بکە.</value>
+  </data>
+  <data name="sldEditor_symbolizer_orderHint" xml:space="preserve">
+    <value>هێماکان بە ڕیزبەندی لیست دەکێشرێن: خوارترەکان لە سەرەوە دەکێشرێن.</value>
+  </data>
+  <data name="sldEditor_symbolizer_point" xml:space="preserve">
+    <value>نیشانە</value>
+  </data>
+  <data name="sldEditor_symbolizer_polygon" xml:space="preserve">
+    <value>پڕکردنەوە</value>
+  </data>
+  <data name="sldEditor_symbolizer_raster" xml:space="preserve">
+    <value>ڕاستەر</value>
+  </data>
+  <data name="sldEditor_symbolizer_remove" xml:space="preserve">
+    <value>لابردنی هێما</value>
+  </data>
+  <data name="sldEditor_symbolizer_text" xml:space="preserve">
+    <value>ناونیشان</value>
+  </data>
+  <data name="sldEditor_tab_details" xml:space="preserve">
+    <value>وردەکاری</value>
+  </data>
+  <data name="sldEditor_tab_filterScale" xml:space="preserve">
+    <value>فلتەر و پێوەر</value>
+  </data>
+  <data name="sldEditor_tab_symbology" xml:space="preserve">
+    <value>هێماسازی</value>
+  </data>
+  <data name="sldEditor_xml_copy" xml:space="preserve">
+    <value>لەبەرگرتنەوە</value>
+  </data>
+  <data name="sldEditor_xml_live" xml:space="preserve">
+    <value>لە کاتی دەستکاریدا نوێ دەبێتەوە. ئەمە ئەوەیە کە «جێبەجێکردن» و «باشە» پاشەکەوتی دەکەن.</value>
+  </data>
+  <data name="sldEditor_rule_newTitle" xml:space="preserve">
+    <value>یاسای {0}</value>
+  </data>
+  <data name="legend_import_gisFiles" xml:space="preserve">
+    <value>فایلەکانی GIS/CAD</value>
+  </data>
+  <data name="legend_import_googleEarth" xml:space="preserve">
+    <value>Google Earth</value>
+  </data>
+  <data name="legend_import_tables" xml:space="preserve">
+    <value>خشتەکان</value>
+  </data>
+  <data name="legend_import_json" xml:space="preserve">
+    <value>JSON</value>
+  </data>
+  <data name="legend_filter_groupVector" xml:space="preserve">
+    <value>ڤێکتەری</value>
+  </data>
+  <data name="legend_filter_groupRaster" xml:space="preserve">
+    <value>ڕاستەری</value>
+  </data>
+  <data name="legend_filter_groupService" xml:space="preserve">
+    <value>خزمەتگوزارییەکان</value>
+  </data>
+  <data name="legend_filter_groupOther" xml:space="preserve">
+    <value>تر</value>
+  </data>
+  <data name="legend_filter_kindRest" xml:space="preserve">
+    <value>خزمەتگوزاری REST</value>
+  </data>
+  <data name="legend_filter_kindGrpc" xml:space="preserve">
+    <value>خزمەتگوزاری gRPC</value>
+  </data>
+  <data name="legend_filter_kindWorldfile" xml:space="preserve">
+    <value>فایلی World</value>
+  </data>
+  <data name="legend_filter_kindImagePyramid" xml:space="preserve">
+    <value>هەرەمی وێنە</value>
+  </data>
+  <data name="legend_filter_kindOther" xml:space="preserve">
+    <value>دیارینەکراو</value>
+  </data>
+  <data name="legend_filter_only" xml:space="preserve">
+    <value>تەنها</value>
   </data>
 </root>

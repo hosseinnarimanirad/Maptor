@@ -3,75 +3,101 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:helpers="clr-namespace:IRI.Maptor.Presentation.Wpf.Helpers"
              xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:vm="clr-namespace:IRI.Maptor.Presentation.Wpf.ViewModels.Symbology"
              xmlns:sldViews="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls.Symbology.Sld"
              mc:Ignorable="d"
-             d:DesignHeight="240" d:DesignWidth="400">
+             d:DataContext="{d:DesignInstance Type=vm:RuleViewModel}"
+             d:DesignHeight="240" d:DesignWidth="420">
 
-    <!--The inner GroupBox became a SectionHeader rather than another Border.Section: this view is
-        hosted inside the editor's "Filter" card, and a card within a card reads as a box in a box.
-        Label column uses the shared token (was 90, while the symbolizers used 120).-->
+    <!--A rule's filter as one condition, field – operator – value, with the condition read back as a
+        sentence. A filter this editor cannot show (logical, spatial, like …) is kept and said so.
+        Hosted inside the editor's "Filter" card, so no card of its own.-->
 
-    <Grid Margin="{StaticResource IRI.Maptor.Styles.Thickness.ViewContent}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Views/Symbology/Sld/SldEditorStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
 
-        <CheckBox Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.CheckBox.Normal}"
-                  Content="{Binding [sldEditor_filter_enableFilter], Source={StaticResource Localization}}"
+    <StackPanel>
+        <CheckBox Style="{StaticResource IRI.Maptor.Styles.CheckBox.Normal}" HorizontalAlignment="Left" Margin="0,2,0,6"
+                  Content="{Binding [sldEditor_filter_onlyMatching], Source={StaticResource Localization}}"
                   IsChecked="{Binding HasFilter, Mode=TwoWay}"/>
 
-        <StackPanel Grid.Row="1" IsEnabled="{Binding HasFilter}">
-                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}"
-                           Text="{Binding [sldEditor_filter_filterSettings], Source={StaticResource Localization}}"/>
-
+        <StackPanel IsEnabled="{Binding HasFilter}">
+            <!--editable combo: suggests the layer's field names when the editor has layer context
+                (SldEditorViewModel.FieldNames), still accepts free text-->
+            <Border Style="{StaticResource sld.FieldCard}">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-
-                    <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
                                Text="{Binding [sldEditor_filter_property], Source={StaticResource Localization}}"/>
-                    <!--editable combo: suggests the layer's field names when the editor has layer
-                        context (SldEditorViewModel.FieldNames), still accepts free text-->
-                    <ComboBox Grid.Row="0" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal}" IsEditable="True"
+                    <ComboBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal}" IsEditable="True"
                               ItemsSource="{Binding DataContext.FieldNames, RelativeSource={RelativeSource AncestorType=sldViews:SldEditorView}}"
+                              mahApp:TextBoxHelper.Watermark="{Binding [sldEditor_field_labelFieldWatermark], Source={StaticResource Localization}}"
                               Text="{Binding FilterPropertyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
-                    <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
-                               Text="{Binding [sldEditor_filter_operator], Source={StaticResource Localization}}"/>
-                    <ComboBox Grid.Row="1" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal}"
-                              SelectedItem="{Binding FilterOperator, Mode=TwoWay}">
-                        <ComboBox.ItemsSource>
-                            <x:Array Type="{x:Type vm:FilterComparisonOperator}">
-                                <vm:FilterComparisonOperator>Equal</vm:FilterComparisonOperator>
-                                <vm:FilterComparisonOperator>NotEqual</vm:FilterComparisonOperator>
-                                <vm:FilterComparisonOperator>LessThan</vm:FilterComparisonOperator>
-                                <vm:FilterComparisonOperator>GreaterThan</vm:FilterComparisonOperator>
-                                <vm:FilterComparisonOperator>LessThanOrEqual</vm:FilterComparisonOperator>
-                                <vm:FilterComparisonOperator>GreaterThanOrEqual</vm:FilterComparisonOperator>
-                            </x:Array>
-                        </ComboBox.ItemsSource>
-                    </ComboBox>
-
-                    <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
-                               Text="{Binding [sldEditor_filter_value], Source={StaticResource Localization}}"/>
-                    <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
-                             Text="{Binding FilterValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
-                    <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
-                               Style="{StaticResource IRI.Maptor.Styles.TextBlock.Note}"
-                               Text="{Binding FilterDescription}"/>
                 </Grid>
+            </Border>
+
+            <Border Style="{StaticResource sld.FieldCard}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                               Text="{Binding [sldEditor_filter_operator], Source={StaticResource Localization}}"/>
+                    <ComboBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal}"
+                              ItemsSource="{x:Static vm:SldEditorOptions.FilterOperators}"
+                              ItemTemplate="{StaticResource sld.OperatorOptionTemplate}"
+                              SelectedValuePath="Value" SelectedValue="{Binding FilterOperator, Mode=TwoWay}"/>
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource sld.FieldCard}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                               Text="{Binding [sldEditor_filter_value], Source={StaticResource Localization}}"/>
+                    <TextBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
+                             Text="{Binding FilterValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </Grid>
+            </Border>
+
+            <!--the condition read back-->
+            <Border Style="{StaticResource IRI.Maptor.Styles.Border.Banner}" Margin="0,6,0,0">
+                <DockPanel>
+                    <iconPacks:PackIconMaterial DockPanel.Dock="Left" Kind="FilterOutline" Margin="0,0,8,0" VerticalAlignment="Center"
+                                                Width="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"
+                                                Height="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"
+                                                Foreground="{DynamicResource MahApps.Brushes.Gray3}"/>
+                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldValue}" TextWrapping="Wrap"
+                               Text="{Binding FilterDescription}"/>
+                </DockPanel>
+            </Border>
+
+            <Border Style="{StaticResource IRI.Maptor.Styles.Border.Banner.Accent}" Margin="0,6,0,0"
+                    Visibility="{Binding IsAdvancedFilter, Converter={StaticResource boolToVisibilityConverter}}">
+                <DockPanel>
+                    <iconPacks:PackIconMaterial DockPanel.Dock="Left" Kind="InformationOutline" Margin="0,0,8,0" VerticalAlignment="Top"
+                                                Width="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"
+                                                Height="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"
+                                                Foreground="{DynamicResource MahApps.Brushes.Accent}"/>
+                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldValue}" TextWrapping="Wrap"
+                               Text="{Binding [sldEditor_filter_advancedNotice], Source={StaticResource Localization}}"/>
+                </DockPanel>
+            </Border>
         </StackPanel>
-    </Grid>
+    </StackPanel>
 </UserControl>

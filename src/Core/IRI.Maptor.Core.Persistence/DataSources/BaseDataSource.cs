@@ -58,6 +58,8 @@ public abstract class BaseDataSource : IDataSource
 
     public event EventHandler<bool>? IsProcessingChanged;
 
+    public event EventHandler<bool>? IsFetchingChanged;
+
     public event EventHandler<bool>? IsLoadedChanged;
 
     public event EventHandler<bool>? HasPendingChangesChanged;
@@ -95,6 +97,21 @@ public abstract class BaseDataSource : IDataSource
 
             _isProcessing = value;
             IsProcessingChanged?.Invoke(this, value);
+        }
+    }
+
+
+    private bool _isFetching;
+    public virtual bool IsFetching
+    {
+        get => _isFetching;
+        protected set
+        {
+            if (_isFetching == value)
+                return;
+
+            _isFetching = value;
+            IsFetchingChanged?.Invoke(this, value);
         }
     }
 

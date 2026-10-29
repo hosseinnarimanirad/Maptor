@@ -26,6 +26,7 @@ public class RuleViewModel : Notifier
         {
             _name = value;
             RaisePropertyChanged();
+            RaisePropertyChanged(nameof(DisplayTitle));
         }
     }
 
@@ -37,6 +38,7 @@ public class RuleViewModel : Notifier
         {
             _title = value;
             RaisePropertyChanged();
+            RaisePropertyChanged(nameof(DisplayTitle));
         }
     }
 
@@ -59,6 +61,7 @@ public class RuleViewModel : Notifier
         {
             _minScale = value;
             RaisePropertyChanged();
+            RaiseScaleRangeChanged();
         }
     }
 
@@ -70,7 +73,43 @@ public class RuleViewModel : Notifier
         {
             _maxScale = value;
             RaisePropertyChanged();
+            RaiseScaleRangeChanged();
         }
+    }
+
+    /// <summary>What the legend shows for the rule: its title, or its name when it has no title.</summary>
+    public string DisplayTitle => !string.IsNullOrWhiteSpace(Title) ? Title : Name ?? string.Empty;
+
+    public bool HasScaleRange => MinScale.HasValue || MaxScale.HasValue;
+
+    /// <summary>Both limits are set but the zoomed-in one is not the smaller: the rule would never draw.</summary>
+    public bool HasScaleRangeError => MinScale.HasValue && MaxScale.HasValue && MinScale.Value >= MaxScale.Value;
+
+    /// <summary>The scale range in words, for the rule list and the preview.</summary>
+    public string ScaleRangeText
+    {
+        get
+        {
+            static string Format(double value) => value.ToString("#,0", System.Globalization.CultureInfo.InvariantCulture);
+
+            if (MinScale.HasValue && MaxScale.HasValue)
+                return string.Format(LocalizationManager.Instance["sldEditor_scale_between"], Format(MinScale.Value), Format(MaxScale.Value));
+
+            if (MaxScale.HasValue)
+                return string.Format(LocalizationManager.Instance["sldEditor_scale_closerThan"], Format(MaxScale.Value));
+
+            if (MinScale.HasValue)
+                return string.Format(LocalizationManager.Instance["sldEditor_scale_fartherThan"], Format(MinScale.Value));
+
+            return LocalizationManager.Instance["sldEditor_scale_all"];
+        }
+    }
+
+    private void RaiseScaleRangeChanged()
+    {
+        RaisePropertyChanged(nameof(HasScaleRange));
+        RaisePropertyChanged(nameof(HasScaleRangeError));
+        RaisePropertyChanged(nameof(ScaleRangeText));
     }
 
     // A filter loaded from an existing rule that the simple editor can't represent
@@ -98,6 +137,7 @@ public class RuleViewModel : Notifier
             _hasFilter = value;
             RaisePropertyChanged();
             RaisePropertyChanged(nameof(FilterDescription));
+            RaisePropertyChanged(nameof(IsAdvancedFilter));
         }
     }
 
@@ -110,6 +150,7 @@ public class RuleViewModel : Notifier
             _filterPropertyName = value;
             RaisePropertyChanged();
             RaisePropertyChanged(nameof(FilterDescription));
+            RaisePropertyChanged(nameof(IsAdvancedFilter));
         }
     }
 
@@ -122,6 +163,7 @@ public class RuleViewModel : Notifier
             _filterOperator = value;
             RaisePropertyChanged();
             RaisePropertyChanged(nameof(FilterDescription));
+            RaisePropertyChanged(nameof(IsAdvancedFilter));
         }
     }
 
@@ -134,6 +176,7 @@ public class RuleViewModel : Notifier
             _filterValue = value;
             RaisePropertyChanged();
             RaisePropertyChanged(nameof(FilterDescription));
+            RaisePropertyChanged(nameof(IsAdvancedFilter));
         }
     }
 
@@ -154,6 +197,12 @@ public class RuleViewModel : Notifier
         }
     }
 
+    /// <summary>
+    /// The rule keeps a filter the simple editor cannot show (logical, spatial, like …); it is saved unchanged
+    /// until the user picks a field here.
+    /// </summary>
+    public bool IsAdvancedFilter => HasFilter && string.IsNullOrWhiteSpace(FilterPropertyName) && _loadedFilter?.Predicate != null;
+
     public ObservableCollection<SymbolizerViewModelBase> Symbolizers { get; } = new ObservableCollection<SymbolizerViewModelBase>();
 
     private SymbolizerViewModelBase _selectedSymbolizer;
@@ -172,18 +221,82 @@ public class RuleViewModel : Notifier
     public ICommand AddPolygonSymbolizerCommand { get; }
     public ICommand AddTextSymbolizerCommand { get; }
     public ICommand AddRasterSymbolizerCommand { get; }
+    /// <summary>Removes the symbolizer passed as the parameter, or the selected one.</summary>
     public ICommand RemoveSymbolizerCommand { get; }
+    public ICommand MoveSymbolizerUpCommand { get; }
+    public ICommand MoveSymbolizerDownCommand { get; }
+
+    /// <summary>
+    /// Raised when anything that ends up in the SLD changes: the rule's own fields, its symbolizer list or a
+    /// field of one of its symbolizers. Editor-only state (selection, expanded cards, previews) does not count.
+    /// </summary>
+    public event EventHandler? Changed;
+
+    private static readonly System.Collections.Generic.HashSet<string> _uiOnlyProperties = new()
+    {
+        nameof(SwatchImage), nameof(PreviewImage), nameof(PreviewLabel), nameof(HasPreviewLabel), nameof(HasSymbolizers),
+        nameof(SelectedSymbolizer), nameof(DisplayTitle), nameof(HasScaleRange), nameof(HasScaleRangeError),
+        nameof(ScaleRangeText), nameof(FilterDescription), nameof(IsAdvancedFilter),
+    };
 
     public RuleViewModel()
     {
-        AddPointSymbolizerCommand = new RelayCommand(_ => Symbolizers.Add(new PointSymbolizerViewModel()));
-        AddLineSymbolizerCommand = new RelayCommand(_ => Symbolizers.Add(new LineSymbolizerViewModel()));
-        AddPolygonSymbolizerCommand = new RelayCommand(_ => Symbolizers.Add(new PolygonSymbolizerViewModel()));
-        AddTextSymbolizerCommand = new RelayCommand(_ => Symbolizers.Add(new TextSymbolizerViewModel()));
-        AddRasterSymbolizerCommand = new RelayCommand(_ => Symbolizers.Add(new RasterSymbolizerViewModel()));
-        RemoveSymbolizerCommand = new RelayCommand(_ => RemoveSymbolizer(), _ => SelectedSymbolizer != null);
+        AddPointSymbolizerCommand = new RelayCommand(_ => AddSymbolizer(new PointSymbolizerViewModel()));
+        AddLineSymbolizerCommand = new RelayCommand(_ => AddSymbolizer(new LineSymbolizerViewModel()));
+        AddPolygonSymbolizerCommand = new RelayCommand(_ => AddSymbolizer(new PolygonSymbolizerViewModel()));
+        AddTextSymbolizerCommand = new RelayCommand(_ => AddSymbolizer(new TextSymbolizerViewModel()));
+        AddRasterSymbolizerCommand = new RelayCommand(_ => AddSymbolizer(new RasterSymbolizerViewModel()));
+        RemoveSymbolizerCommand = new RelayCommand(p => RemoveSymbolizer(p as SymbolizerViewModelBase ?? SelectedSymbolizer),
+                                                   p => (p as SymbolizerViewModelBase ?? SelectedSymbolizer) != null);
+        MoveSymbolizerUpCommand = new RelayCommand(p => MoveSymbolizer(p as SymbolizerViewModelBase, -1),
+                                                   p => p is SymbolizerViewModelBase s && Symbolizers.IndexOf(s) > 0);
+        MoveSymbolizerDownCommand = new RelayCommand(p => MoveSymbolizer(p as SymbolizerViewModelBase, 1),
+                                                     p => p is SymbolizerViewModelBase s && Symbolizers.IndexOf(s) >= 0 && Symbolizers.IndexOf(s) < Symbolizers.Count - 1);
 
         Symbolizers.CollectionChanged += OnSymbolizersCollectionChanged;
+
+        PropertyChanged += (_, e) =>
+        {
+            if (!_uiOnlyProperties.Contains(e.PropertyName ?? string.Empty))
+                Changed?.Invoke(this, EventArgs.Empty);
+        };
+    }
+
+    public bool HasSymbolizers => Symbolizers.Count > 0;
+
+    /// <summary>The first label of the rule; the editor's preview draws its sample text with it.</summary>
+    public TextSymbolizerViewModel? PreviewLabel => Symbolizers.OfType<TextSymbolizerViewModel>().FirstOrDefault();
+
+    public bool HasPreviewLabel => PreviewLabel is not null;
+
+    /// <summary>
+    /// A copy of the rule for "Duplicate": same fields, symbolizers and kept SLD parts, and the same
+    /// FeatureTypeStyle on save.
+    /// </summary>
+    public RuleViewModel Clone()
+    {
+        var copy = new RuleViewModel { SourceFeatureTypeStyleIndex = SourceFeatureTypeStyleIndex };
+
+        copy.FromRule(ToRule());
+
+        return copy;
+    }
+
+    private void AddSymbolizer(SymbolizerViewModelBase symbolizer)
+    {
+        Symbolizers.Add(symbolizer);
+        SelectedSymbolizer = symbolizer;
+    }
+
+    private void MoveSymbolizer(SymbolizerViewModelBase? symbolizer, int offset)
+    {
+        var index = symbolizer is null ? -1 : Symbolizers.IndexOf(symbolizer);
+        var target = index + offset;
+
+        if (index < 0 || target < 0 || target >= Symbolizers.Count)
+            return;
+
+        Symbolizers.Move(index, target);
     }
 
     #region Live swatch preview
@@ -244,13 +357,64 @@ public class RuleViewModel : Notifier
         }
 
         InvalidateSwatch();
+        RaisePropertyChanged(nameof(HasSymbolizers));
+        RaisePropertyChanged(nameof(PreviewLabel));
+        RaisePropertyChanged(nameof(HasPreviewLabel));
+        Changed?.Invoke(this, EventArgs.Empty);
     }
 
-    private void OnSymbolizerPropertyChanged(object? sender, PropertyChangedEventArgs e) => InvalidateSwatch();
+    private void OnSymbolizerPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        // opening or closing a card changes nothing that is drawn or saved
+        if (e.PropertyName == nameof(SymbolizerViewModelBase.IsExpanded))
+            return;
+
+        InvalidateSwatch();
+        Changed?.Invoke(this, EventArgs.Empty);
+    }
+
+    private const int PreviewWidth = 240;
+    private const int PreviewHeight = 150;
+
+    private ImageSource? _previewImage;
+    private bool _previewDirty = true;
+
+    /// <summary>
+    /// The editor's large preview of the rule's geometry symbolizers (labels are drawn over it by the view).
+    /// Lazy and debounced like <see cref="SwatchImage"/>.
+    /// </summary>
+    public ImageSource? PreviewImage
+    {
+        get
+        {
+            if (_previewDirty)
+            {
+                _previewDirty = false;
+                _previewImage = CreatePreviewImage();
+            }
+
+            return _previewImage;
+        }
+    }
+
+    private ImageSource? CreatePreviewImage()
+    {
+        try
+        {
+            using var bitmap = LegendSwatchFactory.CreatePreviewBitmap(ToRule(), PreviewWidth, PreviewHeight);
+
+            return SldLegendBuilder.ToFrozenBitmapImage(bitmap);
+        }
+        catch
+        {
+            return null;
+        }
+    }
 
     private void InvalidateSwatch()
     {
         _swatchDirty = true;
+        _previewDirty = true;
 
         if (_swatchTimer is null)
         {
@@ -259,6 +423,7 @@ public class RuleViewModel : Notifier
             {
                 _swatchTimer.Stop();
                 RaisePropertyChanged(nameof(SwatchImage));
+                RaisePropertyChanged(nameof(PreviewImage));
             };
         }
 
@@ -269,13 +434,15 @@ public class RuleViewModel : Notifier
 
     #endregion
 
-    private void RemoveSymbolizer()
+    private void RemoveSymbolizer(SymbolizerViewModelBase? symbolizer)
     {
-        if (SelectedSymbolizer != null)
-        {
-            Symbolizers.Remove(SelectedSymbolizer);
+        if (symbolizer is null)
+            return;
+
+        Symbolizers.Remove(symbolizer);
+
+        if (ReferenceEquals(SelectedSymbolizer, symbolizer))
             SelectedSymbolizer = null;
-        }
     }
 
     public Rule ToRule()

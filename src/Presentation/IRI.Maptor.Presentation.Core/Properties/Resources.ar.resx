@@ -887,7 +887,7 @@
     <value>التعتيم:</value>
   </data>
   <data name="layerSettings_general_sourceAddress" xml:space="preserve">
-    <value>عنوان المصدر</value>
+    <value>عنوان المصدر:</value>
   </data>
   <data name="layerSettings_general_sourceType" xml:space="preserve">
     <value>نوع المصدر:</value>
@@ -1950,5 +1950,650 @@
   </data>
   <data name="identify_featuresFound" xml:space="preserve">
     <value>المعالم التي تم العثور عليها</value>
+  </data>
+  <data name="featureTable_unsavedChangesNote" xml:space="preserve">
+    <value>{0} تغييرات غير محفوظة (غير مشمولة في الإجماليات)</value>
+  </data>
+  <data name="featureTable_showUnsavedChanges" xml:space="preserve">
+    <value>عرض التغييرات غير المحفوظة فقط</value>
+  </data>
+  <data name="legendItem_zoomInToSeeAllFeatures" xml:space="preserve">
+    <value>لم تُعرض كل المعالم: عدد المعالم في هذه المنطقة أكبر مما يمكن تحميله دفعة واحدة. قم بالتكبير لرؤيتها كلها</value>
+  </data>
+  <data name="serverLayerSettings_title" xml:space="preserve">
+    <value>إعدادات طبقات الخادم</value>
+  </data>
+  <data name="serverLayerSettings_searchPlaceholder" xml:space="preserve">
+    <value>ابحث في الطبقات والمجموعات</value>
+  </data>
+  <data name="serverLayerSettings_noMatch" xml:space="preserve">
+    <value>لا توجد طبقة أو مجموعة تطابق البحث.</value>
+  </data>
+  <data name="serverLayerSettings_noSelection" xml:space="preserve">
+    <value>اختر طبقة أو مجموعة لتحريرها.</value>
+  </data>
+  <data name="serverLayerSettings_loadFailed" xml:space="preserve">
+    <value>تعذّر تحميل إعدادات الطبقات من الخادم.</value>
+  </data>
+  <data name="serverLayerSettings_saveFailed" xml:space="preserve">
+    <value>تعذّر إرسال التغييرات إلى الخادم.</value>
+  </data>
+  <data name="serverLayerSettings_retry" xml:space="preserve">
+    <value>إعادة المحاولة</value>
+  </data>
+  <data name="serverLayerSettings_reload" xml:space="preserve">
+    <value>إعادة التحميل من الخادم</value>
+  </data>
+  <data name="serverLayerSettings_revert" xml:space="preserve">
+    <value>تراجع</value>
+  </data>
+  <data name="serverLayerSettings_topLevel" xml:space="preserve">
+    <value>المستوى الأعلى</value>
+  </data>
+  <data name="serverLayerSettings_layerCount" xml:space="preserve">
+    <value>الطبقات: {0}</value>
+  </data>
+  <data name="serverLayerSettings_badge_unsaved" xml:space="preserve">
+    <value>غير محفوظ</value>
+  </data>
+  <data name="serverLayerSettings_badge_inactive" xml:space="preserve">
+    <value>غير نشط</value>
+  </data>
+  <data name="serverLayerSettings_badge_group" xml:space="preserve">
+    <value>مجموعة</value>
+  </data>
+  <data name="serverLayerSettings_badge_live" xml:space="preserve">
+    <value>مباشر</value>
+  </data>
+  <data name="serverLayerSettings_tab_general" xml:space="preserve">
+    <value>عام</value>
+  </data>
+  <data name="serverLayerSettings_tab_display" xml:space="preserve">
+    <value>العرض</value>
+  </data>
+  <data name="serverLayerSettings_tab_labels" xml:space="preserve">
+    <value>التسميات</value>
+  </data>
+  <data name="serverLayerSettings_tab_loading" xml:space="preserve">
+    <value>التحميل</value>
+  </data>
+  <data name="serverLayerSettings_section_visibility" xml:space="preserve">
+    <value>الظهور</value>
+  </data>
+  <data name="serverLayerSettings_section_source" xml:space="preserve">
+    <value>مصدر البيانات</value>
+  </data>
+  <data name="serverLayerSettings_section_zoom" xml:space="preserve">
+    <value>نطاق التكبير المرئي</value>
+  </data>
+  <data name="serverLayerSettings_section_style" xml:space="preserve">
+    <value>النمط</value>
+  </data>
+  <data name="serverLayerSettings_field_title" xml:space="preserve">
+    <value>العنوان</value>
+  </data>
+  <data name="serverLayerSettings_field_group" xml:space="preserve">
+    <value>المجموعة</value>
+  </data>
+  <data name="serverLayerSettings_field_active" xml:space="preserve">
+    <value>نشط</value>
+  </data>
+  <data name="serverLayerSettings_hint_active" xml:space="preserve">
+    <value>الطبقة أو المجموعة غير النشطة مخفية عن جميع المستخدمين.</value>
+  </data>
+  <data name="serverLayerSettings_field_onByDefault" xml:space="preserve">
+    <value>ظاهرة عند فتح الخريطة</value>
+  </data>
+  <data name="serverLayerSettings_field_expanded" xml:space="preserve">
+    <value>موسّعة في قائمة الطبقات</value>
+  </data>
+  <data name="serverLayerSettings_field_searchable" xml:space="preserve">
+    <value>مشمولة في بحث الخريطة</value>
+  </data>
+  <data name="serverLayerSettings_field_table" xml:space="preserve">
+    <value>الجدول</value>
+  </data>
+  <data name="serverLayerSettings_field_serviceUrl" xml:space="preserve">
+    <value>عنوان الخدمة</value>
+  </data>
+  <data name="serverLayerSettings_field_id" xml:space="preserve">
+    <value>المعرّف</value>
+  </data>
+  <data name="serverLayerSettings_field_zoomFrom" xml:space="preserve">
+    <value>من المستوى</value>
+  </data>
+  <data name="serverLayerSettings_field_zoomTo" xml:space="preserve">
+    <value>إلى المستوى</value>
+  </data>
+  <data name="serverLayerSettings_noLimit" xml:space="preserve">
+    <value>بلا حد</value>
+  </data>
+  <data name="serverLayerSettings_hint_zoom" xml:space="preserve">
+    <value>اترك المستوى فارغًا لعدم وجود حد. المستوى 0 يعرض العالم كله، والمستوى 18 يعرض تفاصيل الشوارع.</value>
+  </data>
+  <data name="serverLayerSettings_sld_none" xml:space="preserve">
+    <value>تُرسم بالنمط البسيط أدناه.</value>
+  </data>
+  <data name="serverLayerSettings_sld_active" xml:space="preserve">
+    <value>تُرسم بنمط SLD. لا تُستخدم الألوان أدناه ما دام محددًا.</value>
+  </data>
+  <data name="serverLayerSettings_sld_edit" xml:space="preserve">
+    <value>تحرير SLD…</value>
+  </data>
+  <data name="serverLayerSettings_sld_remove" xml:space="preserve">
+    <value>إزالة SLD</value>
+  </data>
+  <data name="serverLayerSettings_field_fill" xml:space="preserve">
+    <value>التعبئة</value>
+  </data>
+  <data name="serverLayerSettings_field_stroke" xml:space="preserve">
+    <value>الحدود</value>
+  </data>
+  <data name="serverLayerSettings_field_strokeWidth" xml:space="preserve">
+    <value>عرض الحدود</value>
+  </data>
+  <data name="serverLayerSettings_field_opacity" xml:space="preserve">
+    <value>العتامة</value>
+  </data>
+  <data name="serverLayerSettings_field_preview" xml:space="preserve">
+    <value>معاينة</value>
+  </data>
+  <data name="serverLayerSettings_field_hasLabels" xml:space="preserve">
+    <value>لهذه الطبقة تسميات</value>
+  </data>
+  <data name="serverLayerSettings_field_labelsOn" xml:space="preserve">
+    <value>إظهار التسميات عند فتح الخريطة</value>
+  </data>
+  <data name="serverLayerSettings_field_labelColumn" xml:space="preserve">
+    <value>حقل التسمية</value>
+  </data>
+  <data name="serverLayerSettings_field_labelSize" xml:space="preserve">
+    <value>حجم الخط</value>
+  </data>
+  <data name="serverLayerSettings_field_labelColor" xml:space="preserve">
+    <value>اللون</value>
+  </data>
+  <data name="serverLayerSettings_mode_cache" xml:space="preserve">
+    <value>تحميل الكل مرة واحدة (Cache)</value>
+  </data>
+  <data name="serverLayerSettings_mode_cacheDescription" xml:space="preserve">
+    <value>تُنزَّل الطبقة كاملة مرة واحدة عند فتح الخريطة. الأنسب للطبقات الصغيرة والمتوسطة.</value>
+  </data>
+  <data name="serverLayerSettings_mode_live" xml:space="preserve">
+    <value>تحميل حسب عرض الخريطة (Live)</value>
+  </data>
+  <data name="serverLayerSettings_mode_liveDescription" xml:space="preserve">
+    <value>تُنزَّل المعالم الموجودة في المنطقة المرئية فقط مع تحريك الخريطة؛ ويستعلم جدول السمات والبحث من الخادم. الأنسب للطبقات الكبيرة جدًا.</value>
+  </data>
+  <data name="serverLayerSettings_hint_appliesNext" xml:space="preserve">
+    <value>تصل التغييرات المحفوظة إلى المستخدمين الآخرين عند تسجيل دخولهم التالي أو إعادة تحميل الطبقات.</value>
+  </data>
+  <data name="serverLayerSettings_status_noChanges" xml:space="preserve">
+    <value>لا توجد تغييرات غير محفوظة</value>
+  </data>
+  <data name="serverLayerSettings_status_changes" xml:space="preserve">
+    <value>تغييرات غير محفوظة: {0}</value>
+  </data>
+  <data name="serverLayerSettings_status_invalid" xml:space="preserve">
+    <value>بها أخطاء: {0}</value>
+  </data>
+  <data name="serverLayerSettings_result_saved" xml:space="preserve">
+    <value>تم حفظ التغييرات ({0}).</value>
+  </data>
+  <data name="serverLayerSettings_result_partial" xml:space="preserve">
+    <value>المحفوظ: {0} · غير المحفوظ: {1}</value>
+  </data>
+  <data name="serverLayerSettings_conflict" xml:space="preserve">
+    <value>حفظ مستخدم آخر هذا العنصر بعد فتحك النافذة. أعد التحميل للحصول على أحدث نسخة؛ وستُفقد تغييراتك عليه.</value>
+  </data>
+  <data name="serverLayerSettings_notFound" xml:space="preserve">
+    <value>لم يعد هذا العنصر موجودًا على الخادم.</value>
+  </data>
+  <data name="serverLayerSettings_serverRejected" xml:space="preserve">
+    <value>لم يقبل الخادم هذه التغييرات.</value>
+  </data>
+  <data name="serverLayerSettings_confirmDiscard" xml:space="preserve">
+    <value>توجد تغييرات غير محفوظة. هل تريد تجاهلها؟</value>
+  </data>
+  <data name="serverLayerSettings_error_titleRequired" xml:space="preserve">
+    <value>أدخل عنوانًا.</value>
+  </data>
+  <data name="serverLayerSettings_error_titleTooLong" xml:space="preserve">
+    <value>العنوان طويل جدًا.</value>
+  </data>
+  <data name="serverLayerSettings_error_layerZoomOutOfRange" xml:space="preserve">
+    <value>يجب أن تكون مستويات التكبير بين 0 و24.</value>
+  </data>
+  <data name="serverLayerSettings_error_layerZoomRangeInverted" xml:space="preserve">
+    <value>يجب ألا يكون مستوى التكبير الأول أكبر من الثاني.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelZoomOutOfRange" xml:space="preserve">
+    <value>يجب أن تكون مستويات تكبير التسميات بين 0 و24.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelZoomRangeInverted" xml:space="preserve">
+    <value>يجب ألا يكون مستوى تكبير التسمية الأول أكبر من الثاني.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidFillColor" xml:space="preserve">
+    <value>لون التعبئة غير صالح.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidStrokeColor" xml:space="preserve">
+    <value>لون الحدود غير صالح.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidLabelColor" xml:space="preserve">
+    <value>لون التسمية غير صالح.</value>
+  </data>
+  <data name="serverLayerSettings_error_opacityOutOfRange" xml:space="preserve">
+    <value>يجب أن تكون العتامة بين 0% و100%.</value>
+  </data>
+  <data name="serverLayerSettings_error_strokeThicknessOutOfRange" xml:space="preserve">
+    <value>يجب أن يكون عرض الحدود بين 0 و50.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelSizeOutOfRange" xml:space="preserve">
+    <value>يجب أن يكون حجم خط التسمية بين 1 و72.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelColumnRequired" xml:space="preserve">
+    <value>اختر الحقل الذي تعرضه التسميات.</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownLabelColumn" xml:space="preserve">
+    <value>حقل التسمية ليس من حقول هذه الطبقة.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidSld" xml:space="preserve">
+    <value>تعذّرت قراءة نمط SLD.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidLoadMode" xml:space="preserve">
+    <value>اختر طريقة تحميل الطبقة.</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownRow" xml:space="preserve">
+    <value>لم يعد أحد العناصر موجودًا على الخادم.</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownGroup" xml:space="preserve">
+    <value>لم تعد المجموعة الهدف موجودة.</value>
+  </data>
+  <data name="serverLayerSettings_error_groupInGroup" xml:space="preserve">
+    <value>لا يمكن وضع مجموعة داخل مجموعة أخرى.</value>
+  </data>
+  <data name="serverLayerSettings_error_duplicateRow" xml:space="preserve">
+    <value>يظهر عنصر مرتين في الطلب.</value>
+  </data>
+  <data name="serverLayerSettings_cmd_newGroup" xml:space="preserve">
+    <value>مجموعة جديدة</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveUp" xml:space="preserve">
+    <value>نقل لأعلى</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveDown" xml:space="preserve">
+    <value>نقل لأسفل</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveTo" xml:space="preserve">
+    <value>نقل إلى</value>
+  </data>
+  <data name="serverLayerSettings_cmd_rename" xml:space="preserve">
+    <value>إعادة تسمية</value>
+  </data>
+  <data name="serverLayerSettings_cmd_deleteGroup" xml:space="preserve">
+    <value>حذف المجموعة</value>
+  </data>
+  <data name="serverLayerSettings_moveTo_topLevel" xml:space="preserve">
+    <value>المستوى الأعلى (بلا مجموعة)</value>
+  </data>
+  <data name="serverLayerSettings_newGroup_title" xml:space="preserve">
+    <value>مجموعة جديدة</value>
+  </data>
+  <data name="serverLayerSettings_group_created" xml:space="preserve">
+    <value>تم إنشاء المجموعة «{0}».</value>
+  </data>
+  <data name="serverLayerSettings_group_deleted" xml:space="preserve">
+    <value>تم حذف المجموعة «{0}».</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_confirm" xml:space="preserve">
+    <value>هل تريد حذف المجموعة «{0}»؟</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_notEmpty" xml:space="preserve">
+    <value>لا يمكن حذف إلا مجموعة فارغة. انقل طبقاتها إلى مجموعة أخرى أولًا.</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_pendingMoves" xml:space="preserve">
+    <value>احفظ نقل الطبقات أو تراجع عنه قبل حذف مجموعة.</value>
+  </data>
+  <data name="serverLayerSettings_orderRejected" xml:space="preserve">
+    <value>لم يقبل الخادم الترتيب الجديد.</value>
+  </data>
+  <data name="serverLayerSettings_hint_dragDrop" xml:space="preserve">
+    <value>اسحب الطبقات لإعادة ترتيبها أو لنقلها إلى مجموعة أخرى.</value>
+  </data>
+  <data name="serverLayerSettings_cmd_open" xml:space="preserve">
+    <value>إعدادات الخادم…</value>
+  </data>
+  <data name="serverLayerSettings_reloadMapConfirm" xml:space="preserve">
+    <value>تم حفظ إعدادات الطبقات. هل تريد إعادة تحميل طبقات الخادم في الخريطة الآن لرؤيتها؟ ستُفقد تعديلات المعالم غير المحفوظة.</value>
+  </data>
+  <data name="dialog_symbology_noFill" xml:space="preserve">
+    <value>بلا تعبئة</value>
+  </data>
+  <data name="dialog_symbology_noStroke" xml:space="preserve">
+    <value>بلا حدود</value>
+  </data>
+  <data name="sldEditor_badge_filter" xml:space="preserve">
+    <value>عامل تصفية</value>
+  </data>
+  <data name="sldEditor_badge_scale" xml:space="preserve">
+    <value>نطاق المقياس</value>
+  </data>
+  <data name="sldEditor_cap_butt" xml:space="preserve">
+    <value>مسطّح</value>
+  </data>
+  <data name="sldEditor_cap_round" xml:space="preserve">
+    <value>مستدير</value>
+  </data>
+  <data name="sldEditor_cap_square" xml:space="preserve">
+    <value>مربّع</value>
+  </data>
+  <data name="sldEditor_dash_dashDot" xml:space="preserve">
+    <value>شرطة ونقطة</value>
+  </data>
+  <data name="sldEditor_dash_dashed" xml:space="preserve">
+    <value>متقطّع</value>
+  </data>
+  <data name="sldEditor_dash_dotted" xml:space="preserve">
+    <value>منقّط</value>
+  </data>
+  <data name="sldEditor_dash_longDash" xml:space="preserve">
+    <value>شرطة طويلة</value>
+  </data>
+  <data name="sldEditor_dash_solid" xml:space="preserve">
+    <value>متّصل</value>
+  </data>
+  <data name="sldEditor_field_bold" xml:space="preserve">
+    <value>عريض</value>
+  </data>
+  <data name="sldEditor_field_cap" xml:space="preserve">
+    <value>نهايات الخط</value>
+  </data>
+  <data name="sldEditor_field_color" xml:space="preserve">
+    <value>اللون</value>
+  </data>
+  <data name="sldEditor_field_dashOffset" xml:space="preserve">
+    <value>إزاحة النمط</value>
+  </data>
+  <data name="sldEditor_field_dashPattern" xml:space="preserve">
+    <value>نمط التقطيع</value>
+  </data>
+  <data name="sldEditor_field_font" xml:space="preserve">
+    <value>الخط</value>
+  </data>
+  <data name="sldEditor_field_geometryDefault" xml:space="preserve">
+    <value>هندسة الطبقة</value>
+  </data>
+  <data name="sldEditor_field_haloOn" xml:space="preserve">
+    <value>رسم هالة حول النص</value>
+  </data>
+  <data name="sldEditor_field_italic" xml:space="preserve">
+    <value>مائل</value>
+  </data>
+  <data name="sldEditor_field_join" xml:space="preserve">
+    <value>الزوايا</value>
+  </data>
+  <data name="sldEditor_field_labelField" xml:space="preserve">
+    <value>النص من الحقل</value>
+  </data>
+  <data name="sldEditor_field_labelFieldWatermark" xml:space="preserve">
+    <value>اختر حقلًا أو اكتبه</value>
+  </data>
+  <data name="sldEditor_field_opacity" xml:space="preserve">
+    <value>العتامة</value>
+  </data>
+  <data name="sldEditor_field_rotation" xml:space="preserve">
+    <value>الدوران</value>
+  </data>
+  <data name="sldEditor_field_shape" xml:space="preserve">
+    <value>الشكل</value>
+  </data>
+  <data name="sldEditor_field_size" xml:space="preserve">
+    <value>الحجم</value>
+  </data>
+  <data name="sldEditor_field_width" xml:space="preserve">
+    <value>العرض</value>
+  </data>
+  <data name="sldEditor_filter_advancedNotice" xml:space="preserve">
+    <value>لهذه القاعدة عامل تصفية لا يمكن عرضه هنا. يبقى كما هو ما لم تختر حقلًا في الأعلى.</value>
+  </data>
+  <data name="sldEditor_filter_onlyMatching" xml:space="preserve">
+    <value>ارسم فقط المعالم التي تطابق شرطًا</value>
+  </data>
+  <data name="sldEditor_join_bevel" xml:space="preserve">
+    <value>مشطوف</value>
+  </data>
+  <data name="sldEditor_join_mitre" xml:space="preserve">
+    <value>حادّ</value>
+  </data>
+  <data name="sldEditor_join_round" xml:space="preserve">
+    <value>مستدير</value>
+  </data>
+  <data name="sldEditor_mark_circle" xml:space="preserve">
+    <value>دائرة</value>
+  </data>
+  <data name="sldEditor_mark_cross" xml:space="preserve">
+    <value>علامة زائد</value>
+  </data>
+  <data name="sldEditor_mark_square" xml:space="preserve">
+    <value>مربّع</value>
+  </data>
+  <data name="sldEditor_mark_star" xml:space="preserve">
+    <value>نجمة</value>
+  </data>
+  <data name="sldEditor_mark_triangle" xml:space="preserve">
+    <value>مثلّث</value>
+  </data>
+  <data name="sldEditor_mark_x" xml:space="preserve">
+    <value>علامة X</value>
+  </data>
+  <data name="sldEditor_op_equal" xml:space="preserve">
+    <value>يساوي</value>
+  </data>
+  <data name="sldEditor_op_greaterThan" xml:space="preserve">
+    <value>أكبر من</value>
+  </data>
+  <data name="sldEditor_op_greaterThanOrEqual" xml:space="preserve">
+    <value>على الأقل</value>
+  </data>
+  <data name="sldEditor_op_lessThan" xml:space="preserve">
+    <value>أصغر من</value>
+  </data>
+  <data name="sldEditor_op_lessThanOrEqual" xml:space="preserve">
+    <value>على الأكثر</value>
+  </data>
+  <data name="sldEditor_op_notEqual" xml:space="preserve">
+    <value>لا يساوي</value>
+  </data>
+  <data name="sldEditor_preview_labelSample" xml:space="preserve">
+    <value>تسمية</value>
+  </data>
+  <data name="sldEditor_preview_legend" xml:space="preserve">
+    <value>مفتاح الخريطة</value>
+  </data>
+  <data name="sldEditor_preview_none" xml:space="preserve">
+    <value>اختر قاعدة لمعاينتها.</value>
+  </data>
+  <data name="sldEditor_preview_title" xml:space="preserve">
+    <value>معاينة</value>
+  </data>
+  <data name="sldEditor_rule_copySuffix" xml:space="preserve">
+    <value>نسخة</value>
+  </data>
+  <data name="sldEditor_rule_detailsHint" xml:space="preserve">
+    <value>العنوان هو النص الذي يعرضه مفتاح الخريطة. الاسم يعرّف القاعدة داخل SLD.</value>
+  </data>
+  <data name="sldEditor_rule_titleHint" xml:space="preserve">
+    <value>النص الذي يعرضه مفتاح الخريطة لهذه القاعدة</value>
+  </data>
+  <data name="sldEditor_rule_titleWatermark" xml:space="preserve">
+    <value>نص المفتاح</value>
+  </data>
+  <data name="sldEditor_rules_count" xml:space="preserve">
+    <value>القواعد: {0}</value>
+  </data>
+  <data name="sldEditor_rules_delete" xml:space="preserve">
+    <value>حذف القاعدة (Del)</value>
+  </data>
+  <data name="sldEditor_rules_duplicate" xml:space="preserve">
+    <value>تكرار القاعدة (Ctrl+D)</value>
+  </data>
+  <data name="sldEditor_rules_empty" xml:space="preserve">
+    <value>لا يرسم شيئًا</value>
+  </data>
+  <data name="sldEditor_rules_hint" xml:space="preserve">
+    <value>تُرسم المعلمة بكل قاعدة تطابقها؛ القواعد الأدنى تُرسم فوق غيرها.</value>
+  </data>
+  <data name="sldEditor_rules_moveDown" xml:space="preserve">
+    <value>نقل للأسفل (Alt+Down)</value>
+  </data>
+  <data name="sldEditor_rules_moveUp" xml:space="preserve">
+    <value>نقل للأعلى (Alt+Up)</value>
+  </data>
+  <data name="sldEditor_rules_noSelection" xml:space="preserve">
+    <value>اختر قاعدة من القائمة لتحريرها، أو أضف قاعدة جديدة.</value>
+  </data>
+  <data name="sldEditor_rules_none" xml:space="preserve">
+    <value>لا يحتوي هذا النمط على قواعد بعد.</value>
+  </data>
+  <data name="sldEditor_scale_all" xml:space="preserve">
+    <value>كل المقاييس</value>
+  </data>
+  <data name="sldEditor_scale_between" xml:space="preserve">
+    <value>بين 1:{0} و 1:{1}</value>
+  </data>
+  <data name="sldEditor_scale_closerThan" xml:space="preserve">
+    <value>أقرب من 1:{0}</value>
+  </data>
+  <data name="sldEditor_scale_fartherThan" xml:space="preserve">
+    <value>من 1:{0} فأبعد</value>
+  </data>
+  <data name="sldEditor_scale_hint" xml:space="preserve">
+    <value>تُرسم القاعدة بين الحدّين فقط. اترك الحدّ فارغًا لإلغائه. المقياس 1:5,000 أقرب من 1:50,000.</value>
+  </data>
+  <data name="sldEditor_scale_inverted" xml:space="preserve">
+    <value>يجب أن يكون حدّ التكبير أصغر من حدّ التصغير، وإلا فلن تُرسم القاعدة أبدًا.</value>
+  </data>
+  <data name="sldEditor_scale_maxLabel" xml:space="preserve">
+    <value>حدّ التصغير</value>
+  </data>
+  <data name="sldEditor_scale_minLabel" xml:space="preserve">
+    <value>حدّ التكبير</value>
+  </data>
+  <data name="sldEditor_scale_noLimit" xml:space="preserve">
+    <value>بلا حدّ</value>
+  </data>
+  <data name="sldEditor_section_ends" xml:space="preserve">
+    <value>النهايات والزوايا</value>
+  </data>
+  <data name="sldEditor_section_fill" xml:space="preserve">
+    <value>التعبئة</value>
+  </data>
+  <data name="sldEditor_section_geometry" xml:space="preserve">
+    <value>الهندسة</value>
+  </data>
+  <data name="sldEditor_section_halo" xml:space="preserve">
+    <value>الهالة</value>
+  </data>
+  <data name="sldEditor_section_outline" xml:space="preserve">
+    <value>الحدود</value>
+  </data>
+  <data name="sldEditor_section_pattern" xml:space="preserve">
+    <value>النمط</value>
+  </data>
+  <data name="sldEditor_style_panel" xml:space="preserve">
+    <value>اسم النمط ووصفه</value>
+  </data>
+  <data name="sldEditor_symbolizer_add" xml:space="preserve">
+    <value>إضافة رمز:</value>
+  </data>
+  <data name="sldEditor_symbolizer_line" xml:space="preserve">
+    <value>خط</value>
+  </data>
+  <data name="sldEditor_symbolizer_moveDown" xml:space="preserve">
+    <value>نقل للأسفل</value>
+  </data>
+  <data name="sldEditor_symbolizer_moveUp" xml:space="preserve">
+    <value>نقل للأعلى</value>
+  </data>
+  <data name="sldEditor_symbolizer_none" xml:space="preserve">
+    <value>لا ترسم هذه القاعدة شيئًا بعد. أضف رمزًا في الأسفل.</value>
+  </data>
+  <data name="sldEditor_symbolizer_orderHint" xml:space="preserve">
+    <value>تُرسم الرموز بترتيب القائمة: الأدنى يُرسم فوق غيره.</value>
+  </data>
+  <data name="sldEditor_symbolizer_point" xml:space="preserve">
+    <value>علامة</value>
+  </data>
+  <data name="sldEditor_symbolizer_polygon" xml:space="preserve">
+    <value>تعبئة</value>
+  </data>
+  <data name="sldEditor_symbolizer_raster" xml:space="preserve">
+    <value>نقطية</value>
+  </data>
+  <data name="sldEditor_symbolizer_remove" xml:space="preserve">
+    <value>إزالة الرمز</value>
+  </data>
+  <data name="sldEditor_symbolizer_text" xml:space="preserve">
+    <value>تسمية</value>
+  </data>
+  <data name="sldEditor_tab_details" xml:space="preserve">
+    <value>التفاصيل</value>
+  </data>
+  <data name="sldEditor_tab_filterScale" xml:space="preserve">
+    <value>التصفية والمقياس</value>
+  </data>
+  <data name="sldEditor_tab_symbology" xml:space="preserve">
+    <value>الترميز</value>
+  </data>
+  <data name="sldEditor_xml_copy" xml:space="preserve">
+    <value>نسخ</value>
+  </data>
+  <data name="sldEditor_xml_live" xml:space="preserve">
+    <value>يتحدّث أثناء التحرير. هذا ما يحفظه «تطبيق» و«موافق».</value>
+  </data>
+  <data name="sldEditor_rule_newTitle" xml:space="preserve">
+    <value>القاعدة {0}</value>
+  </data>
+  <data name="legend_import_gisFiles" xml:space="preserve">
+    <value>ملفات GIS/CAD</value>
+  </data>
+  <data name="legend_import_googleEarth" xml:space="preserve">
+    <value>Google Earth</value>
+  </data>
+  <data name="legend_import_tables" xml:space="preserve">
+    <value>جداول</value>
+  </data>
+  <data name="legend_import_json" xml:space="preserve">
+    <value>JSON</value>
+  </data>
+  <data name="legend_filter_groupVector" xml:space="preserve">
+    <value>متجهي</value>
+  </data>
+  <data name="legend_filter_groupRaster" xml:space="preserve">
+    <value>نقطي</value>
+  </data>
+  <data name="legend_filter_groupService" xml:space="preserve">
+    <value>خدمات</value>
+  </data>
+  <data name="legend_filter_groupOther" xml:space="preserve">
+    <value>أخرى</value>
+  </data>
+  <data name="legend_filter_kindRest" xml:space="preserve">
+    <value>خدمة REST</value>
+  </data>
+  <data name="legend_filter_kindGrpc" xml:space="preserve">
+    <value>خدمة gRPC</value>
+  </data>
+  <data name="legend_filter_kindWorldfile" xml:space="preserve">
+    <value>ملف World</value>
+  </data>
+  <data name="legend_filter_kindImagePyramid" xml:space="preserve">
+    <value>هرم الصور</value>
+  </data>
+  <data name="legend_filter_kindOther" xml:space="preserve">
+    <value>غير محدد</value>
+  </data>
+  <data name="legend_filter_only" xml:space="preserve">
+    <value>فقط</value>
   </data>
 </root>

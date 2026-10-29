@@ -3,88 +3,149 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:helpers="clr-namespace:IRI.Maptor.Presentation.Wpf.Helpers"
              xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
-             xmlns:sld="clr-namespace:IRI.Maptor.Core.Ogc.SLD;assembly=IRI.Maptor.Core.Ogc"
+             xmlns:vm="clr-namespace:IRI.Maptor.Presentation.Wpf.ViewModels.Symbology"
              mc:Ignorable="d"
-             d:DesignHeight="400" d:DesignWidth="350">
+             d:DataContext="{d:DesignInstance Type=vm:LineSymbolizerViewModel}"
+             d:DesignHeight="420" d:DesignWidth="420">
 
-    <!--Same row pattern as PointSymbolizerView; see that file for the rationale.
-        StrokeColor is SLD model data, not chrome.-->
+    <!--A line: Stroke, Pattern, Ends and corners, geometry property. Row grammar as in PolygonSymbolizerView.
+        StrokeColor is SLD data, not chrome.-->
 
-    <Grid Margin="{StaticResource IRI.Maptor.Styles.Thickness.ViewContent}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Views/Symbology/Sld/SldEditorStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
-                   Text="{Binding [sldEditor_common_strokeColor], Source={StaticResource Localization}}"/>
-        <mahApp:ColorPicker Grid.Row="0" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.ColorPicker.Normal}"
-                            SelectedColor="{Binding StrokeColor, Mode=TwoWay}"/>
+    <StackPanel>
+        <Border Style="{StaticResource sld.FieldCard}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                           Text="{Binding [sldEditor_field_color], Source={StaticResource Localization}}"/>
+                <mahApp:ColorPicker Grid.Column="1" Style="{StaticResource sld.ColorBox}" SelectedColor="{Binding StrokeColor, Mode=TwoWay}"/>
+            </Grid>
+        </Border>
 
-        <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
-                   Text="{Binding [sldEditor_common_strokeWidth], Source={StaticResource Localization}}"/>
-        <mahApp:NumericUpDown Grid.Row="1" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Normal}"
-                              Value="{Binding StrokeWidth, Mode=TwoWay}"
-                              Minimum="0" Maximum="50" Interval="0.5"/>
+        <Border Style="{StaticResource sld.FieldCard}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                           Text="{Binding [sldEditor_field_width], Source={StaticResource Localization}}"/>
+                <mahApp:NumericUpDown Grid.Column="1" Style="{StaticResource sld.NumberBox}" Value="{Binding StrokeWidth, Mode=TwoWay}"
+                                      Minimum="0" Maximum="50" Interval="0.5"/>
+                <TextBlock Grid.Column="2" Style="{StaticResource sld.Unit}" Text="px"/>
+            </Grid>
+        </Border>
 
-        <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
-                   Text="{Binding [sldEditor_common_strokeOpacity], Source={StaticResource Localization}}"/>
-        <Slider Grid.Row="2" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.Slider.Normal}"
-                Value="{Binding StrokeOpacity, Mode=TwoWay}"
-                Minimum="0" Maximum="1" TickFrequency="0.1" IsSnapToTickEnabled="True"/>
+        <Border Style="{StaticResource sld.FieldCard}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                           Text="{Binding [sldEditor_field_opacity], Source={StaticResource Localization}}"/>
+                <Slider Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.Slider.Normal}" Value="{Binding StrokeOpacity, Mode=TwoWay}"
+                        Minimum="0" Maximum="1" SmallChange="0.05" LargeChange="0.1" TickFrequency="0.01" IsSnapToTickEnabled="True"/>
+                <TextBlock Grid.Column="2" Style="{StaticResource sld.PercentText}" Text="{Binding StrokeOpacity, Converter={StaticResource sld.PercentConverter}}"/>
+            </Grid>
+        </Border>
 
-        <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
-                   Text="{Binding [sldEditor_common_lineCap], Source={StaticResource Localization}}"/>
-        <ComboBox Grid.Row="3" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal}"
-                  SelectedItem="{Binding LineCap}">
-            <ComboBox.ItemsSource>
-                <x:Array Type="{x:Type sld:Sld_StrokeLineCap}">
-                    <sld:Sld_StrokeLineCap>Butt</sld:Sld_StrokeLineCap>
-                    <sld:Sld_StrokeLineCap>Round</sld:Sld_StrokeLineCap>
-                    <sld:Sld_StrokeLineCap>Square</sld:Sld_StrokeLineCap>
-                </x:Array>
-            </ComboBox.ItemsSource>
-        </ComboBox>
+        <TextBlock Style="{StaticResource sld.GroupHeader}"
+                   Text="{Binding [sldEditor_section_pattern], Source={StaticResource Localization}}"/>
 
-        <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
-                   Text="{Binding [sldEditor_common_lineJoin], Source={StaticResource Localization}}"/>
-        <ComboBox Grid.Row="4" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal}"
-                  SelectedItem="{Binding LineJoin}">
-            <ComboBox.ItemsSource>
-                <x:Array Type="{x:Type sld:Sld_StrokeLineJoin}">
-                    <sld:Sld_StrokeLineJoin>Mitre</sld:Sld_StrokeLineJoin>
-                    <sld:Sld_StrokeLineJoin>Round</sld:Sld_StrokeLineJoin>
-                    <sld:Sld_StrokeLineJoin>Bevel</sld:Sld_StrokeLineJoin>
-                </x:Array>
-            </ComboBox.ItemsSource>
-        </ComboBox>
+        <!--presets fill the box; any other "dash gap …" pattern can still be typed-->
+        <Border Style="{StaticResource sld.FieldCard}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                           Text="{Binding [sldEditor_field_dashPattern], Source={StaticResource Localization}}"/>
+                <ComboBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}" IsEditable="True" FlowDirection="LeftToRight"
+                          ItemsSource="{x:Static vm:SldEditorOptions.DashPresets}"
+                          ItemTemplate="{StaticResource sld.DashOptionTemplate}"
+                          TextSearch.TextPath="Pattern"
+                          mahApp:TextBoxHelper.Watermark="{Binding [sldEditor_dash_solid], Source={StaticResource Localization}}"
+                          Text="{Binding DashArray, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+        </Border>
 
-        <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
-                   Text="{Binding [sldEditor_lineSymbolizer_dashArray], Source={StaticResource Localization}}"/>
-        <TextBox Grid.Row="5" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
-                 Text="{Binding DashArray, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 mahApp:TextBoxHelper.Watermark="{Binding [sldEditor_lineSymbolizer_dashArrayWatermark], Source={StaticResource Localization}}"/>
+        <Border Style="{StaticResource sld.FieldCard}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                           Text="{Binding [sldEditor_field_dashOffset], Source={StaticResource Localization}}"/>
+                <mahApp:NumericUpDown Grid.Column="1" Style="{StaticResource sld.NumberBox}" Value="{Binding DashOffset, Mode=TwoWay}"
+                                      Minimum="0" Interval="1"/>
+                <TextBlock Grid.Column="2" Style="{StaticResource sld.Unit}" Text="px"/>
+            </Grid>
+        </Border>
 
-        <TextBlock Grid.Row="6" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
-                   Text="{Binding [sldEditor_lineSymbolizer_dashOffset], Source={StaticResource Localization}}"/>
-        <mahApp:NumericUpDown Grid.Row="6" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Normal}"
-                              Value="{Binding DashOffset, Mode=TwoWay}"
-                              Minimum="0" Maximum="1000" Interval="0.5"/>
+        <TextBlock Style="{StaticResource sld.GroupHeader}"
+                   Text="{Binding [sldEditor_section_ends], Source={StaticResource Localization}}"/>
 
-        <TextBlock Grid.Row="7" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
-                   Text="{Binding [sldEditor_common_geometryProperty], Source={StaticResource Localization}}"/>
-        <TextBox Grid.Row="7" Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
-                 Text="{Binding GeometryPropertyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-    </Grid>
+        <Border Style="{StaticResource sld.FieldCard}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                           Text="{Binding [sldEditor_field_cap], Source={StaticResource Localization}}"/>
+                <ComboBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal}"
+                          ItemsSource="{x:Static vm:SldEditorOptions.LineCaps}" DisplayMemberPath="Name"
+                          SelectedValuePath="Value" SelectedValue="{Binding LineCap}"/>
+            </Grid>
+        </Border>
+
+        <Border Style="{StaticResource sld.FieldCard}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                           Text="{Binding [sldEditor_field_join], Source={StaticResource Localization}}"/>
+                <ComboBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal}"
+                          ItemsSource="{x:Static vm:SldEditorOptions.LineJoins}" DisplayMemberPath="Name"
+                          SelectedValuePath="Value" SelectedValue="{Binding LineJoin}"/>
+            </Grid>
+        </Border>
+
+        <TextBlock Style="{StaticResource sld.GroupHeader}"
+                   Text="{Binding [sldEditor_section_geometry], Source={StaticResource Localization}}"/>
+
+        <Border Style="{StaticResource sld.FieldCard}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
+                           Text="{Binding [sldEditor_common_geometryProperty], Source={StaticResource Localization}}"/>
+                <TextBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
+                         mahApp:TextBoxHelper.Watermark="{Binding [sldEditor_field_geometryDefault], Source={StaticResource Localization}}"
+                         Text="{Binding GeometryPropertyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+        </Border>
+    </StackPanel>
 </UserControl>

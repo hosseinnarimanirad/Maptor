@@ -65,6 +65,66 @@ internal static class LegendSwatchFactory
     }
 
     /// <summary>
+    /// A larger sample of the rule for the SLD editor's preview: a free-form polygon, a bent line or a few
+    /// points, so fills, dashes, joins and marker shapes all show. Text symbolizers are left out (the editor
+    /// draws its label sample itself); a rule with nothing else gives a transparent image. Caller owns disposal.
+    /// </summary>
+    public static Drawing.Bitmap CreatePreviewBitmap(Rule rule, int w, int h)
+    {
+        var geometryPairs = rule.ParseWithSource()
+            .Where(p => p.sldSymbolizer is not TextSymbolizer && p.symbolizer is not null)
+            .ToList();
+
+        if (geometryPairs.Count == 0)
+            return CreateBlank(w, h);
+
+        foreach (var pair in geometryPairs)
+        {
+            pair.symbolizer.IsFilterPassed = _ => true;
+            pair.symbolizer.MinScaleDenominator = null;
+            pair.symbolizer.MaxScaleDenominator = null;
+        }
+
+        var features = CreatePreviewFeatures(geometryPairs[0].sldSymbolizer, w, h);
+
+        if (features.Count == 0)
+            return CreateBlank(w, h);
+
+        var bitmap = new GdiBitmapRenderStrategy(geometryPairs.Select(p => p.symbolizer).ToList())
+            .AsGdiBitmap(features, mapScale: 1.0, w, h);
+
+        return bitmap ?? CreateBlank(w, h);
+    }
+
+    private static List<Feature<Point>> CreatePreviewFeatures(Symbolizer sldSymbolizer, int w, int h)
+    {
+        Point At(double x, double y) => new Point(w * x, h * y);
+
+        switch (sldSymbolizer)
+        {
+            case LineSymbolizer:
+                var line = new List<Point> { At(0.08, 0.72), At(0.3, 0.3), At(0.52, 0.62), At(0.72, 0.26), At(0.92, 0.5) };
+                return new List<Feature<Point>> { new Feature<Point>(Geometry<Point>.Create(line, GeometryType.LineString, 0)) };
+
+            case PolygonSymbolizer:
+                // rings are never closed: the first point is not repeated
+                var ring = new List<Point> { At(0.2, 0.22), At(0.56, 0.12), At(0.84, 0.3), At(0.8, 0.76), At(0.46, 0.88), At(0.16, 0.66) };
+                return new List<Feature<Point>> { new Feature<Point>(Geometry<Point>.CreatePolygon(ring, 0)) };
+
+            case PointSymbolizer:
+                return new List<Feature<Point>>
+                {
+                    new Feature<Point>(Geometry<Point>.Create(w * 0.28, h * 0.62, 0)),
+                    new Feature<Point>(Geometry<Point>.Create(w * 0.5, h * 0.36, 0)),
+                    new Feature<Point>(Geometry<Point>.Create(w * 0.72, h * 0.6, 0)),
+                };
+
+            default:
+                return new List<Feature<Point>>();
+        }
+    }
+
+    /// <summary>
     /// A synthetic feature in swatch-pixel coordinates (origin top-left, Y down) matching the
     /// geometry kind of the SLD symbolizer. Returns null for kinds without a geometry swatch.
     /// </summary>

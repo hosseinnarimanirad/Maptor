@@ -887,7 +887,7 @@
     <value>अपारदर्शिता:</value>
   </data>
   <data name="layerSettings_general_sourceAddress" xml:space="preserve">
-    <value>स्रोत पता</value>
+    <value>स्रोत पता:</value>
   </data>
   <data name="layerSettings_general_sourceType" xml:space="preserve">
     <value>स्रोत प्रकार:</value>
@@ -1950,5 +1950,650 @@
   </data>
   <data name="identify_featuresFound" xml:space="preserve">
     <value>मिले फ़ीचर</value>
+  </data>
+  <data name="featureTable_unsavedChangesNote" xml:space="preserve">
+    <value>{0} असहेजे परिवर्तन (कुल में शामिल नहीं)</value>
+  </data>
+  <data name="featureTable_showUnsavedChanges" xml:space="preserve">
+    <value>केवल असहेजे परिवर्तन दिखाएँ</value>
+  </data>
+  <data name="legendItem_zoomInToSeeAllFeatures" xml:space="preserve">
+    <value>सभी फ़ीचर नहीं दिखाए गए हैं: इस क्षेत्र में एक बार में लोड हो सकने से अधिक फ़ीचर हैं। सभी देखने के लिए ज़ूम इन करें</value>
+  </data>
+  <data name="serverLayerSettings_title" xml:space="preserve">
+    <value>सर्वर लेयर सेटिंग्स</value>
+  </data>
+  <data name="serverLayerSettings_searchPlaceholder" xml:space="preserve">
+    <value>लेयर और समूह खोजें</value>
+  </data>
+  <data name="serverLayerSettings_noMatch" xml:space="preserve">
+    <value>कोई लेयर या समूह खोज से मेल नहीं खाता।</value>
+  </data>
+  <data name="serverLayerSettings_noSelection" xml:space="preserve">
+    <value>संपादित करने के लिए कोई लेयर या समूह चुनें।</value>
+  </data>
+  <data name="serverLayerSettings_loadFailed" xml:space="preserve">
+    <value>लेयर सेटिंग्स सर्वर से लोड नहीं हो सकीं।</value>
+  </data>
+  <data name="serverLayerSettings_saveFailed" xml:space="preserve">
+    <value>बदलाव सर्वर को नहीं भेजे जा सके।</value>
+  </data>
+  <data name="serverLayerSettings_retry" xml:space="preserve">
+    <value>फिर से प्रयास करें</value>
+  </data>
+  <data name="serverLayerSettings_reload" xml:space="preserve">
+    <value>सर्वर से फिर लोड करें</value>
+  </data>
+  <data name="serverLayerSettings_revert" xml:space="preserve">
+    <value>वापस करें</value>
+  </data>
+  <data name="serverLayerSettings_topLevel" xml:space="preserve">
+    <value>शीर्ष स्तर</value>
+  </data>
+  <data name="serverLayerSettings_layerCount" xml:space="preserve">
+    <value>लेयर: {0}</value>
+  </data>
+  <data name="serverLayerSettings_badge_unsaved" xml:space="preserve">
+    <value>सहेजा नहीं गया</value>
+  </data>
+  <data name="serverLayerSettings_badge_inactive" xml:space="preserve">
+    <value>निष्क्रिय</value>
+  </data>
+  <data name="serverLayerSettings_badge_group" xml:space="preserve">
+    <value>समूह</value>
+  </data>
+  <data name="serverLayerSettings_badge_live" xml:space="preserve">
+    <value>लाइव</value>
+  </data>
+  <data name="serverLayerSettings_tab_general" xml:space="preserve">
+    <value>सामान्य</value>
+  </data>
+  <data name="serverLayerSettings_tab_display" xml:space="preserve">
+    <value>प्रदर्शन</value>
+  </data>
+  <data name="serverLayerSettings_tab_labels" xml:space="preserve">
+    <value>लेबल</value>
+  </data>
+  <data name="serverLayerSettings_tab_loading" xml:space="preserve">
+    <value>लोडिंग</value>
+  </data>
+  <data name="serverLayerSettings_section_visibility" xml:space="preserve">
+    <value>दृश्यता</value>
+  </data>
+  <data name="serverLayerSettings_section_source" xml:space="preserve">
+    <value>डेटा स्रोत</value>
+  </data>
+  <data name="serverLayerSettings_section_zoom" xml:space="preserve">
+    <value>दृश्य ज़ूम सीमा</value>
+  </data>
+  <data name="serverLayerSettings_section_style" xml:space="preserve">
+    <value>शैली</value>
+  </data>
+  <data name="serverLayerSettings_field_title" xml:space="preserve">
+    <value>शीर्षक</value>
+  </data>
+  <data name="serverLayerSettings_field_group" xml:space="preserve">
+    <value>समूह</value>
+  </data>
+  <data name="serverLayerSettings_field_active" xml:space="preserve">
+    <value>सक्रिय</value>
+  </data>
+  <data name="serverLayerSettings_hint_active" xml:space="preserve">
+    <value>निष्क्रिय लेयर या समूह सभी उपयोगकर्ताओं से छिपा रहता है।</value>
+  </data>
+  <data name="serverLayerSettings_field_onByDefault" xml:space="preserve">
+    <value>मानचित्र खुलने पर दिखाई दे</value>
+  </data>
+  <data name="serverLayerSettings_field_expanded" xml:space="preserve">
+    <value>लेयर सूची में विस्तारित</value>
+  </data>
+  <data name="serverLayerSettings_field_searchable" xml:space="preserve">
+    <value>मानचित्र खोज में शामिल</value>
+  </data>
+  <data name="serverLayerSettings_field_table" xml:space="preserve">
+    <value>तालिका</value>
+  </data>
+  <data name="serverLayerSettings_field_serviceUrl" xml:space="preserve">
+    <value>सेवा URL</value>
+  </data>
+  <data name="serverLayerSettings_field_id" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="serverLayerSettings_field_zoomFrom" xml:space="preserve">
+    <value>स्तर से</value>
+  </data>
+  <data name="serverLayerSettings_field_zoomTo" xml:space="preserve">
+    <value>स्तर तक</value>
+  </data>
+  <data name="serverLayerSettings_noLimit" xml:space="preserve">
+    <value>कोई सीमा नहीं</value>
+  </data>
+  <data name="serverLayerSettings_hint_zoom" xml:space="preserve">
+    <value>कोई सीमा न रखने के लिए स्तर खाली छोड़ें। स्तर 0 पूरी दुनिया दिखाता है; स्तर 18 सड़कों का विवरण।</value>
+  </data>
+  <data name="serverLayerSettings_sld_none" xml:space="preserve">
+    <value>नीचे दी गई सरल शैली से बनाया जाता है।</value>
+  </data>
+  <data name="serverLayerSettings_sld_active" xml:space="preserve">
+    <value>SLD शैली से बनाया जाता है। जब तक यह सेट है, नीचे के रंग उपयोग नहीं होते।</value>
+  </data>
+  <data name="serverLayerSettings_sld_edit" xml:space="preserve">
+    <value>SLD संपादित करें…</value>
+  </data>
+  <data name="serverLayerSettings_sld_remove" xml:space="preserve">
+    <value>SLD हटाएँ</value>
+  </data>
+  <data name="serverLayerSettings_field_fill" xml:space="preserve">
+    <value>भराव</value>
+  </data>
+  <data name="serverLayerSettings_field_stroke" xml:space="preserve">
+    <value>रूपरेखा</value>
+  </data>
+  <data name="serverLayerSettings_field_strokeWidth" xml:space="preserve">
+    <value>रूपरेखा की मोटाई</value>
+  </data>
+  <data name="serverLayerSettings_field_opacity" xml:space="preserve">
+    <value>अपारदर्शिता</value>
+  </data>
+  <data name="serverLayerSettings_field_preview" xml:space="preserve">
+    <value>पूर्वावलोकन</value>
+  </data>
+  <data name="serverLayerSettings_field_hasLabels" xml:space="preserve">
+    <value>इस लेयर में लेबल हैं</value>
+  </data>
+  <data name="serverLayerSettings_field_labelsOn" xml:space="preserve">
+    <value>मानचित्र खुलने पर लेबल दिखाएँ</value>
+  </data>
+  <data name="serverLayerSettings_field_labelColumn" xml:space="preserve">
+    <value>लेबल फ़ील्ड</value>
+  </data>
+  <data name="serverLayerSettings_field_labelSize" xml:space="preserve">
+    <value>फ़ॉन्ट आकार</value>
+  </data>
+  <data name="serverLayerSettings_field_labelColor" xml:space="preserve">
+    <value>रंग</value>
+  </data>
+  <data name="serverLayerSettings_mode_cache" xml:space="preserve">
+    <value>सब एक साथ लोड करें (Cache)</value>
+  </data>
+  <data name="serverLayerSettings_mode_cacheDescription" xml:space="preserve">
+    <value>पूरी लेयर मानचित्र खुलने पर एक बार डाउनलोड होती है। छोटी और मध्यम लेयरों के लिए सबसे अच्छा।</value>
+  </data>
+  <data name="serverLayerSettings_mode_live" xml:space="preserve">
+    <value>मानचित्र दृश्य के अनुसार लोड करें (Live)</value>
+  </data>
+  <data name="serverLayerSettings_mode_liveDescription" xml:space="preserve">
+    <value>मानचित्र के हिलने के साथ केवल दिखाई देने वाले क्षेत्र की फ़ीचर डाउनलोड होती हैं; एट्रिब्यूट तालिका और खोज सर्वर से पूछती हैं। बहुत बड़ी लेयरों के लिए सबसे अच्छा।</value>
+  </data>
+  <data name="serverLayerSettings_hint_appliesNext" xml:space="preserve">
+    <value>सहेजे गए बदलाव अन्य उपयोगकर्ताओं तक उनके अगले साइन-इन या लेयर फिर से लोड करने पर पहुँचते हैं।</value>
+  </data>
+  <data name="serverLayerSettings_status_noChanges" xml:space="preserve">
+    <value>कोई असहेजा बदलाव नहीं</value>
+  </data>
+  <data name="serverLayerSettings_status_changes" xml:space="preserve">
+    <value>असहेजे बदलाव: {0}</value>
+  </data>
+  <data name="serverLayerSettings_status_invalid" xml:space="preserve">
+    <value>त्रुटियों सहित: {0}</value>
+  </data>
+  <data name="serverLayerSettings_result_saved" xml:space="preserve">
+    <value>बदलाव सहेजे गए ({0})।</value>
+  </data>
+  <data name="serverLayerSettings_result_partial" xml:space="preserve">
+    <value>सहेजे गए: {0} · नहीं सहेजे गए: {1}</value>
+  </data>
+  <data name="serverLayerSettings_conflict" xml:space="preserve">
+    <value>आपके विंडो खोलने के बाद किसी और ने यह आइटम सहेजा। नवीनतम संस्करण पाने के लिए फिर लोड करें; इस पर आपके बदलाव खो जाएँगे।</value>
+  </data>
+  <data name="serverLayerSettings_notFound" xml:space="preserve">
+    <value>यह आइटम अब सर्वर पर मौजूद नहीं है।</value>
+  </data>
+  <data name="serverLayerSettings_serverRejected" xml:space="preserve">
+    <value>सर्वर ने ये बदलाव स्वीकार नहीं किए।</value>
+  </data>
+  <data name="serverLayerSettings_confirmDiscard" xml:space="preserve">
+    <value>असहेजे बदलाव हैं। क्या उन्हें छोड़ दें?</value>
+  </data>
+  <data name="serverLayerSettings_error_titleRequired" xml:space="preserve">
+    <value>शीर्षक दर्ज करें।</value>
+  </data>
+  <data name="serverLayerSettings_error_titleTooLong" xml:space="preserve">
+    <value>शीर्षक बहुत लंबा है।</value>
+  </data>
+  <data name="serverLayerSettings_error_layerZoomOutOfRange" xml:space="preserve">
+    <value>ज़ूम स्तर 0 से 24 के बीच होने चाहिए।</value>
+  </data>
+  <data name="serverLayerSettings_error_layerZoomRangeInverted" xml:space="preserve">
+    <value>पहला ज़ूम स्तर दूसरे से बड़ा नहीं होना चाहिए।</value>
+  </data>
+  <data name="serverLayerSettings_error_labelZoomOutOfRange" xml:space="preserve">
+    <value>लेबल ज़ूम स्तर 0 से 24 के बीच होने चाहिए।</value>
+  </data>
+  <data name="serverLayerSettings_error_labelZoomRangeInverted" xml:space="preserve">
+    <value>पहला लेबल ज़ूम स्तर दूसरे से बड़ा नहीं होना चाहिए।</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidFillColor" xml:space="preserve">
+    <value>भराव का रंग मान्य नहीं है।</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidStrokeColor" xml:space="preserve">
+    <value>रूपरेखा का रंग मान्य नहीं है।</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidLabelColor" xml:space="preserve">
+    <value>लेबल का रंग मान्य नहीं है।</value>
+  </data>
+  <data name="serverLayerSettings_error_opacityOutOfRange" xml:space="preserve">
+    <value>अपारदर्शिता 0% से 100% के बीच होनी चाहिए।</value>
+  </data>
+  <data name="serverLayerSettings_error_strokeThicknessOutOfRange" xml:space="preserve">
+    <value>रूपरेखा की मोटाई 0 से 50 के बीच होनी चाहिए।</value>
+  </data>
+  <data name="serverLayerSettings_error_labelSizeOutOfRange" xml:space="preserve">
+    <value>लेबल का फ़ॉन्ट आकार 1 से 72 के बीच होना चाहिए।</value>
+  </data>
+  <data name="serverLayerSettings_error_labelColumnRequired" xml:space="preserve">
+    <value>वह फ़ील्ड चुनें जो लेबल दिखाएँ।</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownLabelColumn" xml:space="preserve">
+    <value>लेबल फ़ील्ड इस लेयर की फ़ील्ड नहीं है।</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidSld" xml:space="preserve">
+    <value>SLD शैली पढ़ी नहीं जा सकती।</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidLoadMode" xml:space="preserve">
+    <value>लेयर कैसे लोड हो, यह चुनें।</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownRow" xml:space="preserve">
+    <value>एक आइटम अब सर्वर पर मौजूद नहीं है।</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownGroup" xml:space="preserve">
+    <value>लक्ष्य समूह अब मौजूद नहीं है।</value>
+  </data>
+  <data name="serverLayerSettings_error_groupInGroup" xml:space="preserve">
+    <value>किसी समूह को दूसरे समूह के अंदर नहीं रखा जा सकता।</value>
+  </data>
+  <data name="serverLayerSettings_error_duplicateRow" xml:space="preserve">
+    <value>अनुरोध में एक आइटम दो बार है।</value>
+  </data>
+  <data name="serverLayerSettings_cmd_newGroup" xml:space="preserve">
+    <value>नया समूह</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveUp" xml:space="preserve">
+    <value>ऊपर ले जाएँ</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveDown" xml:space="preserve">
+    <value>नीचे ले जाएँ</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveTo" xml:space="preserve">
+    <value>यहाँ ले जाएँ</value>
+  </data>
+  <data name="serverLayerSettings_cmd_rename" xml:space="preserve">
+    <value>नाम बदलें</value>
+  </data>
+  <data name="serverLayerSettings_cmd_deleteGroup" xml:space="preserve">
+    <value>समूह हटाएँ</value>
+  </data>
+  <data name="serverLayerSettings_moveTo_topLevel" xml:space="preserve">
+    <value>शीर्ष स्तर (कोई समूह नहीं)</value>
+  </data>
+  <data name="serverLayerSettings_newGroup_title" xml:space="preserve">
+    <value>नया समूह</value>
+  </data>
+  <data name="serverLayerSettings_group_created" xml:space="preserve">
+    <value>समूह "{0}" बनाया गया।</value>
+  </data>
+  <data name="serverLayerSettings_group_deleted" xml:space="preserve">
+    <value>समूह "{0}" हटाया गया।</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_confirm" xml:space="preserve">
+    <value>समूह "{0}" हटाएँ?</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_notEmpty" xml:space="preserve">
+    <value>केवल खाली समूह हटाया जा सकता है। पहले उसकी लेयर दूसरे समूह में ले जाएँ।</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_pendingMoves" xml:space="preserve">
+    <value>समूह हटाने से पहले खिसकाई गई लेयर सहेजें या वापस करें।</value>
+  </data>
+  <data name="serverLayerSettings_orderRejected" xml:space="preserve">
+    <value>सर्वर ने नया क्रम स्वीकार नहीं किया।</value>
+  </data>
+  <data name="serverLayerSettings_hint_dragDrop" xml:space="preserve">
+    <value>लेयरों का क्रम बदलने या उन्हें दूसरे समूह में ले जाने के लिए उन्हें खींचें।</value>
+  </data>
+  <data name="serverLayerSettings_cmd_open" xml:space="preserve">
+    <value>सर्वर सेटिंग्स…</value>
+  </data>
+  <data name="serverLayerSettings_reloadMapConfirm" xml:space="preserve">
+    <value>लेयर सेटिंग्स सहेज ली गईं। उन्हें देखने के लिए मानचित्र की सर्वर लेयर अभी फिर से लोड करें? फ़ीचर के असहेजे संपादन खो जाएँगे।</value>
+  </data>
+  <data name="dialog_symbology_noFill" xml:space="preserve">
+    <value>कोई भराव नहीं</value>
+  </data>
+  <data name="dialog_symbology_noStroke" xml:space="preserve">
+    <value>कोई रूपरेखा नहीं</value>
+  </data>
+  <data name="sldEditor_badge_filter" xml:space="preserve">
+    <value>फ़िल्टर</value>
+  </data>
+  <data name="sldEditor_badge_scale" xml:space="preserve">
+    <value>पैमाने की सीमा</value>
+  </data>
+  <data name="sldEditor_cap_butt" xml:space="preserve">
+    <value>सपाट</value>
+  </data>
+  <data name="sldEditor_cap_round" xml:space="preserve">
+    <value>गोल</value>
+  </data>
+  <data name="sldEditor_cap_square" xml:space="preserve">
+    <value>वर्गाकार</value>
+  </data>
+  <data name="sldEditor_dash_dashDot" xml:space="preserve">
+    <value>डैश-बिंदु</value>
+  </data>
+  <data name="sldEditor_dash_dashed" xml:space="preserve">
+    <value>डैश वाली</value>
+  </data>
+  <data name="sldEditor_dash_dotted" xml:space="preserve">
+    <value>बिंदीदार</value>
+  </data>
+  <data name="sldEditor_dash_longDash" xml:space="preserve">
+    <value>लंबा डैश</value>
+  </data>
+  <data name="sldEditor_dash_solid" xml:space="preserve">
+    <value>ठोस</value>
+  </data>
+  <data name="sldEditor_field_bold" xml:space="preserve">
+    <value>मोटा</value>
+  </data>
+  <data name="sldEditor_field_cap" xml:space="preserve">
+    <value>रेखा के सिरे</value>
+  </data>
+  <data name="sldEditor_field_color" xml:space="preserve">
+    <value>रंग</value>
+  </data>
+  <data name="sldEditor_field_dashOffset" xml:space="preserve">
+    <value>पैटर्न ऑफ़सेट</value>
+  </data>
+  <data name="sldEditor_field_dashPattern" xml:space="preserve">
+    <value>डैश पैटर्न</value>
+  </data>
+  <data name="sldEditor_field_font" xml:space="preserve">
+    <value>फ़ॉन्ट</value>
+  </data>
+  <data name="sldEditor_field_geometryDefault" xml:space="preserve">
+    <value>परत की ज्यामिति</value>
+  </data>
+  <data name="sldEditor_field_haloOn" xml:space="preserve">
+    <value>पाठ के चारों ओर आभामंडल बनाएँ</value>
+  </data>
+  <data name="sldEditor_field_italic" xml:space="preserve">
+    <value>तिरछा</value>
+  </data>
+  <data name="sldEditor_field_join" xml:space="preserve">
+    <value>कोने</value>
+  </data>
+  <data name="sldEditor_field_labelField" xml:space="preserve">
+    <value>फ़ील्ड से पाठ</value>
+  </data>
+  <data name="sldEditor_field_labelFieldWatermark" xml:space="preserve">
+    <value>फ़ील्ड चुनें या लिखें</value>
+  </data>
+  <data name="sldEditor_field_opacity" xml:space="preserve">
+    <value>अपारदर्शिता</value>
+  </data>
+  <data name="sldEditor_field_rotation" xml:space="preserve">
+    <value>घुमाव</value>
+  </data>
+  <data name="sldEditor_field_shape" xml:space="preserve">
+    <value>आकृति</value>
+  </data>
+  <data name="sldEditor_field_size" xml:space="preserve">
+    <value>आकार</value>
+  </data>
+  <data name="sldEditor_field_width" xml:space="preserve">
+    <value>चौड़ाई</value>
+  </data>
+  <data name="sldEditor_filter_advancedNotice" xml:space="preserve">
+    <value>इस नियम में ऐसा फ़िल्टर है जो यहाँ नहीं दिखाया जा सकता। जब तक आप ऊपर कोई फ़ील्ड न चुनें, यह जैसा है वैसा रहता है।</value>
+  </data>
+  <data name="sldEditor_filter_onlyMatching" xml:space="preserve">
+    <value>केवल वे फ़ीचर बनाएँ जो किसी शर्त से मेल खाते हों</value>
+  </data>
+  <data name="sldEditor_join_bevel" xml:space="preserve">
+    <value>तिरछे कटे</value>
+  </data>
+  <data name="sldEditor_join_mitre" xml:space="preserve">
+    <value>नुकीले</value>
+  </data>
+  <data name="sldEditor_join_round" xml:space="preserve">
+    <value>गोल</value>
+  </data>
+  <data name="sldEditor_mark_circle" xml:space="preserve">
+    <value>वृत्त</value>
+  </data>
+  <data name="sldEditor_mark_cross" xml:space="preserve">
+    <value>धन चिह्न</value>
+  </data>
+  <data name="sldEditor_mark_square" xml:space="preserve">
+    <value>वर्ग</value>
+  </data>
+  <data name="sldEditor_mark_star" xml:space="preserve">
+    <value>तारा</value>
+  </data>
+  <data name="sldEditor_mark_triangle" xml:space="preserve">
+    <value>त्रिभुज</value>
+  </data>
+  <data name="sldEditor_mark_x" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="sldEditor_op_equal" xml:space="preserve">
+    <value>बराबर है</value>
+  </data>
+  <data name="sldEditor_op_greaterThan" xml:space="preserve">
+    <value>से अधिक</value>
+  </data>
+  <data name="sldEditor_op_greaterThanOrEqual" xml:space="preserve">
+    <value>कम से कम</value>
+  </data>
+  <data name="sldEditor_op_lessThan" xml:space="preserve">
+    <value>से कम</value>
+  </data>
+  <data name="sldEditor_op_lessThanOrEqual" xml:space="preserve">
+    <value>अधिक से अधिक</value>
+  </data>
+  <data name="sldEditor_op_notEqual" xml:space="preserve">
+    <value>बराबर नहीं</value>
+  </data>
+  <data name="sldEditor_preview_labelSample" xml:space="preserve">
+    <value>लेबल</value>
+  </data>
+  <data name="sldEditor_preview_legend" xml:space="preserve">
+    <value>मानचित्र सूची</value>
+  </data>
+  <data name="sldEditor_preview_none" xml:space="preserve">
+    <value>पूर्वावलोकन के लिए कोई नियम चुनें।</value>
+  </data>
+  <data name="sldEditor_preview_title" xml:space="preserve">
+    <value>पूर्वावलोकन</value>
+  </data>
+  <data name="sldEditor_rule_copySuffix" xml:space="preserve">
+    <value>प्रति</value>
+  </data>
+  <data name="sldEditor_rule_detailsHint" xml:space="preserve">
+    <value>शीर्षक वह पाठ है जो मानचित्र सूची दिखाती है। नाम SLD के भीतर नियम की पहचान है।</value>
+  </data>
+  <data name="sldEditor_rule_titleHint" xml:space="preserve">
+    <value>इस नियम के लिए मानचित्र सूची में दिखने वाला पाठ</value>
+  </data>
+  <data name="sldEditor_rule_titleWatermark" xml:space="preserve">
+    <value>सूची का पाठ</value>
+  </data>
+  <data name="sldEditor_rules_count" xml:space="preserve">
+    <value>नियम: {0}</value>
+  </data>
+  <data name="sldEditor_rules_delete" xml:space="preserve">
+    <value>नियम हटाएँ (Del)</value>
+  </data>
+  <data name="sldEditor_rules_duplicate" xml:space="preserve">
+    <value>नियम की प्रति बनाएँ (Ctrl+D)</value>
+  </data>
+  <data name="sldEditor_rules_empty" xml:space="preserve">
+    <value>कुछ नहीं बनाता</value>
+  </data>
+  <data name="sldEditor_rules_hint" xml:space="preserve">
+    <value>हर फ़ीचर उन सभी नियमों से बनता है जिनसे वह मेल खाता है; नीचे वाले नियम ऊपर बनते हैं।</value>
+  </data>
+  <data name="sldEditor_rules_moveDown" xml:space="preserve">
+    <value>नीचे ले जाएँ (Alt+Down)</value>
+  </data>
+  <data name="sldEditor_rules_moveUp" xml:space="preserve">
+    <value>ऊपर ले जाएँ (Alt+Up)</value>
+  </data>
+  <data name="sldEditor_rules_noSelection" xml:space="preserve">
+    <value>संपादन के लिए बाईं ओर से कोई नियम चुनें या नया जोड़ें।</value>
+  </data>
+  <data name="sldEditor_rules_none" xml:space="preserve">
+    <value>इस शैली में अभी कोई नियम नहीं है।</value>
+  </data>
+  <data name="sldEditor_scale_all" xml:space="preserve">
+    <value>सभी पैमाने</value>
+  </data>
+  <data name="sldEditor_scale_between" xml:space="preserve">
+    <value>1:{0} और 1:{1} के बीच</value>
+  </data>
+  <data name="sldEditor_scale_closerThan" xml:space="preserve">
+    <value>1:{0} से निकट</value>
+  </data>
+  <data name="sldEditor_scale_fartherThan" xml:space="preserve">
+    <value>1:{0} और उससे दूर</value>
+  </data>
+  <data name="sldEditor_scale_hint" xml:space="preserve">
+    <value>नियम केवल दोनों सीमाओं के बीच बनता है। सीमा न चाहिए तो उसे खाली छोड़ें। 1:5,000, 1:50,000 से निकट है।</value>
+  </data>
+  <data name="sldEditor_scale_inverted" xml:space="preserve">
+    <value>ज़ूम-इन सीमा ज़ूम-आउट सीमा से छोटी होनी चाहिए, वरना नियम कभी नहीं बनेगा।</value>
+  </data>
+  <data name="sldEditor_scale_maxLabel" xml:space="preserve">
+    <value>ज़ूम-आउट सीमा</value>
+  </data>
+  <data name="sldEditor_scale_minLabel" xml:space="preserve">
+    <value>ज़ूम-इन सीमा</value>
+  </data>
+  <data name="sldEditor_scale_noLimit" xml:space="preserve">
+    <value>कोई सीमा नहीं</value>
+  </data>
+  <data name="sldEditor_section_ends" xml:space="preserve">
+    <value>सिरे और कोने</value>
+  </data>
+  <data name="sldEditor_section_fill" xml:space="preserve">
+    <value>भराव</value>
+  </data>
+  <data name="sldEditor_section_geometry" xml:space="preserve">
+    <value>ज्यामिति</value>
+  </data>
+  <data name="sldEditor_section_halo" xml:space="preserve">
+    <value>आभामंडल</value>
+  </data>
+  <data name="sldEditor_section_outline" xml:space="preserve">
+    <value>रूपरेखा</value>
+  </data>
+  <data name="sldEditor_section_pattern" xml:space="preserve">
+    <value>पैटर्न</value>
+  </data>
+  <data name="sldEditor_style_panel" xml:space="preserve">
+    <value>शैली का नाम और विवरण</value>
+  </data>
+  <data name="sldEditor_symbolizer_add" xml:space="preserve">
+    <value>प्रतीक जोड़ें:</value>
+  </data>
+  <data name="sldEditor_symbolizer_line" xml:space="preserve">
+    <value>रेखा</value>
+  </data>
+  <data name="sldEditor_symbolizer_moveDown" xml:space="preserve">
+    <value>नीचे ले जाएँ</value>
+  </data>
+  <data name="sldEditor_symbolizer_moveUp" xml:space="preserve">
+    <value>ऊपर ले जाएँ</value>
+  </data>
+  <data name="sldEditor_symbolizer_none" xml:space="preserve">
+    <value>यह नियम अभी कुछ नहीं बनाता। नीचे से कोई प्रतीक जोड़ें।</value>
+  </data>
+  <data name="sldEditor_symbolizer_orderHint" xml:space="preserve">
+    <value>प्रतीक सूची के क्रम में बनते हैं: नीचे वाले ऊपर बनते हैं।</value>
+  </data>
+  <data name="sldEditor_symbolizer_point" xml:space="preserve">
+    <value>चिह्नक</value>
+  </data>
+  <data name="sldEditor_symbolizer_polygon" xml:space="preserve">
+    <value>भराव</value>
+  </data>
+  <data name="sldEditor_symbolizer_raster" xml:space="preserve">
+    <value>रास्टर</value>
+  </data>
+  <data name="sldEditor_symbolizer_remove" xml:space="preserve">
+    <value>प्रतीक हटाएँ</value>
+  </data>
+  <data name="sldEditor_symbolizer_text" xml:space="preserve">
+    <value>लेबल</value>
+  </data>
+  <data name="sldEditor_tab_details" xml:space="preserve">
+    <value>विवरण</value>
+  </data>
+  <data name="sldEditor_tab_filterScale" xml:space="preserve">
+    <value>फ़िल्टर और पैमाना</value>
+  </data>
+  <data name="sldEditor_tab_symbology" xml:space="preserve">
+    <value>प्रतीकविधान</value>
+  </data>
+  <data name="sldEditor_xml_copy" xml:space="preserve">
+    <value>कॉपी करें</value>
+  </data>
+  <data name="sldEditor_xml_live" xml:space="preserve">
+    <value>संपादन के साथ अपडेट होता है। यही 'लागू करें' और 'ठीक है' सहेजते हैं।</value>
+  </data>
+  <data name="sldEditor_rule_newTitle" xml:space="preserve">
+    <value>नियम {0}</value>
+  </data>
+  <data name="legend_import_gisFiles" xml:space="preserve">
+    <value>GIS/CAD फ़ाइलें</value>
+  </data>
+  <data name="legend_import_googleEarth" xml:space="preserve">
+    <value>Google Earth</value>
+  </data>
+  <data name="legend_import_tables" xml:space="preserve">
+    <value>तालिकाएँ</value>
+  </data>
+  <data name="legend_import_json" xml:space="preserve">
+    <value>JSON</value>
+  </data>
+  <data name="legend_filter_groupVector" xml:space="preserve">
+    <value>वेक्टर</value>
+  </data>
+  <data name="legend_filter_groupRaster" xml:space="preserve">
+    <value>रास्टर</value>
+  </data>
+  <data name="legend_filter_groupService" xml:space="preserve">
+    <value>सेवाएँ</value>
+  </data>
+  <data name="legend_filter_groupOther" xml:space="preserve">
+    <value>अन्य</value>
+  </data>
+  <data name="legend_filter_kindRest" xml:space="preserve">
+    <value>REST सेवा</value>
+  </data>
+  <data name="legend_filter_kindGrpc" xml:space="preserve">
+    <value>gRPC सेवा</value>
+  </data>
+  <data name="legend_filter_kindWorldfile" xml:space="preserve">
+    <value>World फ़ाइल</value>
+  </data>
+  <data name="legend_filter_kindImagePyramid" xml:space="preserve">
+    <value>छवि पिरामिड</value>
+  </data>
+  <data name="legend_filter_kindOther" xml:space="preserve">
+    <value>अनिर्दिष्ट</value>
+  </data>
+  <data name="legend_filter_only" xml:space="preserve">
+    <value>केवल</value>
   </data>
 </root>

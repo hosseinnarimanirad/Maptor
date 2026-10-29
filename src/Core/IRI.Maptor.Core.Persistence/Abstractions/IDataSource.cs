@@ -37,6 +37,12 @@ public interface IDataSource
     bool IsProcessing { get; }
 
     /// <summary>
+    /// True while data is downloaded in the background (a Live layer fetching the features of the current
+    /// view). Unlike <see cref="IsInitializing"/> and <see cref="IsProcessing"/>, the layer stays usable.
+    /// </summary>
+    bool IsFetching { get; }
+
+    /// <summary>
     /// True after the initial load operation for this data source
     /// has successfully completed at least once.
     /// </summary>
@@ -63,6 +69,8 @@ public interface IDataSource
     event EventHandler<bool>? IsInitializingChanged;
 
     event EventHandler<bool>? IsProcessingChanged;
+
+    event EventHandler<bool>? IsFetchingChanged;
 
     event EventHandler<bool>? IsLoadedChanged;
 

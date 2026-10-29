@@ -887,7 +887,7 @@
     <value>不透明度：</value>
   </data>
   <data name="layerSettings_general_sourceAddress" xml:space="preserve">
-    <value>源地址</value>
+    <value>源地址：</value>
   </data>
   <data name="layerSettings_general_sourceType" xml:space="preserve">
     <value>源类型：</value>
@@ -1950,5 +1950,650 @@
   </data>
   <data name="identify_featuresFound" xml:space="preserve">
     <value>找到的要素</value>
+  </data>
+  <data name="featureTable_unsavedChangesNote" xml:space="preserve">
+    <value>{0} 项未保存的更改（不计入总数）</value>
+  </data>
+  <data name="featureTable_showUnsavedChanges" xml:space="preserve">
+    <value>仅显示未保存的更改</value>
+  </data>
+  <data name="legendItem_zoomInToSeeAllFeatures" xml:space="preserve">
+    <value>未显示全部要素：此区域的要素数量超过一次可加载的上限。请放大以查看全部要素</value>
+  </data>
+  <data name="serverLayerSettings_title" xml:space="preserve">
+    <value>服务器图层设置</value>
+  </data>
+  <data name="serverLayerSettings_searchPlaceholder" xml:space="preserve">
+    <value>搜索图层和分组</value>
+  </data>
+  <data name="serverLayerSettings_noMatch" xml:space="preserve">
+    <value>没有与搜索匹配的图层或分组。</value>
+  </data>
+  <data name="serverLayerSettings_noSelection" xml:space="preserve">
+    <value>选择一个图层或分组进行编辑。</value>
+  </data>
+  <data name="serverLayerSettings_loadFailed" xml:space="preserve">
+    <value>无法从服务器加载图层设置。</value>
+  </data>
+  <data name="serverLayerSettings_saveFailed" xml:space="preserve">
+    <value>无法将更改发送到服务器。</value>
+  </data>
+  <data name="serverLayerSettings_retry" xml:space="preserve">
+    <value>重试</value>
+  </data>
+  <data name="serverLayerSettings_reload" xml:space="preserve">
+    <value>从服务器重新加载</value>
+  </data>
+  <data name="serverLayerSettings_revert" xml:space="preserve">
+    <value>还原</value>
+  </data>
+  <data name="serverLayerSettings_topLevel" xml:space="preserve">
+    <value>顶层</value>
+  </data>
+  <data name="serverLayerSettings_layerCount" xml:space="preserve">
+    <value>图层：{0}</value>
+  </data>
+  <data name="serverLayerSettings_badge_unsaved" xml:space="preserve">
+    <value>未保存</value>
+  </data>
+  <data name="serverLayerSettings_badge_inactive" xml:space="preserve">
+    <value>未启用</value>
+  </data>
+  <data name="serverLayerSettings_badge_group" xml:space="preserve">
+    <value>分组</value>
+  </data>
+  <data name="serverLayerSettings_badge_live" xml:space="preserve">
+    <value>实时</value>
+  </data>
+  <data name="serverLayerSettings_tab_general" xml:space="preserve">
+    <value>常规</value>
+  </data>
+  <data name="serverLayerSettings_tab_display" xml:space="preserve">
+    <value>显示</value>
+  </data>
+  <data name="serverLayerSettings_tab_labels" xml:space="preserve">
+    <value>标注</value>
+  </data>
+  <data name="serverLayerSettings_tab_loading" xml:space="preserve">
+    <value>加载</value>
+  </data>
+  <data name="serverLayerSettings_section_visibility" xml:space="preserve">
+    <value>可见性</value>
+  </data>
+  <data name="serverLayerSettings_section_source" xml:space="preserve">
+    <value>数据源</value>
+  </data>
+  <data name="serverLayerSettings_section_zoom" xml:space="preserve">
+    <value>可见缩放范围</value>
+  </data>
+  <data name="serverLayerSettings_section_style" xml:space="preserve">
+    <value>样式</value>
+  </data>
+  <data name="serverLayerSettings_field_title" xml:space="preserve">
+    <value>标题</value>
+  </data>
+  <data name="serverLayerSettings_field_group" xml:space="preserve">
+    <value>分组</value>
+  </data>
+  <data name="serverLayerSettings_field_active" xml:space="preserve">
+    <value>启用</value>
+  </data>
+  <data name="serverLayerSettings_hint_active" xml:space="preserve">
+    <value>未启用的图层或分组对所有用户隐藏。</value>
+  </data>
+  <data name="serverLayerSettings_field_onByDefault" xml:space="preserve">
+    <value>打开地图时可见</value>
+  </data>
+  <data name="serverLayerSettings_field_expanded" xml:space="preserve">
+    <value>在图层列表中展开</value>
+  </data>
+  <data name="serverLayerSettings_field_searchable" xml:space="preserve">
+    <value>参与地图搜索</value>
+  </data>
+  <data name="serverLayerSettings_field_table" xml:space="preserve">
+    <value>表</value>
+  </data>
+  <data name="serverLayerSettings_field_serviceUrl" xml:space="preserve">
+    <value>服务地址</value>
+  </data>
+  <data name="serverLayerSettings_field_id" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="serverLayerSettings_field_zoomFrom" xml:space="preserve">
+    <value>从级别</value>
+  </data>
+  <data name="serverLayerSettings_field_zoomTo" xml:space="preserve">
+    <value>到级别</value>
+  </data>
+  <data name="serverLayerSettings_noLimit" xml:space="preserve">
+    <value>无限制</value>
+  </data>
+  <data name="serverLayerSettings_hint_zoom" xml:space="preserve">
+    <value>留空表示不限制。级别 0 显示整个世界；级别 18 显示街道细节。</value>
+  </data>
+  <data name="serverLayerSettings_sld_none" xml:space="preserve">
+    <value>使用下方的简单样式绘制。</value>
+  </data>
+  <data name="serverLayerSettings_sld_active" xml:space="preserve">
+    <value>使用 SLD 样式绘制。设置 SLD 后，下方颜色不再使用。</value>
+  </data>
+  <data name="serverLayerSettings_sld_edit" xml:space="preserve">
+    <value>编辑 SLD…</value>
+  </data>
+  <data name="serverLayerSettings_sld_remove" xml:space="preserve">
+    <value>移除 SLD</value>
+  </data>
+  <data name="serverLayerSettings_field_fill" xml:space="preserve">
+    <value>填充</value>
+  </data>
+  <data name="serverLayerSettings_field_stroke" xml:space="preserve">
+    <value>轮廓</value>
+  </data>
+  <data name="serverLayerSettings_field_strokeWidth" xml:space="preserve">
+    <value>轮廓宽度</value>
+  </data>
+  <data name="serverLayerSettings_field_opacity" xml:space="preserve">
+    <value>不透明度</value>
+  </data>
+  <data name="serverLayerSettings_field_preview" xml:space="preserve">
+    <value>预览</value>
+  </data>
+  <data name="serverLayerSettings_field_hasLabels" xml:space="preserve">
+    <value>此图层有标注</value>
+  </data>
+  <data name="serverLayerSettings_field_labelsOn" xml:space="preserve">
+    <value>打开地图时显示标注</value>
+  </data>
+  <data name="serverLayerSettings_field_labelColumn" xml:space="preserve">
+    <value>标注字段</value>
+  </data>
+  <data name="serverLayerSettings_field_labelSize" xml:space="preserve">
+    <value>字号</value>
+  </data>
+  <data name="serverLayerSettings_field_labelColor" xml:space="preserve">
+    <value>颜色</value>
+  </data>
+  <data name="serverLayerSettings_mode_cache" xml:space="preserve">
+    <value>一次全部加载（Cache）</value>
+  </data>
+  <data name="serverLayerSettings_mode_cacheDescription" xml:space="preserve">
+    <value>打开地图时一次性下载整个图层。适合中小型图层。</value>
+  </data>
+  <data name="serverLayerSettings_mode_live" xml:space="preserve">
+    <value>按地图视图加载（Live）</value>
+  </data>
+  <data name="serverLayerSettings_mode_liveDescription" xml:space="preserve">
+    <value>随着地图移动，只下载可见区域内的要素；属性表和搜索直接查询服务器。适合超大型图层。</value>
+  </data>
+  <data name="serverLayerSettings_hint_appliesNext" xml:space="preserve">
+    <value>已保存的更改会在其他用户下次登录或重新加载图层时生效。</value>
+  </data>
+  <data name="serverLayerSettings_status_noChanges" xml:space="preserve">
+    <value>没有未保存的更改</value>
+  </data>
+  <data name="serverLayerSettings_status_changes" xml:space="preserve">
+    <value>未保存的更改：{0}</value>
+  </data>
+  <data name="serverLayerSettings_status_invalid" xml:space="preserve">
+    <value>有错误：{0}</value>
+  </data>
+  <data name="serverLayerSettings_result_saved" xml:space="preserve">
+    <value>更改已保存（{0}）。</value>
+  </data>
+  <data name="serverLayerSettings_result_partial" xml:space="preserve">
+    <value>已保存：{0} · 未保存：{1}</value>
+  </data>
+  <data name="serverLayerSettings_conflict" xml:space="preserve">
+    <value>在您打开窗口后，其他人保存了此项。请重新加载以获取最新版本；您对此项的更改将丢失。</value>
+  </data>
+  <data name="serverLayerSettings_notFound" xml:space="preserve">
+    <value>服务器上已不存在此项。</value>
+  </data>
+  <data name="serverLayerSettings_serverRejected" xml:space="preserve">
+    <value>服务器未接受这些更改。</value>
+  </data>
+  <data name="serverLayerSettings_confirmDiscard" xml:space="preserve">
+    <value>有未保存的更改。是否放弃？</value>
+  </data>
+  <data name="serverLayerSettings_error_titleRequired" xml:space="preserve">
+    <value>请输入标题。</value>
+  </data>
+  <data name="serverLayerSettings_error_titleTooLong" xml:space="preserve">
+    <value>标题过长。</value>
+  </data>
+  <data name="serverLayerSettings_error_layerZoomOutOfRange" xml:space="preserve">
+    <value>缩放级别必须介于 0 到 24 之间。</value>
+  </data>
+  <data name="serverLayerSettings_error_layerZoomRangeInverted" xml:space="preserve">
+    <value>第一个缩放级别不能大于第二个。</value>
+  </data>
+  <data name="serverLayerSettings_error_labelZoomOutOfRange" xml:space="preserve">
+    <value>标注缩放级别必须介于 0 到 24 之间。</value>
+  </data>
+  <data name="serverLayerSettings_error_labelZoomRangeInverted" xml:space="preserve">
+    <value>第一个标注缩放级别不能大于第二个。</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidFillColor" xml:space="preserve">
+    <value>填充颜色无效。</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidStrokeColor" xml:space="preserve">
+    <value>轮廓颜色无效。</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidLabelColor" xml:space="preserve">
+    <value>标注颜色无效。</value>
+  </data>
+  <data name="serverLayerSettings_error_opacityOutOfRange" xml:space="preserve">
+    <value>不透明度必须介于 0% 到 100% 之间。</value>
+  </data>
+  <data name="serverLayerSettings_error_strokeThicknessOutOfRange" xml:space="preserve">
+    <value>轮廓宽度必须介于 0 到 50 之间。</value>
+  </data>
+  <data name="serverLayerSettings_error_labelSizeOutOfRange" xml:space="preserve">
+    <value>标注字号必须介于 1 到 72 之间。</value>
+  </data>
+  <data name="serverLayerSettings_error_labelColumnRequired" xml:space="preserve">
+    <value>请选择标注显示的字段。</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownLabelColumn" xml:space="preserve">
+    <value>标注字段不是此图层的字段。</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidSld" xml:space="preserve">
+    <value>无法读取 SLD 样式。</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidLoadMode" xml:space="preserve">
+    <value>请选择图层的加载方式。</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownRow" xml:space="preserve">
+    <value>服务器上已不存在某一项。</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownGroup" xml:space="preserve">
+    <value>目标分组已不存在。</value>
+  </data>
+  <data name="serverLayerSettings_error_groupInGroup" xml:space="preserve">
+    <value>分组不能放入另一个分组中。</value>
+  </data>
+  <data name="serverLayerSettings_error_duplicateRow" xml:space="preserve">
+    <value>请求中某一项出现了两次。</value>
+  </data>
+  <data name="serverLayerSettings_cmd_newGroup" xml:space="preserve">
+    <value>新建分组</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveUp" xml:space="preserve">
+    <value>上移</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveDown" xml:space="preserve">
+    <value>下移</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveTo" xml:space="preserve">
+    <value>移动到</value>
+  </data>
+  <data name="serverLayerSettings_cmd_rename" xml:space="preserve">
+    <value>重命名</value>
+  </data>
+  <data name="serverLayerSettings_cmd_deleteGroup" xml:space="preserve">
+    <value>删除分组</value>
+  </data>
+  <data name="serverLayerSettings_moveTo_topLevel" xml:space="preserve">
+    <value>顶层（无分组）</value>
+  </data>
+  <data name="serverLayerSettings_newGroup_title" xml:space="preserve">
+    <value>新建分组</value>
+  </data>
+  <data name="serverLayerSettings_group_created" xml:space="preserve">
+    <value>已创建分组“{0}”。</value>
+  </data>
+  <data name="serverLayerSettings_group_deleted" xml:space="preserve">
+    <value>已删除分组“{0}”。</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_confirm" xml:space="preserve">
+    <value>删除分组“{0}”？</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_notEmpty" xml:space="preserve">
+    <value>只能删除空分组。请先将其中的图层移到其他分组。</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_pendingMoves" xml:space="preserve">
+    <value>删除分组前，请先保存或还原已移动的图层。</value>
+  </data>
+  <data name="serverLayerSettings_orderRejected" xml:space="preserve">
+    <value>服务器未接受新的顺序。</value>
+  </data>
+  <data name="serverLayerSettings_hint_dragDrop" xml:space="preserve">
+    <value>拖动图层可调整顺序或将其移到其他分组。</value>
+  </data>
+  <data name="serverLayerSettings_cmd_open" xml:space="preserve">
+    <value>服务器设置…</value>
+  </data>
+  <data name="serverLayerSettings_reloadMapConfirm" xml:space="preserve">
+    <value>图层设置已保存。是否立即重新加载地图上的服务器图层以查看更改？未保存的要素编辑将丢失。</value>
+  </data>
+  <data name="dialog_symbology_noFill" xml:space="preserve">
+    <value>无填充</value>
+  </data>
+  <data name="dialog_symbology_noStroke" xml:space="preserve">
+    <value>无轮廓</value>
+  </data>
+  <data name="sldEditor_badge_filter" xml:space="preserve">
+    <value>筛选</value>
+  </data>
+  <data name="sldEditor_badge_scale" xml:space="preserve">
+    <value>比例尺范围</value>
+  </data>
+  <data name="sldEditor_cap_butt" xml:space="preserve">
+    <value>平头</value>
+  </data>
+  <data name="sldEditor_cap_round" xml:space="preserve">
+    <value>圆头</value>
+  </data>
+  <data name="sldEditor_cap_square" xml:space="preserve">
+    <value>方头</value>
+  </data>
+  <data name="sldEditor_dash_dashDot" xml:space="preserve">
+    <value>点划线</value>
+  </data>
+  <data name="sldEditor_dash_dashed" xml:space="preserve">
+    <value>虚线</value>
+  </data>
+  <data name="sldEditor_dash_dotted" xml:space="preserve">
+    <value>点线</value>
+  </data>
+  <data name="sldEditor_dash_longDash" xml:space="preserve">
+    <value>长虚线</value>
+  </data>
+  <data name="sldEditor_dash_solid" xml:space="preserve">
+    <value>实线</value>
+  </data>
+  <data name="sldEditor_field_bold" xml:space="preserve">
+    <value>粗体</value>
+  </data>
+  <data name="sldEditor_field_cap" xml:space="preserve">
+    <value>线端</value>
+  </data>
+  <data name="sldEditor_field_color" xml:space="preserve">
+    <value>颜色</value>
+  </data>
+  <data name="sldEditor_field_dashOffset" xml:space="preserve">
+    <value>图案偏移</value>
+  </data>
+  <data name="sldEditor_field_dashPattern" xml:space="preserve">
+    <value>虚线图案</value>
+  </data>
+  <data name="sldEditor_field_font" xml:space="preserve">
+    <value>字体</value>
+  </data>
+  <data name="sldEditor_field_geometryDefault" xml:space="preserve">
+    <value>图层的几何</value>
+  </data>
+  <data name="sldEditor_field_haloOn" xml:space="preserve">
+    <value>在文字周围绘制光晕</value>
+  </data>
+  <data name="sldEditor_field_italic" xml:space="preserve">
+    <value>斜体</value>
+  </data>
+  <data name="sldEditor_field_join" xml:space="preserve">
+    <value>拐角</value>
+  </data>
+  <data name="sldEditor_field_labelField" xml:space="preserve">
+    <value>文字来自字段</value>
+  </data>
+  <data name="sldEditor_field_labelFieldWatermark" xml:space="preserve">
+    <value>选择或输入字段</value>
+  </data>
+  <data name="sldEditor_field_opacity" xml:space="preserve">
+    <value>不透明度</value>
+  </data>
+  <data name="sldEditor_field_rotation" xml:space="preserve">
+    <value>旋转</value>
+  </data>
+  <data name="sldEditor_field_shape" xml:space="preserve">
+    <value>形状</value>
+  </data>
+  <data name="sldEditor_field_size" xml:space="preserve">
+    <value>大小</value>
+  </data>
+  <data name="sldEditor_field_width" xml:space="preserve">
+    <value>宽度</value>
+  </data>
+  <data name="sldEditor_filter_advancedNotice" xml:space="preserve">
+    <value>此规则的筛选条件无法在此显示。除非在上方选择字段，否则将原样保留。</value>
+  </data>
+  <data name="sldEditor_filter_onlyMatching" xml:space="preserve">
+    <value>仅绘制满足条件的要素</value>
+  </data>
+  <data name="sldEditor_join_bevel" xml:space="preserve">
+    <value>斜角</value>
+  </data>
+  <data name="sldEditor_join_mitre" xml:space="preserve">
+    <value>尖角</value>
+  </data>
+  <data name="sldEditor_join_round" xml:space="preserve">
+    <value>圆角</value>
+  </data>
+  <data name="sldEditor_mark_circle" xml:space="preserve">
+    <value>圆形</value>
+  </data>
+  <data name="sldEditor_mark_cross" xml:space="preserve">
+    <value>十字</value>
+  </data>
+  <data name="sldEditor_mark_square" xml:space="preserve">
+    <value>正方形</value>
+  </data>
+  <data name="sldEditor_mark_star" xml:space="preserve">
+    <value>星形</value>
+  </data>
+  <data name="sldEditor_mark_triangle" xml:space="preserve">
+    <value>三角形</value>
+  </data>
+  <data name="sldEditor_mark_x" xml:space="preserve">
+    <value>叉号</value>
+  </data>
+  <data name="sldEditor_op_equal" xml:space="preserve">
+    <value>等于</value>
+  </data>
+  <data name="sldEditor_op_greaterThan" xml:space="preserve">
+    <value>大于</value>
+  </data>
+  <data name="sldEditor_op_greaterThanOrEqual" xml:space="preserve">
+    <value>至少</value>
+  </data>
+  <data name="sldEditor_op_lessThan" xml:space="preserve">
+    <value>小于</value>
+  </data>
+  <data name="sldEditor_op_lessThanOrEqual" xml:space="preserve">
+    <value>至多</value>
+  </data>
+  <data name="sldEditor_op_notEqual" xml:space="preserve">
+    <value>不等于</value>
+  </data>
+  <data name="sldEditor_preview_labelSample" xml:space="preserve">
+    <value>标注</value>
+  </data>
+  <data name="sldEditor_preview_legend" xml:space="preserve">
+    <value>图例</value>
+  </data>
+  <data name="sldEditor_preview_none" xml:space="preserve">
+    <value>选择一条规则以预览。</value>
+  </data>
+  <data name="sldEditor_preview_title" xml:space="preserve">
+    <value>预览</value>
+  </data>
+  <data name="sldEditor_rule_copySuffix" xml:space="preserve">
+    <value>副本</value>
+  </data>
+  <data name="sldEditor_rule_detailsHint" xml:space="preserve">
+    <value>标题是地图图例显示的文字。名称用于在 SLD 中标识规则。</value>
+  </data>
+  <data name="sldEditor_rule_titleHint" xml:space="preserve">
+    <value>地图图例为此规则显示的文字</value>
+  </data>
+  <data name="sldEditor_rule_titleWatermark" xml:space="preserve">
+    <value>图例文字</value>
+  </data>
+  <data name="sldEditor_rules_count" xml:space="preserve">
+    <value>规则：{0}</value>
+  </data>
+  <data name="sldEditor_rules_delete" xml:space="preserve">
+    <value>删除规则 (Del)</value>
+  </data>
+  <data name="sldEditor_rules_duplicate" xml:space="preserve">
+    <value>复制规则 (Ctrl+D)</value>
+  </data>
+  <data name="sldEditor_rules_empty" xml:space="preserve">
+    <value>不绘制任何内容</value>
+  </data>
+  <data name="sldEditor_rules_hint" xml:space="preserve">
+    <value>要素会由其匹配的每条规则绘制；靠下的规则绘制在上层。</value>
+  </data>
+  <data name="sldEditor_rules_moveDown" xml:space="preserve">
+    <value>下移 (Alt+Down)</value>
+  </data>
+  <data name="sldEditor_rules_moveUp" xml:space="preserve">
+    <value>上移 (Alt+Up)</value>
+  </data>
+  <data name="sldEditor_rules_noSelection" xml:space="preserve">
+    <value>在左侧选择一条规则进行编辑，或添加新规则。</value>
+  </data>
+  <data name="sldEditor_rules_none" xml:space="preserve">
+    <value>此样式还没有规则。</value>
+  </data>
+  <data name="sldEditor_scale_all" xml:space="preserve">
+    <value>所有比例尺</value>
+  </data>
+  <data name="sldEditor_scale_between" xml:space="preserve">
+    <value>1:{0} 至 1:{1} 之间</value>
+  </data>
+  <data name="sldEditor_scale_closerThan" xml:space="preserve">
+    <value>比 1:{0} 更近</value>
+  </data>
+  <data name="sldEditor_scale_fartherThan" xml:space="preserve">
+    <value>1:{0} 及更远</value>
+  </data>
+  <data name="sldEditor_scale_hint" xml:space="preserve">
+    <value>规则仅在两个界限之间绘制。留空表示不设界限。1:5,000 比 1:50,000 更近。</value>
+  </data>
+  <data name="sldEditor_scale_inverted" xml:space="preserve">
+    <value>放大界限必须小于缩小界限，否则规则永远不会绘制。</value>
+  </data>
+  <data name="sldEditor_scale_maxLabel" xml:space="preserve">
+    <value>缩小界限</value>
+  </data>
+  <data name="sldEditor_scale_minLabel" xml:space="preserve">
+    <value>放大界限</value>
+  </data>
+  <data name="sldEditor_scale_noLimit" xml:space="preserve">
+    <value>无界限</value>
+  </data>
+  <data name="sldEditor_section_ends" xml:space="preserve">
+    <value>线端与拐角</value>
+  </data>
+  <data name="sldEditor_section_fill" xml:space="preserve">
+    <value>填充</value>
+  </data>
+  <data name="sldEditor_section_geometry" xml:space="preserve">
+    <value>几何</value>
+  </data>
+  <data name="sldEditor_section_halo" xml:space="preserve">
+    <value>光晕</value>
+  </data>
+  <data name="sldEditor_section_outline" xml:space="preserve">
+    <value>轮廓</value>
+  </data>
+  <data name="sldEditor_section_pattern" xml:space="preserve">
+    <value>图案</value>
+  </data>
+  <data name="sldEditor_style_panel" xml:space="preserve">
+    <value>样式名称与说明</value>
+  </data>
+  <data name="sldEditor_symbolizer_add" xml:space="preserve">
+    <value>添加符号：</value>
+  </data>
+  <data name="sldEditor_symbolizer_line" xml:space="preserve">
+    <value>线</value>
+  </data>
+  <data name="sldEditor_symbolizer_moveDown" xml:space="preserve">
+    <value>下移</value>
+  </data>
+  <data name="sldEditor_symbolizer_moveUp" xml:space="preserve">
+    <value>上移</value>
+  </data>
+  <data name="sldEditor_symbolizer_none" xml:space="preserve">
+    <value>此规则尚未绘制任何内容。请在下方添加符号。</value>
+  </data>
+  <data name="sldEditor_symbolizer_orderHint" xml:space="preserve">
+    <value>符号按列表顺序绘制：靠下的绘制在上层。</value>
+  </data>
+  <data name="sldEditor_symbolizer_point" xml:space="preserve">
+    <value>标记</value>
+  </data>
+  <data name="sldEditor_symbolizer_polygon" xml:space="preserve">
+    <value>填充</value>
+  </data>
+  <data name="sldEditor_symbolizer_raster" xml:space="preserve">
+    <value>栅格</value>
+  </data>
+  <data name="sldEditor_symbolizer_remove" xml:space="preserve">
+    <value>移除符号</value>
+  </data>
+  <data name="sldEditor_symbolizer_text" xml:space="preserve">
+    <value>标注</value>
+  </data>
+  <data name="sldEditor_tab_details" xml:space="preserve">
+    <value>详细信息</value>
+  </data>
+  <data name="sldEditor_tab_filterScale" xml:space="preserve">
+    <value>筛选与比例尺</value>
+  </data>
+  <data name="sldEditor_tab_symbology" xml:space="preserve">
+    <value>符号系统</value>
+  </data>
+  <data name="sldEditor_xml_copy" xml:space="preserve">
+    <value>复制</value>
+  </data>
+  <data name="sldEditor_xml_live" xml:space="preserve">
+    <value>编辑时实时更新。这就是“应用”和“确定”保存的内容。</value>
+  </data>
+  <data name="sldEditor_rule_newTitle" xml:space="preserve">
+    <value>规则 {0}</value>
+  </data>
+  <data name="legend_import_gisFiles" xml:space="preserve">
+    <value>GIS/CAD 文件</value>
+  </data>
+  <data name="legend_import_googleEarth" xml:space="preserve">
+    <value>Google Earth</value>
+  </data>
+  <data name="legend_import_tables" xml:space="preserve">
+    <value>表格</value>
+  </data>
+  <data name="legend_import_json" xml:space="preserve">
+    <value>JSON</value>
+  </data>
+  <data name="legend_filter_groupVector" xml:space="preserve">
+    <value>矢量</value>
+  </data>
+  <data name="legend_filter_groupRaster" xml:space="preserve">
+    <value>栅格</value>
+  </data>
+  <data name="legend_filter_groupService" xml:space="preserve">
+    <value>服务</value>
+  </data>
+  <data name="legend_filter_groupOther" xml:space="preserve">
+    <value>其他</value>
+  </data>
+  <data name="legend_filter_kindRest" xml:space="preserve">
+    <value>REST 服务</value>
+  </data>
+  <data name="legend_filter_kindGrpc" xml:space="preserve">
+    <value>gRPC 服务</value>
+  </data>
+  <data name="legend_filter_kindWorldfile" xml:space="preserve">
+    <value>World 文件</value>
+  </data>
+  <data name="legend_filter_kindImagePyramid" xml:space="preserve">
+    <value>影像金字塔</value>
+  </data>
+  <data name="legend_filter_kindOther" xml:space="preserve">
+    <value>未指定</value>
+  </data>
+  <data name="legend_filter_only" xml:space="preserve">
+    <value>仅此</value>
   </data>
 </root>

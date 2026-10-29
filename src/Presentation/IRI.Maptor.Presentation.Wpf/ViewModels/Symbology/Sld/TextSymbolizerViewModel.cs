@@ -49,6 +49,7 @@ public class TextSymbolizerViewModel : SymbolizerViewModelBase
         {
             _fontStyle = value;
             RaisePropertyChanged();
+            RaisePropertyChanged(nameof(IsItalic));
         }
     }
 
@@ -60,7 +61,28 @@ public class TextSymbolizerViewModel : SymbolizerViewModelBase
         {
             _fontWeight = value;
             RaisePropertyChanged();
+            RaisePropertyChanged(nameof(IsBold));
         }
+    }
+
+    /// <summary>The halo's full width in the editor's preview: twice the SLD radius, none while it is off (not saved).</summary>
+    public double PreviewHaloWidth => EnableHalo ? HaloRadius * 2 : 0;
+
+    /// <summary>The editor's bold toggle over <see cref="FontWeight"/>.</summary>
+    public bool IsBold
+    {
+        get => FontWeight == Sld_FontWeight.Bold;
+        set => FontWeight = value ? Sld_FontWeight.Bold : Sld_FontWeight.Normal;
+    }
+
+    /// <summary>
+    /// The editor's italic toggle over <see cref="FontStyle"/>; an oblique font loaded from an SLD shows as
+    /// italic and stays oblique until the toggle is used.
+    /// </summary>
+    public bool IsItalic
+    {
+        get => FontStyle != Sld_FontStyle.Normal;
+        set => FontStyle = value ? Sld_FontStyle.Italic : Sld_FontStyle.Normal;
     }
 
     private System.Windows.Media.Color _fontColor = System.Windows.Media.Colors.Black;
@@ -82,6 +104,7 @@ public class TextSymbolizerViewModel : SymbolizerViewModelBase
         {
             _enableHalo = value;
             RaisePropertyChanged();
+            RaisePropertyChanged(nameof(PreviewHaloWidth));
         }
     }
 
@@ -93,6 +116,7 @@ public class TextSymbolizerViewModel : SymbolizerViewModelBase
         {
             _haloRadius = Math.Max(0, value);
             RaisePropertyChanged();
+            RaisePropertyChanged(nameof(PreviewHaloWidth));
         }
     }
 
@@ -115,6 +139,7 @@ public class TextSymbolizerViewModel : SymbolizerViewModelBase
         {
             _haloOpacity = Math.Clamp(value, 0.0, 1.0);
             RaisePropertyChanged();
+            RaisePropertyChanged(nameof(PreviewHaloWidth));
         }
     }
 

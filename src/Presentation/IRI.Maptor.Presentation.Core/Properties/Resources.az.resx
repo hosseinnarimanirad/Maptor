@@ -887,7 +887,7 @@
     <value>Şəffaflıq:</value>
   </data>
   <data name="layerSettings_general_sourceAddress" xml:space="preserve">
-    <value>Mənbə ünvanı</value>
+    <value>Mənbə ünvanı:</value>
   </data>
   <data name="layerSettings_general_sourceType" xml:space="preserve">
     <value>Mənbə növü:</value>
@@ -1950,5 +1950,650 @@
   </data>
   <data name="identify_featuresFound" xml:space="preserve">
     <value>Tapılan obyektlər</value>
+  </data>
+  <data name="featureTable_unsavedChangesNote" xml:space="preserve">
+    <value>{0} yadda saxlanmamış dəyişiklik (cəmlərə daxil deyil)</value>
+  </data>
+  <data name="featureTable_showUnsavedChanges" xml:space="preserve">
+    <value>Yalnız yadda saxlanmamış dəyişiklikləri göstər</value>
+  </data>
+  <data name="legendItem_zoomInToSeeAllFeatures" xml:space="preserve">
+    <value>Bütün obyektlər göstərilmir: bu ərazidə bir dəfəyə yüklənə biləndən çox obyekt var. Hamısını görmək üçün yaxınlaşdırın</value>
+  </data>
+  <data name="serverLayerSettings_title" xml:space="preserve">
+    <value>Server laylarının parametrləri</value>
+  </data>
+  <data name="serverLayerSettings_searchPlaceholder" xml:space="preserve">
+    <value>Lay və qrupları axtar</value>
+  </data>
+  <data name="serverLayerSettings_noMatch" xml:space="preserve">
+    <value>Axtarışa uyğun lay və ya qrup yoxdur.</value>
+  </data>
+  <data name="serverLayerSettings_noSelection" xml:space="preserve">
+    <value>Redaktə etmək üçün lay və ya qrup seçin.</value>
+  </data>
+  <data name="serverLayerSettings_loadFailed" xml:space="preserve">
+    <value>Lay parametrləri serverdən yüklənmədi.</value>
+  </data>
+  <data name="serverLayerSettings_saveFailed" xml:space="preserve">
+    <value>Dəyişikliklər serverə göndərilmədi.</value>
+  </data>
+  <data name="serverLayerSettings_retry" xml:space="preserve">
+    <value>Yenidən cəhd et</value>
+  </data>
+  <data name="serverLayerSettings_reload" xml:space="preserve">
+    <value>Serverdən yenidən yüklə</value>
+  </data>
+  <data name="serverLayerSettings_revert" xml:space="preserve">
+    <value>Geri qaytar</value>
+  </data>
+  <data name="serverLayerSettings_topLevel" xml:space="preserve">
+    <value>Yuxarı səviyyə</value>
+  </data>
+  <data name="serverLayerSettings_layerCount" xml:space="preserve">
+    <value>Laylar: {0}</value>
+  </data>
+  <data name="serverLayerSettings_badge_unsaved" xml:space="preserve">
+    <value>Saxlanmayıb</value>
+  </data>
+  <data name="serverLayerSettings_badge_inactive" xml:space="preserve">
+    <value>Qeyri-aktiv</value>
+  </data>
+  <data name="serverLayerSettings_badge_group" xml:space="preserve">
+    <value>Qrup</value>
+  </data>
+  <data name="serverLayerSettings_badge_live" xml:space="preserve">
+    <value>Canlı</value>
+  </data>
+  <data name="serverLayerSettings_tab_general" xml:space="preserve">
+    <value>Ümumi</value>
+  </data>
+  <data name="serverLayerSettings_tab_display" xml:space="preserve">
+    <value>Görünüş</value>
+  </data>
+  <data name="serverLayerSettings_tab_labels" xml:space="preserve">
+    <value>Etiketlər</value>
+  </data>
+  <data name="serverLayerSettings_tab_loading" xml:space="preserve">
+    <value>Yükləmə</value>
+  </data>
+  <data name="serverLayerSettings_section_visibility" xml:space="preserve">
+    <value>Görünmə</value>
+  </data>
+  <data name="serverLayerSettings_section_source" xml:space="preserve">
+    <value>Məlumat mənbəyi</value>
+  </data>
+  <data name="serverLayerSettings_section_zoom" xml:space="preserve">
+    <value>Görünən miqyas aralığı</value>
+  </data>
+  <data name="serverLayerSettings_section_style" xml:space="preserve">
+    <value>Üslub</value>
+  </data>
+  <data name="serverLayerSettings_field_title" xml:space="preserve">
+    <value>Başlıq</value>
+  </data>
+  <data name="serverLayerSettings_field_group" xml:space="preserve">
+    <value>Qrup</value>
+  </data>
+  <data name="serverLayerSettings_field_active" xml:space="preserve">
+    <value>Aktiv</value>
+  </data>
+  <data name="serverLayerSettings_hint_active" xml:space="preserve">
+    <value>Qeyri-aktiv lay və ya qrup bütün istifadəçilərdən gizlədilir.</value>
+  </data>
+  <data name="serverLayerSettings_field_onByDefault" xml:space="preserve">
+    <value>Xəritə açılanda görünür</value>
+  </data>
+  <data name="serverLayerSettings_field_expanded" xml:space="preserve">
+    <value>Lay siyahısında açıq</value>
+  </data>
+  <data name="serverLayerSettings_field_searchable" xml:space="preserve">
+    <value>Xəritə axtarışına daxildir</value>
+  </data>
+  <data name="serverLayerSettings_field_table" xml:space="preserve">
+    <value>Cədvəl</value>
+  </data>
+  <data name="serverLayerSettings_field_serviceUrl" xml:space="preserve">
+    <value>Xidmət URL-i</value>
+  </data>
+  <data name="serverLayerSettings_field_id" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="serverLayerSettings_field_zoomFrom" xml:space="preserve">
+    <value>Səviyyədən</value>
+  </data>
+  <data name="serverLayerSettings_field_zoomTo" xml:space="preserve">
+    <value>səviyyəyə</value>
+  </data>
+  <data name="serverLayerSettings_noLimit" xml:space="preserve">
+    <value>Məhdudiyyət yoxdur</value>
+  </data>
+  <data name="serverLayerSettings_hint_zoom" xml:space="preserve">
+    <value>Məhdudiyyət olmaması üçün səviyyəni boş saxlayın. Səviyyə 0 bütün dünyanı, səviyyə 18 küçə təfərrüatını göstərir.</value>
+  </data>
+  <data name="serverLayerSettings_sld_none" xml:space="preserve">
+    <value>Aşağıdakı sadə üslubla çəkilir.</value>
+  </data>
+  <data name="serverLayerSettings_sld_active" xml:space="preserve">
+    <value>SLD üslubu ilə çəkilir. O təyin olunduqca aşağıdakı rənglər istifadə edilmir.</value>
+  </data>
+  <data name="serverLayerSettings_sld_edit" xml:space="preserve">
+    <value>SLD-ni redaktə et…</value>
+  </data>
+  <data name="serverLayerSettings_sld_remove" xml:space="preserve">
+    <value>SLD-ni sil</value>
+  </data>
+  <data name="serverLayerSettings_field_fill" xml:space="preserve">
+    <value>Doldurma</value>
+  </data>
+  <data name="serverLayerSettings_field_stroke" xml:space="preserve">
+    <value>Kontur</value>
+  </data>
+  <data name="serverLayerSettings_field_strokeWidth" xml:space="preserve">
+    <value>Kontur qalınlığı</value>
+  </data>
+  <data name="serverLayerSettings_field_opacity" xml:space="preserve">
+    <value>Qeyri-şəffaflıq</value>
+  </data>
+  <data name="serverLayerSettings_field_preview" xml:space="preserve">
+    <value>Önizləmə</value>
+  </data>
+  <data name="serverLayerSettings_field_hasLabels" xml:space="preserve">
+    <value>Bu layın etiketləri var</value>
+  </data>
+  <data name="serverLayerSettings_field_labelsOn" xml:space="preserve">
+    <value>Xəritə açılanda etiketləri göstər</value>
+  </data>
+  <data name="serverLayerSettings_field_labelColumn" xml:space="preserve">
+    <value>Etiket sahəsi</value>
+  </data>
+  <data name="serverLayerSettings_field_labelSize" xml:space="preserve">
+    <value>Şrift ölçüsü</value>
+  </data>
+  <data name="serverLayerSettings_field_labelColor" xml:space="preserve">
+    <value>Rəng</value>
+  </data>
+  <data name="serverLayerSettings_mode_cache" xml:space="preserve">
+    <value>Hamısını birdən yüklə (Cache)</value>
+  </data>
+  <data name="serverLayerSettings_mode_cacheDescription" xml:space="preserve">
+    <value>Bütün lay xəritə açılanda bir dəfə endirilir. Kiçik və orta laylar üçün ən yaxşısıdır.</value>
+  </data>
+  <data name="serverLayerSettings_mode_live" xml:space="preserve">
+    <value>Xəritə görünüşünə görə yüklə (Live)</value>
+  </data>
+  <data name="serverLayerSettings_mode_liveDescription" xml:space="preserve">
+    <value>Xəritə hərəkət etdikcə yalnız görünən ərazidəki obyektlər endirilir; atribut cədvəli və axtarış serverə müraciət edir. Çox böyük laylar üçün ən yaxşısıdır.</value>
+  </data>
+  <data name="serverLayerSettings_hint_appliesNext" xml:space="preserve">
+    <value>Saxlanmış dəyişikliklər digər istifadəçilərə növbəti girişdə və ya layları yenidən yükləyəndə çatır.</value>
+  </data>
+  <data name="serverLayerSettings_status_noChanges" xml:space="preserve">
+    <value>Saxlanmamış dəyişiklik yoxdur</value>
+  </data>
+  <data name="serverLayerSettings_status_changes" xml:space="preserve">
+    <value>Saxlanmamış dəyişikliklər: {0}</value>
+  </data>
+  <data name="serverLayerSettings_status_invalid" xml:space="preserve">
+    <value>Xətalı: {0}</value>
+  </data>
+  <data name="serverLayerSettings_result_saved" xml:space="preserve">
+    <value>Dəyişikliklər saxlandı ({0}).</value>
+  </data>
+  <data name="serverLayerSettings_result_partial" xml:space="preserve">
+    <value>Saxlanıb: {0} · Saxlanmayıb: {1}</value>
+  </data>
+  <data name="serverLayerSettings_conflict" xml:space="preserve">
+    <value>Siz pəncərəni açandan sonra başqası bu elementi saxladı. Son versiyanı almaq üçün yenidən yükləyin; bu elementdəki dəyişiklikləriniz itəcək.</value>
+  </data>
+  <data name="serverLayerSettings_notFound" xml:space="preserve">
+    <value>Bu element artıq serverdə yoxdur.</value>
+  </data>
+  <data name="serverLayerSettings_serverRejected" xml:space="preserve">
+    <value>Server bu dəyişiklikləri qəbul etmədi.</value>
+  </data>
+  <data name="serverLayerSettings_confirmDiscard" xml:space="preserve">
+    <value>Saxlanmamış dəyişikliklər var. Onlardan imtina edilsin?</value>
+  </data>
+  <data name="serverLayerSettings_error_titleRequired" xml:space="preserve">
+    <value>Başlıq daxil edin.</value>
+  </data>
+  <data name="serverLayerSettings_error_titleTooLong" xml:space="preserve">
+    <value>Başlıq çox uzundur.</value>
+  </data>
+  <data name="serverLayerSettings_error_layerZoomOutOfRange" xml:space="preserve">
+    <value>Miqyas səviyyələri 0 ilə 24 arasında olmalıdır.</value>
+  </data>
+  <data name="serverLayerSettings_error_layerZoomRangeInverted" xml:space="preserve">
+    <value>Birinci miqyas səviyyəsi ikincidən böyük olmamalıdır.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelZoomOutOfRange" xml:space="preserve">
+    <value>Etiket miqyas səviyyələri 0 ilə 24 arasında olmalıdır.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelZoomRangeInverted" xml:space="preserve">
+    <value>Birinci etiket miqyas səviyyəsi ikincidən böyük olmamalıdır.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidFillColor" xml:space="preserve">
+    <value>Doldurma rəngi etibarlı deyil.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidStrokeColor" xml:space="preserve">
+    <value>Kontur rəngi etibarlı deyil.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidLabelColor" xml:space="preserve">
+    <value>Etiket rəngi etibarlı deyil.</value>
+  </data>
+  <data name="serverLayerSettings_error_opacityOutOfRange" xml:space="preserve">
+    <value>Qeyri-şəffaflıq 0% ilə 100% arasında olmalıdır.</value>
+  </data>
+  <data name="serverLayerSettings_error_strokeThicknessOutOfRange" xml:space="preserve">
+    <value>Kontur qalınlığı 0 ilə 50 arasında olmalıdır.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelSizeOutOfRange" xml:space="preserve">
+    <value>Etiket şrift ölçüsü 1 ilə 72 arasında olmalıdır.</value>
+  </data>
+  <data name="serverLayerSettings_error_labelColumnRequired" xml:space="preserve">
+    <value>Etiketlərin göstərəcəyi sahəni seçin.</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownLabelColumn" xml:space="preserve">
+    <value>Etiket sahəsi bu layın sahəsi deyil.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidSld" xml:space="preserve">
+    <value>SLD üslubu oxunmur.</value>
+  </data>
+  <data name="serverLayerSettings_error_invalidLoadMode" xml:space="preserve">
+    <value>Layın necə yüklənəcəyini seçin.</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownRow" xml:space="preserve">
+    <value>Elementlərdən biri artıq serverdə yoxdur.</value>
+  </data>
+  <data name="serverLayerSettings_error_unknownGroup" xml:space="preserve">
+    <value>Hədəf qrup artıq yoxdur.</value>
+  </data>
+  <data name="serverLayerSettings_error_groupInGroup" xml:space="preserve">
+    <value>Qrupu başqa qrupun içinə yerləşdirmək olmaz.</value>
+  </data>
+  <data name="serverLayerSettings_error_duplicateRow" xml:space="preserve">
+    <value>Bir element sorğuda iki dəfə var.</value>
+  </data>
+  <data name="serverLayerSettings_cmd_newGroup" xml:space="preserve">
+    <value>Yeni qrup</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveUp" xml:space="preserve">
+    <value>Yuxarı köçür</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveDown" xml:space="preserve">
+    <value>Aşağı köçür</value>
+  </data>
+  <data name="serverLayerSettings_cmd_moveTo" xml:space="preserve">
+    <value>Köçür</value>
+  </data>
+  <data name="serverLayerSettings_cmd_rename" xml:space="preserve">
+    <value>Adını dəyiş</value>
+  </data>
+  <data name="serverLayerSettings_cmd_deleteGroup" xml:space="preserve">
+    <value>Qrupu sil</value>
+  </data>
+  <data name="serverLayerSettings_moveTo_topLevel" xml:space="preserve">
+    <value>Yuxarı səviyyə (qrupsuz)</value>
+  </data>
+  <data name="serverLayerSettings_newGroup_title" xml:space="preserve">
+    <value>Yeni qrup</value>
+  </data>
+  <data name="serverLayerSettings_group_created" xml:space="preserve">
+    <value>"{0}" qrupu yaradıldı.</value>
+  </data>
+  <data name="serverLayerSettings_group_deleted" xml:space="preserve">
+    <value>"{0}" qrupu silindi.</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_confirm" xml:space="preserve">
+    <value>"{0}" qrupu silinsin?</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_notEmpty" xml:space="preserve">
+    <value>Yalnız boş qrup silinə bilər. Əvvəlcə onun laylarını başqa qrupa köçürün.</value>
+  </data>
+  <data name="serverLayerSettings_deleteGroup_pendingMoves" xml:space="preserve">
+    <value>Qrupu silməzdən əvvəl köçürülmüş layları saxlayın və ya geri qaytarın.</value>
+  </data>
+  <data name="serverLayerSettings_orderRejected" xml:space="preserve">
+    <value>Server yeni sıralamanı qəbul etmədi.</value>
+  </data>
+  <data name="serverLayerSettings_hint_dragDrop" xml:space="preserve">
+    <value>Layların sırasını dəyişmək və ya başqa qrupa köçürmək üçün onları sürükləyin.</value>
+  </data>
+  <data name="serverLayerSettings_cmd_open" xml:space="preserve">
+    <value>Server parametrləri…</value>
+  </data>
+  <data name="serverLayerSettings_reloadMapConfirm" xml:space="preserve">
+    <value>Lay parametrləri saxlanıldı. Onları görmək üçün xəritənin server layları indi yenidən yüklənsin? Obyektlərin saxlanmamış düzəlişləri itəcək.</value>
+  </data>
+  <data name="dialog_symbology_noFill" xml:space="preserve">
+    <value>Doldurma yoxdur</value>
+  </data>
+  <data name="dialog_symbology_noStroke" xml:space="preserve">
+    <value>Kontur yoxdur</value>
+  </data>
+  <data name="sldEditor_badge_filter" xml:space="preserve">
+    <value>Filtr</value>
+  </data>
+  <data name="sldEditor_badge_scale" xml:space="preserve">
+    <value>Miqyas aralığı</value>
+  </data>
+  <data name="sldEditor_cap_butt" xml:space="preserve">
+    <value>Düz</value>
+  </data>
+  <data name="sldEditor_cap_round" xml:space="preserve">
+    <value>Yuvarlaq</value>
+  </data>
+  <data name="sldEditor_cap_square" xml:space="preserve">
+    <value>Kvadrat</value>
+  </data>
+  <data name="sldEditor_dash_dashDot" xml:space="preserve">
+    <value>Xətt-nöqtə</value>
+  </data>
+  <data name="sldEditor_dash_dashed" xml:space="preserve">
+    <value>Qırıq xətt</value>
+  </data>
+  <data name="sldEditor_dash_dotted" xml:space="preserve">
+    <value>Nöqtəli</value>
+  </data>
+  <data name="sldEditor_dash_longDash" xml:space="preserve">
+    <value>Uzun qırıq</value>
+  </data>
+  <data name="sldEditor_dash_solid" xml:space="preserve">
+    <value>Bütöv</value>
+  </data>
+  <data name="sldEditor_field_bold" xml:space="preserve">
+    <value>Qalın</value>
+  </data>
+  <data name="sldEditor_field_cap" xml:space="preserve">
+    <value>Xətt ucları</value>
+  </data>
+  <data name="sldEditor_field_color" xml:space="preserve">
+    <value>Rəng</value>
+  </data>
+  <data name="sldEditor_field_dashOffset" xml:space="preserve">
+    <value>Naxış sürüşməsi</value>
+  </data>
+  <data name="sldEditor_field_dashPattern" xml:space="preserve">
+    <value>Qırıq xətt naxışı</value>
+  </data>
+  <data name="sldEditor_field_font" xml:space="preserve">
+    <value>Şrift</value>
+  </data>
+  <data name="sldEditor_field_geometryDefault" xml:space="preserve">
+    <value>Layın həndəsəsi</value>
+  </data>
+  <data name="sldEditor_field_haloOn" xml:space="preserve">
+    <value>Mətnin ətrafında hale çək</value>
+  </data>
+  <data name="sldEditor_field_italic" xml:space="preserve">
+    <value>Kursiv</value>
+  </data>
+  <data name="sldEditor_field_join" xml:space="preserve">
+    <value>Künclər</value>
+  </data>
+  <data name="sldEditor_field_labelField" xml:space="preserve">
+    <value>Sahədən mətn</value>
+  </data>
+  <data name="sldEditor_field_labelFieldWatermark" xml:space="preserve">
+    <value>Sahə seçin və ya yazın</value>
+  </data>
+  <data name="sldEditor_field_opacity" xml:space="preserve">
+    <value>Qeyri-şəffaflıq</value>
+  </data>
+  <data name="sldEditor_field_rotation" xml:space="preserve">
+    <value>Fırlanma</value>
+  </data>
+  <data name="sldEditor_field_shape" xml:space="preserve">
+    <value>Forma</value>
+  </data>
+  <data name="sldEditor_field_size" xml:space="preserve">
+    <value>Ölçü</value>
+  </data>
+  <data name="sldEditor_field_width" xml:space="preserve">
+    <value>En</value>
+  </data>
+  <data name="sldEditor_filter_advancedNotice" xml:space="preserve">
+    <value>Bu qaydanın burada göstərilə bilməyən filtri var. Yuxarıda sahə seçməsəniz, olduğu kimi saxlanılır.</value>
+  </data>
+  <data name="sldEditor_filter_onlyMatching" xml:space="preserve">
+    <value>Yalnız şərtə uyğun obyektləri çək</value>
+  </data>
+  <data name="sldEditor_join_bevel" xml:space="preserve">
+    <value>Kəsik</value>
+  </data>
+  <data name="sldEditor_join_mitre" xml:space="preserve">
+    <value>İti</value>
+  </data>
+  <data name="sldEditor_join_round" xml:space="preserve">
+    <value>Yuvarlaq</value>
+  </data>
+  <data name="sldEditor_mark_circle" xml:space="preserve">
+    <value>Dairə</value>
+  </data>
+  <data name="sldEditor_mark_cross" xml:space="preserve">
+    <value>Artı</value>
+  </data>
+  <data name="sldEditor_mark_square" xml:space="preserve">
+    <value>Kvadrat</value>
+  </data>
+  <data name="sldEditor_mark_star" xml:space="preserve">
+    <value>Ulduz</value>
+  </data>
+  <data name="sldEditor_mark_triangle" xml:space="preserve">
+    <value>Üçbucaq</value>
+  </data>
+  <data name="sldEditor_mark_x" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="sldEditor_op_equal" xml:space="preserve">
+    <value>bərabərdir</value>
+  </data>
+  <data name="sldEditor_op_greaterThan" xml:space="preserve">
+    <value>böyükdür</value>
+  </data>
+  <data name="sldEditor_op_greaterThanOrEqual" xml:space="preserve">
+    <value>ən azı</value>
+  </data>
+  <data name="sldEditor_op_lessThan" xml:space="preserve">
+    <value>kiçikdir</value>
+  </data>
+  <data name="sldEditor_op_lessThanOrEqual" xml:space="preserve">
+    <value>ən çoxu</value>
+  </data>
+  <data name="sldEditor_op_notEqual" xml:space="preserve">
+    <value>bərabər deyil</value>
+  </data>
+  <data name="sldEditor_preview_labelSample" xml:space="preserve">
+    <value>Etiket</value>
+  </data>
+  <data name="sldEditor_preview_legend" xml:space="preserve">
+    <value>Xəritə şərhi</value>
+  </data>
+  <data name="sldEditor_preview_none" xml:space="preserve">
+    <value>Önizləmə üçün qayda seçin.</value>
+  </data>
+  <data name="sldEditor_preview_title" xml:space="preserve">
+    <value>Önizləmə</value>
+  </data>
+  <data name="sldEditor_rule_copySuffix" xml:space="preserve">
+    <value>surət</value>
+  </data>
+  <data name="sldEditor_rule_detailsHint" xml:space="preserve">
+    <value>Başlıq xəritə şərhinin göstərdiyi mətndir. Ad qaydanı SLD daxilində müəyyən edir.</value>
+  </data>
+  <data name="sldEditor_rule_titleHint" xml:space="preserve">
+    <value>Xəritə şərhinin bu qayda üçün göstərdiyi mətn</value>
+  </data>
+  <data name="sldEditor_rule_titleWatermark" xml:space="preserve">
+    <value>Şərh mətni</value>
+  </data>
+  <data name="sldEditor_rules_count" xml:space="preserve">
+    <value>Qaydalar: {0}</value>
+  </data>
+  <data name="sldEditor_rules_delete" xml:space="preserve">
+    <value>Qaydanı sil (Del)</value>
+  </data>
+  <data name="sldEditor_rules_duplicate" xml:space="preserve">
+    <value>Qaydanın surətini çıxar (Ctrl+D)</value>
+  </data>
+  <data name="sldEditor_rules_empty" xml:space="preserve">
+    <value>Heç nə çəkmir</value>
+  </data>
+  <data name="sldEditor_rules_hint" xml:space="preserve">
+    <value>Obyekt uyğun gəldiyi bütün qaydalarla çəkilir; aşağıdakı qaydalar üstdə çəkilir.</value>
+  </data>
+  <data name="sldEditor_rules_moveDown" xml:space="preserve">
+    <value>Aşağı (Alt+Down)</value>
+  </data>
+  <data name="sldEditor_rules_moveUp" xml:space="preserve">
+    <value>Yuxarı (Alt+Up)</value>
+  </data>
+  <data name="sldEditor_rules_noSelection" xml:space="preserve">
+    <value>Redaktə üçün soldan qayda seçin və ya yenisini əlavə edin.</value>
+  </data>
+  <data name="sldEditor_rules_none" xml:space="preserve">
+    <value>Bu üslubda hələ qayda yoxdur.</value>
+  </data>
+  <data name="sldEditor_scale_all" xml:space="preserve">
+    <value>Bütün miqyaslar</value>
+  </data>
+  <data name="sldEditor_scale_between" xml:space="preserve">
+    <value>1:{0} ilə 1:{1} arasında</value>
+  </data>
+  <data name="sldEditor_scale_closerThan" xml:space="preserve">
+    <value>1:{0}-dən yaxın</value>
+  </data>
+  <data name="sldEditor_scale_fartherThan" xml:space="preserve">
+    <value>1:{0}-dən uzağa</value>
+  </data>
+  <data name="sldEditor_scale_hint" xml:space="preserve">
+    <value>Qayda yalnız iki hədd arasında çəkilir. Hədd istəmirsinizsə, boş saxlayın. 1:5,000 1:50,000-dən yaxındır.</value>
+  </data>
+  <data name="sldEditor_scale_inverted" xml:space="preserve">
+    <value>Yaxınlaşdırma həddi uzaqlaşdırma həddindən kiçik olmalıdır, əks halda qayda heç vaxt çəkilməz.</value>
+  </data>
+  <data name="sldEditor_scale_maxLabel" xml:space="preserve">
+    <value>Uzaqlaşdırma həddi</value>
+  </data>
+  <data name="sldEditor_scale_minLabel" xml:space="preserve">
+    <value>Yaxınlaşdırma həddi</value>
+  </data>
+  <data name="sldEditor_scale_noLimit" xml:space="preserve">
+    <value>Hədd yoxdur</value>
+  </data>
+  <data name="sldEditor_section_ends" xml:space="preserve">
+    <value>Uclar və künclər</value>
+  </data>
+  <data name="sldEditor_section_fill" xml:space="preserve">
+    <value>Doldurma</value>
+  </data>
+  <data name="sldEditor_section_geometry" xml:space="preserve">
+    <value>Həndəsə</value>
+  </data>
+  <data name="sldEditor_section_halo" xml:space="preserve">
+    <value>Hale</value>
+  </data>
+  <data name="sldEditor_section_outline" xml:space="preserve">
+    <value>Kontur</value>
+  </data>
+  <data name="sldEditor_section_pattern" xml:space="preserve">
+    <value>Naxış</value>
+  </data>
+  <data name="sldEditor_style_panel" xml:space="preserve">
+    <value>Üslubun adı və təsviri</value>
+  </data>
+  <data name="sldEditor_symbolizer_add" xml:space="preserve">
+    <value>Simvol əlavə et:</value>
+  </data>
+  <data name="sldEditor_symbolizer_line" xml:space="preserve">
+    <value>Xətt</value>
+  </data>
+  <data name="sldEditor_symbolizer_moveDown" xml:space="preserve">
+    <value>Aşağı</value>
+  </data>
+  <data name="sldEditor_symbolizer_moveUp" xml:space="preserve">
+    <value>Yuxarı</value>
+  </data>
+  <data name="sldEditor_symbolizer_none" xml:space="preserve">
+    <value>Bu qayda hələ heç nə çəkmir. Aşağıdan simvol əlavə edin.</value>
+  </data>
+  <data name="sldEditor_symbolizer_orderHint" xml:space="preserve">
+    <value>Simvollar siyahı sırası ilə çəkilir: aşağıdakılar üstdə çəkilir.</value>
+  </data>
+  <data name="sldEditor_symbolizer_point" xml:space="preserve">
+    <value>Marker</value>
+  </data>
+  <data name="sldEditor_symbolizer_polygon" xml:space="preserve">
+    <value>Doldurma</value>
+  </data>
+  <data name="sldEditor_symbolizer_raster" xml:space="preserve">
+    <value>Raster</value>
+  </data>
+  <data name="sldEditor_symbolizer_remove" xml:space="preserve">
+    <value>Simvolu sil</value>
+  </data>
+  <data name="sldEditor_symbolizer_text" xml:space="preserve">
+    <value>Etiket</value>
+  </data>
+  <data name="sldEditor_tab_details" xml:space="preserve">
+    <value>Təfərrüat</value>
+  </data>
+  <data name="sldEditor_tab_filterScale" xml:space="preserve">
+    <value>Filtr və miqyas</value>
+  </data>
+  <data name="sldEditor_tab_symbology" xml:space="preserve">
+    <value>Simvolika</value>
+  </data>
+  <data name="sldEditor_xml_copy" xml:space="preserve">
+    <value>Kopyala</value>
+  </data>
+  <data name="sldEditor_xml_live" xml:space="preserve">
+    <value>Redaktə etdikcə yenilənir. Tətbiq et və OK bunu saxlayır.</value>
+  </data>
+  <data name="sldEditor_rule_newTitle" xml:space="preserve">
+    <value>Qayda {0}</value>
+  </data>
+  <data name="legend_import_gisFiles" xml:space="preserve">
+    <value>GIS/CAD faylları</value>
+  </data>
+  <data name="legend_import_googleEarth" xml:space="preserve">
+    <value>Google Earth</value>
+  </data>
+  <data name="legend_import_tables" xml:space="preserve">
+    <value>Cədvəllər</value>
+  </data>
+  <data name="legend_import_json" xml:space="preserve">
+    <value>JSON</value>
+  </data>
+  <data name="legend_filter_groupVector" xml:space="preserve">
+    <value>Vektor</value>
+  </data>
+  <data name="legend_filter_groupRaster" xml:space="preserve">
+    <value>Raster</value>
+  </data>
+  <data name="legend_filter_groupService" xml:space="preserve">
+    <value>Xidmətlər</value>
+  </data>
+  <data name="legend_filter_groupOther" xml:space="preserve">
+    <value>Digər</value>
+  </data>
+  <data name="legend_filter_kindRest" xml:space="preserve">
+    <value>REST xidməti</value>
+  </data>
+  <data name="legend_filter_kindGrpc" xml:space="preserve">
+    <value>gRPC xidməti</value>
+  </data>
+  <data name="legend_filter_kindWorldfile" xml:space="preserve">
+    <value>World faylı</value>
+  </data>
+  <data name="legend_filter_kindImagePyramid" xml:space="preserve">
+    <value>Şəkil piramidası</value>
+  </data>
+  <data name="legend_filter_kindOther" xml:space="preserve">
+    <value>Göstərilməyib</value>
+  </data>
+  <data name="legend_filter_only" xml:space="preserve">
+    <value>Yalnız</value>
   </data>
 </root>

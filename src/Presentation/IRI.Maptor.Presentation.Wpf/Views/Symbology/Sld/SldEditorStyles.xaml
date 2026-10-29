@@ -1,0 +1,194 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:helpers="clr-namespace:IRI.Maptor.Presentation.Wpf.Helpers"
+                    xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+                    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                    xmlns:converters="clr-namespace:IRI.Maptor.Presentation.Wpf.Converters"
+                    xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
+                    xmlns:vm="clr-namespace:IRI.Maptor.Presentation.Wpf.ViewModels.Symbology">
+
+    <!--Shared by the SLD editor and its rule, filter, scale and symbolizer views. Each of those merges it,
+        because a UserControl's StaticResources resolve while it is being built, before it has a parent.
+        Everything here is chrome on design-system tokens; the colours the user edits stay bound to the
+        SLD model in the views.-->
+
+    <ResourceDictionary.MergedDictionaries>
+        <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+        <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+
+    <converters:FractionToPercentConverter x:Key="sld.PercentConverter"/>
+    <converters:WellKnownMarkToGeometryConverter x:Key="sld.MarkGeometryConverter"/>
+    <converters:SymbolizerTypeToIconConverter x:Key="sld.SymbolizerIconConverter"/>
+    <converters:NotNullToBoolConverter x:Key="sld.NotNullToBool"/>
+
+    <!--one label + editor row inside a symbolizer card-->
+    <Style x:Key="sld.FieldRow" TargetType="Grid" BasedOn="{StaticResource IRI.Maptor.Styles.Grid.FieldRow}"/>
+
+    <!--an editable row: the grey Border.Card strip the open-file and Go To dialogs use, so the borderless white
+        input inside it reads as a field you can click into. Rows that only show a value stay plain.-->
+    <Style x:Key="sld.FieldCard" TargetType="Border" BasedOn="{StaticResource IRI.Maptor.Styles.Border.Card}">
+        <Setter Property="Margin" Value="0,0,0,6"/>
+        <Setter Property="Padding" Value="10,0,4,0"/>
+    </Style>
+
+    <!--a group heading inside a card: Fill, Outline, Marker …-->
+    <Style x:Key="sld.GroupHeader" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}">
+        <Setter Property="Margin" Value="0,8,0,2"/>
+    </Style>
+
+    <!--widths, sizes, scales: always Latin digits, left to right, not stretched across the card-->
+    <Style x:Key="sld.NumberBox" TargetType="mahApp:NumericUpDown" BasedOn="{StaticResource IRI.Maptor.Styles.NumericUpDown.Normal}">
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="MinWidth" Value="130"/>
+    </Style>
+
+    <!--the picker shows the colour's name and hex code, which an RTL flow would scramble-->
+    <Style x:Key="sld.ColorBox" TargetType="mahApp:ColorPicker" BasedOn="{StaticResource IRI.Maptor.Styles.ColorPicker.Normal}">
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+    </Style>
+
+    <!--the unit after a number box: px, °-->
+    <Style x:Key="sld.Unit" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.FieldHint}">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="6,0"/>
+    </Style>
+
+    <!--the value beside an opacity slider-->
+    <Style x:Key="sld.PercentText" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.FieldValue}">
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+        <Setter Property="TextAlignment" Value="Right"/>
+        <Setter Property="MinWidth" Value="44"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <!--tab content inherits Foreground from its TabItem, and the selected tab's header text is the light
+        on-accent colour: without this every text style that sets no Foreground turns invisible-->
+    <Style x:Key="sld.TabScroll" TargetType="ScrollViewer">
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="Padding" Value="{StaticResource IRI.Maptor.Styles.Thickness.ViewContent}"/>
+    </Style>
+
+    <!--a flat toggle with a border: bold / italic, and the bottom-panel switches-->
+    <Style x:Key="sld.SegmentToggle" TargetType="ToggleButton">
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="MinWidth" Value="32"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Padding" Value="8,0"/>
+        <Setter Property="Margin" Value="0,0,4,0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="root" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}"
+                            CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="root" Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}"/>
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="root" Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="root" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
+                            <Setter TargetName="root" Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="{StaticResource IRI.Maptor.Styles.Opacity.Disabled}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--the glyph inside a SegmentToggle or a small action button-->
+    <Style x:Key="sld.ToggleIcon" TargetType="iconPacks:PackIconMaterial">
+        <Setter Property="Width" Value="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"/>
+        <Setter Property="Height" Value="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <!--a transparency checkerboard behind previews: shows what is transparent and works in both themes-->
+    <DrawingBrush x:Key="sld.CheckerBrush" TileMode="Tile" Viewport="0,0,16,16" ViewportUnits="Absolute">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="{DynamicResource MahApps.Brushes.ThemeBackground}">
+                    <GeometryDrawing.Geometry>
+                        <RectangleGeometry Rect="0,0,16,16"/>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="{DynamicResource MahApps.Brushes.Gray10}">
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <RectangleGeometry Rect="0,0,8,8"/>
+                            <RectangleGeometry Rect="8,8,8,8"/>
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+
+    <!--a rule's swatch in a list: the live image on the checkerboard-->
+    <Style x:Key="sld.SwatchFrame" TargetType="Border">
+        <Setter Property="Width" Value="40"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Background" Value="{StaticResource sld.CheckerBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+    </Style>
+
+    <!--marker shape choice: the outline of the shape, then its name-->
+    <DataTemplate x:Key="sld.MarkOptionTemplate" DataType="{x:Type vm:SldOption}">
+        <StackPanel Orientation="Horizontal">
+            <Path Width="16" Height="16" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center"
+                  Fill="{DynamicResource MahApps.Brushes.Accent}"
+                  Data="{Binding Value, Converter={StaticResource sld.MarkGeometryConverter}}"/>
+            <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+        </StackPanel>
+    </DataTemplate>
+
+    <!--a dash pattern choice: a line drawn with it, then its name-->
+    <DataTemplate x:Key="sld.DashOptionTemplate" DataType="{x:Type vm:SldDashPreset}">
+        <StackPanel Orientation="Horizontal">
+            <Line X1="0" Y1="8" X2="56" Y2="8" Width="56" Height="16" Margin="0,0,8,0" VerticalAlignment="Center"
+                  Stroke="{DynamicResource MahApps.Brushes.ThemeForeground}" StrokeThickness="2"
+                  StrokeDashArray="{Binding Dashes}"/>
+            <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+        </StackPanel>
+    </DataTemplate>
+
+    <!--a filter operator: its sign, then its name-->
+    <DataTemplate x:Key="sld.OperatorOptionTemplate" DataType="{x:Type vm:SldOption}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding Symbol}" MinWidth="18" FontWeight="SemiBold" VerticalAlignment="Center"
+                       Foreground="{DynamicResource MahApps.Brushes.Accent}"/>
+            <TextBlock Text="{Binding Name}" Margin="6,0,0,0" VerticalAlignment="Center"/>
+        </StackPanel>
+    </DataTemplate>
+
+    <!--a font family, drawn in itself-->
+    <DataTemplate x:Key="sld.FontOptionTemplate">
+        <TextBlock Text="{Binding}" FontFamily="{Binding}" VerticalAlignment="Center"/>
+    </DataTemplate>
+
+    <ItemsPanelTemplate x:Key="sld.VirtualizingPanel">
+        <VirtualizingStackPanel/>
+    </ItemsPanelTemplate>
+</ResourceDictionary>
