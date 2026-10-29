@@ -1,4 +1,5 @@
 using IRI.Maptor.Core.Common.Services;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
@@ -211,10 +212,165 @@ public static class HttpTransport
             return ResponseFactory.CreateError<T>(error!);
         }
 
-        using var request = new HttpRequestMessage(method, uri) { Content = content };
+        using var request = CreateClientRequest(method, uri!, content, bearer, headers);
 
-        // Per-request headers only — a shared client's defaults must never be mutated. A request-level
-        // Authorization overrides the client default; a null bearer leaves the client default in effect.
+        return await SendCoreAsync<T>(client, request, cancellationToken);
+    }
+
+    /// <summary>
+    /// GET on a caller-provided shared client for large JSON responses: the body is deserialized
+    /// straight from the response stream instead of first being read into one string, so a
+    /// 100 MB feature set is never held twice in memory. Results and errors are the same as the
+    /// client-based <see cref="GetAsync{T}(HttpClient, string, string?, Dictionary{string, string}?, CancellationToken)"/>.
+    /// Only the time to the response headers counts towards HttpClient.Timeout; reading the body
+    /// is bounded by <paramref name="cancellationToken"/>.
+    /// </summary>
+    public static Task<Response<T>> GetJsonStreamAsync<T>(
+        HttpClient client,
+        string address,
+        string? bearer = null,
+        Dictionary<string, string>? headers = null,
+        CancellationToken cancellationToken = default) where T : class
+    {
+        return GetStreamAsync(
+            client,
+            address,
+            accept: null,
+            (_, stream, token) => JsonSerializer.DeserializeAsync<T>(stream, JsonHelper.DefaultOptions, token).AsTask(),
+            bearer,
+            headers,
+            cancellationToken);
+    }
+
+    /// <summary>
+    /// As <see cref="GetJsonStreamAsync{T}"/>, but sends <paramref name="accept"/> (when given) and lets
+    /// <paramref name="read"/> choose how to parse the body from the response's media type, so a client
+    /// can ask for an optional format and still read a server that answers with plain JSON.
+    /// </summary>
+    public static Task<Response<T>> GetStreamAsync<T>(
+        HttpClient client,
+        string address,
+        string? accept,
+        Func<string?, Stream, CancellationToken, Task<T?>> read,
+        string? bearer = null,
+        Dictionary<string, string>? headers = null,
+        CancellationToken cancellationToken = default) where T : class
+    {
+        return SendStreamAsync(client, HttpMethod.Get, address, null, accept, read, bearer, headers, cancellationToken);
+    }
+
+    /// <summary>
+    /// POST of <paramref name="body"/> as JSON on a caller-provided shared client, with the answer read from the
+    /// response stream as in <see cref="GetStreamAsync{T}"/>. For queries whose parameters do not fit in a url
+    /// (filters, geometries), such as a layer query.
+    /// </summary>
+    public static Task<Response<T>> PostJsonStreamAsync<T>(
+        HttpClient client,
+        string address,
+        object body,
+        Func<string?, Stream, CancellationToken, Task<T?>> read,
+        string? bearer = null,
+        Dictionary<string, string>? headers = null,
+        CancellationToken cancellationToken = default) where T : class
+    {
+        var content = CreateJsonContent(body, Encoding.UTF8, ContentTypeJson);
+
+        return SendStreamAsync(client, HttpMethod.Post, address, content, AcceptJson, read, bearer, headers, cancellationToken);
+    }
+
+    private static async Task<Response<T>> SendStreamAsync<T>(
+        HttpClient client,
+        HttpMethod method,
+        string address,
+        HttpContent? content,
+        string? accept,
+        Func<string?, Stream, CancellationToken, Task<T?>> read,
+        string? bearer,
+        Dictionary<string, string>? headers,
+        CancellationToken cancellationToken) where T : class
+    {
+        if (client == null)
+        {
+            return ResponseFactory.CreateError<T>("HttpClient cannot be null.");
+        }
+
+        if (!TryBuildUri(client, address, out var uri, out var error))
+        {
+            return ResponseFactory.CreateError<T>(error!);
+        }
+
+        using var request = CreateClientRequest(method, uri!, content, bearer, headers);
+
+        if (!string.IsNullOrWhiteSpace(accept))
+        {
+            request.Headers.TryAddWithoutValidation("Accept", accept);
+        }
+
+        try
+        {
+            var stopwatch = Stopwatch.StartNew();
+
+            using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+
+            var headersElapsed = stopwatch.ElapsedMilliseconds;
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorBody = await response.Content.ReadAsStringAsync();
+                return BuildErrorResponse<T>(response.StatusCode, response.ReasonPhrase, errorBody);
+            }
+
+            var result = Response<T>.Create(isSuccess: true, statusCode: (int)response.StatusCode);
+
+            // An empty body is a null result, as in BuildSuccessResponse.
+            if (response.Content.Headers.ContentLength == 0)
+            {
+                result.Result = default!;
+                return result;
+            }
+
+            var mediaType = response.Content.Headers.ContentType?.MediaType;
+
+            await using var stream = await response.Content.ReadAsStreamAsync();
+
+            result.Result = (await read(mediaType, stream, cancellationToken))!;
+
+            Trace.TraceInformation(
+                $"{method} {uri}: headers after {headersElapsed} ms, body downloaded and parsed after {stopwatch.ElapsedMilliseconds} ms " +
+                $"(type {mediaType}, Content-Length {response.Content.Headers.ContentLength?.ToString() ?? "unknown"}, encoding {string.Join(",", response.Content.Headers.ContentEncoding)})");
+
+            return result;
+        }
+        catch (TaskCanceledException ex)
+        {
+            var message = ex.CancellationToken.IsCancellationRequested
+                ? "Request was cancelled."
+                : $"Request timed out: {ex.Message}";
+            return ResponseFactory.CreateError<T>(message);
+        }
+        catch (HttpRequestException ex)
+        {
+            return ResponseFactory.CreateError<T>($"HTTP request failed: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            return ResponseFactory.CreateError<T>(ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// Per-request headers only — a shared client's defaults must never be mutated. A request-level
+    /// Authorization overrides the client default; a null bearer leaves the client default in effect.
+    /// </summary>
+    private static HttpRequestMessage CreateClientRequest(
+        HttpMethod method,
+        Uri uri,
+        HttpContent? content,
+        string? bearer,
+        Dictionary<string, string>? headers)
+    {
+        var request = new HttpRequestMessage(method, uri) { Content = content };
+
         if (!string.IsNullOrWhiteSpace(bearer))
         {
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", bearer.Trim());
@@ -233,7 +389,7 @@ public static class HttpTransport
             }
         }
 
-        return await SendCoreAsync<T>(client, request, cancellationToken);
+        return request;
     }
 
     private static async Task<Response<T>> SendCoreAsync<T>(HttpClient client, HttpRequestMessage request, CancellationToken cancellationToken)

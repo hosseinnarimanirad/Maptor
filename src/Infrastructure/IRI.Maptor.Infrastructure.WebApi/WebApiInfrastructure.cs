@@ -1,6 +1,7 @@
 using IRI.Maptor.Core.Common.Helpers;
 using IRI.Maptor.Core.Common.Services;
 using IRI.Maptor.Core.Spatial.Dtos;
+using System.Text.Json;
 
 namespace IRI.Maptor.Infrastructure.WebApi;
 
@@ -19,13 +20,27 @@ public static class WebApiInfrastructure
         string? bearerToken = null,
         Dictionary<string, string>? headers = null,
         HttpClient? httpClient = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        bool preferCompactFormat = false)
     {
         var url = BuildUrl(/*baseUrl, */endpoint, queryParams);
 
+        if (httpClient != null && preferCompactFormat)
+        {
+            return await HttpTransport.GetStreamAsync(
+                httpClient,
+                url,
+                CompactAccept,
+                ReadFeatureSetAsync,
+                bearer: bearerToken,
+                headers: headers,
+                cancellationToken: cancellationToken);
+        }
+
+        // Feature sets are the largest responses: stream them instead of reading one big string.
         if (httpClient != null)
         {
-            return await HttpTransport.GetAsync<FeatureSetDto>(
+            return await HttpTransport.GetJsonStreamAsync<FeatureSetDto>(
                 httpClient,
                 url,
                 bearer: bearerToken,
@@ -133,6 +148,44 @@ public static class WebApiInfrastructure
     /// <summary>
     /// Builds a URL with query string from ListFeaturesQueryParams.
     /// </summary>
+    /// <summary>
+    /// Runs a layer query (<c>POST /LayerQuery/{layerId}</c>): a page of the attribute table, or every feature
+    /// of a map extent. Needs a shared client; the answer is read from the response stream.
+    /// </summary>
+    public static Task<Response<FeaturePageDto>> QueryFeaturesAsync(
+        HttpClient httpClient,
+        string queryUrl,
+        FeatureQueryDto query,
+        string? bearerToken = null,
+        Dictionary<string, string>? headers = null,
+        CancellationToken cancellationToken = default)
+    {
+        return HttpTransport.PostJsonStreamAsync(
+            httpClient,
+            queryUrl,
+            query,
+            (_, stream, token) => JsonSerializer.DeserializeAsync<FeaturePageDto>(stream, JsonHelper.DefaultOptions, token).AsTask(),
+            bearerToken,
+            headers,
+            cancellationToken);
+    }
+
+    /// <summary>The compact form first, plain JSON as the fallback a server that does not know it answers with.</summary>
+    private const string CompactAccept = CompactFeatureSetDto.MediaType + ", application/json;q=0.9";
+
+    /// <summary>Reads whichever form the server chose; both give the same <see cref="FeatureSetDto"/>.</summary>
+    private static async Task<FeatureSetDto?> ReadFeatureSetAsync(string? mediaType, Stream stream, CancellationToken cancellationToken)
+    {
+        if (string.Equals(mediaType, CompactFeatureSetDto.MediaType, StringComparison.OrdinalIgnoreCase))
+        {
+            var compact = await JsonSerializer.DeserializeAsync<CompactFeatureSetDto>(stream, JsonHelper.DefaultOptions, cancellationToken);
+
+            return compact?.ToFeatureSetDto();
+        }
+
+        return await JsonSerializer.DeserializeAsync<FeatureSetDto>(stream, JsonHelper.DefaultOptions, cancellationToken);
+    }
+
     private static string BuildUrl(/*string baseUrl, */string endpoint, ListFeaturesQueryParams? queryParams = null)
     {
         //var url = $"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}";

@@ -9,7 +9,7 @@
         xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls;assembly=IRI.Maptor.Presentation.Wpf"    
         mc:Ignorable="d" Loaded="Window_Loaded"
         FlowDirection="{Binding CurrentFlowDirection, Source={StaticResource Localization}}"
-        Title="{Binding [lr_ui_title], Source={StaticResource Localization}}" Height="850" Width="1400">
+        Title="{Binding [lr_ui_title], Source={StaticResource Localization}}" Height="900" Width="1500">
     <Window.Resources>
 
         <Style TargetType="{x:Type Slider}" BasedOn="{StaticResource MahApps.Styles.Slider}"/>
@@ -24,7 +24,7 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="530"/>
+            <ColumnDefinition Width="580"/>
             <ColumnDefinition Width="5"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
@@ -32,6 +32,7 @@
         <ScrollViewer Grid.Row="0" Grid.Column="0"  >
             <Grid Grid.Row="1" Grid.Column="0"  >
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -64,19 +65,99 @@
                     </Style>
                 </Grid.Resources>
                 
+                <!--compare simplifications (2026-10-08)-->
+                <Expander Grid.Row="0" Header="Compare simplifications" IsExpanded="True" DataContext="{Binding Comparison}">
+                    <Grid Margin="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Row="0" Grid.Column="0" Command="{Binding OpenCommand}" Padding="8,2" ToolTip="Open one polyline or polygon (GeoJSON, WGS 84)">
+                            <StackPanel Orientation="Horizontal">
+                                <iconPacks:PackIconMaterial Kind="FolderOpenOutline" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                <TextBlock Text="Open feature" Margin="0"/>
+                            </StackPanel>
+                        </Button>
+                        <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="6,0">
+                            <TextBlock Text="{Binding FeatureName}" FontWeight="SemiBold" Margin="0"/>
+                            <TextBlock Text="{Binding FeatureInfo}" Foreground="Gray" FontSize="11" Margin="0"/>
+                        </StackPanel>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Level of detail" />
+                        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="2">
+                            <ComboBox ItemsSource="{Binding Levels}" SelectedItem="{Binding Level, Mode=TwoWay}" MinWidth="70" Margin="4"/>
+                            <Button Content="Fit 256-px screen" Command="{Binding FitLevelCommand}" Padding="6,0"
+                                    ToolTip="The LoD at which the feature fits a 256 x 256 screen (its natural scale)"/>
+                            <TextBlock Text="{Binding ScaleText}" Foreground="Gray"/>
+                        </StackPanel>
+
+                        <Button Grid.Row="2" Grid.ColumnSpan="2" Command="{Binding RunCommand}" HorizontalAlignment="Stretch" Padding="8,4"
+                                ToolTip="LRS (no threshold) and RDP, BOPW, NOPW, CTR, RW with a 1-px tolerance at the chosen LoD">
+                            <StackPanel Orientation="Horizontal">
+                                <iconPacks:PackIconMaterial Kind="Play" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                <TextBlock Text="Simplify with LRS and the five baselines" Margin="0" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Button>
+
+                        <DataGrid Grid.Row="3" Grid.ColumnSpan="2" ItemsSource="{Binding Rows}" AutoGenerateColumns="False" CanUserAddRows="False"
+                                  HeadersVisibility="Column" GridLinesVisibility="Horizontal" Margin="4" BorderThickness="1" BorderBrush="LightGray"
+                                  IsReadOnly="False" SelectionMode="Single">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="Show">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding IsVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Method">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Rectangle Width="16" Height="3" Fill="{Binding Colour}" Margin="2,0,6,0" VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding Method}" FontWeight="SemiBold" Margin="0"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="Points" Binding="{Binding Points}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Compression" Binding="{Binding CompressionText}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="E" Binding="{Binding ExcessText}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Omitted" Binding="{Binding OmittedText}" IsReadOnly="True"/>
+                                <DataGridTemplateColumn Header="Verdict">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Verdict}" Foreground="{Binding VerdictColour}" Margin="2,0"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Text="{Binding Status}" Foreground="Gray" FontSize="11" TextWrapping="Wrap"/>
+                    </Grid>
+                </Expander>
+
                 <!--tools-->
-                <Expander Grid.Row="0" Header="{Binding [lr_expanderTitle_tools], Source={StaticResource Localization}}">
+                <Expander Grid.Row="1" Header="{Binding [lr_expanderTitle_tools], Source={StaticResource Localization}}">
                     <WrapPanel>
                         <Button Height="20" Content="Analyze" HorizontalAlignment="Left" Margin="2" Command="{Binding AnalyzeCommand}"/>
                         <Button Height="20" Content="Measure" HorizontalAlignment="Left" Margin="2" Command="{Binding MeasureLengthCommand}"/>
-                        <Button Height="20" Content="Create initial syn. data" HorizontalAlignment="Left" Margin="2" Click="createData_Click" Visibility="Collapsed"/>
                         <Button Height="20" Content="Print" HorizontalAlignment="Left" Margin="2" Command="{Binding ExportMapAsPngCommand}" CommandParameter="{Binding ElementName=window}"/>
                         <Button Height="20" Content="set print area" HorizontalAlignment="Left" Margin="2" Command="{Binding SetPrintAreaCommand}"/>
                     </WrapPanel>
                 </Expander>
 
                 <!--logistic regression-->
-                <Expander Grid.Row="1" Header="{Binding [lr_expanderTitle_logisticRegression], Source={StaticResource Localization}}">
+                <Expander Grid.Row="2" Header="{Binding [lr_expanderTitle_logisticRegression], Source={StaticResource Localization}}">
                     <WrapPanel>
                         <!--<Button Content="Create LR Model using selected drawing items" Command="{Binding CreateTrainingDataCommand}"/>-->
                         <Button Content="{Binding [lr_model_saveModelAsJson], Source={StaticResource Localization}}" Command="{Binding SaveTrainingDataAsJsonCommand}"/>
@@ -88,7 +169,7 @@
                 </Expander>
 
                 <!--training-->
-                <Expander Grid.Row="2" Header="{Binding [lr_expanderTitle_trainingData], Source={StaticResource Localization}}">
+                <Expander Grid.Row="3" Header="{Binding [lr_expanderTitle_trainingData], Source={StaticResource Localization}}">
                     <Grid x:Name="syntheticGrid" DataContext="{Binding SyntheticDataTrainingData}">
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -161,22 +242,22 @@
                 </Expander>
 
                 <!--drawing legend-->
-                <Expander Grid.Row="3" Header="{Binding [ui_header_drawingLegend], Source={StaticResource Localization}}">
+                <Expander x:Name="drawingsExpander" Grid.Row="4" Header="{Binding [ui_header_drawingLegend], Source={StaticResource Localization}}">
                     <maptor:MapDrawingLegendView MinHeight="90"  />
                 </Expander>
 
                 <!--layer legend-->
-                <Expander Grid.Row="4" Header="{Binding [ui_header_layerLegend], Source={StaticResource Localization}}">
+                <Expander Grid.Row="5" Header="{Binding [ui_header_layerLegend], Source={StaticResource Localization}}">
                     <maptor:MapLegendView LegendViewModel="{Binding LegendViewModel}"  />
                 </Expander>
 
                 <!--attribute table-->
-                <Expander Grid.Row="5" Header="{Binding [ui_header_attributeTable], Source={StaticResource Localization}}" MaxHeight="260">
+                <Expander Grid.Row="6" Header="{Binding [ui_header_attributeTable], Source={StaticResource Localization}}" MaxHeight="260">
                     <maptor:FeatureTabControl/>
                 </Expander>
 
                 <!--settings-->
-                <Expander Grid.Row="6" Header="{Binding [lr_expanderTitle_settings], Source={StaticResource Localization}}">
+                <Expander Grid.Row="7" Header="{Binding [lr_expanderTitle_settings], Source={StaticResource Localization}}">
                     <Grid Margin="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="32"/>
