@@ -45,7 +45,13 @@
         <Setter Property="MaxWidth" Value="550"/>
         <Setter Property="SizeToContent" Value="WidthAndHeight"/>
 
-        <Setter Property="GlowBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+        <!--No GlowBrush: MahApps implements the glow with four extra top-level windows per
+            dialog, a measurable part of every dialog open. A one-pixel accent border keeps the
+            dialog edge visible. Transitions are off for the same reason: the entrance animation
+            is paid on every open and competes with the blurred owner behind it.-->
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+        <Setter Property="WindowTransitionsEnabled" Value="False"/>
         <Setter Property="Padding" Value="10"/>
         <!--this property cannot be set in styles-->
         <!--<Setter Property="WindowStartupLocation" Value="CenterOwner"/>-->

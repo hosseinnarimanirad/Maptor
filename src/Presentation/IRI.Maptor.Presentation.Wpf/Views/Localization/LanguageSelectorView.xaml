@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="IRI.Maptor.Presentation.Wpf.Controls.LanguageSelectorView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:helpers="clr-namespace:IRI.Maptor.Presentation.Wpf.Helpers"
              xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
              xmlns:jabloc="clr-namespace:IRI.Maptor.Presentation.Wpf.Localization">
     <UserControl.Resources>
@@ -9,7 +10,7 @@
                 resolves only within its own scope chain, so declaring the merge here means this
                 view does not depend on the host having merged Maptor.All.xaml.-->
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Common.Metrics.xaml"/>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Common.Metrics.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
         </ResourceDictionary>
