@@ -15,6 +15,7 @@ dotnet add package IRI.Maptor.Core.Persistence
 
 - Core abstractions: `IDataSource`, `IVectorDataSource` (async feature queries by bounding box, geometry, or map scale), `IEditableVectorDataSource`, `IRasterDataSource`
 - Base implementations: `BaseDataSource`, `VectorDataSource`, `RasterDataSource`
+- Generated overlays: map grids (`MapGridDataSource`, `MgrsGridDataSource`) the day/night terminator with civil, nautical and astronomical twilight bands (`DayNightDataSource`), and satellites (`SatellitesDataSource`): every satellite's position and, for the selected one, its past and future ground track, the area that sees it and its imaging swath. `HitTest` finds the satellite under a click, in screen pixels; `LabelMode` names all satellites, only the selected one, or (Auto) all up to 50. `Region` draws the area (or point) passes are found for, and `HighlightedPass` draws the track flown during one pass in bold. For the time-based ones, set `Time` and redraw
 - In-memory vector sources built on `MemoryDataSource`, with file-backed variants for GeoJSON, shapefile, GPX, KML/KMZ, DXF, TopoJSON, ESRI JSON, and plain text/JSON lists
 - Raster sources: image pyramids (plain and zipped) and online/offline Google-style tile sources
 - Scale-dependent data sources that switch content by map scale (`MemoryScaleDependentDataSource`)
@@ -49,6 +50,7 @@ async Task PrintCountAsync(IVectorDataSource source, BoundingBox extent)
 
 - `IRI.Maptor.Core.Common`, `IRI.Maptor.Core.Spatial`, `IRI.Maptor.Core.SpatialReferenceSystem`
 - `IRI.Maptor.Core.Ogc`, `IRI.Maptor.Core.ShapefileFormat` (file-backed data sources)
+- `IRI.Maptor.Core.Astronomy` (the Sun's position for `DayNightDataSource`) and `IRI.Maptor.Core.Satellite` (SGP4, tracks, footprints and swaths for `SatellitesDataSource`)
 
 ---
 [NuGet package](https://www.nuget.org/packages/IRI.Maptor.Core.Persistence/) · [Report issues](https://github.com/hosseinnarimanirad/Maptor/issues) · [Back to IRI.Maptor.Core](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/README.md)

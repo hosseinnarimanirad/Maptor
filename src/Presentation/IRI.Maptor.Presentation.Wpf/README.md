@@ -27,6 +27,10 @@ reference it from your WPF app.
 - Layer model: `BaseLayer` and concrete layers such as `FeatureLayer`, `VectorLayer`,
   `RasterLayer`, `TileServiceLayer`, `GridLayer`, `GroupLayer`, `DrawingLayer`,
   `EditableFeatureLayer`, and `ClusteredPointLayer`.
+- Ready-made time-based overlays:
+  - `DayNightLayers.Create(source)`: the night side with its twilight bands.
+  - `SatelliteLayers.Create(source, style?)`: satellite positions, names, and for the selected one its track, the area that sees it and its imaging swath. It also draws the source's region for passes, and a highlighted pass in bold. `SatelliteLayerStyle` sets the colours and sizes. `SatelliteLayers.HitTest(map, source, mouseEvent)` finds the satellite under the mouse, within 10 pixels.
+  - `MapClockBinding` keeps either layer in step with a `MapClock`. On each tick it sets the source's time and redraws the layer in place, so the legend row is kept. A burst of ticks gives one redraw.
 - Cartography primitives: `VisualParameters`, symbologies, and rendering helpers.
 - Map markers: WPF user controls for location, label, photo, and textbox markers.
 - Localization: RTL-aware language switching (`LanguageCombo`, WPF binding extensions) on top of

@@ -1,0 +1,114 @@
+<UserControl x:Class="IRI.Maptor.Samples.Wpf.Gallery.Samples.DayNight.DayNightSample"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls;assembly=IRI.Maptor.Presentation.Wpf"
+             xmlns:local="clr-namespace:IRI.Maptor.Samples.Wpf.Gallery.Samples.DayNight"
+             xmlns:shell="clr-namespace:IRI.Maptor.Samples.Wpf.Gallery.Shell"
+             Loaded="OnLoaded" Unloaded="OnUnloaded">
+    <UserControl.Resources>
+
+        <!-- Shading colour of the overlay (DayNightLayers.DefaultHexFill), for the legend swatches -->
+        <SolidColorBrush x:Key="NightBrush" Color="#0B1A3A" />
+
+        <!-- One legend row: a swatch and its meaning -->
+        <Style x:Key="LegendText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource IRI.Maptor.Brushes.OnMap.Text}" />
+            <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Small}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="LegendSwatch" TargetType="Border">
+            <Setter Property="Width" Value="22" />
+            <Setter Property="Height" Value="14" />
+            <Setter Property="Margin" Value="0,3,10,3" />
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{StaticResource IRI.Maptor.Brushes.OnMap.Border}" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <maptor:MapViewer x:Name="map" MapAction="{Binding MapAction, Mode=OneWay}"
+                          PreviewMouseLeftButtonDown="OnMapMouseDown" PreviewMouseLeftButtonUp="OnMapMouseUp" />
+
+        <!-- Legend: an over-map readout, so it keeps the on-map palette whatever the theme or imagery -->
+        <Border HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16" Padding="14,12" MinWidth="250"
+                Background="{StaticResource IRI.Maptor.Brushes.OnMap.Surface}"
+                BorderBrush="{StaticResource IRI.Maptor.Brushes.OnMap.Border}" BorderThickness="1"
+                CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"
+                Effect="{StaticResource IRI.Maptor.Effects.Elevation2}">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                    <iconPacks:PackIconMaterial Kind="WeatherNight" Width="16" Height="16" VerticalAlignment="Center"
+                                                Foreground="{StaticResource NightBrush}" Margin="0,0,8,0" />
+                    <TextBlock Text="Day and night" FontWeight="SemiBold" Style="{StaticResource LegendText}"
+                               FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Body}" />
+                </StackPanel>
+
+                <!-- Swatches show what 0, 1, 2, 3 and 4 stacked bands look like: 1 − 0.7ⁿ of the shade -->
+                <StackPanel Orientation="Horizontal">
+                    <Border Style="{StaticResource LegendSwatch}" Background="White" />
+                    <TextBlock Style="{StaticResource LegendText}" Text="Daylight" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Border Style="{StaticResource LegendSwatch}" Background="White">
+                        <Border Background="{StaticResource NightBrush}" Opacity="0.30" CornerRadius="2" />
+                    </Border>
+                    <TextBlock Style="{StaticResource LegendText}" Text="Civil twilight · Sun 0–6° below" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Border Style="{StaticResource LegendSwatch}" Background="White">
+                        <Border Background="{StaticResource NightBrush}" Opacity="0.51" CornerRadius="2" />
+                    </Border>
+                    <TextBlock Style="{StaticResource LegendText}" Text="Nautical twilight · 6–12° below" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Border Style="{StaticResource LegendSwatch}" Background="White">
+                        <Border Background="{StaticResource NightBrush}" Opacity="0.66" CornerRadius="2" />
+                    </Border>
+                    <TextBlock Style="{StaticResource LegendText}" Text="Astronomical twilight · 12–18° below" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Border Style="{StaticResource LegendSwatch}" Background="White">
+                        <Border Background="{StaticResource NightBrush}" Opacity="0.76" CornerRadius="2" />
+                    </Border>
+                    <TextBlock Style="{StaticResource LegendText}" Text="Night · more than 18° below" />
+                </StackPanel>
+
+                <Border Height="1" Margin="0,8" Background="{StaticResource IRI.Maptor.Brushes.OnMap.Border}" />
+
+                <CheckBox x:Name="subSolarCheck" IsChecked="True" Checked="OnSubSolarChanged" Unchecked="OnSubSolarChanged"
+                          Foreground="{StaticResource IRI.Maptor.Brushes.OnMap.Text}"
+                          ToolTip="Mark the point where the Sun is straight overhead">
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="12" Height="12" Fill="#FFC107" Stroke="#7A4E00" StrokeThickness="1.5"
+                                 Margin="0,0,8,0" VerticalAlignment="Center" />
+                        <TextBlock Style="{StaticResource LegendText}" Text="Sun overhead" />
+                    </StackPanel>
+                </CheckBox>
+
+                <TextBlock x:Name="subSolarText" Margin="20,2,0,0" FontFamily="Consolas"
+                           Style="{StaticResource LegendText}" Foreground="{StaticResource IRI.Maptor.Brushes.OnMap.Text}" Opacity="0.75" />
+            </StackPanel>
+        </Border>
+
+        <!-- Time bar: the controls, on the theme surface so its inputs follow light/dark -->
+        <shell:MapTimeBar x:Name="timeBar" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="16,16,16,40" />
+
+        <!-- Until a place is chosen: say what a click does -->
+        <Border x:Name="clickHint" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="16" Padding="12,7"
+                Background="{StaticResource IRI.Maptor.Brushes.OnMap.Surface}"
+                BorderBrush="{StaticResource IRI.Maptor.Brushes.OnMap.Border}" BorderThickness="1" CornerRadius="16"
+                Effect="{StaticResource IRI.Maptor.Effects.Elevation2}" IsHitTestVisible="False">
+            <StackPanel Orientation="Horizontal">
+                <iconPacks:PackIconMaterial Kind="CursorDefaultClickOutline" Width="14" Height="14" VerticalAlignment="Center"
+                                            Foreground="{StaticResource IRI.Maptor.Brushes.OnMap.Text}" Margin="0,0,8,0" />
+                <TextBlock Style="{StaticResource LegendText}" Text="Click the map for sunrise, sunset and twilight times" />
+            </StackPanel>
+        </Border>
+
+        <!-- The Sun at the chosen place -->
+        <local:SunInfoPanel x:Name="sunPanel" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="16"
+                            Visibility="Collapsed" CloseRequested="OnSunPanelClosed" />
+    </Grid>
+</UserControl>

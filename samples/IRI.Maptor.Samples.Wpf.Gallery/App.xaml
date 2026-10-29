@@ -17,24 +17,61 @@
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Maptor.All.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <!-- Shared look for the small tool bars at the top of every sample -->
+            <!-- Shared chrome of every sample. Change it here and all samples follow. -->
+
+            <!-- The command strip at the top of a sample, set off from the map by a hairline -->
+            <Style x:Key="SampleToolbarHost" TargetType="Border">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray8}" />
+                <Setter Property="BorderThickness" Value="0,0,0,1" />
+                <Setter Property="Padding" Value="16,8" />
+                <Setter Property="MinHeight" Value="52" />
+            </Style>
             <Style x:Key="SampleToolbar" TargetType="StackPanel">
                 <Setter Property="Orientation" Value="Horizontal" />
-                <Setter Property="Margin" Value="4" />
+                <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
-            <Style x:Key="SampleToolbarButton" TargetType="Button" BasedOn="{StaticResource IRI.Maptor.Styles.Button.Primary.Large}">
-                <Setter Property="Margin" Value="2" />
-                <Setter Property="MinWidth" Value="110" />
+            <!-- Outlined, default height: a row of equal commands, none shouting louder than the map -->
+            <Style x:Key="SampleToolbarButton" TargetType="Button" BasedOn="{StaticResource IRI.Maptor.Styles.Button.Secondary}">
+                <Setter Property="Margin" Value="0,0,8,0" />
+                <Setter Property="MinWidth" Value="0" />
+                <Setter Property="Padding" Value="14,0" />
+                <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
+            <!-- A panel docked beside the map: legend, results, options -->
             <Style x:Key="SampleSidePanel" TargetType="Border">
                 <Setter Property="Width" Value="300" />
-                <Setter Property="Padding" Value="6" />
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
                 <Setter Property="BorderThickness" Value="0,0,1,0" />
                 <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray8}" />
             </Style>
+            <!-- A panel floating over the map that holds inputs: theme surface, so its controls follow light/dark -->
+            <Style x:Key="SampleMapCard" TargetType="Border">
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray8}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}" />
+                <Setter Property="Effect" Value="{StaticResource IRI.Maptor.Effects.Elevation3}" />
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+            </Style>
+            <!-- A read-out floating over the map: the on-map palette, legible over any imagery in either theme -->
+            <Style x:Key="SampleMapReadout" TargetType="Border">
+                <Setter Property="Padding" Value="14,12" />
+                <Setter Property="Background" Value="{StaticResource IRI.Maptor.Brushes.OnMap.Surface}" />
+                <Setter Property="BorderBrush" Value="{StaticResource IRI.Maptor.Brushes.OnMap.Border}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}" />
+                <Setter Property="Effect" Value="{StaticResource IRI.Maptor.Effects.Elevation2}" />
+                <Setter Property="TextElement.Foreground" Value="{StaticResource IRI.Maptor.Brushes.OnMap.Text}" />
+            </Style>
+            <!-- Secondary text: how to use the sample, a status line -->
             <Style x:Key="SampleHint" TargetType="TextBlock">
                 <Setter Property="TextWrapping" Value="Wrap" />
-                <Setter Property="Margin" Value="6,4" />
+                <Setter Property="Margin" Value="8,4" />
+                <Setter Property="LineHeight" Value="18" />
+                <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Small}" />
                 <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray2}" />
             </Style>
         </ResourceDictionary>

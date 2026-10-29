@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>A .NET standard library for satellite orbits: TLE and OMM reading, SGP4 propagation and the satellite's position over the Earth</Description>
+    <PackageTags>satellite;orbit;TLE;OMM;SGP4;propagation;ground track;GIS</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IRI.Maptor.Core.Astronomy\IRI.Maptor.Core.Astronomy.csproj" />
+    <ProjectReference Include="..\IRI.Maptor.Core.Common\IRI.Maptor.Core.Common.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -13,6 +13,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Presentation\IRI.Maptor.Presentation.Wpf\IRI.Maptor.Presentation.Wpf.csproj" />
+    <!-- TLE/OMM reading and SGP4, for the satellite samples -->
+    <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.Satellite\IRI.Maptor.Core.Satellite.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +25,11 @@
   <ItemGroup>
     <!-- READMEs live next to the samples they describe; keep them out of the build -->
     <None Remove="Samples\**\README.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Public TLEs from CelesTrak, downloaded on the date in the name; they age, which the sample shows -->
+    <EmbeddedResource Include="Samples\SatellitePosition\sample-2026-10-28.tle" LogicalName="SatellitePosition.sample.tle" />
   </ItemGroup>
 
 </Project>

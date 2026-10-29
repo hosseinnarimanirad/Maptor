@@ -10,7 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\IRI.Maptor.Core.Astronomy\IRI.Maptor.Core.Astronomy.csproj" />
     <ProjectReference Include="..\IRI.Maptor.Core.Common\IRI.Maptor.Core.Common.csproj" />
+    <ProjectReference Include="..\IRI.Maptor.Core.Satellite\IRI.Maptor.Core.Satellite.csproj" />
     <ProjectReference Include="..\IRI.Maptor.Core.Ogc\IRI.Maptor.Core.Ogc.csproj" />
     <ProjectReference Include="..\IRI.Maptor.Core.ShapefileFormat\IRI.Maptor.Core.ShapefileFormat.csproj" />
     <ProjectReference Include="..\IRI.Maptor.Core.Spatial\IRI.Maptor.Core.Spatial.csproj" />
