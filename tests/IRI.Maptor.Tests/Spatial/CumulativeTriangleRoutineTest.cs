@@ -93,6 +93,64 @@ public class CumulativeTriangleRoutineTest
         Assert.True(pseudoCode.Count > published.Count);
     }
 
+    // the pseudo-code of the ISPRS paper (Section 3.1), line by line; the paper returns without the last
+    // input point, the implementation appends it, so the transcription does too
+    private static List<Point> PseudoCode(List<Point> input, double areaThreshold)
+    {
+        var result = new List<Point> { input[0] };
+
+        int first = 0, middle = 1, last = 2;
+
+        double tempArea = 0;
+
+        while (last < input.Count)
+        {
+            tempArea += SpatialUtility.GetUnsignedEuclideanArea(input[first], input[middle], input[last]);
+
+            if (tempArea > areaThreshold)
+            {
+                tempArea = 0;
+                result.Add(input[middle]);
+                result.Add(input[last]);
+                first = last;
+                middle = first + 1;
+                last = first + 2;
+            }
+            else
+            {
+                middle++;
+                last++;
+            }
+        }
+
+        if (!result.Last().Equals(input.Last()))
+            result.Add(input.Last());
+
+        return result;
+    }
+
+    [Theory]
+    [InlineData(1, 0.5)]
+    [InlineData(2, 2.0)]
+    [InlineData(3, 10.0)]
+    [InlineData(4, 0.05)]
+    public void PseudoCodeVariant_EqualsTheIsprsPseudoCode_AndIsWhatCtr2DispatchesTo(int seed, double threshold)
+    {
+        var random = new System.Random(seed);
+
+        var points = Enumerable.Range(0, 300).Select(i => new Point(i + random.NextDouble(), 5 * random.NextDouble())).ToList();
+
+        var parameters = new SimplificationParameters { AreaThreshold = threshold };
+
+        var variant2 = Simplifications.SimplifyByCumulativeTriangleRoutine2(points, parameters);
+
+        Assert.Equal(PseudoCode(points, threshold), variant2);
+
+        var line = Geometry<Point>.Create(points, GeometryType.LineString);
+
+        Assert.Equal(variant2, line.Simplify(SimplificationType.CumulativeTriangleRoutine2, parameters).Points);
+    }
+
     [Fact]
     public void FewerThanThreePoints_AreReturnedUnchanged()
     {

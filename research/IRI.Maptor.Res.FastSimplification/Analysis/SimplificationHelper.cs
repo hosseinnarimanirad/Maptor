@@ -10,6 +10,9 @@ using IRI.Maptor.Core.Spatial.Helpers;
 using IRI.Maptor.Core.Spatial.Analysis;
 using IRI.Maptor.Core.SpatialReferenceSystem;
 using IRI.Maptor.Core.Common.Enums;
+using IRI.Maptor.Core.Spatial.Primitives;
+
+using Point = IRI.Maptor.Core.Common.Primitives.Point;
 
 
 namespace IRI.Maptor.Res.FastSimplification;
@@ -77,10 +80,12 @@ public static class SimplificationHelper
         }
     }
 
-    public static void ProcessVisualQuality(string shpFile, string outputDirectory)
+    /// <summary>
+    /// The features of the visual experiment, in the order that gives them their published index (1-based):
+    /// single parts with 40–500 points, consecutive duplicates removed, features that still repeat a point dropped.
+    /// </summary>
+    public static List<Geometry<Point>> LoadFeatures(string shpFile)
     {
-        var fileName = Path.GetFileNameWithoutExtension(shpFile);
-
         var features = Shapefile.ReadShapes(shpFile)
                         .Select(g => g.AsGeometry())
                         .SelectMany(g => g.NumberOfGeometries > 1 ? g.Split(false) : [g])
@@ -88,16 +93,54 @@ public static class SimplificationHelper
                         .Where(g => g.TotalNumberOfPoints > 40 && g.TotalNumberOfPoints < 500)
                         .ToList();
 
-        if (features.IsNullOrEmpty())
-            return;
-
         foreach (var feature in features)
         {
             feature.Srid = SridHelper.WebMercator;
             feature.RemoveConsecutiveDuplicatePoints();
+            RestorePublishedRingOrientation(feature);
         }
 
-        features = features.Where(f => !f.HasDuplicatePoints()).ToList();
+        return features.Where(f => !f.HasDuplicatePoints()).ToList();
+    }
+
+    /// <summary>
+    /// Outer rings clockwise, holes counter-clockwise: the orientation the shapefile reader gave the rings when the published
+    /// runs were made (shapefiles store outer rings clockwise). Since 2026-10-13 the reader turns them to the OGC orientation
+    /// (outer counter-clockwise), which reverses the direction in which order-dependent methods (NOPW, BOPW, RW, CTR, LRS) walk
+    /// a ring and so changes their results on polygons; lines are not affected.
+    /// </summary>
+    public static void RestorePublishedRingOrientation(Geometry<Point> feature)
+    {
+        if (feature.Type == GeometryType.Polygon)
+        {
+            for (int i = 0; i < feature.Geometries!.Count; i++)
+            {
+                var points = feature.Geometries[i].Points;
+
+                if (points is null || points.Count < 3)
+                    continue;
+
+                var outer = i == 0;
+
+                if (SpatialUtility.IsClockwise(points) != outer)
+                    points.Reverse();
+            }
+        }
+        else if (feature.Type == GeometryType.MultiPolygon)
+        {
+            foreach (var polygon in feature.Geometries!)
+                RestorePublishedRingOrientation(polygon);
+        }
+    }
+
+    public static void ProcessVisualQuality(string shpFile, string outputDirectory)
+    {
+        var fileName = Path.GetFileNameWithoutExtension(shpFile);
+
+        var features = LoadFeatures(shpFile);
+
+        if (features.IsNullOrEmpty())
+            return;
 
         var originalColor = ColorHelper.ToWpfColor("#DE36A1");
         var simplifiedColor = ColorHelper.ToWpfColor("#08686E");

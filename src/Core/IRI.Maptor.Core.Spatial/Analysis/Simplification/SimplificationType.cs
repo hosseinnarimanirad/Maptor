@@ -155,5 +155,29 @@ public enum SimplificationType
     /// <summary>
     /// APSC
     /// </summary>
-    APSC
+    APSC,
+
+
+    // 1405.07.10
+    /// <summary>
+    /// LO: Li and Openshaw (1992), vector mode (circular smallest visible object of diameter DistanceThreshold)
+    /// </summary>
+    [Description("LO")]
+    LiOpenshaw,
+
+
+    /// <summary>
+    /// LOR: Li and Openshaw (1992), raster mode (square cells of side DistanceThreshold)
+    /// </summary>
+    [Description("LOR")]
+    LiOpenshawRaster,
+
+
+    // 1405.08.04
+    /// <summary>
+    /// CTR2: CTR as the ISPRS 2025 pseudo-code describes it (retain the middle and the last point, restart at the last
+    /// point). <see cref="CumulativeTriangleRoutine"/> is the variant that produced the published numbers.
+    /// </summary>
+    [Description("CTR2")]
+    CumulativeTriangleRoutine2,
 }

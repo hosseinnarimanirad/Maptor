@@ -26,7 +26,27 @@ compression values match). `SimplifyByCumulativeTriangleRoutine2`, which retains
 last point and restarts at the last point, is what the paper's pseudo-code literally describes; it was
 never dispatched. `tests/IRI.Maptor.Tests/Spatial/CumulativeTriangleRoutineTest.cs` pins both down.
 
-Not in this project: the execution-time measurements of the paper (Figures 9 and 10).
+Not in this project: the execution-time measurements of the paper (Figures 9 and 10); their data were not kept.
+
+## Thesis re-run (2026-10-26)
+
+For the thesis the author chose to describe CTR as the pseudo-code does and to re-run its results with that variant:
+`SimplificationType.CumulativeTriangleRoutine2` (description `CTR2`) dispatches to `SimplifyByCumulativeTriangleRoutine2`,
+which `CumulativeTriangleRoutineTest` checks against a line-by-line transcription of the pseudo-code. The published
+experiment is unchanged. `Analysis/ThesisExperiments.cs`, run headless from a Release build:
+
+```powershell
+dotnet build research\IRI.Maptor.Res.FastSimplification -c Release -o <folder>
+<folder>\IRI.Maptor.Res.FastSimplification.exe --run ThesisVisual   # same features, sizes and threshold; RDP, VW, NOPW, CTR2
+<folder>\IRI.Maptor.Res.FastSimplification.exe --run ThesisTiming   # time against points, 1:2M and 1:1M, nested random samples
+```
+
+`ThesisVisual` writes one row per feature, render size and method (`All-summary.txt`; `Collapsed` = 1 when the result is empty
+or a point, 2 when a ring collapsed inside a polygon so that TLVD is undefined) and, for the features of the paper's
+Figures 5–8 (Building 11, Road 9938, AdminArea 662, 455, 438, 53, 443), GeoJSON and PNG files. `ThesisTiming` takes the single
+parts of all seven layers in a fixed random order (seed 2026), cuts nested samples at 10k, 100k, 1M, 3.5M and 7M points, and
+logs a warm-up plus five repetitions per method (RDP, VW, NOPW, BOPW, CTR2) and scale; run it on an otherwise idle machine.
+Without `--run` the window of the published experiment opens as before.
 
 ## How to run
 
