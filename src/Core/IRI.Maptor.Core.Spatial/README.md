@@ -1,4 +1,4 @@
-# IRI.Maptor.Core.Spatial
+﻿# IRI.Maptor.Core.Spatial
 
 [![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Core.Spatial?logo=nuget)](https://www.nuget.org/packages/IRI.Maptor.Core.Spatial/)
 [![Target](https://img.shields.io/badge/netstandard2.1-512BD4)](https://learn.microsoft.com/dotnet/standard/net-standard)
@@ -16,7 +16,7 @@ dotnet add package IRI.Maptor.Core.Spatial
 - OGC geometry model via `Geometry<T>`: point, linestring, polygon, their multi-variants, and geometry collections, with WKT/WKB round-trip (`FromWkt`, `FromWkb`)
 - Feature model: `Feature<T>` and `FeatureSet<T>` with fields and change tracking
 - Spatial analysis: Delaunay triangulation, Voronoi diagrams, convex hull, area statistics, topology helpers, and shape characteristics metrics
-- Line simplification: Ramer-Douglas-Peucker, Visvalingam-Whyatt, and other point-reduction methods, plus simplification quality metrics
+- Line simplification: Ramer-Douglas-Peucker, Visvalingam-Whyatt, Li-Openshaw (vector and raster modes) and other point-reduction methods, plus simplification quality metrics
 - Digital terrain modeling: regular (grid) and irregular (TIN) DTMs
 - Spatial interpolation: inverse distance weighting (IDW)
 - Space-filling curves: Hilbert and Z-order (Morton) point ordering
@@ -74,6 +74,7 @@ var parsed = Geometry<Point>.FromWkt("POINT (51.39 35.69)", 4326);
 
 - [Analysis](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/Analysis/README.md) · [Digital terrain modeling](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/Analysis/DigitalTerrainModeling/README.md) · [Interpolation](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/Analysis/Interpolation/README.md) · [Space-filling curves](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/Analysis/SFC/README.md)
 - [Map grids](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/Helpers/MapGrids/README.md)
+- `Helpers/SphericalCapHelper`: a spherical cap (all points within an angular radius of a centre) as lon/lat rings that draw correctly on Web Mercator, including caps over a pole or across the antimeridian. It is used for the night side of the Earth and for satellite footprints.
 - [Advanced structures](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/AdvancedStructures/README.md) · [K-d trees](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/AdvancedStructures/KdTrees/README.md) · [R-trees](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/AdvancedStructures/RTrees/README.md)
 - IO formats: [GeoJSON](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/IO/GeoJsonFormat/README.md) · [WKT/WKB](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/IO/OgcSFA/README.md) · [TopoJSON](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/IO/TopoJson/README.md) · [DXF](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/IO/Dxf/README.md) · [SVG](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/IO/Svg/README.md) · [EPS](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/IO/Eps/README.md) · [PMTiles](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/IO/PmTiles/README.md) · [Vector tiles](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/IO/VectorTiles/README.md) · [Cesium terrain](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/IO/CesiumTerrain/README.md) · [SQL Server native binary](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/IO/SqlServerNativeBinary/README.md) · [ESRI JSON](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/Core/IRI.Maptor.Core.Spatial/IO/EsriJson/README.md)
 

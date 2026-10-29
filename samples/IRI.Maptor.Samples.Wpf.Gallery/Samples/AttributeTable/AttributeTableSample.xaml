@@ -4,11 +4,13 @@
              xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls;assembly=IRI.Maptor.Presentation.Wpf"
              Loaded="OnLoaded">
     <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Style="{StaticResource SampleToolbar}">
-            <Button Content="Add shapefile…" Command="{Binding AddShapefileCommand}" Style="{StaticResource SampleToolbarButton}" />
-            <TextBlock Style="{StaticResource SampleHint}" VerticalAlignment="Center"
-                       Text="Right-click a layer in the legend and choose its attribute table; a tab opens below. Select a row to highlight the feature; double-click to zoom to it." />
-        </StackPanel>
+        <Border DockPanel.Dock="Top" Style="{StaticResource SampleToolbarHost}">
+            <StackPanel Style="{StaticResource SampleToolbar}">
+                <Button Content="Add shapefile…" Command="{Binding AddShapefileCommand}" Style="{StaticResource SampleToolbarButton}" />
+                <TextBlock Style="{StaticResource SampleHint}" VerticalAlignment="Center"
+                           Text="Right-click a layer in the legend and choose its attribute table; a tab opens below. Select a row to highlight the feature; double-click to zoom to it." />
+            </StackPanel>
+        </Border>
 
         <Grid>
             <Grid.ColumnDefinitions>

@@ -4,12 +4,14 @@
              xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls;assembly=IRI.Maptor.Presentation.Wpf"
              Loaded="OnLoaded">
     <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Style="{StaticResource SampleToolbar}">
-            <Button Content="Add markers" Command="{Binding AddMarkersCommand}" Style="{StaticResource SampleToolbarButton}" />
-            <Button Content="Clear all" Command="{Binding ClearAllCommand}" Style="{StaticResource SampleToolbarButton}" />
-            <TextBlock Style="{StaticResource SampleHint}" VerticalAlignment="Center"
-                       Text="Markers are ordinary WPF elements anchored to a WGS 84 position; they keep their pixel size while the map zooms." />
-        </StackPanel>
+        <Border DockPanel.Dock="Top" Style="{StaticResource SampleToolbarHost}">
+            <StackPanel Style="{StaticResource SampleToolbar}">
+                <Button Content="Add markers" Command="{Binding AddMarkersCommand}" Style="{StaticResource SampleToolbarButton}" />
+                <Button Content="Clear all" Command="{Binding ClearAllCommand}" Style="{StaticResource SampleToolbarButton}" />
+                <TextBlock Style="{StaticResource SampleHint}" VerticalAlignment="Center"
+                           Text="Markers are ordinary WPF elements anchored to a WGS 84 position; they keep their pixel size while the map zooms." />
+            </StackPanel>
+        </Border>
 
         <maptor:MapViewer x:Name="map" MapAction="{Binding MapAction, Mode=OneWay}" />
     </DockPanel>

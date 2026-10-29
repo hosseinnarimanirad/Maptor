@@ -4,22 +4,24 @@
              xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls;assembly=IRI.Maptor.Presentation.Wpf"
              Loaded="OnLoaded">
     <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Style="{StaticResource SampleToolbar}">
-            <StackPanel.Resources>
-                <Style TargetType="Button" BasedOn="{StaticResource SampleToolbarButton}" />
-            </StackPanel.Resources>
-            <Button Content="Full extent" Command="{Binding FullExtentCommand}" />
-            <Button Content="Zoom in" Command="{Binding ZoomInAtCenterCommand}" />
-            <Button Content="Zoom out" Command="{Binding ZoomOutAtCenterCommand}" />
-            <Button Content="Rectangle zoom" Command="{Binding RectangleZoomCommand}" />
-            <Button Content="Pan" Command="{Binding PanCommand}" />
-            <Button Content="Previous extent" Command="{Binding PreviousExtentCommand}" />
-            <Button Content="Next extent" Command="{Binding NextExtentCommand}" />
-            <ComboBox MinWidth="180" Margin="12,2,2,2" VerticalAlignment="Center"
-                      ItemsSource="{Binding MapProviders}"
-                      SelectedItem="{Binding SelectedMapProvider, Mode=TwoWay}"
-                      DisplayMemberPath="Title" />
-        </StackPanel>
+        <Border DockPanel.Dock="Top" Style="{StaticResource SampleToolbarHost}">
+            <StackPanel Style="{StaticResource SampleToolbar}">
+                <StackPanel.Resources>
+                    <Style TargetType="Button" BasedOn="{StaticResource SampleToolbarButton}" />
+                </StackPanel.Resources>
+                <Button Content="Full extent" Command="{Binding FullExtentCommand}" />
+                <Button Content="Zoom in" Command="{Binding ZoomInAtCenterCommand}" />
+                <Button Content="Zoom out" Command="{Binding ZoomOutAtCenterCommand}" />
+                <Button Content="Rectangle zoom" Command="{Binding RectangleZoomCommand}" />
+                <Button Content="Pan" Command="{Binding PanCommand}" />
+                <Button Content="Previous extent" Command="{Binding PreviousExtentCommand}" />
+                <Button Content="Next extent" Command="{Binding NextExtentCommand}" />
+                <ComboBox MinWidth="180" Margin="12,2,2,2" VerticalAlignment="Center"
+                          ItemsSource="{Binding MapProviders}"
+                          SelectedItem="{Binding SelectedMapProvider, Mode=TwoWay}"
+                          DisplayMemberPath="Title" />
+            </StackPanel>
+        </Border>
 
         <Grid>
             <!-- MapAction tells the control what the mouse does: pan, zoom, draw, measure, identify... -->

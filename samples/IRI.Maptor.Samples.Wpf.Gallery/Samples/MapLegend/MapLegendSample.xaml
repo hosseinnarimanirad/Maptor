@@ -4,15 +4,17 @@
              xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls;assembly=IRI.Maptor.Presentation.Wpf"
              Loaded="OnLoaded">
     <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Style="{StaticResource SampleToolbar}">
-            <StackPanel.Resources>
-                <Style TargetType="Button" BasedOn="{StaticResource SampleToolbarButton}" />
-            </StackPanel.Resources>
-            <Button Content="Add shapefile…" Command="{Binding AddShapefileCommand}" />
-            <Button Content="Add GeoJSON…" Command="{Binding AddGeoJSONfileCommand}" />
-            <Button Content="Add sample layer" Click="OnAddSampleLayer" />
-            <Button Content="Clear all" Command="{Binding ClearAllCommand}" />
-        </StackPanel>
+        <Border DockPanel.Dock="Top" Style="{StaticResource SampleToolbarHost}">
+            <StackPanel Style="{StaticResource SampleToolbar}">
+                <StackPanel.Resources>
+                    <Style TargetType="Button" BasedOn="{StaticResource SampleToolbarButton}" />
+                </StackPanel.Resources>
+                <Button Content="Add shapefile…" Command="{Binding AddShapefileCommand}" />
+                <Button Content="Add GeoJSON…" Command="{Binding AddGeoJSONfileCommand}" />
+                <Button Content="Add sample layer" Click="OnAddSampleLayer" />
+                <Button Content="Clear all" Command="{Binding ClearAllCommand}" />
+            </StackPanel>
+        </Border>
 
         <Border DockPanel.Dock="Left" Style="{StaticResource SampleSidePanel}">
             <DockPanel>

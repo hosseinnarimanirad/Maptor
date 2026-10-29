@@ -4,11 +4,13 @@
              xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls;assembly=IRI.Maptor.Presentation.Wpf"
              Loaded="OnLoaded">
     <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Style="{StaticResource SampleToolbar}">
-            <!-- GoToCommand opens GoToMetroWindow (the default action wired by MapInitializationHelper) -->
-            <Button Content="Go to… (dialog)" Command="{Binding GoToCommand}" Style="{StaticResource SampleToolbarButton}" />
-            <Button Content="Full extent" Command="{Binding FullExtentCommand}" Style="{StaticResource SampleToolbarButton}" />
-        </StackPanel>
+        <Border DockPanel.Dock="Top" Style="{StaticResource SampleToolbarHost}">
+            <StackPanel Style="{StaticResource SampleToolbar}">
+                <!-- GoToCommand opens GoToMetroWindow (the default action wired by MapInitializationHelper) -->
+                <Button Content="Go to… (dialog)" Command="{Binding GoToCommand}" Style="{StaticResource SampleToolbarButton}" />
+                <Button Content="Full extent" Command="{Binding FullExtentCommand}" Style="{StaticResource SampleToolbarButton}" />
+            </StackPanel>
+        </Border>
 
         <!-- The same view the dialog hosts, embedded in the page. Its view model is created in code-behind. -->
         <Border DockPanel.Dock="Right" Style="{StaticResource SampleSidePanel}" Width="540" BorderThickness="1,0,0,0">

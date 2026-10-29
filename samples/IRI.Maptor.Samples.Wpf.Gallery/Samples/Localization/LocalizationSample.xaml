@@ -12,20 +12,22 @@
 
     <!-- Bind FlowDirection once at the root; right-to-left cultures flip the whole layout. -->
     <DockPanel FlowDirection="{Binding CurrentFlowDirection, Source={StaticResource Localization}}">
-        <StackPanel DockPanel.Dock="Top" Style="{StaticResource SampleToolbar}">
-            <StackPanel.Resources>
-                <Style TargetType="Button" BasedOn="{StaticResource SampleToolbarButton}" />
-            </StackPanel.Resources>
-            <!-- Language picker with flags and native names; switching applies to the whole process -->
-            <maptor:LanguageCombo x:Name="languageCombo" MinWidth="180" Margin="2,2,12,2" VerticalAlignment="Center" />
+        <Border DockPanel.Dock="Top" Style="{StaticResource SampleToolbarHost}">
+            <StackPanel Style="{StaticResource SampleToolbar}">
+                <StackPanel.Resources>
+                    <Style TargetType="Button" BasedOn="{StaticResource SampleToolbarButton}" />
+                </StackPanel.Resources>
+                <!-- Language picker with flags and native names; switching applies to the whole process -->
+                <maptor:LanguageCombo x:Name="languageCombo" MinWidth="180" Margin="2,2,12,2" VerticalAlignment="Center" />
 
-            <!-- Resource keys come from IRI.Maptor.Presentation.Core/Properties/Resources.resx -->
-            <Button Content="{Binding [cmd_general_fullExtent], Source={StaticResource Localization}}" Command="{Binding FullExtentCommand}" />
-            <Button Content="{Binding [cmd_general_goTo], Source={StaticResource Localization}}" Command="{Binding GoToCommand}" />
-            <Button Content="{Binding [cmd_general_measureLength], Source={StaticResource Localization}}" Command="{Binding MeasureLengthCommand}" />
-            <Button Content="{Binding [cmd_general_measureArea], Source={StaticResource Localization}}" Command="{Binding MeasureAreaCommand}" />
-            <Button Content="{Binding [cmd_general_drawPolygon], Source={StaticResource Localization}}" Command="{Binding DrawPolygonCommand}" />
-        </StackPanel>
+                <!-- Resource keys come from IRI.Maptor.Presentation.Core/Properties/Resources.resx -->
+                <Button Content="{Binding [cmd_general_fullExtent], Source={StaticResource Localization}}" Command="{Binding FullExtentCommand}" />
+                <Button Content="{Binding [cmd_general_goTo], Source={StaticResource Localization}}" Command="{Binding GoToCommand}" />
+                <Button Content="{Binding [cmd_general_measureLength], Source={StaticResource Localization}}" Command="{Binding MeasureLengthCommand}" />
+                <Button Content="{Binding [cmd_general_measureArea], Source={StaticResource Localization}}" Command="{Binding MeasureAreaCommand}" />
+                <Button Content="{Binding [cmd_general_drawPolygon], Source={StaticResource Localization}}" Command="{Binding DrawPolygonCommand}" />
+            </StackPanel>
+        </Border>
 
         <Border DockPanel.Dock="Left" Style="{StaticResource SampleSidePanel}" Width="360">
             <StackPanel>

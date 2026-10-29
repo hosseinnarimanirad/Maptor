@@ -1,10 +1,12 @@
 using System;
 using System.Windows.Controls;
+using MahApps.Metro.IconPacks;
 
 namespace IRI.Maptor.Samples.Wpf.Gallery.Shell;
 
 /// <summary>One entry in the gallery: where it is, what it shows, and how to create its view.</summary>
-public sealed class SampleInfo(string category, string title, string description, string folder, Func<UserControl> createView)
+public sealed class SampleInfo(string category, string title, string description, string folder, Func<UserControl> createView,
+                               PackIconMaterialKind icon = PackIconMaterialKind.MapOutline)
 {
     private UserControl? _view;
 
@@ -12,6 +14,9 @@ public sealed class SampleInfo(string category, string title, string description
     public string Category { get; } = category;
 
     public string Title { get; } = title;
+
+    /// <summary>Shown beside the title in the navigation list and the header.</summary>
+    public PackIconMaterialKind Icon { get; } = icon;
 
     /// <summary>One or two sentences shown above the sample.</summary>
     public string Description { get; } = description;

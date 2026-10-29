@@ -4,17 +4,19 @@
              xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls;assembly=IRI.Maptor.Presentation.Wpf"
              Loaded="OnLoaded">
     <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Style="{StaticResource SampleToolbar}">
-            <StackPanel.Resources>
-                <Style TargetType="Button" BasedOn="{StaticResource SampleToolbarButton}" />
-            </StackPanel.Resources>
-            <Button Content="Draw point" Command="{Binding DrawPointCommand}" />
-            <Button Content="Draw polyline" Command="{Binding DrawPolylineCommand}" />
-            <Button Content="Draw polygon" Command="{Binding DrawPolygonCommand}" />
-            <Button Content="Draw rectangle" Command="{Binding DrawRectangleCommand}" />
-            <Button Content="Add text" Command="{Binding AddTextToMapCommand}" />
-            <Button Content="Remove all" Command="{Binding RemoveAllDrawingItemsCommand}" />
-        </StackPanel>
+        <Border DockPanel.Dock="Top" Style="{StaticResource SampleToolbarHost}">
+            <StackPanel Style="{StaticResource SampleToolbar}">
+                <StackPanel.Resources>
+                    <Style TargetType="Button" BasedOn="{StaticResource SampleToolbarButton}" />
+                </StackPanel.Resources>
+                <Button Content="Draw point" Command="{Binding DrawPointCommand}" />
+                <Button Content="Draw polyline" Command="{Binding DrawPolylineCommand}" />
+                <Button Content="Draw polygon" Command="{Binding DrawPolygonCommand}" />
+                <Button Content="Draw rectangle" Command="{Binding DrawRectangleCommand}" />
+                <Button Content="Add text" Command="{Binding AddTextToMapCommand}" />
+                <Button Content="Remove all" Command="{Binding RemoveAllDrawingItemsCommand}" />
+            </StackPanel>
+        </Border>
 
         <Border DockPanel.Dock="Left" Style="{StaticResource SampleSidePanel}" Width="360">
             <DockPanel>
