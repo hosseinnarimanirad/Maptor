@@ -2,7 +2,7 @@
 
 Shows where satellites are right now. The sample reads their orbital elements and propagates each satellite with SGP4. Every few seconds it redraws the point beneath each one, on satellite imagery.
 
-<!-- screenshot.png still to be added -->
+![Satellite positions](screenshot.png)
 
 - The sample starts with ten public TLEs from CelesTrak (`sample-2026-10-28.tle`). Eight were downloaded on 2026-10-28: the ISS, Landsat 8 and 9, Sentinel-2A/B/C, Terra and one GPS satellite (NAVSTAR 81). The other two were added on 2026-10-29: one Galileo satellite (GSAT0210) and the geostationary weather satellite Meteosat-12. TLEs age, and the sample shows how much: elements a few days old are accurate to a few km, and weeks-old ones are only a sketch.
 - **Open file…** reads a TLE file (2- or 3-line sets) or CelesTrak's OMM JSON. **Paste…** takes TLEs copied from a web page. Sets that cannot be read are reported in a banner, and the rest are still shown.

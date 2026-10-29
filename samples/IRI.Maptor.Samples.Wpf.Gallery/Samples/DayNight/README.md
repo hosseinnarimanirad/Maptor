@@ -16,7 +16,7 @@ To compare seasons, click a **month** in the strip above the timeline. The date 
 
 A place's real time zone can't be known offline, so the times can be shown in three zones: the place's own zone from its longitude (whole hours), this computer's zone, or UTC. Esc closes the panel.
 
-<!-- screenshot.png still to be added -->
+![Day and night](screenshot.png)
 
 ## What it shows
 
