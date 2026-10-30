@@ -8,6 +8,7 @@ using IRI.Maptor.Presentation.Wpf.Helpers;
 using IRI.Maptor.Presentation.Wpf.ColorBrushes;
 using IRI.Maptor.Presentation.Wpf.Assets.Fonts;
 using IRI.Maptor.Presentation.Core;
+using IRI.Maptor.Presentation.Core.Models.MapText;
 
 namespace IRI.Maptor.Presentation.Wpf.ViewModels.Map;
 
@@ -240,6 +241,66 @@ public class TextboxMarkerViewModel : Notifier
     }
 
 
+    private MapTextFrame _formatting_Frame = MapTextFrame.Box;
+    public MapTextFrame Formatting_Frame
+    {
+        get { return _formatting_Frame; }
+        set
+        {
+            _formatting_Frame = value;
+            RaisePropertyChanged();
+            RaiseFrameButtonsChanged();
+        }
+    }
+
+    // Box/Plain/Halo toolbar toggle buttons; same contract as the direction buttons:
+    // false (clicking the already-checked button) is ignored and re-notified
+    public bool Formatting_IsBoxFrame
+    {
+        get { return Formatting_Frame == MapTextFrame.Box; }
+        set { SetFrame(MapTextFrame.Box, value); }
+    }
+
+    public bool Formatting_IsPlainFrame
+    {
+        get { return Formatting_Frame == MapTextFrame.Plain; }
+        set { SetFrame(MapTextFrame.Plain, value); }
+    }
+
+    public bool Formatting_IsHaloFrame
+    {
+        get { return Formatting_Frame == MapTextFrame.Halo; }
+        set { SetFrame(MapTextFrame.Halo, value); }
+    }
+
+    private void SetFrame(MapTextFrame frame, bool isChecked)
+    {
+        if (isChecked)
+            Formatting_Frame = frame;
+        else
+            RaiseFrameButtonsChanged();
+    }
+
+    private void RaiseFrameButtonsChanged()
+    {
+        RaisePropertyChanged(nameof(Formatting_IsBoxFrame));
+        RaisePropertyChanged(nameof(Formatting_IsPlainFrame));
+        RaisePropertyChanged(nameof(Formatting_IsHaloFrame));
+    }
+
+
+    private Color _formatting_TextColor = Colors.Black;
+    public Color Formatting_TextColor
+    {
+        get { return _formatting_TextColor; }
+        set
+        {
+            _formatting_TextColor = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
     static TextboxMarkerViewModel()
     {
 
@@ -299,6 +360,18 @@ public class TextboxMarkerViewModel : Notifier
         return list.ToArray();
     }
 
+    public sealed record TextColorChoice(string Name, Color ColorValue);
+
+    // the toolbar combo binds SelectedValue (ColorValue) to Formatting_TextColor; a colour
+    // outside this list (e.g. from ApplyStyle) still applies, the combo just shows no item
+    public static readonly TextColorChoice[] TextColorChoices =
+    [
+        new("Black", Colors.Black),
+        new("White", Colors.White),
+        .. BackgroundChoices.Where(c => !c.IsTheme && c.ColorValue != ModernUIColors.BlackColor)
+                            .Select(c => new TextColorChoice(c.Name, c.ColorValue!.Value)),
+    ];
+
     private BackgroundChoice _selectedBackgroundChoice = BackgroundChoices[0];
     public BackgroundChoice SelectedBackgroundChoice
     {
@@ -318,6 +391,86 @@ public class TextboxMarkerViewModel : Notifier
             BackgroundColor = new SolidColorBrush(_selectedBackgroundChoice.ColorValue.Value);
         }
     }
+
+
+    #region Style
+
+    public MapTextStyle ToStyle()
+    {
+        return new MapTextStyle
+        {
+            Frame = Formatting_Frame,
+            FontFamilyName = Formatting_FontFamilyName,
+            FontSize = Formatting_FontSize,
+            IsBold = Formatting_IsBold,
+            IsItalic = Formatting_IsItalic,
+            IsUnderline = Formatting_IsUnderline,
+            Alignment = ToStyleAlignment(Formatting_Alignment),
+            IsRightToLeft = Formatting_FlowDirection == FlowDirection.RightToLeft,
+            TextColor = Formatting_TextColor.ToString(),
+            BackgroundColor = SelectedBackgroundChoice.IsTheme ? null : SelectedBackgroundChoice.ColorValue?.ToString(),
+        };
+    }
+
+    // values that cannot be used (unparsable colour, non-positive size, background
+    // colour not among BackgroundChoices) fall back to the defaults instead of throwing
+    public void ApplyStyle(MapTextStyle style)
+    {
+        ArgumentNullException.ThrowIfNull(style);
+
+        Formatting_Frame = Enum.IsDefined(style.Frame) ? style.Frame : MapTextFrame.Box;
+        Formatting_FontFamilyName = string.IsNullOrWhiteSpace(style.FontFamilyName) ? IranSansFontName : style.FontFamilyName;
+        Formatting_FontSize = double.IsFinite(style.FontSize) && style.FontSize > 0 ? style.FontSize : 14.0;
+        Formatting_IsBold = style.IsBold;
+        Formatting_IsItalic = style.IsItalic;
+        Formatting_IsUnderline = style.IsUnderline;
+        Formatting_FlowDirection = style.IsRightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
+        Formatting_Alignment = ToTextAlignment(style.Alignment);
+        Formatting_TextColor = TryParseColor(style.TextColor) ?? Colors.Black;
+
+        var backgroundColor = TryParseColor(style.BackgroundColor);
+        SelectedBackgroundChoice = BackgroundChoices.FirstOrDefault(c => !c.IsTheme && c.ColorValue == backgroundColor && backgroundColor is not null)
+            ?? BackgroundChoices[0];
+    }
+
+    private static MapTextAlignment ToStyleAlignment(TextAlignment alignment)
+    {
+        return alignment switch
+        {
+            TextAlignment.Right => MapTextAlignment.Right,
+            TextAlignment.Center => MapTextAlignment.Center,
+            TextAlignment.Justify => MapTextAlignment.Justify,
+            _ => MapTextAlignment.Left,
+        };
+    }
+
+    private static TextAlignment ToTextAlignment(MapTextAlignment alignment)
+    {
+        return alignment switch
+        {
+            MapTextAlignment.Right => TextAlignment.Right,
+            MapTextAlignment.Center => TextAlignment.Center,
+            MapTextAlignment.Justify => TextAlignment.Justify,
+            _ => TextAlignment.Left,
+        };
+    }
+
+    private static Color? TryParseColor(string? hexColor)
+    {
+        if (string.IsNullOrWhiteSpace(hexColor))
+            return null;
+
+        try
+        {
+            return ColorHelper.ToWpfColor(hexColor);
+        }
+        catch (Exception ex) when (ex is FormatException or NotSupportedException)
+        {
+            return null;
+        }
+    }
+
+    #endregion
 
 
     public void IncreaseFontSize()
