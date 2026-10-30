@@ -2740,4 +2740,28 @@
   <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
     <value>اسحب للتدوير. Shift: خطوات 15°. نقر مزدوج: بلا دوران</value>
   </data>
+  <data name="featureTable_exportDates" xml:space="preserve">
+    <value>التواريخ في تصدير Excel</value>
+  </data>
+  <data name="featureTable_exportDates_calendar" xml:space="preserve">
+    <value>التقويم</value>
+  </data>
+  <data name="featureTable_exportDates_persian" xml:space="preserve">
+    <value>هجري شمسي</value>
+  </data>
+  <data name="featureTable_exportDates_gregorian" xml:space="preserve">
+    <value>ميلادي</value>
+  </data>
+  <data name="featureTable_exportDates_timeZone" xml:space="preserve">
+    <value>المنطقة الزمنية</value>
+  </data>
+  <data name="featureTable_exportDates_iran" xml:space="preserve">
+    <value>توقيت إيران</value>
+  </data>
+  <data name="featureTable_exportDates_utc" xml:space="preserve">
+    <value>UTC</value>
+  </data>
+  <data name="featureTable_exportDates_local" xml:space="preserve">
+    <value>المنطقة الزمنية لهذا الحاسوب</value>
+  </data>
 </root>

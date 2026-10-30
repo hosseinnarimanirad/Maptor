@@ -2740,4 +2740,28 @@
   <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
     <value>Քաշեք՝ պտտելու համար։ Shift՝ 15° քայլեր։ Կրկնակի սեղմում՝ առանց պտույտի</value>
   </data>
+  <data name="featureTable_exportDates" xml:space="preserve">
+    <value>Ամսաթվերը Excel արտահանման մեջ</value>
+  </data>
+  <data name="featureTable_exportDates_calendar" xml:space="preserve">
+    <value>Օրացույց</value>
+  </data>
+  <data name="featureTable_exportDates_persian" xml:space="preserve">
+    <value>Պարսկական (արեգակնային հիջրի)</value>
+  </data>
+  <data name="featureTable_exportDates_gregorian" xml:space="preserve">
+    <value>Գրիգորյան</value>
+  </data>
+  <data name="featureTable_exportDates_timeZone" xml:space="preserve">
+    <value>Ժամային գոտի</value>
+  </data>
+  <data name="featureTable_exportDates_iran" xml:space="preserve">
+    <value>Իրանի ժամանակ</value>
+  </data>
+  <data name="featureTable_exportDates_utc" xml:space="preserve">
+    <value>UTC</value>
+  </data>
+  <data name="featureTable_exportDates_local" xml:space="preserve">
+    <value>Այս համակարգչի ժամային գոտին</value>
+  </data>
 </root>

@@ -2740,4 +2740,28 @@
   <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
     <value>拖动以旋转。Shift：15° 步进。双击：不旋转</value>
   </data>
+  <data name="featureTable_exportDates" xml:space="preserve">
+    <value>Excel 导出中的日期</value>
+  </data>
+  <data name="featureTable_exportDates_calendar" xml:space="preserve">
+    <value>日历</value>
+  </data>
+  <data name="featureTable_exportDates_persian" xml:space="preserve">
+    <value>波斯历（太阳希吉来历）</value>
+  </data>
+  <data name="featureTable_exportDates_gregorian" xml:space="preserve">
+    <value>公历</value>
+  </data>
+  <data name="featureTable_exportDates_timeZone" xml:space="preserve">
+    <value>时区</value>
+  </data>
+  <data name="featureTable_exportDates_iran" xml:space="preserve">
+    <value>伊朗时间</value>
+  </data>
+  <data name="featureTable_exportDates_utc" xml:space="preserve">
+    <value>UTC</value>
+  </data>
+  <data name="featureTable_exportDates_local" xml:space="preserve">
+    <value>本计算机的时区</value>
+  </data>
 </root>

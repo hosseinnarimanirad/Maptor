@@ -90,16 +90,27 @@ public static class FeatureTableCommands
 
             var features = layer.GetSelectedFeatures();
 
-            // Create headers from field aliases (matching grid display)
+            // Create headers from field aliases; same column rule as the grid, so the file never has columns the table hides
             List<string>? headers = null;
 
             List<string>? fieldNames = null;
 
+            // date/time fields are written as text in the time zone and calendar chosen in the settings
+            Dictionary<string, Field> dateFields = new();
+
             if (!layer.Fields.IsNullOrEmpty())
             {
-                headers = layer.Fields.Where(f => !FeatureTableHelper.IsGeometryField(f)).Select(f => f.Alias ?? f.Name).ToList();
-                fieldNames = layer.Fields.Where(f => !FeatureTableHelper.IsGeometryField(f)).Select(f => f.Name).ToList();
+                var exportedFields = layer.Fields.Where(FeatureTableHelper.IsDisplayableField).ToList();
+
+                headers = exportedFields.Select(f => f.Alias ?? f.Name).ToList();
+                fieldNames = exportedFields.Select(f => f.Name).ToList();
+
+                foreach (var field in exportedFields.Where(f => f.ResolveDataType() == FieldDataType.DateTime))
+                    dateFields[field.Name] = field;
             }
+
+            var calendar = map.GeneralSettings.FeatureTable_ExportCalendar;
+            var timeZone = map.GeneralSettings.FeatureTable_ExportTimeZone;
 
             //
             List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
@@ -116,7 +127,15 @@ public static class FeatureTableCommands
                     {
                         if (item.Attributes.TryGetValue(fieldName, out var value))
                         {
+                            if (dateFields.TryGetValue(fieldName, out var dateField) && ExportDateTimeHelper.TryGetDateTime(value, out var dateTime))
+                                value = ExportDateTimeHelper.Format(dateTime, map.StoredDateTimeZone, timeZone, calendar, dateField.DisplayFormat);
+
                             orderedRow[fieldName] = value;
+                        }
+                        else
+                        {
+                            // keep the slot: cells are written by position, so a missing value would shift the row
+                            orderedRow[fieldName] = null!;
                         }
                     }
 

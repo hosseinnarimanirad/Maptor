@@ -2740,4 +2740,28 @@
   <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
     <value>Fırlatmaq üçün dartın. Shift: 15° addımlar. İki dəfə klik: fırlanmasız</value>
   </data>
+  <data name="featureTable_exportDates" xml:space="preserve">
+    <value>Excel ixracında tarixlər</value>
+  </data>
+  <data name="featureTable_exportDates_calendar" xml:space="preserve">
+    <value>Təqvim</value>
+  </data>
+  <data name="featureTable_exportDates_persian" xml:space="preserve">
+    <value>Hicri-şəmsi</value>
+  </data>
+  <data name="featureTable_exportDates_gregorian" xml:space="preserve">
+    <value>Qriqorian</value>
+  </data>
+  <data name="featureTable_exportDates_timeZone" xml:space="preserve">
+    <value>Saat qurşağı</value>
+  </data>
+  <data name="featureTable_exportDates_iran" xml:space="preserve">
+    <value>İran vaxtı</value>
+  </data>
+  <data name="featureTable_exportDates_utc" xml:space="preserve">
+    <value>UTC</value>
+  </data>
+  <data name="featureTable_exportDates_local" xml:space="preserve">
+    <value>Bu kompüterin saat qurşağı</value>
+  </data>
 </root>

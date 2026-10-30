@@ -2740,4 +2740,28 @@
   <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
     <value>ڕابکێشە بۆ سووڕاندن. Shift: هەنگاوی 15°. دوو کرتە: بێ سووڕانەوە</value>
   </data>
+  <data name="featureTable_exportDates" xml:space="preserve">
+    <value>بەروارەکان لە هەناردەی Excel</value>
+  </data>
+  <data name="featureTable_exportDates_calendar" xml:space="preserve">
+    <value>ڕۆژژمێر</value>
+  </data>
+  <data name="featureTable_exportDates_persian" xml:space="preserve">
+    <value>هەتاوی</value>
+  </data>
+  <data name="featureTable_exportDates_gregorian" xml:space="preserve">
+    <value>زایینی</value>
+  </data>
+  <data name="featureTable_exportDates_timeZone" xml:space="preserve">
+    <value>ناوچەی کات</value>
+  </data>
+  <data name="featureTable_exportDates_iran" xml:space="preserve">
+    <value>کاتی ئێران</value>
+  </data>
+  <data name="featureTable_exportDates_utc" xml:space="preserve">
+    <value>UTC</value>
+  </data>
+  <data name="featureTable_exportDates_local" xml:space="preserve">
+    <value>ناوچەی کاتی ئەم کۆمپیوتەرە</value>
+  </data>
 </root>

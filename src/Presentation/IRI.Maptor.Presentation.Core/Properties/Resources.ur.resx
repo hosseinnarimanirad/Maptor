@@ -2740,4 +2740,28 @@
   <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
     <value>گھمانے کے لیے گھسیٹیں۔ Shift: 15° کے قدم۔ ڈبل کلک: بغیر گردش</value>
   </data>
+  <data name="featureTable_exportDates" xml:space="preserve">
+    <value>Excel برآمد میں تاریخیں</value>
+  </data>
+  <data name="featureTable_exportDates_calendar" xml:space="preserve">
+    <value>کیلنڈر</value>
+  </data>
+  <data name="featureTable_exportDates_persian" xml:space="preserve">
+    <value>شمسی ہجری</value>
+  </data>
+  <data name="featureTable_exportDates_gregorian" xml:space="preserve">
+    <value>عیسوی</value>
+  </data>
+  <data name="featureTable_exportDates_timeZone" xml:space="preserve">
+    <value>ٹائم زون</value>
+  </data>
+  <data name="featureTable_exportDates_iran" xml:space="preserve">
+    <value>ایران کا وقت</value>
+  </data>
+  <data name="featureTable_exportDates_utc" xml:space="preserve">
+    <value>UTC</value>
+  </data>
+  <data name="featureTable_exportDates_local" xml:space="preserve">
+    <value>اس کمپیوٹر کا ٹائم زون</value>
+  </data>
 </root>

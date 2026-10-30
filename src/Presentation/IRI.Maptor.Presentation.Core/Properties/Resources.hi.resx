@@ -2740,4 +2740,28 @@
   <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
     <value>घुमाने के लिए खींचें। Shift: 15° के चरण। डबल-क्लिक: बिना घुमाव</value>
   </data>
+  <data name="featureTable_exportDates" xml:space="preserve">
+    <value>Excel निर्यात में तिथियाँ</value>
+  </data>
+  <data name="featureTable_exportDates_calendar" xml:space="preserve">
+    <value>कैलेंडर</value>
+  </data>
+  <data name="featureTable_exportDates_persian" xml:space="preserve">
+    <value>फ़ारसी (सौर हिजरी)</value>
+  </data>
+  <data name="featureTable_exportDates_gregorian" xml:space="preserve">
+    <value>ग्रेगोरियन</value>
+  </data>
+  <data name="featureTable_exportDates_timeZone" xml:space="preserve">
+    <value>समय क्षेत्र</value>
+  </data>
+  <data name="featureTable_exportDates_iran" xml:space="preserve">
+    <value>ईरान का समय</value>
+  </data>
+  <data name="featureTable_exportDates_utc" xml:space="preserve">
+    <value>UTC</value>
+  </data>
+  <data name="featureTable_exportDates_local" xml:space="preserve">
+    <value>इस कंप्यूटर का समय क्षेत्र</value>
+  </data>
 </root>

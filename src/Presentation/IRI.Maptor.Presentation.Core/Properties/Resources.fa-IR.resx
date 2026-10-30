@@ -3661,4 +3661,28 @@
   <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
     <value>برای چرخاندن بکشید. Shift: گام‌های ۱۵ درجه. دوبار کلیک: بدون چرخش</value>
   </data>
+  <data name="featureTable_exportDates" xml:space="preserve">
+    <value>تاریخ در خروجی اکسل</value>
+  </data>
+  <data name="featureTable_exportDates_calendar" xml:space="preserve">
+    <value>تقویم</value>
+  </data>
+  <data name="featureTable_exportDates_persian" xml:space="preserve">
+    <value>شمسی</value>
+  </data>
+  <data name="featureTable_exportDates_gregorian" xml:space="preserve">
+    <value>میلادی</value>
+  </data>
+  <data name="featureTable_exportDates_timeZone" xml:space="preserve">
+    <value>منطقهٔ زمانی</value>
+  </data>
+  <data name="featureTable_exportDates_iran" xml:space="preserve">
+    <value>وقت ایران</value>
+  </data>
+  <data name="featureTable_exportDates_utc" xml:space="preserve">
+    <value>UTC (گرینویچ)</value>
+  </data>
+  <data name="featureTable_exportDates_local" xml:space="preserve">
+    <value>منطقهٔ زمانی این رایانه</value>
+  </data>
 </root>

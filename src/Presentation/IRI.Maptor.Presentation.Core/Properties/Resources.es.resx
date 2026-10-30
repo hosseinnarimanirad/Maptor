@@ -2740,4 +2740,28 @@
   <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
     <value>Arrastre para girar. Mayús: pasos de 15°. Doble clic: sin rotación</value>
   </data>
+  <data name="featureTable_exportDates" xml:space="preserve">
+    <value>Fechas en la exportación a Excel</value>
+  </data>
+  <data name="featureTable_exportDates_calendar" xml:space="preserve">
+    <value>Calendario</value>
+  </data>
+  <data name="featureTable_exportDates_persian" xml:space="preserve">
+    <value>Persa (hégira solar)</value>
+  </data>
+  <data name="featureTable_exportDates_gregorian" xml:space="preserve">
+    <value>Gregoriano</value>
+  </data>
+  <data name="featureTable_exportDates_timeZone" xml:space="preserve">
+    <value>Zona horaria</value>
+  </data>
+  <data name="featureTable_exportDates_iran" xml:space="preserve">
+    <value>Hora de Irán</value>
+  </data>
+  <data name="featureTable_exportDates_utc" xml:space="preserve">
+    <value>UTC</value>
+  </data>
+  <data name="featureTable_exportDates_local" xml:space="preserve">
+    <value>Zona horaria de este equipo</value>
+  </data>
 </root>

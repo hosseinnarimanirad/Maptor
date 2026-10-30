@@ -2740,4 +2740,28 @@
   <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
     <value>Trascina per ruotare. Maiusc: passi di 15°. Doppio clic: senza rotazione</value>
   </data>
+  <data name="featureTable_exportDates" xml:space="preserve">
+    <value>Date nell'esportazione Excel</value>
+  </data>
+  <data name="featureTable_exportDates_calendar" xml:space="preserve">
+    <value>Calendario</value>
+  </data>
+  <data name="featureTable_exportDates_persian" xml:space="preserve">
+    <value>Persiano (egira solare)</value>
+  </data>
+  <data name="featureTable_exportDates_gregorian" xml:space="preserve">
+    <value>Gregoriano</value>
+  </data>
+  <data name="featureTable_exportDates_timeZone" xml:space="preserve">
+    <value>Fuso orario</value>
+  </data>
+  <data name="featureTable_exportDates_iran" xml:space="preserve">
+    <value>Ora dell'Iran</value>
+  </data>
+  <data name="featureTable_exportDates_utc" xml:space="preserve">
+    <value>UTC</value>
+  </data>
+  <data name="featureTable_exportDates_local" xml:space="preserve">
+    <value>Fuso orario di questo computer</value>
+  </data>
 </root>

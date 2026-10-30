@@ -32,7 +32,7 @@ reference it from your WPF app.
   - `SatelliteLayers.Create(source, style?)`: satellite positions, names, and for the selected one its track, the area that sees it and its imaging swath. It also draws the source's region for passes, and a highlighted pass in bold. `SatelliteLayerStyle` sets the colours and sizes. `SatelliteLayers.HitTest(map, source, mouseEvent)` finds the satellite under the mouse, within 10 pixels.
   - `MapClockBinding` keeps either layer in step with a `MapClock`. On each tick it sets the source's time and redraws the layer in place, so the legend row is kept. A burst of ticks gives one redraw.
 - Cartography primitives: `VisualParameters`, symbologies, and rendering helpers.
-- Map markers: WPF user controls for location, label, photo, and textbox markers. The textbox marker is the text label of the map's Text tool: a hover formatting bar, Box / Plain text / Halo display modes, saving with the drawings as a GeoJSON point with a `TextSymbolizer` SLD, and printing in the PDF export as vector shapes.
+- Map markers: WPF user controls for location, label, photo, and textbox markers. The textbox marker is the text label of the map's Text tool: a hover formatting bar, Box / Plain text / Halo display modes, width and rotate handles, saving with the drawings as a GeoJSON point with a `TextSymbolizer` SLD, and printing in the PDF export as vector shapes.
 - Localization: RTL-aware language switching (`LanguageCombo`, WPF binding extensions) on top of
   the `LocalizationManager` in IRI.Maptor.Presentation.Core.
 - WPF assets: resource dictionaries for converters, colors, fonts, and animations.

@@ -3816,4 +3816,28 @@
     <value>Drag to rotate. Shift: 15° steps. Double-click: upright</value>
     <comment>text-on-map: the round handle at a label's top-right corner</comment>
   </data>
+  <data name="featureTable_exportDates" xml:space="preserve">
+    <value>Excel export dates</value>
+  </data>
+  <data name="featureTable_exportDates_calendar" xml:space="preserve">
+    <value>Calendar</value>
+  </data>
+  <data name="featureTable_exportDates_persian" xml:space="preserve">
+    <value>Persian (Solar Hijri)</value>
+  </data>
+  <data name="featureTable_exportDates_gregorian" xml:space="preserve">
+    <value>Gregorian</value>
+  </data>
+  <data name="featureTable_exportDates_timeZone" xml:space="preserve">
+    <value>Time zone</value>
+  </data>
+  <data name="featureTable_exportDates_iran" xml:space="preserve">
+    <value>Iran time</value>
+  </data>
+  <data name="featureTable_exportDates_utc" xml:space="preserve">
+    <value>UTC</value>
+  </data>
+  <data name="featureTable_exportDates_local" xml:space="preserve">
+    <value>This computer's time zone</value>
+  </data>
 </root>
