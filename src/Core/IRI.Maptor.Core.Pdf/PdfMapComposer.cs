@@ -127,6 +127,31 @@ internal static class PdfMapComposer
     }
 
     /// <summary>
+    /// Draws a text-on-map label's parts in order, at its on-screen physical size, with the block's
+    /// bottom-centre on <paramref name="anchor"/> (page coordinates). Opacity below 1 fades each part
+    /// on its own (PdfSharpCore has no group opacity), so overlapping parts show through each other.
+    /// </summary>
+    internal static void DrawMapText(XGraphics gfx, PdfWriter.PdfMapText text, XPoint anchor, double opacity)
+    {
+        if (!text.IsValid)
+            return;
+
+        var originX = anchor.X - text.Width * LabelPxToPoint / 2;
+        var originY = anchor.Y - text.Height * LabelPxToPoint;
+
+        foreach (var part in text.Parts)
+        {
+            if (part?.Shape is not { IsValid: true })
+                continue;
+
+            var c = part.Color;
+            var alpha = (int)Math.Round(Math.Max(0, Math.Min(1, opacity)) * c.A);
+
+            FillVectorFigures(gfx, part.Shape, originX, originY, LabelPxToPoint, XColor.FromArgb(alpha, c.R, c.G, c.B));
+        }
+    }
+
+    /// <summary>
     /// Fills a vector logo/text's figures as an even-odd path (so glyph holes render) at the given
     /// page origin and scale, in the given color.
     /// </summary>

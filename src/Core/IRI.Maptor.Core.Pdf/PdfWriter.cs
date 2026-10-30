@@ -33,6 +33,12 @@ public static class PdfWriter
         /// anchor). Null/empty means no labels. Kept in the layer's toggleable content group.
         /// </summary>
         public List<PdfFeatureLabel>? Labels { get; set; }
+
+        /// <summary>
+        /// Text-on-map labels (user-placed text drawings) to draw on top of this layer's geometry and
+        /// labels. Null/empty means none. Kept in the layer's toggleable content group.
+        /// </summary>
+        public List<PdfMapText>? Texts { get; set; }
     }
 
     /// <summary>
@@ -47,6 +53,40 @@ public static class PdfWriter
 
         /// <summary>Text color; null draws black.</summary>
         public IRI.Maptor.Core.Spatial.IO.Dxf.RgbColor? Color { get; set; }
+    }
+
+    /// <summary>
+    /// A text-on-map label: filled vector shapes (frame, text field, halo, glyphs) drawn in order at a
+    /// fixed paper size, with the block's bottom-centre on a map-space anchor — where the on-screen
+    /// marker is anchored. Unlike <see cref="PdfFeatureLabel"/> it carries its own colours and gets no
+    /// readability box.
+    /// </summary>
+    public class PdfMapText
+    {
+        /// <summary>Anchor point in map coordinates (same space as the geometry / map extent).</summary>
+        public Point Anchor { get; set; } = new(0, 0);
+
+        /// <summary>Block width in screen pixels (1/96"); printed at the same physical size.</summary>
+        public double Width { get; set; }
+
+        /// <summary>Block height in screen pixels (1/96").</summary>
+        public double Height { get; set; }
+
+        /// <summary>Shapes drawn first to last; their figures are in block pixels, top-left origin.</summary>
+        public List<PdfMapTextPart> Parts { get; set; } = new();
+
+        public bool IsValid => Width > 0 && Height > 0 && Parts.Any(p => p?.Shape is { IsValid: true });
+    }
+
+    /// <summary>
+    /// One filled shape of a <see cref="PdfMapText"/>, filled even-odd: callers pass outlined
+    /// (non-overlapping) geometry so overlapping glyphs or strokes leave no holes.
+    /// </summary>
+    public class PdfMapTextPart
+    {
+        public PdfVectorLogo Shape { get; set; } = new();
+
+        public IRI.Maptor.Core.Spatial.IO.Dxf.RgbColor Color { get; set; } = new(0, 0, 0);
     }
 
     /// <summary>
@@ -1050,7 +1090,7 @@ public static class PdfWriter
 
         public bool HasContent =>
             Rasters.Any(r => r.Tiles != null && r.Tiles.Count > 0) ||
-            Vectors.Any(v => (v.Features != null && v.Features.Count > 0) || (v.Labels != null && v.Labels.Count > 0));
+            Vectors.Any(v => (v.Features != null && v.Features.Count > 0) || (v.Labels != null && v.Labels.Count > 0) || (v.Texts != null && v.Texts.Any(t => t is { IsValid: true })));
     }
 
     /// <summary>
@@ -1144,8 +1184,9 @@ public static class PdfWriter
         {
             var hasFeatures = layerData.Features is { Count: > 0 };
             var hasLabels = layerData.Labels is { Count: > 0 };
+            var hasTexts = layerData.Texts is { Count: > 0 };
 
-            if (!hasFeatures && !hasLabels)
+            if (!hasFeatures && !hasLabels && !hasTexts)
                 continue;
 
             var combinedOpacity = baseOptions.Opacity * layerData.Opacity;
@@ -1181,6 +1222,18 @@ public static class PdfWriter
 
                     var anchor = pageTransform.ToPage(label.Anchor);
                     PdfMapComposer.DrawFeatureLabel(target, label.Glyphs, anchor, label.Color);
+                }
+            }
+
+            if (hasTexts)
+            {
+                foreach (var text in layerData.Texts!)
+                {
+                    if (text is not { IsValid: true } || text.Anchor == null)
+                        continue;
+
+                    var anchor = pageTransform.ToPage(text.Anchor);
+                    PdfMapComposer.DrawMapText(target, text, anchor, combinedOpacity);
                 }
             }
         }

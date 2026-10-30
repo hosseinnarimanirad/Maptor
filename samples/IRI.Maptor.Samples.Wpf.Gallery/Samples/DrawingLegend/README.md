@@ -8,6 +8,7 @@ Draw points, polylines, polygons, rectangles and text on the map. Each finished 
 
 - `DrawPointCommand`, `DrawPolylineCommand`, `DrawPolygonCommand`, `DrawRectangleCommand`, `AddTextToMapCommand`, `RemoveAllDrawingItemsCommand`.
 - `MapDrawingLegendView` — bound through the inherited `DataContext`, no extra wiring.
+- Text labels: hover one for its formatting bar (colour, size, Box / Plain text / Halo frame). **Save All** and **Open All** in the legend keep labels and geometry drawings alike (GeoJSON + embedded SLD).
 - `SketchBarView` with `DataContext="{Binding}"`.
 - The same commands are the entry point for `GetDrawingAsync`, if you need the drawn geometry in code.
 
