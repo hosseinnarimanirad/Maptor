@@ -160,13 +160,6 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    /// <summary>
-    /// The time zone of attribute date/time values that carry no <see cref="DateTimeKind"/>, i.e. the zone the
-    /// data's server writes its times in. Used to convert them in the feature table's Excel export. UTC by default.
-    /// </summary>
-    public virtual TimeZoneInfo StoredDateTimeZone => TimeZoneInfo.Utc;
-
-
     private async void ProxySettings_OnProxyChanged(object? sender, EventArgs e)
     {
         HttpClient.ConfigHttpClient(this.ProxySettings);

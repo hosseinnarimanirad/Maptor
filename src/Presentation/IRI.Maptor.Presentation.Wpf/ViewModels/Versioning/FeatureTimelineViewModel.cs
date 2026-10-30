@@ -201,13 +201,7 @@ public class FeatureTimelineViewModel : Notifier
             ParseToMap(_timeline?.Live?.GeometryWkb, _timeline?.Live?.Srid ?? 0));
     }
 
-    private static string? FormatValue(object? value) => value switch
-    {
-        null => null,
-        byte[] bytes => Convert.ToBase64String(bytes),
-        DateTime dt => dt.ToString("yyyy/MM/dd HH:mm"),
-        _ => value.ToString(),
-    };
+    private static string? FormatValue(object? value) => VersioningValueFormatter.Format(value);
 
     private static Geometry<Point>? ParseToMap(byte[]? wkb, int srid)
     {

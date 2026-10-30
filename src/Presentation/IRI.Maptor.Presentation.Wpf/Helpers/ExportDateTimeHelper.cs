@@ -47,41 +47,24 @@ public static class ExportDateTimeHelper
         }
     }
 
-    /// <param name="storedTimeZone">
-    /// The zone a value without a <see cref="DateTimeKind"/> is in, i.e. the zone the server writes its times in.
-    /// </param>
-    public static string Format(DateTime value, TimeZoneInfo storedTimeZone, ExportTimeZone timeZone, ExportCalendar calendar, string? format = null)
+    /// <summary>
+    /// A UTC or local value is converted to <paramref name="timeZone"/>. A value without a <see cref="DateTimeKind"/>
+    /// carries no zone (a file's wall-clock time, an older server) and is written as it is, in the chosen calendar.
+    /// </summary>
+    public static string Format(DateTime value, ExportTimeZone timeZone, ExportCalendar calendar, string? format = null)
     {
-        var converted = TimeZoneInfo.ConvertTimeFromUtc(ToUtc(value, storedTimeZone), GetTimeZone(timeZone));
+        var converted = value.Kind switch
+        {
+            DateTimeKind.Utc => TimeZoneInfo.ConvertTimeFromUtc(value, GetTimeZone(timeZone)),
+            DateTimeKind.Local => TimeZoneInfo.ConvertTimeFromUtc(value.ToUniversalTime(), GetTimeZone(timeZone)),
+            _ => value,
+        };
 
         format = string.IsNullOrWhiteSpace(format) ? DefaultFormat : format;
 
         return calendar == ExportCalendar.Persian
             ? converted.ToPersianString(format, useFarsiNumbers: false)
             : converted.ToString(format, CultureInfo.InvariantCulture);
-    }
-
-    private static DateTime ToUtc(DateTime value, TimeZoneInfo storedTimeZone)
-    {
-        switch (value.Kind)
-        {
-            case DateTimeKind.Utc:
-                return value;
-
-            case DateTimeKind.Local:
-                return value.ToUniversalTime();
-
-            default:
-                try
-                {
-                    return TimeZoneInfo.ConvertTimeToUtc(value, storedTimeZone);
-                }
-                catch (ArgumentException)
-                {
-                    // A clock time skipped by a daylight-saving change: shift by the standard offset.
-                    return DateTime.SpecifyKind(value - storedTimeZone.BaseUtcOffset, DateTimeKind.Utc);
-                }
-        }
     }
 
     private static TimeZoneInfo FindIranTimeZone()

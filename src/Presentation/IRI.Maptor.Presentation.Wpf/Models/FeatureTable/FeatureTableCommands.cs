@@ -128,7 +128,7 @@ public static class FeatureTableCommands
                         if (item.Attributes.TryGetValue(fieldName, out var value))
                         {
                             if (dateFields.TryGetValue(fieldName, out var dateField) && ExportDateTimeHelper.TryGetDateTime(value, out var dateTime))
-                                value = ExportDateTimeHelper.Format(dateTime, map.StoredDateTimeZone, timeZone, calendar, dateField.DisplayFormat);
+                                value = ExportDateTimeHelper.Format(dateTime, timeZone, calendar, dateField.DisplayFormat);
 
                             orderedRow[fieldName] = value;
                         }
