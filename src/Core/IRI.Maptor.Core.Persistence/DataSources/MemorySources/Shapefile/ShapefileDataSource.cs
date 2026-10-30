@@ -119,7 +119,7 @@ public class ShapefileDataSource : MemoryDataSource
 
             await Task.Delay(10);
 
-            var attributes = await DbfFile.ReadAsync(ShapefileFormat.Shapefile.GetDbfFileName(_shapefileName), true, _encoding, skipDeletedRecords: false);
+            var attributes = await DbfFile.ReadAsync(ShapefileFormat.Shapefile.GetDbfFileName(_shapefileName), true, _encoding);
 
             System.Diagnostics.Debug.WriteLine($"***** LoadAsync shapefile - attributes read {DateTime.Now.ToLongTimeString()}");
 
@@ -175,19 +175,19 @@ public class ShapefileDataSource : MemoryDataSource
 
         this.Fields = attributes.Fields.Select(f => f.AsField()).ToList();
 
-        // pair shapes and dbf records by record number (counts may differ)
-        var records = ShapefileFormat.Shapefile.MatchRecords(_shapefileName, geometries, attributes);
+        if (geometries?.Count != attributes.Attributes?.Count)
+            throw new NotImplementedException();
 
         var features = new List<Feature<Point>>();
 
-        foreach (var record in records)
+        for (int i = 0; i < geometries.Count; i++)
         {
             //Geometry<Point>? geometry = transformFunc == null
             //    ? geometries[i].AsGeometry()
             //    : geometries[i].AsGeometry().Transform(transformFunc, _targetSrs!.Srid);
-            var geometry = record.Shape.AsGeometry().Project(SrsBases.WebMercator);
+            var geometry = geometries[i].AsGeometry().Project(SrsBases.WebMercator);
 
-            var feature = map(geometry, record.Attributes);
+            var feature = map(geometry, attributes.Attributes[i]);
 
             feature.Id = GetNewId();
 

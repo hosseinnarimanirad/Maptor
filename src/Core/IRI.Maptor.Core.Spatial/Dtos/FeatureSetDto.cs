@@ -115,41 +115,11 @@ public class FeatureSetDto
         if (features.Count > 0 && features[0].TheGeometry != null)
             result.GeometryType = features[0].GeometryType;
 
-        ParseDateAttributes(features, this.Fields);
+
 
         //result.Fields = this.Fields;
 
         return result;
-    }
-
-    /// <summary>
-    /// JSON carries date/time attributes as ISO text; turn those of date fields into <see cref="DateTime"/>. A value
-    /// with a Z suffix (a server storing UTC) becomes Kind=Utc, so clients can show it in local time.
-    /// </summary>
-    private static void ParseDateAttributes(List<Feature<Point>> features, List<Field>? fields)
-    {
-        if (fields == null)
-            return;
-
-        var dateFields = fields.Where(f => f.ResolveDataType() == FieldDataType.DateTime).Select(f => f.Name).ToList();
-
-        if (dateFields.Count == 0)
-            return;
-
-        foreach (var feature in features)
-        {
-            if (feature.Attributes == null)
-                continue;
-
-            foreach (var name in dateFields)
-            {
-                if (feature.Attributes.TryGetValue(name, out var value) && value is string text &&
-                    DateTime.TryParse(text, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.RoundtripKind, out var date))
-                {
-                    feature.Attributes[name] = date;
-                }
-            }
-        }
     }
 
 

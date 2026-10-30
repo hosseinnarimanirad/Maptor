@@ -293,8 +293,31 @@ public static class PdfDecorationHelper
             if (bounds.IsEmpty || bounds.Width <= 0 || bounds.Height <= 0)
                 return null;
 
-            // Normalize to the text block's own top-left origin (0..W / 0..H).
-            var figures = ToMarkerFigures(flattened, p => new StaPoint(p.X - bounds.Left, p.Y - bounds.Top));
+            var figures = new List<PdfMarkerFigure>();
+
+            foreach (var figure in flattened.Figures)
+            {
+                var wpfPoints = new List<System.Windows.Point> { figure.StartPoint };
+
+                foreach (var segment in figure.Segments)
+                {
+                    if (segment is PolyLineSegment poly)
+                        wpfPoints.AddRange(poly.Points);
+                    else if (segment is LineSegment line)
+                        wpfPoints.Add(line.Point);
+                }
+
+                if (wpfPoints.Count < 2)
+                    continue;
+
+                // Normalize to the text block's own top-left origin (0..W / 0..H).
+                figures.Add(new PdfMarkerFigure
+                {
+                    IsClosed = figure.IsClosed,
+                    IsFilled = figure.IsFilled,
+                    Points = wpfPoints.Select(p => new StaPoint(p.X - bounds.Left, p.Y - bounds.Top)).ToList(),
+                });
+            }
 
             return figures.Count > 0
                 ? new PdfVectorLogo { Figures = figures, SourceWidth = bounds.Width, SourceHeight = bounds.Height }
@@ -341,20 +364,6 @@ public static class PdfDecorationHelper
         if (bounds.Width <= 0 || bounds.Height <= 0)
             return null;
 
-        // Normalize to the logo's own top-left origin (source coords 0..W / 0..H).
-        var figures = ToMarkerFigures(flattened, p => new StaPoint(p.X - bounds.Left, p.Y - bounds.Top));
-
-        return figures.Count > 0
-            ? new PdfVectorLogo { Figures = figures, SourceWidth = bounds.Width, SourceHeight = bounds.Height }
-            : null;
-    }
-
-    /// <summary>
-    /// The figures of a flattened geometry (line segments only) as PDF figures, each point mapped
-    /// by <paramref name="map"/>; figures with fewer than two points are dropped.
-    /// </summary>
-    internal static List<PdfMarkerFigure> ToMarkerFigures(PathGeometry flattened, Func<System.Windows.Point, StaPoint> map)
-    {
         var figures = new List<PdfMarkerFigure>();
 
         foreach (var figure in flattened.Figures)
@@ -372,15 +381,18 @@ public static class PdfDecorationHelper
             if (wpfPoints.Count < 2)
                 continue;
 
+            // Normalize to the logo's own top-left origin (source coords 0..W / 0..H).
             figures.Add(new PdfMarkerFigure
             {
                 IsClosed = figure.IsClosed,
                 IsFilled = figure.IsFilled,
-                Points = wpfPoints.Select(map).ToList(),
+                Points = wpfPoints.Select(p => new StaPoint(p.X - bounds.Left, p.Y - bounds.Top)).ToList(),
             });
         }
 
-        return figures;
+        return figures.Count > 0
+            ? new PdfVectorLogo { Figures = figures, SourceWidth = bounds.Width, SourceHeight = bounds.Height }
+            : null;
     }
 
     public static byte[]? LoadLabelFontBytes() => LoadPackResourceBytes(LabelFontPackUri);
@@ -481,7 +493,32 @@ public static class PdfDecorationHelper
         var offsetX = bounds.Left + pointSymbol.SymbolWidth / 2.0;
         var offsetY = bounds.Bottom - pointSymbol.SymbolHeight / 2.0;
 
-        var figures = ToMarkerFigures(flattened, p => new StaPoint((p.X - offsetX) * PxToPoint, (p.Y - offsetY) * PxToPoint));
+        var figures = new List<PdfMarkerFigure>();
+
+        foreach (var figure in flattened.Figures)
+        {
+            var wpfPoints = new List<System.Windows.Point> { figure.StartPoint };
+
+            foreach (var segment in figure.Segments)
+            {
+                if (segment is PolyLineSegment poly)
+                    wpfPoints.AddRange(poly.Points);
+                else if (segment is LineSegment line)
+                    wpfPoints.Add(line.Point);
+            }
+
+            if (wpfPoints.Count < 2)
+                continue;
+
+            figures.Add(new PdfMarkerFigure
+            {
+                IsClosed = figure.IsClosed,
+                IsFilled = figure.IsFilled,
+                Points = wpfPoints
+                    .Select(p => new StaPoint((p.X - offsetX) * PxToPoint, (p.Y - offsetY) * PxToPoint))
+                    .ToList(),
+            });
+        }
 
         return figures.Count > 0 ? new PdfPointMarker { Figures = figures } : null;
     }

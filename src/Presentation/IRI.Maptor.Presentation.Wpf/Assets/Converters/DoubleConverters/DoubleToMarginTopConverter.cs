@@ -11,7 +11,7 @@ public class DoubleToMarginTopConverter : IValueConverter
     {
         double marginTop;
 
-        if (!double.TryParse(System.Convert.ToString(value, CultureInfo.InvariantCulture), NumberStyles.Float, CultureInfo.InvariantCulture, out marginTop))
+        if (!double.TryParse(value?.ToString(), out marginTop))
         {
             marginTop = 0;
         }

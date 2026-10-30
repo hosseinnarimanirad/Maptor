@@ -528,24 +528,10 @@ public class LegendCommand : LegendCommandBase
         {
             try
             {
-                // a text label has no geometry: it is written as its saved form, a GeoJSON point with
-                // the text in its Label property and the style as the embedded SLD (what .mtd files
-                // hold), so "open drawing file" reads it back; an empty label has nothing to export
-                var textLabel = layer.IsTextLayer ? layer.Serialize() : null;
-
-                if (layer.IsTextLayer && string.IsNullOrEmpty(textLabel))
-                    return;
-
                 var file = await map.DialogService.ShowSaveFileDialogAsync(DataSourceKind.GeoJson/*"*.json|*.json"*/, null, layer.LayerName);
 
                 if (string.IsNullOrWhiteSpace(file))
                     return;
-
-                if (textLabel is not null)
-                {
-                    await System.IO.File.WriteAllTextAsync(file, textLabel);
-                    return;
-                }
 
                 var feature = GeoJsonFeature.Create(layer.Geometry.Project(SrsBases.GeodeticWgs84).AsGeoJson());
 
@@ -1049,7 +1035,6 @@ public class LegendCommand : LegendCommandBase
         {
             (p,l) => CreateZoomToExtentCommandFunc(p,l),
             CreateRemoveDrawingItemLayer,
-            CreateExportDrawingItemLayerAsGeoJson,
         };
     }
 

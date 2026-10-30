@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using IRI.Maptor.Core.Common.Primitives;
 using IRI.Maptor.Core.Spatial.Primitives;
-using IRI.Maptor.Infrastructure.EfCore.ValueConversion;
 
 namespace IRI.Maptor.Infrastructure.EfCore.Extensions;
 
@@ -30,20 +29,6 @@ public static class MaptorGeometryModelConfigurationExtensions
         ArgumentNullException.ThrowIfNull(configurationBuilder);
 
         configurationBuilder.Properties<Geometry<Point>>().HaveColumnType(storeType);
-
-        return configurationBuilder;
-    }
-
-    /// <summary>
-    /// Call from <c>DbContext.ConfigureConventions</c> when the database stores every date-time in UTC: all
-    /// <see cref="DateTime"/> and <see cref="Nullable{DateTime}"/> properties are read back with
-    /// <see cref="DateTimeKind.Utc"/> (see <see cref="UtcDateTimeConverter"/>).
-    /// </summary>
-    public static ModelConfigurationBuilder ConfigureUtcDateTimes(this ModelConfigurationBuilder configurationBuilder)
-    {
-        ArgumentNullException.ThrowIfNull(configurationBuilder);
-
-        configurationBuilder.Properties<DateTime>().HaveConversion<UtcDateTimeConverter>();
 
         return configurationBuilder;
     }

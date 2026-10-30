@@ -219,19 +219,17 @@ public class MapProjectService
     {
         foreach (var item in _map.DrawingItems.ToList())
         {
+            // todo: text items (SpecialPointLayer-based) are not persisted;
+            // same limitation as SaveDrawingItemFile
+            if (item.IsTextLayer)
+                continue;
+
             try
             {
-                // geometry and text drawings alike (DrawingItemLayer.Deserialize tells them apart);
-                // empty for a drawing with nothing to save, e.g. an empty text label
-                var serialized = item.Serialize();
-
-                if (string.IsNullOrEmpty(serialized))
-                    continue;
-
                 project.DrawingItems.Add(new DrawingItemEntry
                 {
                     Name = item.LayerName,
-                    SerializedFeature = serialized,
+                    SerializedFeature = item.Serialize(),
                     IsVisible = item.IsVisible,
                     Opacity = item.Opacity,
                 });

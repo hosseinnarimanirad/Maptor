@@ -2385,7 +2385,8 @@ public partial class MapViewer : NotifiableUserControl
     }
 
     // a focused text-on-map TextBox keeps keyboard focus when the user clicks the map
-    // itself (the canvas is not a focus scope), so the caret never goes away.
+    // itself (the canvas is not a focus scope), so the caret never goes away; dropping
+    // focus here also commits the Text binding, which updates on LostFocus.
     // Clicks on the marker's own format popup never reach this handler (the popup is its
     // own top-level visual tree), so the popup keeps working while the text is focused.
     private void MapView_PreviewMouseDownForTextMarkerFocus(object sender, MouseButtonEventArgs e)

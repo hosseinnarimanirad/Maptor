@@ -76,28 +76,6 @@ public static class DateTimeExtensions
         return useFarsiNumbers ? result.LatinNumbersToFarsiNumbers() : result;
     }
 
-    /// <summary>
-    /// Applies a .NET-style format pattern against the Persian calendar.
-    /// Supported tokens: yyyy, MM, dd, HH, mm, ss; all other characters are passed through as literals.
-    /// </summary>
-    public static string ToPersianString(this DateTime dateTime, string format, bool useFarsiNumbers = true)
-    {
-        //to avoid ArgumentOutOfRangeException
-        if (dateTime < _midValidPersianDateTime)
-            dateTime = _midValidPersianDateTime;
-
-        // Replace longest tokens first to avoid partial replacements (e.g. MM before M).
-        var result = format
-            .Replace("yyyy", FormattableString.Invariant($"{_calendar.GetYear(dateTime):0000}"))
-            .Replace("MM", FormattableString.Invariant($"{_calendar.GetMonth(dateTime):00}"))
-            .Replace("dd", FormattableString.Invariant($"{_calendar.GetDayOfMonth(dateTime):00}"))
-            .Replace("HH", FormattableString.Invariant($"{dateTime.Hour:00}"))
-            .Replace("mm", FormattableString.Invariant($"{dateTime.Minute:00}"))
-            .Replace("ss", FormattableString.Invariant($"{dateTime.Second:00}"));
-
-        return useFarsiNumbers ? result.LatinNumbersToFarsiNumbers() : result;
-    }
-
     public static string ToPersianDate(this DateTime dateTime, bool useFarsiNumbers = true)
     {
         //to avoid ArgumentOutOfRangeException

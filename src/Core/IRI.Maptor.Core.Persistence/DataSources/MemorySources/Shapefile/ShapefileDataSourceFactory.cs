@@ -32,7 +32,7 @@ public static class ShapefileDataSourceFactory
         //SrsBase? targetSrs = null,
         Encoding? encoding = null)
     {
-        var attributes = DbfFile.Read(ShapefileFormat.Shapefile.GetDbfFileName(shapefileName), true, encoding, skipDeletedRecords: false);
+        var attributes = DbfFile.Read(ShapefileFormat.Shapefile.GetDbfFileName(shapefileName), true, encoding);
 
         var geometries = ShapefileFormat.Shapefile.ReadShapes(shapefileName);
 
@@ -51,7 +51,7 @@ public static class ShapefileDataSourceFactory
         //SrsBase? targetSrs = null,
         Encoding? encoding = null)
     {
-        var attributes = DbfFile.Read(ShapefileFormat.Shapefile.GetDbfFileName(shapefileName), true, encoding, skipDeletedRecords: false);
+        var attributes = DbfFile.Read(ShapefileFormat.Shapefile.GetDbfFileName(shapefileName), true, encoding);
 
         var geometries = await ShapefileFormat.Shapefile.ReadShapesAsync(shapefileName);
 

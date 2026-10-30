@@ -52,7 +52,7 @@ public class PolyLineZReader : zReader<EsriPolylineZ>
 
         double[] measures = new double[numPoints];
 
-        if (shpReader.BaseStream.Position < recordEnd)
+        if (shpReader.BaseStream.Position != shpReader.BaseStream.Length)
         {
             this.ReadMeasures(numPoints, out minMeasure, out maxMeasure, out measures);
         }
@@ -92,7 +92,7 @@ public class PolyLineZReader : zReader<EsriPolylineZ>
 
         double[] measures = new double[numPoints];
 
-        if (reader.BaseStream.Position < offset * 2 + 8 + contentLength * 2)
+        if (contentLength > reader.BaseStream.Position * 2 - offset)
         {
             ShpBinaryReader.ReadValues(reader, numPoints, out minMeasure, out maxMeasure, out measures);
         }

@@ -20,42 +20,38 @@
         <StackPanel>
             <TextBlock Text="{Binding [languageSelector_title], Source={StaticResource Localization}}" FontWeight="SemiBold" Margin="0,0,0,8"
                        FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.BodyLarge}"/>
-            <!--Buttons, not a ListBox: a ListBox selects on mouse-down and keeps selecting while the button is held,
-                so when the new language mirrors the window (and moves this pop-up) the item that lands under the
-                pointer was picked instead. A button acts only on a completed click.-->
-            <ItemsControl x:Name="languageList" ItemsSource="{Binding AvailableLanguages}">
-                <ItemsControl.ItemsPanel>
+            <ListBox ItemsSource="{Binding AvailableLanguages}"
+                     SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}"
+                     BorderThickness="0" Background="Transparent"
+                     Padding="0">
+                <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="3"/>
                     </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Padding" Value="8,6"/>
+                        <Setter Property="Margin" Value="0,2"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="IsEnabled" Value="{Binding IsEnabled}"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                                <Setter Property="Cursor" Value="Arrow"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type jabloc:LanguageItem}">
-                        <Button Command="{Binding DataContext.SelectLanguageCommand, ElementName=languageList}"
-                                CommandParameter="{Binding}"
-                                IsEnabled="{Binding IsEnabled}"
-                                Click="LanguageButton_Click"
-                                Margin="0,2" Padding="8,6" Cursor="Hand" FocusVisualStyle="{x:Null}"
-                                HorizontalContentAlignment="Stretch">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Border x:Name="background" Background="Transparent" Padding="{TemplateBinding Padding}">
-                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <DataTrigger Binding="{Binding IsCurrent}" Value="True">
-                                            <Setter TargetName="background" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
-                                        </DataTrigger>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="background" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
-                                        </Trigger>
-                                        <Trigger Property="IsEnabled" Value="False">
-                                            <Setter Property="Opacity" Value="0.5"/>
-                                            <Setter Property="Cursor" Value="Arrow"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Button.Template>
                         <Grid FlowDirection="LeftToRight">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -63,19 +59,15 @@
                             </Grid.ColumnDefinitions>
                             <Image Source="{Binding FlagUri}" Stretch="Uniform" Width="24" Height="18"
                                    VerticalAlignment="Top" Margin="4,0,4,0"/>
-                            <!--the language in its own script first (people look for their own language), its English
-                                name under it; left-aligned so a right-to-left name stays next to its flag-->
                             <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding LanguageName}" FontWeight="SemiBold" FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"
-                                           FlowDirection="{Binding TextFlowDirection}" HorizontalAlignment="Left"/>
-                                <TextBlock Text="{Binding EnglishLanguageName}" FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Caption}" Foreground="{DynamicResource IRI.Maptor.Brushes.Muted}"
-                                           FlowDirection="LeftToRight" HorizontalAlignment="Left"/>
+                                <TextBlock Text="{Binding EnglishName}" FontWeight="SemiBold" FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Small}" FlowDirection="LeftToRight"/>
+                                <TextBlock Text="{Binding NativeName}" FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Caption}" Foreground="{DynamicResource IRI.Maptor.Brushes.Muted}"
+                                           FlowDirection="{Binding TextFlowDirection}"/>
                             </StackPanel>
                         </Grid>
-                        </Button>
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </StackPanel>
     </Border>
 </UserControl>

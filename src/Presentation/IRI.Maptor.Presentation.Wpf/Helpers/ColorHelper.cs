@@ -26,25 +26,6 @@ public static class ColorHelper
         return result;
     }
 
-    /// <summary>
-    /// Like <see cref="ToWpfColor"/>, but null for an empty or unreadable value instead of
-    /// Transparent / an exception (for colours read from files).
-    /// </summary>
-    public static Color? TryToWpfColor(string? hexColor, double opacity = 1.0)
-    {
-        if (string.IsNullOrWhiteSpace(hexColor))
-            return null;
-
-        try
-        {
-            return ToWpfColor(hexColor.Trim(), opacity);
-        }
-        catch (Exception ex) when (ex is FormatException or NotSupportedException)
-        {
-            return null;
-        }
-    }
-
     public static System.Drawing.Color ToGdiColor(string hexColor, double opacity = 1.0)
     {
         if (string.IsNullOrEmpty(hexColor))

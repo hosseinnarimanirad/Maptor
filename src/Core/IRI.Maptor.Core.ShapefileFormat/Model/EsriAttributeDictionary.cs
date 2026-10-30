@@ -20,10 +20,7 @@ public class EsriAttributeDictionary
 
     public EsriAttributeDictionary(List<Dictionary<string, object>> attributes, List<DbfFieldDescriptor> fields)
     {
-        // deleted records may be kept as null entries (DbfFile.Read with skipDeletedRecords: false)
-        var first = attributes.FirstOrDefault(a => a != null);
-
-        if (first != null && first.Count != fields.Count)
+        if (attributes.First().Count != fields.Count)
         {
             throw new NotImplementedException("EsriAttributeDictionary > constructor");
         }

@@ -12,12 +12,6 @@ public class LanguageItem : Notifier
     public string Name { get; init; }
     public string EnglishName { get; init; } //=> Culture.EnglishName;
     public string NativeName { get; init; }// => /*_nativeNameOverride ??*/ Culture.NativeName;
-
-    /// <summary>The language in its own script, without the region: «فارسی», «Français», «English».</summary>
-    public string LanguageName { get; init; }
-
-    /// <summary>The language's English name, without the region: "Persian". Empty for English itself.</summary>
-    public string EnglishLanguageName { get; init; }
     /// <summary>
     /// When false, the language cannot be selected. Disabled items are shown grayed out in the UI.
     /// </summary>
@@ -28,21 +22,6 @@ public class LanguageItem : Notifier
         set
         {
             _isEnabled = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    /// <summary>Whether this is the language the application is in (the selector highlights it).</summary>
-    private bool _isCurrent;
-    public bool IsCurrent
-    {
-        get { return _isCurrent; }
-        set
-        {
-            if (_isCurrent == value)
-                return;
-
-            _isCurrent = value;
             RaisePropertyChanged();
         }
     }
@@ -70,12 +49,6 @@ public class LanguageItem : Notifier
         Name = culture.Name;
         EnglishName = culture.EnglishName;
         NativeName = culture.NativeName;
-
-        // the neutral culture names the language alone: fa-IR → fa «فارسی», az-Latn-AZ → az-Latn «azərbaycan»
-        var neutral = culture.IsNeutralCulture || string.IsNullOrEmpty(culture.Parent.Name) ? culture : culture.Parent;
-        LanguageName = Capitalize(neutral.NativeName, culture);
-        EnglishLanguageName = culture.TwoLetterISOLanguageName == "en" ? string.Empty : neutral.EnglishName;
-
         TextFlowDirection = culture.TextInfo.IsRightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
 
         IsEnabled = true;
@@ -83,10 +56,6 @@ public class LanguageItem : Notifier
         _flagKey = flagKey ?? GetFlagKeyFromCulture(culture);
         LanguageType = language;
     }
-
-    // "français" → "Français"; scripts without case are unchanged
-    private static string Capitalize(string text, CultureInfo culture)
-        => string.IsNullOrEmpty(text) ? text : char.ToUpper(text[0], culture) + text.Substring(1);
 
     private static string GetFlagKeyFromCulture(CultureInfo culture)
     {
@@ -116,10 +85,4 @@ public class LanguageItem : Notifier
             return new CultureInfo("en-US");
         }
     }
-
-    /// <summary>
-    /// Switches the application to <paramref name="language"/> (English for a culture this PC does not know). The
-    /// one place the apps change their culture: at start-up and when the user picks a language.
-    /// </summary>
-    public static void ApplyCulture(LanguageType language) => LocalizationManager.Instance.SetCulture(GetCultureInfo(language));
 }

@@ -154,7 +154,13 @@ public class CompetitionCompareViewModel : Notifier
         }
     }
 
-    private static string? FormatValue(object? value) => VersioningValueFormatter.Format(value);
+    private static string? FormatValue(object? value) => value switch
+    {
+        null => null,
+        byte[] bytes => Convert.ToBase64String(bytes),
+        DateTime dt => dt.ToString("yyyy/MM/dd HH:mm"),
+        _ => value.ToString(),
+    };
 
     private void ShowOnMap(ProposalCompareRowViewModel? row)
     {

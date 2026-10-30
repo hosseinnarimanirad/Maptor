@@ -33,12 +33,6 @@ public static class PdfWriter
         /// anchor). Null/empty means no labels. Kept in the layer's toggleable content group.
         /// </summary>
         public List<PdfFeatureLabel>? Labels { get; set; }
-
-        /// <summary>
-        /// Text-on-map labels (user-placed text drawings) to draw on top of this layer's geometry and
-        /// labels. Null/empty means none. Kept in the layer's toggleable content group.
-        /// </summary>
-        public List<PdfMapText>? Texts { get; set; }
     }
 
     /// <summary>
@@ -53,49 +47,6 @@ public static class PdfWriter
 
         /// <summary>Text color; null draws black.</summary>
         public IRI.Maptor.Core.Spatial.IO.Dxf.RgbColor? Color { get; set; }
-    }
-
-    /// <summary>
-    /// A text-on-map label: filled vector shapes (frame, text field, halo, glyphs) drawn in order at a
-    /// fixed paper size, with the block's anchor point (by default its bottom-centre, where the
-    /// on-screen marker is anchored) on a map-space anchor. Unlike <see cref="PdfFeatureLabel"/> it
-    /// carries its own colours and gets no readability box.
-    /// </summary>
-    public class PdfMapText
-    {
-        /// <summary>Anchor point in map coordinates (same space as the geometry / map extent).</summary>
-        public Point Anchor { get; set; } = new(0, 0);
-
-        /// <summary>Block width in screen pixels (1/96"); printed at the same physical size.</summary>
-        public double Width { get; set; }
-
-        /// <summary>Block height in screen pixels (1/96").</summary>
-        public double Height { get; set; }
-
-        /// <summary>
-        /// Where in the block (px from its left edge) the anchor sits; null is the horizontal centre.
-        /// A rotated label's block is its turned bounds, so its anchor is elsewhere.
-        /// </summary>
-        public double? AnchorX { get; set; }
-
-        /// <summary>Where in the block (px from its top edge) the anchor sits; null is the bottom edge.</summary>
-        public double? AnchorY { get; set; }
-
-        /// <summary>Shapes drawn first to last; their figures are in block pixels, top-left origin.</summary>
-        public List<PdfMapTextPart> Parts { get; set; } = new();
-
-        public bool IsValid => Width > 0 && Height > 0 && Parts.Any(p => p?.Shape is { IsValid: true });
-    }
-
-    /// <summary>
-    /// One filled shape of a <see cref="PdfMapText"/>, filled even-odd: callers pass outlined
-    /// (non-overlapping) geometry so overlapping glyphs or strokes leave no holes.
-    /// </summary>
-    public class PdfMapTextPart
-    {
-        public PdfVectorLogo Shape { get; set; } = new();
-
-        public IRI.Maptor.Core.Spatial.IO.Dxf.RgbColor Color { get; set; } = new(0, 0, 0);
     }
 
     /// <summary>
@@ -589,6 +540,9 @@ public static class PdfWriter
         page.Width = pageWidth;
         page.Height = pageHeight;
 
+        // Group layers into render units; each unit becomes one toggleable PDF layer.
+        var units = BuildRenderUnits(layers, rasterLayers, GroupByLayerName);
+
         // Decorated exports render the map into the layout's map frame (and clip to it);
         // plain exports keep the classic full-bleed page.
         PdfMapLayout layout = default;
@@ -605,18 +559,6 @@ public static class PdfWriter
             pageTransform = MapPageTransform.CreateFullPage(mapExtent, pageWidth, pageHeight, baseOptions.BoundingBoxPadding);
         }
 
-        // A text label prints when its box reaches the printed area (the map frame, or the whole
-        // plain page), even with its anchor outside; one that does not is dropped before the
-        // units are built, so it never gets an empty PDF layer of its own.
-        var printedArea = isDecorated ? layout.MapFrameRect : new XRect(0, 0, pageWidth, pageHeight);
-
-        bool IsTextPrinted(PdfMapText? text)
-            => text is { IsValid: true } && text.Anchor != null
-               && PdfMapComposer.GetMapTextRect(text, pageTransform.ToPage(text.Anchor)).IntersectsWith(printedArea);
-
-        // Group layers into render units; each unit becomes one toggleable PDF layer.
-        var units = BuildRenderUnits(layers, rasterLayers, GroupByLayerName, IsTextPrinted);
-
         void DrawClippedUnit(XGraphics target, RenderUnit unit)
         {
             if (isDecorated)
@@ -625,7 +567,7 @@ public static class PdfWriter
                 target.IntersectClip(layout.MapFrameRect);
             }
 
-            DrawUnit(target, unit, pageTransform, baseOptions, IsTextPrinted);
+            DrawUnit(target, unit, pageTransform, baseOptions);
 
             if (isDecorated)
                 target.Restore();
@@ -635,7 +577,7 @@ public static class PdfWriter
         // the first vector-bearing unit (or after all rasters if there are none).
         var drawGraticuleBelowData = isDecorated && decorations!.ShowGraticule;
         var firstVectorUnitIndex = drawGraticuleBelowData
-            ? units.FindIndex(u => u.Vectors.Any(v => v.Features is { Count: > 0 } || (v.Texts?.Any(IsTextPrinted) ?? false)))
+            ? units.FindIndex(u => u.Vectors.Any(v => v.Features is { Count: > 0 }))
             : -1;
         var graticuleLinesDrawn = false;
 
@@ -1106,9 +1048,9 @@ public static class PdfWriter
         public List<RasterLayerPdfData> Rasters = new();
         public List<LayerPdfData> Vectors = new();
 
-        public bool HasContent(Func<PdfMapText?, bool> isTextPrinted) =>
+        public bool HasContent =>
             Rasters.Any(r => r.Tiles != null && r.Tiles.Count > 0) ||
-            Vectors.Any(v => (v.Features != null && v.Features.Count > 0) || (v.Labels != null && v.Labels.Count > 0) || (v.Texts != null && v.Texts.Any(isTextPrinted)));
+            Vectors.Any(v => (v.Features != null && v.Features.Count > 0) || (v.Labels != null && v.Labels.Count > 0));
     }
 
     /// <summary>
@@ -1118,8 +1060,7 @@ public static class PdfWriter
     private static List<RenderUnit> BuildRenderUnits(
         List<LayerPdfData> vectors,
         List<RasterLayerPdfData>? rasters,
-        bool groupByLayerName,
-        Func<PdfMapText?, bool> isTextPrinted)
+        bool groupByLayerName)
     {
         // Flatten to a common list, preserving input order for stable tie-breaking.
         var items = new List<(int ZIndex, int Index, bool IsRaster, string Name, object Data)>();
@@ -1172,7 +1113,7 @@ public static class PdfWriter
 
         // Keep only units with drawable content; order by ZIndex then first appearance.
         return units
-            .Where(u => u.HasContent(isTextPrinted))
+            .Where(u => u.HasContent)
             .OrderBy(u => u.OrderZIndex)
             .ThenBy(u => u.FirstIndex)
             .ToList();
@@ -1186,8 +1127,7 @@ public static class PdfWriter
         XGraphics target,
         RenderUnit unit,
         in MapPageTransform pageTransform,
-        PdfOptions baseOptions,
-        Func<PdfMapText?, bool> isTextPrinted)
+        PdfOptions baseOptions)
     {
         // Rasters first (drawn beneath the vector features).
         foreach (var rasterLayerData in unit.Rasters)
@@ -1204,9 +1144,8 @@ public static class PdfWriter
         {
             var hasFeatures = layerData.Features is { Count: > 0 };
             var hasLabels = layerData.Labels is { Count: > 0 };
-            var hasTexts = layerData.Texts?.Any(isTextPrinted) ?? false;
 
-            if (!hasFeatures && !hasLabels && !hasTexts)
+            if (!hasFeatures && !hasLabels)
                 continue;
 
             var combinedOpacity = baseOptions.Opacity * layerData.Opacity;
@@ -1242,17 +1181,6 @@ public static class PdfWriter
 
                     var anchor = pageTransform.ToPage(label.Anchor);
                     PdfMapComposer.DrawFeatureLabel(target, label.Glyphs, anchor, label.Color);
-                }
-            }
-
-            if (hasTexts)
-            {
-                foreach (var text in layerData.Texts!)
-                {
-                    if (!isTextPrinted(text))
-                        continue;
-
-                    PdfMapComposer.DrawMapText(target, text!, pageTransform.ToPage(text!.Anchor), combinedOpacity);
                 }
             }
         }

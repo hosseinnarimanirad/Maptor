@@ -23,11 +23,6 @@ public abstract class ShpReader<T> : IEnumerable<T> where T : EsriShapeBase
     protected System.IO.BinaryReader shpReader;
 
     /// <summary>
-    /// Stream position (bytes) just past the record being read by ReadElement
-    /// </summary>
-    protected long recordEnd;
-
-    /// <summary>
     /// Words
     /// </summary>
     //protected int tempPosition;
@@ -86,8 +81,6 @@ public abstract class ShpReader<T> : IEnumerable<T> where T : EsriShapeBase
                         System.Diagnostics.Trace.WriteLine("ERROR at contentLength != contentLength02: i=" + i.ToString());
                         //throw new NotImplementedException();
                     }
-
-                    recordEnd = shpReader.BaseStream.Position + contentLength * 2;
 
                     if (contentLength == 2)
                         continue;

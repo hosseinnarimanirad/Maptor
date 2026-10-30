@@ -558,7 +558,7 @@ public static class SldExtensions
         };
     }
 
-    internal static Fill CreateFill(Brush? brush)
+    private static Fill CreateFill(Brush? brush)
     {
         var color = (brush as SolidColorBrush)?.Color ?? Colors.Transparent;
         return new Fill

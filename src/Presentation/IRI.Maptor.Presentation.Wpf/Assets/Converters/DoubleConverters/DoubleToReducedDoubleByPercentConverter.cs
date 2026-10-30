@@ -10,14 +10,14 @@ public class DoubleToReducedDoubleByPercentConverter : IValueConverter
     {
         double doubleValue;
 
-        if (!double.TryParse(System.Convert.ToString(value, CultureInfo.InvariantCulture), NumberStyles.Float, CultureInfo.InvariantCulture, out doubleValue))
+        if (!double.TryParse(value?.ToString(), out doubleValue))
         {
             doubleValue = 0;
         }
 
         double percent;
 
-        if (!double.TryParse(System.Convert.ToString(parameter, CultureInfo.InvariantCulture), NumberStyles.Float, CultureInfo.InvariantCulture, out percent))
+        if (!double.TryParse(parameter?.ToString(), out percent))
         {
             percent = 0;
         }

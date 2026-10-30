@@ -29,30 +29,11 @@ public class LanguageSelectorViewModel : Notifier, IDisposable
                 return;
 
             _selectedLanguage = value;
-            UpdateCurrentFlags();
-
-            // With a callback the owner switches the culture (once, through its settings); without one, do it here.
-            if (_onLanguageChanged is null)
-                LanguageItem.ApplyCulture(value.LanguageType);
-            else
-                _onLanguageChanged.Invoke(value);
-
+            _localization.SetCulture(value.GetCultureInfo());
+            _onLanguageChanged?.Invoke(value);
             RaisePropertyChanged(nameof(SelectedLanguage));
         }
     }
-
-    /// <summary>
-    /// Picks a language (parameter: a <see cref="LanguageItem"/>). For click-to-choose lists: it runs on a completed
-    /// click, unlike a list's selection, which follows the pressed mouse and so can pick the item that lands under the
-    /// pointer when the window mirrors for the new language.
-    /// </summary>
-    public RelayCommand SelectLanguageCommand => _selectLanguageCommand ??= new RelayCommand(parameter =>
-    {
-        if (parameter is LanguageItem language)
-            SelectedLanguage = language;
-    });
-
-    private RelayCommand? _selectLanguageCommand;
 
     /// <summary>
     /// Creates a view model with the default language list.
@@ -143,17 +124,10 @@ public class LanguageSelectorViewModel : Notifier, IDisposable
             throw new ArgumentException("At least one language must be provided.", nameof(availableLanguages));
 
         _selectedLanguage = GetInitialSelection();
-        UpdateCurrentFlags();
 
         _onLanguageChanged = onLanguageChanged;
 
         _localization.LanguageChanged += OnLanguageChanged;
-    }
-
-    private void UpdateCurrentFlags()
-    {
-        foreach (var language in AvailableLanguages)
-            language.IsCurrent = language == _selectedLanguage;
     }
 
     public void SetDisabledLanguages(IEnumerable<LanguageType> disabledLanguages)
@@ -186,7 +160,6 @@ public class LanguageSelectorViewModel : Notifier, IDisposable
         if (newSelected != null && _selectedLanguage != newSelected)
         {
             _selectedLanguage = newSelected;
-            UpdateCurrentFlags();
             RaisePropertyChanged(nameof(SelectedLanguage));
         }
     }
