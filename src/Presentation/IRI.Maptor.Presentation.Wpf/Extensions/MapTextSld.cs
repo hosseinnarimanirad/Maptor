@@ -16,10 +16,12 @@ namespace IRI.Maptor.Extensions;
 /// drawings are saved like geometry drawings (GeoJSON point + embedded SLD). The text itself is
 /// not style: it is a feature attribute, referenced by the TextSymbolizer's Label.
 /// <para>
-/// Standard SLD 1.0: font family/size/weight/style, text fill, Halo (Halo frame only) and
-/// AnchorPoint 0.5/0 (the label's bottom-centre sits on the point, like the map marker).
+/// Standard SLD 1.0: font family/size/weight/style, text fill, Halo (Halo frame only),
+/// AnchorPoint 0.5/0 (the label's bottom-centre sits on the point, like the map marker) and
+/// Rotation (clockwise degrees, written only when not upright).
 /// The rest is VendorOptions, which other engines ignore: underlineText (GeoServer), and
-/// maptor:frame, maptor:textAlign, maptor:direction, maptor:background.
+/// maptor:frame, maptor:textAlign, maptor:direction, maptor:background, maptor:width (only
+/// when the width is not automatic).
 /// </para>
 /// </summary>
 public static class MapTextSld
@@ -32,6 +34,7 @@ public static class MapTextSld
     public const string VendorTextAlign = "maptor:textAlign";
     public const string VendorDirection = "maptor:direction";
     public const string VendorBackground = "maptor:background";
+    public const string VendorWidth = "maptor:width";
 
     private const string ThemeBackground = "theme";
     private const string Rtl = "rtl";
@@ -52,7 +55,7 @@ public static class MapTextSld
                 CssParameters =
                 [
                     new CssParameter { Name = SldHelper.CssParameter_FontFamily, Value = style.FontFamilyName },
-                    new CssParameter { Name = SldHelper.CssParameter_FontSize, Value = style.FontSize.ToString("0.##", CultureInfo.InvariantCulture) },
+                    new CssParameter { Name = SldHelper.CssParameter_FontSize, Value = Format(style.FontSize) },
                     new CssParameter { Name = SldHelper.CssParameter_FontStyle, Value = style.IsItalic ? "italic" : "normal" },
                     new CssParameter { Name = SldHelper.CssParameter_FontWeight, Value = style.IsBold ? "bold" : "normal" },
                 ]
@@ -80,6 +83,13 @@ public static class MapTextSld
 
         if (style.IsUnderline)
             symbolizer.VendorOptions.Add(new VendorOption { Name = VendorUnderline, Value = "true" });
+
+        // SLD rotation is clockwise degrees, the same as the label's
+        if (style.Rotation != 0)
+            symbolizer.LabelPlacement.PointPlacement.Rotation = new ParameterValueType { Value = Format(style.Rotation) };
+
+        if (style.Width is { } width)
+            symbolizer.VendorOptions.Add(new VendorOption { Name = VendorWidth, Value = Format(width) });
 
         // the halo colour is written out (automatic → its contrast colour) so other tools draw it too
         if (style.Frame == MapTextFrame.Halo)
@@ -165,6 +175,13 @@ public static class MapTextSld
         var haloColor = ReadFill(text.Halo?.Fill);
         style.HaloColor = haloColor is null || haloColor == ColorToContrastBrushConverter.GetContrastColor(textColor) ? null : haloColor.ToString();
 
+        // the view model keeps both in range; anything unreadable is upright / automatic
+        if (TryReadNumber(text.LabelPlacement?.PointPlacement?.Rotation?.Value, out var rotation))
+            style.Rotation = rotation;
+
+        if (TryReadNumber(Option(VendorWidth), out var width) && width > 0)
+            style.Width = width;
+
         return style;
     }
 
@@ -205,6 +222,11 @@ public static class MapTextSld
 
         return ColorHelper.TryToWpfColor(fill.FillValue, fill.FillOpacityValue);
     }
+
+    private static string Format(double value) => value.ToString("0.##", CultureInfo.InvariantCulture);
+
+    private static bool TryReadNumber(string? value, out double number)
+        => double.TryParse(value?.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out number) && double.IsFinite(number);
 
     private static bool Is(string? value, string expected) => string.Equals(value?.Trim(), expected, StringComparison.OrdinalIgnoreCase);
 }

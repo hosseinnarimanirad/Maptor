@@ -50,6 +50,7 @@ public partial class TextboxMarker : MapMarker
         if (RenderTransform is TransformGroup transformGroup)
             transformGroup.Changed += (_, _) => UpdatePopupPlacement();
         SizeChanged += (_, _) => UpdatePopupPlacement();
+        contentRotation.Changed += (_, _) => UpdatePopupPlacement();
 
         // a StaysOpen popup is a top-most window of its own: close it when the marker goes
         // away (deleted, or taken off the canvas by a refresh), is hidden, or the app is left
@@ -218,13 +219,18 @@ public partial class TextboxMarker : MapMarker
     }
 
     // centres the popup above the label (MS Office style) and makes it re-place itself; an
-    // unchanged offset is nudged, since only a change makes the Popup re-position
+    // unchanged offset is nudged, since only a change makes the Popup re-position. It is placed
+    // against the rotated content's bounds, so a turned label never sits under its own popup
     private void UpdatePopupPlacement()
     {
         if (!formatPopup.IsOpen || formatPopup.Child is not FrameworkElement popupChild)
             return;
 
-        var offset = (ActualWidth - popupChild.ActualWidth) / 2;
+        var contentBounds = mainBorder.TransformToAncestor(this).TransformBounds(new Rect(mainBorder.RenderSize));
+
+        formatPopup.PlacementRectangle = contentBounds;
+
+        var offset = (contentBounds.Width - popupChild.ActualWidth) / 2;
 
         if (formatPopup.HorizontalOffset == offset)
             formatPopup.HorizontalOffset = offset + 0.01;

@@ -324,6 +324,62 @@ public class TextboxMarkerViewModel : Notifier
     }
 
 
+    // the label's width range in px; the Box frame also keeps a larger minimum of its own (XAML)
+    public const double MinTextWidth = 40;
+    public const double MaxTextWidth = 600;
+
+    // degrees, clockwise on screen, around the anchor (bottom-centre); kept in (-180, 180]
+    private double _formatting_Rotation;
+    public double Formatting_Rotation
+    {
+        get { return _formatting_Rotation; }
+        set
+        {
+            var rotation = NormalizeRotation(value);
+
+            if (_formatting_Rotation == rotation)
+                return;
+
+            _formatting_Rotation = rotation;
+            RaisePropertyChanged();
+        }
+    }
+
+    // null = automatic: the label grows with its text up to MaxTextWidth; else the text wraps
+    // inside this width (px), kept within MinTextWidth..MaxTextWidth
+    private double? _formatting_TextWidth;
+    public double? Formatting_TextWidth
+    {
+        get { return _formatting_TextWidth; }
+        set
+        {
+            var width = value is { } w && double.IsFinite(w) ? Math.Clamp(w, MinTextWidth, MaxTextWidth) : (double?)null;
+
+            if (_formatting_TextWidth == width)
+                return;
+
+            _formatting_TextWidth = width;
+            RaisePropertyChanged();
+        }
+    }
+
+    // a non-finite angle is upright; -180 is shown as 180
+    private static double NormalizeRotation(double degrees)
+    {
+        if (!double.IsFinite(degrees))
+            return 0;
+
+        var rotation = degrees % 360;
+
+        if (rotation > 180)
+            rotation -= 360;
+        else if (rotation <= -180)
+            rotation += 360;
+
+        return rotation;
+    }
+
+
     static TextboxMarkerViewModel()
     {
 
@@ -433,11 +489,14 @@ public class TextboxMarkerViewModel : Notifier
             TextColor = Formatting_TextColor.ToString(),
             HaloColor = Formatting_HaloColor?.ToString(),
             BackgroundColor = SelectedBackgroundChoice.IsTheme ? null : SelectedBackgroundChoice.ColorValue?.ToString(),
+            Rotation = Formatting_Rotation,
+            Width = Formatting_TextWidth,
         };
     }
 
     // values that cannot be used (unparsable colour, non-positive size, background
-    // colour not among BackgroundChoices) fall back to the defaults instead of throwing
+    // colour not among BackgroundChoices) fall back to the defaults instead of throwing;
+    // rotation and width are normalized and clamped by their setters
     public void ApplyStyle(MapTextStyle style)
     {
         ArgumentNullException.ThrowIfNull(style);
@@ -457,6 +516,9 @@ public class TextboxMarkerViewModel : Notifier
         var backgroundColor = ColorHelper.TryToWpfColor(style.BackgroundColor);
         SelectedBackgroundChoice = BackgroundChoices.FirstOrDefault(c => !c.IsTheme && c.ColorValue == backgroundColor && backgroundColor is not null)
             ?? BackgroundChoices[0];
+
+        Formatting_Rotation = style.Rotation;
+        Formatting_TextWidth = style.Width;
     }
 
     private static MapTextAlignment ToStyleAlignment(TextAlignment alignment)

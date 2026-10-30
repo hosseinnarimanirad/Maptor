@@ -60,4 +60,15 @@ public class MapTextStyle
     /// Box frame fill; null means the theme highlight brush.
     /// </summary>
     public string? BackgroundColor { get; set; }
+
+    /// <summary>
+    /// Rotation in degrees, clockwise on screen, around the label's anchor (bottom-centre); 0 is upright.
+    /// </summary>
+    public double Rotation { get; set; }
+
+    /// <summary>
+    /// Label width in screen pixels (the text wraps inside it); null means automatic: the label
+    /// grows with its text up to the maximum width.
+    /// </summary>
+    public double? Width { get; set; }
 }
