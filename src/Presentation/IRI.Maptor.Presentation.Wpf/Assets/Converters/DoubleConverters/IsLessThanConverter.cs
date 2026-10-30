@@ -13,12 +13,12 @@ public class IsLessThanConverter : IValueConverter
 
         double doubleValue;
 
-        if (!double.TryParse(value?.ToString(), out doubleValue))
+        if (!double.TryParse(System.Convert.ToString(value, CultureInfo.InvariantCulture), NumberStyles.Float, CultureInfo.InvariantCulture, out doubleValue))
             return false;
 
         double parameterValue;
 
-        if (!double.TryParse(parameter?.ToString(), out parameterValue))
+        if (!double.TryParse(System.Convert.ToString(parameter, CultureInfo.InvariantCulture), NumberStyles.Float, CultureInfo.InvariantCulture, out parameterValue))
             return false;
 
         return doubleValue < parameterValue;

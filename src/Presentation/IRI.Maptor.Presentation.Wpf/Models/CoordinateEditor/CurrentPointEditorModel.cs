@@ -1,5 +1,6 @@
 using System;
 
+using IRI.Maptor.Core.Common.Helpers;
 using IRI.Maptor.Core.Common.Primitives;
 using IRI.Maptor.Core.SpatialReferenceSystem;
 using IRI.Maptor.Presentation.Wpf.ViewModels.CoordinateEditor;
@@ -355,7 +356,7 @@ public class CurrentPointEditorModel : Notifier
             }
             else
             {
-                if (!double.TryParse(CoordinateX, out x) || !double.TryParse(CoordinateY, out y))
+                if (!CoordinateTextParser.TryParseNumber(CoordinateX, out x) || !CoordinateTextParser.TryParseNumber(CoordinateY, out y))
                     return false;
             }
 
@@ -402,7 +403,7 @@ public class CurrentPointEditorModel : Notifier
                 if (string.IsNullOrWhiteSpace(CoordinateX) || string.IsNullOrWhiteSpace(CoordinateY))
                     return false;
 
-                return double.TryParse(CoordinateX, out _) && double.TryParse(CoordinateY, out _);
+                return CoordinateTextParser.TryParseNumber(CoordinateX, out _) && CoordinateTextParser.TryParseNumber(CoordinateY, out _);
             }
         }
         catch
@@ -414,8 +415,8 @@ public class CurrentPointEditorModel : Notifier
 
     public Point GetNewXY()
     {
-        bool hasValidX = double.TryParse(CoordinateX, out double x);
-        bool hasValidY = double.TryParse(CoordinateY, out double y);
+        bool hasValidX = CoordinateTextParser.TryParseNumber(CoordinateX, out double x);
+        bool hasValidY = CoordinateTextParser.TryParseNumber(CoordinateY, out double y);
 
         return hasValidX && hasValidY ? new Point(x, y) : Point.NaN;
     }

@@ -154,10 +154,22 @@ public abstract class MapViewModelBase : ViewModelBase
         get { return _generalSettings; }
         private set
         {
+            if (_generalSettings is not null)
+                _generalSettings.PropertyChanged -= ApplyLanguageOnSettingsChange;
+
             _generalSettings = value ?? new GeneralSettingsModel(Core.Data.GeneralSettings.Default);
+
+            _generalSettings.PropertyChanged += ApplyLanguageOnSettingsChange;
 
             RaisePropertyChanged();
         }
+    }
+
+    // The one place a language change reaches the UI culture; the apps only persist the setting.
+    private void ApplyLanguageOnSettingsChange(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(GeneralSettingsModel.CurrentLanguage))
+            Localization.LanguageItem.ApplyCulture(_generalSettings.CurrentLanguage);
     }
 
     private async void ProxySettings_OnProxyChanged(object? sender, EventArgs e)

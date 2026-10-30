@@ -27,7 +27,11 @@ public class LocalizedDateTimeConverter : IValueConverter
         {
             dateTime = dto.LocalDateTime;
         }
-        else if (value is string dateStr && DateTime.TryParse(dateStr, out var parsed))
+        // machine text (ISO) first: with the fa-IR culture, which uses the Persian calendar, a plain TryParse reads
+        // "2026-10-30" as the Persian year 2026
+        else if (value is string dateStr &&
+                 (DateTime.TryParse(dateStr, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var parsed) ||
+                  DateTime.TryParse(dateStr, out parsed)))
         {
             dateTime = parsed;
         }

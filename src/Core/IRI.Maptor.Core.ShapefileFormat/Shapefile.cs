@@ -135,7 +135,8 @@ public static class Shapefile
     {
         var shapes = ReadShapes(shpFileName, defaultSrid);
 
-        var attributeArray = Dbf.DbfFile.Read(GetDbfFileName(shpFileName), correctFarsiCharacters, dataEncoding, headerEncoding);
+        // keep deleted records so dbf indexes match shx record numbers
+        var attributeArray = Dbf.DbfFile.Read(GetDbfFileName(shpFileName), correctFarsiCharacters, dataEncoding, headerEncoding, skipDeletedRecords: false);
 
         //int srid;
 
@@ -148,15 +149,60 @@ public static class Shapefile
         //    srid = TryGetSrid(shpFileName);
         //}
 
-        List<T> result = new List<T>(shapes.Count);
+        return MatchRecords(shpFileName, shapes, attributeArray)
+            .Select(r => mapFunc(r.Attributes, r.Shape))
+            .ToList();
+    }
 
-        for (int i = 0; i < attributeArray.Attributes.Count; i++)
+    /// <summary>
+    /// Pairs each shape with its dbf record by shx record number (the shx record count is the source of truth).
+    /// Null shapes and deleted dbf records are dropped; extra dbf records are ignored; shapes without
+    /// a dbf record get every field with a null value.
+    /// </summary>
+    /// <param name="shapes">as returned by ReadShapes (null shapes skipped)</param>
+    /// <param name="attributeArray">as returned by DbfFile.Read with skipDeletedRecords: false</param>
+    public static List<(EsriShapeBase Shape, Dictionary<string, object> Attributes)> MatchRecords(
+        string shpFileName,
+        IEsriShapeCollection shapes,
+        EsriAttributeDictionary attributeArray)
+    {
+        var shxFile = new ShxReader(GetShxFileName(shpFileName));
+
+        if (attributeArray.Attributes.Count != shxFile.NumberOfRecords)
         {
-            //shapes[i].Srid = srid;
+            System.Diagnostics.Trace.WriteLine($"WARNING at Shapefile.MatchRecords: dbf has {attributeArray.Attributes.Count} records but shx has {shxFile.NumberOfRecords}; extra dbf records ignored, missing ones get null values");
+        }
 
-            var feature = mapFunc(attributeArray.Attributes[i], shapes[i]);
+        var result = new List<(EsriShapeBase Shape, Dictionary<string, object> Attributes)>(shapes.Count);
 
-            result.Add(feature);
+        int shapeIndex = 0;
+
+        for (int i = 0; i < shxFile.NumberOfRecords; i++)
+        {
+            shxFile.GetRecord(i, out _, out int contentLength);
+
+            // null shape: ReadShapes skips it, so skip its dbf record too
+            if (contentLength == 2)
+                continue;
+
+            var shape = shapes[shapeIndex++];
+
+            Dictionary<string, object> attributes;
+
+            if (i < attributeArray.Attributes.Count)
+            {
+                attributes = attributeArray.Attributes[i];
+
+                // deleted dbf record: the feature is deleted
+                if (attributes == null)
+                    continue;
+            }
+            else
+            {
+                attributes = attributeArray.Fields.ToDictionary(f => f.Name, f => (object)null);
+            }
+
+            result.Add((shape, attributes));
         }
 
         return result;
