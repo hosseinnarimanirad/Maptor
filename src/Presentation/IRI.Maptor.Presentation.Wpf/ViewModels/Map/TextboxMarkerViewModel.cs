@@ -603,6 +603,19 @@ public class TextboxMarkerViewModel : Notifier
     }
 
 
+    private RelayCommand? _resetRotationCommand;
+    public RelayCommand ResetRotationCommand
+    {
+        get
+        {
+            if (_resetRotationCommand == null)
+                _resetRotationCommand = new RelayCommand(param => Formatting_Rotation = 0);
+
+            return _resetRotationCommand;
+        }
+    }
+
+
     private RelayCommand? _copyTextCommand;
     public RelayCommand CopyTextCommand
     {

@@ -2728,4 +2728,16 @@
   <data name="msg_drawingFile_openFailed" xml:space="preserve">
     <value>Bu fayllar çizim kimi açıla bilmədi: {0}</value>
   </data>
+  <data name="textMarker_tooltip_rotation" xml:space="preserve">
+    <value>Fırlanma (dərəcə, saat əqrəbi istiqamətində)</value>
+  </data>
+  <data name="textMarker_tooltip_resetRotation" xml:space="preserve">
+    <value>Fırlanmasız</value>
+  </data>
+  <data name="textMarker_tooltip_widthHandle" xml:space="preserve">
+    <value>Eni dəyişmək üçün dartın. İki dəfə klik: avtomatik en</value>
+  </data>
+  <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
+    <value>Fırlatmaq üçün dartın. Shift: 15° addımlar. İki dəfə klik: fırlanmasız</value>
+  </data>
 </root>

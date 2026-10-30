@@ -2728,4 +2728,16 @@
   <data name="msg_drawingFile_openFailed" xml:space="preserve">
     <value>Не удалось открыть эти файлы как рисунки: {0}</value>
   </data>
+  <data name="textMarker_tooltip_rotation" xml:space="preserve">
+    <value>Поворот (градусы, по часовой стрелке)</value>
+  </data>
+  <data name="textMarker_tooltip_resetRotation" xml:space="preserve">
+    <value>Без поворота</value>
+  </data>
+  <data name="textMarker_tooltip_widthHandle" xml:space="preserve">
+    <value>Перетащите, чтобы изменить ширину. Двойной щелчок: автоматическая ширина</value>
+  </data>
+  <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
+    <value>Перетащите, чтобы повернуть. Shift: шаг 15°. Двойной щелчок: без поворота</value>
+  </data>
 </root>

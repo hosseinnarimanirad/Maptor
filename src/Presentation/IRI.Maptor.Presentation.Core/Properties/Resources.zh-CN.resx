@@ -2728,4 +2728,16 @@
   <data name="msg_drawingFile_openFailed" xml:space="preserve">
     <value>无法将这些文件作为绘图打开：{0}</value>
   </data>
+  <data name="textMarker_tooltip_rotation" xml:space="preserve">
+    <value>旋转（度，顺时针）</value>
+  </data>
+  <data name="textMarker_tooltip_resetRotation" xml:space="preserve">
+    <value>不旋转</value>
+  </data>
+  <data name="textMarker_tooltip_widthHandle" xml:space="preserve">
+    <value>拖动以更改宽度。双击：自动宽度</value>
+  </data>
+  <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
+    <value>拖动以旋转。Shift：15° 步进。双击：不旋转</value>
+  </data>
 </root>

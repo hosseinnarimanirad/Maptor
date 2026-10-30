@@ -2728,4 +2728,16 @@
   <data name="msg_drawingFile_openFailed" xml:space="preserve">
     <value>Impossibile aprire questi file come disegni: {0}</value>
   </data>
+  <data name="textMarker_tooltip_rotation" xml:space="preserve">
+    <value>Rotazione (gradi, senso orario)</value>
+  </data>
+  <data name="textMarker_tooltip_resetRotation" xml:space="preserve">
+    <value>Senza rotazione</value>
+  </data>
+  <data name="textMarker_tooltip_widthHandle" xml:space="preserve">
+    <value>Trascina per cambiare la larghezza. Doppio clic: larghezza automatica</value>
+  </data>
+  <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
+    <value>Trascina per ruotare. Maiusc: passi di 15°. Doppio clic: senza rotazione</value>
+  </data>
 </root>

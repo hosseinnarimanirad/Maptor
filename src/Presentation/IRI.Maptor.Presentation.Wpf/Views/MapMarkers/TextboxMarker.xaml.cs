@@ -218,6 +218,10 @@ public partial class TextboxMarker : MapMarker
             };
             border.Clip = clip;
         }
+
+        // the popup's width changes with its content (e.g. the angle box text), and the centring
+        // offset depends on it
+        UpdatePopupPlacement();
     }
 
     private void OnPopupOpened(object? sender, EventArgs e)

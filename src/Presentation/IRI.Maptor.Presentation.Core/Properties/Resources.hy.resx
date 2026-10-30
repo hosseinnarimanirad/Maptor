@@ -2728,4 +2728,16 @@
   <data name="msg_drawingFile_openFailed" xml:space="preserve">
     <value>Այս ֆայլերը հնարավոր չեղավ բացել որպես գծագրեր՝ {0}</value>
   </data>
+  <data name="textMarker_tooltip_rotation" xml:space="preserve">
+    <value>Պտույտ (աստիճան, ժամացույցի սլաքի ուղղությամբ)</value>
+  </data>
+  <data name="textMarker_tooltip_resetRotation" xml:space="preserve">
+    <value>Առանց պտույտի</value>
+  </data>
+  <data name="textMarker_tooltip_widthHandle" xml:space="preserve">
+    <value>Քաշեք՝ լայնությունը փոխելու համար։ Կրկնակի սեղմում՝ ավտոմատ լայնություն</value>
+  </data>
+  <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
+    <value>Քաշեք՝ պտտելու համար։ Shift՝ 15° քայլեր։ Կրկնակի սեղմում՝ առանց պտույտի</value>
+  </data>
 </root>

@@ -3800,4 +3800,20 @@
     <value>These files could not be opened as drawings: {0}</value>
     <comment>message after Open drawing file; {0} = comma-separated file names that are not Maptor drawings</comment>
   </data>
+  <data name="textMarker_tooltip_rotation" xml:space="preserve">
+    <value>Rotation (degrees, clockwise)</value>
+    <comment>text-on-map format bar: the angle box (degrees, clockwise)</comment>
+  </data>
+  <data name="textMarker_tooltip_resetRotation" xml:space="preserve">
+    <value>Upright</value>
+    <comment>text-on-map format bar: button that makes the label upright again</comment>
+  </data>
+  <data name="textMarker_tooltip_widthHandle" xml:space="preserve">
+    <value>Drag to change the width. Double-click: automatic width</value>
+    <comment>text-on-map: the small handle on a label's side edge</comment>
+  </data>
+  <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
+    <value>Drag to rotate. Shift: 15° steps. Double-click: upright</value>
+    <comment>text-on-map: the round handle at a label's top-right corner</comment>
+  </data>
 </root>

@@ -34,6 +34,7 @@
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="Focusable" Value="False"/>
                 <Setter Property="Cursor" Value="SizeWE"/>
+                <Setter Property="ToolTip" Value="{Binding [textMarker_tooltip_widthHandle], Source={StaticResource Localization}}"/>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Thumb">
@@ -259,7 +260,7 @@
                     <Thumb x:Name="rightWidthThumb" Style="{StaticResource textMarkerWidthThumb}" HorizontalAlignment="Right" Margin="0,0,-4,0"
                            DragDelta="OnWidthThumbDragDelta" MouseDoubleClick="OnWidthThumbDoubleClick"/>
                     <Thumb x:Name="rotateThumb" Width="18" Height="18" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-32,-16,0"
-                           Focusable="False" Cursor="Hand"
+                           Focusable="False" Cursor="Hand" ToolTip="{Binding [textMarker_tooltip_rotateHandle], Source={StaticResource Localization}}"
                            DragStarted="OnRotateThumbDragStarted" DragDelta="OnRotateThumbDragDelta" MouseDoubleClick="OnRotateThumbDoubleClick">
                         <Thumb.Template>
                             <ControlTemplate TargetType="Thumb">
@@ -297,6 +298,17 @@
                         </Button>
                         <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Margin="0,0,2,0" Command="{Binding DecreaseFontSizeCommand}" ToolTip="{Binding [textMarker_tooltip_decreaseFontSize], Source={StaticResource Localization}}">
                             <iconPacks:PackIconMaterial Kind="FormatFontSizeDecrease" Width="12" Height="12"/>
+                        </Button>
+
+                        <!-- Rotation: the angle in degrees, clockwise (the arrows step 15°), and upright again;
+                             the same property as the rotate handle on the label -->
+                        <Separator Margin="4,0" VerticalAlignment="Stretch"/>
+                        <mahApp:NumericUpDown x:Name="rotationBox" Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Small}" Margin="0,0,2,0" MinWidth="70"
+                                              Minimum="-180" Maximum="180" Interval="15" StringFormat="0.#"
+                                              Value="{Binding Formatting_Rotation, Mode=TwoWay}"
+                                              ToolTip="{Binding [textMarker_tooltip_rotation], Source={StaticResource Localization}}"/>
+                        <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Margin="0,0,2,0" Command="{Binding ResetRotationCommand}" ToolTip="{Binding [textMarker_tooltip_resetRotation], Source={StaticResource Localization}}">
+                            <iconPacks:PackIconMaterial Kind="FormatTextRotationNone" Width="12" Height="12"/>
                         </Button>
                         <Separator Margin="4,0" VerticalAlignment="Stretch"/>
 

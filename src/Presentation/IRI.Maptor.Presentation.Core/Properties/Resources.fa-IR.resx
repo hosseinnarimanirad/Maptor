@@ -3649,4 +3649,16 @@
   <data name="msg_drawingFile_openFailed" xml:space="preserve">
     <value>این فایل‌ها به‌عنوان ترسیم باز نشدند: {0}</value>
   </data>
+  <data name="textMarker_tooltip_rotation" xml:space="preserve">
+    <value>چرخش (درجه، ساعتگرد)</value>
+  </data>
+  <data name="textMarker_tooltip_resetRotation" xml:space="preserve">
+    <value>بدون چرخش</value>
+  </data>
+  <data name="textMarker_tooltip_widthHandle" xml:space="preserve">
+    <value>برای تغییر پهنا بکشید. دوبار کلیک: پهنای خودکار</value>
+  </data>
+  <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
+    <value>برای چرخاندن بکشید. Shift: گام‌های ۱۵ درجه. دوبار کلیک: بدون چرخش</value>
+  </data>
 </root>

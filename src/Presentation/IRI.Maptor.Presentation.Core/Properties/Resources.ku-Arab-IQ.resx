@@ -2728,4 +2728,16 @@
   <data name="msg_drawingFile_openFailed" xml:space="preserve">
     <value>ئەم فایلانە وەک وێنەی کێشان نەکرانەوە: {0}</value>
   </data>
+  <data name="textMarker_tooltip_rotation" xml:space="preserve">
+    <value>سووڕانەوە (پلە، بە ئاڕاستەی کاتژمێر)</value>
+  </data>
+  <data name="textMarker_tooltip_resetRotation" xml:space="preserve">
+    <value>بێ سووڕانەوە</value>
+  </data>
+  <data name="textMarker_tooltip_widthHandle" xml:space="preserve">
+    <value>ڕابکێشە بۆ گۆڕینی پانی. دوو کرتە: پانیی خۆکار</value>
+  </data>
+  <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
+    <value>ڕابکێشە بۆ سووڕاندن. Shift: هەنگاوی 15°. دوو کرتە: بێ سووڕانەوە</value>
+  </data>
 </root>

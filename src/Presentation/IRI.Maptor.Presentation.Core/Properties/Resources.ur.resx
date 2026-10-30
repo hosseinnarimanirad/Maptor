@@ -2728,4 +2728,16 @@
   <data name="msg_drawingFile_openFailed" xml:space="preserve">
     <value>یہ فائلیں ڈرائنگ کے طور پر نہیں کھل سکیں: {0}</value>
   </data>
+  <data name="textMarker_tooltip_rotation" xml:space="preserve">
+    <value>گردش (ڈگری، گھڑی کی سمت)</value>
+  </data>
+  <data name="textMarker_tooltip_resetRotation" xml:space="preserve">
+    <value>بغیر گردش</value>
+  </data>
+  <data name="textMarker_tooltip_widthHandle" xml:space="preserve">
+    <value>چوڑائی بدلنے کے لیے گھسیٹیں۔ ڈبل کلک: خودکار چوڑائی</value>
+  </data>
+  <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
+    <value>گھمانے کے لیے گھسیٹیں۔ Shift: 15° کے قدم۔ ڈبل کلک: بغیر گردش</value>
+  </data>
 </root>

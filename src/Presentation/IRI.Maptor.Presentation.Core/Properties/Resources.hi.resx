@@ -2728,4 +2728,16 @@
   <data name="msg_drawingFile_openFailed" xml:space="preserve">
     <value>इन फ़ाइलों को आरेखण के रूप में नहीं खोला जा सका: {0}</value>
   </data>
+  <data name="textMarker_tooltip_rotation" xml:space="preserve">
+    <value>घुमाव (डिग्री, दक्षिणावर्त)</value>
+  </data>
+  <data name="textMarker_tooltip_resetRotation" xml:space="preserve">
+    <value>बिना घुमाव</value>
+  </data>
+  <data name="textMarker_tooltip_widthHandle" xml:space="preserve">
+    <value>चौड़ाई बदलने के लिए खींचें। डबल-क्लिक: स्वचालित चौड़ाई</value>
+  </data>
+  <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
+    <value>घुमाने के लिए खींचें। Shift: 15° के चरण। डबल-क्लिक: बिना घुमाव</value>
+  </data>
 </root>

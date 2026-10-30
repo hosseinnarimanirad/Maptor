@@ -2728,4 +2728,16 @@
   <data name="msg_drawingFile_openFailed" xml:space="preserve">
     <value>تعذّر فتح هذه الملفات كرسومات: {0}</value>
   </data>
+  <data name="textMarker_tooltip_rotation" xml:space="preserve">
+    <value>الدوران (درجات، باتجاه عقارب الساعة)</value>
+  </data>
+  <data name="textMarker_tooltip_resetRotation" xml:space="preserve">
+    <value>بلا دوران</value>
+  </data>
+  <data name="textMarker_tooltip_widthHandle" xml:space="preserve">
+    <value>اسحب لتغيير العرض. نقر مزدوج: عرض تلقائي</value>
+  </data>
+  <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
+    <value>اسحب للتدوير. Shift: خطوات 15°. نقر مزدوج: بلا دوران</value>
+  </data>
 </root>

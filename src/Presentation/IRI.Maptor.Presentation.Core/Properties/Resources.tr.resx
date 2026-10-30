@@ -2728,4 +2728,16 @@
   <data name="msg_drawingFile_openFailed" xml:space="preserve">
     <value>Bu dosyalar çizim olarak açılamadı: {0}</value>
   </data>
+  <data name="textMarker_tooltip_rotation" xml:space="preserve">
+    <value>Döndürme (derece, saat yönünde)</value>
+  </data>
+  <data name="textMarker_tooltip_resetRotation" xml:space="preserve">
+    <value>Döndürmesiz</value>
+  </data>
+  <data name="textMarker_tooltip_widthHandle" xml:space="preserve">
+    <value>Genişliği değiştirmek için sürükleyin. Çift tıklama: otomatik genişlik</value>
+  </data>
+  <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
+    <value>Döndürmek için sürükleyin. Shift: 15° adımlar. Çift tıklama: döndürmesiz</value>
+  </data>
 </root>
