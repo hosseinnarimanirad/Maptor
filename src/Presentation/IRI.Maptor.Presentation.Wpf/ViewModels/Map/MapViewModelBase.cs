@@ -2448,11 +2448,8 @@ public abstract class MapViewModelBase : ViewModelBase
         if (item.IsTextLayer)
         {
             // the label's own Delete button and its empty-label removal go through RequestDelete
-            foreach (var locateable in item.SpecialPointLayer?.Items ?? [])
-            {
-                if (locateable.Element?.DataContext is TextboxMarkerViewModel viewModel)
-                    viewModel.RequestDelete = () => RemoveDrawingItem(item);
-            }
+            foreach (var (_, viewModel) in item.GetTextLabels())
+                viewModel.RequestDelete = () => RemoveDrawingItem(item);
 
             return;
         }
@@ -4375,8 +4372,9 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             try
             {
+                // text-on-map labels carry their own look; they get no legend entry
                 decorations.LegendGroups = PdfLegendHelper.BuildLegendGroups(
-                    Enumerable.Reverse(allVisibleInScaleLayers), mapScale);
+                    Enumerable.Reverse(allVisibleInScaleLayers.Where(l => l is not DrawingItemLayer { IsTextLayer: true })), mapScale);
             }
             catch (Exception ex)
             {
@@ -4391,6 +4389,29 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             try
             {
+                // Text-on-map labels have no features: each marker prints as vector shapes. All are
+                // passed on; PdfWriter drops those whose box misses the printed area, which is only
+                // known there. No layer opacity: MapViewer draws markers at their own opacity.
+                if (layer is DrawingItemLayer { IsTextLayer: true } textLayer)
+                {
+                    var texts = textLayer.GetTextLabels()
+                        .Select(label => PdfMapTextHelper.BuildMapText(label.ViewModel, new Point(label.Locateable.X, label.Locateable.Y)))
+                        .OfType<PdfWriter.PdfMapText>()
+                        .ToList();
+
+                    if (texts.Count > 0)
+                    {
+                        layerPdfDataList.Add(new PdfWriter.LayerPdfData
+                        {
+                            Features = new List<Feature<Point>>(),
+                            Texts = texts,
+                            ZIndex = layer.ZIndex,
+                            LayerName = layer.LayerName
+                        });
+                    }
+                    continue;
+                }
+
                 // Get features for current extent and scale
                 var featureSet = await layer.GetFeatureSet(boundingBox, mapScale);
 

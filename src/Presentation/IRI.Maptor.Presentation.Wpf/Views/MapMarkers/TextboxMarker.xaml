@@ -56,8 +56,8 @@
         <StackPanel>
             <!-- drag handle; without a frame it shows only while the label is hovered or being
                  edited (Opacity, not Visibility, so the label never changes size and the hidden
-                 handle can still be hovered and grabbed) -->
-            <Border Height="12" Background="Transparent" Cursor="ScrollAll" >
+                 handle can still be hovered and grabbed); left out of printed labels -->
+            <Border x:Name="dragHandle" Height="12" Background="Transparent" Cursor="ScrollAll" >
                 <Border.Style>
                     <Style TargetType="Border">
                         <Style.Triggers>

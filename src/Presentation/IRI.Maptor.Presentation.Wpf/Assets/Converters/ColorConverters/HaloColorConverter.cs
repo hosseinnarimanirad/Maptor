@@ -14,13 +14,15 @@ public class HaloColorConverter : IMultiValueConverter
 {
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
-        if (values?.Length > 0 && values[0] is Color explicitColor)
-            return explicitColor;
+        var haloColor = values?.Length > 0 && values[0] is Color explicitColor ? explicitColor : (Color?)null;
 
         var textColor = values?.Length > 1 && values[1] is Color color ? color : Colors.Black;
 
-        return ColorToContrastBrushConverter.GetContrastColor(textColor);
+        return GetHaloColor(haloColor, textColor);
     }
+
+    public static Color GetHaloColor(Color? haloColor, Color textColor)
+        => haloColor ?? ColorToContrastBrushConverter.GetContrastColor(textColor);
 
     public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
     {

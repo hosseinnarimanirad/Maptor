@@ -580,9 +580,6 @@ public static class PdfWriter
         page.Width = pageWidth;
         page.Height = pageHeight;
 
-        // Group layers into render units; each unit becomes one toggleable PDF layer.
-        var units = BuildRenderUnits(layers, rasterLayers, GroupByLayerName);
-
         // Decorated exports render the map into the layout's map frame (and clip to it);
         // plain exports keep the classic full-bleed page.
         PdfMapLayout layout = default;
@@ -599,6 +596,18 @@ public static class PdfWriter
             pageTransform = MapPageTransform.CreateFullPage(mapExtent, pageWidth, pageHeight, baseOptions.BoundingBoxPadding);
         }
 
+        // A text label prints when its box reaches the printed area (the map frame, or the whole
+        // plain page), even with its anchor outside; one that does not is dropped before the
+        // units are built, so it never gets an empty PDF layer of its own.
+        var printedArea = isDecorated ? layout.MapFrameRect : new XRect(0, 0, pageWidth, pageHeight);
+
+        bool IsTextPrinted(PdfMapText? text)
+            => text is { IsValid: true } && text.Anchor != null
+               && PdfMapComposer.GetMapTextRect(text, pageTransform.ToPage(text.Anchor)).IntersectsWith(printedArea);
+
+        // Group layers into render units; each unit becomes one toggleable PDF layer.
+        var units = BuildRenderUnits(layers, rasterLayers, GroupByLayerName, IsTextPrinted);
+
         void DrawClippedUnit(XGraphics target, RenderUnit unit)
         {
             if (isDecorated)
@@ -607,7 +616,7 @@ public static class PdfWriter
                 target.IntersectClip(layout.MapFrameRect);
             }
 
-            DrawUnit(target, unit, pageTransform, baseOptions);
+            DrawUnit(target, unit, pageTransform, baseOptions, IsTextPrinted);
 
             if (isDecorated)
                 target.Restore();
@@ -617,7 +626,7 @@ public static class PdfWriter
         // the first vector-bearing unit (or after all rasters if there are none).
         var drawGraticuleBelowData = isDecorated && decorations!.ShowGraticule;
         var firstVectorUnitIndex = drawGraticuleBelowData
-            ? units.FindIndex(u => u.Vectors.Any(v => v.Features is { Count: > 0 }))
+            ? units.FindIndex(u => u.Vectors.Any(v => v.Features is { Count: > 0 } || (v.Texts?.Any(IsTextPrinted) ?? false)))
             : -1;
         var graticuleLinesDrawn = false;
 
@@ -1088,9 +1097,9 @@ public static class PdfWriter
         public List<RasterLayerPdfData> Rasters = new();
         public List<LayerPdfData> Vectors = new();
 
-        public bool HasContent =>
+        public bool HasContent(Func<PdfMapText?, bool> isTextPrinted) =>
             Rasters.Any(r => r.Tiles != null && r.Tiles.Count > 0) ||
-            Vectors.Any(v => (v.Features != null && v.Features.Count > 0) || (v.Labels != null && v.Labels.Count > 0) || (v.Texts != null && v.Texts.Any(t => t is { IsValid: true })));
+            Vectors.Any(v => (v.Features != null && v.Features.Count > 0) || (v.Labels != null && v.Labels.Count > 0) || (v.Texts != null && v.Texts.Any(isTextPrinted)));
     }
 
     /// <summary>
@@ -1100,7 +1109,8 @@ public static class PdfWriter
     private static List<RenderUnit> BuildRenderUnits(
         List<LayerPdfData> vectors,
         List<RasterLayerPdfData>? rasters,
-        bool groupByLayerName)
+        bool groupByLayerName,
+        Func<PdfMapText?, bool> isTextPrinted)
     {
         // Flatten to a common list, preserving input order for stable tie-breaking.
         var items = new List<(int ZIndex, int Index, bool IsRaster, string Name, object Data)>();
@@ -1153,7 +1163,7 @@ public static class PdfWriter
 
         // Keep only units with drawable content; order by ZIndex then first appearance.
         return units
-            .Where(u => u.HasContent)
+            .Where(u => u.HasContent(isTextPrinted))
             .OrderBy(u => u.OrderZIndex)
             .ThenBy(u => u.FirstIndex)
             .ToList();
@@ -1167,7 +1177,8 @@ public static class PdfWriter
         XGraphics target,
         RenderUnit unit,
         in MapPageTransform pageTransform,
-        PdfOptions baseOptions)
+        PdfOptions baseOptions,
+        Func<PdfMapText?, bool> isTextPrinted)
     {
         // Rasters first (drawn beneath the vector features).
         foreach (var rasterLayerData in unit.Rasters)
@@ -1184,7 +1195,7 @@ public static class PdfWriter
         {
             var hasFeatures = layerData.Features is { Count: > 0 };
             var hasLabels = layerData.Labels is { Count: > 0 };
-            var hasTexts = layerData.Texts is { Count: > 0 };
+            var hasTexts = layerData.Texts?.Any(isTextPrinted) ?? false;
 
             if (!hasFeatures && !hasLabels && !hasTexts)
                 continue;
@@ -1229,11 +1240,10 @@ public static class PdfWriter
             {
                 foreach (var text in layerData.Texts!)
                 {
-                    if (text is not { IsValid: true } || text.Anchor == null)
+                    if (!isTextPrinted(text))
                         continue;
 
-                    var anchor = pageTransform.ToPage(text.Anchor);
-                    PdfMapComposer.DrawMapText(target, text, anchor, combinedOpacity);
+                    PdfMapComposer.DrawMapText(target, text!, pageTransform.ToPage(text!.Anchor), combinedOpacity);
                 }
             }
         }

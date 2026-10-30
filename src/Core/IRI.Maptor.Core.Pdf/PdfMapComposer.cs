@@ -136,8 +136,7 @@ internal static class PdfMapComposer
         if (!text.IsValid)
             return;
 
-        var originX = anchor.X - text.Width * LabelPxToPoint / 2;
-        var originY = anchor.Y - text.Height * LabelPxToPoint;
+        var rect = GetMapTextRect(text, anchor);
 
         foreach (var part in text.Parts)
         {
@@ -147,8 +146,20 @@ internal static class PdfMapComposer
             var c = part.Color;
             var alpha = (int)Math.Round(Math.Max(0, Math.Min(1, opacity)) * c.A);
 
-            FillVectorFigures(gfx, part.Shape, originX, originY, LabelPxToPoint, XColor.FromArgb(alpha, c.R, c.G, c.B));
+            FillVectorFigures(gfx, part.Shape, rect.X, rect.Y, LabelPxToPoint, XColor.FromArgb(alpha, c.R, c.G, c.B));
         }
+    }
+
+    /// <summary>
+    /// The page rectangle a text-on-map label covers: its on-screen size in points, bottom-centre
+    /// on <paramref name="anchor"/> (page coordinates).
+    /// </summary>
+    internal static XRect GetMapTextRect(PdfWriter.PdfMapText text, XPoint anchor)
+    {
+        var width = text.Width * LabelPxToPoint;
+        var height = text.Height * LabelPxToPoint;
+
+        return new XRect(anchor.X - width / 2, anchor.Y - height, width, height);
     }
 
     /// <summary>

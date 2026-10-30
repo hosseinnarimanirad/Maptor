@@ -143,14 +143,30 @@ public class DrawingItemLayer : VectorLayer
         return JsonHelper.Serialize(feature);
     }
 
+    /// <summary>
+    /// The labels of a text drawing: each marker's position (Web Mercator, the label's
+    /// bottom-centre) and view model. Empty for a geometry drawing.
+    /// </summary>
+    public IEnumerable<(Locateable Locateable, TextboxMarkerViewModel ViewModel)> GetTextLabels()
+    {
+        if (!IsTextLayer)
+            yield break;
+
+        foreach (var locateable in SpecialPointLayer?.Items ?? [])
+        {
+            if (locateable.Element?.DataContext is TextboxMarkerViewModel viewModel)
+                yield return (locateable, viewModel);
+        }
+    }
+
     // A text drawing is saved like a geometry drawing: a GeoJSON point (the label's bottom-centre,
     // where the marker is anchored) with the text in the Label attribute and its style as a
     // TextSymbolizer-only SLD (see MapTextSld). An empty label is not saved.
     private string SerializeText()
     {
-        var locateable = SpecialPointLayer?.Items.FirstOrDefault();
+        var (locateable, viewModel) = GetTextLabels().FirstOrDefault();
 
-        if (locateable?.Element?.DataContext is not TextboxMarkerViewModel viewModel || string.IsNullOrWhiteSpace(viewModel.LabelValue))
+        if (viewModel is null || string.IsNullOrWhiteSpace(viewModel.LabelValue))
             return string.Empty;
 
         var position = Geometry<Point>.Create(locateable.X, locateable.Y, SridHelper.WebMercator);
