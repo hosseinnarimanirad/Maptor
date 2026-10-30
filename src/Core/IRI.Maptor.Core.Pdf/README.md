@@ -18,7 +18,7 @@ dotnet add package IRI.Maptor.Core.Pdf
 - Standard (A0–A5, B2–B4, Letter, Legal, Tabloid), custom, or auto (fit-to-bounds) page sizes in portrait/landscape
 - Feature attributes stored as PDF document metadata (Title, Author, Creator, Subject, Keywords) when `PdfOptions.PreserveFeatureAttributes` is `true`
 - Decorated map export (`PdfWriter.WriteLayers`): raster basemap plus stacked vector layers, title band, four-segment scale bar with representative fraction, dashed degree graticule with WGS84 labels, double-border neat line, powered-by and company logos, and optional-content (toggleable) PDF layers
-- Text-on-map labels (`LayerPdfData.Texts`, `PdfWriter.PdfMapText`): pre-built filled vector parts (frame, text field, halo, glyphs) drawn in order at on-screen size, bottom-centre on a map anchor; a label whose box misses the printed area is dropped
+- Text-on-map labels (`LayerPdfData.Texts`, `PdfWriter.PdfMapText`): pre-built filled vector parts (frame, text field, halo, glyphs) drawn in order at on-screen size, the block's anchor point (bottom-centre unless `AnchorX`/`AnchorY` say otherwise, e.g. for a rotated label) on a map anchor; a label whose box misses the printed area is dropped
 - `PdfWriter.ComputeDecoratedMapExtent` returns the map extent adjusted for decoration margins
 
 ## Usage

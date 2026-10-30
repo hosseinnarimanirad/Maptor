@@ -34,7 +34,7 @@ public static class PdfMapTextHelper
 
     /// <summary>
     /// The label of <paramref name="viewModel"/> with its bottom-centre at <paramref name="anchor"/>
-    /// (map coordinates); null for an empty label.
+    /// (map coordinates); null for an empty label. Rotation and width come with the laid-out copy.
     /// </summary>
     public static PdfWriter.PdfMapText? BuildMapText(TextboxMarkerViewModel viewModel, StaPoint anchor)
     {
@@ -59,7 +59,7 @@ public static class PdfMapTextHelper
 
         Collect(marker, marker, 1.0, false, shapes);
 
-        var parts = new List<PdfWriter.PdfMapTextPart>();
+        var parts = new List<(PathGeometry Outline, Color Color)>();
         var textGeometry = new GeometryGroup { FillRule = FillRule.Nonzero };
         var haloIndex = -1;
 
@@ -83,7 +83,7 @@ public static class PdfMapTextHelper
             if (first.IsText && haloIndex < 0)
                 haloIndex = parts.Count;
 
-            AddPart(parts, group, first.Color, width, height);
+            AddPart(parts, group, first.Color);
         }
 
         if (viewModel.Formatting_Frame == MapTextFrame.Halo && textGeometry.Children.Count > 0 && haloIndex >= 0)
@@ -97,15 +97,55 @@ public static class PdfMapTextHelper
 
             var haloColor = HaloColorConverter.GetHaloColor(viewModel.Formatting_HaloColor, viewModel.Formatting_TextColor);
 
-            var haloParts = new List<PdfWriter.PdfMapTextPart>();
-            AddPart(haloParts, halo, haloColor, width, height);
+            var haloParts = new List<(PathGeometry Outline, Color Color)>();
+            AddPart(haloParts, halo, haloColor);
             parts.InsertRange(haloIndex, haloParts);
         }
 
+        return ToMapText(parts, anchor, new Point(width / 2, height));
+    }
+
+    // the block is the bounds of what is drawn: a rotated label (the turn is inside the marker)
+    // reaches outside its upright layout box, so the anchor is placed within those bounds
+    private static PdfWriter.PdfMapText? ToMapText(List<(PathGeometry Outline, Color Color)> parts, StaPoint anchor, Point anchorInMarker)
+    {
         if (parts.Count == 0)
             return null;
 
-        return new PdfWriter.PdfMapText { Anchor = anchor, Width = width, Height = height, Parts = parts };
+        var bounds = Rect.Empty;
+
+        foreach (var part in parts)
+            bounds.Union(part.Outline.Bounds);
+
+        if (bounds.IsEmpty || bounds.Width <= 0 || bounds.Height <= 0)
+            return null;
+
+        var mapText = new PdfWriter.PdfMapText
+        {
+            Anchor = anchor,
+            Width = bounds.Width,
+            Height = bounds.Height,
+            AnchorX = anchorInMarker.X - bounds.Left,
+            AnchorY = anchorInMarker.Y - bounds.Top,
+        };
+
+        foreach (var (outline, color) in parts)
+        {
+            var figures = PdfDecorationHelper.ToMarkerFigures(
+                outline.GetFlattenedPathGeometry(Tolerance, ToleranceType.Absolute),
+                p => new StaPoint(p.X - bounds.Left, p.Y - bounds.Top));
+
+            if (figures.Count == 0)
+                continue;
+
+            mapText.Parts.Add(new PdfWriter.PdfMapTextPart
+            {
+                Shape = new PdfVectorLogo { Figures = figures, SourceWidth = bounds.Width, SourceHeight = bounds.Height },
+                Color = new RgbColor(color.R, color.G, color.B, color.A),
+            });
+        }
+
+        return mapText.IsValid ? mapText : null;
     }
 
     private readonly record struct Shape(Geometry Geometry, Color Color, bool IsText);
@@ -178,21 +218,11 @@ public static class PdfMapTextHelper
         shapes.Add(new Shape(new GeometryGroup { FillRule = FillRule.Nonzero, Children = { geometry }, Transform = new MatrixTransform(matrix) }, color, isText));
     }
 
-    private static void AddPart(List<PdfWriter.PdfMapTextPart> parts, Geometry geometry, Color color, double width, double height)
+    private static void AddPart(List<(PathGeometry Outline, Color Color)> parts, Geometry geometry, Color color)
     {
         var outline = geometry.GetOutlinedPathGeometry(Tolerance, ToleranceType.Absolute);
 
-        var figures = PdfDecorationHelper.ToMarkerFigures(
-            outline.GetFlattenedPathGeometry(Tolerance, ToleranceType.Absolute),
-            p => new StaPoint(p.X, p.Y));
-
-        if (figures.Count == 0)
-            return;
-
-        parts.Add(new PdfWriter.PdfMapTextPart
-        {
-            Shape = new PdfVectorLogo { Figures = figures, SourceWidth = width, SourceHeight = height },
-            Color = new RgbColor(color.R, color.G, color.B, color.A),
-        });
+        if (!outline.IsEmpty())
+            parts.Add((outline, color));
     }
 }

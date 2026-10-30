@@ -151,15 +151,15 @@ internal static class PdfMapComposer
     }
 
     /// <summary>
-    /// The page rectangle a text-on-map label covers: its on-screen size in points, bottom-centre
-    /// on <paramref name="anchor"/> (page coordinates).
+    /// The page rectangle a text-on-map label covers: its on-screen size in points, with its anchor
+    /// point (bottom-centre unless set) on <paramref name="anchor"/> (page coordinates).
     /// </summary>
     internal static XRect GetMapTextRect(PdfWriter.PdfMapText text, XPoint anchor)
     {
-        var width = text.Width * LabelPxToPoint;
-        var height = text.Height * LabelPxToPoint;
+        var anchorX = (text.AnchorX ?? text.Width / 2) * LabelPxToPoint;
+        var anchorY = (text.AnchorY ?? text.Height) * LabelPxToPoint;
 
-        return new XRect(anchor.X - width / 2, anchor.Y - height, width, height);
+        return new XRect(anchor.X - anchorX, anchor.Y - anchorY, text.Width * LabelPxToPoint, text.Height * LabelPxToPoint);
     }
 
     /// <summary>

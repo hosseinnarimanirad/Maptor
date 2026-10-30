@@ -57,9 +57,9 @@ public static class PdfWriter
 
     /// <summary>
     /// A text-on-map label: filled vector shapes (frame, text field, halo, glyphs) drawn in order at a
-    /// fixed paper size, with the block's bottom-centre on a map-space anchor — where the on-screen
-    /// marker is anchored. Unlike <see cref="PdfFeatureLabel"/> it carries its own colours and gets no
-    /// readability box.
+    /// fixed paper size, with the block's anchor point (by default its bottom-centre, where the
+    /// on-screen marker is anchored) on a map-space anchor. Unlike <see cref="PdfFeatureLabel"/> it
+    /// carries its own colours and gets no readability box.
     /// </summary>
     public class PdfMapText
     {
@@ -71,6 +71,15 @@ public static class PdfWriter
 
         /// <summary>Block height in screen pixels (1/96").</summary>
         public double Height { get; set; }
+
+        /// <summary>
+        /// Where in the block (px from its left edge) the anchor sits; null is the horizontal centre.
+        /// A rotated label's block is its turned bounds, so its anchor is elsewhere.
+        /// </summary>
+        public double? AnchorX { get; set; }
+
+        /// <summary>Where in the block (px from its top edge) the anchor sits; null is the bottom edge.</summary>
+        public double? AnchorY { get; set; }
 
         /// <summary>Shapes drawn first to last; their figures are in block pixels, top-left origin.</summary>
         public List<PdfMapTextPart> Parts { get; set; } = new();
