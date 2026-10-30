@@ -2596,4 +2596,136 @@
   <data name="legend_filter_only" xml:space="preserve">
     <value>فقط</value>
   </data>
+  <data name="textMarker_tooltip_fontFamily" xml:space="preserve">
+    <value>الخط</value>
+  </data>
+  <data name="textMarker_tooltip_fontSize" xml:space="preserve">
+    <value>حجم الخط</value>
+  </data>
+  <data name="textMarker_tooltip_increaseFontSize" xml:space="preserve">
+    <value>تكبير الخط</value>
+  </data>
+  <data name="textMarker_tooltip_decreaseFontSize" xml:space="preserve">
+    <value>تصغير الخط</value>
+  </data>
+  <data name="textMarker_tooltip_textColor" xml:space="preserve">
+    <value>لون النص</value>
+  </data>
+  <data name="textMarker_tooltip_background" xml:space="preserve">
+    <value>الخلفية (للإطار فقط)</value>
+  </data>
+  <data name="textMarker_tooltip_bold" xml:space="preserve">
+    <value>عريض</value>
+  </data>
+  <data name="textMarker_tooltip_italic" xml:space="preserve">
+    <value>مائل</value>
+  </data>
+  <data name="textMarker_tooltip_underline" xml:space="preserve">
+    <value>تسطير</value>
+  </data>
+  <data name="textMarker_tooltip_alignLeft" xml:space="preserve">
+    <value>محاذاة لليسار</value>
+  </data>
+  <data name="textMarker_tooltip_alignCenter" xml:space="preserve">
+    <value>توسيط</value>
+  </data>
+  <data name="textMarker_tooltip_alignRight" xml:space="preserve">
+    <value>محاذاة لليمين</value>
+  </data>
+  <data name="textMarker_tooltip_leftToRight" xml:space="preserve">
+    <value>من اليسار إلى اليمين (LTR)</value>
+  </data>
+  <data name="textMarker_tooltip_rightToLeft" xml:space="preserve">
+    <value>من اليمين إلى اليسار (RTL)</value>
+  </data>
+  <data name="textMarker_tooltip_frameBox" xml:space="preserve">
+    <value>إطار</value>
+  </data>
+  <data name="textMarker_tooltip_framePlain" xml:space="preserve">
+    <value>نص عادي</value>
+  </data>
+  <data name="textMarker_tooltip_frameHalo" xml:space="preserve">
+    <value>الهالة</value>
+  </data>
+  <data name="textMarker_tooltip_erase" xml:space="preserve">
+    <value>مسح النص</value>
+  </data>
+  <data name="textMarker_tooltip_copyText" xml:space="preserve">
+    <value>نسخ النص</value>
+  </data>
+  <data name="textMarker_tooltip_delete" xml:space="preserve">
+    <value>حذف التسمية</value>
+  </data>
+  <data name="textMarker_color_themeHighlight" xml:space="preserve">
+    <value>لون التمييز في السمة</value>
+  </data>
+  <data name="textMarker_color_black" xml:space="preserve">
+    <value>أسود</value>
+  </data>
+  <data name="textMarker_color_white" xml:space="preserve">
+    <value>أبيض</value>
+  </data>
+  <data name="textMarker_color_limeGreen" xml:space="preserve">
+    <value>أخضر ليموني</value>
+  </data>
+  <data name="textMarker_color_lime" xml:space="preserve">
+    <value>ليموني</value>
+  </data>
+  <data name="textMarker_color_green" xml:space="preserve">
+    <value>أخضر</value>
+  </data>
+  <data name="textMarker_color_teal" xml:space="preserve">
+    <value>أزرق مخضر</value>
+  </data>
+  <data name="textMarker_color_cyan" xml:space="preserve">
+    <value>سماوي</value>
+  </data>
+  <data name="textMarker_color_blue" xml:space="preserve">
+    <value>أزرق</value>
+  </data>
+  <data name="textMarker_color_indigo" xml:space="preserve">
+    <value>نيلي</value>
+  </data>
+  <data name="textMarker_color_violet" xml:space="preserve">
+    <value>بنفسجي</value>
+  </data>
+  <data name="textMarker_color_pink" xml:space="preserve">
+    <value>وردي</value>
+  </data>
+  <data name="textMarker_color_magenta" xml:space="preserve">
+    <value>أرجواني</value>
+  </data>
+  <data name="textMarker_color_crimson" xml:space="preserve">
+    <value>قرمزي</value>
+  </data>
+  <data name="textMarker_color_red" xml:space="preserve">
+    <value>أحمر</value>
+  </data>
+  <data name="textMarker_color_orange" xml:space="preserve">
+    <value>برتقالي</value>
+  </data>
+  <data name="textMarker_color_amber" xml:space="preserve">
+    <value>كهرماني</value>
+  </data>
+  <data name="textMarker_color_yellow" xml:space="preserve">
+    <value>أصفر</value>
+  </data>
+  <data name="textMarker_color_brown" xml:space="preserve">
+    <value>بني</value>
+  </data>
+  <data name="textMarker_color_olive" xml:space="preserve">
+    <value>زيتوني</value>
+  </data>
+  <data name="textMarker_color_steel" xml:space="preserve">
+    <value>فولاذي</value>
+  </data>
+  <data name="textMarker_color_mauve" xml:space="preserve">
+    <value>بنفسجي فاتح</value>
+  </data>
+  <data name="textMarker_color_taupe" xml:space="preserve">
+    <value>رمادي بني</value>
+  </data>
+  <data name="msg_drawingFile_openFailed" xml:space="preserve">
+    <value>تعذّر فتح هذه الملفات كرسومات: {0}</value>
+  </data>
 </root>

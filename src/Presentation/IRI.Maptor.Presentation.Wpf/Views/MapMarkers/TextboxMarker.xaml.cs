@@ -11,7 +11,10 @@ namespace IRI.Maptor.Presentation.Wpf.Controls.MapMarkers;
 
 public partial class TextboxMarker : MapMarker
 {
-    public static bool IsOptionsEnabled { get; set; } = false;
+    // set by MapViewer.OnMapActionChanged (Pan or DrawText); that callback only runs on a change, so
+    // the start value must match MapViewer.MapAction's default, Pan, or labels loaded from a project
+    // show no options until the map action changes once
+    public static bool IsOptionsEnabled { get; set; } = true;
 
     private readonly DispatcherTimer _popupCloseTimer = new() { Interval = TimeSpan.FromMilliseconds(250) };
 

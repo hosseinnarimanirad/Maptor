@@ -2596,4 +2596,136 @@
   <data name="legend_filter_only" xml:space="preserve">
     <value>Somente</value>
   </data>
+  <data name="textMarker_tooltip_fontFamily" xml:space="preserve">
+    <value>Fonte</value>
+  </data>
+  <data name="textMarker_tooltip_fontSize" xml:space="preserve">
+    <value>Tamanho da fonte</value>
+  </data>
+  <data name="textMarker_tooltip_increaseFontSize" xml:space="preserve">
+    <value>Aumentar tamanho da fonte</value>
+  </data>
+  <data name="textMarker_tooltip_decreaseFontSize" xml:space="preserve">
+    <value>Diminuir tamanho da fonte</value>
+  </data>
+  <data name="textMarker_tooltip_textColor" xml:space="preserve">
+    <value>Cor do texto</value>
+  </data>
+  <data name="textMarker_tooltip_background" xml:space="preserve">
+    <value>Fundo (só moldura)</value>
+  </data>
+  <data name="textMarker_tooltip_bold" xml:space="preserve">
+    <value>Negrito</value>
+  </data>
+  <data name="textMarker_tooltip_italic" xml:space="preserve">
+    <value>Itálico</value>
+  </data>
+  <data name="textMarker_tooltip_underline" xml:space="preserve">
+    <value>Sublinhado</value>
+  </data>
+  <data name="textMarker_tooltip_alignLeft" xml:space="preserve">
+    <value>Alinhar à esquerda</value>
+  </data>
+  <data name="textMarker_tooltip_alignCenter" xml:space="preserve">
+    <value>Centralizar</value>
+  </data>
+  <data name="textMarker_tooltip_alignRight" xml:space="preserve">
+    <value>Alinhar à direita</value>
+  </data>
+  <data name="textMarker_tooltip_leftToRight" xml:space="preserve">
+    <value>Da esquerda para a direita (LTR)</value>
+  </data>
+  <data name="textMarker_tooltip_rightToLeft" xml:space="preserve">
+    <value>Da direita para a esquerda (RTL)</value>
+  </data>
+  <data name="textMarker_tooltip_frameBox" xml:space="preserve">
+    <value>Moldura</value>
+  </data>
+  <data name="textMarker_tooltip_framePlain" xml:space="preserve">
+    <value>Texto simples</value>
+  </data>
+  <data name="textMarker_tooltip_frameHalo" xml:space="preserve">
+    <value>Halo</value>
+  </data>
+  <data name="textMarker_tooltip_erase" xml:space="preserve">
+    <value>Apagar texto</value>
+  </data>
+  <data name="textMarker_tooltip_copyText" xml:space="preserve">
+    <value>Copiar texto</value>
+  </data>
+  <data name="textMarker_tooltip_delete" xml:space="preserve">
+    <value>Excluir rótulo</value>
+  </data>
+  <data name="textMarker_color_themeHighlight" xml:space="preserve">
+    <value>Destaque do tema</value>
+  </data>
+  <data name="textMarker_color_black" xml:space="preserve">
+    <value>Preto</value>
+  </data>
+  <data name="textMarker_color_white" xml:space="preserve">
+    <value>Branco</value>
+  </data>
+  <data name="textMarker_color_limeGreen" xml:space="preserve">
+    <value>Verde-lima</value>
+  </data>
+  <data name="textMarker_color_lime" xml:space="preserve">
+    <value>Lima</value>
+  </data>
+  <data name="textMarker_color_green" xml:space="preserve">
+    <value>Verde</value>
+  </data>
+  <data name="textMarker_color_teal" xml:space="preserve">
+    <value>Verde-azulado</value>
+  </data>
+  <data name="textMarker_color_cyan" xml:space="preserve">
+    <value>Ciano</value>
+  </data>
+  <data name="textMarker_color_blue" xml:space="preserve">
+    <value>Azul</value>
+  </data>
+  <data name="textMarker_color_indigo" xml:space="preserve">
+    <value>Índigo</value>
+  </data>
+  <data name="textMarker_color_violet" xml:space="preserve">
+    <value>Violeta</value>
+  </data>
+  <data name="textMarker_color_pink" xml:space="preserve">
+    <value>Rosa</value>
+  </data>
+  <data name="textMarker_color_magenta" xml:space="preserve">
+    <value>Magenta</value>
+  </data>
+  <data name="textMarker_color_crimson" xml:space="preserve">
+    <value>Carmesim</value>
+  </data>
+  <data name="textMarker_color_red" xml:space="preserve">
+    <value>Vermelho</value>
+  </data>
+  <data name="textMarker_color_orange" xml:space="preserve">
+    <value>Laranja</value>
+  </data>
+  <data name="textMarker_color_amber" xml:space="preserve">
+    <value>Âmbar</value>
+  </data>
+  <data name="textMarker_color_yellow" xml:space="preserve">
+    <value>Amarelo</value>
+  </data>
+  <data name="textMarker_color_brown" xml:space="preserve">
+    <value>Marrom</value>
+  </data>
+  <data name="textMarker_color_olive" xml:space="preserve">
+    <value>Oliva</value>
+  </data>
+  <data name="textMarker_color_steel" xml:space="preserve">
+    <value>Aço</value>
+  </data>
+  <data name="textMarker_color_mauve" xml:space="preserve">
+    <value>Malva</value>
+  </data>
+  <data name="textMarker_color_taupe" xml:space="preserve">
+    <value>Cinza-acastanhado</value>
+  </data>
+  <data name="msg_drawingFile_openFailed" xml:space="preserve">
+    <value>Não foi possível abrir estes arquivos como desenhos: {0}</value>
+  </data>
 </root>

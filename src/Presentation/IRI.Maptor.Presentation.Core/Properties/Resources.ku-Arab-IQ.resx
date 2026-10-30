@@ -2596,4 +2596,136 @@
   <data name="legend_filter_only" xml:space="preserve">
     <value>تەنها</value>
   </data>
+  <data name="textMarker_tooltip_fontFamily" xml:space="preserve">
+    <value>فۆنت</value>
+  </data>
+  <data name="textMarker_tooltip_fontSize" xml:space="preserve">
+    <value>قەبارەی فۆنت</value>
+  </data>
+  <data name="textMarker_tooltip_increaseFontSize" xml:space="preserve">
+    <value>گەورەکردنی فۆنت</value>
+  </data>
+  <data name="textMarker_tooltip_decreaseFontSize" xml:space="preserve">
+    <value>بچووککردنەوەی فۆنت</value>
+  </data>
+  <data name="textMarker_tooltip_textColor" xml:space="preserve">
+    <value>ڕەنگی دەق</value>
+  </data>
+  <data name="textMarker_tooltip_background" xml:space="preserve">
+    <value>پاشبنەما (تەنها چوارچێوە)</value>
+  </data>
+  <data name="textMarker_tooltip_bold" xml:space="preserve">
+    <value>ئەستوور</value>
+  </data>
+  <data name="textMarker_tooltip_italic" xml:space="preserve">
+    <value>لار</value>
+  </data>
+  <data name="textMarker_tooltip_underline" xml:space="preserve">
+    <value>ژێرهێڵ</value>
+  </data>
+  <data name="textMarker_tooltip_alignLeft" xml:space="preserve">
+    <value>ڕیزکردن بە چەپ</value>
+  </data>
+  <data name="textMarker_tooltip_alignCenter" xml:space="preserve">
+    <value>ڕیزکردن بە ناوەڕاست</value>
+  </data>
+  <data name="textMarker_tooltip_alignRight" xml:space="preserve">
+    <value>ڕیزکردن بە ڕاست</value>
+  </data>
+  <data name="textMarker_tooltip_leftToRight" xml:space="preserve">
+    <value>چەپ بۆ ڕاست (LTR)</value>
+  </data>
+  <data name="textMarker_tooltip_rightToLeft" xml:space="preserve">
+    <value>ڕاست بۆ چەپ (RTL)</value>
+  </data>
+  <data name="textMarker_tooltip_frameBox" xml:space="preserve">
+    <value>چوارچێوە</value>
+  </data>
+  <data name="textMarker_tooltip_framePlain" xml:space="preserve">
+    <value>دەقی سادە</value>
+  </data>
+  <data name="textMarker_tooltip_frameHalo" xml:space="preserve">
+    <value>هاڵە</value>
+  </data>
+  <data name="textMarker_tooltip_erase" xml:space="preserve">
+    <value>سڕینەوەی دەق</value>
+  </data>
+  <data name="textMarker_tooltip_copyText" xml:space="preserve">
+    <value>لەبەرگرتنەوەی دەق</value>
+  </data>
+  <data name="textMarker_tooltip_delete" xml:space="preserve">
+    <value>سڕینەوەی ناونیشان</value>
+  </data>
+  <data name="textMarker_color_themeHighlight" xml:space="preserve">
+    <value>ڕەنگی دیارخستنی ڕووکار</value>
+  </data>
+  <data name="textMarker_color_black" xml:space="preserve">
+    <value>ڕەش</value>
+  </data>
+  <data name="textMarker_color_white" xml:space="preserve">
+    <value>سپی</value>
+  </data>
+  <data name="textMarker_color_limeGreen" xml:space="preserve">
+    <value>سەوزی لیمۆیی</value>
+  </data>
+  <data name="textMarker_color_lime" xml:space="preserve">
+    <value>لیمۆیی</value>
+  </data>
+  <data name="textMarker_color_green" xml:space="preserve">
+    <value>سەوز</value>
+  </data>
+  <data name="textMarker_color_teal" xml:space="preserve">
+    <value>سەوزی شین</value>
+  </data>
+  <data name="textMarker_color_cyan" xml:space="preserve">
+    <value>فیرۆزەیی</value>
+  </data>
+  <data name="textMarker_color_blue" xml:space="preserve">
+    <value>شین</value>
+  </data>
+  <data name="textMarker_color_indigo" xml:space="preserve">
+    <value>نیلی</value>
+  </data>
+  <data name="textMarker_color_violet" xml:space="preserve">
+    <value>مۆر</value>
+  </data>
+  <data name="textMarker_color_pink" xml:space="preserve">
+    <value>پەمەیی</value>
+  </data>
+  <data name="textMarker_color_magenta" xml:space="preserve">
+    <value>ئەرخەوانی</value>
+  </data>
+  <data name="textMarker_color_crimson" xml:space="preserve">
+    <value>سووری تۆخ</value>
+  </data>
+  <data name="textMarker_color_red" xml:space="preserve">
+    <value>سوور</value>
+  </data>
+  <data name="textMarker_color_orange" xml:space="preserve">
+    <value>نارنجی</value>
+  </data>
+  <data name="textMarker_color_amber" xml:space="preserve">
+    <value>کارەبایی</value>
+  </data>
+  <data name="textMarker_color_yellow" xml:space="preserve">
+    <value>زەرد</value>
+  </data>
+  <data name="textMarker_color_brown" xml:space="preserve">
+    <value>قاوەیی</value>
+  </data>
+  <data name="textMarker_color_olive" xml:space="preserve">
+    <value>زەیتوونی</value>
+  </data>
+  <data name="textMarker_color_steel" xml:space="preserve">
+    <value>پۆڵایی</value>
+  </data>
+  <data name="textMarker_color_mauve" xml:space="preserve">
+    <value>مۆری کاڵ</value>
+  </data>
+  <data name="textMarker_color_taupe" xml:space="preserve">
+    <value>خۆڵەمێشیی قاوەیی</value>
+  </data>
+  <data name="msg_drawingFile_openFailed" xml:space="preserve">
+    <value>ئەم فایلانە وەک وێنەی کێشان نەکرانەوە: {0}</value>
+  </data>
 </root>

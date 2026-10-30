@@ -3517,4 +3517,136 @@
   <data name="legend_filter_only" xml:space="preserve">
     <value>فقط</value>
   </data>
+  <data name="textMarker_tooltip_fontFamily" xml:space="preserve">
+    <value>قلم</value>
+  </data>
+  <data name="textMarker_tooltip_fontSize" xml:space="preserve">
+    <value>اندازه قلم</value>
+  </data>
+  <data name="textMarker_tooltip_increaseFontSize" xml:space="preserve">
+    <value>بزرگ‌کردن قلم</value>
+  </data>
+  <data name="textMarker_tooltip_decreaseFontSize" xml:space="preserve">
+    <value>کوچک‌کردن قلم</value>
+  </data>
+  <data name="textMarker_tooltip_textColor" xml:space="preserve">
+    <value>رنگ متن</value>
+  </data>
+  <data name="textMarker_tooltip_background" xml:space="preserve">
+    <value>پس‌زمینه (فقط حالت قاب)</value>
+  </data>
+  <data name="textMarker_tooltip_bold" xml:space="preserve">
+    <value>پررنگ</value>
+  </data>
+  <data name="textMarker_tooltip_italic" xml:space="preserve">
+    <value>کج</value>
+  </data>
+  <data name="textMarker_tooltip_underline" xml:space="preserve">
+    <value>زیرخط</value>
+  </data>
+  <data name="textMarker_tooltip_alignLeft" xml:space="preserve">
+    <value>تراز چپ</value>
+  </data>
+  <data name="textMarker_tooltip_alignCenter" xml:space="preserve">
+    <value>تراز وسط</value>
+  </data>
+  <data name="textMarker_tooltip_alignRight" xml:space="preserve">
+    <value>تراز راست</value>
+  </data>
+  <data name="textMarker_tooltip_leftToRight" xml:space="preserve">
+    <value>چپ به راست (LTR)</value>
+  </data>
+  <data name="textMarker_tooltip_rightToLeft" xml:space="preserve">
+    <value>راست به چپ (RTL)</value>
+  </data>
+  <data name="textMarker_tooltip_frameBox" xml:space="preserve">
+    <value>قاب</value>
+  </data>
+  <data name="textMarker_tooltip_framePlain" xml:space="preserve">
+    <value>متن ساده</value>
+  </data>
+  <data name="textMarker_tooltip_frameHalo" xml:space="preserve">
+    <value>هاله</value>
+  </data>
+  <data name="textMarker_tooltip_erase" xml:space="preserve">
+    <value>پاک کردن متن</value>
+  </data>
+  <data name="textMarker_tooltip_copyText" xml:space="preserve">
+    <value>کپی متن</value>
+  </data>
+  <data name="textMarker_tooltip_delete" xml:space="preserve">
+    <value>حذف برچسب</value>
+  </data>
+  <data name="textMarker_color_themeHighlight" xml:space="preserve">
+    <value>رنگ برجسته پوسته</value>
+  </data>
+  <data name="textMarker_color_black" xml:space="preserve">
+    <value>مشکی</value>
+  </data>
+  <data name="textMarker_color_white" xml:space="preserve">
+    <value>سفید</value>
+  </data>
+  <data name="textMarker_color_limeGreen" xml:space="preserve">
+    <value>سبز روشن</value>
+  </data>
+  <data name="textMarker_color_lime" xml:space="preserve">
+    <value>لیمویی</value>
+  </data>
+  <data name="textMarker_color_green" xml:space="preserve">
+    <value>سبز</value>
+  </data>
+  <data name="textMarker_color_teal" xml:space="preserve">
+    <value>سبزآبی</value>
+  </data>
+  <data name="textMarker_color_cyan" xml:space="preserve">
+    <value>فیروزه‌ای</value>
+  </data>
+  <data name="textMarker_color_blue" xml:space="preserve">
+    <value>آبی</value>
+  </data>
+  <data name="textMarker_color_indigo" xml:space="preserve">
+    <value>نیلی</value>
+  </data>
+  <data name="textMarker_color_violet" xml:space="preserve">
+    <value>بنفش</value>
+  </data>
+  <data name="textMarker_color_pink" xml:space="preserve">
+    <value>صورتی</value>
+  </data>
+  <data name="textMarker_color_magenta" xml:space="preserve">
+    <value>سرخابی</value>
+  </data>
+  <data name="textMarker_color_crimson" xml:space="preserve">
+    <value>زرشکی</value>
+  </data>
+  <data name="textMarker_color_red" xml:space="preserve">
+    <value>قرمز</value>
+  </data>
+  <data name="textMarker_color_orange" xml:space="preserve">
+    <value>نارنجی</value>
+  </data>
+  <data name="textMarker_color_amber" xml:space="preserve">
+    <value>کهربایی</value>
+  </data>
+  <data name="textMarker_color_yellow" xml:space="preserve">
+    <value>زرد</value>
+  </data>
+  <data name="textMarker_color_brown" xml:space="preserve">
+    <value>قهوه‌ای</value>
+  </data>
+  <data name="textMarker_color_olive" xml:space="preserve">
+    <value>زیتونی</value>
+  </data>
+  <data name="textMarker_color_steel" xml:space="preserve">
+    <value>فولادی</value>
+  </data>
+  <data name="textMarker_color_mauve" xml:space="preserve">
+    <value>ارغوانی روشن</value>
+  </data>
+  <data name="textMarker_color_taupe" xml:space="preserve">
+    <value>خاکستری قهوه‌ای</value>
+  </data>
+  <data name="msg_drawingFile_openFailed" xml:space="preserve">
+    <value>این فایل‌ها به‌عنوان ترسیم باز نشدند: {0}</value>
+  </data>
 </root>

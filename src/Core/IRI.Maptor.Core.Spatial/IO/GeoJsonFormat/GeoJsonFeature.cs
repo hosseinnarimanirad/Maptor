@@ -67,6 +67,15 @@ public class GeoJsonFeature
     }
 
     /// <summary>
+    /// Drops the embedded style once it has been read, so it does not stay behind as an
+    /// ordinary attribute of the feature built from these properties.
+    /// </summary>
+    public void RemoveSldAttribute()
+    {
+        this.Properties?.Remove(_defaultSymbologyPropertyName);
+    }
+
+    /// <summary>
     /// Converts this GeoJSON feature to a Feature&lt;Point&gt; with the specified coordinate order and spatial reference system.
     /// </summary>
     /// <param name="isLongitudeFirst">If true, coordinates are interpreted as [longitude, latitude]; otherwise [latitude, longitude].</param>

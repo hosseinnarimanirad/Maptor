@@ -1,7 +1,8 @@
 namespace IRI.Maptor.Presentation.Core.Models.Project;
 
 /// <summary>
-/// One geometry drawing item. Text drawing items are not persisted.
+/// One drawing item: a geometry drawing, or a text label (a point whose SLD holds only a
+/// TextSymbolizer, with the text in its Label attribute).
 /// </summary>
 public class DrawingItemEntry
 {

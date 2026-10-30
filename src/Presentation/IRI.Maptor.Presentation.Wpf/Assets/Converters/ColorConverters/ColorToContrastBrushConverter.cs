@@ -14,14 +14,17 @@ public class ColorToContrastBrushConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        var isLight = value is Color color
-            && (0.299 * color.R + 0.587 * color.G + 0.114 * color.B) / 255.0 > 0.6;
+        var isLight = value is Color color && IsLight(color);
 
         if (targetType == typeof(Color))
             return isLight ? Colors.Black : Colors.White;
 
         return isLight ? Brushes.Black : Brushes.White;
     }
+
+    public static bool IsLight(Color color) => (0.299 * color.R + 0.587 * color.G + 0.114 * color.B) / 255.0 > 0.6;
+
+    public static Color GetContrastColor(Color color) => IsLight(color) ? Colors.Black : Colors.White;
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         => throw new NotSupportedException();

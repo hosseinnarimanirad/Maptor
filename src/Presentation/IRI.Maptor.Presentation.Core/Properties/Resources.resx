@@ -3624,4 +3624,180 @@
     <value>Only</value>
     <comment>layer-type filter row action: show only this type</comment>
   </data>
+  <data name="textMarker_tooltip_fontFamily" xml:space="preserve">
+    <value>Font</value>
+    <comment>text-on-map label popup: tooltip of the font family combo</comment>
+  </data>
+  <data name="textMarker_tooltip_fontSize" xml:space="preserve">
+    <value>Font size</value>
+    <comment>text-on-map label popup: tooltip of the font size combo</comment>
+  </data>
+  <data name="textMarker_tooltip_increaseFontSize" xml:space="preserve">
+    <value>Increase font size</value>
+    <comment>text-on-map label popup: tooltip of the bigger-font button</comment>
+  </data>
+  <data name="textMarker_tooltip_decreaseFontSize" xml:space="preserve">
+    <value>Decrease font size</value>
+    <comment>text-on-map label popup: tooltip of the smaller-font button</comment>
+  </data>
+  <data name="textMarker_tooltip_textColor" xml:space="preserve">
+    <value>Text color</value>
+    <comment>text-on-map label popup: tooltip of the text colour combo</comment>
+  </data>
+  <data name="textMarker_tooltip_background" xml:space="preserve">
+    <value>Background (Box only)</value>
+    <comment>text-on-map label popup: tooltip of the frame fill combo; it only applies in the Box frame</comment>
+  </data>
+  <data name="textMarker_tooltip_bold" xml:space="preserve">
+    <value>Bold</value>
+    <comment>text-on-map label popup: tooltip</comment>
+  </data>
+  <data name="textMarker_tooltip_italic" xml:space="preserve">
+    <value>Italic</value>
+    <comment>text-on-map label popup: tooltip</comment>
+  </data>
+  <data name="textMarker_tooltip_underline" xml:space="preserve">
+    <value>Underline</value>
+    <comment>text-on-map label popup: tooltip</comment>
+  </data>
+  <data name="textMarker_tooltip_alignLeft" xml:space="preserve">
+    <value>Align left</value>
+    <comment>text-on-map label popup: tooltip</comment>
+  </data>
+  <data name="textMarker_tooltip_alignCenter" xml:space="preserve">
+    <value>Align center</value>
+    <comment>text-on-map label popup: tooltip</comment>
+  </data>
+  <data name="textMarker_tooltip_alignRight" xml:space="preserve">
+    <value>Align right</value>
+    <comment>text-on-map label popup: tooltip</comment>
+  </data>
+  <data name="textMarker_tooltip_leftToRight" xml:space="preserve">
+    <value>Left to right (LTR)</value>
+    <comment>text-on-map label popup: tooltip of the text direction button</comment>
+  </data>
+  <data name="textMarker_tooltip_rightToLeft" xml:space="preserve">
+    <value>Right to left (RTL)</value>
+    <comment>text-on-map label popup: tooltip of the text direction button</comment>
+  </data>
+  <data name="textMarker_tooltip_frameBox" xml:space="preserve">
+    <value>Box</value>
+    <comment>text-on-map label popup: tooltip of the frame button: coloured frame with a white text field</comment>
+  </data>
+  <data name="textMarker_tooltip_framePlain" xml:space="preserve">
+    <value>Plain text</value>
+    <comment>text-on-map label popup: tooltip of the frame button: only the text, no frame</comment>
+  </data>
+  <data name="textMarker_tooltip_frameHalo" xml:space="preserve">
+    <value>Halo</value>
+    <comment>text-on-map label popup: tooltip of the frame button: only the text, with a contrasting outline</comment>
+  </data>
+  <data name="textMarker_tooltip_erase" xml:space="preserve">
+    <value>Erase text</value>
+    <comment>text-on-map label popup: tooltip of the button that clears the label text</comment>
+  </data>
+  <data name="textMarker_tooltip_copyText" xml:space="preserve">
+    <value>Copy text</value>
+    <comment>text-on-map label popup: tooltip of the button that copies the label text</comment>
+  </data>
+  <data name="textMarker_tooltip_delete" xml:space="preserve">
+    <value>Delete label</value>
+    <comment>text-on-map label popup: tooltip of the button that removes the label from the map</comment>
+  </data>
+  <data name="textMarker_color_themeHighlight" xml:space="preserve">
+    <value>Theme highlight</value>
+    <comment>text-on-map label popup: colour list entry: the current theme highlight colour</comment>
+  </data>
+  <data name="textMarker_color_black" xml:space="preserve">
+    <value>Black</value>
+    <comment>text-on-map label popup: colour name</comment>
+  </data>
+  <data name="textMarker_color_white" xml:space="preserve">
+    <value>White</value>
+    <comment>text-on-map label popup: colour name</comment>
+  </data>
+  <data name="textMarker_color_limeGreen" xml:space="preserve">
+    <value>Lime Green</value>
+    <comment>text-on-map label popup: colour name</comment>
+  </data>
+  <data name="textMarker_color_lime" xml:space="preserve">
+    <value>Lime</value>
+    <comment>text-on-map label popup: colour name</comment>
+  </data>
+  <data name="textMarker_color_green" xml:space="preserve">
+    <value>Green</value>
+    <comment>text-on-map label popup: colour name</comment>
+  </data>
+  <data name="textMarker_color_teal" xml:space="preserve">
+    <value>Teal</value>
+    <comment>text-on-map label popup: colour name</comment>
+  </data>
+  <data name="textMarker_color_cyan" xml:space="preserve">
+    <value>Cyan</value>
+    <comment>text-on-map label popup: colour name</comment>
+  </data>
+  <data name="textMarker_color_blue" xml:space="preserve">
+    <value>Blue</value>
+    <comment>text-on-map label popup: colour name</comment>
+  </data>
+  <data name="textMarker_color_indigo" xml:space="preserve">
+    <value>Indigo</value>
+    <comment>text-on-map label popup: colour name</comment>
+  </data>
+  <data name="textMarker_color_violet" xml:space="preserve">
+    <value>Violet</value>
+    <comment>text-on-map label popup: colour name</comment>
+  </data>
+  <data name="textMarker_color_pink" xml:space="preserve">
+    <value>Pink</value>
+    <comment>text-on-map label popup: colour name</comment>
+  </data>
+  <data name="textMarker_color_magenta" xml:space="preserve">
+    <value>Magenta</value>
+    <comment>text-on-map label popup: colour name</comment>
+  </data>
+  <data name="textMarker_color_crimson" xml:space="preserve">
+    <value>Crimson</value>
+    <comment>text-on-map label popup: colour name</comment>
+  </data>
+  <data name="textMarker_color_red" xml:space="preserve">
+    <value>Red</value>
+    <comment>text-on-map label popup: colour name</comment>
+  </data>
+  <data name="textMarker_color_orange" xml:space="preserve">
+    <value>Orange</value>
+    <comment>text-on-map label popup: colour name</comment>
+  </data>
+  <data name="textMarker_color_amber" xml:space="preserve">
+    <value>Amber</value>
+    <comment>text-on-map label popup: colour name</comment>
+  </data>
+  <data name="textMarker_color_yellow" xml:space="preserve">
+    <value>Yellow</value>
+    <comment>text-on-map label popup: colour name</comment>
+  </data>
+  <data name="textMarker_color_brown" xml:space="preserve">
+    <value>Brown</value>
+    <comment>text-on-map label popup: colour name</comment>
+  </data>
+  <data name="textMarker_color_olive" xml:space="preserve">
+    <value>Olive</value>
+    <comment>text-on-map label popup: colour name</comment>
+  </data>
+  <data name="textMarker_color_steel" xml:space="preserve">
+    <value>Steel</value>
+    <comment>text-on-map label popup: colour name</comment>
+  </data>
+  <data name="textMarker_color_mauve" xml:space="preserve">
+    <value>Mauve</value>
+    <comment>text-on-map label popup: colour name</comment>
+  </data>
+  <data name="textMarker_color_taupe" xml:space="preserve">
+    <value>Taupe</value>
+    <comment>text-on-map label popup: colour name</comment>
+  </data>
+  <data name="msg_drawingFile_openFailed" xml:space="preserve">
+    <value>These files could not be opened as drawings: {0}</value>
+    <comment>message after Open drawing file; {0} = comma-separated file names that are not Maptor drawings</comment>
+  </data>
 </root>

@@ -52,6 +52,11 @@ public class MapTextStyle
     public string TextColor { get; set; } = "#FF000000";
 
     /// <summary>
+    /// Halo outline colour; null means automatic (contrasting with <see cref="TextColor"/>).
+    /// </summary>
+    public string? HaloColor { get; set; }
+
+    /// <summary>
     /// Box frame fill; null means the theme highlight brush.
     /// </summary>
     public string? BackgroundColor { get; set; }

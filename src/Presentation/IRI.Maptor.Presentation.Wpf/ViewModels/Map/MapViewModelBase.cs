@@ -43,6 +43,7 @@ using IRI.Maptor.Presentation.Wpf.Models.Legend;
 using IRI.Maptor.Presentation.Wpf.Models.Print;
 using IRI.Maptor.Presentation.Wpf.ViewModels.Map;
 using IRI.Maptor.Presentation.Wpf.Controls.MapMarkers;
+using IRI.Maptor.Presentation.Core.Localization;
 using IRI.Maptor.Presentation.Wpf.Cartography;
 using IRI.Maptor.Presentation.Wpf.Cartography.Symbologies;
 using IRI.Maptor.Infrastructure.Sqlite.GeoPackage;
@@ -2415,6 +2416,8 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         DrawingItems.Insert(0, item);
 
+        PrepareDrawingItem(item);
+
         //this.AddLayer(item.AssociatedLayer);
         AddLayer(item);
 
@@ -2432,8 +2435,33 @@ public abstract class MapViewModelBase : ViewModelBase
             DrawingItems.Insert(index, item);
         }
 
+        PrepareDrawingItem(item);
+
         //this.AddLayer(item.AssociatedLayer);
         AddLayer(item);
+    }
+
+    // hooks a drawing up to this map whatever path added it (new, project, drawing file); must run
+    // before AddLayer, whose TrySetCommands gives a layer without commands the vector-layer ones
+    private void PrepareDrawingItem(DrawingItemLayer item)
+    {
+        if (item.IsTextLayer)
+        {
+            // the label's own Delete button and its empty-label removal go through RequestDelete
+            foreach (var locateable in item.SpecialPointLayer?.Items ?? [])
+            {
+                if (locateable.Element?.DataContext is TextboxMarkerViewModel viewModel)
+                    viewModel.RequestDelete = () => RemoveDrawingItem(item);
+            }
+
+            return;
+        }
+
+        // a geometry drawing from DrawingItemLayer.Deserialize has not been through
+        // CreateDrawingItemLayer: give it the same drawing commands, highlight and visibility
+        // handling (RequestHighlightGeometry is set only by TrySetCommandsForDrawingItemLayer)
+        if (item.RequestHighlightGeometry is null)
+            TrySetCommandsForDrawingItemLayer(item);
     }
 
     public void RemoveDrawingItem(DrawingItemLayer item)
@@ -2563,24 +2591,45 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public async Task LoadDrawingItemFile(object owner)
     {
-        var fileNames = await DialogService.ShowOpenFilesDialogAsync($"*.{maptorDrawingFileExtension}|*.{maptorDrawingFileExtension}", owner);
+        // .geojson/.json: a single drawing exported from the legend (same content as .mtd)
+        var fileNames = await DialogService.ShowOpenFilesDialogAsync($"*.{maptorDrawingFileExtension};*.geojson;*.json|*.{maptorDrawingFileExtension};*.geojson;*.json", owner);
 
         if (fileNames.IsNullOrEmpty())
             return;
 
+        List<string> failed = [];
+
         foreach (var fileName in fileNames)
         {
-            // deserialize the geojsonfeature
-            var geoJsonFeatureString = System.IO.File.ReadAllText(fileName);
+            try
+            {
+                // deserialize the geojsonfeature
+                var geoJsonFeatureString = System.IO.File.ReadAllText(fileName);
 
-            var layerName = System.IO.Path.GetFileNameWithoutExtension(fileName);
+                var layerName = System.IO.Path.GetFileNameWithoutExtension(fileName);
 
-            var layer = DrawingItemLayer.Deserialize(layerName, geoJsonFeatureString);
+                var layer = DrawingItemLayer.Deserialize(layerName, geoJsonFeatureString);
 
-            AddDrawingItem(layer);
+                if (layer is null)
+                {
+                    failed.Add(Path.GetFileName(fileName));
+                    continue;
+                }
+
+                AddDrawingItem(layer);
+            }
+            catch (Exception)
+            {
+                // not a Maptor drawing (e.g. a plain GeoJSON file without the embedded style)
+                failed.Add(Path.GetFileName(fileName));
+            }
         }
+
+        if (failed.Count > 0)
+            await DialogService.ShowMessageAsync(string.Format(LocalizationManager.Instance["msg_drawingFile_openFailed"], string.Join(", ", failed)), null, owner);
     }
 
+    // writes every drawing, geometry and text, as its own .mtd file
     public async Task SaveDrawingItemFile(object owner)
     {
         // mtd: maptor drawings
@@ -2589,44 +2638,39 @@ public abstract class MapViewModelBase : ViewModelBase
         if (string.IsNullOrWhiteSpace(folderName))
             return;
 
-        List<GeoJsonFeatureSet> geoJsonFeatures = [];
-
         foreach (var item in DrawingItems)
         {
-            // todo: add support for texts, 
-            if (item.IsTextLayer)
+            // GeoJSON feature + embedded SLD; empty for a drawing with nothing to save (an empty label)
+            var serialized = item.Serialize();
+
+            if (string.IsNullOrEmpty(serialized))
                 continue;
-
-            var sld = item.GetSld();
-
-            if (item.Feature is null)
-                continue;
-
-            var geoJson = item.Feature.AsGeoJsonFeature();
-
-            geoJson.AddSldAttribute(XmlHelper.Parse(sld));
 
             var fileName = GetUniqueFileName(folderName, item.LayerName);
 
-            System.IO.File.WriteAllText(fileName, JsonHelper.Serialize(geoJson));
+            System.IO.File.WriteAllText(fileName, serialized);
         }
     }
 
+    // drawings often share a name (every label is "Text"): the next free "<name> (n).mtd"
     private string GetUniqueFileName(string folderPath, string desiredFileName)
     {
-        string extension = Path.GetExtension(desiredFileName);
+        // a layer name can hold characters a file name cannot
+        var baseName = PathHelper.CleanFileName(desiredFileName).Trim();
 
-        string uniqueFileName = desiredFileName;
+        if (baseName.Length == 0)
+            baseName = "Drawing";
+
+        var fileName = $"{baseName}.{maptorDrawingFileExtension}";
 
         int counter = 1;
 
-        while (File.Exists(Path.Combine(folderPath, uniqueFileName)))
+        while (File.Exists(Path.Combine(folderPath, fileName)))
         {
-            uniqueFileName = $"{desiredFileName} ({counter++}){extension}";
+            fileName = $"{baseName} ({counter++}).{maptorDrawingFileExtension}";
         }
 
-        // mtd: maptor drawing
-        return Path.Combine(folderPath, $"{uniqueFileName}.mtd");
+        return Path.Combine(folderPath, fileName);
     }
 
     #endregion
@@ -3950,13 +3994,9 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         TextboxMarkerViewModel viewModel = new TextboxMarkerViewModel() { LabelValue = string.Empty };
 
-        var drawingItemLayer = DrawingItemLayer.CreateTextLayer("Text",
-        [
-            new Locateable(geodeticPoint, AnchorFunctionHandlers.BottomCenter) { Element = new TextboxMarker() { DataContext = viewModel, FocusTextBoxOnLoad = true } }
-        ]);
+        var drawingItemLayer = DrawingItemLayer.CreateTextLayer("Text", viewModel, MapProjects.GeodeticWgs84ToWebMercator(geodeticPoint), focusTextBoxOnLoad: true);
 
-        viewModel.RequestDelete = () => RemoveDrawingItem(drawingItemLayer);
-
+        // AddDrawingItem wires the label's Delete (also for labels loaded from a file)
         AddDrawingItem(drawingItemLayer);
     }
 
