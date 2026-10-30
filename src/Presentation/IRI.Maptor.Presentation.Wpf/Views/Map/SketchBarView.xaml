@@ -17,7 +17,7 @@
 
             <Style  TargetType="{x:Type ToggleButton}" x:Key="simpleToggle">
                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.OnAccent.Text}"/>
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
                 <Setter Property="Margin" Value="4,2"/>
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
                 <Setter Property="Cursor" Value="Hand"/>
@@ -63,7 +63,7 @@
             <Border  Background="{DynamicResource MahApps.Brushes.Accent}" 
                      CornerRadius="13 13 0 0"
                      BorderThickness="0">
-                <TextBlock Text="{Binding SketchBar.Title}" HorizontalAlignment="Center" Foreground="{DynamicResource IRI.Maptor.Brushes.OnAccent.Text}"/>
+                <TextBlock Text="{Binding SketchBar.Title}" HorizontalAlignment="Center" Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
             </Border>
             
             
@@ -341,7 +341,7 @@
                                         IsChecked="{Binding SketchBar.IsGeodeticWgs84EditingMode, Mode=TwoWay}">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
                                     <iconPacks:PackIconMaterial Kind="Earth" Margin="0 0 4 0" VerticalAlignment="Center"/>
-                                    <TextBlock Text="WGS84" Margin="2" Foreground="{DynamicResource IRI.Maptor.Brushes.OnAccent.Text}"/>
+                                    <TextBlock Text="WGS84" Margin="2" Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
                                 </StackPanel>
                             </RadioButton>
                             <RadioButton GroupName="A" Style="{StaticResource simpleToggle}"
@@ -349,7 +349,7 @@
                                         IsChecked="{Binding SketchBar.IsUTMEditingMode, Mode=TwoWay}">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
                                     <iconPacks:PackIconMaterial Kind="EarthBox" Margin="0 0 4 0" VerticalAlignment="Center"/>
-                                    <TextBlock Text="UTM" Margin="2" Foreground="{DynamicResource IRI.Maptor.Brushes.OnAccent.Text}"/>
+                                    <TextBlock Text="UTM" Margin="2" Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
                                 </StackPanel>
                             </RadioButton>
                             <TextBlock DockPanel.Dock="Left" Margin="4"
