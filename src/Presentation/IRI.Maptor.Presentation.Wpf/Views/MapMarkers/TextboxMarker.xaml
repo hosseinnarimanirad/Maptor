@@ -27,6 +27,21 @@
             <converters:ColorToContrastBrushConverter x:Key="colorToContrastBrushConverter"/>
             <converters:LocalizationKeyConverter x:Key="localizationKeyConverter"/>
             <converters:HaloColorConverter x:Key="haloColorConverter"/>
+            <!-- a width handle: a small pill on the label's side edge -->
+            <Style x:Key="textMarkerWidthThumb" TargetType="Thumb">
+                <Setter Property="Width" Value="8"/>
+                <Setter Property="Height" Value="20"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Focusable" Value="False"/>
+                <Setter Property="Cursor" Value="SizeWE"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Thumb">
+                            <Border CornerRadius="3" Background="{DynamicResource IRI.Maptor.Brushes.OnMap.HandleFill}" BorderBrush="{DynamicResource MahApps.Brushes.Highlight}" BorderThickness="1.5"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </ResourceDictionary>
     </maptor:MapMarker.Resources>
     <maptor:MapMarker.RenderTransform>
@@ -67,128 +82,59 @@
                     </Style.Triggers>
                 </Style>
             </Border.Style>
-            <StackPanel>
-                <!-- drag handle; without a frame it shows only while the label is hovered or being
-                     edited (Opacity, not Visibility, so the label never changes size and the hidden
-                     handle can still be hovered and grabbed); left out of printed labels -->
-                <Border x:Name="dragHandle" Height="12" Background="Transparent" Cursor="ScrollAll" >
-                    <Border.Style>
-                        <Style TargetType="Border">
-                            <Style.Triggers>
-                                <MultiDataTrigger>
-                                    <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding Formatting_Frame, Converter={StaticResource enumToBoolConverter}, ConverterParameter=Box}" Value="False"/>
-                                        <Condition Binding="{Binding IsMouseOver, ElementName=root}" Value="False"/>
-                                        <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=root}" Value="False"/>
-                                    </MultiDataTrigger.Conditions>
-                                    <Setter Property="Opacity" Value="0"/>
-                                </MultiDataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Border.Style>
-                    <Border HorizontalAlignment="Center" CornerRadius="6" Padding="10,0">
+            <Grid>
+                <StackPanel>
+                    <!-- drag handle; without a frame it shows only while the label is hovered or being
+                         edited (Opacity, not Visibility, so the label never changes size and the hidden
+                         handle can still be hovered and grabbed); left out of printed labels -->
+                    <Border x:Name="dragHandle" Height="12" Background="Transparent" Cursor="ScrollAll" >
                         <Border.Style>
                             <Style TargetType="Border">
-                                <Setter Property="Background" Value="Transparent"/>
                                 <Style.Triggers>
-                                    <!-- no frame behind it: give the handle its own pill so it shows on any map -->
-                                    <DataTrigger Binding="{Binding Formatting_Frame, Converter={StaticResource enumToBoolConverter}, ConverterParameter=Box}" Value="False">
-                                        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                                    </DataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Formatting_Frame, Converter={StaticResource enumToBoolConverter}, ConverterParameter=Box}" Value="False"/>
+                                            <Condition Binding="{Binding IsMouseOver, ElementName=root}" Value="False"/>
+                                            <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=root}" Value="False"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Opacity" Value="0"/>
+                                    </MultiDataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </Border.Style>
-                        <iconPacks:PackIconMaterial Kind="DotsHorizontal" HorizontalAlignment="Center">
-                            <iconPacks:PackIconMaterial.Style>
-                                <Style TargetType="iconPacks:PackIconMaterial">
-                                    <!-- contrasts with the Box frame colour; theme highlight (null) gets white -->
-                                    <Setter Property="Foreground" Value="{Binding SelectedBackgroundChoice.ColorValue, Converter={StaticResource colorToContrastBrushConverter}}"/>
+                        <Border HorizontalAlignment="Center" CornerRadius="6" Padding="10,0">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Background" Value="Transparent"/>
                                     <Style.Triggers>
+                                        <!-- no frame behind it: give the handle its own pill so it shows on any map -->
                                         <DataTrigger Binding="{Binding Formatting_Frame, Converter={StaticResource enumToBoolConverter}, ConverterParameter=Box}" Value="False">
-                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </iconPacks:PackIconMaterial.Style>
-                        </iconPacks:PackIconMaterial>
+                            </Border.Style>
+                            <iconPacks:PackIconMaterial Kind="DotsHorizontal" HorizontalAlignment="Center">
+                                <iconPacks:PackIconMaterial.Style>
+                                    <Style TargetType="iconPacks:PackIconMaterial">
+                                        <!-- contrasts with the Box frame colour; theme highlight (null) gets white -->
+                                        <Setter Property="Foreground" Value="{Binding SelectedBackgroundChoice.ColorValue, Converter={StaticResource colorToContrastBrushConverter}}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Formatting_Frame, Converter={StaticResource enumToBoolConverter}, ConverterParameter=Box}" Value="False">
+                                                <Setter Property="Foreground" Value="White"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </iconPacks:PackIconMaterial.Style>
+                            </iconPacks:PackIconMaterial>
+                        </Border>
                     </Border>
-                </Border>
-                <!-- Halo second pass: a glow around the TextBox's own glow (one Effect per element)
-                     makes the outline dense enough to read; no background, so it never takes clicks -->
-                <Border x:Name="haloHost">
-                    <Border.Style>
-                        <Style TargetType="Border">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Formatting_Frame}" Value="Halo">
-                                    <Setter Property="Effect">
-                                        <Setter.Value>
-                                            <DropShadowEffect ShadowDepth="0" BlurRadius="3" Opacity="1" RenderingBias="Quality">
-                                                <DropShadowEffect.Color>
-                                                    <!-- a stored halo colour, else the contrast of the text colour -->
-                                                    <MultiBinding Converter="{StaticResource haloColorConverter}">
-                                                        <Binding Path="Formatting_HaloColor"/>
-                                                        <Binding Path="Formatting_TextColor"/>
-                                                    </MultiBinding>
-                                                </DropShadowEffect.Color>
-                                            </DropShadowEffect>
-                                        </Setter.Value>
-                                    </Setter>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Border.Style>
-                    <!-- FlowDirection is TwoWay: the TextBox's own Ctrl+Shift shortcut calls SetValue on it,
-                         which would replace a OneWay binding and leave the box out of sync with the toolbar -->
-                    <TextBox x:Name="labelBox"
-                            TextAlignment="{Binding Formatting_Alignment}" Height="Auto"
-                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                            Text="{Binding LabelValue, UpdateSourceTrigger=PropertyChanged}"
-                            Foreground="{Binding Formatting_TextColor, Converter={StaticResource colorToBrushConverter}}"
-                            CaretBrush="{Binding Foreground, RelativeSource={RelativeSource Self}}"
-                            TextWrapping="Wrap"
-                            AcceptsReturn="True"
-                            FlowDirection="{Binding Formatting_FlowDirection, Mode=TwoWay}"
-                            FontSize="{Binding Formatting_FontSize}"
-                            FontFamily="{Binding Formatting_FontFamily}"
-                            VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
-                            mahApp:TextBoxHelper.SelectAllOnFocus="True" Focusable="True"
-                            PreviewKeyDown="OnLabelBoxPreviewKeyDown" >
-                        <TextBox.Style>
-                            <Style TargetType="TextBox" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox}">
-                                <Setter Property="Margin" Value="2,4"/>
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="TextBox">
-                                            <Border x:Name="Border"
-                                                    Background="{TemplateBinding Background}"
-                                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                                    CornerRadius="5">
-                                                <ScrollViewer x:Name="PART_ContentHost" />
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
+                    <!-- Halo second pass: a glow around the TextBox's own glow (one Effect per element)
+                         makes the outline dense enough to read; no background, so it never takes clicks -->
+                    <Border x:Name="haloHost">
+                        <Border.Style>
+                            <Style TargetType="Border">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Formatting_IsBold}" Value="True">
-                                        <Setter Property="FontWeight" Value="Bold"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Formatting_IsItalic}" Value="True">
-                                        <Setter Property="FontStyle" Value="Italic"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Formatting_IsUnderline}" Value="True">
-                                        <Setter Property="TextDecorations" Value="Underline"/>
-                                    </DataTrigger>
-                                    <!-- no frame: no white field, border or rim, and no MahApps minimum height -->
-                                    <DataTrigger Binding="{Binding Formatting_Frame, Converter={StaticResource enumToBoolConverter}, ConverterParameter=Box}" Value="False">
-                                        <Setter Property="Background" Value="Transparent"/>
-                                        <Setter Property="BorderThickness" Value="0"/>
-                                        <Setter Property="Margin" Value="0"/>
-                                        <Setter Property="MinHeight" Value="0"/>
-                                    </DataTrigger>
-                                    <!-- Halo: a zero-depth shadow in the colour contrasting with the text works
-                                         as an outline, so the label reads on any map; only here, since an
-                                         effect costs a render pass and turns off ClearType -->
                                     <DataTrigger Binding="{Binding Formatting_Frame}" Value="Halo">
                                         <Setter Property="Effect">
                                             <Setter.Value>
@@ -206,10 +152,126 @@
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </TextBox.Style>
-                    </TextBox>
-                </Border>
-            </StackPanel>
+                        </Border.Style>
+                        <!-- FlowDirection is TwoWay: the TextBox's own Ctrl+Shift shortcut calls SetValue on it,
+                             which would replace a OneWay binding and leave the box out of sync with the toolbar -->
+                        <TextBox x:Name="labelBox"
+                                TextAlignment="{Binding Formatting_Alignment}" Height="Auto"
+                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                Text="{Binding LabelValue, UpdateSourceTrigger=PropertyChanged}"
+                                Foreground="{Binding Formatting_TextColor, Converter={StaticResource colorToBrushConverter}}"
+                                CaretBrush="{Binding Foreground, RelativeSource={RelativeSource Self}}"
+                                TextWrapping="Wrap"
+                                AcceptsReturn="True"
+                                FlowDirection="{Binding Formatting_FlowDirection, Mode=TwoWay}"
+                                FontSize="{Binding Formatting_FontSize}"
+                                FontFamily="{Binding Formatting_FontFamily}"
+                                VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                                mahApp:TextBoxHelper.SelectAllOnFocus="True" Focusable="True"
+                                PreviewKeyDown="OnLabelBoxPreviewKeyDown" >
+                            <TextBox.Style>
+                                <Style TargetType="TextBox" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox}">
+                                    <Setter Property="Margin" Value="2,4"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="TextBox">
+                                                <Border x:Name="Border"
+                                                        Background="{TemplateBinding Background}"
+                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                        CornerRadius="5">
+                                                    <ScrollViewer x:Name="PART_ContentHost" />
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Formatting_IsBold}" Value="True">
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Formatting_IsItalic}" Value="True">
+                                            <Setter Property="FontStyle" Value="Italic"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Formatting_IsUnderline}" Value="True">
+                                            <Setter Property="TextDecorations" Value="Underline"/>
+                                        </DataTrigger>
+                                        <!-- no frame: no white field, border or rim, and no MahApps minimum height -->
+                                        <DataTrigger Binding="{Binding Formatting_Frame, Converter={StaticResource enumToBoolConverter}, ConverterParameter=Box}" Value="False">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="Margin" Value="0"/>
+                                            <Setter Property="MinHeight" Value="0"/>
+                                        </DataTrigger>
+                                        <!-- Halo: a zero-depth shadow in the colour contrasting with the text works
+                                             as an outline, so the label reads on any map; only here, since an
+                                             effect costs a render pass and turns off ClearType -->
+                                        <DataTrigger Binding="{Binding Formatting_Frame}" Value="Halo">
+                                            <Setter Property="Effect">
+                                                <Setter.Value>
+                                                    <DropShadowEffect ShadowDepth="0" BlurRadius="3" Opacity="1" RenderingBias="Quality">
+                                                        <DropShadowEffect.Color>
+                                                            <!-- a stored halo colour, else the contrast of the text colour -->
+                                                            <MultiBinding Converter="{StaticResource haloColorConverter}">
+                                                                <Binding Path="Formatting_HaloColor"/>
+                                                                <Binding Path="Formatting_TextColor"/>
+                                                            </MultiBinding>
+                                                        </DropShadowEffect.Color>
+                                                    </DropShadowEffect>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                    </Border>
+                </StackPanel>
+                <!-- resize and rotate handles over the text area (below the drag band); inside the rotated
+                     border, so they turn with the label. Shown while the format popup is open (hover, map
+                     action Pan/DrawText) or the text is being edited, and while one is dragged; never
+                     printed (hidden in the copy PdfMapTextHelper lays out). Not focusable: grabbing one
+                     must not take focus from the text -->
+                <Grid x:Name="editHandles" Margin="0,12,0,0">
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsOpen, ElementName=formatPopup}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsKeyboardFocusWithin, ElementName=root}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsDragging, ElementName=leftWidthThumb}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsDragging, ElementName=rightWidthThumb}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsDragging, ElementName=rotateThumb}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <Thumb x:Name="leftWidthThumb" Style="{StaticResource textMarkerWidthThumb}" HorizontalAlignment="Left" Margin="-4,0,0,0"
+                           DragDelta="OnWidthThumbDragDelta" MouseDoubleClick="OnWidthThumbDoubleClick"/>
+                    <Thumb x:Name="rightWidthThumb" Style="{StaticResource textMarkerWidthThumb}" HorizontalAlignment="Right" Margin="0,0,-4,0"
+                           DragDelta="OnWidthThumbDragDelta" MouseDoubleClick="OnWidthThumbDoubleClick"/>
+                    <Thumb x:Name="rotateThumb" Width="18" Height="18" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-32,-16,0"
+                           Focusable="False" Cursor="Hand"
+                           DragStarted="OnRotateThumbDragStarted" DragDelta="OnRotateThumbDragDelta" MouseDoubleClick="OnRotateThumbDoubleClick">
+                        <Thumb.Template>
+                            <ControlTemplate TargetType="Thumb">
+                                <Border CornerRadius="9" Background="{DynamicResource IRI.Maptor.Brushes.OnMap.HandleFill}" BorderBrush="{DynamicResource MahApps.Brushes.Highlight}" BorderThickness="1.5">
+                                    <iconPacks:PackIconMaterial Kind="RotateRight" Width="10" Height="10" Foreground="{DynamicResource MahApps.Brushes.Highlight}"
+                                                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Thumb.Template>
+                    </Thumb>
+                </Grid>
+            </Grid>
         </Border>
         <Popup x:Name="formatPopup" StaysOpen="True" Placement="Top" 
                PlacementTarget="{Binding ElementName=root}" HorizontalOffset="0" VerticalOffset="-5"

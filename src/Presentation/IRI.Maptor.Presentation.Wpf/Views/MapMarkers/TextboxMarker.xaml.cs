@@ -1,6 +1,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -32,6 +33,12 @@ public partial class TextboxMarker : MapMarker
         _popupCloseTimer.Tick += (_, _) =>
         {
             _popupCloseTimer.Stop();
+
+            // a handle being dragged keeps the label "hovered"; releasing it outside the label
+            // raises MouseLeave again, which restarts the timer
+            if (IsDraggingHandle)
+                return;
+
             formatPopup.IsOpen = false;
         };
 
@@ -51,6 +58,9 @@ public partial class TextboxMarker : MapMarker
             transformGroup.Changed += (_, _) => UpdatePopupPlacement();
         SizeChanged += (_, _) => UpdatePopupPlacement();
         contentRotation.Changed += (_, _) => UpdatePopupPlacement();
+        // the handles appear with the popup and the rotate handle reaches above the label; its
+        // size goes 0 -> 18 once it is laid out (IsVisibleChanged comes before that)
+        rotateThumb.SizeChanged += (_, _) => UpdatePopupPlacement();
 
         // a StaysOpen popup is a top-most window of its own: close it when the marker goes
         // away (deleted, or taken off the canvas by a refresh), is hidden, or the app is left
@@ -228,9 +238,17 @@ public partial class TextboxMarker : MapMarker
 
         var contentBounds = mainBorder.TransformToAncestor(this).TransformBounds(new Rect(mainBorder.RenderSize));
 
-        formatPopup.PlacementRectangle = contentBounds;
+        // it also clears the rotate handle, which reaches above the label, or it would cover it;
+        // it stays centred on the text
+        var placementBounds = contentBounds;
 
-        var offset = (contentBounds.Width - popupChild.ActualWidth) / 2;
+        if (rotateThumb.IsVisible)
+            placementBounds.Union(rotateThumb.TransformToAncestor(this).TransformBounds(new Rect(rotateThumb.RenderSize)));
+
+        formatPopup.PlacementRectangle = placementBounds;
+
+        // the offset counts from the placement rectangle's left edge
+        var offset = contentBounds.Left - placementBounds.Left + (contentBounds.Width - popupChild.ActualWidth) / 2;
 
         if (formatPopup.HorizontalOffset == offset)
             formatPopup.HorizontalOffset = offset + 0.01;
@@ -300,6 +318,88 @@ public partial class TextboxMarker : MapMarker
         _popupCloseTimer.Stop();
         _popupCloseTimer.Start();
     }
+
+    #region Resize and rotate handles
+
+    // Shift while rotating snaps to steps of this many degrees
+    private const double RotationSnapDegrees = 15;
+
+    private double _rotateStartMouseAngle;
+    private double _rotateStartRotation;
+
+    private bool IsDraggingHandle => leftWidthThumb.IsDragging || rightWidthThumb.IsDragging || rotateThumb.IsDragging;
+
+    // the width changes on both sides, so the label stays centred on its anchor; a thumb's own
+    // coordinates turn with the label, so the drag follows its rotated edge. A drag starting from
+    // the automatic width starts from the width shown
+    private void OnWidthThumbDragDelta(object sender, DragDeltaEventArgs e)
+    {
+        if (DataContext is not TextboxMarkerViewModel viewModel)
+            return;
+
+        var direction = ReferenceEquals(sender, rightWidthThumb) ? 1 : -1;
+
+        var width = (viewModel.Formatting_TextWidth ?? mainBorder.ActualWidth) + 2 * direction * e.HorizontalChange;
+
+        // the Box frame's own minimum is larger than the view model's
+        viewModel.Formatting_TextWidth = Math.Max(width, mainBorder.MinWidth);
+    }
+
+    // double-click: back to the automatic width (grow with the text)
+    private void OnWidthThumbDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+
+        if (DataContext is TextboxMarkerViewModel viewModel)
+            viewModel.Formatting_TextWidth = null;
+    }
+
+    private void OnRotateThumbDragStarted(object sender, DragStartedEventArgs e)
+        => BeginRotation(Mouse.GetPosition(this));
+
+    private void OnRotateThumbDragDelta(object sender, DragDeltaEventArgs e)
+        => RotateTo(Mouse.GetPosition(this), Keyboard.Modifiers.HasFlag(ModifierKeys.Shift));
+
+    // mouse positions are in marker coordinates, which stay upright (the rotation is inside)
+    private void BeginRotation(Point mouse)
+    {
+        if (DataContext is not TextboxMarkerViewModel viewModel)
+            return;
+
+        _rotateStartMouseAngle = GetAngleAroundAnchor(mouse);
+        _rotateStartRotation = viewModel.Formatting_Rotation;
+    }
+
+    // turns by the angle the mouse moved around the anchor, so grabbing the handle does not make
+    // the label jump; the view model keeps the result in (-180, 180]
+    private void RotateTo(Point mouse, bool snap)
+    {
+        if (DataContext is not TextboxMarkerViewModel viewModel)
+            return;
+
+        var rotation = _rotateStartRotation + GetAngleAroundAnchor(mouse) - _rotateStartMouseAngle;
+
+        if (snap)
+            rotation = Math.Round(rotation / RotationSnapDegrees) * RotationSnapDegrees;
+
+        viewModel.Formatting_Rotation = rotation;
+    }
+
+    // double-click: upright again
+    private void OnRotateThumbDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+
+        if (DataContext is TextboxMarkerViewModel viewModel)
+            viewModel.Formatting_Rotation = 0;
+    }
+
+    // the direction of a point from the anchor (the label's bottom-centre, the rotation pivot), in
+    // degrees clockwise from straight up
+    private double GetAngleAroundAnchor(Point position)
+        => Math.Atan2(position.X - ActualWidth / 2, ActualHeight - position.Y) * 180 / Math.PI;
+
+    #endregion
 
     private void root_MouseUp(object sender, MouseButtonEventArgs e)
     {
