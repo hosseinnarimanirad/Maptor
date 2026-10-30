@@ -13,12 +13,12 @@ namespace IRI.Maptor.Presentation.Wpf.ViewModels.Map;
 
 public class TextboxMarkerViewModel : Notifier
 {
-    public static readonly double[] FontSizeOptions = { 9, 10, 11, 12, 14, 16, 18, 20 };
+    // ascending; IncreaseFontSize/DecreaseFontSize step through it
+    public static readonly double[] FontSizeOptions = { 9, 10, 11, 12, 14, 16, 18, 20, 24, 28, 32, 36, 48, 72 };
 
     public static readonly string[] FontFamilyOptions;
 
     public const string IranSansFontName = "IRANSans";
-    private const string TimesNewRoman = "TimesNewRoman";
 
     private double _formatting_FontSize = 14.0;
     public double Formatting_FontSize
@@ -108,6 +108,9 @@ public class TextboxMarkerViewModel : Notifier
     }
 
 
+    // the TextBox's own TextAlignment, relative to its flow direction: under RightToLeft
+    // WPF mirrors it, so Left shows on the right edge. The toolbar buttons bind to the
+    // on-screen Formatting_*Aligned properties below instead.
     private System.Windows.TextAlignment _formatting_Alignment;
     public System.Windows.TextAlignment Formatting_Alignment
     {
@@ -116,6 +119,7 @@ public class TextboxMarkerViewModel : Notifier
         {
             _formatting_Alignment = value;
             RaisePropertyChanged();
+            RaiseScreenAlignmentChanged();
         }
     }
 
@@ -127,41 +131,88 @@ public class TextboxMarkerViewModel : Notifier
         {
             _formatting_FlowDirection = value;
             RaisePropertyChanged();
+            RaiseFlowDirectionButtonsChanged();
+            RaiseScreenAlignmentChanged();
         }
     }
 
+    // LTR/RTL toolbar toggle buttons; same contract as the alignment buttons below:
+    // false (clicking the already-checked button) is ignored and re-notified
+    public bool Formatting_IsLeftToRight
+    {
+        get { return Formatting_FlowDirection == FlowDirection.LeftToRight; }
+        set { SetFlowDirection(FlowDirection.LeftToRight, value); }
+    }
 
-    private bool _formatting_LeftAligned;
+    public bool Formatting_IsRightToLeft
+    {
+        get { return Formatting_FlowDirection == FlowDirection.RightToLeft; }
+        set { SetFlowDirection(FlowDirection.RightToLeft, value); }
+    }
+
+    private void SetFlowDirection(FlowDirection flowDirection, bool isChecked)
+    {
+        if (isChecked)
+            Formatting_FlowDirection = flowDirection;
+        else
+            RaiseFlowDirectionButtonsChanged();
+    }
+
+    private void RaiseFlowDirectionButtonsChanged()
+    {
+        RaisePropertyChanged(nameof(Formatting_IsLeftToRight));
+        RaisePropertyChanged(nameof(Formatting_IsRightToLeft));
+    }
+
+
+    // on-screen alignment for the toolbar toggle buttons; true picks that alignment,
+    // false (clicking the already-checked button) is ignored and re-notified so the
+    // button stays checked
     public bool Formatting_LeftAligned
     {
-        get { return _formatting_LeftAligned; }
-        set
-        {
-            _formatting_LeftAligned = value;
-            RaisePropertyChanged();
-        }
+        get { return Formatting_Alignment == ToTextAlignment(TextAlignment.Left); }
+        set { SetScreenAlignment(TextAlignment.Left, value); }
     }
 
-    private bool _formatting_RightAligned;
     public bool Formatting_RightAligned
     {
-        get { return _formatting_RightAligned; }
-        set
-        {
-            _formatting_RightAligned = value;
-            RaisePropertyChanged();
-        }
+        get { return Formatting_Alignment == ToTextAlignment(TextAlignment.Right); }
+        set { SetScreenAlignment(TextAlignment.Right, value); }
     }
 
-    private bool _formatting_CenterAligned;
     public bool Formatting_CenterAligned
     {
-        get { return _formatting_CenterAligned; }
-        set
+        get { return Formatting_Alignment == TextAlignment.Center; }
+        set { SetScreenAlignment(TextAlignment.Center, value); }
+    }
+
+    // on-screen left/right → the TextAlignment that renders there under the current flow direction
+    private TextAlignment ToTextAlignment(TextAlignment screenAlignment)
+    {
+        if (Formatting_FlowDirection != FlowDirection.RightToLeft)
+            return screenAlignment;
+
+        return screenAlignment switch
         {
-            _formatting_CenterAligned = value;
-            RaisePropertyChanged();
-        }
+            TextAlignment.Left => TextAlignment.Right,
+            TextAlignment.Right => TextAlignment.Left,
+            _ => screenAlignment,
+        };
+    }
+
+    private void SetScreenAlignment(TextAlignment screenAlignment, bool isChecked)
+    {
+        if (isChecked)
+            Formatting_Alignment = ToTextAlignment(screenAlignment);
+        else
+            RaiseScreenAlignmentChanged();
+    }
+
+    private void RaiseScreenAlignmentChanged()
+    {
+        RaisePropertyChanged(nameof(Formatting_LeftAligned));
+        RaisePropertyChanged(nameof(Formatting_RightAligned));
+        RaisePropertyChanged(nameof(Formatting_CenterAligned));
     }
 
 
@@ -172,17 +223,6 @@ public class TextboxMarkerViewModel : Notifier
         set
         {
             _labelValue = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    private string _tooltipValue = string.Empty;
-    public string TooltipValue
-    {
-        get { return _tooltipValue; }
-        set
-        {
-            _tooltipValue = value;
             RaisePropertyChanged();
         }
     }
@@ -230,37 +270,31 @@ public class TextboxMarkerViewModel : Notifier
 
     private static BackgroundChoice[] BuildBackgroundChoices()
     {
-        // Replaced inline hex definitions with ModernUIColors to avoid duplication.
-        // Original: ColorHelper.ToWpfColor("#FF...") for each of the 21 colors.
-        var colors = new[]
+        var list = new List<BackgroundChoice>
         {
-            ModernUIColors.BlackColor,
-            ModernUIColors.LimeGreenColor,
-            ModernUIColors.LimeColor,
-            ModernUIColors.GreenColor,
-            ModernUIColors.TealColor,
-            ModernUIColors.CyanColor,
-            ModernUIColors.BlueColor,
-            ModernUIColors.IndigoColor,
-            ModernUIColors.VioletColor,
-            ModernUIColors.PinkColor,
-            ModernUIColors.MagentaColor,
-            ModernUIColors.CrimsonColor,
-            ModernUIColors.RedColor,
-            ModernUIColors.OrangeColor,
-            ModernUIColors.AmberColor,
-            ModernUIColors.YellowColor,
-            ModernUIColors.BrownColor,
-            ModernUIColors.OliveColor,
-            ModernUIColors.SteelColor,
-            ModernUIColors.MauveColor,
-            ModernUIColors.TaupeColor,
+            new("Theme highlight", null, true),
+            new("Black", ModernUIColors.BlackColor, false),
+            new("Lime Green", ModernUIColors.LimeGreenColor, false),
+            new("Lime", ModernUIColors.LimeColor, false),
+            new("Green", ModernUIColors.GreenColor, false),
+            new("Teal", ModernUIColors.TealColor, false),
+            new("Cyan", ModernUIColors.CyanColor, false),
+            new("Blue", ModernUIColors.BlueColor, false),
+            new("Indigo", ModernUIColors.IndigoColor, false),
+            new("Violet", ModernUIColors.VioletColor, false),
+            new("Pink", ModernUIColors.PinkColor, false),
+            new("Magenta", ModernUIColors.MagentaColor, false),
+            new("Crimson", ModernUIColors.CrimsonColor, false),
+            new("Red", ModernUIColors.RedColor, false),
+            new("Orange", ModernUIColors.OrangeColor, false),
+            new("Amber", ModernUIColors.AmberColor, false),
+            new("Yellow", ModernUIColors.YellowColor, false),
+            new("Brown", ModernUIColors.BrownColor, false),
+            new("Olive", ModernUIColors.OliveColor, false),
+            new("Steel", ModernUIColors.SteelColor, false),
+            new("Mauve", ModernUIColors.MauveColor, false),
+            new("Taupe", ModernUIColors.TaupeColor, false),
         };
-
-        var list = new List<BackgroundChoice> { new("Theme highlight", null, true) };
-
-        foreach (var c in colors)
-            list.Add(new(c.ToString(), c, false));
 
         return list.ToArray();
     }
@@ -290,15 +324,14 @@ public class TextboxMarkerViewModel : Notifier
     {
         var currentSize = Formatting_FontSize;
 
-        var largerSizes = FontSizeOptions.Where(s => s > currentSize).ToArray();
-
-        if (largerSizes.Length > 0)
+        // no-op at the largest option
+        foreach (var size in FontSizeOptions)
         {
-            Formatting_FontSize = largerSizes[0];
-        }
-        else if (currentSize < FontSizeOptions.Max())
-        {
-            Formatting_FontSize = Math.Min(currentSize + 1, FontSizeOptions.Max());
+            if (size > currentSize)
+            {
+                Formatting_FontSize = size;
+                return;
+            }
         }
     }
 
@@ -306,15 +339,14 @@ public class TextboxMarkerViewModel : Notifier
     {
         var currentSize = Formatting_FontSize;
 
-        var smallerSizes = FontSizeOptions.Where(s => s < currentSize).ToArray();
-
-        if (smallerSizes.Length > 0)
+        // no-op at the smallest option
+        for (int i = FontSizeOptions.Length - 1; i >= 0; i--)
         {
-            Formatting_FontSize = smallerSizes[smallerSizes.Length - 1];
-        }
-        else if (currentSize > FontSizeOptions.Min())
-        {
-            Formatting_FontSize = Math.Max(currentSize - 1, FontSizeOptions.Min());
+            if (FontSizeOptions[i] < currentSize)
+            {
+                Formatting_FontSize = FontSizeOptions[i];
+                return;
+            }
         }
     }
 

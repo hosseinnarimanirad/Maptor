@@ -7,7 +7,7 @@
                      xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
                      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
-                    x:Name="root" Background="Transparent" Canvas.ZIndex="1000000"
+                    x:Name="root" Background="Transparent" Canvas.ZIndex="1000000" FlowDirection="LeftToRight"
                     MinWidth="150" MouseUp="root_MouseUp" >
     <maptor:MapMarker.Resources>
         <ResourceDictionary>
@@ -27,7 +27,7 @@
             <ScaleTransform />
         </TransformGroup>
     </maptor:MapMarker.RenderTransform>
-    <Border x:Name="mainBorder" CornerRadius="5"  BorderBrush="White" BorderThickness="0" Grid.ColumnSpan="2"
+    <Border x:Name="mainBorder" CornerRadius="5"  BorderBrush="White" BorderThickness="0"
             MouseEnter="OnMarkerMouseEnter" MouseLeave="OnMarkerMouseLeave">
         <Border.Style>
             <Style TargetType="Border">
@@ -43,13 +43,15 @@
             <Border Height="12" Background="Transparent" Cursor="ScrollAll" >
                 <iconPacks:PackIconMaterial Kind="DotsHorizontal" HorizontalAlignment="Center" Margin="10,0" Foreground="White"/>
             </Border>
-            <TextBox x:Name="labelBox" Grid.Column="0"                     
-                    TextAlignment="{Binding Formatting_Alignment}" Margin="2,4" Height="Auto"                      
+            <!-- FlowDirection is TwoWay: the TextBox's own Ctrl+Shift shortcut calls SetValue on it,
+                 which would replace a OneWay binding and leave the box out of sync with the toolbar -->
+            <TextBox x:Name="labelBox"
+                    TextAlignment="{Binding Formatting_Alignment}" Margin="2,4" Height="Auto"
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                    Text="{Binding LabelValue}"
+                    Text="{Binding LabelValue, UpdateSourceTrigger=PropertyChanged}"
                     Foreground="Black" TextWrapping="Wrap"
                     AcceptsReturn="True"
-                    FlowDirection="{Binding Formatting_FlowDirection}"
+                    FlowDirection="{Binding Formatting_FlowDirection, Mode=TwoWay}"
                     FontSize="{Binding Formatting_FontSize}"
                     FontFamily="{Binding Formatting_FontFamily}"
                     VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
@@ -86,7 +88,7 @@
             <Popup x:Name="formatPopup" StaysOpen="True" Placement="Top" 
                    PlacementTarget="{Binding ElementName=root}" HorizontalOffset="0" VerticalOffset="-5"
                    AllowsTransparency="True">
-                <Border x:Name="popupBorder" Background="White" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="1,1,2,1" 
+                <Border x:Name="popupBorder" Background="White" FlowDirection="LeftToRight" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="1,1,2,1" 
                         CornerRadius="5" Padding="4"
                         MouseEnter="OnPopupContentMouseEnter" MouseLeave="OnPopupContentMouseLeave">
                     <StackPanel x:Name="popupContentPanel" Orientation="Vertical">
@@ -156,27 +158,28 @@
 
                             <!-- Alignment -->
                             <Separator Margin="4,0" VerticalAlignment="Stretch"/>
+                            <!-- on-screen alignment: the view model maps it onto TextAlignment, which WPF mirrors under RTL -->
                             <ToggleButton x:Name="alignLeftButton" Margin="2,0,2,0" ToolTip="Align Left" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
-                                          IsChecked="{Binding Formatting_Alignment, Converter={StaticResource enumToBoolConverter}, ConverterParameter=Right, Mode=TwoWay}">
+                                          IsChecked="{Binding Formatting_LeftAligned, Mode=TwoWay}">
                                 <iconPacks:PackIconMaterial Kind="FormatAlignLeft"/>
                             </ToggleButton>
                             <ToggleButton x:Name="alignCenterButton" Margin="0,0,2,0" ToolTip="Align Center" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
-                                          IsChecked="{Binding Formatting_Alignment, Converter={StaticResource enumToBoolConverter}, ConverterParameter=Center, Mode=TwoWay}">
+                                          IsChecked="{Binding Formatting_CenterAligned, Mode=TwoWay}">
                                 <iconPacks:PackIconMaterial Kind="FormatAlignCenter"/>
                             </ToggleButton>
                             <ToggleButton x:Name="alignRightButton" Margin="0,0,2,0" ToolTip="Align Right" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
-                                          IsChecked="{Binding Formatting_Alignment, Converter={StaticResource enumToBoolConverter}, ConverterParameter=Left, Mode=TwoWay}">
+                                          IsChecked="{Binding Formatting_RightAligned, Mode=TwoWay}">
                                 <iconPacks:PackIconMaterial Kind="FormatAlignRight"/>
                             </ToggleButton>
 
                             <!-- RTL / LTR -->
                             <Separator Margin="4,0" VerticalAlignment="Stretch"/>
                             <ToggleButton x:Name="ltrButton" Margin="0,0,2,0" ToolTip="LTR" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
-                                          IsChecked="{Binding Formatting_FlowDirection, Converter={StaticResource enumToBoolConverter}, ConverterParameter=LeftToRight, Mode=TwoWay}">
+                                          IsChecked="{Binding Formatting_IsLeftToRight, Mode=TwoWay}">
                                 <iconPacks:PackIconMaterial Kind="FormatPilcrowArrowRight" FlowDirection="LeftToRight"/>
                             </ToggleButton>
                             <ToggleButton x:Name="rtlButton" Margin="2,0,2,0" ToolTip="RTL" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
-                                          IsChecked="{Binding Formatting_FlowDirection, Converter={StaticResource enumToBoolConverter}, ConverterParameter=RightToLeft, Mode=TwoWay}">
+                                          IsChecked="{Binding Formatting_IsRightToLeft, Mode=TwoWay}">
                                 <iconPacks:PackIconMaterial Kind="FormatPilcrowArrowLeft" FlowDirection="LeftToRight"/>
                             </ToggleButton>
 
