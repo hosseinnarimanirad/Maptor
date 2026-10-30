@@ -164,6 +164,9 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
     /// <summary>Raised whenever the geometry's points/parts are added or removed (not on coordinate moves).</summary>
     public event Action? OnGeometryChanged;
 
+    /// <summary>True once a vertex was moved, added or removed in this session (Esc asks before discarding).</summary>
+    public bool HasChanges { get; private set; }
+
     public Func<CoordinateDisplayMode>? RequestGetCoordinateDisplayMode;
 
     public Func<IMapSettings>? RequestGetMapSettings;
@@ -270,6 +273,9 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         _primaryVerticesLabelLayer = new SpecialPointLayer("#vert length", new List<Locateable>(), .9, ScaleInterval.All, layerType) { AlwaysTop = false, IsMovable = isMovable };
 
         ReconstructLocateables();
+
+        // the initial build is not a change
+        HasChanges = false;
 
         SelectPoint(0);
         //_primaryVerticesLayer.SelectLocatable(0);
@@ -421,6 +427,8 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         LocateablesReconstructed?.Invoke();
 
         // Structural change (points/parts added or removed) funnels through here.
+        HasChanges = true;
+
         OnGeometryChanged?.Invoke();
 
         RaisePropertyChanged(nameof(IsPreviousPartAvailable));
@@ -685,6 +693,8 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
             webMercatorPoint.X = locateable.X;
             webMercatorPoint.Y = locateable.Y;
+
+            HasChanges = true;
 
             UpdateEdgeLabels();
 

@@ -458,6 +458,10 @@ public partial class MapViewer : NotifiableUserControl
         this.mapView.PreviewMouseDown -= MapView_PreviewMouseDownForTextMarkerFocus;
         this.mapView.PreviewMouseDown += MapView_PreviewMouseDownForTextMarkerFocus;
 
+        // the map canvas never takes keyboard focus, so Esc is caught on the host window
+        this.Loaded += (s, e) => { if (Window.GetWindow(this) is Window w) { w.KeyDown -= HostWindow_KeyDownForSketchBar; w.KeyDown += HostWindow_KeyDownForSketchBar; } };
+        this.Unloaded += (s, e) => { if (Window.GetWindow(this) is Window w) w.KeyDown -= HostWindow_KeyDownForSketchBar; };
+
         _layerManager.RequestRefreshVisibility = RefreshLayerVisibility;
 
         this.extentManager.OnTilesAdded -= ExtentManager_OnTilesAdded;
@@ -5378,6 +5382,42 @@ public partial class MapViewer : NotifiableUserControl
                 this.Status = MapStatus.Idle;
             }
         }
+    }
+
+    // Esc = the sketch bar's visible Cancel (or Delete, for a measurement) button;
+    // asks first when a drawing or an edit would be lost
+    private async void HostWindow_KeyDownForSketchBar(object sender, KeyEventArgs e)
+    {
+        if (e.Handled || e.Key != Key.Escape || _presenter == null || Keyboard.FocusedElement is System.Windows.Controls.Primitives.TextBoxBase)
+            return;
+
+        var isMeasure = _presenter.SketchBar.Options?.IsMeasureMode == true;
+
+        ICommand? command;
+        bool hasChanges;
+
+        if (_presenter.IsDrawMode)
+        {
+            command = _presenter.CancelNewDrawingCommand;
+            hasChanges = drawingLayer != null;
+        }
+        else if (CurrentEditingLayer != null)
+        {
+            command = isMeasure ? CurrentEditingLayer.DeleteCommand : CurrentEditingLayer.CancelEditingCommand;
+            hasChanges = CurrentEditingLayer.HasChanges;
+        }
+        else
+        {
+            return;
+        }
+
+        e.Handled = true;
+
+        if (hasChanges && !isMeasure &&
+            await _presenter.DialogService.ShowYesNoDialogAsync(IRI.Maptor.Presentation.Core.Localization.LocalizationManager.Instance["serverLayerSettings_confirmDiscard"],Window.GetWindow(this)) != true)
+            return;
+
+        command.Execute(null);
     }
 
     public void CancelEditGeometry()
