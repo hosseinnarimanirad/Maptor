@@ -146,12 +146,12 @@ can look up elevation, whereas MGRS is derived from the position the panel alrea
 | `Views/Map/CoordinatePanelView.xaml` | label + value block copied from the height block, declared first among the right-docked children so it reads last on the line |
 | `Presentation.Core/Properties/Resources*.resx` (×15) | `map_coordinatePanel_mgrs` = `MGRS` |
 | `Data/Settings/{IGeneralSettings,GeneralSettings}.cs`, `Models/Settings/GeneralSettingsModel.cs` | `CoordinatePanel_ShowMgrs`, default **false** |
-| the host application `Common/SettingsHelper.cs` | the new key added to `GeneralSettingsKeys` |
-| the host application `MainWindow.xaml` | `ShowMgrs` bound on the panel; a `ToggleButton` in the Display ribbon group |
-| the host application `Properties/Resources*.resx` (×15) | `app_saba_ribbon_showMgrs` |
+| Host application `Common/SettingsHelper.cs` | the new key added to `GeneralSettingsKeys` |
+| Host application `MainWindow.xaml` | `ShowMgrs` bound on the panel; a `ToggleButton` in the Display ribbon group |
+| Host application `Properties/Resources*.resx` (×15) | the *Show MGRS* ribbon string |
 
 `CoordinatePanelViewModel`, `SpatialReferenceItem` and `SpatialReferenceItems` are **untouched**,
-and so is `CoordinateDisplayMode`. The other five hosts (those applications) need no change — `ShowMgrs` defaults to false.
+and so is `CoordinateDisplayMode`. The other hosts need no change — `ShowMgrs` defaults to false.
 
 `Resources.Designer.cs` needed no edit this time: both labels resolve through
 `LocalizationManager`'s string indexer, not `nameof`. The reverted version only needed Designer
@@ -236,7 +236,7 @@ number reports the widest span the zone ever reaches, so `32` is [3, 12] rather 
 | `Models/Map/MapInitializationHelper.cs` | assigns it after `Initialize` |
 | `ViewModels/Map/MapViewModelBase.cs` | `RequestShowMgrsGoToView` + `MgrsGoToCommand` |
 | `Presentation.Core/Properties/Resources*.resx` (×15) | six `dialog_mgrs_*` keys |
-| the host application `MainWindow.xaml` | a ribbon button beside Go To |
+| Host application `MainWindow.xaml` | a ribbon button beside Go To |
 
 `RequestShowMgrsGoToView` is a field assigned *after* `Initialize` rather than a new parameter on
 it, because every application presenter overrides that signature; adding a fifth argument would
@@ -322,7 +322,7 @@ those seams would have to be stitched by hand.
 | `Presentation.Wpf/Layers/MgrsGridLayers.cs` | the `VectorLayer` — stroke-only symbolizer plus a centred label |
 | `Presentation.Wpf/ViewModels/Map/MapViewModelBase.cs` | `ToggleMgrsGridCommand`, `IsMgrsGridVisible` |
 | `Presentation.Core/Properties/Resources*.resx` (×15) | `layer_mgrsGrid_title`, `cmd_general_toggleMgrsGrid` |
-| the host application `MainWindow.xaml` | a ribbon toggle beside the MGRS panel button |
+| Host application `MainWindow.xaml` | a ribbon toggle beside the MGRS panel button |
 
 `MgrsConverter` gained the public API the generator needs, which was previously locked inside the
 `internal` `MgrsBands`: `BandLetters`, `GetBandLatitudeRange`, `GetGridZoneLongitudeRange`,

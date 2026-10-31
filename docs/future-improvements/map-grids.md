@@ -25,7 +25,7 @@ Decisions taken in that conversation, so they are not re-opened by accident:
 
 | Question | Decision |
 |---|---|
-| The `2⁹` figures in the middle of ONC cells | **Not now.** They are *Maximum Elevation Figures* — the highest terrain in the cell in thousands + hundreds of feet — derived from a DEM, not from the grid. the host application has no elevation feed today. |
+| The `2⁹` figures in the middle of ONC cells | **Not now.** They are *Maximum Elevation Figures* — the highest terrain in the cell in thousands + hundreds of feet — derived from a DEM, not from the grid. The host application has no elevation feed today. |
 | The `JF` letters in ONC cell corners | **Not now.** They are GEOREF one-degree quadrangle ids (a text encoding of lat/long, as MGRS is of UTM). Cheap to add later as an option of the geodetic grid — see *Later*. |
 | UTM zone behaviour | **Follow the view's zone(s)**: each zone strip in view gets its own grid, lines cut at the zone boundary — exactly as the MGRS grid does. No pinned-zone mode. |
 | Which edges carry the values | **All four.** Eastings / meridians along the bottom *and* top, northings / parallels up the left *and* right. |
@@ -50,10 +50,10 @@ Line anchors verified 2026-09-01 — they drift.
 | `Presentation.Wpf/Models/GoTo/ProjectionPreset.cs` | the projection catalogue (Web Mercator, Mercator, TM, LCC 1P/2P, CEA; named NIOC / FD58 / Nahrwan systems) with `CreateSrs(ellipsoid, parameters)` — the picker for "projected grid" |
 | `Core.SpatialReferenceSystem/MapProjections/SrsBase.cs` | `FromGeodetic<T>` / `ToGeodetic<T>` — every projection the grid can be drawn in speaks this |
 | `Core.SpatialReferenceSystem/MapProjects.cs:212, 229, 870, 970` | `FindUtmZone` (boundary-correct since MGRS step 5), `CalculateCentralMeridian`, `GeodeticToUTM(point, ellipsoid, zone, isNorth)`, `UTMToGeodetic(point, ellipsoid, centralMeridian, isNorth)` |
-| the host application `MainWindow.xaml:459–461` | the MGRS ribbon toggle — the new picker sits beside it |
-| the host application `MainWindow.xaml:629–650` | the *Display* ribbon group of `GeneralSettings.*` toggles |
-| the host application `Common/SettingsHelper.cs:36–46` | `GeneralSettingsKeys` — the allow-list any new `IGeneralSettings` property must be added to, or it silently never persists |
-| `Presentation.Core/Properties/Resources*.resx` (×15), the host application `Properties/Resources*.resx` (×15) | every new UI string goes in all of them |
+| Host application `MainWindow.xaml:459–461` | the MGRS ribbon toggle — the new picker sits beside it |
+| Host application `MainWindow.xaml:629–650` | the *Display* ribbon group of `GeneralSettings.*` toggles |
+| Host application `Common/SettingsHelper.cs:36–46` | `GeneralSettingsKeys` — the allow-list any new `IGeneralSettings` property must be added to, or it silently never persists |
+| `Presentation.Core/Properties/Resources*.resx` (×15), host application `Properties/Resources*.resx` (×15) | every new UI string goes in all of them |
 
 ## Things this trips over
 
@@ -271,7 +271,7 @@ Both grids step finer monotonically as the view narrows, and never coarsen.
 | `Presentation.Wpf/ViewModels/Map/MapGridsViewModel.cs` | what is on, and the label tiers |
 | `Presentation.Wpf/ViewModels/Map/MapGridItemViewModel.cs` | one drop-down entry |
 | `Presentation.Wpf/ViewModels/Map/MapViewModelBase.cs` *(modified)* | `MapGrids` / `MapGridItems`, the reconcile hook in `Layers_CollectionChanged`, `ReconcileMgrsGridLayer` |
-| the host application `MainWindow.xaml` *(modified)* | the `fluent:DropDownButton`, beside the MGRS toggle |
+| Host application `MainWindow.xaml` *(modified)* | the `fluent:DropDownButton`, beside the MGRS toggle |
 | `Presentation.Core/Properties/Resources*.resx` (×15) | `cmd_general_mapGrids`, `layer_mapGrid_geodetic`, `layer_mapGrid_utm`, `layer_mapGrid_lines`, `layer_mapGrid_labels` |
 
 **14 new tests** — 4 on the data sources in `MapGridTest.cs`, 10 in
@@ -470,7 +470,7 @@ all moved to *Later*, which left this step as just the persistence.
 | `Presentation.Core/Models/Settings/GeneralSettingsModel.cs` | the notifying pass-through |
 | `Presentation.Wpf/ViewModels/Map/MapGridsViewModel.cs` | `RestoreFromSettings()`, and a private `Persist()` called from show, hide and a legend-driven removal |
 | `Presentation.Wpf/Models/Map/MapInitializationHelper.cs` | the restore call |
-| the host application `Common/SettingsHelper.cs` | the key added to `GeneralSettingsKeys` |
+| Host application `Common/SettingsHelper.cs` | the key added to `GeneralSettingsKeys` |
 
 **Keys, not indices.** A grid added to or removed from the catalogue later would otherwise restore a
 different one; an unrecognised key is simply dropped.
@@ -485,7 +485,7 @@ has wired the layer delegates — restoring a grid means adding a layer, and the
 built the first time the ribbon binds to it, which is not guaranteed to be late enough. Every WPF
 host gets it, not just the host application. It is idempotent.
 
-**The trap this walks into was already documented in `mgrs-support.md`:** the host application's
+**The trap this walks into was already documented in `mgrs-support.md`:** The host application's
 `SettingsHelper.GeneralSettingsKeys` is an explicit allow-list filtering **both** save and load, so a
 new `IGeneralSettings` property that is not listed there is silently never written and never read
 back, with no error. The key is listed.
@@ -570,7 +570,7 @@ and would be a fourth weight per grid.
 ### Step 5 — docs ✅ implemented 2026-09-01
 
 Following the MGRS precedent, which put its documentation in library READMEs and `docs/features/`
-rather than in the Barg document set:
+rather than in the host application's document set:
 
 - **`Core.Spatial/Helpers/MapGrids/README.md`** — the engine: the three kinds, the ladders and the
   subdivision rule, how labels are placed and abbreviated, why lines are sampled, how UTM is the
@@ -581,7 +581,7 @@ rather than in the Barg document set:
   abbreviated values, what the zone seam means, how to restyle a grid, **the warning not to use the
   symbology dialog's *Advanced* button on a grid layer**, and what is deliberately not included.
 
-Nothing was added to `src/IRI.App/Barg/Docs/` — that set's changelog covers changes to the documents
+Nothing was added to the host application's documents — that set's changelog covers changes to the documents
 in that folder, and the MGRS feature added nothing there either.
 
 ## Not in scope (decided)

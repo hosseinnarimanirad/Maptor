@@ -63,7 +63,7 @@ Same `async void` pattern: `AddLayer(RasterLayer, sb.BoundingBox)` (`:1598`),
 ### B3. Shared animation counters race between `Pan` and `ZoomToExtent` — ✅ DONE (2026-08-06)
 
 > `Pan` was ported to `AnimateAsync` + `Task.WhenAll` (via a private `PanCoreAsync`, so the public
-> `Pan(double, double, Action?)` signature still compiles for RahyabTehran/ZaminNegar), and both
+> `Pan(double, double, Action?)` signature still compiles for other applications), and both
 > `counter`/`counterValue` fields are deleted. Two extra defects found while fixing it: `Pan` reset
 > the counters *before* its `IsNaN` and `Abs(...) > 2` guards, so even a pan too small to animate
 > clobbered an in-flight `ZoomToExtent`; and it reused a single `DoubleAnimation` instance across
@@ -260,7 +260,7 @@ concurrent clocks after a big layer add; each `AddFlash` adds three more with 5�
 
 > Solved by exposing snapping as a real user setting rather than enabling the dead flag:
 > `ZoomStepsPerGoogleLevel` = 1 snaps every step to a Google level (crispest); the default 2 makes
-> every second notch land exactly on one. Surfaced in the the host application settings dialog and persisted.
+> every second notch land exactly on one. Surfaced in the host application's settings dialog and persisted.
 
 
 Free-scale wheel zoom (see B1) means tiles rarely display at native resolution. Enabling the
@@ -310,7 +310,7 @@ converge on. Don't "improve" it while fixing the rest.
 
 ## Verification (when implementing)
 
-1. Build `IRI.Maptor.Presentation.Wpf` + `your host application` (close any running the host application first — it
+1. Build `IRI.Maptor.Presentation.Wpf` + your host application (close any running instance first — it
    locks output DLLs).
 2. B1/S1: wheel-zoom to both extremes — scale stops at the configured levels; tiles stay sane.
 3. B3: spam `PanTo` / zoom-to-extent operations back-to-back — map always ends refreshed,

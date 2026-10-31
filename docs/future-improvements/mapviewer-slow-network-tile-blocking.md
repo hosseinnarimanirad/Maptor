@@ -143,7 +143,7 @@ considered there (15 s is long for a 256px tile).
 
 ## Verification
 
-1. Build `IRI.Maptor.Presentation.Wpf` + `your host application` (close running the host application first).
+1. Build `IRI.Maptor.Presentation.Wpf` + your host application (close any running instance first).
 2. Throttle the network (e.g. temporarily wrap `HttpProtocol.GetByteArrayAsync` with
    `await Task.Delay(2000)` or use an OS/proxy throttle). Load a project with vector layers +
    basemap:

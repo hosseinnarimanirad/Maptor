@@ -1,7 +1,7 @@
 # Layer settings — Statistics (آمار) tab: status and deferred work
 
 - **Status (2026-10-21):** the Statistics tab of the layer settings dialog is built (uncommitted at
-  the time of writing) and shared by every client that uses the dialog (Gas and Barg/the host application WPF). It
+  the time of writing) and shared by every client that uses the dialog (every WPF host application). It
   has two modes:
   - **Field statistics:** count, empty and distinct values, the 10 most frequent values with their
     share; min/max/sum/mean/median/standard deviation for numeric fields; earliest/latest for dates.
@@ -36,7 +36,7 @@
 | 2026-10-22 | Item 4 built: "Layer summary" card on the General tab (`LayerSettings_GeneralSummaryViewModel`); pending edits left out by the user (own tab). Legend: the visibility checkbox now hides while a Live layer fetches (`BaseLayer.HideLoadingIndicator`) |
 | 2026-10-23 | General tab: the summary card in two columns (the two extents side by side), labels no longer cut off, "Source Address:" colon in all 15 cultures. Same dialog: the Labeling tab removed and the Symbology tab enabled (see `docs/features/sld-symbology-editing.md`, "Multiple named styles per layer") |
 | 2026-10-23 | **Item 5 built: Live layers via the server** (all steps at once, by the user's choice; exact median; EF's default 30 s command timeout kept). See "5. Live layers via the server" below |
-| next | Real-app run by the user (Gas and the host application, Live layers; the endpoints have not been called through a real API yet) |
+| next | Real-app run by the user (both host applications, Live layers; the endpoints have not been called through a real API yet) |
 
 ## Where the code is
 
@@ -125,10 +125,10 @@ type, opacity) — add only the missing ones.
 
 The original plan, kept for reference:
 
-So Live layers (e.g. Gas customers, millions of rows) get correct numbers: a new endpoint beside
+So Live layers (e.g. millions of customer rows) get correct numbers: a new endpoint beside
 `Distinct` and `Extent` in both `LayerQueryController`s
-(`the host application's LayerQueryController`
-and the Barg one), e.g. `POST /LayerQuery/{layerId}/Statistics`, implemented once in the shared
+of the host applications,
+e.g. `POST /LayerQuery/{layerId}/Statistics`, implemented once in the shared
 `src/Infrastructure/IRI.Maptor.Infrastructure.EfCore/Querying/FeatureQueryExecutor.cs` so both
 apps get it. SQL aggregates: `COUNT`, `MIN`, `MAX`, `SUM`, `AVG`, `STDEV`, `GROUP BY` with counts;
 geodesic length/area via SQL Server geography (`STLength`/`STArea`) or PostGIS
@@ -160,7 +160,7 @@ out-of-domain checks. `FieldDomainValue.Label` exists for a future source that s
 
 - **Web API layers drop features without geometry** before they reach the client
   (`FeatureDto.AsFeature` returns null for an empty shape and `FeatureSetDto.AsFeatureSet` skips it),
-  so for Gas/Barg layers the "empty geometries" tile is always 0 and the feature count excludes such
+  so for server layers the "empty geometries" tile is always 0 and the feature count excludes such
   rows. Only file layers can show a non-zero count. Showing them would need a change in that DTO path.
 - File/memory layers type their fields from the **first** feature's values (`Field.FromDictionary`);
   an empty first value gives type `"object"`. `FieldStatistics.ResolveKind` then infers the kind from

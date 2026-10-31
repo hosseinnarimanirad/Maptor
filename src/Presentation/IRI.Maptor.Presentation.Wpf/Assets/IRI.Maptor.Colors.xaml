@@ -15,9 +15,8 @@
         ever wanted again, add it under IRI.Maptor.Brushes.Palette.* rather than bare words.-->
 
     <!--Tehran municipality brand red. Kept because a downstream application resolves
-        mapTehranIrLightRedColor from this dictionary at runtime. Note other applications and
-        another application define their own private copies of these keys and do not reference
-        this library at all, so they are unaffected by anything here.
+        mapTehranIrLightRedColor from this dictionary at runtime. Note other applications define their
+        own private copies of these keys and do not reference this library at all, so they are unaffected by anything here.
 
         As of Step 5a the generic MapMarker views no longer use these: a municipal brand colour
         was the hardcoded default fill for markers shipped to every app.-->

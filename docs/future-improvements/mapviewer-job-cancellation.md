@@ -161,7 +161,7 @@ The `jobs` list then contains only pending/running work; when the map is idle,
 
 ## Verification
 
-1. Build `IRI.Maptor.Presentation.Wpf` + `your host application` — 0 errors (close any running the host application
+1. Build `IRI.Maptor.Presentation.Wpf` + your host application — 0 errors (close any running instance
    first; it locks output DLLs).
 2. Harness (pattern: a `net8.0-windows`/`UseWPF` console project referencing `Jab.Wpf`, as
    used for the 2026-08 off-thread render verification): `Render` with a pre-cancelled token

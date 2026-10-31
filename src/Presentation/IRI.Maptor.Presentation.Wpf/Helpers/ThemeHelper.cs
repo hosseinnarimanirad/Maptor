@@ -38,7 +38,7 @@ namespace IRI.Maptor.Presentation.Wpf.Helpers;
 /// <para>
 /// Because the status palette is driven from <see cref="ThemeManager.ThemeChanged"/> rather than
 /// from our own entry point, it now follows a theme change made by <i>anyone</i>: this class, a
-/// host calling <see cref="ThemeManager"/> directly (that application does), or the Windows theme
+/// host calling <see cref="ThemeManager"/> directly (some hosts do), or the Windows theme
 /// changing under <see cref="FollowWindowsMode"/>.
 /// </para>
 /// </remarks>
