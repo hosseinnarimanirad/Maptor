@@ -130,10 +130,24 @@ public class SingleSimplifiedGeometryLog
 
         // APSC moves and adds vertices, so its TLVD is not defined (logged as 0 as in the published run). A simplified
         // geometry whose structure differs from the original (a ring of a polygon collapsed to a point, possible for VW
-        // since its ring fix of 2026-10-06) gets +∞, which the analysis scripts read as "collapsed".
-        this.TotalVectorDisplacement = methodName == "APSC" ? 0
-                                     : original.HasTheSameSignature(simplified) ? original.CalculateTotalVectorDisplacement(simplified)
-                                     : double.PositiveInfinity;
+        // since its ring fix of 2026-10-06, and for RDP on rings) gets +∞, which the analysis scripts read as "collapsed";
+        // HasTheSameSignature only compares ring counts, so the collapse shows up as the NotImplementedException of
+        // CalculateTotalVectorDisplacement on the point leaf.
+        if (methodName == "APSC")
+        {
+            this.TotalVectorDisplacement = 0;
+        }
+        else
+        {
+            try
+            {
+                this.TotalVectorDisplacement = original.CalculateTotalVectorDisplacement(simplified);
+            }
+            catch (NotImplementedException)
+            {
+                this.TotalVectorDisplacement = double.PositiveInfinity;
+            }
+        }
 
         //this.TotalVectorDisplacementAtWindowScale = WebMercatorUtility.ToScreenLength(level, TotalVectorDisplacement);
 
