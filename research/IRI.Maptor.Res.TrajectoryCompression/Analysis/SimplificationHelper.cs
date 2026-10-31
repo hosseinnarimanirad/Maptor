@@ -65,17 +65,21 @@ public static class SimplificationHelper
         PerFeatureRanks,
         /// <summary>Rendered comparisons of the hand-picked features listed in <see cref="IsSpecialCase"/>.</summary>
         VisualOutput,
+        /// <summary>One row per layer: how many features the protocol of <see cref="LoadFeatures"/> keeps and why (<see cref="CountFeatures"/>).</summary>
+        FeatureCounts,
     }
+
+    // OSM dataset directory should be addressed here
+    private const string DataFolder = @"E:\University.Ph.D\Sample Data\OSM-1401-03-03-WebMercator";
+
+    /// <summary>Output directory; every run gets a dated folder below it, never a published one.</summary>
+    public const string OutputRoot = @"E:\University.Ph.D\3. Paper1_ReviewPaper\AlgorithmRun";
 
     public async static Task GeneralTest(Experiment experiment = Experiment.SingleFeatures)
     {
-        // OSM dataset directory should be addressed here
-        var dataFolder = @"E:\University.Ph.D\Sample Data\OSM-1401-03-03-WebMercator";
+        var files = Directory.EnumerateFiles(DataFolder, "*.shp", SearchOption.AllDirectories);
 
-        var files = Directory.EnumerateFiles(dataFolder, "*.shp", SearchOption.AllDirectories);
-
-        // Output directory should be addressed here; every run gets a dated folder
-        var writeFolder = $@"E:\University.Ph.D\3. Paper1_ReviewPaper\AlgorithmRun\{DateTime.Now:yyyy-MM-dd}-{experiment}";
+        var writeFolder = $@"{OutputRoot}\{DateTime.Now:yyyy-MM-dd}-{experiment}";
 
         Directory.CreateDirectory(writeFolder);
 
@@ -83,6 +87,9 @@ public static class SimplificationHelper
 
         if (experiment == Experiment.SingleFeatures)
             writer.WriteLine(SingleSimplifiedGeometryLog.GetHeader());
+
+        if (experiment == Experiment.FeatureCounts)
+            writer.WriteLine("Layer\tRecords\tParts\tPartsWith15To500Points\tFeatures\tPoints\tZoomBelow10\tZoom10To20\tZoomAbove20");
 
         // layers whose summary already exists in the output folder are skipped, so an interrupted run can be resumed
         var finishedLayers = Directory.EnumerateFiles(writeFolder, "*.txt", SearchOption.AllDirectories)
@@ -120,6 +127,11 @@ public static class SimplificationHelper
                 case Experiment.VisualOutput:
                     await TestWithOutput(file, writer, includeHeader, writeFolder);
                     includeHeader = false;
+                    break;
+
+                case Experiment.FeatureCounts:
+                    writer.WriteLine(CountFeatures(file));
+                    writer.Flush();
                     break;
             }
 
@@ -174,17 +186,28 @@ public static class SimplificationHelper
                     if (simplified.Type == GeometryType.Point)
                         continue;
 
-                    writer.WriteLine(
-                      new SingleSimplifiedGeometryLog(fileName,
-                                            boundingBox,
-                                            featureIndex,
-                                            feature,
-                                            simplified,
-                                            estimatedZoomLevel,
-                                            methodNames[method],
-                                            stopwatch.ElapsedMilliseconds,
-                                            parameters,
-                                            coef).ToTsv());
+                    try
+                    {
+                        writer.WriteLine(
+                          new SingleSimplifiedGeometryLog(fileName,
+                                                boundingBox,
+                                                featureIndex,
+                                                feature,
+                                                simplified,
+                                                estimatedZoomLevel,
+                                                methodNames[method],
+                                                stopwatch.ElapsedMilliseconds,
+                                                parameters,
+                                                coef).ToTsv());
+                    }
+                    catch (Exception ex)
+                    {
+                        // one failed measure must not abort an hour-long run; the row is skipped and the case recorded
+                        var folder = Path.GetDirectoryName(((FileStream)writer.BaseStream).Name)!;
+
+                        File.AppendAllText(Path.Combine(folder, "Failures.txt"),
+                            $"{fileName}\t{featureIndex}\t{coef}\t{methodNames[method]}\t{ex.GetType().Name}: {ex.Message}{Environment.NewLine}");
+                    }
                 }
             }
         }
@@ -193,7 +216,8 @@ public static class SimplificationHelper
 
     /// <summary>
     /// Reads the layer as single-part features with 15 &lt; points &lt; 500 (the filter of the published assessment),
-    /// removes consecutive duplicate points and drops features that still contain duplicates.
+    /// removes consecutive duplicate points and drops features that still contain duplicates. Polygons are split
+    /// into one polygon per ring. Ring orientation is restored to that of the published run.
     /// </summary>
     private static List<Geometry<Point>> LoadFeatures(string shpFile, bool splitAllMultiParts)
     {
@@ -208,9 +232,85 @@ public static class SimplificationHelper
         {
             feature.Srid = SridHelper.WebMercator;
             feature.RemoveConsecutiveDuplicatePoints();
+            RestorePublishedRingOrientation(feature);
         }
 
         return features.Where(f => !f.HasDuplicatePoints()).ToList();
+    }
+
+    /// <summary>
+    /// Outer rings clockwise, holes counter-clockwise: the orientation the shapefile reader gave the rings when the
+    /// published run (1403-03-10) was made. Since 2026-10-13 the reader turns them to the OGC orientation (outer
+    /// counter-clockwise), which reverses the direction in which order-dependent methods (RW, NOPW, BOPW, SF, APSC)
+    /// walk a ring and so changes their results on polygons; lines are not affected. Same as
+    /// IRI.Maptor.Res.FastSimplification.SimplificationHelper.RestorePublishedRingOrientation.
+    /// </summary>
+    private static void RestorePublishedRingOrientation(Geometry<Point> feature)
+    {
+        if (feature.Type == GeometryType.Polygon)
+        {
+            for (int i = 0; i < feature.Geometries!.Count; i++)
+            {
+                var points = feature.Geometries[i].Points;
+
+                if (points is null || points.Count < 3)
+                    continue;
+
+                var outer = i == 0;
+
+                if (SpatialUtility.IsClockwise(points) != outer)
+                    points.Reverse();
+            }
+        }
+        else if (feature.Type == GeometryType.MultiPolygon)
+        {
+            foreach (var polygon in feature.Geometries!)
+                RestorePublishedRingOrientation(polygon);
+        }
+    }
+
+    /// <summary>
+    /// One TSV row for the layer: shapefile records, single parts (rings) after splitting, parts with 15 &lt; points &lt; 500,
+    /// features that survive duplicate-point removal (= the features of <see cref="TestSingleFeatures"/>), their points,
+    /// and how many of them get a natural zoom level below 10, within 10–20 and above 20 (the paper's Tables 3 and 4
+    /// report the 10–20 band only).
+    /// </summary>
+    public static string CountFeatures(string shpFile)
+    {
+        var fileName = Path.GetFileNameWithoutExtension(shpFile);
+
+        int records = 0, parts = 0, inRange = 0;
+
+        foreach (var shape in Shapefile.ReadShapes(shpFile))
+        {
+            records++;
+
+            foreach (var part in shape.AsGeometry().Split(false))
+            {
+                if (part.IsNullOrEmpty())
+                    continue;
+
+                parts++;
+
+                if (part.TotalNumberOfPoints > 15 && part.TotalNumberOfPoints < 500)
+                    inRange++;
+            }
+        }
+
+        var features = LoadFeatures(shpFile, splitAllMultiParts: true);
+
+        int below = 0, within = 0, above = 0;
+
+        foreach (var feature in features)
+        {
+            var level = WebMercatorUtility.EstimateZoomLevel(feature.GetBoundingBox(), 256, 256);
+
+            if (level < 10) below++;
+            else if (level > 20) above++;
+            else within++;
+        }
+
+        return string.Join('\t', fileName, records, parts, inRange, features.Count, features.Sum(f => f.TotalNumberOfPoints), below, within, above);
     }
 
     #region Per Feature

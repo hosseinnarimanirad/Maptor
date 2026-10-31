@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="IRI.Maptor.Tests" />
+    <InternalsVisibleTo Include="IRI.Maptor.Tests.Private" />
   </ItemGroup>
 
   <ItemGroup>

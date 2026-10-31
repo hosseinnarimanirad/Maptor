@@ -128,7 +128,12 @@ public class SingleSimplifiedGeometryLog
         this.Curvilinearity_Simplified = simplified.GetNumerOfCurvilinearityChange();
         this.PCInCurvilinearity = original.PercentageChangeInCurvilinearSegments(simplified);
 
-        this.TotalVectorDisplacement = (methodName == "APSC") ? 0 : original.CalculateTotalVectorDisplacement(simplified);
+        // APSC moves and adds vertices, so its TLVD is not defined (logged as 0 as in the published run). A simplified
+        // geometry whose structure differs from the original (a ring of a polygon collapsed to a point, possible for VW
+        // since its ring fix of 2026-10-06) gets +∞, which the analysis scripts read as "collapsed".
+        this.TotalVectorDisplacement = methodName == "APSC" ? 0
+                                     : original.HasTheSameSignature(simplified) ? original.CalculateTotalVectorDisplacement(simplified)
+                                     : double.PositiveInfinity;
 
         //this.TotalVectorDisplacementAtWindowScale = WebMercatorUtility.ToScreenLength(level, TotalVectorDisplacement);
 

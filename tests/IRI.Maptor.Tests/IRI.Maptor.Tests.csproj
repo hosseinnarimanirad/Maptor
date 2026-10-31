@@ -50,8 +50,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- The ruling-span calculator lives in the Saba client (the analysis is client-side
-         by design) and is pure, UI-free arithmetic, so it is unit-tested from here. -->
     <ProjectReference Include="..\..\src\Presentation\IRI.Maptor.Presentation.Wpf\IRI.Maptor.Presentation.Wpf.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure\IRI.Maptor.Infrastructure.EfCore.SqlServer\IRI.Maptor.Infrastructure.EfCore.SqlServer.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure\IRI.Maptor.Infrastructure.EfCore.PostgreSql\IRI.Maptor.Infrastructure.EfCore.PostgreSql.csproj" />
