@@ -19,11 +19,11 @@ public class BoolToGridLengthConverter : IValueConverter
             }
             if (parameter.ToString().EndsWith("*"))
             {
-                return new GridLength(double.Parse(parameter.ToString().TrimEnd('*')), GridUnitType.Star);
+                return new GridLength(double.Parse(parameter.ToString().TrimEnd('*'), CultureInfo.InvariantCulture), GridUnitType.Star);
             }
             else
             {
-                return new GridLength(double.Parse(parameter.ToString()), GridUnitType.Pixel);
+                return new GridLength(double.Parse(parameter.ToString(), CultureInfo.InvariantCulture), GridUnitType.Pixel);
             }
         }
         else
