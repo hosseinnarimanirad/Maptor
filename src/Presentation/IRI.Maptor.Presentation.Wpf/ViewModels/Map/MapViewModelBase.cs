@@ -2267,6 +2267,9 @@ public abstract class MapViewModelBase : ViewModelBase
             if (!layer.IsInScaleRange && !options.IncludeNotInScaleRangeLayers)
                 continue;
 
+            // a lazy source (e.g. shapefile) still loading in the background would answer empty
+            await WaitWhileInitializingAsync(layer.DataSource);
+
             var features = await (layer.DataSource as IVectorDataSource)!.GetAsFeatureSetAsync(geometryBoundary);
 
             if (features is not null && !features.Features.IsNullOrEmpty())
@@ -2282,6 +2285,35 @@ public abstract class MapViewModelBase : ViewModelBase
         }
 
         return result;
+    }
+
+    /// <summary>
+    /// Completes when <paramref name="dataSource"/> is not loading. Only an in-progress load is
+    /// awaited; a source that never loads (or already failed) completes at once.
+    /// </summary>
+    private static Task WaitWhileInitializingAsync(IDataSource? dataSource)
+    {
+        if (dataSource is null || !dataSource.IsInitializing)
+            return Task.CompletedTask;
+
+        var completion = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        void OnIsInitializingChanged(object? sender, bool isInitializing)
+        {
+            if (isInitializing)
+                return;
+
+            dataSource.IsInitializingChanged -= OnIsInitializingChanged;
+            completion.TrySetResult();
+        }
+
+        dataSource.IsInitializingChanged += OnIsInitializingChanged;
+
+        // the load may have finished between the first check and the subscription
+        if (!dataSource.IsInitializing)
+            OnIsInitializingChanged(dataSource, false);
+
+        return completion.Task;
     }
 
     public List<VectorLayer> GetAllVectorLayers(IEnumerable<ILayer>? layers)
@@ -5428,7 +5460,8 @@ public abstract class MapViewModelBase : ViewModelBase
             }
             else
             {
-                var groupLayer = new GroupLayer(Path.GetFileNameWithoutExtension(fileName));
+                // searchable so identify/search descend into the sub-layers (each keeps its own flag)
+                var groupLayer = new GroupLayer(Path.GetFileNameWithoutExtension(fileName)) { IsSearchable = true };
 
                 foreach (var group in groups)
                 {
@@ -5572,7 +5605,8 @@ public abstract class MapViewModelBase : ViewModelBase
             }
             else
             {
-                var groupLayer = new GroupLayer(Path.GetFileNameWithoutExtension(fileName));
+                // searchable so identify/search descend into the sub-layers (each keeps its own flag)
+                var groupLayer = new GroupLayer(Path.GetFileNameWithoutExtension(fileName)) { IsSearchable = true };
 
                 foreach (var group in groups)
                 {
@@ -5815,8 +5849,9 @@ public abstract class MapViewModelBase : ViewModelBase
                 .ThenBy(g => g.Key.Category)
                 .ToList();
 
-            // create the parent group layer
-            GroupLayer groupLayer = new GroupLayer(Path.GetFileNameWithoutExtension(fileName));
+            // create the parent group layer; searchable so identify/search descend into the
+            // sub-layers ("-other" annotation sub-layers stay non-searchable on their own flag)
+            GroupLayer groupLayer = new GroupLayer(Path.GetFileNameWithoutExtension(fileName)) { IsSearchable = true };
 
             foreach (var group in groups)
             {
@@ -6223,7 +6258,8 @@ public abstract class MapViewModelBase : ViewModelBase
     /// </summary>
     private void AddGeoPackageVectorLayers(string fileName, List<string> layerNames)
     {
-        var groupLayer = new GroupLayer($"{Path.GetFileNameWithoutExtension(fileName)} (Vector)");
+        // searchable so identify/search descend into the sub-layers
+        var groupLayer = new GroupLayer($"{Path.GetFileNameWithoutExtension(fileName)} (Vector)") { IsSearchable = true };
 
         foreach (var layerName in layerNames)
         {
