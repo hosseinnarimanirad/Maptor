@@ -43,7 +43,7 @@ public class MultiPointZReader : zReader<EsriMultiPointZ>
 
         double[] measures = new double[numPoints];
 
-        if (shpReader.BaseStream.Position != shpReader.BaseStream.Length)
+        if (shpReader.BaseStream.Position < recordEnd)
         {
             this.ReadMeasures(numPoints, out minMeasure, out maxMeasure, out measures);
         }
@@ -74,7 +74,7 @@ public class MultiPointZReader : zReader<EsriMultiPointZ>
 
         double[] measures = new double[numPoints];
 
-        if (contentLength > reader.BaseStream.Position * 2 - offset)
+        if (reader.BaseStream.Position < offset * 2 + 8 + contentLength * 2)
         {
             ShpBinaryReader.ReadValues(reader, numPoints, out minMeasure, out maxMeasure, out measures);
         }

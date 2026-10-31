@@ -166,11 +166,13 @@ public static class DbfFile
     }
 
     //public static List<Dictionary<string, object>> Read(string dbfFileName, bool correctFarsiCharacters = true, Encoding dataEncoding = null, Encoding fieldHeaderEncoding = null)
+    /// <param name="skipDeletedRecords">false: a deleted record is kept as a null entry so indexes match record numbers</param>
     public static EsriAttributeDictionary Read(
         string dbfFileName,
         bool correctFarsiCharacters = true,
         Encoding? dataEncoding = null,
-        Encoding? fieldHeaderEncoding = null)
+        Encoding? fieldHeaderEncoding = null,
+        bool skipDeletedRecords = true)
     {
         dataEncoding = dataEncoding ?? TryDetectEncoding(dbfFileName);
 
@@ -222,6 +224,11 @@ public static class DbfFile
             // All dbf field records begin with a deleted flag field. Deleted - 0x2A (asterisk) else 0x20 (space)
             if (recordReader.ReadChar() == '*')
             {
+                if (!skipDeletedRecords)
+                {
+                    attributes.Add(null);
+                }
+
                 continue;
             }
 
@@ -252,7 +259,8 @@ public static class DbfFile
     bool correctFarsiCharacters = true,
     Encoding? dataEncoding = null,
     Encoding? fieldHeaderEncoding = null,
-    CancellationToken cancellationToken = default)
+    CancellationToken cancellationToken = default,
+    bool skipDeletedRecords = true)
     {
         // Detect encoding synchronously (assumed to be fast, no I/O needed inside)
         dataEncoding ??= TryDetectEncoding(dbfFileName);
@@ -314,7 +322,13 @@ public static class DbfFile
             // First byte is deletion marker
             char deletedFlag = recordReader.ReadChar();
             if (deletedFlag == '*')
+            {
+                // keep a null entry so indexes match record numbers
+                if (!skipDeletedRecords)
+                    attributes.Add(null);
+
                 continue; // Skip deleted record
+            }
 
             var values = new Dictionary<string, object>(fields.Count);
             for (int fieldIdx = 0; fieldIdx < fields.Count; fieldIdx++)
