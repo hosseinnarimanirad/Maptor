@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Core.Common.Enums;
 using IRI.Maptor.Core.Common.Primitives;
@@ -477,6 +478,44 @@ public class Geometry_DxfTest
         Assert.Equal(5, lineStrings[1].Points[0].Y, precision: 9);
         Assert.Equal(5, lineStrings[1].Points[1].X, precision: 9);
         Assert.Equal(7, lineStrings[1].Points[1].Y, precision: 9);
+    }
+
+    [Fact]
+    public async Task GetPreview_DrawingInsideAnonymousBlock_ShouldSampleBlockContentNotInsertionPoint()
+    {
+        // The whole drawing lives in anonymous block *U1, placed once at 0,0 (as AutoCAD writes a
+        // grouped drawing): the preview must show the block's vertices, not the 0,0 insertion point.
+        var dxf = BuildDxf(
+            blocksSection: new[]
+            {
+                "0", "BLOCK", "2", "*U1", "10", "0", "20", "0",
+                "0", "LINE", "10", "500000", "20", "3500000", "11", "500100", "21", "3500100",
+                "0", "ENDBLK"
+            },
+            entitiesSection: new[]
+            {
+                "0", "INSERT", "2", "*U1", "10", "0", "20", "0"
+            });
+
+        var path = Path.Combine(Path.GetTempPath(), $"preview_{Guid.NewGuid()}.dxf");
+
+        try
+        {
+            await File.WriteAllTextAsync(path, dxf);
+
+            var preview = await DxfReader.GetPreviewAsync(path, maxSamplePoints: 50);
+
+            Assert.Equal(0, preview.DetectedSrid);
+            Assert.Equal(2, preview.SamplePoints.Count);
+            Assert.Equal(500000, preview.SamplePoints[0].X, precision: 9);
+            Assert.Equal(3500000, preview.SamplePoints[0].Y, precision: 9);
+            Assert.Equal(500100, preview.SamplePoints[1].X, precision: 9);
+            Assert.Equal(3500100, preview.SamplePoints[1].Y, precision: 9);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
     }
 
     [Fact]

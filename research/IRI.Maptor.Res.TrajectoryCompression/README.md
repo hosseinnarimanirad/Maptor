@@ -21,6 +21,7 @@ are applied to it.
 | `PerFeatureRanks` | `StatisticsEnhancedTest` | one row per feature × coefficient with the six measures of all ten algorithms and their ranks as columns (`Model/NineAlgoSixMeasureLog.cs`) |
 | `VisualOutput` | `TestWithOutput` | for the hand-picked features of `IsSpecialCase` (the RDP-versus-SF cases of the paper's Figure 9): one PNG per coefficient with RDP and SF overlaid on the original, plus the GeoJSON of every result |
 | `FeatureCounts` | `CountFeatures` | one row per layer: shapefile records, single parts, parts with 15 < points < 500, features kept after duplicate removal, their points, and how many fall below / within / above the natural zoom band 10–20 |
+| `ExportRdpSfCases` | `ExportRdpSfCases` | GeoJSON of the original, RDP and SF results at coefficients 1/2, 1, 2 (plus the usual log rows) for the features listed in `ThesisCasesFile` (type and FeatureIndex of the SingleFeatures log); used for the thesis figure on RDP against SF |
 
 The ten algorithms: ED, RDP, RW, PD, VW, SF, NOPW, BOPW, TR and APSC (`SimplificationType`). The TLVD of
 APSC is not computed because APSC moves and adds vertices.

@@ -67,7 +67,16 @@ public static class SimplificationHelper
         VisualOutput,
         /// <summary>One row per layer: how many features the protocol of <see cref="LoadFeatures"/> keeps and why (<see cref="CountFeatures"/>).</summary>
         FeatureCounts,
+        /// <summary>GeoJSON of the original, RDP and SF results (coefficients 1/2, 1, 2) of the features listed in <see cref="ThesisCasesFile"/>, plus their log rows (<see cref="ExportRdpSfCases"/>).</summary>
+        ExportRdpSfCases,
     }
+
+    /// <summary>
+    /// Cases of the thesis figure on RDP against SF: one `Type&lt;tab&gt;FeatureIndex` per line (`#` = comment), the
+    /// index being the position of the feature in <see cref="LoadFeatures"/> with every multi-part geometry split,
+    /// i.e. the FeatureIndex column of the SingleFeatures log.
+    /// </summary>
+    public const string ThesisCasesFile = @"E:\University.Ph.D\Thesis\Assets\figures-ch4-6\src\f5_09_cases.txt";
 
     // OSM dataset directory should be addressed here
     private const string DataFolder = @"E:\University.Ph.D\Sample Data\OSM-1401-03-03-WebMercator";
@@ -85,7 +94,7 @@ public static class SimplificationHelper
 
         using var writer = new StreamWriter($"{writeFolder}\\All-summary.txt", false);
 
-        if (experiment == Experiment.SingleFeatures)
+        if (experiment is Experiment.SingleFeatures or Experiment.ExportRdpSfCases)
             writer.WriteLine(SingleSimplifiedGeometryLog.GetHeader());
 
         if (experiment == Experiment.FeatureCounts)
@@ -131,6 +140,11 @@ public static class SimplificationHelper
 
                 case Experiment.FeatureCounts:
                     writer.WriteLine(CountFeatures(file));
+                    writer.Flush();
+                    break;
+
+                case Experiment.ExportRdpSfCases:
+                    await ExportRdpSfCases(file, writer, writeFolder);
                     writer.Flush();
                     break;
             }
@@ -311,6 +325,76 @@ public static class SimplificationHelper
         }
 
         return string.Join('\t', fileName, records, parts, inRange, features.Count, features.Sum(f => f.TotalNumberOfPoints), below, within, above);
+    }
+
+    /// <summary>
+    /// For the features of <see cref="ThesisCasesFile"/> that belong to this layer: the same protocol as
+    /// <see cref="TestSingleFeatures"/> (same indices, zoom level and thresholds) restricted to RDP and SF at the
+    /// coefficients 1/2, 1 and 2, writing the original and every result as GeoJSON
+    /// (`{Type}-{index}-z{zoom}-original.json`, `{Type}-{index}-z{zoom}-{coef}-{method}.json`) and the usual log row,
+    /// so that a figure script draws exactly the geometries behind the published-style numbers.
+    /// </summary>
+    public static async Task ExportRdpSfCases(string shpFile, StreamWriter writer, string outputDirectory)
+    {
+        var fileName = Path.GetFileNameWithoutExtension(shpFile);
+
+        var type = fileName.Split('_').First();
+
+        var wanted = File.ReadLines(ThesisCasesFile)
+                         .Select(l => l.Trim())
+                         .Where(l => l.Length > 0 && !l.StartsWith('#'))
+                         .Select(l => l.Split(new[] { '\t', ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                         .Where(p => p.Length >= 2 && p[0] == type)
+                         .Select(p => int.Parse(p[1]))
+                         .ToHashSet();
+
+        if (wanted.Count == 0)
+            return;
+
+        var features = LoadFeatures(shpFile, splitAllMultiParts: true);
+
+        var coefficients = new List<double> { 1.0 / 2, 1, 2 };
+
+        var methods = new List<SimplificationType> { SimplificationType.RamerDouglasPeucker, SimplificationType.SleeveFitting };
+
+        var methodNames = methods.ToDictionary(m => m, m => m.GetDescription());
+
+        int featureIndex = 0;
+
+        foreach (var feature in features)
+        {
+            featureIndex++;
+
+            if (!wanted.Contains(featureIndex))
+                continue;
+
+            var boundingBox = feature.GetBoundingBox();
+
+            var estimatedZoomLevel = WebMercatorUtility.EstimateZoomLevel(boundingBox, 256, 256);
+
+            var baseThreshold = WebMercatorUtility.ToWebMercatorLength(estimatedZoomLevel, BaseThresholdInPixels);
+
+            await feature.AsGeoJsonFeatureSet().SaveAsync($"{outputDirectory}\\{type}-{featureIndex}-z{estimatedZoomLevel}-original.json", false, true);
+
+            foreach (var coef in coefficients)
+            {
+                var threshold = baseThreshold * coef;
+
+                var parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = Retain3Points };
+
+                foreach (var method in methods)
+                {
+                    var simplified = feature.Simplify(method, parameters);
+
+                    if (simplified.IsNullOrEmpty() || simplified.Type == GeometryType.Point)
+                        continue;
+
+                    await simplified.AsGeoJsonFeatureSet().SaveAsync($"{outputDirectory}\\{type}-{featureIndex}-z{estimatedZoomLevel}-{coef:0.00}-{methodNames[method]}.json", false, true);
+
+                    writer.WriteLine(new SingleSimplifiedGeometryLog(fileName, boundingBox, featureIndex, feature, simplified, estimatedZoomLevel, methodNames[method], 0, parameters, coef).ToTsv());
+                }
+            }
+        }
     }
 
     #region Per Feature

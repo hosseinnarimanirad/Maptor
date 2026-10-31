@@ -71,6 +71,8 @@ public class DxfReader
 {
     /// <summary>
     /// Extracts preview data from a DXF file: detected SRID (if any) and up to maxSamplePoints coordinate pairs.
+    /// The sample is taken from the same geometries <see cref="ReadFeatures(string, int?)"/> returns, so
+    /// block content (drawings placed through an INSERT) is previewed exactly as it will be drawn.
     /// </summary>
     public static async Task<DxfPreviewResult> GetPreviewAsync(string filePath, int maxSamplePoints = 50)
     {
@@ -81,7 +83,11 @@ public class DxfReader
         var lines = content.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
 
         var detectedSrid = ExtractSridFromDxf(lines);
-        var samplePoints = ExtractSamplePoints(lines, maxSamplePoints);
+
+        // the SRID only labels the geometries here; sample coordinates are the file's raw values
+        var features = ReadFeatures(lines, detectedSrid > 0 ? detectedSrid : SridHelper.GeodeticWGS84);
+
+        var samplePoints = ExtractSamplePoints(features, maxSamplePoints);
 
         return new DxfPreviewResult(detectedSrid, samplePoints);
     }
@@ -126,6 +132,11 @@ public class DxfReader
 
         var lines = dxfContent.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
 
+        return ReadFeatures(lines, defaultSrid);
+    }
+
+    private static List<DxfFeature> ReadFeatures(string[] lines, int? defaultSrid)
+    {
         // Use detected SRID from DXF only when user did not provide one
         if (!defaultSrid.HasValue || defaultSrid == 0)
         {
@@ -241,54 +252,18 @@ public class DxfReader
     }
 
     /// <summary>
-    /// Extracts raw (x,y) coordinate pairs from ENTITIES section up to maxSamplePoints.
+    /// Takes up to maxSamplePoints vertices of the geometries the map will draw: real features
+    /// first, then annotation. The insertion point of an anonymous block (*U, *D, ...) is skipped:
+    /// it is drawing machinery (usually 0,0), not a location in the drawing.
     /// </summary>
-    private static List<Point> ExtractSamplePoints(string[] lines, int maxSamplePoints)
+    private static List<Point> ExtractSamplePoints(List<DxfFeature> features, int maxSamplePoints)
     {
-        var points = new List<Point>();
-        if (lines == null || lines.Length == 0)
-            return points;
-
-        int entitiesStart = -1;
-        for (int i = 0; i < lines.Length - 1; i++)
-        {
-            if (lines[i].Trim() == "0" && lines[i + 1].Trim() == "SECTION")
-            {
-                if (i + 3 < lines.Length && lines[i + 2].Trim() == "2" && lines[i + 3].Trim() == "ENTITIES")
-                {
-                    entitiesStart = i + 4;
-                    break;
-                }
-            }
-        }
-
-        if (entitiesStart < 0)
-            return points;
-
-        double? pendingX = null;
-        for (int i = entitiesStart; i < lines.Length - 1 && points.Count < maxSamplePoints; i++)
-        {
-            var groupCode = lines[i].Trim();
-            var value = lines[i + 1].Trim();
-
-            if (groupCode == "0" && (value == "ENDSEC" || value == "EOF"))
-                break;
-
-            if (groupCode == "10" && double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out double x))
-            {
-                pendingX = x;
-                i++;
-            }
-            else if ((groupCode == "20" || groupCode == "21") && pendingX.HasValue &&
-                     double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out double y))
-            {
-                points.Add(new Point(pendingX.Value, y));
-                pendingX = null;
-                i++;
-            }
-        }
-
-        return points;
+        return features
+            .Where(f => !(f.EntityType == "INSERT" && f.IsAnnotation && f.Geometry.Type == GeometryType.Point))
+            .OrderBy(f => f.IsAnnotation)
+            .SelectMany(f => f.Geometry.GetAllPoints())
+            .Take(maxSamplePoints)
+            .ToList();
     }
 
     private static List<DxfFeature> ParseEntities(string[] lines, int srid, Dictionary<string, DxfBlock> blocks,

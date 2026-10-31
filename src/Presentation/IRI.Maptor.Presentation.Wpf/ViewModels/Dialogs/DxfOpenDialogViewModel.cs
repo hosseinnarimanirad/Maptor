@@ -1,9 +1,11 @@
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 
 using IRI.Maptor.Core.Common.Enums;
+using IRI.Maptor.Core.Common.Primitives;
 using IRI.Maptor.Core.Spatial.IO.Dxf;
 using IRI.Maptor.Presentation.Wpf.Services;
 using IRI.Maptor.Core.SpatialReferenceSystem;
@@ -214,6 +216,8 @@ public class DxfOpenDialogViewModel : DialogViewModelBase
             else
             {
                 CanUserChooseSrs = true;
+
+                GuessSrsFromSamplePoints(preview.SamplePoints);
             }
         }
         catch (Exception ex)
@@ -223,6 +227,28 @@ public class DxfOpenDialogViewModel : DialogViewModelBase
         finally
         {
             IsLoading = false;
+        }
+    }
+
+    /// <summary>
+    /// The file names no SRS (CAD drawings rarely do): pick the option the coordinates fit, so
+    /// projected UTM values are not opened as degrees by default. The UTM zone cannot be told
+    /// from the coordinates and is left for the user to set. Coordinates that fit neither keep
+    /// the current selection.
+    /// </summary>
+    private void GuessSrsFromSamplePoints(IReadOnlyList<Point> points)
+    {
+        if (points.Count == 0)
+            return;
+
+        if (points.All(p => Math.Abs(p.X) <= 180 && Math.Abs(p.Y) <= 90))
+        {
+            SelectedSrsOption = AvailableSrsOptions.First(o => o.FixedSrid == SridHelper.GeodeticWGS84);
+        }
+        // UTM easting is about 166 000–834 000 m inside a zone; northing 0–10 000 000 m
+        else if (points.All(p => p.X > 100_000 && p.X < 900_000 && p.Y >= 0 && p.Y <= 10_000_000))
+        {
+            SelectedSrsOption = _utmOption;
         }
     }
 
