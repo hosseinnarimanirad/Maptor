@@ -26,6 +26,10 @@ public static class GeoJson
         AllowOutOfOrderMetadataProperties = true,
     };
 
+    // DefaultOptions with indentation. An options instance becomes read-only once it has been used, so
+    // indented output needs its own instance instead of toggling WriteIndented on the shared one.
+    private static readonly JsonSerializerOptions IndentedOptions = new JsonSerializerOptions(DefaultOptions) { WriteIndented = true };
+
     public const string Point = "Point";
     public const string MultiPoint = "MultiPoint";
     public const string LineString = "LineString";
@@ -110,9 +114,7 @@ public static class GeoJson
 
     public static string SerializeGeometry(IGeoJsonGeometry geoJson, bool indented, bool removeSpaces = false)
     {
-        DefaultOptions.WriteIndented = indented;
-
-        var result = JsonHelper.Serialize(geoJson, DefaultOptions);
+        var result = JsonHelper.Serialize(geoJson, indented ? IndentedOptions : DefaultOptions);
 
         return removeSpaces ? result.Replace(" ", string.Empty) : result;
     }
