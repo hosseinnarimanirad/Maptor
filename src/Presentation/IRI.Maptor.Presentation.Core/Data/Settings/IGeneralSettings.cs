@@ -42,7 +42,13 @@ public interface IGeneralSettings
 
     bool Legend_ShowLayerColors { get; set; }
 
-    bool FeatureTable_UseMultiRowTabs { get; set; } 
+    bool FeatureTable_UseMultiRowTabs { get; set; }
+
+    /// <summary>Calendar of the date/time columns in the feature table's Excel export.</summary>
+    ExportCalendar FeatureTable_ExportCalendar { get; set; }
+
+    /// <summary>Time zone of the date/time columns in the feature table's Excel export.</summary>
+    ExportTimeZone FeatureTable_ExportTimeZone { get; set; }
 
     MahAppsThemeColor? MahAppsTheme { get; set; }
 

@@ -56,7 +56,7 @@ public class DateColumnFilter : ColumnFilterViewModel
 
     public override bool IsActive => FromDate.HasValue || ToDate.HasValue;
 
-    // date-only, as in Matches: the whole To day is included
+    // date-only, as in Matches: the whole To day is included. The days are local; the server stores UTC.
     public override IEnumerable<FeatureFilterDto> ToServerFilters()
     {
         if (!IsActive)
@@ -66,10 +66,12 @@ public class DateColumnFilter : ColumnFilterViewModel
         {
             Field = FieldName,
             Operator = FeatureFilterOperator.Between,
-            Value = FromDate?.Date,
-            ValueTo = ToDate?.Date.AddDays(1).AddTicks(-1),
+            Value = FromDate.HasValue ? LocalToUtc(FromDate.Value.Date) : null,
+            ValueTo = ToDate.HasValue ? LocalToUtc(ToDate.Value.Date.AddDays(1).AddTicks(-1)) : null,
         };
     }
+
+    private static DateTime LocalToUtc(DateTime local) => DateTime.SpecifyKind(local, DateTimeKind.Local).ToUniversalTime();
 
     public override bool Matches(object? rawValue)
     {
@@ -78,6 +80,10 @@ public class DateColumnFilter : ColumnFilterViewModel
 
         if (!TryGetDateTime(rawValue, out var date))
             return false;
+
+        // compared by the day the user sees
+        if (date.Kind == DateTimeKind.Utc)
+            date = date.ToLocalTime();
 
         if (FromDate.HasValue && date.Date < FromDate.Value.Date)
             return false;
@@ -114,7 +120,8 @@ public class DateColumnFilter : ColumnFilterViewModel
                 return true;
 
             case string s when !string.IsNullOrWhiteSpace(s):
-                return DateTime.TryParse(s, CultureInfo.CurrentCulture, DateTimeStyles.None, out date) ||
+                return DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out date) ||
+                       DateTime.TryParse(s, CultureInfo.CurrentCulture, DateTimeStyles.None, out date) ||
                        DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
 
             default:

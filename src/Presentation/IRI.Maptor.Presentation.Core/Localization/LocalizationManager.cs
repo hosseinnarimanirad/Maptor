@@ -47,16 +47,20 @@ public class LocalizationManager : INotifyPropertyChanged
         get => _currentCulture;
         private set
         {
-            if (_currentCulture != value)
+            // by name: two CultureInfo instances of the same language must not switch (and repaint) the UI again
+            if (!string.Equals(_currentCulture?.Name, value.Name, StringComparison.OrdinalIgnoreCase))
             {
                 _currentCulture = value;
                 CultureInfo.CurrentUICulture = value;
                 CultureInfo.CurrentCulture = value;
+
+                // before the events, so their handlers already read the new language
+                Resources.Culture = value;
+
                 LanguageChanged?.Invoke();
 
                 FlowDirectionChanged?.Invoke();
 
-                Resources.Culture = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null)); // refresh all bindings
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsRightToLeft)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentFlowDirection)));

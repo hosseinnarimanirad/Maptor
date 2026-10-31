@@ -18,6 +18,7 @@ dotnet add package IRI.Maptor.Core.Pdf
 - Standard (A0–A5, B2–B4, Letter, Legal, Tabloid), custom, or auto (fit-to-bounds) page sizes in portrait/landscape
 - Feature attributes stored as PDF document metadata (Title, Author, Creator, Subject, Keywords) when `PdfOptions.PreserveFeatureAttributes` is `true`
 - Decorated map export (`PdfWriter.WriteLayers`): raster basemap plus stacked vector layers, title band, four-segment scale bar with representative fraction, dashed degree graticule with WGS84 labels, double-border neat line, powered-by and company logos, and optional-content (toggleable) PDF layers
+- Text-on-map labels (`LayerPdfData.Texts`, `PdfWriter.PdfMapText`): pre-built filled vector parts (frame, text field, halo, glyphs) drawn in order at on-screen size, the block's anchor point (bottom-centre unless `AnchorX`/`AnchorY` say otherwise, e.g. for a rotated label) on a map anchor; a label whose box misses the printed area is dropped
 - `PdfWriter.ComputeDecoratedMapExtent` returns the map extent adjusted for decoration margins
 
 ## Usage
@@ -95,6 +96,7 @@ File.WriteAllBytes("map.pdf", pdf);
 - The north arrow decoration is not implemented.
 - The legend column is fixed-width; content flows one column, then two, then shrinks (to a minimum) and is finally clipped with a "+N" indicator. Legend symbols are drawn as vector art (`PdfLegendSwatch`) and stay crisp at any zoom; a raster swatch is only used as a fallback for symbology the vector path can't express.
 - Raster/tile opacity is not applied to drawn images (a PdfSharpCore `DrawImage` limitation); vector opacity works.
+- A `PdfMapText` below full opacity fades each part separately (no group opacity), so its parts show through each other.
 - `PdfOptions.PointMarker` only takes effect on the `WriteLayers` map-export path; the simple `ToPdf`/`Write` path always draws a circle of `PointCircleRadius`.
 - `PdfOptions.CoordinatePrecision` is currently unused (no coordinate rounding is applied).
 - Output is a single page; units are PDF points (1/72 inch) with no DPI setting. Set `PreserveMapScale` plus `PreservedWebMercatorScale` to size the page so the printed map keeps a given scale.

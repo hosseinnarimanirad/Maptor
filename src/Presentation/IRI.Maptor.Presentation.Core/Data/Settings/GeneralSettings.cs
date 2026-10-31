@@ -30,6 +30,10 @@ public class GeneralSettings : IGeneralSettings
 
     public bool FeatureTable_UseMultiRowTabs { get; set; } = true;
 
+    public ExportCalendar FeatureTable_ExportCalendar { get; set; } = ExportCalendar.Persian;
+
+    public ExportTimeZone FeatureTable_ExportTimeZone { get; set; } = ExportTimeZone.Iran;
+
     public MahAppsThemeColor? MahAppsTheme { get; set; } = MahAppsThemeColor.Amber;
 
     /// <summary>

@@ -128,6 +128,26 @@ public class GeneralSettingsModel : Notifier, IGeneralSettings
             RaisePropertyChanged();
         }
     }
+
+    public ExportCalendar FeatureTable_ExportCalendar
+    {
+        get => _settings.FeatureTable_ExportCalendar;
+        set
+        {
+            _settings.FeatureTable_ExportCalendar = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    public ExportTimeZone FeatureTable_ExportTimeZone
+    {
+        get => _settings.FeatureTable_ExportTimeZone;
+        set
+        {
+            _settings.FeatureTable_ExportTimeZone = value;
+            RaisePropertyChanged();
+        }
+    }
      
 
     public MahAppsThemeColor? MahAppsTheme
