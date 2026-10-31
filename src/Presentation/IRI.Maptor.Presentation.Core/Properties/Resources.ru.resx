@@ -2596,4 +2596,172 @@
   <data name="legend_filter_only" xml:space="preserve">
     <value>Только</value>
   </data>
+  <data name="textMarker_tooltip_fontFamily" xml:space="preserve">
+    <value>Шрифт</value>
+  </data>
+  <data name="textMarker_tooltip_fontSize" xml:space="preserve">
+    <value>Размер шрифта</value>
+  </data>
+  <data name="textMarker_tooltip_increaseFontSize" xml:space="preserve">
+    <value>Увеличить шрифт</value>
+  </data>
+  <data name="textMarker_tooltip_decreaseFontSize" xml:space="preserve">
+    <value>Уменьшить шрифт</value>
+  </data>
+  <data name="textMarker_tooltip_textColor" xml:space="preserve">
+    <value>Цвет текста</value>
+  </data>
+  <data name="textMarker_tooltip_background" xml:space="preserve">
+    <value>Фон (только для рамки)</value>
+  </data>
+  <data name="textMarker_tooltip_bold" xml:space="preserve">
+    <value>Полужирный</value>
+  </data>
+  <data name="textMarker_tooltip_italic" xml:space="preserve">
+    <value>Курсив</value>
+  </data>
+  <data name="textMarker_tooltip_underline" xml:space="preserve">
+    <value>Подчёркнутый</value>
+  </data>
+  <data name="textMarker_tooltip_alignLeft" xml:space="preserve">
+    <value>По левому краю</value>
+  </data>
+  <data name="textMarker_tooltip_alignCenter" xml:space="preserve">
+    <value>По центру</value>
+  </data>
+  <data name="textMarker_tooltip_alignRight" xml:space="preserve">
+    <value>По правому краю</value>
+  </data>
+  <data name="textMarker_tooltip_leftToRight" xml:space="preserve">
+    <value>Слева направо (LTR)</value>
+  </data>
+  <data name="textMarker_tooltip_rightToLeft" xml:space="preserve">
+    <value>Справа налево (RTL)</value>
+  </data>
+  <data name="textMarker_tooltip_frameBox" xml:space="preserve">
+    <value>Рамка</value>
+  </data>
+  <data name="textMarker_tooltip_framePlain" xml:space="preserve">
+    <value>Простой текст</value>
+  </data>
+  <data name="textMarker_tooltip_frameHalo" xml:space="preserve">
+    <value>Ореол</value>
+  </data>
+  <data name="textMarker_tooltip_erase" xml:space="preserve">
+    <value>Стереть текст</value>
+  </data>
+  <data name="textMarker_tooltip_copyText" xml:space="preserve">
+    <value>Копировать текст</value>
+  </data>
+  <data name="textMarker_tooltip_delete" xml:space="preserve">
+    <value>Удалить подпись</value>
+  </data>
+  <data name="textMarker_color_themeHighlight" xml:space="preserve">
+    <value>Акцент темы</value>
+  </data>
+  <data name="textMarker_color_black" xml:space="preserve">
+    <value>Чёрный</value>
+  </data>
+  <data name="textMarker_color_white" xml:space="preserve">
+    <value>Белый</value>
+  </data>
+  <data name="textMarker_color_limeGreen" xml:space="preserve">
+    <value>Лаймово-зелёный</value>
+  </data>
+  <data name="textMarker_color_lime" xml:space="preserve">
+    <value>Лаймовый</value>
+  </data>
+  <data name="textMarker_color_green" xml:space="preserve">
+    <value>Зелёный</value>
+  </data>
+  <data name="textMarker_color_teal" xml:space="preserve">
+    <value>Сине-зелёный</value>
+  </data>
+  <data name="textMarker_color_cyan" xml:space="preserve">
+    <value>Голубой</value>
+  </data>
+  <data name="textMarker_color_blue" xml:space="preserve">
+    <value>Синий</value>
+  </data>
+  <data name="textMarker_color_indigo" xml:space="preserve">
+    <value>Индиго</value>
+  </data>
+  <data name="textMarker_color_violet" xml:space="preserve">
+    <value>Фиолетовый</value>
+  </data>
+  <data name="textMarker_color_pink" xml:space="preserve">
+    <value>Розовый</value>
+  </data>
+  <data name="textMarker_color_magenta" xml:space="preserve">
+    <value>Пурпурный</value>
+  </data>
+  <data name="textMarker_color_crimson" xml:space="preserve">
+    <value>Малиновый</value>
+  </data>
+  <data name="textMarker_color_red" xml:space="preserve">
+    <value>Красный</value>
+  </data>
+  <data name="textMarker_color_orange" xml:space="preserve">
+    <value>Оранжевый</value>
+  </data>
+  <data name="textMarker_color_amber" xml:space="preserve">
+    <value>Янтарный</value>
+  </data>
+  <data name="textMarker_color_yellow" xml:space="preserve">
+    <value>Жёлтый</value>
+  </data>
+  <data name="textMarker_color_brown" xml:space="preserve">
+    <value>Коричневый</value>
+  </data>
+  <data name="textMarker_color_olive" xml:space="preserve">
+    <value>Оливковый</value>
+  </data>
+  <data name="textMarker_color_steel" xml:space="preserve">
+    <value>Стальной</value>
+  </data>
+  <data name="textMarker_color_mauve" xml:space="preserve">
+    <value>Сиреневый</value>
+  </data>
+  <data name="textMarker_color_taupe" xml:space="preserve">
+    <value>Серо-коричневый</value>
+  </data>
+  <data name="msg_drawingFile_openFailed" xml:space="preserve">
+    <value>Не удалось открыть эти файлы как рисунки: {0}</value>
+  </data>
+  <data name="textMarker_tooltip_rotation" xml:space="preserve">
+    <value>Поворот (градусы, по часовой стрелке)</value>
+  </data>
+  <data name="textMarker_tooltip_resetRotation" xml:space="preserve">
+    <value>Без поворота</value>
+  </data>
+  <data name="textMarker_tooltip_widthHandle" xml:space="preserve">
+    <value>Перетащите, чтобы изменить ширину. Двойной щелчок: автоматическая ширина</value>
+  </data>
+  <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
+    <value>Перетащите, чтобы повернуть. Shift: шаг 15°. Двойной щелчок: без поворота</value>
+  </data>
+  <data name="featureTable_exportDates" xml:space="preserve">
+    <value>Даты при экспорте в Excel</value>
+  </data>
+  <data name="featureTable_exportDates_calendar" xml:space="preserve">
+    <value>Календарь</value>
+  </data>
+  <data name="featureTable_exportDates_persian" xml:space="preserve">
+    <value>Персидский (солнечная хиджра)</value>
+  </data>
+  <data name="featureTable_exportDates_gregorian" xml:space="preserve">
+    <value>Григорианский</value>
+  </data>
+  <data name="featureTable_exportDates_timeZone" xml:space="preserve">
+    <value>Часовой пояс</value>
+  </data>
+  <data name="featureTable_exportDates_iran" xml:space="preserve">
+    <value>Время Ирана</value>
+  </data>
+  <data name="featureTable_exportDates_utc" xml:space="preserve">
+    <value>UTC</value>
+  </data>
+  <data name="featureTable_exportDates_local" xml:space="preserve">
+    <value>Часовой пояс этого компьютера</value>
+  </data>
 </root>

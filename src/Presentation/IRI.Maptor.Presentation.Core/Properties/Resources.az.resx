@@ -2596,4 +2596,172 @@
   <data name="legend_filter_only" xml:space="preserve">
     <value>Yalnız</value>
   </data>
+  <data name="textMarker_tooltip_fontFamily" xml:space="preserve">
+    <value>Şrift</value>
+  </data>
+  <data name="textMarker_tooltip_fontSize" xml:space="preserve">
+    <value>Şrift ölçüsü</value>
+  </data>
+  <data name="textMarker_tooltip_increaseFontSize" xml:space="preserve">
+    <value>Şrifti böyüt</value>
+  </data>
+  <data name="textMarker_tooltip_decreaseFontSize" xml:space="preserve">
+    <value>Şrifti kiçilt</value>
+  </data>
+  <data name="textMarker_tooltip_textColor" xml:space="preserve">
+    <value>Mətn rəngi</value>
+  </data>
+  <data name="textMarker_tooltip_background" xml:space="preserve">
+    <value>Fon (yalnız çərçivə)</value>
+  </data>
+  <data name="textMarker_tooltip_bold" xml:space="preserve">
+    <value>Qalın</value>
+  </data>
+  <data name="textMarker_tooltip_italic" xml:space="preserve">
+    <value>Kursiv</value>
+  </data>
+  <data name="textMarker_tooltip_underline" xml:space="preserve">
+    <value>Altından xətt</value>
+  </data>
+  <data name="textMarker_tooltip_alignLeft" xml:space="preserve">
+    <value>Sola düzləndir</value>
+  </data>
+  <data name="textMarker_tooltip_alignCenter" xml:space="preserve">
+    <value>Mərkəzə düzləndir</value>
+  </data>
+  <data name="textMarker_tooltip_alignRight" xml:space="preserve">
+    <value>Sağa düzləndir</value>
+  </data>
+  <data name="textMarker_tooltip_leftToRight" xml:space="preserve">
+    <value>Soldan sağa (LTR)</value>
+  </data>
+  <data name="textMarker_tooltip_rightToLeft" xml:space="preserve">
+    <value>Sağdan sola (RTL)</value>
+  </data>
+  <data name="textMarker_tooltip_frameBox" xml:space="preserve">
+    <value>Çərçivə</value>
+  </data>
+  <data name="textMarker_tooltip_framePlain" xml:space="preserve">
+    <value>Sadə mətn</value>
+  </data>
+  <data name="textMarker_tooltip_frameHalo" xml:space="preserve">
+    <value>Hale</value>
+  </data>
+  <data name="textMarker_tooltip_erase" xml:space="preserve">
+    <value>Mətni təmizlə</value>
+  </data>
+  <data name="textMarker_tooltip_copyText" xml:space="preserve">
+    <value>Mətni kopyala</value>
+  </data>
+  <data name="textMarker_tooltip_delete" xml:space="preserve">
+    <value>Etiketi sil</value>
+  </data>
+  <data name="textMarker_color_themeHighlight" xml:space="preserve">
+    <value>Mövzunun vurğu rəngi</value>
+  </data>
+  <data name="textMarker_color_black" xml:space="preserve">
+    <value>Qara</value>
+  </data>
+  <data name="textMarker_color_white" xml:space="preserve">
+    <value>Ağ</value>
+  </data>
+  <data name="textMarker_color_limeGreen" xml:space="preserve">
+    <value>Laym yaşılı</value>
+  </data>
+  <data name="textMarker_color_lime" xml:space="preserve">
+    <value>Laym</value>
+  </data>
+  <data name="textMarker_color_green" xml:space="preserve">
+    <value>Yaşıl</value>
+  </data>
+  <data name="textMarker_color_teal" xml:space="preserve">
+    <value>Göy-yaşıl</value>
+  </data>
+  <data name="textMarker_color_cyan" xml:space="preserve">
+    <value>Firuzəyi</value>
+  </data>
+  <data name="textMarker_color_blue" xml:space="preserve">
+    <value>Göy</value>
+  </data>
+  <data name="textMarker_color_indigo" xml:space="preserve">
+    <value>İndiqo</value>
+  </data>
+  <data name="textMarker_color_violet" xml:space="preserve">
+    <value>Bənövşəyi</value>
+  </data>
+  <data name="textMarker_color_pink" xml:space="preserve">
+    <value>Çəhrayı</value>
+  </data>
+  <data name="textMarker_color_magenta" xml:space="preserve">
+    <value>Macenta</value>
+  </data>
+  <data name="textMarker_color_crimson" xml:space="preserve">
+    <value>Tünd qırmızı</value>
+  </data>
+  <data name="textMarker_color_red" xml:space="preserve">
+    <value>Qırmızı</value>
+  </data>
+  <data name="textMarker_color_orange" xml:space="preserve">
+    <value>Narıncı</value>
+  </data>
+  <data name="textMarker_color_amber" xml:space="preserve">
+    <value>Kəhrəba</value>
+  </data>
+  <data name="textMarker_color_yellow" xml:space="preserve">
+    <value>Sarı</value>
+  </data>
+  <data name="textMarker_color_brown" xml:space="preserve">
+    <value>Qəhvəyi</value>
+  </data>
+  <data name="textMarker_color_olive" xml:space="preserve">
+    <value>Zeytuni</value>
+  </data>
+  <data name="textMarker_color_steel" xml:space="preserve">
+    <value>Polad</value>
+  </data>
+  <data name="textMarker_color_mauve" xml:space="preserve">
+    <value>Açıq bənövşəyi</value>
+  </data>
+  <data name="textMarker_color_taupe" xml:space="preserve">
+    <value>Boz-qəhvəyi</value>
+  </data>
+  <data name="msg_drawingFile_openFailed" xml:space="preserve">
+    <value>Bu fayllar çizim kimi açıla bilmədi: {0}</value>
+  </data>
+  <data name="textMarker_tooltip_rotation" xml:space="preserve">
+    <value>Fırlanma (dərəcə, saat əqrəbi istiqamətində)</value>
+  </data>
+  <data name="textMarker_tooltip_resetRotation" xml:space="preserve">
+    <value>Fırlanmasız</value>
+  </data>
+  <data name="textMarker_tooltip_widthHandle" xml:space="preserve">
+    <value>Eni dəyişmək üçün dartın. İki dəfə klik: avtomatik en</value>
+  </data>
+  <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
+    <value>Fırlatmaq üçün dartın. Shift: 15° addımlar. İki dəfə klik: fırlanmasız</value>
+  </data>
+  <data name="featureTable_exportDates" xml:space="preserve">
+    <value>Excel ixracında tarixlər</value>
+  </data>
+  <data name="featureTable_exportDates_calendar" xml:space="preserve">
+    <value>Təqvim</value>
+  </data>
+  <data name="featureTable_exportDates_persian" xml:space="preserve">
+    <value>Hicri-şəmsi</value>
+  </data>
+  <data name="featureTable_exportDates_gregorian" xml:space="preserve">
+    <value>Qriqorian</value>
+  </data>
+  <data name="featureTable_exportDates_timeZone" xml:space="preserve">
+    <value>Saat qurşağı</value>
+  </data>
+  <data name="featureTable_exportDates_iran" xml:space="preserve">
+    <value>İran vaxtı</value>
+  </data>
+  <data name="featureTable_exportDates_utc" xml:space="preserve">
+    <value>UTC</value>
+  </data>
+  <data name="featureTable_exportDates_local" xml:space="preserve">
+    <value>Bu kompüterin saat qurşağı</value>
+  </data>
 </root>

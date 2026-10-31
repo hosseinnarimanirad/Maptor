@@ -2596,4 +2596,172 @@
   <data name="legend_filter_only" xml:space="preserve">
     <value>Solo</value>
   </data>
+  <data name="textMarker_tooltip_fontFamily" xml:space="preserve">
+    <value>Carattere</value>
+  </data>
+  <data name="textMarker_tooltip_fontSize" xml:space="preserve">
+    <value>Dimensione carattere</value>
+  </data>
+  <data name="textMarker_tooltip_increaseFontSize" xml:space="preserve">
+    <value>Aumenta dimensione carattere</value>
+  </data>
+  <data name="textMarker_tooltip_decreaseFontSize" xml:space="preserve">
+    <value>Riduci dimensione carattere</value>
+  </data>
+  <data name="textMarker_tooltip_textColor" xml:space="preserve">
+    <value>Colore del testo</value>
+  </data>
+  <data name="textMarker_tooltip_background" xml:space="preserve">
+    <value>Sfondo (solo riquadro)</value>
+  </data>
+  <data name="textMarker_tooltip_bold" xml:space="preserve">
+    <value>Grassetto</value>
+  </data>
+  <data name="textMarker_tooltip_italic" xml:space="preserve">
+    <value>Corsivo</value>
+  </data>
+  <data name="textMarker_tooltip_underline" xml:space="preserve">
+    <value>Sottolineato</value>
+  </data>
+  <data name="textMarker_tooltip_alignLeft" xml:space="preserve">
+    <value>Allinea a sinistra</value>
+  </data>
+  <data name="textMarker_tooltip_alignCenter" xml:space="preserve">
+    <value>Centra</value>
+  </data>
+  <data name="textMarker_tooltip_alignRight" xml:space="preserve">
+    <value>Allinea a destra</value>
+  </data>
+  <data name="textMarker_tooltip_leftToRight" xml:space="preserve">
+    <value>Da sinistra a destra (LTR)</value>
+  </data>
+  <data name="textMarker_tooltip_rightToLeft" xml:space="preserve">
+    <value>Da destra a sinistra (RTL)</value>
+  </data>
+  <data name="textMarker_tooltip_frameBox" xml:space="preserve">
+    <value>Riquadro</value>
+  </data>
+  <data name="textMarker_tooltip_framePlain" xml:space="preserve">
+    <value>Testo semplice</value>
+  </data>
+  <data name="textMarker_tooltip_frameHalo" xml:space="preserve">
+    <value>Alone</value>
+  </data>
+  <data name="textMarker_tooltip_erase" xml:space="preserve">
+    <value>Cancella testo</value>
+  </data>
+  <data name="textMarker_tooltip_copyText" xml:space="preserve">
+    <value>Copia testo</value>
+  </data>
+  <data name="textMarker_tooltip_delete" xml:space="preserve">
+    <value>Elimina etichetta</value>
+  </data>
+  <data name="textMarker_color_themeHighlight" xml:space="preserve">
+    <value>Evidenziazione del tema</value>
+  </data>
+  <data name="textMarker_color_black" xml:space="preserve">
+    <value>Nero</value>
+  </data>
+  <data name="textMarker_color_white" xml:space="preserve">
+    <value>Bianco</value>
+  </data>
+  <data name="textMarker_color_limeGreen" xml:space="preserve">
+    <value>Verde lime</value>
+  </data>
+  <data name="textMarker_color_lime" xml:space="preserve">
+    <value>Lime</value>
+  </data>
+  <data name="textMarker_color_green" xml:space="preserve">
+    <value>Verde</value>
+  </data>
+  <data name="textMarker_color_teal" xml:space="preserve">
+    <value>Verde acqua</value>
+  </data>
+  <data name="textMarker_color_cyan" xml:space="preserve">
+    <value>Ciano</value>
+  </data>
+  <data name="textMarker_color_blue" xml:space="preserve">
+    <value>Blu</value>
+  </data>
+  <data name="textMarker_color_indigo" xml:space="preserve">
+    <value>Indaco</value>
+  </data>
+  <data name="textMarker_color_violet" xml:space="preserve">
+    <value>Viola</value>
+  </data>
+  <data name="textMarker_color_pink" xml:space="preserve">
+    <value>Rosa</value>
+  </data>
+  <data name="textMarker_color_magenta" xml:space="preserve">
+    <value>Magenta</value>
+  </data>
+  <data name="textMarker_color_crimson" xml:space="preserve">
+    <value>Cremisi</value>
+  </data>
+  <data name="textMarker_color_red" xml:space="preserve">
+    <value>Rosso</value>
+  </data>
+  <data name="textMarker_color_orange" xml:space="preserve">
+    <value>Arancione</value>
+  </data>
+  <data name="textMarker_color_amber" xml:space="preserve">
+    <value>Ambra</value>
+  </data>
+  <data name="textMarker_color_yellow" xml:space="preserve">
+    <value>Giallo</value>
+  </data>
+  <data name="textMarker_color_brown" xml:space="preserve">
+    <value>Marrone</value>
+  </data>
+  <data name="textMarker_color_olive" xml:space="preserve">
+    <value>Oliva</value>
+  </data>
+  <data name="textMarker_color_steel" xml:space="preserve">
+    <value>Acciaio</value>
+  </data>
+  <data name="textMarker_color_mauve" xml:space="preserve">
+    <value>Malva</value>
+  </data>
+  <data name="textMarker_color_taupe" xml:space="preserve">
+    <value>Grigio talpa</value>
+  </data>
+  <data name="msg_drawingFile_openFailed" xml:space="preserve">
+    <value>Impossibile aprire questi file come disegni: {0}</value>
+  </data>
+  <data name="textMarker_tooltip_rotation" xml:space="preserve">
+    <value>Rotazione (gradi, senso orario)</value>
+  </data>
+  <data name="textMarker_tooltip_resetRotation" xml:space="preserve">
+    <value>Senza rotazione</value>
+  </data>
+  <data name="textMarker_tooltip_widthHandle" xml:space="preserve">
+    <value>Trascina per cambiare la larghezza. Doppio clic: larghezza automatica</value>
+  </data>
+  <data name="textMarker_tooltip_rotateHandle" xml:space="preserve">
+    <value>Trascina per ruotare. Maiusc: passi di 15°. Doppio clic: senza rotazione</value>
+  </data>
+  <data name="featureTable_exportDates" xml:space="preserve">
+    <value>Date nell'esportazione Excel</value>
+  </data>
+  <data name="featureTable_exportDates_calendar" xml:space="preserve">
+    <value>Calendario</value>
+  </data>
+  <data name="featureTable_exportDates_persian" xml:space="preserve">
+    <value>Persiano (egira solare)</value>
+  </data>
+  <data name="featureTable_exportDates_gregorian" xml:space="preserve">
+    <value>Gregoriano</value>
+  </data>
+  <data name="featureTable_exportDates_timeZone" xml:space="preserve">
+    <value>Fuso orario</value>
+  </data>
+  <data name="featureTable_exportDates_iran" xml:space="preserve">
+    <value>Ora dell'Iran</value>
+  </data>
+  <data name="featureTable_exportDates_utc" xml:space="preserve">
+    <value>UTC</value>
+  </data>
+  <data name="featureTable_exportDates_local" xml:space="preserve">
+    <value>Fuso orario di questo computer</value>
+  </data>
 </root>
