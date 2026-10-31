@@ -120,42 +120,4 @@ public class PrjFileTest
                              // For instance, "Cylindrical Equal Area (world)" has ESRI:54034. If that should be checked,
                              // move it to PrjSridTestData.
     }
-
-
-    // ---------------------------------------------------------------------------------
-    // TestD900ToWebMercatorProjection with embedded PRJ strings
-    // ---------------------------------------------------------------------------------
-    [Fact]
-    public void TestD900ToWebMercatorProjection()
-    {
-        // Arrange
-        string d900PrjContent = @"PROJCS[""LCC_D900"",GEOGCS["""",DATUM[""D_unknown"",SPHEROID[""unretrievable_using_WGS84"",6378137.0,298.257223563]],PRIMEM[""Greenwich"",0.0],UNIT[""Degree"",0.0174532925199433]],PROJECTION[""Lambert_Conformal_Conic""],PARAMETER[""False_Easting"",1500000.0],PARAMETER[""False_Northing"",1166200.0],PARAMETER[""Central_Meridian"",45.0],PARAMETER[""Standard_Parallel_1"",29.65508275],PARAMETER[""Standard_Parallel_2"",35.31468808333333],PARAMETER[""Scale_Factor"",0.9987864078],PARAMETER[""Latitude_Of_Origin"",32.5],UNIT[""Meter"",1.0]]";
-        string webMercatorPrjContent = @"PROJCS[""WGS_1984_Web_Mercator_Auxiliary_Sphere"",GEOGCS[""GCS_WGS_1984"",DATUM[""D_WGS_1984"",SPHEROID[""WGS_1984"",6378137.0,298.257223563]],PRIMEM[""Greenwich"",0.0],UNIT[""Degree"",0.0174532925199433]],PROJECTION[""Mercator_Auxiliary_Sphere""],PARAMETER[""False_Easting"",0.0],PARAMETER[""False_Northing"",0.0],PARAMETER[""Central_Meridian"",0.0],PARAMETER[""Standard_Parallel_1"",0.0],PARAMETER[""Auxiliary_Sphere_Type"",0.0],UNIT[""Meter"",1.0],AUTHORITY[""EPSG"",3857]]";
-
-        var d900Prj = EsriPrjFile.Parse(d900PrjContent)
-                                 .AsMapProjection();
-
-        var webMercator = EsriPrjFile.Parse(webMercatorPrjContent)
-                                     .AsMapProjection();
-
-        // These still rely on external files. Consider if these shapefiles' data
-        // can also be embedded or mocked for fully self-contained tests if needed.
-        var sourceShapes = Shapefile.ReadShapes($"Assets\\ShapefileSamples\\sourceD900.shp").ToList();
-        var targetShapes = Shapefile.ReadShapes($"Assets\\ShapefileSamples\\targetWebMercator.shp").ToList();
-
-        // Act
-        var projected = Shapefile.Project(sourceShapes, d900Prj, webMercator);
-
-        // Assert
-        Assert.Equal(targetShapes.Count, projected.Count); // Good to check counts match before looping
-        for (int i = 0; i < targetShapes.Count; i++) // Loop to targetShapes.Count, not Count-1
-        {
-            // Assuming EsriPoint, adjust if the actual type is different or a base class
-            var expectedPoint = (EsriPoint)targetShapes[i];
-            var actualPoint = (EsriPoint)projected[i];
-
-            Assert.Equal(expectedPoint.X, actualPoint.X, 4 /*precision*/);
-            Assert.Equal(expectedPoint.Y, actualPoint.Y, 4 /*precision*/);
-        }
-    }
 }

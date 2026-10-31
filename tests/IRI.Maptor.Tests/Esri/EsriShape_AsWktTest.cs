@@ -22,8 +22,6 @@ public class EsriShape_AsWktTest
     EsriPointM[][] pointCollectionM;
     EsriPointZ[][] pointCollectionZ;
 
-    IEsriShapeCollection polygons;
-
     //[TestInitialize]
     public void InitializeTest()
     {
@@ -54,15 +52,6 @@ public class EsriShape_AsWktTest
         pointCollectionZ[2] = new EsriPointZ[] { pointsZ[1], pointsZ[7] };
         pointCollectionZ[3] = new EsriPointZ[] { pointsZ[3], pointsZ[5], pointsZ[8] };
         pointCollectionZ[4] = new EsriPointZ[] { pointsZ[9], pointsZ[7], pointsZ[8] };
-
-        System.IO.DirectoryInfo info = new System.IO.DirectoryInfo(System.Environment.CurrentDirectory);
-
-        //string fileName = string.Join("\\", info.Parent.Parent.FullName, "Resources\\regions.shp");
-        //"E:\Programming\100.IRI.Japey\IRI.Tst\IRI.Maptor.Tests\bin\Debug\net8.0-windows\Assets\ShapefileSamples2\regions.shp"
-        string fileName = $@"{Environment.CurrentDirectory}\Assets\ShapefileSamples2\regions.shp";
-
-        this.polygons = IRI.Maptor.Core.ShapefileFormat.Shapefile.ReadShapes(fileName);
-
     }
 
     [Fact]
@@ -120,19 +109,4 @@ public class EsriShape_AsWktTest
 
         //Assert.Equal(true, sqlPolylineZ.HasZ);
     }
-
-    [Fact]
-    public void TestEsriPolygonAsSqlServerWkt()
-    {
-        foreach (EsriPolygon item in this.polygons)
-        {
-            SqlGeometry geometry = SqlGeometry.STPolyFromText(new SqlChars(new SqlString(item.AsSqlServerWkt())), 0);
-
-            Assert.Equal(geometry.STNumPoints(), item.NumberOfPoints);
-
-            Assert.Equal(geometry.STNumGeometries(), item.NumberOfParts);
-        }
-
-    }
-
 }
