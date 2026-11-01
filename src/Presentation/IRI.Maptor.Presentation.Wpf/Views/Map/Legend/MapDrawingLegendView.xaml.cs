@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Threading;
 
 using IRI.Maptor.Presentation.Wpf.Controls;
 
@@ -74,5 +76,28 @@ public partial class MapDrawingLegendView : NotifiableUserControl
 
     #endregion
 
-     
+
+    /// <summary>
+    /// Keep the selected drawing in view, also when it was selected from outside the legend
+    /// (e.g. the identify results). ScrollIntoView covers a height-capped list; BringIntoView
+    /// on the row covers a list that grows inside an outer scroll viewer. Deferred so a legend
+    /// that was just expanded has laid out its rows first.
+    /// </summary>
+    private void DrawingItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (sender is not ListBox listBox || e.AddedItems.Count == 0)
+            return;
+
+        var item = e.AddedItems[0];
+
+        listBox.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, () =>
+        {
+            if (!ReferenceEquals(listBox.SelectedItem, item))
+                return;
+
+            listBox.ScrollIntoView(item);
+
+            (listBox.ItemContainerGenerator.ContainerFromItem(item) as FrameworkElement)?.BringIntoView();
+        });
+    }
 }

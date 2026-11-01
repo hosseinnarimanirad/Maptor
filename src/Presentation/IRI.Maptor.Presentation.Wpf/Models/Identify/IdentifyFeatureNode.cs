@@ -4,6 +4,7 @@ using System.Linq;
 
 using IRI.Maptor.Presentation.Core;
 using IRI.Maptor.Presentation.Wpf.Helpers;
+using IRI.Maptor.Presentation.Wpf.Layers;
 using IRI.Maptor.Core.Common.Enums;
 using IRI.Maptor.Core.Common.Primitives;
 using IRI.Maptor.Core.Spatial.Primitives;
@@ -21,10 +22,33 @@ public class IdentifyFeatureNode : Notifier, IIdentifyNode
 
         Feature = feature ?? throw new ArgumentNullException(nameof(feature));
 
-        Title = IdentifyAttributeHelper.ResolveTitle(feature, layer.Fields);
+        _fields = layer.Fields;
+
+        Title = IdentifyAttributeHelper.ResolveTitle(feature, _fields);
     }
 
+    /// <summary>A drawing item under the drawings group: titled with its legend name, its own fields.</summary>
+    public IdentifyFeatureNode(IdentifyLayerNode group, DrawingItemLayer drawing)
+    {
+        Layer = group ?? throw new ArgumentNullException(nameof(group));
+
+        Drawing = drawing ?? throw new ArgumentNullException(nameof(drawing));
+
+        Feature = drawing.Feature ?? throw new ArgumentException("A text drawing has no feature to identify.", nameof(drawing));
+
+        _fields = drawing.GetFields();
+
+        Title = string.IsNullOrWhiteSpace(drawing.LayerName)
+                    ? IdentifyAttributeHelper.ResolveTitle(Feature, _fields)
+                    : drawing.LayerName;
+    }
+
+    private readonly IReadOnlyList<Field>? _fields;
+
     public IdentifyLayerNode Layer { get; }
+
+    /// <summary>The drawing item this row stands for; null for a data-layer feature.</summary>
+    public DrawingItemLayer? Drawing { get; }
 
     public Feature<Point> Feature { get; }
 
@@ -36,7 +60,7 @@ public class IdentifyFeatureNode : Notifier, IIdentifyNode
     public GeometryType GeometryType => Feature.GeometryType;
 
     /// <summary>Built lazily; identify result sets are small, so this is cheap and keeps construction light.</summary>
-    public IReadOnlyList<IdentifyAttributeRow> Attributes => _attributes ??= IdentifyAttributeHelper.BuildRows(Feature, Layer.Fields);
+    public IReadOnlyList<IdentifyAttributeRow> Attributes => _attributes ??= IdentifyAttributeHelper.BuildRows(Feature, _fields);
 
 
     private bool _isSelected;

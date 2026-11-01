@@ -12,9 +12,36 @@ using IRI.Maptor.Core.Spatial.Primitives;
 
 namespace IRI.Maptor.Presentation.Wpf.Models.Identify;
 
-/// <summary>Parent of the identify tree: one layer with the features found under the click.</summary>
+/// <summary>
+/// Parent of the identify tree: one layer with the features found under the click, or the
+/// drawings group (<see cref="IsDrawingGroup"/>), whose children are drawing items.
+/// </summary>
 public class IdentifyLayerNode : Notifier, IIdentifyNode
 {
+    /// <summary>
+    /// The drawings group: one child per drawing item under the click. Each drawing is its own
+    /// layer holding one feature, so the group stands for no single layer (<see cref="Layer"/> is null).
+    /// </summary>
+    public IdentifyLayerNode(string title, IEnumerable<DrawingItemLayer> drawings)
+    {
+        if (drawings is null)
+            throw new ArgumentNullException(nameof(drawings));
+
+        IsDrawingGroup = true;
+
+        LayerName = title ?? string.Empty;
+
+        Features = drawings.Where(d => d?.Feature is not null)
+                           .Select(d => new IdentifyFeatureNode(this, d))
+                           .ToList();
+
+        var geometryTypes = Features.Select(f => f.GeometryType).Distinct().ToList();
+
+        GeometryType = geometryTypes.Count == 1 ? geometryTypes[0] : GeometryType.None;
+
+        VisibleFeatures = new ObservableCollection<IdentifyFeatureNode>(Features);
+    }
+
     public IdentifyLayerNode(VectorLayer layer, FeatureSet<Point> hits)
     {
         Layer = layer ?? throw new ArgumentNullException(nameof(layer));
@@ -39,9 +66,13 @@ public class IdentifyLayerNode : Notifier, IIdentifyNode
         VisibleFeatures = new ObservableCollection<IdentifyFeatureNode>(Features);
     }
 
-    public VectorLayer Layer { get; }
+    /// <summary>The data layer; null for the drawings group.</summary>
+    public VectorLayer? Layer { get; }
 
-    public Guid LayerId => Layer.LayerId;
+    /// <summary>True for the drawings group, whose children are drawing items rather than features of one layer.</summary>
+    public bool IsDrawingGroup { get; }
+
+    public Guid LayerId => Layer?.LayerId ?? Guid.Empty;
 
     public string LayerName { get; }
 
@@ -61,8 +92,11 @@ public class IdentifyLayerNode : Notifier, IIdentifyNode
 
     public bool HasVisibleFeatures => VisibleFeatures.Count > 0;
 
-    /// <summary>Stroke width of the layer's own symbology; the highlight overlay is drawn relative to it.</summary>
-    public double? StrokeThickness => Layer.DefaultSymbology?.StrokeThickness;
+    /// <summary>
+    /// Stroke width of the layer's own symbology; the highlight overlay is drawn relative to it.
+    /// Null for the drawings group (its drawings are styled one by one), so the default width is used.
+    /// </summary>
+    public double? StrokeThickness => Layer?.DefaultSymbology?.StrokeThickness;
 
     /// <summary>Names the details pane lists for a layer node (displayable schema fields only).</summary>
     public IReadOnlyList<string> FieldNames =>

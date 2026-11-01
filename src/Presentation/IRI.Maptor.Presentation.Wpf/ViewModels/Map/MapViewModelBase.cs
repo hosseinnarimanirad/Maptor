@@ -2196,7 +2196,62 @@ public abstract class MapViewModelBase : ViewModelBase
             ClearLayer(LayerType.AnimatingItem, true);
         };
 
+        viewModel.RequestSelectDrawing = SelectDrawingItemFromIdentify;
+
         return viewModel;
+    }
+
+    // the drawing the identify results selected in the drawing legend; only this one is released
+    // again, a drawing the user selected in the legend themselves stays selected
+    private DrawingItemLayer? _identifySelectedDrawing;
+
+    /// <summary>
+    /// Select <paramref name="drawing"/> in the drawing legend (expanding it; the legend view
+    /// scrolls to the row), or with null release the selection an earlier call made.
+    /// </summary>
+    private void SelectDrawingItemFromIdentify(DrawingItemLayer? drawing)
+    {
+        if (drawing is not null && ReferenceEquals(drawing, _identifySelectedDrawing))
+            return;
+
+        if (_identifySelectedDrawing is { } previous)
+        {
+            _identifySelectedDrawing = null;
+
+            // the user may have moved on in the legend meanwhile; only undo what is still ours
+            if (previous.IsSelectedInToc)
+            {
+                previous.IsSelectedInToc = false;
+
+                if (ReferenceEquals(SelectedDrawingItem, previous))
+                    SelectedDrawingItem = null;
+            }
+        }
+
+        // a drawing deleted while the results window stayed open
+        if (drawing is null || !DrawingItems.Contains(drawing))
+            return;
+
+        // already selected by the user: leave it theirs
+        if (drawing.IsSelectedInToc)
+            return;
+
+        // the legend is single-select
+        foreach (var other in DrawingItems)
+        {
+            if (!ReferenceEquals(other, drawing) && other.IsSelectedInToc)
+                other.IsSelectedInToc = false;
+        }
+
+        IsDrawingLegendExpanded = true;
+
+        // IsSelectedInToc draws the drawing's own highlight; SelectedDrawingItem moves the
+        // legend's selection, which the legend view scrolls into view
+        drawing.IsSelectedInToc = true;
+
+        SelectedDrawingItem = drawing;
+
+        _identifySelectedDrawing = drawing;
     }
 
     /// <summary>
@@ -2210,12 +2265,14 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             this.IsBusy = true;
 
-            var identify = await this.IdentifyFeaturesAsync(point, new IdentifyOptions()
+            var options = new IdentifyOptions()
             {
                 IncludeNotInScaleRangeLayers = this.MapSettings.Identify_IncludeNotInScaleRangeLayers,
                 IncludeInvisibleLayers = this.MapSettings.Identify_IncludeInvisibleLayers,
                 SelectionTolerance = this.MapSettings.Identify_SelectionTolerance
-            });
+            };
+
+            var identify = await this.IdentifyFeaturesAsync(point, options);
 
             if (identify == null)
                 return;
@@ -2228,8 +2285,10 @@ public abstract class MapViewModelBase : ViewModelBase
                     results.Add((layer, item));
             }
 
+            var drawings = IdentifyDrawingItems(point, options);
+
             // an empty list is a valid outcome: the window shows its "nothing here" state
-            IdentifyResults.Update(point, results);
+            IdentifyResults.Update(point, results, drawings);
 
             RequestShowIdentifyResults?.Invoke(IdentifyResults);
 
@@ -2282,6 +2341,40 @@ public abstract class MapViewModelBase : ViewModelBase
 
                 result.Add(features);
             }
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Drawing items under <paramref name="point"/> (Web Mercator), top of the drawing list first.
+    /// Data layers are queried by <see cref="IdentifyFeaturesAsync"/>; drawings are kept apart so
+    /// the results can show them separately. Only geometry drawings are tested: a text label has
+    /// no feature. Each drawing's own geometry is tested, not its data source, so an edited
+    /// drawing is matched by its current shape.
+    /// </summary>
+    public List<DrawingItemLayer> IdentifyDrawingItems(Point point, IdentifyOptions options)
+    {
+        var result = new List<DrawingItemLayer>();
+
+        if (DrawingItems.IsNullOrEmpty())
+            return result;
+
+        var offset = this.RequestScreenDistanceMapDistance(options.SelectionTolerance);
+
+        var geometryBoundary = new BoundingBox(point, offset).AsGeometry<Point>(SridHelper.WebMercator);
+
+        foreach (var drawing in DrawingItems)
+        {
+            if (drawing.IsTextLayer || drawing.Geometry is not { } geometry || geometry.IsNullOrEmpty())
+                continue;
+
+            // a drawing can be hidden with its legend checkbox
+            if (drawing.Visibility != System.Windows.Visibility.Visible && !options.IncludeInvisibleLayers)
+                continue;
+
+            if (geometry.Intersects(geometryBoundary))
+                result.Add(drawing);
         }
 
         return result;

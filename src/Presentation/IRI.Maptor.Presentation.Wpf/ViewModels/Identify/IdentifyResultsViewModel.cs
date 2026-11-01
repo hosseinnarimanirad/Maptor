@@ -59,6 +59,12 @@ public class IdentifyResultsViewModel : Notifier
     /// <summary>Remove the highlight overlay.</summary>
     public Action? RequestClearHighlight { get; set; }
 
+    /// <summary>
+    /// Select this drawing item in the drawing legend (its own highlight replaces the overlay),
+    /// or, with null, release the legend selection an earlier call made.
+    /// </summary>
+    public Action<DrawingItemLayer?>? RequestSelectDrawing { get; set; }
+
     #endregion
 
     #region Results
@@ -108,9 +114,13 @@ public class IdentifyResultsViewModel : Notifier
 
     /// <summary>
     /// Replace the results. Called on first open and on every later identify click.
-    /// Pairs whose layer is null or whose set holds no feature are skipped.
+    /// Pairs whose layer is null or whose set holds no feature are skipped. Drawing items under
+    /// the click, if any, go into one drawings group after every data layer.
     /// </summary>
-    public void Update(Point? location, IEnumerable<(VectorLayer Layer, FeatureSet<Point> Hits)>? results)
+    public void Update(
+        Point? location,
+        IEnumerable<(VectorLayer Layer, FeatureSet<Point> Hits)>? results,
+        IEnumerable<DrawingItemLayer>? drawings = null)
     {
         DetachNodes();
 
@@ -128,6 +138,18 @@ public class IdentifyResultsViewModel : Notifier
                 AttachNode(node);
 
                 Layers.Add(node);
+            }
+        }
+
+        if (drawings is not null)
+        {
+            var group = new IdentifyLayerNode(Localization["identify_drawingsGroup"], drawings);
+
+            if (group.Count > 0)
+            {
+                AttachNode(group);
+
+                Layers.Add(group);
             }
         }
 
@@ -270,6 +292,18 @@ public class IdentifyResultsViewModel : Notifier
 
     private async Task HighlightSelectionAsync()
     {
+        // A visible drawing is selected in the drawing legend instead: the legend draws its own
+        // highlight, so the overlay would only duplicate it. A hidden drawing gets no legend
+        // highlight and keeps the overlay.
+        if (SelectedFeature?.Drawing is { } drawing && drawing.Visibility == System.Windows.Visibility.Visible)
+        {
+            RequestClearHighlight?.Invoke();
+            RequestSelectDrawing?.Invoke(drawing);
+            return;
+        }
+
+        RequestSelectDrawing?.Invoke(null);
+
         var features = GetSelectedFeatures();
 
         if (features.Count == 0)
