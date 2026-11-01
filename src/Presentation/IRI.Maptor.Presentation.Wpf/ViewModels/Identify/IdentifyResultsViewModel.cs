@@ -30,6 +30,10 @@ public class IdentifyResultsViewModel : Notifier
 {
     private static LocalizationManager Localization => LocalizationManager.Instance;
 
+    // the drawing legend's own header, so the group reads exactly like the legend section a
+    // selected drawing is shown in
+    private const string DrawingsGroupTitleKey = "ui_header_drawingLegend";
+
     private bool _isSyncingSelection;
 
     public IdentifyResultsViewModel()
@@ -143,7 +147,7 @@ public class IdentifyResultsViewModel : Notifier
 
         if (drawings is not null)
         {
-            var group = new IdentifyLayerNode(Localization["identify_drawingsGroup"], drawings);
+            var group = new IdentifyLayerNode(Localization[DrawingsGroupTitleKey], drawings);
 
             if (group.Count > 0)
             {
@@ -411,6 +415,9 @@ public class IdentifyResultsViewModel : Notifier
 
     private void OnLanguageChanged()
     {
+        foreach (var layer in Layers)
+            layer.SetGroupTitle(Localization[DrawingsGroupTitleKey]);
+
         RaisePropertyChanged(nameof(SummaryText));
         RaisePropertyChanged(nameof(LocationText));
     }

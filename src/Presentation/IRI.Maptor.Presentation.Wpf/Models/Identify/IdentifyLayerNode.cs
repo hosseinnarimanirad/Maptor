@@ -74,7 +74,26 @@ public class IdentifyLayerNode : Notifier, IIdentifyNode
 
     public Guid LayerId => Layer?.LayerId ?? Guid.Empty;
 
-    public string LayerName { get; }
+    private string _layerName = string.Empty;
+    public string LayerName
+    {
+        get { return _layerName; }
+        private set
+        {
+            if (_layerName == value)
+                return;
+
+            _layerName = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    /// <summary>Re-title the drawings group after a language switch; a data layer keeps its own name.</summary>
+    public void SetGroupTitle(string title)
+    {
+        if (IsDrawingGroup)
+            LayerName = title ?? string.Empty;
+    }
 
     public GeometryType GeometryType { get; }
 

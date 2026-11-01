@@ -29,33 +29,68 @@
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
 
             <!--tree rows-->
+            <!--layer row icon: the geometry type; a pencil in a muted colour for the drawings group-->
+            <Style x:Key="layerRowIcon" TargetType="iconPacks:PackIconMaterial">
+                <Setter Property="Kind" Value="{Binding GeometryType, Converter={StaticResource geometryTypeToMaterialIconConverter}}"/>
+                <Setter Property="Width" Value="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"/>
+                <Setter Property="Height" Value="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"/>
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsDrawingGroup}" Value="True">
+                        <Setter Property="Kind" Value="Draw"/>
+                        <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Muted}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <!--tree rows-->
             <HierarchicalDataTemplate DataType="{x:Type identify:IdentifyLayerNode}" ItemsSource="{Binding VisibleFeatures}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+                <!--the drawings group (always last) is set apart from the data layers by a rule above it-->
+                <Border BorderBrush="{DynamicResource MahApps.Brushes.Gray8}">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsDrawingGroup}" Value="True">
+                                    <Setter Property="BorderThickness" Value="0,1,0,0"/>
+                                    <Setter Property="Padding" Value="0,4,0,0"/>
+                                    <Setter Property="Margin" Value="0,4,0,0"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
 
-                    <iconPacks:PackIconMaterial Grid.Column="0"
-                                                Kind="{Binding GeometryType, Converter={StaticResource geometryTypeToMaterialIconConverter}}"
-                                                Width="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"
-                                                Height="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"
-                                                Foreground="{DynamicResource MahApps.Brushes.Accent}"
-                                                VerticalAlignment="Center"
-                                                Margin="0,0,6,0"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="1"
-                               Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal.Bold}"
-                               Text="{Binding LayerName}"
-                               ToolTip="{Binding LayerName}"
-                               TextTrimming="CharacterEllipsis"
-                               VerticalAlignment="Center"/>
+                        <iconPacks:PackIconMaterial Grid.Column="0" Style="{StaticResource layerRowIcon}" Margin="0,0,6,0"/>
 
-                    <Border Grid.Column="2" Style="{StaticResource IRI.Maptor.Styles.Pill.Small}" Margin="6,0,0,0">
-                        <TextBlock Style="{StaticResource IRI.Maptor.Styles.Pill.Text.Small}" Text="{Binding VisibleCount}"/>
-                    </Border>
-                </Grid>
+                        <TextBlock Grid.Column="1"
+                                   Text="{Binding LayerName}"
+                                   ToolTip="{Binding LayerName}"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.Normal.Bold}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsDrawingGroup}" Value="True">
+                                            <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Muted}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <Border Grid.Column="2" Style="{StaticResource IRI.Maptor.Styles.Pill.Small}" Margin="6,0,0,0">
+                            <TextBlock Style="{StaticResource IRI.Maptor.Styles.Pill.Text.Small}" Text="{Binding VisibleCount}"/>
+                        </Border>
+                    </Grid>
+                </Border>
             </HierarchicalDataTemplate>
 
             <DataTemplate DataType="{x:Type identify:IdentifyFeatureNode}">
@@ -285,11 +320,8 @@
                                 </StackPanel>
 
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0,8,0">
-                                    <iconPacks:PackIconMaterial Kind="{Binding SelectedLayer.GeometryType, Converter={StaticResource geometryTypeToMaterialIconConverter}}"
-                                                                Width="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"
-                                                                Height="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"
-                                                                Foreground="{DynamicResource MahApps.Brushes.Accent}"
-                                                                VerticalAlignment="Center"
+                                    <iconPacks:PackIconMaterial DataContext="{Binding SelectedLayer}"
+                                                                Style="{StaticResource layerRowIcon}"
                                                                 Margin="0,0,6,0"/>
                                     <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardTitle}"
                                                Text="{Binding SelectedLayer.LayerName}"
@@ -311,7 +343,9 @@
                                            Text="{Binding SelectedLayer.Count}"/>
                             </Grid>
 
-                            <Grid Style="{StaticResource IRI.Maptor.Styles.Grid.FieldRow}">
+                            <!--the drawings group has no single schema: no fields row-->
+                            <Grid Style="{StaticResource IRI.Maptor.Styles.Grid.FieldRow}"
+                                  Visibility="{Binding SelectedLayer.IsDrawingGroup, Converter={StaticResource boolToInverseVisibilityConverter}}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="{StaticResource IRI.Maptor.Styles.GridLength.FieldLabelColumn}"/>
                                     <ColumnDefinition Width="*"/>
