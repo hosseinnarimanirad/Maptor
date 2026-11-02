@@ -2752,6 +2752,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use multi row tabs in feature table.
+        /// </summary>
+        public static string featureTable_useMultiRowTabs {
+            get {
+                return ResourceManager.GetString("featureTable_useMultiRowTabs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Azimuth To Next.
         /// </summary>
         public static string geometryDetails_coordinateGrid_azimuthToNext {
@@ -4714,6 +4723,258 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Offline Map.
+        /// </summary>
+        public static string ribbon_backgroundMaps_offline {
+            get {
+                return ResourceManager.GetString("ribbon_backgroundMaps_offline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use local network maps (requires local server).
+        /// </summary>
+        public static string ribbon_backgroundMaps_offlineTooltip {
+            get {
+                return ResourceManager.GetString("ribbon_backgroundMaps_offlineTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Online Map.
+        /// </summary>
+        public static string ribbon_backgroundMaps_online {
+            get {
+                return ResourceManager.GetString("ribbon_backgroundMaps_online", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use online maps (requires internet).
+        /// </summary>
+        public static string ribbon_backgroundMaps_onlineTooltip {
+            get {
+                return ResourceManager.GetString("ribbon_backgroundMaps_onlineTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Proxy Service.
+        /// </summary>
+        public static string ribbon_backgroundMaps_proxy {
+            get {
+                return ResourceManager.GetString("ribbon_backgroundMaps_proxy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use proxy service (caches maps).
+        /// </summary>
+        public static string ribbon_backgroundMaps_proxyTooltip {
+            get {
+                return ResourceManager.GetString("ribbon_backgroundMaps_proxyTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Background Maps.
+        /// </summary>
+        public static string ribbon_backgroundMaps_title {
+            get {
+                return ResourceManager.GetString("ribbon_backgroundMaps_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Base Map.
+        /// </summary>
+        public static string ribbon_baseMap_title {
+            get {
+                return ResourceManager.GetString("ribbon_baseMap_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear.
+        /// </summary>
+        public static string ribbon_common_clear {
+            get {
+                return ResourceManager.GetString("ribbon_common_clear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear map.
+        /// </summary>
+        public static string ribbon_common_clearTooltip {
+            get {
+                return ResourceManager.GetString("ribbon_common_clearTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show coordinate panel.
+        /// </summary>
+        public static string ribbon_display_showCoordPanel {
+            get {
+                return ResourceManager.GetString("ribbon_display_showCoordPanel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Legend layer color separation.
+        /// </summary>
+        public static string ribbon_display_showLayerColors {
+            get {
+                return ResourceManager.GetString("ribbon_display_showLayerColors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show legend tools.
+        /// </summary>
+        public static string ribbon_display_showLegendTools {
+            get {
+                return ResourceManager.GetString("ribbon_display_showLegendTools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show MGRS.
+        /// </summary>
+        public static string ribbon_display_showMgrs {
+            get {
+                return ResourceManager.GetString("ribbon_display_showMgrs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show scale control.
+        /// </summary>
+        public static string ribbon_display_showScalebar {
+            get {
+                return ResourceManager.GetString("ribbon_display_showScalebar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show scale value.
+        /// </summary>
+        public static string ribbon_display_showScaleValue {
+            get {
+                return ResourceManager.GetString("ribbon_display_showScaleValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show zoom level.
+        /// </summary>
+        public static string ribbon_display_showZoomLevel {
+            get {
+                return ResourceManager.GetString("ribbon_display_showZoomLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display.
+        /// </summary>
+        public static string ribbon_display_title {
+            get {
+                return ResourceManager.GetString("ribbon_display_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Point.
+        /// </summary>
+        public static string ribbon_drawing_point {
+            get {
+                return ResourceManager.GetString("ribbon_drawing_point", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Draw point.
+        /// </summary>
+        public static string ribbon_drawing_pointTooltip {
+            get {
+                return ResourceManager.GetString("ribbon_drawing_pointTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Polygon.
+        /// </summary>
+        public static string ribbon_drawing_polygon {
+            get {
+                return ResourceManager.GetString("ribbon_drawing_polygon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Draw polygon.
+        /// </summary>
+        public static string ribbon_drawing_polygonTooltip {
+            get {
+                return ResourceManager.GetString("ribbon_drawing_polygonTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Line.
+        /// </summary>
+        public static string ribbon_drawing_polyline {
+            get {
+                return ResourceManager.GetString("ribbon_drawing_polyline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Draw line.
+        /// </summary>
+        public static string ribbon_drawing_polylineTooltip {
+            get {
+                return ResourceManager.GetString("ribbon_drawing_polylineTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rectangle.
+        /// </summary>
+        public static string ribbon_drawing_rectangle {
+            get {
+                return ResourceManager.GetString("ribbon_drawing_rectangle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Draw rectangle.
+        /// </summary>
+        public static string ribbon_drawing_rectangleTooltip {
+            get {
+                return ResourceManager.GetString("ribbon_drawing_rectangleTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text.
+        /// </summary>
+        public static string ribbon_drawing_text {
+            get {
+                return ResourceManager.GetString("ribbon_drawing_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Drawing.
+        /// </summary>
+        public static string ribbon_drawing_title {
+            get {
+                return ResourceManager.GetString("ribbon_drawing_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Drawing.
         /// </summary>
         public static string ribbon_header_drawing {
@@ -4732,6 +4993,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Layer and Drawing.
+        /// </summary>
+        public static string ribbon_header_layerDrawing {
+            get {
+                return ResourceManager.GetString("ribbon_header_layerDrawing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Map.
         /// </summary>
         public static string ribbon_header_map {
@@ -4746,6 +5016,159 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string ribbon_header_settings {
             get {
                 return ResourceManager.GetString("ribbon_header_settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Print Current View.
+        /// </summary>
+        public static string ribbon_print_currentView {
+            get {
+                return ResourceManager.GetString("ribbon_print_currentView", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Print Extent.
+        /// </summary>
+        public static string ribbon_print_extent {
+            get {
+                return ResourceManager.GetString("ribbon_print_extent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Print Map.
+        /// </summary>
+        public static string ribbon_print_title {
+            get {
+                return ResourceManager.GetString("ribbon_print_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Raster.
+        /// </summary>
+        public static string ribbon_raster_title {
+            get {
+                return ResourceManager.GetString("ribbon_raster_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Raster (Web Mercator).
+        /// </summary>
+        public static string ribbon_raster_webMercator {
+            get {
+                return ResourceManager.GetString("ribbon_raster_webMercator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Appearance Settings.
+        /// </summary>
+        public static string ribbon_settings_appearance {
+            get {
+                return ResourceManager.GetString("ribbon_settings_appearance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose application color.
+        /// </summary>
+        public static string ribbon_settings_appearanceTooltip {
+            get {
+                return ResourceManager.GetString("ribbon_settings_appearanceTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Layer settings.
+        /// </summary>
+        public static string ribbon_settings_layers {
+            get {
+                return ResourceManager.GetString("ribbon_settings_layers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Map Settings.
+        /// </summary>
+        public static string ribbon_settings_map {
+            get {
+                return ResourceManager.GetString("ribbon_settings_map", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application settings.
+        /// </summary>
+        public static string ribbon_settings_mapTooltip {
+            get {
+                return ResourceManager.GetString("ribbon_settings_mapTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string ribbon_settings_title {
+            get {
+                return ResourceManager.GetString("ribbon_settings_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Layer font size:.
+        /// </summary>
+        public static string ribbon_text_layersFontSize {
+            get {
+                return ResourceManager.GetString("ribbon_text_layersFontSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text.
+        /// </summary>
+        public static string ribbon_text_title {
+            get {
+                return ResourceManager.GetString("ribbon_text_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tools.
+        /// </summary>
+        public static string ribbon_tools_title {
+            get {
+                return ResourceManager.GetString("ribbon_tools_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vector.
+        /// </summary>
+        public static string ribbon_vector_title {
+            get {
+                return ResourceManager.GetString("ribbon_vector_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Views.
+        /// </summary>
+        public static string ribbon_views_title {
+            get {
+                return ResourceManager.GetString("ribbon_views_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Workspace.
+        /// </summary>
+        public static string ribbon_workspace_title {
+            get {
+                return ResourceManager.GetString("ribbon_workspace_title", resourceCulture);
             }
         }
         

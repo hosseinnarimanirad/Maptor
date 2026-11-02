@@ -2776,4 +2776,145 @@
   <data name="dialog_csvTsvOpen_validationTooFewPoints" xml:space="preserve">
     <value>इस ज्यामिति प्रकार के लिए कम से कम {0} बिंदु आवश्यक हैं।</value>
   </data>
+  <data name="featureTable_useMultiRowTabs" xml:space="preserve">
+    <value>फ़ीचर तालिका में बहु-पंक्ति टैब का उपयोग करें</value>
+  </data>
+  <data name="ribbon_header_layerDrawing" xml:space="preserve">
+    <value>परत और रेखांकन</value>
+  </data>
+  <data name="ribbon_workspace_title" xml:space="preserve">
+    <value>कार्यस्थान</value>
+  </data>
+  <data name="ribbon_baseMap_title" xml:space="preserve">
+    <value>आधार नक्शा</value>
+  </data>
+  <data name="ribbon_views_title" xml:space="preserve">
+    <value>दृश्य</value>
+  </data>
+  <data name="ribbon_tools_title" xml:space="preserve">
+    <value>औजार</value>
+  </data>
+  <data name="ribbon_print_title" xml:space="preserve">
+    <value>मानचित्र प्रिंट करें</value>
+  </data>
+  <data name="ribbon_print_extent" xml:space="preserve">
+    <value>प्रिंट विस्तार</value>
+  </data>
+  <data name="ribbon_print_currentView" xml:space="preserve">
+    <value>वर्तमान दृश्य प्रिंट करें</value>
+  </data>
+  <data name="ribbon_drawing_title" xml:space="preserve">
+    <value>चित्रकला</value>
+  </data>
+  <data name="ribbon_drawing_polygon" xml:space="preserve">
+    <value>बहुभुज</value>
+  </data>
+  <data name="ribbon_drawing_polygonTooltip" xml:space="preserve">
+    <value>बहुभुज बनाएं</value>
+  </data>
+  <data name="ribbon_drawing_rectangle" xml:space="preserve">
+    <value>आयत</value>
+  </data>
+  <data name="ribbon_drawing_rectangleTooltip" xml:space="preserve">
+    <value>आयत बनाएं</value>
+  </data>
+  <data name="ribbon_drawing_polyline" xml:space="preserve">
+    <value>रेखा</value>
+  </data>
+  <data name="ribbon_drawing_polylineTooltip" xml:space="preserve">
+    <value>रेखा खींचो</value>
+  </data>
+  <data name="ribbon_drawing_point" xml:space="preserve">
+    <value>बिंदु</value>
+  </data>
+  <data name="ribbon_drawing_pointTooltip" xml:space="preserve">
+    <value>बिंदु बनाएं</value>
+  </data>
+  <data name="ribbon_drawing_text" xml:space="preserve">
+    <value>मूलपाठ</value>
+  </data>
+  <data name="ribbon_common_clear" xml:space="preserve">
+    <value>स्पष्ट</value>
+  </data>
+  <data name="ribbon_common_clearTooltip" xml:space="preserve">
+    <value>साफ़ नक्शा</value>
+  </data>
+  <data name="ribbon_vector_title" xml:space="preserve">
+    <value>वेक्टर</value>
+  </data>
+  <data name="ribbon_raster_title" xml:space="preserve">
+    <value>रेखापुंज</value>
+  </data>
+  <data name="ribbon_raster_webMercator" xml:space="preserve">
+    <value>रैस्टर (वेब ​​मर्केटर)</value>
+  </data>
+  <data name="ribbon_text_title" xml:space="preserve">
+    <value>मूलपाठ</value>
+  </data>
+  <data name="ribbon_text_layersFontSize" xml:space="preserve">
+    <value>परत फ़ॉन्ट आकार:</value>
+  </data>
+  <data name="ribbon_backgroundMaps_title" xml:space="preserve">
+    <value>पृष्ठभूमि मानचित्र</value>
+  </data>
+  <data name="ribbon_backgroundMaps_online" xml:space="preserve">
+    <value>ऑनलाइन मानचित्र</value>
+  </data>
+  <data name="ribbon_backgroundMaps_onlineTooltip" xml:space="preserve">
+    <value>ऑनलाइन मानचित्रों का उपयोग करें (इंटरनेट की आवश्यकता है)</value>
+  </data>
+  <data name="ribbon_backgroundMaps_offline" xml:space="preserve">
+    <value>ऑफ़लाइन मानचित्र</value>
+  </data>
+  <data name="ribbon_backgroundMaps_offlineTooltip" xml:space="preserve">
+    <value>स्थानीय नेटवर्क मानचित्र का उपयोग करें (स्थानीय सर्वर की आवश्यकता है)</value>
+  </data>
+  <data name="ribbon_backgroundMaps_proxy" xml:space="preserve">
+    <value>प्रॉक्सी सेवा</value>
+  </data>
+  <data name="ribbon_backgroundMaps_proxyTooltip" xml:space="preserve">
+    <value>प्रॉक्सी सेवा का उपयोग करें (कैश मानचित्र)</value>
+  </data>
+  <data name="ribbon_settings_title" xml:space="preserve">
+    <value>सेटिंग्स</value>
+  </data>
+  <data name="ribbon_settings_map" xml:space="preserve">
+    <value>मानचित्र सेटिंग</value>
+  </data>
+  <data name="ribbon_settings_mapTooltip" xml:space="preserve">
+    <value>एप्लिकेशन सेटिंग्स</value>
+  </data>
+  <data name="ribbon_settings_appearance" xml:space="preserve">
+    <value>अपियरेंस सेटिंग्स</value>
+  </data>
+  <data name="ribbon_settings_appearanceTooltip" xml:space="preserve">
+    <value>एप्लिकेशन रंग चुनें</value>
+  </data>
+  <data name="ribbon_settings_layers" xml:space="preserve">
+    <value>लेयर सेटिंग्स</value>
+  </data>
+  <data name="ribbon_display_title" xml:space="preserve">
+    <value>प्रदर्शन</value>
+  </data>
+  <data name="ribbon_display_showScalebar" xml:space="preserve">
+    <value>स्केल नियंत्रण दिखाएँ</value>
+  </data>
+  <data name="ribbon_display_showScaleValue" xml:space="preserve">
+    <value>स्केल मान दिखाएँ</value>
+  </data>
+  <data name="ribbon_display_showZoomLevel" xml:space="preserve">
+    <value>ज़ूम स्तर दिखाएँ</value>
+  </data>
+  <data name="ribbon_display_showCoordPanel" xml:space="preserve">
+    <value>समन्वय पैनल दिखाएँ</value>
+  </data>
+  <data name="ribbon_display_showMgrs" xml:space="preserve">
+    <value>MGRS दिखाएँ</value>
+  </data>
+  <data name="ribbon_display_showLegendTools" xml:space="preserve">
+    <value>किंवदंती उपकरण दिखाएँ</value>
+  </data>
+  <data name="ribbon_display_showLayerColors" xml:space="preserve">
+    <value>किंवदंती परत रंग पृथक्करण</value>
+  </data>
 </root>

@@ -2776,4 +2776,145 @@
   <data name="dialog_csvTsvOpen_validationTooFewPoints" xml:space="preserve">
     <value>此几何类型至少需要 {0} 个点。</value>
   </data>
+  <data name="featureTable_useMultiRowTabs" xml:space="preserve">
+    <value>在要素表中使用多行选项卡</value>
+  </data>
+  <data name="ribbon_header_layerDrawing" xml:space="preserve">
+    <value>图层和绘图</value>
+  </data>
+  <data name="ribbon_workspace_title" xml:space="preserve">
+    <value>工作空间</value>
+  </data>
+  <data name="ribbon_baseMap_title" xml:space="preserve">
+    <value>底图</value>
+  </data>
+  <data name="ribbon_views_title" xml:space="preserve">
+    <value>意见</value>
+  </data>
+  <data name="ribbon_tools_title" xml:space="preserve">
+    <value>工具</value>
+  </data>
+  <data name="ribbon_print_title" xml:space="preserve">
+    <value>打印地图</value>
+  </data>
+  <data name="ribbon_print_extent" xml:space="preserve">
+    <value>打印范围</value>
+  </data>
+  <data name="ribbon_print_currentView" xml:space="preserve">
+    <value>打印当前视图</value>
+  </data>
+  <data name="ribbon_drawing_title" xml:space="preserve">
+    <value>绘画</value>
+  </data>
+  <data name="ribbon_drawing_polygon" xml:space="preserve">
+    <value>多边形</value>
+  </data>
+  <data name="ribbon_drawing_polygonTooltip" xml:space="preserve">
+    <value>绘制多边形</value>
+  </data>
+  <data name="ribbon_drawing_rectangle" xml:space="preserve">
+    <value>长方形</value>
+  </data>
+  <data name="ribbon_drawing_rectangleTooltip" xml:space="preserve">
+    <value>绘制矩形</value>
+  </data>
+  <data name="ribbon_drawing_polyline" xml:space="preserve">
+    <value>线</value>
+  </data>
+  <data name="ribbon_drawing_polylineTooltip" xml:space="preserve">
+    <value>画线</value>
+  </data>
+  <data name="ribbon_drawing_point" xml:space="preserve">
+    <value>观点</value>
+  </data>
+  <data name="ribbon_drawing_pointTooltip" xml:space="preserve">
+    <value>绘制点</value>
+  </data>
+  <data name="ribbon_drawing_text" xml:space="preserve">
+    <value>文本</value>
+  </data>
+  <data name="ribbon_common_clear" xml:space="preserve">
+    <value>清除</value>
+  </data>
+  <data name="ribbon_common_clearTooltip" xml:space="preserve">
+    <value>清晰的地图</value>
+  </data>
+  <data name="ribbon_vector_title" xml:space="preserve">
+    <value>向量</value>
+  </data>
+  <data name="ribbon_raster_title" xml:space="preserve">
+    <value>光栅</value>
+  </data>
+  <data name="ribbon_raster_webMercator" xml:space="preserve">
+    <value>光栅（Web 墨卡托）</value>
+  </data>
+  <data name="ribbon_text_title" xml:space="preserve">
+    <value>文本</value>
+  </data>
+  <data name="ribbon_text_layersFontSize" xml:space="preserve">
+    <value>图层字体大小：</value>
+  </data>
+  <data name="ribbon_backgroundMaps_title" xml:space="preserve">
+    <value>背景地图</value>
+  </data>
+  <data name="ribbon_backgroundMaps_online" xml:space="preserve">
+    <value>在线地图</value>
+  </data>
+  <data name="ribbon_backgroundMaps_onlineTooltip" xml:space="preserve">
+    <value>使用在线地图（需要互联网）</value>
+  </data>
+  <data name="ribbon_backgroundMaps_offline" xml:space="preserve">
+    <value>离线地图</value>
+  </data>
+  <data name="ribbon_backgroundMaps_offlineTooltip" xml:space="preserve">
+    <value>使用本地网络映射（需要本地服务器）</value>
+  </data>
+  <data name="ribbon_backgroundMaps_proxy" xml:space="preserve">
+    <value>代理服务</value>
+  </data>
+  <data name="ribbon_backgroundMaps_proxyTooltip" xml:space="preserve">
+    <value>使用代理服务（缓存地图）</value>
+  </data>
+  <data name="ribbon_settings_title" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="ribbon_settings_map" xml:space="preserve">
+    <value>地图设置</value>
+  </data>
+  <data name="ribbon_settings_mapTooltip" xml:space="preserve">
+    <value>应用程序设置</value>
+  </data>
+  <data name="ribbon_settings_appearance" xml:space="preserve">
+    <value>外观设置</value>
+  </data>
+  <data name="ribbon_settings_appearanceTooltip" xml:space="preserve">
+    <value>选择应用颜色</value>
+  </data>
+  <data name="ribbon_settings_layers" xml:space="preserve">
+    <value>图层设置</value>
+  </data>
+  <data name="ribbon_display_title" xml:space="preserve">
+    <value>展示</value>
+  </data>
+  <data name="ribbon_display_showScalebar" xml:space="preserve">
+    <value>显示比例控制</value>
+  </data>
+  <data name="ribbon_display_showScaleValue" xml:space="preserve">
+    <value>显示比例值</value>
+  </data>
+  <data name="ribbon_display_showZoomLevel" xml:space="preserve">
+    <value>显示缩放级别</value>
+  </data>
+  <data name="ribbon_display_showCoordPanel" xml:space="preserve">
+    <value>显示坐标面板</value>
+  </data>
+  <data name="ribbon_display_showMgrs" xml:space="preserve">
+    <value>显示 MGRS</value>
+  </data>
+  <data name="ribbon_display_showLegendTools" xml:space="preserve">
+    <value>显示图例工具</value>
+  </data>
+  <data name="ribbon_display_showLayerColors" xml:space="preserve">
+    <value>图例层分色</value>
+  </data>
 </root>

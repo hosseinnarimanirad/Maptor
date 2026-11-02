@@ -2776,4 +2776,145 @@
   <data name="dialog_csvTsvOpen_validationTooFewPoints" xml:space="preserve">
     <value>Այս երկրաչափության տեսակի համար անհրաժեշտ է առնվազն {0} կետ։</value>
   </data>
+  <data name="featureTable_useMultiRowTabs" xml:space="preserve">
+    <value>Օգտագործել բազմատող ներդիրներ օբյեկտների աղյուսակում</value>
+  </data>
+  <data name="ribbon_header_layerDrawing" xml:space="preserve">
+    <value>Շերտ և նկարչություն</value>
+  </data>
+  <data name="ribbon_workspace_title" xml:space="preserve">
+    <value>Աշխատանքային տարածք</value>
+  </data>
+  <data name="ribbon_baseMap_title" xml:space="preserve">
+    <value>Բազային քարտեզ</value>
+  </data>
+  <data name="ribbon_views_title" xml:space="preserve">
+    <value>Դիտումներ</value>
+  </data>
+  <data name="ribbon_tools_title" xml:space="preserve">
+    <value>Գործիքներ</value>
+  </data>
+  <data name="ribbon_print_title" xml:space="preserve">
+    <value>Տպել քարտեզը</value>
+  </data>
+  <data name="ribbon_print_extent" xml:space="preserve">
+    <value>Տպման ծավալը</value>
+  </data>
+  <data name="ribbon_print_currentView" xml:space="preserve">
+    <value>Տպել ընթացիկ տեսքը</value>
+  </data>
+  <data name="ribbon_drawing_title" xml:space="preserve">
+    <value>Նկարչություն</value>
+  </data>
+  <data name="ribbon_drawing_polygon" xml:space="preserve">
+    <value>Բազմանկյուն</value>
+  </data>
+  <data name="ribbon_drawing_polygonTooltip" xml:space="preserve">
+    <value>Նկարել բազմանկյուն</value>
+  </data>
+  <data name="ribbon_drawing_rectangle" xml:space="preserve">
+    <value>Ուղղանկյուն</value>
+  </data>
+  <data name="ribbon_drawing_rectangleTooltip" xml:space="preserve">
+    <value>Նկարեք ուղղանկյուն</value>
+  </data>
+  <data name="ribbon_drawing_polyline" xml:space="preserve">
+    <value>Գիծ</value>
+  </data>
+  <data name="ribbon_drawing_polylineTooltip" xml:space="preserve">
+    <value>Գիծ քաշիր</value>
+  </data>
+  <data name="ribbon_drawing_point" xml:space="preserve">
+    <value>Կետ</value>
+  </data>
+  <data name="ribbon_drawing_pointTooltip" xml:space="preserve">
+    <value>Նկարել կետը</value>
+  </data>
+  <data name="ribbon_drawing_text" xml:space="preserve">
+    <value>Տեքստ</value>
+  </data>
+  <data name="ribbon_common_clear" xml:space="preserve">
+    <value>Պարզ</value>
+  </data>
+  <data name="ribbon_common_clearTooltip" xml:space="preserve">
+    <value>Մաքրել քարտեզը</value>
+  </data>
+  <data name="ribbon_vector_title" xml:space="preserve">
+    <value>Վեկտոր</value>
+  </data>
+  <data name="ribbon_raster_title" xml:space="preserve">
+    <value>Ռաստեր</value>
+  </data>
+  <data name="ribbon_raster_webMercator" xml:space="preserve">
+    <value>Ռաստր (Web Mercator)</value>
+  </data>
+  <data name="ribbon_text_title" xml:space="preserve">
+    <value>Տեքստ</value>
+  </data>
+  <data name="ribbon_text_layersFontSize" xml:space="preserve">
+    <value>Շերտի տառաչափը.</value>
+  </data>
+  <data name="ribbon_backgroundMaps_title" xml:space="preserve">
+    <value>Ֆոնային քարտեզներ</value>
+  </data>
+  <data name="ribbon_backgroundMaps_online" xml:space="preserve">
+    <value>Առցանց քարտեզ</value>
+  </data>
+  <data name="ribbon_backgroundMaps_onlineTooltip" xml:space="preserve">
+    <value>Օգտագործեք առցանց քարտեզներ (պահանջվում է ինտերնետ)</value>
+  </data>
+  <data name="ribbon_backgroundMaps_offline" xml:space="preserve">
+    <value>Անցանց քարտեզ</value>
+  </data>
+  <data name="ribbon_backgroundMaps_offlineTooltip" xml:space="preserve">
+    <value>Օգտագործեք տեղական ցանցային քարտեզներ (պահանջվում է տեղական սերվեր)</value>
+  </data>
+  <data name="ribbon_backgroundMaps_proxy" xml:space="preserve">
+    <value>Վստահված անձի ծառայություն</value>
+  </data>
+  <data name="ribbon_backgroundMaps_proxyTooltip" xml:space="preserve">
+    <value>Օգտագործեք վստահված անձի ծառայություն (քեշերի քարտեզներ)</value>
+  </data>
+  <data name="ribbon_settings_title" xml:space="preserve">
+    <value>Կարգավորումներ</value>
+  </data>
+  <data name="ribbon_settings_map" xml:space="preserve">
+    <value>Քարտեզի կարգավորումներ</value>
+  </data>
+  <data name="ribbon_settings_mapTooltip" xml:space="preserve">
+    <value>Հավելվածի կարգավորումներ</value>
+  </data>
+  <data name="ribbon_settings_appearance" xml:space="preserve">
+    <value>Արտաքին տեսքի կարգավորումներ</value>
+  </data>
+  <data name="ribbon_settings_appearanceTooltip" xml:space="preserve">
+    <value>Ընտրեք հավելվածի գույնը</value>
+  </data>
+  <data name="ribbon_settings_layers" xml:space="preserve">
+    <value>Շերտերի կարգավորումներ</value>
+  </data>
+  <data name="ribbon_display_title" xml:space="preserve">
+    <value>Ցուցադրել</value>
+  </data>
+  <data name="ribbon_display_showScalebar" xml:space="preserve">
+    <value>Ցույց տալ սանդղակի կառավարումը</value>
+  </data>
+  <data name="ribbon_display_showScaleValue" xml:space="preserve">
+    <value>Ցույց տալ սանդղակի արժեքը</value>
+  </data>
+  <data name="ribbon_display_showZoomLevel" xml:space="preserve">
+    <value>Ցույց տալ խոշորացման մակարդակը</value>
+  </data>
+  <data name="ribbon_display_showCoordPanel" xml:space="preserve">
+    <value>Ցույց տալ կոորդինատային վահանակը</value>
+  </data>
+  <data name="ribbon_display_showMgrs" xml:space="preserve">
+    <value>Ցուցադրել MGRS</value>
+  </data>
+  <data name="ribbon_display_showLegendTools" xml:space="preserve">
+    <value>Ցույց տալ լեգենդի գործիքները</value>
+  </data>
+  <data name="ribbon_display_showLayerColors" xml:space="preserve">
+    <value>Լեգենդի շերտի գունային տարանջատում</value>
+  </data>
 </root>

@@ -2776,4 +2776,145 @@
   <data name="dialog_csvTsvOpen_validationTooFewPoints" xml:space="preserve">
     <value>Для этого типа геометрии нужно не менее {0} точек.</value>
   </data>
+  <data name="featureTable_useMultiRowTabs" xml:space="preserve">
+    <value>Использовать многострочные вкладки в таблице объектов</value>
+  </data>
+  <data name="ribbon_header_layerDrawing" xml:space="preserve">
+    <value>Слой и рисунок</value>
+  </data>
+  <data name="ribbon_workspace_title" xml:space="preserve">
+    <value>Рабочая область</value>
+  </data>
+  <data name="ribbon_baseMap_title" xml:space="preserve">
+    <value>Базовая карта</value>
+  </data>
+  <data name="ribbon_views_title" xml:space="preserve">
+    <value>Просмотры</value>
+  </data>
+  <data name="ribbon_tools_title" xml:space="preserve">
+    <value>Инструменты</value>
+  </data>
+  <data name="ribbon_print_title" xml:space="preserve">
+    <value>Распечатать карту</value>
+  </data>
+  <data name="ribbon_print_extent" xml:space="preserve">
+    <value>Распечатать экстент</value>
+  </data>
+  <data name="ribbon_print_currentView" xml:space="preserve">
+    <value>Распечатать текущий вид</value>
+  </data>
+  <data name="ribbon_drawing_title" xml:space="preserve">
+    <value>Рисунок</value>
+  </data>
+  <data name="ribbon_drawing_polygon" xml:space="preserve">
+    <value>Полигон</value>
+  </data>
+  <data name="ribbon_drawing_polygonTooltip" xml:space="preserve">
+    <value>Нарисовать многоугольник</value>
+  </data>
+  <data name="ribbon_drawing_rectangle" xml:space="preserve">
+    <value>Прямоугольник</value>
+  </data>
+  <data name="ribbon_drawing_rectangleTooltip" xml:space="preserve">
+    <value>Нарисовать прямоугольник</value>
+  </data>
+  <data name="ribbon_drawing_polyline" xml:space="preserve">
+    <value>Линия</value>
+  </data>
+  <data name="ribbon_drawing_polylineTooltip" xml:space="preserve">
+    <value>Нарисовать линию</value>
+  </data>
+  <data name="ribbon_drawing_point" xml:space="preserve">
+    <value>Точка</value>
+  </data>
+  <data name="ribbon_drawing_pointTooltip" xml:space="preserve">
+    <value>Точка рисования</value>
+  </data>
+  <data name="ribbon_drawing_text" xml:space="preserve">
+    <value>Текст</value>
+  </data>
+  <data name="ribbon_common_clear" xml:space="preserve">
+    <value>Прозрачный</value>
+  </data>
+  <data name="ribbon_common_clearTooltip" xml:space="preserve">
+    <value>Очистить карту</value>
+  </data>
+  <data name="ribbon_vector_title" xml:space="preserve">
+    <value>Вектор</value>
+  </data>
+  <data name="ribbon_raster_title" xml:space="preserve">
+    <value>Растр</value>
+  </data>
+  <data name="ribbon_raster_webMercator" xml:space="preserve">
+    <value>Растр (Web Mercator)</value>
+  </data>
+  <data name="ribbon_text_title" xml:space="preserve">
+    <value>Текст</value>
+  </data>
+  <data name="ribbon_text_layersFontSize" xml:space="preserve">
+    <value>Размер шрифта слоя:</value>
+  </data>
+  <data name="ribbon_backgroundMaps_title" xml:space="preserve">
+    <value>Фоновые карты</value>
+  </data>
+  <data name="ribbon_backgroundMaps_online" xml:space="preserve">
+    <value>Онлайн-карта</value>
+  </data>
+  <data name="ribbon_backgroundMaps_onlineTooltip" xml:space="preserve">
+    <value>Используйте онлайн-карты (требуется Интернет)</value>
+  </data>
+  <data name="ribbon_backgroundMaps_offline" xml:space="preserve">
+    <value>Офлайн-карта</value>
+  </data>
+  <data name="ribbon_backgroundMaps_offlineTooltip" xml:space="preserve">
+    <value>Использовать карты локальной сети (требуется локальный сервер)</value>
+  </data>
+  <data name="ribbon_backgroundMaps_proxy" xml:space="preserve">
+    <value>Прокси-сервис</value>
+  </data>
+  <data name="ribbon_backgroundMaps_proxyTooltip" xml:space="preserve">
+    <value>Использовать прокси-сервис (кэширует карты)</value>
+  </data>
+  <data name="ribbon_settings_title" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="ribbon_settings_map" xml:space="preserve">
+    <value>Настройки карты</value>
+  </data>
+  <data name="ribbon_settings_mapTooltip" xml:space="preserve">
+    <value>Настройки приложения</value>
+  </data>
+  <data name="ribbon_settings_appearance" xml:space="preserve">
+    <value>Настройки внешнего вида</value>
+  </data>
+  <data name="ribbon_settings_appearanceTooltip" xml:space="preserve">
+    <value>Выберите цвет приложения</value>
+  </data>
+  <data name="ribbon_settings_layers" xml:space="preserve">
+    <value>Параметры слоёв</value>
+  </data>
+  <data name="ribbon_display_title" xml:space="preserve">
+    <value>Отображать</value>
+  </data>
+  <data name="ribbon_display_showScalebar" xml:space="preserve">
+    <value>Показать контроль масштаба</value>
+  </data>
+  <data name="ribbon_display_showScaleValue" xml:space="preserve">
+    <value>Показать значение шкалы</value>
+  </data>
+  <data name="ribbon_display_showZoomLevel" xml:space="preserve">
+    <value>Показать уровень масштабирования</value>
+  </data>
+  <data name="ribbon_display_showCoordPanel" xml:space="preserve">
+    <value>Показать панель координат</value>
+  </data>
+  <data name="ribbon_display_showMgrs" xml:space="preserve">
+    <value>Показать MGRS</value>
+  </data>
+  <data name="ribbon_display_showLegendTools" xml:space="preserve">
+    <value>Показать инструменты легенды</value>
+  </data>
+  <data name="ribbon_display_showLayerColors" xml:space="preserve">
+    <value>Цветоделение слоя легенды</value>
+  </data>
 </root>

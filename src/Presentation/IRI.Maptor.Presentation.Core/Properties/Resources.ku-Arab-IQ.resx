@@ -2776,4 +2776,145 @@
   <data name="dialog_csvTsvOpen_validationTooFewPoints" xml:space="preserve">
     <value>بۆ ئەم جۆرە ئەندازەییە لانیکەم {0} خاڵ پێویستە.</value>
   </data>
+  <data name="featureTable_useMultiRowTabs" xml:space="preserve">
+    <value>بەکارهێنانی تابی چەند ڕیزی لە خشتەی تایبەتمەندییەکاندا</value>
+  </data>
+  <data name="ribbon_header_layerDrawing" xml:space="preserve">
+    <value>چین و وێنەکێشان</value>
+  </data>
+  <data name="ribbon_workspace_title" xml:space="preserve">
+    <value>شوێنی کارکردن</value>
+  </data>
+  <data name="ribbon_baseMap_title" xml:space="preserve">
+    <value>نەخشەی بنەڕەتی</value>
+  </data>
+  <data name="ribbon_views_title" xml:space="preserve">
+    <value>بینینەکان</value>
+  </data>
+  <data name="ribbon_tools_title" xml:space="preserve">
+    <value>ئامرازەکان</value>
+  </data>
+  <data name="ribbon_print_title" xml:space="preserve">
+    <value>نەخشە چاپ بکە</value>
+  </data>
+  <data name="ribbon_print_extent" xml:space="preserve">
+    <value>ڕادەی چاپکردن</value>
+  </data>
+  <data name="ribbon_print_currentView" xml:space="preserve">
+    <value>چاپکردنی دیمەنی ئێستا</value>
+  </data>
+  <data name="ribbon_drawing_title" xml:space="preserve">
+    <value>وێنە کێشان</value>
+  </data>
+  <data name="ribbon_drawing_polygon" xml:space="preserve">
+    <value>فرەگۆشە</value>
+  </data>
+  <data name="ribbon_drawing_polygonTooltip" xml:space="preserve">
+    <value>فرەگۆشە بکێشە</value>
+  </data>
+  <data name="ribbon_drawing_rectangle" xml:space="preserve">
+    <value>لاکێشە</value>
+  </data>
+  <data name="ribbon_drawing_rectangleTooltip" xml:space="preserve">
+    <value>گۆشە چوارگۆشە بکێشە</value>
+  </data>
+  <data name="ribbon_drawing_polyline" xml:space="preserve">
+    <value>هێڵ</value>
+  </data>
+  <data name="ribbon_drawing_polylineTooltip" xml:space="preserve">
+    <value>هێڵ بکێشە</value>
+  </data>
+  <data name="ribbon_drawing_point" xml:space="preserve">
+    <value>خاڵ</value>
+  </data>
+  <data name="ribbon_drawing_pointTooltip" xml:space="preserve">
+    <value>خاڵێک بکێشە</value>
+  </data>
+  <data name="ribbon_drawing_text" xml:space="preserve">
+    <value>دەق</value>
+  </data>
+  <data name="ribbon_common_clear" xml:space="preserve">
+    <value>ڕوون</value>
+  </data>
+  <data name="ribbon_common_clearTooltip" xml:space="preserve">
+    <value>نەخشەی ڕوون</value>
+  </data>
+  <data name="ribbon_vector_title" xml:space="preserve">
+    <value>ڤێکتەر</value>
+  </data>
+  <data name="ribbon_raster_title" xml:space="preserve">
+    <value>ڕاستەر</value>
+  </data>
+  <data name="ribbon_raster_webMercator" xml:space="preserve">
+    <value>ڕاستەر (وێب مێرکاتۆر)</value>
+  </data>
+  <data name="ribbon_text_title" xml:space="preserve">
+    <value>دەق</value>
+  </data>
+  <data name="ribbon_text_layersFontSize" xml:space="preserve">
+    <value>قەبارەی فۆنتەکانی چین:</value>
+  </data>
+  <data name="ribbon_backgroundMaps_title" xml:space="preserve">
+    <value>نەخشەی پاشخان</value>
+  </data>
+  <data name="ribbon_backgroundMaps_online" xml:space="preserve">
+    <value>نەخشەی ئۆنلاین</value>
+  </data>
+  <data name="ribbon_backgroundMaps_onlineTooltip" xml:space="preserve">
+    <value>نەخشەی ئۆنلاین بەکاربهێنە (پێویستی بە ئینتەرنێتە)</value>
+  </data>
+  <data name="ribbon_backgroundMaps_offline" xml:space="preserve">
+    <value>نەخشەی ئۆفلاین</value>
+  </data>
+  <data name="ribbon_backgroundMaps_offlineTooltip" xml:space="preserve">
+    <value>نەخشەی تۆڕی ناوخۆیی بەکاربهێنە (پێویستی بە سێرڤەری ناوخۆیی هەیە)</value>
+  </data>
+  <data name="ribbon_backgroundMaps_proxy" xml:space="preserve">
+    <value>خزمەتگوزاری پرۆکسی</value>
+  </data>
+  <data name="ribbon_backgroundMaps_proxyTooltip" xml:space="preserve">
+    <value>خزمەتگوزاری پرۆکسی بەکاربهێنە (نەخشەی کاشەکان)</value>
+  </data>
+  <data name="ribbon_settings_title" xml:space="preserve">
+    <value>ڕێکخستنەکان</value>
+  </data>
+  <data name="ribbon_settings_map" xml:space="preserve">
+    <value>ڕێکخستنەکانی نەخشە</value>
+  </data>
+  <data name="ribbon_settings_mapTooltip" xml:space="preserve">
+    <value>ڕێکخستنەکانی بەرنامەکە</value>
+  </data>
+  <data name="ribbon_settings_appearance" xml:space="preserve">
+    <value>ڕێکخستنەکانی دەرکەوتن</value>
+  </data>
+  <data name="ribbon_settings_appearanceTooltip" xml:space="preserve">
+    <value>ڕەنگی بەرنامەکە هەڵبژێرە</value>
+  </data>
+  <data name="ribbon_settings_layers" xml:space="preserve">
+    <value>ڕێکخستنەکانی چین</value>
+  </data>
+  <data name="ribbon_display_title" xml:space="preserve">
+    <value>نیشاندان</value>
+  </data>
+  <data name="ribbon_display_showScalebar" xml:space="preserve">
+    <value>کۆنترۆڵی پێوەر پیشان بدە</value>
+  </data>
+  <data name="ribbon_display_showScaleValue" xml:space="preserve">
+    <value>بەهای پێوانە پیشان بدە</value>
+  </data>
+  <data name="ribbon_display_showZoomLevel" xml:space="preserve">
+    <value>ئاستی زووم پیشان بدە</value>
+  </data>
+  <data name="ribbon_display_showCoordPanel" xml:space="preserve">
+    <value>پانێڵی کۆئۆردینیات پیشان بدە</value>
+  </data>
+  <data name="ribbon_display_showMgrs" xml:space="preserve">
+    <value>پیشاندانی MGRS</value>
+  </data>
+  <data name="ribbon_display_showLegendTools" xml:space="preserve">
+    <value>ئامرازەکانی ئەفسانە پیشان بدە</value>
+  </data>
+  <data name="ribbon_display_showLayerColors" xml:space="preserve">
+    <value>جیاکردنەوەی ڕەنگی چینە ئەفسانەییەکان</value>
+  </data>
 </root>

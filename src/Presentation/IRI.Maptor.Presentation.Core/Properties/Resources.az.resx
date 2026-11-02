@@ -2776,4 +2776,145 @@
   <data name="dialog_csvTsvOpen_validationTooFewPoints" xml:space="preserve">
     <value>Bu həndəsə növü üçün ən azı {0} nöqtə lazımdır.</value>
   </data>
+  <data name="featureTable_useMultiRowTabs" xml:space="preserve">
+    <value>Xüsusiyyət cədvəlində çoxsətirli tablardan istifadə et</value>
+  </data>
+  <data name="ribbon_header_layerDrawing" xml:space="preserve">
+    <value>Qat və Rəsm</value>
+  </data>
+  <data name="ribbon_workspace_title" xml:space="preserve">
+    <value>İş sahəsi</value>
+  </data>
+  <data name="ribbon_baseMap_title" xml:space="preserve">
+    <value>Baza xəritəsi</value>
+  </data>
+  <data name="ribbon_views_title" xml:space="preserve">
+    <value>Baxışlar</value>
+  </data>
+  <data name="ribbon_tools_title" xml:space="preserve">
+    <value>Alətlər</value>
+  </data>
+  <data name="ribbon_print_title" xml:space="preserve">
+    <value>Xəritəni çap edin</value>
+  </data>
+  <data name="ribbon_print_extent" xml:space="preserve">
+    <value>Çap ölçüsü</value>
+  </data>
+  <data name="ribbon_print_currentView" xml:space="preserve">
+    <value>Cari Görünüşü çap edin</value>
+  </data>
+  <data name="ribbon_drawing_title" xml:space="preserve">
+    <value>Rəsm</value>
+  </data>
+  <data name="ribbon_drawing_polygon" xml:space="preserve">
+    <value>Poliqon</value>
+  </data>
+  <data name="ribbon_drawing_polygonTooltip" xml:space="preserve">
+    <value>Çoxbucaqlı çəkin</value>
+  </data>
+  <data name="ribbon_drawing_rectangle" xml:space="preserve">
+    <value>Düzbucaqlı</value>
+  </data>
+  <data name="ribbon_drawing_rectangleTooltip" xml:space="preserve">
+    <value>Düzbucaqlı çəkin</value>
+  </data>
+  <data name="ribbon_drawing_polyline" xml:space="preserve">
+    <value>Xətt</value>
+  </data>
+  <data name="ribbon_drawing_polylineTooltip" xml:space="preserve">
+    <value>Xətt çəkin</value>
+  </data>
+  <data name="ribbon_drawing_point" xml:space="preserve">
+    <value>Nöqtə</value>
+  </data>
+  <data name="ribbon_drawing_pointTooltip" xml:space="preserve">
+    <value>Nöqtə çəkmək</value>
+  </data>
+  <data name="ribbon_drawing_text" xml:space="preserve">
+    <value>Mətn</value>
+  </data>
+  <data name="ribbon_common_clear" xml:space="preserve">
+    <value>Təmiz</value>
+  </data>
+  <data name="ribbon_common_clearTooltip" xml:space="preserve">
+    <value>Xəritəni təmizləyin</value>
+  </data>
+  <data name="ribbon_vector_title" xml:space="preserve">
+    <value>Vektor</value>
+  </data>
+  <data name="ribbon_raster_title" xml:space="preserve">
+    <value>Raster</value>
+  </data>
+  <data name="ribbon_raster_webMercator" xml:space="preserve">
+    <value>Raster (Veb Mercator)</value>
+  </data>
+  <data name="ribbon_text_title" xml:space="preserve">
+    <value>Mətn</value>
+  </data>
+  <data name="ribbon_text_layersFontSize" xml:space="preserve">
+    <value>Layer şrift ölçüsü:</value>
+  </data>
+  <data name="ribbon_backgroundMaps_title" xml:space="preserve">
+    <value>Fon xəritələri</value>
+  </data>
+  <data name="ribbon_backgroundMaps_online" xml:space="preserve">
+    <value>Onlayn Xəritə</value>
+  </data>
+  <data name="ribbon_backgroundMaps_onlineTooltip" xml:space="preserve">
+    <value>Onlayn xəritələrdən istifadə edin (internet tələb olunur)</value>
+  </data>
+  <data name="ribbon_backgroundMaps_offline" xml:space="preserve">
+    <value>Oflayn Xəritə</value>
+  </data>
+  <data name="ribbon_backgroundMaps_offlineTooltip" xml:space="preserve">
+    <value>Yerli şəbəkə xəritələrindən istifadə edin (yerli server tələb olunur)</value>
+  </data>
+  <data name="ribbon_backgroundMaps_proxy" xml:space="preserve">
+    <value>Proksi xidməti</value>
+  </data>
+  <data name="ribbon_backgroundMaps_proxyTooltip" xml:space="preserve">
+    <value>Proksi xidmətindən istifadə edin (xəritələri keşlər)</value>
+  </data>
+  <data name="ribbon_settings_title" xml:space="preserve">
+    <value>Parametrlər</value>
+  </data>
+  <data name="ribbon_settings_map" xml:space="preserve">
+    <value>Xəritə Parametrləri</value>
+  </data>
+  <data name="ribbon_settings_mapTooltip" xml:space="preserve">
+    <value>Tətbiq parametrləri</value>
+  </data>
+  <data name="ribbon_settings_appearance" xml:space="preserve">
+    <value>Görünüş Parametrləri</value>
+  </data>
+  <data name="ribbon_settings_appearanceTooltip" xml:space="preserve">
+    <value>Tətbiq rəngini seçin</value>
+  </data>
+  <data name="ribbon_settings_layers" xml:space="preserve">
+    <value>Lay parametrləri</value>
+  </data>
+  <data name="ribbon_display_title" xml:space="preserve">
+    <value>Ekran</value>
+  </data>
+  <data name="ribbon_display_showScalebar" xml:space="preserve">
+    <value>Ölçək nəzarətini göstərin</value>
+  </data>
+  <data name="ribbon_display_showScaleValue" xml:space="preserve">
+    <value>Şkala dəyərini göstərin</value>
+  </data>
+  <data name="ribbon_display_showZoomLevel" xml:space="preserve">
+    <value>Böyütmə səviyyəsini göstərin</value>
+  </data>
+  <data name="ribbon_display_showCoordPanel" xml:space="preserve">
+    <value>Koordinat panelini göstərin</value>
+  </data>
+  <data name="ribbon_display_showMgrs" xml:space="preserve">
+    <value>MGRS göstər</value>
+  </data>
+  <data name="ribbon_display_showLegendTools" xml:space="preserve">
+    <value>Əfsanə alətlərini göstərin</value>
+  </data>
+  <data name="ribbon_display_showLayerColors" xml:space="preserve">
+    <value>Legend təbəqəsinin rəng ayrılması</value>
+  </data>
 </root>

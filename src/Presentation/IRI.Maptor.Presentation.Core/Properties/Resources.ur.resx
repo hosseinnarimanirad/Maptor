@@ -2776,4 +2776,145 @@
   <data name="dialog_csvTsvOpen_validationTooFewPoints" xml:space="preserve">
     <value>اس جیومیٹری قسم کے لیے کم از کم {0} پوائنٹس درکار ہیں۔</value>
   </data>
+  <data name="featureTable_useMultiRowTabs" xml:space="preserve">
+    <value>فیچر ٹیبل میں کثیر سطری ٹیبز استعمال کریں۔</value>
+  </data>
+  <data name="ribbon_header_layerDrawing" xml:space="preserve">
+    <value>پرت اور ڈرائنگ</value>
+  </data>
+  <data name="ribbon_workspace_title" xml:space="preserve">
+    <value>کام کی جگہ</value>
+  </data>
+  <data name="ribbon_baseMap_title" xml:space="preserve">
+    <value>بیس کا نقشہ</value>
+  </data>
+  <data name="ribbon_views_title" xml:space="preserve">
+    <value>مناظر</value>
+  </data>
+  <data name="ribbon_tools_title" xml:space="preserve">
+    <value>اوزار</value>
+  </data>
+  <data name="ribbon_print_title" xml:space="preserve">
+    <value>نقشہ پرنٹ کریں۔</value>
+  </data>
+  <data name="ribbon_print_extent" xml:space="preserve">
+    <value>پرنٹ کی حد</value>
+  </data>
+  <data name="ribbon_print_currentView" xml:space="preserve">
+    <value>موجودہ منظر پرنٹ کریں۔</value>
+  </data>
+  <data name="ribbon_drawing_title" xml:space="preserve">
+    <value>ڈرائنگ</value>
+  </data>
+  <data name="ribbon_drawing_polygon" xml:space="preserve">
+    <value>کثیر الاضلاع</value>
+  </data>
+  <data name="ribbon_drawing_polygonTooltip" xml:space="preserve">
+    <value>کثیرالاضلاع کھینچیں۔</value>
+  </data>
+  <data name="ribbon_drawing_rectangle" xml:space="preserve">
+    <value>مستطیل</value>
+  </data>
+  <data name="ribbon_drawing_rectangleTooltip" xml:space="preserve">
+    <value>مستطیل کھینچیں۔</value>
+  </data>
+  <data name="ribbon_drawing_polyline" xml:space="preserve">
+    <value>لائن</value>
+  </data>
+  <data name="ribbon_drawing_polylineTooltip" xml:space="preserve">
+    <value>لکیر کھینچنا</value>
+  </data>
+  <data name="ribbon_drawing_point" xml:space="preserve">
+    <value>نقطہ</value>
+  </data>
+  <data name="ribbon_drawing_pointTooltip" xml:space="preserve">
+    <value>نقطہ کھینچیں۔</value>
+  </data>
+  <data name="ribbon_drawing_text" xml:space="preserve">
+    <value>متن</value>
+  </data>
+  <data name="ribbon_common_clear" xml:space="preserve">
+    <value>صاف</value>
+  </data>
+  <data name="ribbon_common_clearTooltip" xml:space="preserve">
+    <value>نقشہ صاف کریں۔</value>
+  </data>
+  <data name="ribbon_vector_title" xml:space="preserve">
+    <value>ویکٹر</value>
+  </data>
+  <data name="ribbon_raster_title" xml:space="preserve">
+    <value>راسٹر</value>
+  </data>
+  <data name="ribbon_raster_webMercator" xml:space="preserve">
+    <value>راسٹر (ویب مرکٹر)</value>
+  </data>
+  <data name="ribbon_text_title" xml:space="preserve">
+    <value>متن</value>
+  </data>
+  <data name="ribbon_text_layersFontSize" xml:space="preserve">
+    <value>پرت فونٹ سائز:</value>
+  </data>
+  <data name="ribbon_backgroundMaps_title" xml:space="preserve">
+    <value>پس منظر کے نقشے</value>
+  </data>
+  <data name="ribbon_backgroundMaps_online" xml:space="preserve">
+    <value>آن لائن نقشہ</value>
+  </data>
+  <data name="ribbon_backgroundMaps_onlineTooltip" xml:space="preserve">
+    <value>آن لائن نقشے استعمال کریں (انٹرنیٹ کی ضرورت ہے)</value>
+  </data>
+  <data name="ribbon_backgroundMaps_offline" xml:space="preserve">
+    <value>آف لائن نقشہ</value>
+  </data>
+  <data name="ribbon_backgroundMaps_offlineTooltip" xml:space="preserve">
+    <value>مقامی نیٹ ورک کے نقشے استعمال کریں (مقامی سرور کی ضرورت ہے)</value>
+  </data>
+  <data name="ribbon_backgroundMaps_proxy" xml:space="preserve">
+    <value>پراکسی سروس</value>
+  </data>
+  <data name="ribbon_backgroundMaps_proxyTooltip" xml:space="preserve">
+    <value>پراکسی سروس استعمال کریں (کیچ نقشے)</value>
+  </data>
+  <data name="ribbon_settings_title" xml:space="preserve">
+    <value>ترتیبات</value>
+  </data>
+  <data name="ribbon_settings_map" xml:space="preserve">
+    <value>نقشہ کی ترتیبات</value>
+  </data>
+  <data name="ribbon_settings_mapTooltip" xml:space="preserve">
+    <value>درخواست کی ترتیبات</value>
+  </data>
+  <data name="ribbon_settings_appearance" xml:space="preserve">
+    <value>ظاہری شکل کی ترتیبات</value>
+  </data>
+  <data name="ribbon_settings_appearanceTooltip" xml:space="preserve">
+    <value>درخواست کا رنگ منتخب کریں۔</value>
+  </data>
+  <data name="ribbon_settings_layers" xml:space="preserve">
+    <value>لیئر کی ترتیبات</value>
+  </data>
+  <data name="ribbon_display_title" xml:space="preserve">
+    <value>ڈسپلے</value>
+  </data>
+  <data name="ribbon_display_showScalebar" xml:space="preserve">
+    <value>پیمانے پر کنٹرول دکھائیں۔</value>
+  </data>
+  <data name="ribbon_display_showScaleValue" xml:space="preserve">
+    <value>اسکیل ویلیو دکھائیں۔</value>
+  </data>
+  <data name="ribbon_display_showZoomLevel" xml:space="preserve">
+    <value>زوم لیول دکھائیں۔</value>
+  </data>
+  <data name="ribbon_display_showCoordPanel" xml:space="preserve">
+    <value>کوآرڈینیٹ پینل دکھائیں۔</value>
+  </data>
+  <data name="ribbon_display_showMgrs" xml:space="preserve">
+    <value>MGRS دکھائیں</value>
+  </data>
+  <data name="ribbon_display_showLegendTools" xml:space="preserve">
+    <value>لیجنڈ ٹولز دکھائیں۔</value>
+  </data>
+  <data name="ribbon_display_showLayerColors" xml:space="preserve">
+    <value>لیجنڈ پرت رنگ علیحدگی</value>
+  </data>
 </root>

@@ -2776,4 +2776,145 @@
   <data name="dialog_csvTsvOpen_validationTooFewPoints" xml:space="preserve">
     <value>Se necesitan al menos {0} puntos para este tipo de geometría.</value>
   </data>
+  <data name="featureTable_useMultiRowTabs" xml:space="preserve">
+    <value>Usar pestañas de varias filas en la tabla de entidades</value>
+  </data>
+  <data name="ribbon_header_layerDrawing" xml:space="preserve">
+    <value>Capa y dibujo</value>
+  </data>
+  <data name="ribbon_workspace_title" xml:space="preserve">
+    <value>Espacio de trabajo</value>
+  </data>
+  <data name="ribbon_baseMap_title" xml:space="preserve">
+    <value>Mapa básico</value>
+  </data>
+  <data name="ribbon_views_title" xml:space="preserve">
+    <value>Vistas</value>
+  </data>
+  <data name="ribbon_tools_title" xml:space="preserve">
+    <value>Herramientas</value>
+  </data>
+  <data name="ribbon_print_title" xml:space="preserve">
+    <value>Imprimir mapa</value>
+  </data>
+  <data name="ribbon_print_extent" xml:space="preserve">
+    <value>Imprimir extensión</value>
+  </data>
+  <data name="ribbon_print_currentView" xml:space="preserve">
+    <value>Imprimir vista actual</value>
+  </data>
+  <data name="ribbon_drawing_title" xml:space="preserve">
+    <value>Dibujo</value>
+  </data>
+  <data name="ribbon_drawing_polygon" xml:space="preserve">
+    <value>Polígono</value>
+  </data>
+  <data name="ribbon_drawing_polygonTooltip" xml:space="preserve">
+    <value>Dibujar polígono</value>
+  </data>
+  <data name="ribbon_drawing_rectangle" xml:space="preserve">
+    <value>Rectángulo</value>
+  </data>
+  <data name="ribbon_drawing_rectangleTooltip" xml:space="preserve">
+    <value>Dibujar rectángulo</value>
+  </data>
+  <data name="ribbon_drawing_polyline" xml:space="preserve">
+    <value>Línea</value>
+  </data>
+  <data name="ribbon_drawing_polylineTooltip" xml:space="preserve">
+    <value>dibujar linea</value>
+  </data>
+  <data name="ribbon_drawing_point" xml:space="preserve">
+    <value>Punto</value>
+  </data>
+  <data name="ribbon_drawing_pointTooltip" xml:space="preserve">
+    <value>punto de sorteo</value>
+  </data>
+  <data name="ribbon_drawing_text" xml:space="preserve">
+    <value>Texto</value>
+  </data>
+  <data name="ribbon_common_clear" xml:space="preserve">
+    <value>Claro</value>
+  </data>
+  <data name="ribbon_common_clearTooltip" xml:space="preserve">
+    <value>Borrar mapa</value>
+  </data>
+  <data name="ribbon_vector_title" xml:space="preserve">
+    <value>Vector</value>
+  </data>
+  <data name="ribbon_raster_title" xml:space="preserve">
+    <value>Ráster</value>
+  </data>
+  <data name="ribbon_raster_webMercator" xml:space="preserve">
+    <value>Ráster (Web Mercator)</value>
+  </data>
+  <data name="ribbon_text_title" xml:space="preserve">
+    <value>Texto</value>
+  </data>
+  <data name="ribbon_text_layersFontSize" xml:space="preserve">
+    <value>Tamaño de fuente de capa:</value>
+  </data>
+  <data name="ribbon_backgroundMaps_title" xml:space="preserve">
+    <value>Mapas de fondo</value>
+  </data>
+  <data name="ribbon_backgroundMaps_online" xml:space="preserve">
+    <value>Mapa en línea</value>
+  </data>
+  <data name="ribbon_backgroundMaps_onlineTooltip" xml:space="preserve">
+    <value>Utilice mapas en línea (requiere internet)</value>
+  </data>
+  <data name="ribbon_backgroundMaps_offline" xml:space="preserve">
+    <value>Mapa sin conexión</value>
+  </data>
+  <data name="ribbon_backgroundMaps_offlineTooltip" xml:space="preserve">
+    <value>Utilice mapas de red local (requiere servidor local)</value>
+  </data>
+  <data name="ribbon_backgroundMaps_proxy" xml:space="preserve">
+    <value>Servicio de proxy</value>
+  </data>
+  <data name="ribbon_backgroundMaps_proxyTooltip" xml:space="preserve">
+    <value>Usar servicio proxy (mapas en caché)</value>
+  </data>
+  <data name="ribbon_settings_title" xml:space="preserve">
+    <value>Ajustes</value>
+  </data>
+  <data name="ribbon_settings_map" xml:space="preserve">
+    <value>Configuración del mapa</value>
+  </data>
+  <data name="ribbon_settings_mapTooltip" xml:space="preserve">
+    <value>Configuración de la aplicación</value>
+  </data>
+  <data name="ribbon_settings_appearance" xml:space="preserve">
+    <value>Configuración de apariencia</value>
+  </data>
+  <data name="ribbon_settings_appearanceTooltip" xml:space="preserve">
+    <value>Elige el color de la aplicación</value>
+  </data>
+  <data name="ribbon_settings_layers" xml:space="preserve">
+    <value>Configuración de capas</value>
+  </data>
+  <data name="ribbon_display_title" xml:space="preserve">
+    <value>Mostrar</value>
+  </data>
+  <data name="ribbon_display_showScalebar" xml:space="preserve">
+    <value>Mostrar control de escala</value>
+  </data>
+  <data name="ribbon_display_showScaleValue" xml:space="preserve">
+    <value>Mostrar valor de escala</value>
+  </data>
+  <data name="ribbon_display_showZoomLevel" xml:space="preserve">
+    <value>Mostrar nivel de zoom</value>
+  </data>
+  <data name="ribbon_display_showCoordPanel" xml:space="preserve">
+    <value>Mostrar panel de coordenadas</value>
+  </data>
+  <data name="ribbon_display_showMgrs" xml:space="preserve">
+    <value>Mostrar MGRS</value>
+  </data>
+  <data name="ribbon_display_showLegendTools" xml:space="preserve">
+    <value>Mostrar herramientas de leyenda</value>
+  </data>
+  <data name="ribbon_display_showLayerColors" xml:space="preserve">
+    <value>Separación de colores de la capa de leyenda</value>
+  </data>
 </root>

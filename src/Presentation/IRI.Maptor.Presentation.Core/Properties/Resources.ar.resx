@@ -2776,4 +2776,145 @@
   <data name="dialog_csvTsvOpen_validationTooFewPoints" xml:space="preserve">
     <value>يلزم {0} نقاط على الأقل لهذا النوع من الأشكال الهندسية.</value>
   </data>
+  <data name="featureTable_useMultiRowTabs" xml:space="preserve">
+    <value>استخدام علامات تبويب متعددة الأسطر في جدول المعالم</value>
+  </data>
+  <data name="ribbon_header_layerDrawing" xml:space="preserve">
+    <value>الطبقة والرسم</value>
+  </data>
+  <data name="ribbon_workspace_title" xml:space="preserve">
+    <value>مساحة العمل</value>
+  </data>
+  <data name="ribbon_baseMap_title" xml:space="preserve">
+    <value>الخريطة الأساسية</value>
+  </data>
+  <data name="ribbon_views_title" xml:space="preserve">
+    <value>وجهات النظر</value>
+  </data>
+  <data name="ribbon_tools_title" xml:space="preserve">
+    <value>أدوات</value>
+  </data>
+  <data name="ribbon_print_title" xml:space="preserve">
+    <value>طباعة الخريطة</value>
+  </data>
+  <data name="ribbon_print_extent" xml:space="preserve">
+    <value>مدى الطباعة</value>
+  </data>
+  <data name="ribbon_print_currentView" xml:space="preserve">
+    <value>طباعة العرض الحالي</value>
+  </data>
+  <data name="ribbon_drawing_title" xml:space="preserve">
+    <value>رسم</value>
+  </data>
+  <data name="ribbon_drawing_polygon" xml:space="preserve">
+    <value>مضلع</value>
+  </data>
+  <data name="ribbon_drawing_polygonTooltip" xml:space="preserve">
+    <value>ارسم مضلعًا</value>
+  </data>
+  <data name="ribbon_drawing_rectangle" xml:space="preserve">
+    <value>المستطيل</value>
+  </data>
+  <data name="ribbon_drawing_rectangleTooltip" xml:space="preserve">
+    <value>ارسم المستطيل</value>
+  </data>
+  <data name="ribbon_drawing_polyline" xml:space="preserve">
+    <value>خط</value>
+  </data>
+  <data name="ribbon_drawing_polylineTooltip" xml:space="preserve">
+    <value>رسم الخط</value>
+  </data>
+  <data name="ribbon_drawing_point" xml:space="preserve">
+    <value>نقطة</value>
+  </data>
+  <data name="ribbon_drawing_pointTooltip" xml:space="preserve">
+    <value>نقطة الرسم</value>
+  </data>
+  <data name="ribbon_drawing_text" xml:space="preserve">
+    <value>نص</value>
+  </data>
+  <data name="ribbon_common_clear" xml:space="preserve">
+    <value>واضح</value>
+  </data>
+  <data name="ribbon_common_clearTooltip" xml:space="preserve">
+    <value>خريطة واضحة</value>
+  </data>
+  <data name="ribbon_vector_title" xml:space="preserve">
+    <value>ناقل</value>
+  </data>
+  <data name="ribbon_raster_title" xml:space="preserve">
+    <value>النقطية</value>
+  </data>
+  <data name="ribbon_raster_webMercator" xml:space="preserve">
+    <value>النقطية (ويب مركاتور)</value>
+  </data>
+  <data name="ribbon_text_title" xml:space="preserve">
+    <value>نص</value>
+  </data>
+  <data name="ribbon_text_layersFontSize" xml:space="preserve">
+    <value>حجم خط الطبقة:</value>
+  </data>
+  <data name="ribbon_backgroundMaps_title" xml:space="preserve">
+    <value>خرائط الخلفية</value>
+  </data>
+  <data name="ribbon_backgroundMaps_online" xml:space="preserve">
+    <value>خريطة على الانترنت</value>
+  </data>
+  <data name="ribbon_backgroundMaps_onlineTooltip" xml:space="preserve">
+    <value>استخدام الخرائط عبر الإنترنت (يتطلب الإنترنت)</value>
+  </data>
+  <data name="ribbon_backgroundMaps_offline" xml:space="preserve">
+    <value>خريطة غير متصل</value>
+  </data>
+  <data name="ribbon_backgroundMaps_offlineTooltip" xml:space="preserve">
+    <value>استخدام خرائط الشبكة المحلية (يتطلب خادمًا محليًا)</value>
+  </data>
+  <data name="ribbon_backgroundMaps_proxy" xml:space="preserve">
+    <value>خدمة الوكيل</value>
+  </data>
+  <data name="ribbon_backgroundMaps_proxyTooltip" xml:space="preserve">
+    <value>استخدام خدمة الوكيل (خرائط ذاكرة التخزين المؤقت)</value>
+  </data>
+  <data name="ribbon_settings_title" xml:space="preserve">
+    <value>إعدادات</value>
+  </data>
+  <data name="ribbon_settings_map" xml:space="preserve">
+    <value>إعدادات الخريطة</value>
+  </data>
+  <data name="ribbon_settings_mapTooltip" xml:space="preserve">
+    <value>إعدادات التطبيق</value>
+  </data>
+  <data name="ribbon_settings_appearance" xml:space="preserve">
+    <value>إعدادات المظهر</value>
+  </data>
+  <data name="ribbon_settings_appearanceTooltip" xml:space="preserve">
+    <value>اختر لون التطبيق</value>
+  </data>
+  <data name="ribbon_settings_layers" xml:space="preserve">
+    <value>إعدادات الطبقات</value>
+  </data>
+  <data name="ribbon_display_title" xml:space="preserve">
+    <value>عرض</value>
+  </data>
+  <data name="ribbon_display_showScalebar" xml:space="preserve">
+    <value>إظهار التحكم في المقياس</value>
+  </data>
+  <data name="ribbon_display_showScaleValue" xml:space="preserve">
+    <value>إظهار قيمة المقياس</value>
+  </data>
+  <data name="ribbon_display_showZoomLevel" xml:space="preserve">
+    <value>إظهار مستوى التكبير</value>
+  </data>
+  <data name="ribbon_display_showCoordPanel" xml:space="preserve">
+    <value>إظهار لوحة الإحداثيات</value>
+  </data>
+  <data name="ribbon_display_showMgrs" xml:space="preserve">
+    <value>إظهار MGRS</value>
+  </data>
+  <data name="ribbon_display_showLegendTools" xml:space="preserve">
+    <value>عرض أدوات وسيلة الإيضاح</value>
+  </data>
+  <data name="ribbon_display_showLayerColors" xml:space="preserve">
+    <value>فصل ألوان طبقة الأسطورة</value>
+  </data>
 </root>
