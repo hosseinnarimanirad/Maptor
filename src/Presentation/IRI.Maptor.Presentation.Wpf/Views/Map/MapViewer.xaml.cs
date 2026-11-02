@@ -837,7 +837,8 @@ public partial class MapViewer : NotifiableUserControl
         // base map for the whole session. Re-apply here so the base map no longer depends on which
         // of the two wins. Going through the presenter (rather than invoking the delegate directly)
         // keeps the offline flag accurate, and RequestSetTileService is idempotent: it unsets the
-        // existing base map tile layers before adding this one, so applying twice is harmless.
+        // existing base map tile layers before adding this one, and AddTileServiceLayerAsync drops
+        // tiles of a layer that is no longer in the layer manager, so applying twice is harmless.
         if (presenter.SelectedMapProvider is not null && presenter.BaseMapSettings is not null)
         {
             // GetLocalFileName is optional all the way down to the TileServiceLayer ctor; only the
@@ -1760,13 +1761,17 @@ public partial class MapViewer : NotifiableUserControl
             if (_presenter == null)
                 return;
 
-            if (tile.ZoomLevel != TileZoomLevel || !layer.HasTheSameMapProvider(_presenter.SelectedMapProvider))
+            // HasLayer: a base map layer replaced by RequestSetTileService (which runs twice at
+            // startup) keeps the same provider, so the provider check alone lets its queued and
+            // in-flight tiles land on top of the new layer's; those orphans no longer follow the
+            // ribbon's opacity because only layers still in the manager are updated.
+            if (tile.ZoomLevel != TileZoomLevel || !layer.HasTheSameMapProvider(_presenter.SelectedMapProvider) || !_layerManager.HasLayer(layer.LayerId))
                 return;
 
             // 1401.11.07
             var geoImage = await layer.GetTileAsync(tile, _presenter.HttpClient);
 
-            if (tile.ZoomLevel != TileZoomLevel || !layer.HasTheSameMapProvider(this._presenter.SelectedMapProvider))
+            if (tile.ZoomLevel != TileZoomLevel || !layer.HasTheSameMapProvider(this._presenter.SelectedMapProvider) || !_layerManager.HasLayer(layer.LayerId))
                 return;
 
             var webMercatorExtent = geoImage.GeodeticWgs84BoundingBox.Transform(MapProjects.GeodeticWgs84ToWebMercator);
