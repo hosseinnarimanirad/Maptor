@@ -2764,4 +2764,16 @@
   <data name="featureTable_exportDates_local" xml:space="preserve">
     <value>Zona horaria de este equipo</value>
   </data>
+  <data name="dialog_csvTsvOpen_validationTooFewColumns" xml:space="preserve">
+    <value>Línea {0}: menos de 2 columnas. Revise la opción CSV / TSV.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationColumnCount" xml:space="preserve">
+    <value>Línea {0}: {1} columnas, pero la primera línea de datos tiene {2}.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationNotNumber" xml:space="preserve">
+    <value>Línea {0}: X o Y no es un número.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationTooFewPoints" xml:space="preserve">
+    <value>Se necesitan al menos {0} puntos para este tipo de geometría.</value>
+  </data>
 </root>

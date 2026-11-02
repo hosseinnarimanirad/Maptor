@@ -2764,4 +2764,16 @@
   <data name="featureTable_exportDates_local" xml:space="preserve">
     <value>Bu kompüterin saat qurşağı</value>
   </data>
+  <data name="dialog_csvTsvOpen_validationTooFewColumns" xml:space="preserve">
+    <value>Sətir {0}: 2-dən az sütun. CSV / TSV seçimini yoxlayın.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationColumnCount" xml:space="preserve">
+    <value>Sətir {0}: {1} sütun var, lakin ilk məlumat sətrində {2} var.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationNotNumber" xml:space="preserve">
+    <value>Sətir {0}: X və ya Y rəqəm deyil.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationTooFewPoints" xml:space="preserve">
+    <value>Bu həndəsə növü üçün ən azı {0} nöqtə lazımdır.</value>
+  </data>
 </root>

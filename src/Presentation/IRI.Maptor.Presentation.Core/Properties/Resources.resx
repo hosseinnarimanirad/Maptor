@@ -3840,4 +3840,16 @@
   <data name="featureTable_exportDates_local" xml:space="preserve">
     <value>This computer's time zone</value>
   </data>
+  <data name="dialog_csvTsvOpen_validationTooFewColumns" xml:space="preserve">
+    <value>Line {0}: fewer than 2 columns. Check the CSV / TSV choice.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationColumnCount" xml:space="preserve">
+    <value>Line {0}: {1} columns, but the first data line has {2}.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationNotNumber" xml:space="preserve">
+    <value>Line {0}: X or Y is not a number.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationTooFewPoints" xml:space="preserve">
+    <value>At least {0} points are needed for this geometry type.</value>
+  </data>
 </root>

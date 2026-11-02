@@ -2764,4 +2764,16 @@
   <data name="featureTable_exportDates_local" xml:space="preserve">
     <value>اس کمپیوٹر کا ٹائم زون</value>
   </data>
+  <data name="dialog_csvTsvOpen_validationTooFewColumns" xml:space="preserve">
+    <value>سطر {0}: دو سے کم کالم۔ CSV / TSV کا انتخاب چیک کریں۔</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationColumnCount" xml:space="preserve">
+    <value>سطر {0}: {1} کالم ہیں، لیکن ڈیٹا کی پہلی سطر میں {2} ہیں۔</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationNotNumber" xml:space="preserve">
+    <value>سطر {0}: X یا Y عدد نہیں ہے۔</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationTooFewPoints" xml:space="preserve">
+    <value>اس جیومیٹری قسم کے لیے کم از کم {0} پوائنٹس درکار ہیں۔</value>
+  </data>
 </root>

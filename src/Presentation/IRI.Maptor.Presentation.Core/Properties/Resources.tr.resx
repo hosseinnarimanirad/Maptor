@@ -2764,4 +2764,16 @@
   <data name="featureTable_exportDates_local" xml:space="preserve">
     <value>Bu bilgisayarın saat dilimi</value>
   </data>
+  <data name="dialog_csvTsvOpen_validationTooFewColumns" xml:space="preserve">
+    <value>Satır {0}: 2'den az sütun. CSV / TSV seçimini kontrol edin.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationColumnCount" xml:space="preserve">
+    <value>Satır {0}: {1} sütun var, ancak ilk veri satırında {2} var.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationNotNumber" xml:space="preserve">
+    <value>Satır {0}: X veya Y bir sayı değil.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationTooFewPoints" xml:space="preserve">
+    <value>Bu geometri türü için en az {0} nokta gerekir.</value>
+  </data>
 </root>

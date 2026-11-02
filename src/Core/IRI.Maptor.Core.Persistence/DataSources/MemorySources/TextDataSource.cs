@@ -190,7 +190,11 @@ public class TextDataSource : MemoryDataSource
 
     //public static async Task<TextDataSource> Create(CsvTsvOpenDialogResult)
 
-    private static (int xIndex, int yIndex) FindXyColumnIndices(string[] headerRow, bool isLongitudeFirst)
+    /// <summary>
+    /// X/Y column indices for a header row: by name (x/E/lon/..., y/N/lat/...) when both are found,
+    /// otherwise by order. Used by the import and by the CSV/TSV dialog validation.
+    /// </summary>
+    public static (int xIndex, int yIndex) FindXyColumnIndices(string[] headerRow, bool isLongitudeFirst)
     {
         var xAliases = new[] { "x", "E", "lon", "lng", "longitude", "long" };
         var yAliases = new[] { "y", "N", "lat", "latitude" };

@@ -1240,6 +1240,42 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Line {0}: {1} columns, but the first data line has {2}.
+        /// </summary>
+        public static string dialog_csvTsvOpen_validationColumnCount {
+            get {
+                return ResourceManager.GetString("dialog_csvTsvOpen_validationColumnCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Line {0}: X or Y is not a number.
+        /// </summary>
+        public static string dialog_csvTsvOpen_validationNotNumber {
+            get {
+                return ResourceManager.GetString("dialog_csvTsvOpen_validationNotNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Line {0}: fewer than 2 columns. Check the CSV / TSV choice.
+        /// </summary>
+        public static string dialog_csvTsvOpen_validationTooFewColumns {
+            get {
+                return ResourceManager.GetString("dialog_csvTsvOpen_validationTooFewColumns", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At least {0} points are needed for this geometry type.
+        /// </summary>
+        public static string dialog_csvTsvOpen_validationTooFewPoints {
+            get {
+                return ResourceManager.GetString("dialog_csvTsvOpen_validationTooFewPoints", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to #.
         /// </summary>
         public static string dialog_dxfOpen_columnIndex {

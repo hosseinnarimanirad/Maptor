@@ -2764,4 +2764,16 @@
   <data name="featureTable_exportDates_local" xml:space="preserve">
     <value>इस कंप्यूटर का समय क्षेत्र</value>
   </data>
+  <data name="dialog_csvTsvOpen_validationTooFewColumns" xml:space="preserve">
+    <value>पंक्ति {0}: 2 से कम कॉलम। CSV / TSV चयन जाँचें।</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationColumnCount" xml:space="preserve">
+    <value>पंक्ति {0}: {1} कॉलम हैं, लेकिन पहली डेटा पंक्ति में {2} हैं।</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationNotNumber" xml:space="preserve">
+    <value>पंक्ति {0}: X या Y संख्या नहीं है।</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationTooFewPoints" xml:space="preserve">
+    <value>इस ज्यामिति प्रकार के लिए कम से कम {0} बिंदु आवश्यक हैं।</value>
+  </data>
 </root>

@@ -214,12 +214,28 @@
         <TextBox x:Name="previewTextbox" Grid.Row="6" Margin="4,0" HorizontalAlignment="Stretch"
                 Background="Transparent"
                 Style="{StaticResource IRI.Maptor.Styles.TextBox}"
-                mahApp:TextBoxHelper.Watermark="{Binding [dialog_csvTsvOpen_pasteWatermark], Source={StaticResource Localization}}"
                 Text="{Binding RawText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 TextWrapping="NoWrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
                 HorizontalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"
                 Padding="4" FlowDirection="LeftToRight"
                 IsReadOnly="{Binding IsRawTextReadOnly}"/>
+
+        <!-- Watermark drawn outside the LTR data box so it follows the app direction (RTL in Persian). -->
+        <TextBlock Grid.Row="6" Margin="12,8" IsHitTestVisible="False"
+                   HorizontalAlignment="Stretch" VerticalAlignment="Top" TextWrapping="Wrap"
+                   Opacity="0.6" FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"
+                   Text="{Binding [dialog_csvTsvOpen_pasteWatermark], Source={StaticResource Localization}}">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Text, ElementName=previewTextbox}" Value="">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
 
         <!-- Buttons -->
         <dialogs:DialogFooterView Grid.Row="7"

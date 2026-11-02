@@ -2764,4 +2764,16 @@
   <data name="featureTable_exportDates_local" xml:space="preserve">
     <value>本计算机的时区</value>
   </data>
+  <data name="dialog_csvTsvOpen_validationTooFewColumns" xml:space="preserve">
+    <value>第 {0} 行：少于 2 列。请检查 CSV / TSV 选择。</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationColumnCount" xml:space="preserve">
+    <value>第 {0} 行：有 {1} 列，但第一行数据有 {2} 列。</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationNotNumber" xml:space="preserve">
+    <value>第 {0} 行：X 或 Y 不是数字。</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationTooFewPoints" xml:space="preserve">
+    <value>此几何类型至少需要 {0} 个点。</value>
+  </data>
 </root>

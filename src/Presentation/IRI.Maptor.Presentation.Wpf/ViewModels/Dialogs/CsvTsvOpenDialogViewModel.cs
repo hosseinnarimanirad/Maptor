@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 
 using IRI.Maptor.Core.Common.Enums;
+using IRI.Maptor.Core.Common.Helpers;
 using IRI.Maptor.Presentation.Wpf.Services;
 using IRI.Maptor.Core.SpatialReferenceSystem;
 using IRI.Maptor.Presentation.Wpf.Models.DxfOpenDialog;
@@ -87,7 +88,7 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
         {
             _rawText = value ?? string.Empty;
             RaisePropertyChanged();
-            RaisePropertyChanged(nameof(ValidationMessage));
+            RefreshValidation();
         }
     }
 
@@ -116,6 +117,7 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
         {
             _selectedGeometryMode = value;
             RaisePropertyChanged();
+            RefreshValidation();
         }
     }
 
@@ -146,7 +148,7 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
     public bool IsCsv
     {
         get => _isCsv;
-        set { _isCsv = value; RaisePropertyChanged(); }
+        set { _isCsv = value; RaisePropertyChanged(); RefreshValidation(); }
     }
 
     /// <summary>
@@ -155,13 +157,19 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
     public bool IsLongitudeFirst
     {
         get => _isLongitudeFirst;
-        set { _isLongitudeFirst = value; RaisePropertyChanged(); }
+        set { _isLongitudeFirst = value; RaisePropertyChanged(); RefreshValidation(); }
     }
 
     public bool UseFirstLineAsHeader
     {
         get => _useFirstLineAsHeader;
-        set { _useFirstLineAsHeader = value; RaisePropertyChanged(); }
+        set { _useFirstLineAsHeader = value; RaisePropertyChanged(); RefreshValidation(); }
+    }
+
+    private void RefreshValidation()
+    {
+        RaisePropertyChanged(nameof(ValidationMessage));
+        OpenCommand?.RaiseCanExecuteChanged();
     }
 
     public bool IsUtmSelected => SelectedSrsOption?.IsUtm == true;
@@ -271,9 +279,36 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
             if (IsUtmSelected && (UtmZone < 1 || UtmZone > 60))
                 return LocalizationManager.Instance["dialog_common_validationUtmZone"];
 
-            return null;
+            return ValidateContent();
         }
     }
+
+    private string? ValidateContent()
+    {
+        var result = DelimitedTextValidator.Validate(
+            GetPastedTextToImport(), Delimiter, UseFirstLineAsHeader, IsLongitudeFirst, SelectedGeometryMode, skipPreviewMarker: IsFileSelected);
+
+        var loc = LocalizationManager.Instance;
+
+        return result.Error switch
+        {
+            DelimitedTextError.None => null,
+            DelimitedTextError.TooFewColumns => string.Format(loc["dialog_csvTsvOpen_validationTooFewColumns"], result.Line),
+            DelimitedTextError.ColumnCountMismatch => string.Format(loc["dialog_csvTsvOpen_validationColumnCount"], result.Line, result.Columns, result.ExpectedColumns),
+            DelimitedTextError.NotNumber => string.Format(loc["dialog_csvTsvOpen_validationNotNumber"], result.Line),
+            DelimitedTextError.TooFewPoints => string.Format(loc["dialog_csvTsvOpen_validationTooFewPoints"], result.RequiredPoints),
+            _ => null,
+        };
+    }
+
+    private char Delimiter => IsCsv ? IOHelper.CsvDelimiterChar : IOHelper.TsvDelimiterChar;
+
+    /// <summary>
+    /// The text that is validated and imported. Pasted two-number lines separated by spaces get the
+    /// selected delimiter; the text box itself is never changed. Files are read from disk unchanged.
+    /// </summary>
+    private string GetPastedTextToImport() =>
+        IsFileSelected ? RawText : DelimitedTextValidator.ConvertSpaceSeparatedXy(RawText, Delimiter, UseFirstLineAsHeader);
 
     private void RemoveSelectedFile()
     {
@@ -286,7 +321,7 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
         if (!CanOpen())
             return;
 
-        var textToImport = RawText;
+        var textToImport = GetPastedTextToImport();
 
         if (!string.IsNullOrEmpty(FilePath) && File.Exists(FilePath))
         {

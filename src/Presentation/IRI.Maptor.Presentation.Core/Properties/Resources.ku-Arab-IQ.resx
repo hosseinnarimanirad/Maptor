@@ -2764,4 +2764,16 @@
   <data name="featureTable_exportDates_local" xml:space="preserve">
     <value>ناوچەی کاتی ئەم کۆمپیوتەرە</value>
   </data>
+  <data name="dialog_csvTsvOpen_validationTooFewColumns" xml:space="preserve">
+    <value>دێڕی {0}: کەمتر لە دوو ستوون. هەڵبژاردنی CSV / TSV بپشکنە.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationColumnCount" xml:space="preserve">
+    <value>دێڕی {0}: {1} ستوون، بەڵام یەکەم دێڕی داتا {2} ستوونی هەیە.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationNotNumber" xml:space="preserve">
+    <value>دێڕی {0}: X یان Y ژمارە نییە.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationTooFewPoints" xml:space="preserve">
+    <value>بۆ ئەم جۆرە ئەندازەییە لانیکەم {0} خاڵ پێویستە.</value>
+  </data>
 </root>

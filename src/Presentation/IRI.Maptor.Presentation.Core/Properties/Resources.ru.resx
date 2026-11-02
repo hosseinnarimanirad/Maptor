@@ -2764,4 +2764,16 @@
   <data name="featureTable_exportDates_local" xml:space="preserve">
     <value>Часовой пояс этого компьютера</value>
   </data>
+  <data name="dialog_csvTsvOpen_validationTooFewColumns" xml:space="preserve">
+    <value>Строка {0}: меньше 2 столбцов. Проверьте выбор CSV / TSV.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationColumnCount" xml:space="preserve">
+    <value>Строка {0}: столбцов {1}, а в первой строке данных — {2}.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationNotNumber" xml:space="preserve">
+    <value>Строка {0}: X или Y не является числом.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationTooFewPoints" xml:space="preserve">
+    <value>Для этого типа геометрии нужно не менее {0} точек.</value>
+  </data>
 </root>

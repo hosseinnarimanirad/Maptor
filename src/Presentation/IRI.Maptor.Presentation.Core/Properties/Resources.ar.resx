@@ -2764,4 +2764,16 @@
   <data name="featureTable_exportDates_local" xml:space="preserve">
     <value>المنطقة الزمنية لهذا الحاسوب</value>
   </data>
+  <data name="dialog_csvTsvOpen_validationTooFewColumns" xml:space="preserve">
+    <value>السطر {0}: أقل من عمودين. تحقق من اختيار CSV / TSV.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationColumnCount" xml:space="preserve">
+    <value>السطر {0}: {1} أعمدة، لكن أول سطر بيانات يحتوي على {2}.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationNotNumber" xml:space="preserve">
+    <value>السطر {0}: قيمة X أو Y ليست رقمًا.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationTooFewPoints" xml:space="preserve">
+    <value>يلزم {0} نقاط على الأقل لهذا النوع من الأشكال الهندسية.</value>
+  </data>
 </root>

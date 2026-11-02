@@ -3685,4 +3685,16 @@
   <data name="featureTable_exportDates_local" xml:space="preserve">
     <value>منطقهٔ زمانی این رایانه</value>
   </data>
+  <data name="dialog_csvTsvOpen_validationTooFewColumns" xml:space="preserve">
+    <value>سطر {0}: کمتر از دو ستون دارد. گزینهٔ CSV / TSV را بررسی کنید.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationColumnCount" xml:space="preserve">
+    <value>سطر {0}: {1} ستون دارد، اما نخستین سطر داده {2} ستون دارد.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationNotNumber" xml:space="preserve">
+    <value>سطر {0}: X یا Y عدد نیست.</value>
+  </data>
+  <data name="dialog_csvTsvOpen_validationTooFewPoints" xml:space="preserve">
+    <value>برای این نوع هندسه دست‌کم {0} نقطه لازم است.</value>
+  </data>
 </root>
