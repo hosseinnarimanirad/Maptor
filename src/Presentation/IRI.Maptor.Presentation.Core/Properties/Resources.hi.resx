@@ -2959,4 +2959,10 @@
   <data name="dialog_changePassword_newPasswordsDiffer" xml:space="preserve">
     <value>नया पासवर्ड और उसकी पुष्टि मेल नहीं खाते।</value>
   </data>
+  <data name="message_error_invalidPassword" xml:space="preserve">
+    <value>पासवर्ड गलत है।</value>
+  </data>
+  <data name="message_error_userNotFound" xml:space="preserve">
+    <value>उपयोगकर्ता नहीं मिला।</value>
+  </data>
 </root>

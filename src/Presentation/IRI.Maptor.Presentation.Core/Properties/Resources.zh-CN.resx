@@ -2959,4 +2959,10 @@
   <data name="dialog_changePassword_newPasswordsDiffer" xml:space="preserve">
     <value>新密码与确认密码不一致。</value>
   </data>
+  <data name="message_error_invalidPassword" xml:space="preserve">
+    <value>密码不正确。</value>
+  </data>
+  <data name="message_error_userNotFound" xml:space="preserve">
+    <value>未找到用户。</value>
+  </data>
 </root>

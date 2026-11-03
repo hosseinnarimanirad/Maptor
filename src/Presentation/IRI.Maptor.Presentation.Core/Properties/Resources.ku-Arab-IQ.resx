@@ -2959,4 +2959,10 @@
   <data name="dialog_changePassword_newPasswordsDiffer" xml:space="preserve">
     <value>وشەی نهێنیی نوێ و دووپاتکردنەوەکەی وەک یەک نین.</value>
   </data>
+  <data name="message_error_invalidPassword" xml:space="preserve">
+    <value>وشەی نهێنی هەڵەیە.</value>
+  </data>
+  <data name="message_error_userNotFound" xml:space="preserve">
+    <value>بەکارهێنەر نەدۆزرایەوە.</value>
+  </data>
 </root>

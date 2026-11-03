@@ -2959,4 +2959,10 @@
   <data name="dialog_changePassword_newPasswordsDiffer" xml:space="preserve">
     <value>Նոր գաղտնաբառը և դրա հաստատումը չեն համընկնում։</value>
   </data>
+  <data name="message_error_invalidPassword" xml:space="preserve">
+    <value>Գաղտնաբառը սխալ է։</value>
+  </data>
+  <data name="message_error_userNotFound" xml:space="preserve">
+    <value>Օգտատերը չի գտնվել։</value>
+  </data>
 </root>

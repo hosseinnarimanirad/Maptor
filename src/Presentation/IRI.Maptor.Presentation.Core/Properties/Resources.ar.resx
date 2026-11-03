@@ -2959,4 +2959,10 @@
   <data name="dialog_changePassword_newPasswordsDiffer" xml:space="preserve">
     <value>كلمة المرور الجديدة وتأكيدها غير متطابقين.</value>
   </data>
+  <data name="message_error_invalidPassword" xml:space="preserve">
+    <value>كلمة المرور غير صحيحة.</value>
+  </data>
+  <data name="message_error_userNotFound" xml:space="preserve">
+    <value>لم يتم العثور على المستخدم.</value>
+  </data>
 </root>

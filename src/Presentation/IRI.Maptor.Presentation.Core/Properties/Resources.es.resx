@@ -2959,4 +2959,10 @@
   <data name="dialog_changePassword_newPasswordsDiffer" xml:space="preserve">
     <value>La nueva contraseña y su confirmación no coinciden.</value>
   </data>
+  <data name="message_error_invalidPassword" xml:space="preserve">
+    <value>La contraseña es incorrecta.</value>
+  </data>
+  <data name="message_error_userNotFound" xml:space="preserve">
+    <value>No se encontró el usuario.</value>
+  </data>
 </root>

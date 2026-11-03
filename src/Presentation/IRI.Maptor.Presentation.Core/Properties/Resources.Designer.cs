@@ -959,6 +959,24 @@ namespace IRI.Maptor.Presentation.Core.Properties {
                 return ResourceManager.GetString("dialog_changePassword_newPasswordsDiffer", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The password is incorrect..
+        /// </summary>
+        public static string message_error_invalidPassword {
+            get {
+                return ResourceManager.GetString("message_error_invalidPassword", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to User not found..
+        /// </summary>
+        public static string message_error_userNotFound {
+            get {
+                return ResourceManager.GetString("message_error_userNotFound", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Apply.

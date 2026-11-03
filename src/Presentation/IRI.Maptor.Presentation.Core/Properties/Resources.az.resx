@@ -2959,4 +2959,10 @@
   <data name="dialog_changePassword_newPasswordsDiffer" xml:space="preserve">
     <value>Yeni şifrə və onun təkrarı uyğun gəlmir.</value>
   </data>
+  <data name="message_error_invalidPassword" xml:space="preserve">
+    <value>Şifrə yanlışdır.</value>
+  </data>
+  <data name="message_error_userNotFound" xml:space="preserve">
+    <value>İstifadəçi tapılmadı.</value>
+  </data>
 </root>

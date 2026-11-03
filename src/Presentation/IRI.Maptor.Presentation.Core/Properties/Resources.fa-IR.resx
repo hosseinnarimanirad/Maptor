@@ -3880,4 +3880,10 @@
   <data name="dialog_changePassword_newPasswordsDiffer" xml:space="preserve">
     <value>رمز عبور جدید با تکرار آن یکسان نیست.</value>
   </data>
+  <data name="message_error_invalidPassword" xml:space="preserve">
+    <value>رمز عبور نادرست است.</value>
+  </data>
+  <data name="message_error_userNotFound" xml:space="preserve">
+    <value>کاربر پیدا نشد.</value>
+  </data>
 </root>

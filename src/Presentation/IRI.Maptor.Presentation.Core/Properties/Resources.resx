@@ -4035,4 +4035,10 @@
   <data name="dialog_changePassword_newPasswordsDiffer" xml:space="preserve">
     <value>The new password and its confirmation do not match.</value>
   </data>
+  <data name="message_error_invalidPassword" xml:space="preserve">
+    <value>The password is incorrect.</value>
+  </data>
+  <data name="message_error_userNotFound" xml:space="preserve">
+    <value>User not found.</value>
+  </data>
 </root>

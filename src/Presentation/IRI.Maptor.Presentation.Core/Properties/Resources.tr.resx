@@ -2959,4 +2959,10 @@
   <data name="dialog_changePassword_newPasswordsDiffer" xml:space="preserve">
     <value>Yeni şifre ile tekrarı eşleşmiyor.</value>
   </data>
+  <data name="message_error_invalidPassword" xml:space="preserve">
+    <value>Şifre yanlış.</value>
+  </data>
+  <data name="message_error_userNotFound" xml:space="preserve">
+    <value>Kullanıcı bulunamadı.</value>
+  </data>
 </root>
