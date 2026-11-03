@@ -222,6 +222,7 @@
                              Visibility="{Binding IsLoadingPage, Converter={StaticResource boolToVisibilityConverter}}"/>
             </StackPanel>
 
+            <!--navigation (page counter, then page size) | layer commands (zoom, pan, export, ...) | edit | delete-->
             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                    Command="{Binding GoToFirstPageCommand}"
                    ToolTip="{Binding [featureTable_goToFirstPage], Source={StaticResource Localization}}">
@@ -232,11 +233,6 @@
                    ToolTip="{Binding [geometryDetails_currentPoint_goToPreviousPage], Source={StaticResource Localization}}">
                 <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronPrevious}"/>
             </Button>
-            <ComboBox ItemsSource="{Binding AvailablePageSizes}"
-                      SelectedItem="{Binding SelectedPageSize, Mode=TwoWay}"
-                      Width="60" Margin="4,0" VerticalAlignment="Center"
-                      FlowDirection="LeftToRight"/>
-         
             <TextBlock VerticalAlignment="Center" Margin="4,0" FontFamily="{StaticResource iranSans}">
                 <TextBlock.Text>
                     <MultiBinding StringFormat="{}{0}/{1}">
@@ -255,25 +251,37 @@
                     ToolTip="{Binding [featureTable_goToLastPage], Source={StaticResource Localization}}">
                 <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronDoubleNext}"/>
             </Button>
-            
+            <ComboBox ItemsSource="{Binding AvailablePageSizes}"
+                      SelectedItem="{Binding SelectedPageSize, Mode=TwoWay}"
+                      Width="60" Margin="4,0" VerticalAlignment="Center"
+                      FlowDirection="LeftToRight"/>
+
+            <Separator Style="{StaticResource IRI.Maptor.Styles.Separator.Vertical}" Margin="4,6"/>
+
+            <ItemsControl ItemsSource="{Binding AssociatedLayer.FeatureTableCommands}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+            <Separator Style="{StaticResource IRI.Maptor.Styles.Separator.Vertical}" Margin="4,6"
+                       Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}"/>
+
             <Button Command="{Binding AddCommand}"
                     Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                     ToolTip="{Binding [featureTable_addNew], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
                 <iconPacks:PackIconMaterial Kind="Plus" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
             </Button>
-            <Button Command="{Binding DeleteCommand}"
-                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
-                    ToolTip="{Binding [featureTable_delete], Source={StaticResource Localization}}"
-                    Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
-                <iconPacks:PackIconMaterial Kind="Delete" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
-            </Button>
             <Button Command="{Binding EditCommand}"
                     Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                     ToolTip="{Binding [featureTable_editGeometry], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}"
                     Padding="0">
-                <iconPacks:PackIconMaterial Kind="Pencil" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
+                <!--VectorSquareEdit is the edit-geometry symbol (also the drawing legend item Edit)-->
+                <iconPacks:PackIconMaterial Kind="VectorSquareEdit" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
             </Button>
             <Button Command="{Binding UndoChangesCommand}"
                     Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
@@ -293,13 +301,16 @@
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
                 <iconPacks:PackIconMaterial Kind="History" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
             </Button>
-            <ItemsControl ItemsSource="{Binding AssociatedLayer.FeatureTableCommands}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
+
+            <Separator Style="{StaticResource IRI.Maptor.Styles.Separator.Vertical}" Margin="4,6"
+                       Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}"/>
+
+            <Button Command="{Binding DeleteCommand}"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleDanger}"
+                    ToolTip="{Binding [featureTable_delete], Source={StaticResource Localization}}"
+                    Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
+                <iconPacks:PackIconMaterial Kind="TrashCanOutline" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
+            </Button>
         </DockPanel>
     </Grid>
 </UserControl>

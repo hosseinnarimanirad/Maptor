@@ -324,6 +324,8 @@ public abstract class MapViewModelBase : ViewModelBase
                     ZoomToExtent(g.GetBoundingBox(), isExactExtent: false, isNewExtent: true);
                 };
 
+                _currentEditingLayer.RequestPanToPoint = p => PanTo(p, null);
+
                 _currentEditingLayer.RequestGetCoordinateDisplayMode = () => this.SketchBar.SpatialReference;
 
                 _currentEditingLayer.RequestGetMapSettings = () => this.MapSettings;

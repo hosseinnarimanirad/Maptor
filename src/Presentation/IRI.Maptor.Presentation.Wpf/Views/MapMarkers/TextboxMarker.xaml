@@ -443,7 +443,7 @@
                             <iconPacks:PackIconMaterial Kind="ContentCopy"/>
                         </Button>
                         <Button Margin="0,0,0,0" ToolTip="{Binding [textMarker_tooltip_delete], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding DeleteCommand}">
-                            <iconPacks:PackIconMaterial Kind="Delete"/>
+                            <iconPacks:PackIconMaterial Kind="TrashCanOutline"/>
                         </Button>
                     </StackPanel>
                 </StackPanel>

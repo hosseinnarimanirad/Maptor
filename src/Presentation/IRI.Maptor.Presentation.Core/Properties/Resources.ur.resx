@@ -2917,4 +2917,34 @@
   <data name="ribbon_display_showLayerColors" xml:space="preserve">
     <value>لیجنڈ پرت رنگ علیحدگی</value>
   </data>
+  <data name="mapPanel_currentPart_goToPreviousPart" xml:space="preserve">
+    <value>پچھلا حصہ</value>
+  </data>
+  <data name="mapPanel_currentPart_goToNextPart" xml:space="preserve">
+    <value>اگلا حصہ</value>
+  </data>
+  <data name="geometryDetails_polygon_goToPreviousPolygon" xml:space="preserve">
+    <value>پچھلا کثیر الاضلاع</value>
+  </data>
+  <data name="geometryDetails_polygon_goToNextPolygon" xml:space="preserve">
+    <value>اگلا کثیر الاضلاع</value>
+  </data>
+  <data name="geometryDetails_polygon_add" xml:space="preserve">
+    <value>نیا کثیر الاضلاع شامل کریں</value>
+  </data>
+  <data name="geometryDetails_polygon_delete" xml:space="preserve">
+    <value>موجودہ کثیر الاضلاع حذف کریں</value>
+  </data>
+  <data name="geometryDetails_polygon_zoom" xml:space="preserve">
+    <value>موجودہ کثیر الاضلاع پر زوم کریں</value>
+  </data>
+  <data name="geometryDetails_currentPoint_apply" xml:space="preserve">
+    <value>کوآرڈینیٹ لاگو کریں</value>
+  </data>
+  <data name="mapPanel_currentPart_pan" xml:space="preserve">
+    <value>موجودہ حصے پر پین کریں</value>
+  </data>
+  <data name="featureTable_panToFeature" xml:space="preserve">
+    <value>فیچر پر پین کریں</value>
+  </data>
 </root>

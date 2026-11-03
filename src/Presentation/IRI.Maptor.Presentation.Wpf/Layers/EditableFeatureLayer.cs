@@ -159,6 +159,9 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
     public Action<Geometry>? RequestZoomToGeometry;
 
+    // pan: centre the map on a point (web mercator) and keep the scale
+    public Action<Point>? RequestPanToPoint;
+
     public event Action? LocateablesReconstructed;
 
     /// <summary>Raised whenever the geometry's points/parts are added or removed (not on coordinate moves).</summary>
@@ -753,7 +756,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
                 rightSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.ContentCopy),
                 leftSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.AxisArrowInfo),
-                middleSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.Delete));
+                middleSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.TrashCanOutline));
 
         presenter.RightCommandAction = i =>
         {
@@ -1414,6 +1417,16 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         RequestZoomToPoint?.Invoke(new Point(currentPoint.X, currentPoint.Y));
     }
 
+    private void PanToCurrentPoint()
+    {
+        var currentPoint = _primaryVerticesLayer.FindSelectedLocatable();
+
+        if (currentPoint == null)
+            return;
+
+        RequestPanToPoint?.Invoke(new Point(currentPoint.X, currentPoint.Y));
+    }
+
     private void CopyCurrentPointCoordinateToClipboard(CoordinateDisplayMode mode)
     {
         var currentPoint = _primaryVerticesLayer.FindSelectedLocatable();
@@ -1497,6 +1510,21 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         var part = _webMercatorGeometry.GetRingOrLineStringPassingPoint(currentPoint.X, currentPoint.Y);
 
         RequestZoomToGeometry?.Invoke(part);
+    }
+
+    private void PanToCurrentPart()
+    {
+        var currentPoint = _primaryVerticesLayer.FindSelectedLocatable();
+
+        if (currentPoint == null)
+            return;
+
+        var part = _webMercatorGeometry.GetRingOrLineStringPassingPoint(currentPoint.X, currentPoint.Y);
+
+        if (part == null)
+            return;
+
+        RequestPanToPoint?.Invoke(part.GetBoundingBox().Center);
     }
 
     // Flattens _vertices into the ordered list of parts (each part = its primary vertices).
@@ -1880,6 +1908,19 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
     }
 
 
+    private RelayCommand? _panToCurrentPointCommand;
+    public RelayCommand PanToCurrentPointCommand
+    {
+        get
+        {
+            if (_panToCurrentPointCommand == null)
+                _panToCurrentPointCommand = new RelayCommand(param => PanToCurrentPoint());
+
+            return _panToCurrentPointCommand;
+        }
+    }
+
+
     private RelayCommand? _copyCurrentPointCommand;
     public RelayCommand CopyCurrentPointCommand
     {
@@ -1915,6 +1956,19 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
                 _zoomToCurrentPartCommand = new RelayCommand(param => ZoomToCurrentPart());
 
             return _zoomToCurrentPartCommand;
+        }
+    }
+
+
+    private RelayCommand? _panToCurrentPartCommand;
+    public RelayCommand PanToCurrentPartCommand
+    {
+        get
+        {
+            if (_panToCurrentPartCommand == null)
+                _panToCurrentPartCommand = new RelayCommand(param => PanToCurrentPart());
+
+            return _panToCurrentPartCommand;
         }
     }
 
@@ -2009,6 +2063,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
                 this.RequestShowGeometryDetails = null;
                 this.RequestZoomToGeometry = null;
                 this.RequestZoomToPoint = null;
+                this.RequestPanToPoint = null;
 
                 // Detach and release every locateable still held by the point layers so their
                 // per-vertex handlers (wired in ToPrimaryLocateable/ToSecondaryLocateable) don't

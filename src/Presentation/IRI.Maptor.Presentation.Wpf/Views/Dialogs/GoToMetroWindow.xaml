@@ -47,12 +47,12 @@
                             AutomationProperties.Name="{Binding [dialog_goto_copy], Source={StaticResource Localization}}">
                         <iconPacks:PackIconMaterial Kind="ContentCopy" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}" Margin="0"/>
                     </Button>
-                    <!--same VectorPointPlus the drawing legend uses for "add an item"-->
+                    <!--MapPinPlusFill is the drawing items symbol (legend title and every "to drawings" command)-->
                     <Button Style="{StaticResource IRI.Maptor.Styles.Button.IconSquare}"
                             Command="{Binding AddToDrawingCommand}"
                             ToolTip="{Binding [dialog_goto_addToDrawing], Source={StaticResource Localization}}"
                             AutomationProperties.Name="{Binding [dialog_goto_addToDrawing], Source={StaticResource Localization}}">
-                        <iconPacks:PackIconMaterial Kind="VectorPointPlus" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}" Margin="0"/>
+                        <iconPacks:PackIconPhosphorIcons Kind="MapPinPlusFill" Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.ButtonContent}" Margin="0"/>
                     </Button>
                 </StackPanel>
             </dialogs:DialogFooterView.LeadingContent>

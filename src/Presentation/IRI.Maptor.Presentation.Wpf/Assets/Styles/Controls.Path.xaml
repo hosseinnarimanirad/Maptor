@@ -137,6 +137,24 @@
         </Style.Triggers>
     </Style>
 
+    <!--Phosphor twins of PackIconMaterial.ButtonContent(.Small), same size and spacing, so a
+        Phosphor icon (e.g. MapPinPlusFill, the drawing items symbol) can replace a Material one
+        in a text button without moving anything.-->
+    <Style x:Key="IRI.Maptor.Styles.PackIconPhosphorIcons.ButtonContent"
+           TargetType="iconPacks:PackIconPhosphorIcons"
+           BasedOn="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.CircleLightButtonContent}">
+        <Setter Property="Margin" Value="0,0,8,0"/>
+    </Style>
+
+    <!--icon for IRI.Maptor.Styles.Button.*.Small-->
+    <Style x:Key="IRI.Maptor.Styles.PackIconPhosphorIcons.ButtonContent.Small"
+           TargetType="iconPacks:PackIconPhosphorIcons"
+           BasedOn="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.ButtonContent}">
+        <Setter Property="Width" Value="12"/>
+        <Setter Property="Height" Value="12"/>
+        <Setter Property="Margin" Value="0,0,5,0"/>
+    </Style>
+
 
     <Style x:Key="IRI.Maptor.Styles.Path.ButtonContent" TargetType="{x:Type Path}">
         <Setter Property="Fill" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ButtonBase}}"/>

@@ -792,7 +792,7 @@
                                                                 </Button>
                                                                 <Button Command="{Binding DataContext.RemoveStyleCommand, ElementName=root}">
                                                                     <StackPanel Orientation="Horizontal">
-                                                                        <iconPacks:PackIconMaterial Kind="Delete" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent.Small}"/>
+                                                                        <iconPacks:PackIconMaterial Kind="TrashCanOutline" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent.Small}"/>
                                                                         <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent.Small}" Text="{Binding [layerStyles_delete], Source={StaticResource Localization}}"/>
                                                                     </StackPanel>
                                                                 </Button>

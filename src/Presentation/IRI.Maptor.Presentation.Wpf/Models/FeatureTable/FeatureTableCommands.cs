@@ -8,6 +8,7 @@ using IRI.Maptor.Presentation.Wpf.Helpers;
 using IRI.Maptor.Presentation.Wpf.ViewModels;
 using IRI.Maptor.Core.Common.Primitives;
 using IRI.Maptor.Core.Spatial.Primitives;
+using IRI.Maptor.Presentation.Core.Localization;
 
 namespace IRI.Maptor.Presentation.Wpf.Models;
 
@@ -53,6 +54,37 @@ public static class FeatureTableCommands
             var extent = BoundingBox.GetMergedBoundingBox(features.Select(f => f.TheGeometry.GetBoundingBox()));
 
             map.ZoomToExtent(extent, isExactExtent: false, isNewExtent: true, () => { TryFlashPoint(map, features); });
+        });
+
+        return result;
+    }
+
+    // Centres the map on the selected features and keeps the current scale.
+    public static FeatureTableCommand CreatePanToCommand(MapViewModelBase map)
+    {
+        var markup = new MahApps.Metro.IconPacks.PackIconMaterial() { Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.Crosshairs }.Data;
+
+        var result = new FeatureTableCommand()
+        {
+            PathMarkup = markup,
+            ToolTip = LocalizationManager.Instance["featureTable_panToFeature"]
+        };
+
+        result.Command = new RelayCommand((param) =>
+        {
+            var layer = param as SelectedLayer;
+
+            if (layer == null || map == null)
+                return;
+
+            var features = layer.HighlightedFeatures;
+
+            if (features == null || !features.Any())
+                return;
+
+            var extent = BoundingBox.GetMergedBoundingBox(features.Select(f => f.TheGeometry.GetBoundingBox()));
+
+            map.PanTo(extent.Center, () => { TryFlashPoint(map, features); });
         });
 
         return result;
@@ -166,7 +198,8 @@ public static class FeatureTableCommands
 
     public static FeatureTableCommand CreateExportAsDrawingLayersCommand(MapViewModelBase map)
     {
-        var markup = new MahApps.Metro.IconPacks.PackIconMaterial() { Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.PencilPlus }.Data;
+        // MapPinPlusFill is the drawing items symbol (legend title and every "to drawings" command)
+        var markup = new MahApps.Metro.IconPacks.PackIconPhosphorIcons() { Kind = MahApps.Metro.IconPacks.PackIconPhosphorIconsKind.MapPinPlusFill }.Data;
 
         var result = new FeatureTableCommand()
         {
@@ -239,6 +272,7 @@ public static class FeatureTableCommands
         return new List<Func<MapViewModelBase, IFeatureTableCommand>>()
         {
             CreateZoomToExtentCommand,
+            CreatePanToCommand,
             CreateExportToExcelCommand,
             CreateExportAsDrawingLayersCommand,
             //CreateBufferCommand

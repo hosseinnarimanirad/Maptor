@@ -2917,4 +2917,34 @@
   <data name="ribbon_display_showLayerColors" xml:space="preserve">
     <value>Separação de cores da camada de legenda</value>
   </data>
+  <data name="mapPanel_currentPart_goToPreviousPart" xml:space="preserve">
+    <value>Parte anterior</value>
+  </data>
+  <data name="mapPanel_currentPart_goToNextPart" xml:space="preserve">
+    <value>Próxima parte</value>
+  </data>
+  <data name="geometryDetails_polygon_goToPreviousPolygon" xml:space="preserve">
+    <value>Polígono anterior</value>
+  </data>
+  <data name="geometryDetails_polygon_goToNextPolygon" xml:space="preserve">
+    <value>Próximo polígono</value>
+  </data>
+  <data name="geometryDetails_polygon_add" xml:space="preserve">
+    <value>Adicionar novo polígono</value>
+  </data>
+  <data name="geometryDetails_polygon_delete" xml:space="preserve">
+    <value>Excluir polígono atual</value>
+  </data>
+  <data name="geometryDetails_polygon_zoom" xml:space="preserve">
+    <value>Zoom no polígono atual</value>
+  </data>
+  <data name="geometryDetails_currentPoint_apply" xml:space="preserve">
+    <value>Aplicar coordenadas</value>
+  </data>
+  <data name="mapPanel_currentPart_pan" xml:space="preserve">
+    <value>Mover para a parte atual</value>
+  </data>
+  <data name="featureTable_panToFeature" xml:space="preserve">
+    <value>Mover para a feição</value>
+  </data>
 </root>

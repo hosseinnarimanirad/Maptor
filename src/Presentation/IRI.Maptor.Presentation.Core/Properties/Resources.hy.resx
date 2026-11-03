@@ -2917,4 +2917,34 @@
   <data name="ribbon_display_showLayerColors" xml:space="preserve">
     <value>Լեգենդի շերտի գունային տարանջատում</value>
   </data>
+  <data name="mapPanel_currentPart_goToPreviousPart" xml:space="preserve">
+    <value>Նախորդ մաս</value>
+  </data>
+  <data name="mapPanel_currentPart_goToNextPart" xml:space="preserve">
+    <value>Հաջորդ մաս</value>
+  </data>
+  <data name="geometryDetails_polygon_goToPreviousPolygon" xml:space="preserve">
+    <value>Նախորդ բազմանկյուն</value>
+  </data>
+  <data name="geometryDetails_polygon_goToNextPolygon" xml:space="preserve">
+    <value>Հաջորդ բազմանկյուն</value>
+  </data>
+  <data name="geometryDetails_polygon_add" xml:space="preserve">
+    <value>Ավելացնել նոր բազմանկյուն</value>
+  </data>
+  <data name="geometryDetails_polygon_delete" xml:space="preserve">
+    <value>Ջնջել ընթացիկ բազմանկյունը</value>
+  </data>
+  <data name="geometryDetails_polygon_zoom" xml:space="preserve">
+    <value>Մեծացնել ընթացիկ բազմանկյանը</value>
+  </data>
+  <data name="geometryDetails_currentPoint_apply" xml:space="preserve">
+    <value>Կիրառել կոորդինատները</value>
+  </data>
+  <data name="mapPanel_currentPart_pan" xml:space="preserve">
+    <value>Տեղափոխել ընթացիկ մասին</value>
+  </data>
+  <data name="featureTable_panToFeature" xml:space="preserve">
+    <value>Տեղափոխել օբյեկտին</value>
+  </data>
 </root>

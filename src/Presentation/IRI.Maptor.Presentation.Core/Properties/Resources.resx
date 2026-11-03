@@ -3993,4 +3993,34 @@
   <data name="ribbon_display_showLayerColors" xml:space="preserve">
     <value>Legend layer color separation</value>
   </data>
+  <data name="mapPanel_currentPart_goToPreviousPart" xml:space="preserve">
+    <value>Previous part</value>
+  </data>
+  <data name="mapPanel_currentPart_goToNextPart" xml:space="preserve">
+    <value>Next part</value>
+  </data>
+  <data name="geometryDetails_polygon_goToPreviousPolygon" xml:space="preserve">
+    <value>Previous polygon</value>
+  </data>
+  <data name="geometryDetails_polygon_goToNextPolygon" xml:space="preserve">
+    <value>Next polygon</value>
+  </data>
+  <data name="geometryDetails_polygon_add" xml:space="preserve">
+    <value>Add new polygon</value>
+  </data>
+  <data name="geometryDetails_polygon_delete" xml:space="preserve">
+    <value>Delete current polygon</value>
+  </data>
+  <data name="geometryDetails_polygon_zoom" xml:space="preserve">
+    <value>Zoom to current polygon</value>
+  </data>
+  <data name="geometryDetails_currentPoint_apply" xml:space="preserve">
+    <value>Apply coordinates</value>
+  </data>
+  <data name="mapPanel_currentPart_pan" xml:space="preserve">
+    <value>Pan to current part</value>
+  </data>
+  <data name="featureTable_panToFeature" xml:space="preserve">
+    <value>Pan to feature</value>
+  </data>
 </root>

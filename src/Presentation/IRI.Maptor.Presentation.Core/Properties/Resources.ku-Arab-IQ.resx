@@ -2917,4 +2917,34 @@
   <data name="ribbon_display_showLayerColors" xml:space="preserve">
     <value>جیاکردنەوەی ڕەنگی چینە ئەفسانەییەکان</value>
   </data>
+  <data name="mapPanel_currentPart_goToPreviousPart" xml:space="preserve">
+    <value>بەشی پێشوو</value>
+  </data>
+  <data name="mapPanel_currentPart_goToNextPart" xml:space="preserve">
+    <value>بەشی دواتر</value>
+  </data>
+  <data name="geometryDetails_polygon_goToPreviousPolygon" xml:space="preserve">
+    <value>فرەگۆشەی پێشوو</value>
+  </data>
+  <data name="geometryDetails_polygon_goToNextPolygon" xml:space="preserve">
+    <value>فرەگۆشەی دواتر</value>
+  </data>
+  <data name="geometryDetails_polygon_add" xml:space="preserve">
+    <value>فرەگۆشەی نوێ زیاد بکە</value>
+  </data>
+  <data name="geometryDetails_polygon_delete" xml:space="preserve">
+    <value>فرەگۆشەی ئێستا بسڕەوە</value>
+  </data>
+  <data name="geometryDetails_polygon_zoom" xml:space="preserve">
+    <value>زووم بۆ فرەگۆشەی ئێستا</value>
+  </data>
+  <data name="geometryDetails_currentPoint_apply" xml:space="preserve">
+    <value>کۆردینات جێبەجێ بکە</value>
+  </data>
+  <data name="mapPanel_currentPart_pan" xml:space="preserve">
+    <value>جوڵاندن بۆ بەشی ئێستا</value>
+  </data>
+  <data name="featureTable_panToFeature" xml:space="preserve">
+    <value>جوڵاندن بۆ تەنەکە</value>
+  </data>
 </root>

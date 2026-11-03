@@ -2917,4 +2917,34 @@
   <data name="ribbon_display_showLayerColors" xml:space="preserve">
     <value>Efsane katmanı renk ayrımı</value>
   </data>
+  <data name="mapPanel_currentPart_goToPreviousPart" xml:space="preserve">
+    <value>Önceki bölüm</value>
+  </data>
+  <data name="mapPanel_currentPart_goToNextPart" xml:space="preserve">
+    <value>Sonraki bölüm</value>
+  </data>
+  <data name="geometryDetails_polygon_goToPreviousPolygon" xml:space="preserve">
+    <value>Önceki çokgen</value>
+  </data>
+  <data name="geometryDetails_polygon_goToNextPolygon" xml:space="preserve">
+    <value>Sonraki çokgen</value>
+  </data>
+  <data name="geometryDetails_polygon_add" xml:space="preserve">
+    <value>Yeni çokgen ekle</value>
+  </data>
+  <data name="geometryDetails_polygon_delete" xml:space="preserve">
+    <value>Geçerli çokgeni sil</value>
+  </data>
+  <data name="geometryDetails_polygon_zoom" xml:space="preserve">
+    <value>Geçerli çokgene yakınlaştır</value>
+  </data>
+  <data name="geometryDetails_currentPoint_apply" xml:space="preserve">
+    <value>Koordinatları uygula</value>
+  </data>
+  <data name="mapPanel_currentPart_pan" xml:space="preserve">
+    <value>Geçerli bölüme kaydır</value>
+  </data>
+  <data name="featureTable_panToFeature" xml:space="preserve">
+    <value>Nesneye kaydır</value>
+  </data>
 </root>

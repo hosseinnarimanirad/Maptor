@@ -78,7 +78,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_remove))
         {
-            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.Delete }.Data,
+            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.TrashCanOutline }.Data,
             Layer = layer,
         };
 
@@ -389,7 +389,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_remove))
         {
-            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.Delete }.Data,
+            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.TrashCanOutline }.Data,
             Layer = layer,
 
         };
@@ -410,7 +410,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_edit))
         {
-            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.Pencil }.Data,
+            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.VectorSquareEdit }.Data, // the edit-geometry symbol (also the feature table edit button)
             Layer = layer,
         };
 

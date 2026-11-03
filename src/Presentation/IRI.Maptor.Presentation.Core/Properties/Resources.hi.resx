@@ -2917,4 +2917,34 @@
   <data name="ribbon_display_showLayerColors" xml:space="preserve">
     <value>किंवदंती परत रंग पृथक्करण</value>
   </data>
+  <data name="mapPanel_currentPart_goToPreviousPart" xml:space="preserve">
+    <value>पिछला भाग</value>
+  </data>
+  <data name="mapPanel_currentPart_goToNextPart" xml:space="preserve">
+    <value>अगला भाग</value>
+  </data>
+  <data name="geometryDetails_polygon_goToPreviousPolygon" xml:space="preserve">
+    <value>पिछला बहुभुज</value>
+  </data>
+  <data name="geometryDetails_polygon_goToNextPolygon" xml:space="preserve">
+    <value>अगला बहुभुज</value>
+  </data>
+  <data name="geometryDetails_polygon_add" xml:space="preserve">
+    <value>नया बहुभुज जोड़ें</value>
+  </data>
+  <data name="geometryDetails_polygon_delete" xml:space="preserve">
+    <value>वर्तमान बहुभुज हटाएँ</value>
+  </data>
+  <data name="geometryDetails_polygon_zoom" xml:space="preserve">
+    <value>वर्तमान बहुभुज पर ज़ूम करें</value>
+  </data>
+  <data name="geometryDetails_currentPoint_apply" xml:space="preserve">
+    <value>निर्देशांक लागू करें</value>
+  </data>
+  <data name="mapPanel_currentPart_pan" xml:space="preserve">
+    <value>वर्तमान भाग पर पैन करें</value>
+  </data>
+  <data name="featureTable_panToFeature" xml:space="preserve">
+    <value>फ़ीचर पर पैन करें</value>
+  </data>
 </root>

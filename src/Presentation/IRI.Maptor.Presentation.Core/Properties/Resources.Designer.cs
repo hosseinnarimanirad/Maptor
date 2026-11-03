@@ -2707,6 +2707,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pan to feature.
+        /// </summary>
+        public static string featureTable_panToFeature {
+            get {
+                return ResourceManager.GetString("featureTable_panToFeature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to hour.
         /// </summary>
         public static string featureTable_rowHeader_hour {
@@ -2838,6 +2847,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string geometryDetails_currentPoint_add {
             get {
                 return ResourceManager.GetString("geometryDetails_currentPoint_add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apply coordinates.
+        /// </summary>
+        public static string geometryDetails_currentPoint_apply {
+            get {
+                return ResourceManager.GetString("geometryDetails_currentPoint_apply", resourceCulture);
             }
         }
         
@@ -3085,6 +3103,42 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add new polygon.
+        /// </summary>
+        public static string geometryDetails_polygon_add {
+            get {
+                return ResourceManager.GetString("geometryDetails_polygon_add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete current polygon.
+        /// </summary>
+        public static string geometryDetails_polygon_delete {
+            get {
+                return ResourceManager.GetString("geometryDetails_polygon_delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next polygon.
+        /// </summary>
+        public static string geometryDetails_polygon_goToNextPolygon {
+            get {
+                return ResourceManager.GetString("geometryDetails_polygon_goToNextPolygon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous polygon.
+        /// </summary>
+        public static string geometryDetails_polygon_goToPreviousPolygon {
+            get {
+                return ResourceManager.GetString("geometryDetails_polygon_goToPreviousPolygon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Polygon.
         /// </summary>
         public static string geometryDetails_polygon_title {
@@ -3126,6 +3180,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string geometryDetails_polygons_valid {
             get {
                 return ResourceManager.GetString("geometryDetails_polygons_valid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom to current polygon.
+        /// </summary>
+        public static string geometryDetails_polygon_zoom {
+            get {
+                return ResourceManager.GetString("geometryDetails_polygon_zoom", resourceCulture);
             }
         }
         
@@ -3873,6 +3936,33 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string manageAccount_userName {
             get {
                 return ResourceManager.GetString("manageAccount_userName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next part.
+        /// </summary>
+        public static string mapPanel_currentPart_goToNextPart {
+            get {
+                return ResourceManager.GetString("mapPanel_currentPart_goToNextPart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous part.
+        /// </summary>
+        public static string mapPanel_currentPart_goToPreviousPart {
+            get {
+                return ResourceManager.GetString("mapPanel_currentPart_goToPreviousPart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pan to current part.
+        /// </summary>
+        public static string mapPanel_currentPart_pan {
+            get {
+                return ResourceManager.GetString("mapPanel_currentPart_pan", resourceCulture);
             }
         }
         

@@ -3838,4 +3838,34 @@
   <data name="ribbon_display_showLayerColors" xml:space="preserve">
     <value>تفکیک رنگی لایه‌های لژاندر</value>
   </data>
+  <data name="mapPanel_currentPart_goToPreviousPart" xml:space="preserve">
+    <value>تکهٔ قبلی</value>
+  </data>
+  <data name="mapPanel_currentPart_goToNextPart" xml:space="preserve">
+    <value>تکهٔ بعدی</value>
+  </data>
+  <data name="geometryDetails_polygon_goToPreviousPolygon" xml:space="preserve">
+    <value>چندضلعی قبلی</value>
+  </data>
+  <data name="geometryDetails_polygon_goToNextPolygon" xml:space="preserve">
+    <value>چندضلعی بعدی</value>
+  </data>
+  <data name="geometryDetails_polygon_add" xml:space="preserve">
+    <value>افزودن چندضلعی جدید</value>
+  </data>
+  <data name="geometryDetails_polygon_delete" xml:space="preserve">
+    <value>حذف چندضلعی جاری</value>
+  </data>
+  <data name="geometryDetails_polygon_zoom" xml:space="preserve">
+    <value>بزرگ‌نمایی روی چندضلعی جاری</value>
+  </data>
+  <data name="geometryDetails_currentPoint_apply" xml:space="preserve">
+    <value>اعمال مختصات</value>
+  </data>
+  <data name="mapPanel_currentPart_pan" xml:space="preserve">
+    <value>جابجایی به تکهٔ جاری</value>
+  </data>
+  <data name="featureTable_panToFeature" xml:space="preserve">
+    <value>جابجایی به عارضه</value>
+  </data>
 </root>

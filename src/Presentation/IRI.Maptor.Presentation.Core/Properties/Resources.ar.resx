@@ -2917,4 +2917,34 @@
   <data name="ribbon_display_showLayerColors" xml:space="preserve">
     <value>فصل ألوان طبقة الأسطورة</value>
   </data>
+  <data name="mapPanel_currentPart_goToPreviousPart" xml:space="preserve">
+    <value>الجزء السابق</value>
+  </data>
+  <data name="mapPanel_currentPart_goToNextPart" xml:space="preserve">
+    <value>الجزء التالي</value>
+  </data>
+  <data name="geometryDetails_polygon_goToPreviousPolygon" xml:space="preserve">
+    <value>المضلع السابق</value>
+  </data>
+  <data name="geometryDetails_polygon_goToNextPolygon" xml:space="preserve">
+    <value>المضلع التالي</value>
+  </data>
+  <data name="geometryDetails_polygon_add" xml:space="preserve">
+    <value>إضافة مضلع جديد</value>
+  </data>
+  <data name="geometryDetails_polygon_delete" xml:space="preserve">
+    <value>حذف المضلع الحالي</value>
+  </data>
+  <data name="geometryDetails_polygon_zoom" xml:space="preserve">
+    <value>تكبير إلى المضلع الحالي</value>
+  </data>
+  <data name="geometryDetails_currentPoint_apply" xml:space="preserve">
+    <value>تطبيق الإحداثيات</value>
+  </data>
+  <data name="mapPanel_currentPart_pan" xml:space="preserve">
+    <value>تحريك إلى الجزء الحالي</value>
+  </data>
+  <data name="featureTable_panToFeature" xml:space="preserve">
+    <value>تحريك إلى العنصر</value>
+  </data>
 </root>

@@ -47,31 +47,39 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="4">
                 <TextBlock Text="{Binding [geometryDetails_polygon_title], Source={StaticResource Localization}}"
                            FontWeight="Bold" Margin="0,4,10,4" VerticalAlignment="Center" Style="{StaticResource editorTextBlockStyle}"/>
+                <!--navigation | view | add | delete-->
                 <StackPanel Orientation="Horizontal" >
                     <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                        ToolTip="{Binding [geometryDetails_polygon_goToPreviousPolygon], Source={StaticResource Localization}}"
                         Command="{Binding GoToPreviousPolygonCommand}"
                         IsEnabled="{Binding IsPreviousPolygonAvailable, FallbackValue=False}">
                         <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronPrevious}"/>
                     </Button>
                     <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                        ToolTip="{Binding [geometryDetails_polygon_goToNextPolygon], Source={StaticResource Localization}}"
                         Command="{Binding GoToNextPolygonCommand}"
                         IsEnabled="{Binding IsNextPolygonAvailable, FallbackValue=False}">
                         <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronNext}"/>
                     </Button>
-                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
-                            Command="{Binding AddPolygonCommand}">
-                        <iconPacks:PackIconMaterial Kind="ShapePolygonPlus"/>
-                    </Button>
-                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
-                              Command="{Binding DeletePolygonCommand}"
-                              CommandParameter="{Binding CurrentPolygon}"
-                              IsEnabled="{Binding CurrentPolygon, Converter={StaticResource notNullToBoolConverter}}">
-                        <iconPacks:PackIconMaterial Kind="Delete"/>
-                    </Button>
-                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
+                    <Separator Style="{StaticResource IRI.Maptor.Styles.Separator.Vertical}" Margin="4,6"/>
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                              ToolTip="{Binding [geometryDetails_polygon_zoom], Source={StaticResource Localization}}"
                               Command="{Binding ZoomToCurrentPolygonCommand}"
                               IsEnabled="{Binding CurrentPolygon, Converter={StaticResource notNullToBoolConverter}}">
                         <iconPacks:PackIconMaterial Kind="MagnifyExpand"/>
+                    </Button>
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                            ToolTip="{Binding [geometryDetails_polygon_add], Source={StaticResource Localization}}"
+                            Command="{Binding AddPolygonCommand}">
+                        <iconPacks:PackIconMaterial Kind="ShapePolygonPlus"/>
+                    </Button>
+                    <Separator Style="{StaticResource IRI.Maptor.Styles.Separator.Vertical}" Margin="4,6"/>
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDanger}"
+                              ToolTip="{Binding [geometryDetails_polygon_delete], Source={StaticResource Localization}}"
+                              Command="{Binding DeletePolygonCommand}"
+                              CommandParameter="{Binding CurrentPolygon}"
+                              IsEnabled="{Binding CurrentPolygon, Converter={StaticResource notNullToBoolConverter}}">
+                        <iconPacks:PackIconMaterial Kind="TrashCanOutline"/>
                     </Button>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -122,31 +130,39 @@
                 FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization} }">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="4">
             <TextBlock Text="{Binding [geometryDetails_parts_title], Source={StaticResource Localization}}" VerticalAlignment="Center" FontWeight="Bold" Margin="0,4,10,4" Style="{StaticResource editorTextBlockStyle}"/>
+            <!--navigation | view | add | delete-->
             <StackPanel Orientation="Horizontal" >
                 <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                            ToolTip="{Binding [mapPanel_currentPart_goToPreviousPart], Source={StaticResource Localization}}"
                             Command="{Binding GoToPreviousPartCommand}"
                             IsEnabled="{Binding IsPreviousPartAvailable}">
                     <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronPrevious}"/>
                 </Button>
                 <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                            ToolTip="{Binding [mapPanel_currentPart_goToNextPart], Source={StaticResource Localization}}"
                             Command="{Binding GoToNextPartCommand}"
                             IsEnabled="{Binding IsNextPartAvailable}">
                     <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronNext}"/>
                 </Button>
-                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
-                            Command="{Binding AddPartCommand}">
-                    <iconPacks:PackIconMaterial Kind="Plus"/>
-                </Button>
-                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
-                            Command="{Binding DeletePartCommand}"
-                            CommandParameter="{Binding CurrentPart}"
-                            IsEnabled="{Binding CurrentPart, Converter={StaticResource notNullToBoolConverter}}">
-                    <iconPacks:PackIconMaterial Kind="Delete"/>
-                </Button>
-                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
+                <Separator Style="{StaticResource IRI.Maptor.Styles.Separator.Vertical}" Margin="4,6"/>
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                            ToolTip="{Binding [mapPanel_currentPart_zoom], Source={StaticResource Localization}}"
                             Command="{Binding ZoomToCurrentPartCommand}"
                             IsEnabled="{Binding CurrentPart, Converter={StaticResource notNullToBoolConverter}}">
                     <iconPacks:PackIconMaterial Kind="MagnifyExpand"/>
+                </Button>
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                            ToolTip="{Binding [mapPanel_currentPart_add], Source={StaticResource Localization}}"
+                            Command="{Binding AddPartCommand}">
+                    <iconPacks:PackIconMaterial Kind="VectorSquarePlus"/>
+                </Button>
+                <Separator Style="{StaticResource IRI.Maptor.Styles.Separator.Vertical}" Margin="4,6"/>
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDanger}"
+                            ToolTip="{Binding [mapPanel_currentPart_delete], Source={StaticResource Localization}}"
+                            Command="{Binding DeletePartCommand}"
+                            CommandParameter="{Binding CurrentPart}"
+                            IsEnabled="{Binding CurrentPart, Converter={StaticResource notNullToBoolConverter}}">
+                    <iconPacks:PackIconMaterial Kind="TrashCanOutline"/>
                 </Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -228,18 +244,21 @@
                                  Width="150" Margin="0,0,8,0" 
                                  Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En}"/>
                             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
-                                Command="{Binding ApplyCurrentPointChangesCommand}" 
+                                ToolTip="{Binding [geometryDetails_currentPoint_apply], Source={StaticResource Localization}}"
+                                Command="{Binding ApplyCurrentPointChangesCommand}"
                                 IsEnabled="{Binding CurrentPointEditor, Converter={StaticResource notNullToBoolConverter}}"
                                 Margin="4,0,0,0">
-                                <iconPacks:PackIconMaterial Kind="CheckBold"/>
+                                <iconPacks:PackIconMaterial Kind="CheckCircleOutline"/>
                             </Button>
                             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
-                                 Command="{Binding AddPointCommand}" 
+                                 ToolTip="{Binding [geometryDetails_currentPoint_add], Source={StaticResource Localization}}"
+                                 Command="{Binding AddPointCommand}"
                                  IsEnabled="{Binding CurrentPointEditor, Converter={StaticResource notNullToBoolConverter}}"
                                  Margin="4,0,0,0">
                                 <iconPacks:PackIconMaterial Kind="Plus"/>
                             </Button>
-                            <ToggleButton x:Name="srsConfigToggleButton" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" Margin="8,0,0,0">
+                            <ToggleButton x:Name="srsConfigToggleButton" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" Margin="8,0,0,0"
+                                          ToolTip="{Binding [geometryDetails_options_srsConfiguration], Source={StaticResource Localization}}">
                                 <iconPacks:PackIconMaterial Kind="Cog"/>
                             </ToggleButton>
                         </StackPanel>
@@ -544,9 +563,9 @@
             </DataGrid.RowStyle>
         </DataGrid>
 
-        <!-- Grid's buttons with point counter and navigation buttons -->
+        <!-- Grid's buttons: navigation (with counter, then page size) | zoom, pan, copy | delete.
+             Plain background and CircleLight buttons, like the rows above and the feature table footer. -->
         <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,4,0,0"
-                    Background="{DynamicResource MahApps.Brushes.Accent}"
                     FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization} }">
 
             <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" 
@@ -565,49 +584,19 @@
                     ToolTip="{Binding [geometryDetails_currentPoint_add], Source={StaticResource Localization}}">
                 <iconPacks:PackIconMaterial Kind="Add"/>
             </Button>-->
-            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" 
-                    Command="{Binding DeleteCurrentPointCommand}"
-                    IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
-                    ToolTip="{Binding [geometryDetails_currentPoint_delete], Source={StaticResource Localization}}">
-                <iconPacks:PackIconMaterial Kind="Delete"/>
-            </Button>
-            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" 
-                    Command="{Binding ZoomToCurrentPointCommand}"
-                    IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
-                    ToolTip="{Binding [geometryDetails_currentPoint_zoomToPoint], Source={StaticResource Localization}}">
-                <iconPacks:PackIconMaterial Kind="MagnifyExpand"/>
-            </Button>
-            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" 
-                    Command="{Binding PanToCurrentPointCommand}"
-                    IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
-                    ToolTip="{Binding [geometryDetails_currentPoint_zoom], Source={StaticResource Localization}}">
-                <iconPacks:PackIconMaterial Kind="HandBackRight"  />
-            </Button>
-
-            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" 
-                    Command="{Binding CopyCurrentPointCommand}"
-                    CommandParameter="{Binding SrsViewModel.SelectedSrsType}"
-                    IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
-                    ToolTip="{Binding [geometryDetails_currentPoint_copyCoordinate], Source={StaticResource Localization}}">
-                <iconPacks:PackIconMaterial Kind="ContentCopy"/>
-            </Button>
-            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
-                      Command="{Binding GoToPreviousPageCommand}"  
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                      Command="{Binding GoToPreviousPageCommand}"
                       ToolTip="{Binding [geometryDetails_currentPoint_goToPreviousPage], Source={StaticResource Localization}}">
                 <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronDoublePrevious}"/>
             </Button>
 
-            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                       Command="{Binding GoToPreviousPointCommand}"
                       ToolTip="{Binding [geometryDetails_currentPoint_goToPreviousPoint], Source={StaticResource Localization}}">
                 <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronPrevious}"/>
             </Button>
-            <ComboBox ItemsSource="{Binding AvailablePageSizes}"
-                     SelectedItem="{Binding SelectedPageSize, Mode=TwoWay}"
-                     Width="60" Margin="4,0" VerticalAlignment="Center"
-                     FlowDirection="LeftToRight"/>
-            <TextBlock VerticalAlignment="Center" 
-                        TextBlock.TextAlignment="Right" Margin="8,0,0,0"
+            <TextBlock VerticalAlignment="Center"
+                        TextBlock.TextAlignment="Right" Margin="4,0"
                        FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization} }">
                 <TextBlock.Text>
                     <MultiBinding Converter="{StaticResource localizedFormatConverter}" ConverterParameter="geometryDetails_pointCounter_format">
@@ -618,15 +607,51 @@
                     </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>
-            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
           Command="{Binding GoToNextPointCommand}"
           ToolTip="{Binding [geometryDetails_currentPoint_goToNextPoint], Source={StaticResource Localization}}">
                 <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronNext}"/>
             </Button>
-            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" 
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                      Command="{Binding GoToNextPageCommand}"
                      ToolTip="{Binding [geometryDetails_currentPoint_goToNextPage], Source={StaticResource Localization}}">
                 <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronDoubleNext}"/>
+            </Button>
+            <ComboBox ItemsSource="{Binding AvailablePageSizes}"
+                     SelectedItem="{Binding SelectedPageSize, Mode=TwoWay}"
+                     Width="60" Margin="4,0" VerticalAlignment="Center"
+                     FlowDirection="LeftToRight"/>
+
+            <Separator Style="{StaticResource IRI.Maptor.Styles.Separator.Vertical}" Margin="4,6"/>
+
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                    Command="{Binding ZoomToCurrentPointCommand}"
+                    IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
+                    ToolTip="{Binding [geometryDetails_currentPoint_zoomToPoint], Source={StaticResource Localization}}">
+                <iconPacks:PackIconMaterial Kind="MagnifyExpand"/>
+            </Button>
+            <!--the key is named "zoom" but its text is "Pan to Point"-->
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                    Command="{Binding PanToCurrentPointCommand}"
+                    IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
+                    ToolTip="{Binding [geometryDetails_currentPoint_zoom], Source={StaticResource Localization}}">
+                <iconPacks:PackIconMaterial Kind="Crosshairs"/>
+            </Button>
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                    Command="{Binding CopyCurrentPointCommand}"
+                    CommandParameter="{Binding SrsViewModel.SelectedSrsType}"
+                    IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
+                    ToolTip="{Binding [geometryDetails_currentPoint_copyCoordinate], Source={StaticResource Localization}}">
+                <iconPacks:PackIconMaterial Kind="ContentCopy"/>
+            </Button>
+
+            <Separator Style="{StaticResource IRI.Maptor.Styles.Separator.Vertical}" Margin="4,6"/>
+
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDanger}"
+                    Command="{Binding DeleteCurrentPointCommand}"
+                    IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
+                    ToolTip="{Binding [geometryDetails_currentPoint_delete], Source={StaticResource Localization}}">
+                <iconPacks:PackIconMaterial Kind="TrashCanOutline"/>
             </Button>
         </StackPanel>
 
