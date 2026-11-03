@@ -363,12 +363,14 @@ public partial class MaptorColorPickerPanel : UserControl
 
             if (IsRgbMode)
             {
+                // Pure channel tracks (black → red / green / blue), whatever the other channels are:
+                // a track that previews the result made "Red" start green, which read as wrong (user, 2026-11-03).
                 SetChannelPart(channel1, channel1Box, color.R / 255.0, color.R.ToString(CultureInfo.InvariantCulture),
-                    Gradient(Color.FromRgb(0, color.G, color.B), Color.FromRgb(255, color.G, color.B)), opaque);
+                    RedTrack, Color.FromRgb(color.R, 0, 0));
                 SetChannelPart(channel2, channel2Box, color.G / 255.0, color.G.ToString(CultureInfo.InvariantCulture),
-                    Gradient(Color.FromRgb(color.R, 0, color.B), Color.FromRgb(color.R, 255, color.B)), opaque);
+                    GreenTrack, Color.FromRgb(0, color.G, 0));
                 SetChannelPart(channel3, channel3Box, color.B / 255.0, color.B.ToString(CultureInfo.InvariantCulture),
-                    Gradient(Color.FromRgb(color.R, color.G, 0), Color.FromRgb(color.R, color.G, 255)), opaque);
+                    BlueTrack, Color.FromRgb(0, 0, color.B));
             }
             else
             {
@@ -410,6 +412,10 @@ public partial class MaptorColorPickerPanel : UserControl
     }
 
     private static string Whole(double value) => ((int)Math.Round(value)).ToString(CultureInfo.InvariantCulture);
+
+    private static readonly Brush RedTrack = Gradient(Colors.Black, Color.FromRgb(255, 0, 0));
+    private static readonly Brush GreenTrack = Gradient(Colors.Black, Color.FromRgb(0, 255, 0));
+    private static readonly Brush BlueTrack = Gradient(Colors.Black, Color.FromRgb(0, 0, 255));
 
     private static Brush Gradient(Color from, Color to)
     {

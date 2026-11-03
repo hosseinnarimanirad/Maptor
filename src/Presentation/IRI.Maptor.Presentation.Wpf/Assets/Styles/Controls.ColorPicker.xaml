@@ -70,6 +70,7 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
                             <!--swatch: checkerboard, the colour over it, a hairline frame; a red
@@ -85,14 +86,35 @@
                             </Grid>
 
                             <!--hex and opacity always read left to right, also in RTL forms-->
-                            <TextBlock Grid.Column="1" Text="{TemplateBinding HexText}" VerticalAlignment="Center"
+                            <TextBlock x:Name="hex" Grid.Column="1" Text="{TemplateBinding HexText}" VerticalAlignment="Center"
                                        FlowDirection="LeftToRight" TextTrimming="CharacterEllipsis"
                                        HorizontalAlignment="Left"/>
                             <TextBlock x:Name="opacity" Grid.Column="2" Text="{TemplateBinding OpacityText}"
                                        VerticalAlignment="Center" FlowDirection="LeftToRight" Margin="8,0,0,0"
                                        Foreground="{DynamicResource MahApps.Brushes.Gray3}"/>
 
-                            <Path x:Name="chevron" Grid.Column="3" Data="M0,0 L4,4 L8,0" Width="8" Height="4"
+                            <!--× that clears to "no colour"; only with AllowsNoColor and a colour to clear-->
+                            <Button x:Name="PART_ClearButton" Grid.Column="3" Width="18" Height="18" Margin="6,0,0,0"
+                                    VerticalAlignment="Center" Focusable="False" Cursor="Arrow" Visibility="Collapsed"
+                                    Foreground="{DynamicResource MahApps.Brushes.Gray3}">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="face" CornerRadius="9" Background="Transparent">
+                                            <Path Data="M0,0 L7,7 M7,0 L0,7" Width="7" Height="7" Stretch="None"
+                                                  Stroke="{TemplateBinding Foreground}" StrokeThickness="1.4"
+                                                  StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                                  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="face" Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+
+                            <Path x:Name="chevron" Grid.Column="4" Data="M0,0 L4,4 L8,0" Width="8" Height="4"
                                   Stretch="None" Margin="10,0,0,0" VerticalAlignment="Center"
                                   Stroke="{DynamicResource MahApps.Brushes.Gray3}" StrokeThickness="1.5"
                                   StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round"
@@ -122,7 +144,16 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="HasColor" Value="False">
                             <Setter TargetName="noColor" Property="Visibility" Value="Visible"/>
+                            <Setter TargetName="hex" Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray3}"/>
                         </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="AllowsNoColor" Value="True"/>
+                                <Condition Property="HasColor" Value="True"/>
+                                <Condition Property="IsEnabled" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="PART_ClearButton" Property="Visibility" Value="Visible"/>
+                        </MultiTrigger>
                         <Trigger Property="IsCompact" Value="True">
                             <Setter TargetName="opacity" Property="Visibility" Value="Collapsed"/>
                             <Setter TargetName="chevron" Property="Visibility" Value="Collapsed"/>

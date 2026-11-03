@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
              xmlns:models="clr-namespace:IRI.Maptor.Presentation.Wpf.Models.LayerSettingsAdmin"
@@ -69,7 +70,7 @@
             </Style>
 
             <!--the picker shows the colour's name and hex code, which an RTL flow would scramble-->
-            <Style x:Key="colorBox" TargetType="mahApp:ColorPicker" BasedOn="{StaticResource IRI.Maptor.Styles.ColorPicker.Normal}">
+            <Style x:Key="colorBox" TargetType="maptor:MaptorColorPicker" BasedOn="{StaticResource IRI.Maptor.Styles.MaptorColorPicker.Normal}">
                 <Setter Property="FlowDirection" Value="LeftToRight"/>
             </Style>
 
@@ -674,7 +675,7 @@
                                                                     </Grid.ColumnDefinitions>
                                                                     <CheckBox Style="{StaticResource formCheckBox}" IsChecked="{Binding HasFill}"
                                                                               Content="{Binding [serverLayerSettings_field_fill], Source={StaticResource Localization}}"/>
-                                                                    <mahApp:ColorPicker Grid.Column="1" Style="{StaticResource colorBox}"
+                                                                    <maptor:MaptorColorPicker Grid.Column="1" Style="{StaticResource colorBox}"
                                                                                         SelectedColor="{Binding FillColor, Mode=TwoWay}" IsEnabled="{Binding HasFill}"/>
                                                                 </Grid>
                                                             </Border>
@@ -686,7 +687,7 @@
                                                                     </Grid.ColumnDefinitions>
                                                                     <CheckBox Style="{StaticResource formCheckBox}" IsChecked="{Binding HasStroke}"
                                                                               Content="{Binding [serverLayerSettings_field_stroke], Source={StaticResource Localization}}"/>
-                                                                    <mahApp:ColorPicker Grid.Column="1" Style="{StaticResource colorBox}"
+                                                                    <maptor:MaptorColorPicker Grid.Column="1" Style="{StaticResource colorBox}"
                                                                                         SelectedColor="{Binding StrokeColor, Mode=TwoWay}" IsEnabled="{Binding HasStroke}"/>
                                                                 </Grid>
                                                             </Border>
@@ -949,7 +950,7 @@
                                                             <ColumnDefinition Width="*"/>
                                                         </Grid.ColumnDefinitions>
                                                         <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}" Text="{Binding [serverLayerSettings_field_labelColor], Source={StaticResource Localization}}"/>
-                                                        <mahApp:ColorPicker Grid.Column="1" Style="{StaticResource colorBox}"
+                                                        <maptor:MaptorColorPicker Grid.Column="1" Style="{StaticResource colorBox}"
                                                                             SelectedColor="{Binding LabelColor, Mode=TwoWay}"/>
                                                     </Grid>
                                                 </Border>

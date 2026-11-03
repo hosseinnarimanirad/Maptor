@@ -53,12 +53,48 @@ public class MaptorColorPicker : Control
 
     public static readonly DependencyProperty IsDropDownOpenProperty = DependencyProperty.Register(
         nameof(IsDropDownOpen), typeof(bool), typeof(MaptorColorPicker),
-        new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+            (d, e) => ((MaptorColorPicker)d).OnIsDropDownOpenChanged((bool)e.NewValue)));
 
     public bool IsDropDownOpen
     {
         get => (bool)GetValue(IsDropDownOpenProperty);
         set => SetValue(IsDropDownOpenProperty, value);
+    }
+
+    #endregion
+
+    #region No colour
+
+    /// <summary>
+    /// Whether "no colour" is a valid choice (e.g. no fill, no outline). Shows a × on the closed control
+    /// that sets <see cref="SelectedColor"/> to null, as the MahApps picker's clear button did.
+    /// </summary>
+    public static readonly DependencyProperty AllowsNoColorProperty = DependencyProperty.Register(
+        nameof(AllowsNoColor), typeof(bool), typeof(MaptorColorPicker), new PropertyMetadata(false));
+
+    public bool AllowsNoColor
+    {
+        get => (bool)GetValue(AllowsNoColorProperty);
+        set => SetValue(AllowsNoColorProperty, value);
+    }
+
+    /// <summary>What the closed control says when there is no colour (default an em dash), e.g. "No fill".</summary>
+    public static readonly DependencyProperty NoColorTextProperty = DependencyProperty.Register(
+        nameof(NoColorText), typeof(string), typeof(MaptorColorPicker),
+        new PropertyMetadata("—", (d, _) => ((MaptorColorPicker)d).UpdateDisplay()));
+
+    public string NoColorText
+    {
+        get => (string)GetValue(NoColorTextProperty);
+        set => SetValue(NoColorTextProperty, value);
+    }
+
+    /// <summary>Clears the colour (the closed control's ×). Only when <see cref="AllowsNoColor"/>.</summary>
+    public void ClearColor()
+    {
+        if (AllowsNoColor)
+            SelectedColor = null;
     }
 
     #endregion
@@ -134,7 +170,7 @@ public class MaptorColorPicker : Control
         else
         {
             SetValue(SelectedBrushPropertyKey, Brushes.Transparent);
-            SetValue(HexTextPropertyKey, "—");
+            SetValue(HexTextPropertyKey, string.IsNullOrEmpty(NoColorText) ? "—" : NoColorText);
             SetValue(OpacityTextPropertyKey, string.Empty);
         }
     }
@@ -145,6 +181,13 @@ public class MaptorColorPicker : Control
 
     private Popup? _popup;
     private MaptorColorPickerPanel? _panel;
+    private ButtonBase? _clearButton;
+
+    private void ClearButton_Click(object sender, RoutedEventArgs e)
+    {
+        ClearColor();
+        e.Handled = true;
+    }
 
     // The colour the pop-up opened with, restored by Esc.
     private Color? _colorAtOpen;
@@ -171,8 +214,15 @@ public class MaptorColorPicker : Control
 
         base.OnApplyTemplate();
 
+        if (_clearButton is not null)
+            _clearButton.Click -= ClearButton_Click;
+
         _popup = GetTemplateChild("PART_Popup") as Popup;
         _panel = GetTemplateChild("PART_Panel") as MaptorColorPickerPanel;
+        _clearButton = GetTemplateChild("PART_ClearButton") as ButtonBase;
+
+        if (_clearButton is not null)
+            _clearButton.Click += ClearButton_Click;
 
         if (_popup is not null)
         {
@@ -188,28 +238,38 @@ public class MaptorColorPicker : Control
         }
     }
 
-    private void Popup_Opened(object? sender, EventArgs e)
-    {
-        _colorAtOpen = SelectedColor;
-
-        // No colour yet: start from opaque black, which the user then changes.
-        _panel?.SetColor(SelectedColor ?? Colors.Black);
-
-        Dispatcher.BeginInvoke(() => _panel?.FocusSelectedTab(), System.Windows.Threading.DispatcherPriority.Input);
-    }
-
     // Set by Esc, so closing after a cancel does not add the restored colour to the recent ones.
     private bool _cancelled;
 
-    private void Popup_Closed(object? sender, EventArgs e)
+    /// <summary>
+    /// Open/close housekeeping. Hung on the property, not on Popup.Opened/Closed: with the fade
+    /// animation the popup raises Closed only after the fade, and a close from outside (click away,
+    /// Esc, code) always goes through this property first.
+    /// </summary>
+    private void OnIsDropDownOpenChanged(bool isOpen)
     {
-        _closedAtTicks = Environment.TickCount64;
+        if (isOpen)
+        {
+            _colorAtOpen = SelectedColor;
 
-        if (!_cancelled && SelectedColor is { } color && color != _colorAtOpen)
-            MaptorColorPickerPanel.RememberRecent(color);
+            // No colour yet: start from opaque black, which the user then changes.
+            _panel?.SetColor(SelectedColor ?? Colors.Black);
+        }
+        else
+        {
+            _closedAtTicks = Environment.TickCount64;
 
-        _cancelled = false;
+            if (!_cancelled && SelectedColor is { } color && color != _colorAtOpen)
+                MaptorColorPickerPanel.RememberRecent(color);
+
+            _cancelled = false;
+        }
     }
+
+    private void Popup_Opened(object? sender, EventArgs e) =>
+        Dispatcher.BeginInvoke(() => _panel?.FocusSelectedTab(), System.Windows.Threading.DispatcherPriority.Input);
+
+    private void Popup_Closed(object? sender, EventArgs e) => _closedAtTicks = Environment.TickCount64;
 
     private void Panel_ColorChanged(object? sender, Color color)
     {
@@ -243,6 +303,14 @@ public class MaptorColorPicker : Control
 
     #region Opening (mouse and keyboard)
 
+    // True between a press on the closed control and its release.
+    private bool _pressed;
+
+    /// <summary>
+    /// The pop-up opens on release, like a button click. Opening on press made it close again at once:
+    /// a StaysOpen=False pop-up takes the mouse when it opens, and the release of that same click,
+    /// landing on this control outside the pop-up, counted as a click outside it.
+    /// </summary>
     protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
     {
         base.OnMouseLeftButtonDown(e);
@@ -252,14 +320,38 @@ public class MaptorColorPicker : Control
 
         Focus();
 
-        if (!IsDropDownOpen && Environment.TickCount64 - _closedAtTicks < 250)
+        if (IsDropDownOpen)
         {
-            e.Handled = true;
-            return;
+            IsDropDownOpen = false;
+        }
+        else
+        {
+            // The click that just closed the pop-up (by landing here) must not reopen it on release.
+            _pressed = Environment.TickCount64 - _closedAtTicks >= 250;
         }
 
-        IsDropDownOpen = !IsDropDownOpen;
         e.Handled = true;
+    }
+
+    protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+    {
+        base.OnMouseLeftButtonUp(e);
+
+        if (!_pressed)
+            return;
+
+        _pressed = false;
+
+        if (IsEnabled && IsMouseOver && !IsDropDownOpen)
+            IsDropDownOpen = true;
+
+        e.Handled = true;
+    }
+
+    protected override void OnMouseLeave(MouseEventArgs e)
+    {
+        base.OnMouseLeave(e);
+        _pressed = false;   // pressed here, released elsewhere: no click
     }
 
     /// <summary>The usual drop-down keys: F4, Alt+Down/Up, Enter and Space toggle; Esc closes.</summary>
@@ -281,6 +373,11 @@ public class MaptorColorPicker : Control
         else if (key == Key.Escape && IsDropDownOpen)
         {
             IsDropDownOpen = false;
+            e.Handled = true;
+        }
+        else if ((key == Key.Delete || key == Key.Back) && AllowsNoColor && !IsDropDownOpen)
+        {
+            ClearColor();
             e.Handled = true;
         }
     }

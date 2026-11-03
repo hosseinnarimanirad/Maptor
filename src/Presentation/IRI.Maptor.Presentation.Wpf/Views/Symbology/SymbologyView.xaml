@@ -107,9 +107,9 @@
                         <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
                                    Text="{Binding [dialog_symbology_fill], Source={StaticResource Localization}}"/>
                         <!--clearing the colour removes the fill-->
-                        <mahApp:ColorPicker x:Name="fillColorPicker" Grid.Column="1" Style="{StaticResource sld.ColorBox}"
-                                            mahApp:TextBoxHelper.ClearTextButton="True"
-                                            mahApp:TextBoxHelper.Watermark="{Binding [dialog_symbology_noFill], Source={StaticResource Localization}}"
+                        <maptor:MaptorColorPicker x:Name="fillColorPicker" Grid.Column="1" Style="{StaticResource sld.ColorBox}"
+                                            AllowsNoColor="True"
+                                            NoColorText="{Binding [dialog_symbology_noFill], Source={StaticResource Localization}}"
                                             SelectedColor="{Binding Symbology.Fill, Mode=TwoWay, Converter={StaticResource solidColorBrushToColorConverter}}"/>
                     </Grid>
                 </Border>
@@ -122,9 +122,9 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
                                    Text="{Binding [dialog_symbology_stroke], Source={StaticResource Localization}}"/>
-                        <mahApp:ColorPicker x:Name="strokeColorPicker" Grid.Column="1" Style="{StaticResource sld.ColorBox}"
-                                            mahApp:TextBoxHelper.ClearTextButton="True"
-                                            mahApp:TextBoxHelper.Watermark="{Binding [dialog_symbology_noStroke], Source={StaticResource Localization}}"
+                        <maptor:MaptorColorPicker x:Name="strokeColorPicker" Grid.Column="1" Style="{StaticResource sld.ColorBox}"
+                                            AllowsNoColor="True"
+                                            NoColorText="{Binding [dialog_symbology_noStroke], Source={StaticResource Localization}}"
                                             SelectedColor="{Binding Symbology.Stroke, Mode=TwoWay, Converter={StaticResource solidColorBrushToColorConverter}}"/>
                     </Grid>
                 </Border>

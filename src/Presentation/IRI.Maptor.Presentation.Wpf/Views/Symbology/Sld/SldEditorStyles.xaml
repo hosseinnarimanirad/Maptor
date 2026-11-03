@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:helpers="clr-namespace:IRI.Maptor.Presentation.Wpf.Helpers"
                     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+                    xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls"
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     xmlns:converters="clr-namespace:IRI.Maptor.Presentation.Wpf.Converters"
                     xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
@@ -47,7 +48,7 @@
     </Style>
 
     <!--the picker shows the colour's name and hex code, which an RTL flow would scramble-->
-    <Style x:Key="sld.ColorBox" TargetType="mahApp:ColorPicker" BasedOn="{StaticResource IRI.Maptor.Styles.ColorPicker.Normal}">
+    <Style x:Key="sld.ColorBox" TargetType="maptor:MaptorColorPicker" BasedOn="{StaticResource IRI.Maptor.Styles.MaptorColorPicker.Normal}">
         <Setter Property="FlowDirection" Value="LeftToRight"/>
     </Style>
 

@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:helpers="clr-namespace:IRI.Maptor.Presentation.Wpf.Helpers"
              xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="420">
@@ -63,7 +64,7 @@
                 <DataGridTemplateColumn Header="{Binding [sldEditor_raster_color], Source={StaticResource Localization}}" Width="90">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <mahApp:ColorPicker Style="{StaticResource IRI.Maptor.Styles.ColorPicker.Small}" FlowDirection="LeftToRight"
+                            <maptor:MaptorColorPicker Style="{StaticResource IRI.Maptor.Styles.MaptorColorPicker.Small}" FlowDirection="LeftToRight"
                                                 SelectedColor="{Binding Color, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

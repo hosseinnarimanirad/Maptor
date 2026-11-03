@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:helpers="clr-namespace:IRI.Maptor.Presentation.Wpf.Helpers"
              xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:vm="clr-namespace:IRI.Maptor.Presentation.Wpf.ViewModels.Symbology"
              xmlns:sldViews="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls.Symbology.Sld"
@@ -101,7 +102,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
                            Text="{Binding [sldEditor_field_color], Source={StaticResource Localization}}"/>
-                <mahApp:ColorPicker Grid.Column="1" Style="{StaticResource sld.ColorBox}" SelectedColor="{Binding FontColor, Mode=TwoWay}"/>
+                <maptor:MaptorColorPicker Grid.Column="1" Style="{StaticResource sld.ColorBox}" SelectedColor="{Binding FontColor, Mode=TwoWay}"/>
             </Grid>
         </Border>
 
@@ -137,7 +138,7 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"
                                Text="{Binding [sldEditor_field_color], Source={StaticResource Localization}}"/>
-                    <mahApp:ColorPicker Grid.Column="1" Style="{StaticResource sld.ColorBox}" SelectedColor="{Binding HaloColor, Mode=TwoWay}"/>
+                    <maptor:MaptorColorPicker Grid.Column="1" Style="{StaticResource sld.ColorBox}" SelectedColor="{Binding HaloColor, Mode=TwoWay}"/>
                 </Grid>
             </Border>
 
