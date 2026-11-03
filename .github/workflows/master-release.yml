@@ -18,6 +18,12 @@ jobs:
   build-and-publish:
     runs-on: windows-latest
 
+    # id-token: write lets NuGet/login request the OIDC token for nuget.org trusted publishing.
+    # contents: write is needed by the GitHub release step (setting permissions here drops the defaults).
+    permissions:
+      id-token: write
+      contents: write
+
     steps:
     - uses: actions/checkout@v5
 
@@ -81,12 +87,22 @@ jobs:
           }
         }
 
+    # Trusted publishing: exchanges the workflow's OIDC token for a short-lived (about 1 hour) nuget.org
+    # API key. Needs a trusted publishing policy on nuget.org for this repo and workflow file, and the
+    # nuget.org user name (profile name, not email) in the NUGET_USER secret.
+    - name: NuGet login (trusted publishing)
+      id: nuget_login
+      uses: NuGet/login@v1
+      with:
+        user: ${{ secrets.NUGET_USER }}
+
     - name: Publish to NuGet
+      env:
+        NUGET_API_KEY: ${{ steps.nuget_login.outputs.NUGET_API_KEY }}
       run: |
-        $apiKey = "${{ secrets.NUGET_API_KEY }}"
         Get-ChildItem -Path ./nupkgs -Filter *.nupkg | ForEach-Object {
-          dotnet nuget push $_.FullName --source ${{ env.NUGET_SOURCE }} --api-key $apiKey --skip-duplicate
-        } 
+          dotnet nuget push $_.FullName --source ${{ env.NUGET_SOURCE }} --api-key $env:NUGET_API_KEY --skip-duplicate
+        }
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v3
