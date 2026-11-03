@@ -3868,4 +3868,7 @@
   <data name="featureTable_panToFeature" xml:space="preserve">
     <value>جابجایی به عارضه</value>
   </data>
+  <data name="legend_drawings_empty" xml:space="preserve">
+    <value>هنوز ترسیمی ندارید. با ابزارهای ترسیم یکی اضافه کنید.</value>
+  </data>
 </root>

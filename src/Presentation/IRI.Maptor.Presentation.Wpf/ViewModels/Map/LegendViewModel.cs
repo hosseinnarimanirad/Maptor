@@ -227,6 +227,26 @@ public class LegendViewModel : Notifier
 
         foreach (var item in _dataSourceKindFilterItems)
             item.LayerCount = counts.TryGetValue(item.Kind, out var n) ? n : 0;
+
+        TotalLayerCount = counts.Values.Sum();
+    }
+
+    private int _totalLayerCount;
+    /// <summary>
+    /// The layers this legend lists (leaves of its TOC group, same rule as the per-kind counts), shown
+    /// next to the legend's expander title. Not reduced by the name or kind filters.
+    /// </summary>
+    public int TotalLayerCount
+    {
+        get => _totalLayerCount;
+        private set
+        {
+            if (_totalLayerCount == value)
+                return;
+
+            _totalLayerCount = value;
+            RaisePropertyChanged();
+        }
     }
 
     #region Commands

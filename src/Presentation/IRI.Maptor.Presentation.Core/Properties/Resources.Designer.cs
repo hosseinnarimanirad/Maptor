@@ -3661,6 +3661,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No drawings yet. Use the drawing tools to add one..
+        /// </summary>
+        public static string legend_drawings_empty {
+            get {
+                return ResourceManager.GetString("legend_drawings_empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clear Filters.
         /// </summary>
         public static string legend_filter_clear {

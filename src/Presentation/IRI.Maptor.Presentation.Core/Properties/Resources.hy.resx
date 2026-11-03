@@ -2947,4 +2947,7 @@
   <data name="featureTable_panToFeature" xml:space="preserve">
     <value>Տեղափոխել օբյեկտին</value>
   </data>
+  <data name="legend_drawings_empty" xml:space="preserve">
+    <value>Գծագրեր դեռ չկան։ Ավելացնելու համար օգտագործեք գծագրման գործիքները։</value>
+  </data>
 </root>

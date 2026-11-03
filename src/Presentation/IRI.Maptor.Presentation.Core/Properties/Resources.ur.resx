@@ -2947,4 +2947,7 @@
   <data name="featureTable_panToFeature" xml:space="preserve">
     <value>فیچر پر پین کریں</value>
   </data>
+  <data name="legend_drawings_empty" xml:space="preserve">
+    <value>ابھی کوئی ڈرائنگ نہیں ہے۔ شامل کرنے کے لیے ڈرائنگ ٹولز استعمال کریں۔</value>
+  </data>
 </root>

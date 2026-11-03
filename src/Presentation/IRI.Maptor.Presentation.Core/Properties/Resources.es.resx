@@ -2947,4 +2947,7 @@
   <data name="featureTable_panToFeature" xml:space="preserve">
     <value>Desplazar al elemento</value>
   </data>
+  <data name="legend_drawings_empty" xml:space="preserve">
+    <value>Aún no hay dibujos. Use las herramientas de dibujo para agregar uno.</value>
+  </data>
 </root>

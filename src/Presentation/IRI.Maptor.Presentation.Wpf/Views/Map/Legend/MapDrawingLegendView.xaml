@@ -312,6 +312,21 @@
               Stroke="{DynamicResource MahApps.Brushes.Highlight}" 
               Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}"/>
 
+        <!--empty state: says what the area is for instead of showing a blank list-->
+        <TextBlock Grid.Row="2" IsHitTestVisible="False" Panel.ZIndex="1" Margin="8,12"
+                   Text="{Binding [legend_drawings_empty], Source={StaticResource Localization}}">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.EmptyState}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding DrawingItems.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+
         <ListBox Grid.Row="2" ItemsSource="{Binding Source={StaticResource drawingItemsViewSource}}" SelectionMode="Single" SelectedItem="{Binding SelectedDrawingItem, Mode=TwoWay}"
                  SelectionChanged="DrawingItems_SelectionChanged">
             <ListBox.ItemContainerStyle>

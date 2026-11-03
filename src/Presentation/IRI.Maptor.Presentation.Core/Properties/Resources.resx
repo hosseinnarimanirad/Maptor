@@ -4023,4 +4023,7 @@
   <data name="featureTable_panToFeature" xml:space="preserve">
     <value>Pan to feature</value>
   </data>
+  <data name="legend_drawings_empty" xml:space="preserve">
+    <value>No drawings yet. Use the drawing tools to add one.</value>
+  </data>
 </root>

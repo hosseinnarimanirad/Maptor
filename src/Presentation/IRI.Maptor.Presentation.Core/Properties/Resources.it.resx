@@ -2947,4 +2947,7 @@
   <data name="featureTable_panToFeature" xml:space="preserve">
     <value>Sposta sull'elemento</value>
   </data>
+  <data name="legend_drawings_empty" xml:space="preserve">
+    <value>Ancora nessun disegno. Usa gli strumenti di disegno per aggiungerne uno.</value>
+  </data>
 </root>

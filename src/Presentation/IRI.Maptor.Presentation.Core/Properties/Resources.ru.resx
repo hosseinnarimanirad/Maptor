@@ -2947,4 +2947,7 @@
   <data name="featureTable_panToFeature" xml:space="preserve">
     <value>Переместиться к объекту</value>
   </data>
+  <data name="legend_drawings_empty" xml:space="preserve">
+    <value>Рисунков пока нет. Добавьте рисунок с помощью инструментов рисования.</value>
+  </data>
 </root>

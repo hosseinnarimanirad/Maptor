@@ -2947,4 +2947,7 @@
   <data name="featureTable_panToFeature" xml:space="preserve">
     <value>Centrer sur l'entité</value>
   </data>
+  <data name="legend_drawings_empty" xml:space="preserve">
+    <value>Aucun dessin pour l'instant. Utilisez les outils de dessin pour en ajouter un.</value>
+  </data>
 </root>

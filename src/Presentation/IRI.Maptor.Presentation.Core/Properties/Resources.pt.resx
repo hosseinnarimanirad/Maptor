@@ -2947,4 +2947,7 @@
   <data name="featureTable_panToFeature" xml:space="preserve">
     <value>Mover para a feição</value>
   </data>
+  <data name="legend_drawings_empty" xml:space="preserve">
+    <value>Ainda não há desenhos. Use as ferramentas de desenho para adicionar um.</value>
+  </data>
 </root>

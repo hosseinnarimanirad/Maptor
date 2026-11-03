@@ -2947,4 +2947,7 @@
   <data name="featureTable_panToFeature" xml:space="preserve">
     <value>平移至要素</value>
   </data>
+  <data name="legend_drawings_empty" xml:space="preserve">
+    <value>尚无绘图。请使用绘图工具添加。</value>
+  </data>
 </root>

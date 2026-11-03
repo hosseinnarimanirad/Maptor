@@ -92,4 +92,42 @@
         <Setter Property="Padding" Value="12,10"/>
     </Style>
 
+    <!--The stock MahApps expander with an accent header bar, for side panels (legend, drawings).
+        The whole header bar is the clickable toggle, so the hand cursor goes on that toggle, not on
+        the header content: content gets the cursor only over its own text and icons. The header
+        toggles are reached through MahApps' ExpanderHelper.Header*Style attached properties.
+        Header content: leading icon (14 px), 6 px gap, title, then an optional count.-->
+    <Style x:Key="IRI.Maptor.Styles.ToggleButton.ExpanderHeader.Down" TargetType="{x:Type ToggleButton}"
+           BasedOn="{StaticResource MahApps.Styles.ToggleButton.ExpanderHeader.Down}">
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.ToggleButton.ExpanderHeader.Right" TargetType="{x:Type ToggleButton}"
+           BasedOn="{StaticResource MahApps.Styles.ToggleButton.ExpanderHeader.Right}">
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.Expander.Panel" TargetType="{x:Type Expander}"
+           BasedOn="{StaticResource MahApps.Styles.Expander}">
+        <Setter Property="mahApp:ExpanderHelper.HeaderDownStyle" Value="{StaticResource IRI.Maptor.Styles.ToggleButton.ExpanderHeader.Down}"/>
+        <Setter Property="mahApp:ExpanderHelper.HeaderRightStyle" Value="{StaticResource IRI.Maptor.Styles.ToggleButton.ExpanderHeader.Right}"/>
+    </Style>
+
+    <!--Header pieces for IRI.Maptor.Styles.Expander.Panel: the leading icon and the count after the title.-->
+    <Style x:Key="IRI.Maptor.Styles.PackIconPhosphorIcons.ExpanderHeader" TargetType="iconPacks:PackIconPhosphorIcons">
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+        <Setter Property="Width" Value="14"/>
+        <Setter Property="Height" Value="14"/>
+        <Setter Property="Margin" Value="0,0,6,0"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.TextBlock.ExpanderHeaderCount" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+        <Setter Property="Opacity" Value="0.75"/>
+        <Setter Property="Margin" Value="6,0,0,0"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
 </ResourceDictionary>

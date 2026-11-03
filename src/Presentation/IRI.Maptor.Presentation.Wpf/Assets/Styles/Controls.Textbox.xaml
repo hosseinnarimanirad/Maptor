@@ -79,6 +79,14 @@
         </Style.Triggers>-->
     </Style>
 
+    <!--A Normal input that sits on a tinted band (e.g. the legend's Accent3 tool strip). The white
+        field already stands out from the tint, so the grey resting frame is dropped; hover and the
+        accent focus border stay, so keyboard focus is still visible. Transparent rather than
+        BorderThickness=0, so the field keeps the size and text position of every other Normal input.-->
+    <Style x:Key="IRI.Maptor.Styles.TextBox.OnTint" TargetType="TextBox" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox.Normal}">
+        <Setter Property="BorderBrush" Value="Transparent"/>
+    </Style>
+
     <Style x:Key="IRI.Maptor.Styles.TextBox.Normal.En" TargetType="TextBox" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox.Normal}">
         <Setter Property="FlowDirection" Value="LeftToRight"/>
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
