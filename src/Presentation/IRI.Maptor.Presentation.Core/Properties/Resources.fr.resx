@@ -2965,4 +2965,46 @@
   <data name="message_error_userNotFound" xml:space="preserve">
     <value>Utilisateur introuvable.</value>
   </data>
+  <data name="colorPicker_tab_grid" xml:space="preserve">
+    <value>Grille</value>
+  </data>
+  <data name="colorPicker_tab_spectrum" xml:space="preserve">
+    <value>Spectre</value>
+  </data>
+  <data name="colorPicker_tab_sliders" xml:space="preserve">
+    <value>Curseurs</value>
+  </data>
+  <data name="colorPicker_tab_brand" xml:space="preserve">
+    <value>Marque</value>
+  </data>
+  <data name="colorPicker_channel_red" xml:space="preserve">
+    <value>Rouge</value>
+  </data>
+  <data name="colorPicker_channel_green" xml:space="preserve">
+    <value>Vert</value>
+  </data>
+  <data name="colorPicker_channel_blue" xml:space="preserve">
+    <value>Bleu</value>
+  </data>
+  <data name="colorPicker_channel_hue" xml:space="preserve">
+    <value>Teinte</value>
+  </data>
+  <data name="colorPicker_channel_saturation" xml:space="preserve">
+    <value>Saturation</value>
+  </data>
+  <data name="colorPicker_channel_brightness" xml:space="preserve">
+    <value>Luminosité</value>
+  </data>
+  <data name="colorPicker_opacity" xml:space="preserve">
+    <value>Opacité</value>
+  </data>
+  <data name="colorPicker_hex" xml:space="preserve">
+    <value>Code couleur hexadécimal</value>
+  </data>
+  <data name="colorPicker_eyedropper" xml:space="preserve">
+    <value>Prélever une couleur à l'écran (Échap pour annuler)</value>
+  </data>
+  <data name="colorPicker_addRecent" xml:space="preserve">
+    <value>Ajouter aux couleurs récentes</value>
+  </data>
 </root>

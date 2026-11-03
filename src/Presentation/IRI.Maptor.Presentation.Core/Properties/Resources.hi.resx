@@ -2965,4 +2965,46 @@
   <data name="message_error_userNotFound" xml:space="preserve">
     <value>उपयोगकर्ता नहीं मिला।</value>
   </data>
+  <data name="colorPicker_tab_grid" xml:space="preserve">
+    <value>ग्रिड</value>
+  </data>
+  <data name="colorPicker_tab_spectrum" xml:space="preserve">
+    <value>स्पेक्ट्रम</value>
+  </data>
+  <data name="colorPicker_tab_sliders" xml:space="preserve">
+    <value>स्लाइडर</value>
+  </data>
+  <data name="colorPicker_tab_brand" xml:space="preserve">
+    <value>ब्रांड</value>
+  </data>
+  <data name="colorPicker_channel_red" xml:space="preserve">
+    <value>लाल</value>
+  </data>
+  <data name="colorPicker_channel_green" xml:space="preserve">
+    <value>हरा</value>
+  </data>
+  <data name="colorPicker_channel_blue" xml:space="preserve">
+    <value>नीला</value>
+  </data>
+  <data name="colorPicker_channel_hue" xml:space="preserve">
+    <value>ह्यू</value>
+  </data>
+  <data name="colorPicker_channel_saturation" xml:space="preserve">
+    <value>संतृप्ति</value>
+  </data>
+  <data name="colorPicker_channel_brightness" xml:space="preserve">
+    <value>चमक</value>
+  </data>
+  <data name="colorPicker_opacity" xml:space="preserve">
+    <value>अपारदर्शिता</value>
+  </data>
+  <data name="colorPicker_hex" xml:space="preserve">
+    <value>हेक्स रंग कोड</value>
+  </data>
+  <data name="colorPicker_eyedropper" xml:space="preserve">
+    <value>स्क्रीन से रंग चुनें (Esc से रद्द करें)</value>
+  </data>
+  <data name="colorPicker_addRecent" xml:space="preserve">
+    <value>हाल के रंगों में सहेजें</value>
+  </data>
 </root>

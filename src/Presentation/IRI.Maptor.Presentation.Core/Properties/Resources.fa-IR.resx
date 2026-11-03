@@ -3886,4 +3886,46 @@
   <data name="message_error_userNotFound" xml:space="preserve">
     <value>کاربر پیدا نشد.</value>
   </data>
+  <data name="colorPicker_tab_grid" xml:space="preserve">
+    <value>شبکه</value>
+  </data>
+  <data name="colorPicker_tab_spectrum" xml:space="preserve">
+    <value>طیف</value>
+  </data>
+  <data name="colorPicker_tab_sliders" xml:space="preserve">
+    <value>لغزنده‌ها</value>
+  </data>
+  <data name="colorPicker_tab_brand" xml:space="preserve">
+    <value>برند</value>
+  </data>
+  <data name="colorPicker_channel_red" xml:space="preserve">
+    <value>قرمز</value>
+  </data>
+  <data name="colorPicker_channel_green" xml:space="preserve">
+    <value>سبز</value>
+  </data>
+  <data name="colorPicker_channel_blue" xml:space="preserve">
+    <value>آبی</value>
+  </data>
+  <data name="colorPicker_channel_hue" xml:space="preserve">
+    <value>فام</value>
+  </data>
+  <data name="colorPicker_channel_saturation" xml:space="preserve">
+    <value>اشباع</value>
+  </data>
+  <data name="colorPicker_channel_brightness" xml:space="preserve">
+    <value>روشنایی</value>
+  </data>
+  <data name="colorPicker_opacity" xml:space="preserve">
+    <value>کدری</value>
+  </data>
+  <data name="colorPicker_hex" xml:space="preserve">
+    <value>کد هگز رنگ</value>
+  </data>
+  <data name="colorPicker_eyedropper" xml:space="preserve">
+    <value>برداشتن رنگ از صفحه (Esc برای لغو)</value>
+  </data>
+  <data name="colorPicker_addRecent" xml:space="preserve">
+    <value>افزودن به رنگ‌های اخیر</value>
+  </data>
 </root>

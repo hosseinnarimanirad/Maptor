@@ -2965,4 +2965,46 @@
   <data name="message_error_userNotFound" xml:space="preserve">
     <value>Օգտատերը չի գտնվել։</value>
   </data>
+  <data name="colorPicker_tab_grid" xml:space="preserve">
+    <value>Ցանց</value>
+  </data>
+  <data name="colorPicker_tab_spectrum" xml:space="preserve">
+    <value>Սպեկտր</value>
+  </data>
+  <data name="colorPicker_tab_sliders" xml:space="preserve">
+    <value>Սահիչներ</value>
+  </data>
+  <data name="colorPicker_tab_brand" xml:space="preserve">
+    <value>Բրենդ</value>
+  </data>
+  <data name="colorPicker_channel_red" xml:space="preserve">
+    <value>Կարմիր</value>
+  </data>
+  <data name="colorPicker_channel_green" xml:space="preserve">
+    <value>Կանաչ</value>
+  </data>
+  <data name="colorPicker_channel_blue" xml:space="preserve">
+    <value>Կապույտ</value>
+  </data>
+  <data name="colorPicker_channel_hue" xml:space="preserve">
+    <value>Երանգ</value>
+  </data>
+  <data name="colorPicker_channel_saturation" xml:space="preserve">
+    <value>Հագեցվածություն</value>
+  </data>
+  <data name="colorPicker_channel_brightness" xml:space="preserve">
+    <value>Պայծառություն</value>
+  </data>
+  <data name="colorPicker_opacity" xml:space="preserve">
+    <value>Անթափանցություն</value>
+  </data>
+  <data name="colorPicker_hex" xml:space="preserve">
+    <value>Գույնի hex կոդ</value>
+  </data>
+  <data name="colorPicker_eyedropper" xml:space="preserve">
+    <value>Վերցնել գույնը էկրանից (Esc՝ չեղարկել)</value>
+  </data>
+  <data name="colorPicker_addRecent" xml:space="preserve">
+    <value>Պահել վերջին գույներում</value>
+  </data>
 </root>

@@ -2965,4 +2965,46 @@
   <data name="message_error_userNotFound" xml:space="preserve">
     <value>Kullanıcı bulunamadı.</value>
   </data>
+  <data name="colorPicker_tab_grid" xml:space="preserve">
+    <value>Izgara</value>
+  </data>
+  <data name="colorPicker_tab_spectrum" xml:space="preserve">
+    <value>Spektrum</value>
+  </data>
+  <data name="colorPicker_tab_sliders" xml:space="preserve">
+    <value>Kaydırıcı</value>
+  </data>
+  <data name="colorPicker_tab_brand" xml:space="preserve">
+    <value>Marka</value>
+  </data>
+  <data name="colorPicker_channel_red" xml:space="preserve">
+    <value>Kırmızı</value>
+  </data>
+  <data name="colorPicker_channel_green" xml:space="preserve">
+    <value>Yeşil</value>
+  </data>
+  <data name="colorPicker_channel_blue" xml:space="preserve">
+    <value>Mavi</value>
+  </data>
+  <data name="colorPicker_channel_hue" xml:space="preserve">
+    <value>Ton</value>
+  </data>
+  <data name="colorPicker_channel_saturation" xml:space="preserve">
+    <value>Doygunluk</value>
+  </data>
+  <data name="colorPicker_channel_brightness" xml:space="preserve">
+    <value>Parlaklık</value>
+  </data>
+  <data name="colorPicker_opacity" xml:space="preserve">
+    <value>Opaklık</value>
+  </data>
+  <data name="colorPicker_hex" xml:space="preserve">
+    <value>Onaltılık renk kodu</value>
+  </data>
+  <data name="colorPicker_eyedropper" xml:space="preserve">
+    <value>Ekrandan renk al (Esc iptal eder)</value>
+  </data>
+  <data name="colorPicker_addRecent" xml:space="preserve">
+    <value>Son renklere kaydet</value>
+  </data>
 </root>

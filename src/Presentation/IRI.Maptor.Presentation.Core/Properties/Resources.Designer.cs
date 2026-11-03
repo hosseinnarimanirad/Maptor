@@ -979,6 +979,132 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Blue.
+        /// </summary>
+        public static string colorPicker_channel_blue {
+            get {
+                return ResourceManager.GetString("colorPicker_channel_blue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Brightness.
+        /// </summary>
+        public static string colorPicker_channel_brightness {
+            get {
+                return ResourceManager.GetString("colorPicker_channel_brightness", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Green.
+        /// </summary>
+        public static string colorPicker_channel_green {
+            get {
+                return ResourceManager.GetString("colorPicker_channel_green", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hue.
+        /// </summary>
+        public static string colorPicker_channel_hue {
+            get {
+                return ResourceManager.GetString("colorPicker_channel_hue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Red.
+        /// </summary>
+        public static string colorPicker_channel_red {
+            get {
+                return ResourceManager.GetString("colorPicker_channel_red", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saturation.
+        /// </summary>
+        public static string colorPicker_channel_saturation {
+            get {
+                return ResourceManager.GetString("colorPicker_channel_saturation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hex colour code.
+        /// </summary>
+        public static string colorPicker_hex {
+            get {
+                return ResourceManager.GetString("colorPicker_hex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opacity.
+        /// </summary>
+        public static string colorPicker_opacity {
+            get {
+                return ResourceManager.GetString("colorPicker_opacity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Brand.
+        /// </summary>
+        public static string colorPicker_tab_brand {
+            get {
+                return ResourceManager.GetString("colorPicker_tab_brand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grid.
+        /// </summary>
+        public static string colorPicker_tab_grid {
+            get {
+                return ResourceManager.GetString("colorPicker_tab_grid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sliders.
+        /// </summary>
+        public static string colorPicker_tab_sliders {
+            get {
+                return ResourceManager.GetString("colorPicker_tab_sliders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spectrum.
+        /// </summary>
+        public static string colorPicker_tab_spectrum {
+            get {
+                return ResourceManager.GetString("colorPicker_tab_spectrum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save to recent colours.
+        /// </summary>
+        public static string colorPicker_addRecent {
+            get {
+                return ResourceManager.GetString("colorPicker_addRecent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pick a colour from the screen (Esc cancels).
+        /// </summary>
+        public static string colorPicker_eyedropper {
+            get {
+                return ResourceManager.GetString("colorPicker_eyedropper", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Apply.
         /// </summary>
         public static string dialog_common_apply {

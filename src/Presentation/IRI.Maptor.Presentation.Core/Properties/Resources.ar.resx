@@ -2965,4 +2965,46 @@
   <data name="message_error_userNotFound" xml:space="preserve">
     <value>لم يتم العثور على المستخدم.</value>
   </data>
+  <data name="colorPicker_tab_grid" xml:space="preserve">
+    <value>شبكة</value>
+  </data>
+  <data name="colorPicker_tab_spectrum" xml:space="preserve">
+    <value>طيف</value>
+  </data>
+  <data name="colorPicker_tab_sliders" xml:space="preserve">
+    <value>منزلقات</value>
+  </data>
+  <data name="colorPicker_tab_brand" xml:space="preserve">
+    <value>الهوية</value>
+  </data>
+  <data name="colorPicker_channel_red" xml:space="preserve">
+    <value>أحمر</value>
+  </data>
+  <data name="colorPicker_channel_green" xml:space="preserve">
+    <value>أخضر</value>
+  </data>
+  <data name="colorPicker_channel_blue" xml:space="preserve">
+    <value>أزرق</value>
+  </data>
+  <data name="colorPicker_channel_hue" xml:space="preserve">
+    <value>صبغة</value>
+  </data>
+  <data name="colorPicker_channel_saturation" xml:space="preserve">
+    <value>تشبع</value>
+  </data>
+  <data name="colorPicker_channel_brightness" xml:space="preserve">
+    <value>سطوع</value>
+  </data>
+  <data name="colorPicker_opacity" xml:space="preserve">
+    <value>العتامة</value>
+  </data>
+  <data name="colorPicker_hex" xml:space="preserve">
+    <value>رمز اللون الست عشري</value>
+  </data>
+  <data name="colorPicker_eyedropper" xml:space="preserve">
+    <value>التقاط لون من الشاشة (Esc للإلغاء)</value>
+  </data>
+  <data name="colorPicker_addRecent" xml:space="preserve">
+    <value>حفظ في الألوان الأخيرة</value>
+  </data>
 </root>

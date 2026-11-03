@@ -2965,4 +2965,46 @@
   <data name="message_error_userNotFound" xml:space="preserve">
     <value>Utente non trovato.</value>
   </data>
+  <data name="colorPicker_tab_grid" xml:space="preserve">
+    <value>Griglia</value>
+  </data>
+  <data name="colorPicker_tab_spectrum" xml:space="preserve">
+    <value>Spettro</value>
+  </data>
+  <data name="colorPicker_tab_sliders" xml:space="preserve">
+    <value>Cursori</value>
+  </data>
+  <data name="colorPicker_tab_brand" xml:space="preserve">
+    <value>Marchio</value>
+  </data>
+  <data name="colorPicker_channel_red" xml:space="preserve">
+    <value>Rosso</value>
+  </data>
+  <data name="colorPicker_channel_green" xml:space="preserve">
+    <value>Verde</value>
+  </data>
+  <data name="colorPicker_channel_blue" xml:space="preserve">
+    <value>Blu</value>
+  </data>
+  <data name="colorPicker_channel_hue" xml:space="preserve">
+    <value>Tonalità</value>
+  </data>
+  <data name="colorPicker_channel_saturation" xml:space="preserve">
+    <value>Saturazione</value>
+  </data>
+  <data name="colorPicker_channel_brightness" xml:space="preserve">
+    <value>Luminosità</value>
+  </data>
+  <data name="colorPicker_opacity" xml:space="preserve">
+    <value>Opacità</value>
+  </data>
+  <data name="colorPicker_hex" xml:space="preserve">
+    <value>Codice colore esadecimale</value>
+  </data>
+  <data name="colorPicker_eyedropper" xml:space="preserve">
+    <value>Preleva un colore dallo schermo (Esc annulla)</value>
+  </data>
+  <data name="colorPicker_addRecent" xml:space="preserve">
+    <value>Salva nei colori recenti</value>
+  </data>
 </root>

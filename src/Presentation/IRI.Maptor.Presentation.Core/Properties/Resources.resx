@@ -4041,4 +4041,46 @@
   <data name="message_error_userNotFound" xml:space="preserve">
     <value>User not found.</value>
   </data>
+  <data name="colorPicker_tab_grid" xml:space="preserve">
+    <value>Grid</value>
+  </data>
+  <data name="colorPicker_tab_spectrum" xml:space="preserve">
+    <value>Spectrum</value>
+  </data>
+  <data name="colorPicker_tab_sliders" xml:space="preserve">
+    <value>Sliders</value>
+  </data>
+  <data name="colorPicker_tab_brand" xml:space="preserve">
+    <value>Brand</value>
+  </data>
+  <data name="colorPicker_channel_red" xml:space="preserve">
+    <value>Red</value>
+  </data>
+  <data name="colorPicker_channel_green" xml:space="preserve">
+    <value>Green</value>
+  </data>
+  <data name="colorPicker_channel_blue" xml:space="preserve">
+    <value>Blue</value>
+  </data>
+  <data name="colorPicker_channel_hue" xml:space="preserve">
+    <value>Hue</value>
+  </data>
+  <data name="colorPicker_channel_saturation" xml:space="preserve">
+    <value>Saturation</value>
+  </data>
+  <data name="colorPicker_channel_brightness" xml:space="preserve">
+    <value>Brightness</value>
+  </data>
+  <data name="colorPicker_opacity" xml:space="preserve">
+    <value>Opacity</value>
+  </data>
+  <data name="colorPicker_hex" xml:space="preserve">
+    <value>Hex colour code</value>
+  </data>
+  <data name="colorPicker_eyedropper" xml:space="preserve">
+    <value>Pick a colour from the screen (Esc cancels)</value>
+  </data>
+  <data name="colorPicker_addRecent" xml:space="preserve">
+    <value>Save to recent colours</value>
+  </data>
 </root>

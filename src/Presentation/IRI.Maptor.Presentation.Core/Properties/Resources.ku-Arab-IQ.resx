@@ -2965,4 +2965,46 @@
   <data name="message_error_userNotFound" xml:space="preserve">
     <value>بەکارهێنەر نەدۆزرایەوە.</value>
   </data>
+  <data name="colorPicker_tab_grid" xml:space="preserve">
+    <value>تۆڕ</value>
+  </data>
+  <data name="colorPicker_tab_spectrum" xml:space="preserve">
+    <value>سپێکتروم</value>
+  </data>
+  <data name="colorPicker_tab_sliders" xml:space="preserve">
+    <value>خلیسکێنەکان</value>
+  </data>
+  <data name="colorPicker_tab_brand" xml:space="preserve">
+    <value>براند</value>
+  </data>
+  <data name="colorPicker_channel_red" xml:space="preserve">
+    <value>سوور</value>
+  </data>
+  <data name="colorPicker_channel_green" xml:space="preserve">
+    <value>سەوز</value>
+  </data>
+  <data name="colorPicker_channel_blue" xml:space="preserve">
+    <value>شین</value>
+  </data>
+  <data name="colorPicker_channel_hue" xml:space="preserve">
+    <value>ڕەنگ</value>
+  </data>
+  <data name="colorPicker_channel_saturation" xml:space="preserve">
+    <value>تێری</value>
+  </data>
+  <data name="colorPicker_channel_brightness" xml:space="preserve">
+    <value>ڕووناکی</value>
+  </data>
+  <data name="colorPicker_opacity" xml:space="preserve">
+    <value>ناڕوونی</value>
+  </data>
+  <data name="colorPicker_hex" xml:space="preserve">
+    <value>کۆدی hex ـی ڕەنگ</value>
+  </data>
+  <data name="colorPicker_eyedropper" xml:space="preserve">
+    <value>ڕەنگێک لە شاشەکە هەڵبگرە (Esc بۆ پاشگەزبوونەوە)</value>
+  </data>
+  <data name="colorPicker_addRecent" xml:space="preserve">
+    <value>پاشەکەوتکردن لە ڕەنگە دواییەکان</value>
+  </data>
 </root>

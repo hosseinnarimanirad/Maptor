@@ -39,6 +39,7 @@
         <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.NumericUpDown.xaml"/>
         <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.PasswordBox.xaml"/>
         <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.Inputs.Extra.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.ColorPicker.xaml"/>
         <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.Misc.xaml"/>
         <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.TreeView.xaml"/>
         <!--after Controls.TextBlock: both are BasedOn IRI.Maptor.Styles.TextBlock-->
