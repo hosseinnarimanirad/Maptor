@@ -21,9 +21,13 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
-                        <Border x:Name="face" CornerRadius="6" Margin="2" Padding="2,4" Background="Transparent">
-                            <TextBlock Text="{TemplateBinding Content}" HorizontalAlignment="Center"
-                                       TextTrimming="CharacterEllipsis"/>
+                        <Border x:Name="face" CornerRadius="6" Margin="2" Padding="4,4" Background="Transparent">
+                            <Grid>
+                                <!--reserves the semibold width so a tab doesn't grow when selected-->
+                                <TextBlock Text="{TemplateBinding Content}" FontWeight="SemiBold" Visibility="Hidden"/>
+                                <TextBlock Text="{TemplateBinding Content}" HorizontalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis"/>
+                            </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
@@ -212,7 +216,8 @@
     <StackPanel>
         <!--tabs-->
         <Border CornerRadius="8" Background="{DynamicResource MahApps.Brushes.Gray10}" Padding="1">
-            <UniformGrid Rows="1">
+            <!--each tab as wide as its label (labels differ a lot between languages)-->
+            <local:SegmentPanel>
                 <RadioButton x:Name="tabGrid" Style="{StaticResource segment}"
                              Content="{Binding [colorPicker_tab_grid], Source={StaticResource Localization}}" Checked="Tab_Checked"/>
                 <RadioButton x:Name="tabSpectrum" Style="{StaticResource segment}"
@@ -221,7 +226,7 @@
                              Content="{Binding [colorPicker_tab_sliders], Source={StaticResource Localization}}" Checked="Tab_Checked"/>
                 <RadioButton x:Name="tabBrand" Style="{StaticResource segment}"
                              Content="{Binding [colorPicker_tab_brand], Source={StaticResource Localization}}" Checked="Tab_Checked"/>
-            </UniformGrid>
+            </local:SegmentPanel>
         </Border>
 
         <Grid Height="200" Margin="0,10,0,0">
@@ -238,7 +243,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Button Style="{StaticResource gridSwatch}" Click="Swatch_Click"/>
+                            <Button Style="{StaticResource gridSwatch}" Click="Swatch_Click" MouseDoubleClick="Swatch_DoubleClick"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
@@ -317,7 +322,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Style="{StaticResource brandSwatch}" Click="Swatch_Click"/>
+                        <Button Style="{StaticResource brandSwatch}" Click="Swatch_Click" MouseDoubleClick="Swatch_DoubleClick"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
@@ -372,7 +377,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Style="{StaticResource recentSwatch}" Click="Recent_Click"/>
+                        <Button Style="{StaticResource recentSwatch}" Click="Recent_Click" MouseDoubleClick="Swatch_DoubleClick"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

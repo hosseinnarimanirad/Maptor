@@ -191,6 +191,19 @@ public partial class MaptorColorPickerPanel : UserControl
             OnPart(() => LoadKeepingHue(Color.FromArgb(_alpha, item.Color.R, item.Color.G, item.Color.B)));
     }
 
+    /// <summary>
+    /// Double-click on a Grid, Brand or recent swatch: the colour is already applied by the first
+    /// click of the pair, so this only keeps it and closes the pop-up (like Enter).
+    /// </summary>
+    private void Swatch_DoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ChangedButton != MouseButton.Left)
+            return;
+
+        CommitRequested?.Invoke(this, EventArgs.Empty);
+        e.Handled = true;
+    }
+
     #endregion
 
     #region Recent colours

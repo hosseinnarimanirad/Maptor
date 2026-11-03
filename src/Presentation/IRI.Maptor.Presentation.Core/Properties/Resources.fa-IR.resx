@@ -3887,16 +3887,16 @@
     <value>کاربر پیدا نشد.</value>
   </data>
   <data name="colorPicker_tab_grid" xml:space="preserve">
-    <value>شبکه</value>
+    <value>جدول رنگ</value>
   </data>
   <data name="colorPicker_tab_spectrum" xml:space="preserve">
-    <value>طیف</value>
+    <value>طیف رنگ</value>
   </data>
   <data name="colorPicker_tab_sliders" xml:space="preserve">
-    <value>لغزنده‌ها</value>
+    <value>تنظیم دقیق</value>
   </data>
   <data name="colorPicker_tab_brand" xml:space="preserve">
-    <value>برند</value>
+    <value>رنگ‌های مپتور</value>
   </data>
   <data name="colorPicker_channel_red" xml:space="preserve">
     <value>قرمز</value>
