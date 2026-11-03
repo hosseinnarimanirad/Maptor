@@ -932,6 +932,33 @@ namespace IRI.Maptor.Presentation.Core.Properties {
                 return ResourceManager.GetString("dialog_changePassword_title", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Your password was changed..
+        /// </summary>
+        public static string dialog_changePassword_success {
+            get {
+                return ResourceManager.GetString("dialog_changePassword_success", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Enter your current password..
+        /// </summary>
+        public static string dialog_changePassword_currentRequired {
+            get {
+                return ResourceManager.GetString("dialog_changePassword_currentRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The new password and its confirmation do not match..
+        /// </summary>
+        public static string dialog_changePassword_newPasswordsDiffer {
+            get {
+                return ResourceManager.GetString("dialog_changePassword_newPasswordsDiffer", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Apply.

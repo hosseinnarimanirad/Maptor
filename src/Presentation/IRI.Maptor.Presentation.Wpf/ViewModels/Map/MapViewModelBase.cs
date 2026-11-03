@@ -7740,7 +7740,7 @@ public abstract class MapViewModelBase : ViewModelBase
                         return;
 
                     RemoveAllDrawingItems();
-                });
+                }, _ => DrawingItems?.Count > 0);
             }
 
             return _removeAllDrawingItemsCommand;

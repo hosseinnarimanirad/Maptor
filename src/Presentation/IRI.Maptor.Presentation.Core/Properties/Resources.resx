@@ -4026,4 +4026,13 @@
   <data name="legend_drawings_empty" xml:space="preserve">
     <value>No drawings yet. Use the drawing tools to add one.</value>
   </data>
+  <data name="dialog_changePassword_success" xml:space="preserve">
+    <value>Your password was changed.</value>
+  </data>
+  <data name="dialog_changePassword_currentRequired" xml:space="preserve">
+    <value>Enter your current password.</value>
+  </data>
+  <data name="dialog_changePassword_newPasswordsDiffer" xml:space="preserve">
+    <value>The new password and its confirmation do not match.</value>
+  </data>
 </root>

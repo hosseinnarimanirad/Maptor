@@ -2950,4 +2950,13 @@
   <data name="legend_drawings_empty" xml:space="preserve">
     <value>ابھی کوئی ڈرائنگ نہیں ہے۔ شامل کرنے کے لیے ڈرائنگ ٹولز استعمال کریں۔</value>
   </data>
+  <data name="dialog_changePassword_success" xml:space="preserve">
+    <value>آپ کا پاس ورڈ تبدیل کر دیا گیا ہے۔</value>
+  </data>
+  <data name="dialog_changePassword_currentRequired" xml:space="preserve">
+    <value>اپنا موجودہ پاس ورڈ درج کریں۔</value>
+  </data>
+  <data name="dialog_changePassword_newPasswordsDiffer" xml:space="preserve">
+    <value>نیا پاس ورڈ اور اس کی تصدیق مماثل نہیں ہیں۔</value>
+  </data>
 </root>

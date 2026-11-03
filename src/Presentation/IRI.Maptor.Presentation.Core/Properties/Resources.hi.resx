@@ -2950,4 +2950,13 @@
   <data name="legend_drawings_empty" xml:space="preserve">
     <value>अभी कोई ड्रॉइंग नहीं है। जोड़ने के लिए ड्रॉइंग टूल का उपयोग करें।</value>
   </data>
+  <data name="dialog_changePassword_success" xml:space="preserve">
+    <value>आपका पासवर्ड बदल दिया गया है।</value>
+  </data>
+  <data name="dialog_changePassword_currentRequired" xml:space="preserve">
+    <value>अपना वर्तमान पासवर्ड दर्ज करें।</value>
+  </data>
+  <data name="dialog_changePassword_newPasswordsDiffer" xml:space="preserve">
+    <value>नया पासवर्ड और उसकी पुष्टि मेल नहीं खाते।</value>
+  </data>
 </root>

@@ -2950,4 +2950,13 @@
   <data name="legend_drawings_empty" xml:space="preserve">
     <value>Hələ rəsm yoxdur. Əlavə etmək üçün rəsm alətlərindən istifadə edin.</value>
   </data>
+  <data name="dialog_changePassword_success" xml:space="preserve">
+    <value>Şifrəniz dəyişdirildi.</value>
+  </data>
+  <data name="dialog_changePassword_currentRequired" xml:space="preserve">
+    <value>Cari şifrənizi daxil edin.</value>
+  </data>
+  <data name="dialog_changePassword_newPasswordsDiffer" xml:space="preserve">
+    <value>Yeni şifrə və onun təkrarı uyğun gəlmir.</value>
+  </data>
 </root>

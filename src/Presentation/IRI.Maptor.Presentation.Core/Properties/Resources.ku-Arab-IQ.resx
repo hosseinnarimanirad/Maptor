@@ -2950,4 +2950,13 @@
   <data name="legend_drawings_empty" xml:space="preserve">
     <value>هێشتا هیچ وێنەکێشانێک نییە. بۆ زیادکردن ئامرازەکانی وێنەکێشان بەکاربهێنە.</value>
   </data>
+  <data name="dialog_changePassword_success" xml:space="preserve">
+    <value>وشەی نهێنییەکەت گۆڕدرا.</value>
+  </data>
+  <data name="dialog_changePassword_currentRequired" xml:space="preserve">
+    <value>وشەی نهێنیی ئێستات بنووسە.</value>
+  </data>
+  <data name="dialog_changePassword_newPasswordsDiffer" xml:space="preserve">
+    <value>وشەی نهێنیی نوێ و دووپاتکردنەوەکەی وەک یەک نین.</value>
+  </data>
 </root>

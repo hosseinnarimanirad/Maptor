@@ -3871,4 +3871,13 @@
   <data name="legend_drawings_empty" xml:space="preserve">
     <value>هنوز ترسیمی ندارید. با ابزارهای ترسیم یکی اضافه کنید.</value>
   </data>
+  <data name="dialog_changePassword_success" xml:space="preserve">
+    <value>رمز عبور شما تغییر کرد.</value>
+  </data>
+  <data name="dialog_changePassword_currentRequired" xml:space="preserve">
+    <value>رمز عبور فعلی را وارد کنید.</value>
+  </data>
+  <data name="dialog_changePassword_newPasswordsDiffer" xml:space="preserve">
+    <value>رمز عبور جدید با تکرار آن یکسان نیست.</value>
+  </data>
 </root>

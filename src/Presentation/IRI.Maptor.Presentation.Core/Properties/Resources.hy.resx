@@ -2950,4 +2950,13 @@
   <data name="legend_drawings_empty" xml:space="preserve">
     <value>Գծագրեր դեռ չկան։ Ավելացնելու համար օգտագործեք գծագրման գործիքները։</value>
   </data>
+  <data name="dialog_changePassword_success" xml:space="preserve">
+    <value>Ձեր գաղտնաբառը փոխվել է։</value>
+  </data>
+  <data name="dialog_changePassword_currentRequired" xml:space="preserve">
+    <value>Մուտքագրեք ձեր ընթացիկ գաղտնաբառը։</value>
+  </data>
+  <data name="dialog_changePassword_newPasswordsDiffer" xml:space="preserve">
+    <value>Նոր գաղտնաբառը և դրա հաստատումը չեն համընկնում։</value>
+  </data>
 </root>

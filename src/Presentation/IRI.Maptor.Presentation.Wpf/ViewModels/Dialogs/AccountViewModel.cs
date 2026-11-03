@@ -6,7 +6,9 @@ using IRI.Maptor.Core.Spatial.Services.Google;
 using IRI.Maptor.Core.Security.Services.Google;
 using IRI.Maptor.Core.Common.Contracts.Google;
 using IRI.Maptor.Presentation.Core;
+using IRI.Maptor.Presentation.Core.Localization;
 using IRI.Maptor.Presentation.Core.Models.Security;
+using IRI.Maptor.Presentation.Core.Properties;
 
 namespace IRI.Maptor.Presentation.Wpf.ViewModels.Dialogs;
 
@@ -584,16 +586,23 @@ public class AccountViewModel : DialogViewModelBase
         {
             if (_showChangePasswordDialogCommand == null)
             {
+                // The dialog performs the change and shows any failure itself; the old password is
+                // verified by the server as part of the change (no second sign-in, which would open
+                // a new server session and count a mistyped password as a failed login).
                 _showChangePasswordDialogCommand = new RelayCommand(async param =>
                 {
-                    var viewModel = await DialogService?.ShowChangePasswordDialog(param, ihp =>
+                    if (DialogService is null || RequestChangePassword is null)
+                        return;
+
+                    var viewModel = ChangePasswordDialogViewModel.CreateForChange(RequestChangePassword);
+
+                    var result = await DialogService.ShowChangePasswordDialog(param, viewModel);
+
+                    if (result?.IsOk == true)
                     {
-                        var parameter = new SimpleUserEmailPasswordModel(ihp.Password) { UserNameOrEmail = UserName };
-
-                        return RequestAuthenticateAsync(parameter);
-                    });
-
-                    await ChangePassword(viewModel, param);
+                        await DialogService.ShowMessageAsync(
+                            LocalizationManager.Instance[nameof(Resources.dialog_changePassword_success)], null, param);
+                    }
                 });
             }
 
@@ -631,29 +640,6 @@ public class AccountViewModel : DialogViewModelBase
     //    }
     //}
 
-
-    #region Private Methods
-    private async Task ChangePassword(ChangePasswordDialogViewModel viewModel, object ownerWindow)
-    {
-        if (viewModel == null)
-        {
-            return;
-        }
-
-        try
-        {
-            if (RequestChangePassword != null)
-                await RequestChangePassword.Invoke(viewModel.Model);
-
-            await DialogService?.ShowMessageAsync("رمز عبور با موفقیت تغییر یافت", "پیغام", ownerWindow, null);
-        }
-        catch (Exception ex)
-        {
-            await DialogService?.ShowMessageAsync(ex.Message, "خطا", ownerWindow, null);
-        }
-    }
-
-    #endregion
 
 
     #region Commands (Go To Mode)

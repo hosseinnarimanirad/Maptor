@@ -2950,4 +2950,13 @@
   <data name="legend_drawings_empty" xml:space="preserve">
     <value>Рисунков пока нет. Добавьте рисунок с помощью инструментов рисования.</value>
   </data>
+  <data name="dialog_changePassword_success" xml:space="preserve">
+    <value>Ваш пароль изменён.</value>
+  </data>
+  <data name="dialog_changePassword_currentRequired" xml:space="preserve">
+    <value>Введите текущий пароль.</value>
+  </data>
+  <data name="dialog_changePassword_newPasswordsDiffer" xml:space="preserve">
+    <value>Новый пароль и его подтверждение не совпадают.</value>
+  </data>
 </root>

@@ -2950,4 +2950,13 @@
   <data name="legend_drawings_empty" xml:space="preserve">
     <value>尚无绘图。请使用绘图工具添加。</value>
   </data>
+  <data name="dialog_changePassword_success" xml:space="preserve">
+    <value>您的密码已更改。</value>
+  </data>
+  <data name="dialog_changePassword_currentRequired" xml:space="preserve">
+    <value>请输入当前密码。</value>
+  </data>
+  <data name="dialog_changePassword_newPasswordsDiffer" xml:space="preserve">
+    <value>新密码与确认密码不一致。</value>
+  </data>
 </root>

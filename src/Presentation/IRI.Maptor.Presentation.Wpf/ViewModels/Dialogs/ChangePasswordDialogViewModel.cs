@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using IRI.Maptor.Presentation.Core;
+using IRI.Maptor.Presentation.Core.Localization;
 using IRI.Maptor.Presentation.Core.Models.Security;
+using IRI.Maptor.Presentation.Core.Properties;
 
 namespace IRI.Maptor.Presentation.Wpf.ViewModels.Dialogs;
 
@@ -88,6 +90,54 @@ public class ChangePasswordDialogViewModel : Notifier
         return result;
     }
 
+    /// <summary>
+    /// A dialog that performs the change itself: it checks the input locally, calls
+    /// <paramref name="requestChangePassword"/> and closes only when that succeeds. A failure (the
+    /// callback throws) is shown inside the dialog, which stays open. The old password is verified by
+    /// the server as part of the change, never by signing in again: a second sign-in would open a new
+    /// server session (ending the current one) and count a mistyped password as a failed login.
+    /// </summary>
+    public static ChangePasswordDialogViewModel CreateForChange(Func<IChangePassword, Task> requestChangePassword)
+    {
+        return new ChangePasswordDialogViewModel
+        {
+            IsAsync = true,
+            RequestChangePasswordAsync = requestChangePassword ?? throw new ArgumentNullException(nameof(requestChangePassword))
+        };
+    }
+
+    /// <summary>Set by <see cref="CreateForChange"/>; throws with a user-facing message on failure.</summary>
+    public Func<IChangePassword, Task>? RequestChangePasswordAsync { get; private set; }
+
+
+    private bool _isBusy;
+
+    public bool IsBusy
+    {
+        get { return _isBusy; }
+        private set
+        {
+            _isBusy = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    private string? _errorMessage;
+
+    public string? ErrorMessage
+    {
+        get { return _errorMessage; }
+        private set
+        {
+            _errorMessage = value;
+            RaisePropertyChanged();
+            RaisePropertyChanged(nameof(HasErrorMessage));
+        }
+    }
+
+    public bool HasErrorMessage => !string.IsNullOrWhiteSpace(ErrorMessage);
+
 
     //private string _oldPassword;
 
@@ -144,6 +194,13 @@ public class ChangePasswordDialogViewModel : Notifier
                         return;
                     }
 
+                    if (RequestChangePasswordAsync != null)
+                    {
+                        await SubmitChangeAsync(model);
+
+                        return;
+                    }
+
                     //this.OldPassword = SecureStringHelper.GetString(model.Password);
 
                     if (model.IsNewPasswordValid() && await TryAuthenticate(model))
@@ -168,6 +225,51 @@ public class ChangePasswordDialogViewModel : Notifier
             }
 
             return _changePasswordCommand;
+        }
+    }
+
+    private async Task SubmitChangeAsync(IChangePassword model)
+    {
+        if (IsBusy)
+            return;
+
+        ErrorMessage = null;
+
+        if (model.Password == null || model.Password.Length == 0)
+        {
+            ErrorMessage = LocalizationManager.Instance[nameof(Resources.dialog_changePassword_currentRequired)];
+            return;
+        }
+
+        if (model.NewPassword == null || model.NewPassword.Length == 0)
+        {
+            ErrorMessage = LocalizationManager.Instance[nameof(Resources.dialog_changePassword_enterPassword)];
+            return;
+        }
+
+        if (!model.IsNewPasswordValid())
+        {
+            ErrorMessage = LocalizationManager.Instance[nameof(Resources.dialog_changePassword_newPasswordsDiffer)];
+            return;
+        }
+
+        try
+        {
+            IsBusy = true;
+
+            await RequestChangePasswordAsync!(model);
+
+            IsOk = true;
+
+            RequestClose?.Invoke();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 
@@ -196,12 +298,13 @@ public class ChangePasswordDialogViewModel : Notifier
         {
             if (_cancelCommand == null)
             {
+                // Not while a change is in flight: closing then would hide whether it succeeded.
                 _cancelCommand = new RelayCommand(param =>
                 {
                     IsOk = false;
 
                     RequestClose?.Invoke();
-                });
+                }, _ => !IsBusy);
             }
 
             return _cancelCommand;

@@ -2950,4 +2950,13 @@
   <data name="legend_drawings_empty" xml:space="preserve">
     <value>Aucun dessin pour l'instant. Utilisez les outils de dessin pour en ajouter un.</value>
   </data>
+  <data name="dialog_changePassword_success" xml:space="preserve">
+    <value>Votre mot de passe a été modifié.</value>
+  </data>
+  <data name="dialog_changePassword_currentRequired" xml:space="preserve">
+    <value>Saisissez votre mot de passe actuel.</value>
+  </data>
+  <data name="dialog_changePassword_newPasswordsDiffer" xml:space="preserve">
+    <value>Le nouveau mot de passe et sa confirmation ne correspondent pas.</value>
+  </data>
 </root>

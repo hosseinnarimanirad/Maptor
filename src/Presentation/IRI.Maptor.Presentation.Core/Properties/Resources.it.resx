@@ -2950,4 +2950,13 @@
   <data name="legend_drawings_empty" xml:space="preserve">
     <value>Ancora nessun disegno. Usa gli strumenti di disegno per aggiungerne uno.</value>
   </data>
+  <data name="dialog_changePassword_success" xml:space="preserve">
+    <value>La password è stata modificata.</value>
+  </data>
+  <data name="dialog_changePassword_currentRequired" xml:space="preserve">
+    <value>Inserisci la password attuale.</value>
+  </data>
+  <data name="dialog_changePassword_newPasswordsDiffer" xml:space="preserve">
+    <value>La nuova password e la conferma non corrispondono.</value>
+  </data>
 </root>
