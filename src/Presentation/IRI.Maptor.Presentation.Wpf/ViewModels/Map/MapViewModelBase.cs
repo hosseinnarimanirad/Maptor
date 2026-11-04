@@ -4044,7 +4044,7 @@ public abstract class MapViewModelBase : ViewModelBase
     /// Puts previous/next extent on the left and right buttons of a right-click menu, following the same
     /// rule as the other previous/next buttons: previous sits on the reading-start side and points to it
     /// (left in LTR, right in RTL). The menu lies on the map canvas, which is always LeftToRight, so the
-    /// left slot always shows a left chevron and the right slot a right one; only their meaning swaps.
+    /// left slot always shows a left arrow and the right slot a right one; only their meaning swaps.
     /// Call it once while building the menu, and call <see cref="UpdateExtentHistoryMapOptions"/> from the
     /// menu's <see cref="MapOptionsViewModel.PrepareAction"/> so a language switch shows on the next open.
     /// </summary>
@@ -4067,8 +4067,8 @@ public abstract class MapViewModelBase : ViewModelBase
         var previous = localization["cmd_general_previousExtent"];
         var next = localization["cmd_general_nextExtent"];
 
-        options.LeftSymbol = MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.ChevronLeft);
-        options.RightSymbol = MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.ChevronRight);
+        options.LeftSymbol = MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.ArrowLeftBold);
+        options.RightSymbol = MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.ArrowRightBold);
 
         options.LeftToolTip = localization.IsRightToLeft ? next : previous;
         options.RightToolTip = localization.IsRightToLeft ? previous : next;

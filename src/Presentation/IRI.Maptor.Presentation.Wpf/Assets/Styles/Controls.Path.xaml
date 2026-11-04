@@ -145,6 +145,30 @@
         </Style.Triggers>
     </Style>
 
+    <!--Bold-arrow variant of ChevronPrevious.Plain/ChevronNext.Plain, for the previous/next map
+        extent buttons. Same rule and same LeftToRight FlowDirection.-->
+    <Style x:Key="IRI.Maptor.Styles.PackIconMaterial.ArrowPrevious.Plain" TargetType="iconPacks:PackIconMaterial">
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+        <Setter Property="Kind" Value="ArrowLeftBold"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Source={x:Static localization:LocalizationManager.Instance}, Path=CurrentFlowDirection}"
+                         Value="RightToLeft">
+                <Setter Property="Kind" Value="ArrowRightBold"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.PackIconMaterial.ArrowNext.Plain" TargetType="iconPacks:PackIconMaterial">
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+        <Setter Property="Kind" Value="ArrowRightBold"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Source={x:Static localization:LocalizationManager.Instance}, Path=CurrentFlowDirection}"
+                         Value="RightToLeft">
+                <Setter Property="Kind" Value="ArrowLeftBold"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
     <!--PackIcon inside a light circle button-->
     <Style x:Key="IRI.Maptor.Styles.PackIconPhosphorIcons.CircleLightButtonContent"
            TargetType="iconPacks:PackIconPhosphorIcons">

@@ -66,10 +66,10 @@
                             <iconPacks:PackIconMaterial Kind="MagnifyMinus" />
                         </Button>
                         <Button Command="{Binding Map.PreviousExtentCommand}" ToolTip="{Binding [cmd_general_previousExtent], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" Padding="6" Margin="0,0,4,4">
-                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronPrevious.Plain}"/>
+                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ArrowPrevious.Plain}"/>
                         </Button>
                         <Button Command="{Binding Map.NextExtentCommand}" ToolTip="{Binding [cmd_general_nextExtent], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" Padding="6" Margin="0,0,4,4">
-                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronNext.Plain}"/>
+                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ArrowNext.Plain}"/>
                         </Button>
                     </WrapPanel>
 
