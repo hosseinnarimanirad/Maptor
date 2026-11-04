@@ -2163,18 +2163,6 @@ public abstract class MapViewModelBase : ViewModelBase
         // selection in the tree ↔ highlight overlay (flashes a handful of points, draws everything else)
         viewModel.RequestHighlightAsync = ShowHighlightedFeatures;
 
-        viewModel.RequestFlash = features =>
-        {
-            var points = features.Where(f => f.GeometryType == GeometryType.Point)
-                                 .Select(f => f.TheGeometry.AsPoint())
-                                 .ToList();
-
-            if (points.Count > 0 && points.Count == features.Count)
-                FlashPoints(points);
-            else
-                _ = ShowHighlightedFeatures(features, null);
-        };
-
         viewModel.RequestZoomTo = features =>
         {
             if (features.Count == 0)

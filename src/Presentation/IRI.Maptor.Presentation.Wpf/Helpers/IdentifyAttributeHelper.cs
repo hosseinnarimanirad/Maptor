@@ -31,7 +31,7 @@ public static class IdentifyAttributeHelper
 
     /// <summary>
     /// Title fallback chain: <see cref="Feature{T}.Label"/> → first non-empty string attribute
-    /// (schema order first, then any extra attribute) → <c>#Id</c>.
+    /// that <see cref="BuildRows"/> would show (schema order; any attribute when there is no schema) → <c>#Id</c>.
     /// </summary>
     public static string ResolveTitle(Feature<Point> feature, IReadOnlyList<Field>? fields)
     {
@@ -45,6 +45,8 @@ public static class IdentifyAttributeHelper
 
         if (attributes is not null && attributes.Count > 0)
         {
+            var hasSchema = HasSchema(fields);
+
             foreach (var key in OrderedKeys(attributes, fields))
             {
                 if (attributes[key] is not string text || string.IsNullOrWhiteSpace(text))
@@ -52,8 +54,8 @@ public static class IdentifyAttributeHelper
 
                 var field = FindField(fields, key);
 
-                // an attribute outside the schema has no visibility rule, so it is allowed
-                if (field is null || FeatureTableHelper.IsDisplayableField(field))
+                // same rule as BuildRows: with a schema only its displayable fields, otherwise anything
+                if (field is null ? !hasSchema : FeatureTableHelper.IsDisplayableField(field))
                     return text.Trim();
             }
         }
@@ -62,9 +64,11 @@ public static class IdentifyAttributeHelper
     }
 
     /// <summary>
-    /// Rows in schema order; fields hidden by <see cref="FeatureTableHelper.IsDisplayableField"/>
-    /// are dropped, and attributes the feature carries but the schema does not know are appended
-    /// at the end so nothing is silently lost.
+    /// With a schema: its displayable fields (<see cref="FeatureTableHelper.IsDisplayableField"/>)
+    /// in schema order, and nothing else, which is the attribute table's rule. Attributes outside the
+    /// schema are not shown: <see cref="Field.GetFields{T}"/> leaves <c>[Field(CanRead = false)]</c>
+    /// properties (RowVersion, CreatedById, ...) out of the schema entirely, so they would otherwise
+    /// come back here. Without a schema every attribute is listed.
     /// </summary>
     public static IReadOnlyList<IdentifyAttributeRow> BuildRows(Feature<Point> feature, IReadOnlyList<Field>? fields)
     {
@@ -72,35 +76,27 @@ public static class IdentifyAttributeHelper
 
         var attributes = feature?.Attributes ?? new Dictionary<string, object>();
 
-        var consumed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-        if (fields is not null)
+        if (HasSchema(fields))
         {
-            foreach (var field in fields)
+            foreach (var field in fields!)
             {
-                if (field is null || string.IsNullOrWhiteSpace(field.Name))
-                    continue;
-
-                // a hidden schema field must not resurface as a "schemaless" extra below
-                consumed.Add(field.Name);
-
                 if (!FeatureTableHelper.IsDisplayableField(field))
                     continue;
 
                 rows.Add(CreateRow(field.Name, field, TryGetValue(attributes, field.Name)));
             }
+
+            return rows;
         }
 
         foreach (var pair in attributes)
-        {
-            if (consumed.Contains(pair.Key))
-                continue;
-
             rows.Add(CreateRow(pair.Key, null, pair.Value));
-        }
 
         return rows;
     }
+
+    private static bool HasSchema(IReadOnlyList<Field>? fields) =>
+        fields is not null && fields.Any(f => !string.IsNullOrWhiteSpace(f?.Name));
 
     public static string FormatValue(object? value, Field? field)
     {

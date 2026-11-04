@@ -23,7 +23,7 @@ namespace IRI.Maptor.Presentation.Wpf.ViewModels.Identify;
 /// the master side, the selected node's attributes on the detail side.
 /// One instance lives as long as the (modeless) results window; every new identify click
 /// calls <see cref="Update"/> on it, so the window refreshes in place instead of stacking.
-/// Map coupling (highlight / flash / zoom) goes through the <c>Request*</c> delegates, wired
+/// Map coupling (highlight / zoom) goes through the <c>Request*</c> delegates, wired
 /// by the host exactly like <c>FeatureChangesViewModel</c>.
 /// </summary>
 public class IdentifyResultsViewModel : Notifier
@@ -40,8 +40,6 @@ public class IdentifyResultsViewModel : Notifier
     {
         ZoomToCommand = new RelayCommand(_ => ZoomToSelection(), _ => SelectedNode is not null);
 
-        FlashCommand = new RelayCommand(_ => FlashSelection(), _ => SelectedNode is not null);
-
         CopyAttributesCommand = new RelayCommand(_ => CopySelectedAttributes(), _ => SelectedFeature is not null);
 
         ClearFilterCommand = new RelayCommand(_ => FilterText = string.Empty, _ => !string.IsNullOrEmpty(FilterText));
@@ -56,9 +54,6 @@ public class IdentifyResultsViewModel : Notifier
 
     /// <summary>Draw the highlight overlay for the given features; second argument is the layer's stroke thickness.</summary>
     public Func<IReadOnlyList<Feature<Point>>, double?, Task>? RequestHighlightAsync { get; set; }
-
-    /// <summary>Draw attention to the given features (flash animation).</summary>
-    public Action<IReadOnlyList<Feature<Point>>>? RequestFlash { get; set; }
 
     /// <summary>Remove the highlight overlay.</summary>
     public Action? RequestClearHighlight { get; set; }
@@ -326,8 +321,6 @@ public class IdentifyResultsViewModel : Notifier
 
     public ICommand ZoomToCommand { get; }
 
-    public ICommand FlashCommand { get; }
-
     public ICommand CopyAttributesCommand { get; }
 
     public ICommand ClearFilterCommand { get; }
@@ -338,14 +331,6 @@ public class IdentifyResultsViewModel : Notifier
 
         if (features.Count > 0)
             RequestZoomTo?.Invoke(features);
-    }
-
-    private void FlashSelection()
-    {
-        var features = GetSelectedFeatures();
-
-        if (features.Count > 0)
-            RequestFlash?.Invoke(features);
     }
 
     private void CopySelectedAttributes()

@@ -101,11 +101,26 @@
                            VerticalAlignment="Center"/>
             </DataTemplate>
 
+            <!--attribute grid: tighter than the shared list grid (rows 30 → 24, cell padding 8,5 → 6,2)
+                so more attributes fit without scrolling-->
+            <Style x:Key="compactRow" TargetType="DataGridRow" BasedOn="{StaticResource IRI.Maptor.Styles.DataGrid.Row}">
+                <Setter Property="MinHeight" Value="24"/>
+            </Style>
+
+            <Style x:Key="compactCell" TargetType="DataGridCell" BasedOn="{StaticResource IRI.Maptor.Styles.DataGrid.Cell}">
+                <Setter Property="Padding" Value="6,2"/>
+            </Style>
+
+            <Style x:Key="compactColumnHeader" TargetType="DataGridColumnHeader" BasedOn="{StaticResource IRI.Maptor.Styles.DataGrid.ColumnHeader}">
+                <Setter Property="Padding" Value="6,4"/>
+                <Setter Property="MinHeight" Value="26"/>
+            </Style>
+
             <!--value cell: numbers right-aligned, nulls muted, per-field text direction-->
             <Style x:Key="valueCellText" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}">
                 <Setter Property="TextWrapping" Value="Wrap"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="Margin" Value="4,2"/>
+                <Setter Property="Margin" Value="0"/>
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding IsNumeric}" Value="True">
                         <Setter Property="TextAlignment" Value="Right"/>
@@ -129,16 +144,8 @@
             <Style x:Key="nameCellText" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}">
                 <Setter Property="FontWeight" Value="SemiBold"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="Margin" Value="4,2"/>
+                <Setter Property="Margin" Value="0"/>
                 <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-                <Style.Triggers>
-                    <!--an attribute the layer schema does not declare: shown, but visibly secondary-->
-                    <DataTrigger Binding="{Binding IsInSchema}" Value="False">
-                        <Setter Property="FontWeight" Value="Normal"/>
-                        <Setter Property="FontStyle" Value="Italic"/>
-                        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray3}"/>
-                    </DataTrigger>
-                </Style.Triggers>
             </Style>
 
             <Style x:Key="toolbarIcon" TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
@@ -151,28 +158,41 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!--header: summary + clicked location (the empty state below speaks for itself)-->
+        <!--header, one line: summary, then the clicked location (the empty state below speaks for itself)-->
         <Grid Grid.Row="0" Margin="0,0,0,8"
               Visibility="{Binding HasResults, Converter={StaticResource boolToVisibilityConverter}}">
-            <StackPanel VerticalAlignment="Center">
-                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardTitle}"
-                           Text="{Binding SummaryText}"
-                           TextTrimming="CharacterEllipsis"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-                <StackPanel Orientation="Horizontal"
-                            Visibility="{Binding HasResults, Converter={StaticResource boolToVisibilityConverter}}">
-                    <iconPacks:PackIconMaterial Kind="MapMarkerOutline"
-                                                Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.Indicator}"
-                                                Margin="0,0,4,0"/>
-                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}"
-                               Text="{Binding [identify_location], Source={StaticResource Localization}, StringFormat='{}{0}:'}"
-                               Margin="0,0,4,0"/>
-                    <!--coordinates are always Latin digits, so they keep LTR inside an RTL window-->
-                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}"
-                               Text="{Binding LocationText}"
-                               FlowDirection="LeftToRight"/>
-                </StackPanel>
-            </StackPanel>
+            <TextBlock Grid.Column="0"
+                       Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardTitle}"
+                       Text="{Binding SummaryText}"
+                       VerticalAlignment="Center"
+                       Margin="0,0,16,0"/>
+
+            <iconPacks:PackIconMaterial Grid.Column="1"
+                                        Kind="MapMarkerOutline"
+                                        Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.Indicator}"
+                                        VerticalAlignment="Center"
+                                        Margin="0,0,4,0"/>
+            <TextBlock Grid.Column="2"
+                       Style="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}"
+                       Text="{Binding [identify_location], Source={StaticResource Localization}, StringFormat='{}{0}:'}"
+                       VerticalAlignment="Center"
+                       Margin="0,0,4,0"/>
+            <!--coordinates are always Latin digits, so they keep LTR inside an RTL window-->
+            <TextBlock Grid.Column="3"
+                       Style="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}"
+                       Text="{Binding LocationText}"
+                       ToolTip="{Binding LocationText}"
+                       TextTrimming="CharacterEllipsis"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Left"
+                       FlowDirection="LeftToRight"/>
         </Grid>
 
         <!--no results at all-->
@@ -249,12 +269,6 @@
                                         <iconPacks:PackIconMaterial Kind="MagnifyExpand" Style="{StaticResource toolbarIcon}"/>
                                     </Button>
                                     <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
-                                            Command="{Binding FlashCommand}"
-                                            ToolTip="{Binding [identify_flash], Source={StaticResource Localization}}"
-                                            AutomationProperties.Name="{Binding [identify_flash], Source={StaticResource Localization}}">
-                                        <iconPacks:PackIconMaterial Kind="Flash" Style="{StaticResource toolbarIcon}"/>
-                                    </Button>
-                                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                                             Command="{Binding CopyAttributesCommand}"
                                             ToolTip="{Binding [identify_copyAttributes], Source={StaticResource Localization}}"
                                             AutomationProperties.Name="{Binding [identify_copyAttributes], Source={StaticResource Localization}}">
@@ -277,6 +291,9 @@
 
                         <DataGrid Grid.Row="1"
                                   Style="{StaticResource IRI.Maptor.Styles.DataGrid.ReadOnly}"
+                                  RowStyle="{StaticResource compactRow}"
+                                  CellStyle="{StaticResource compactCell}"
+                                  ColumnHeaderStyle="{StaticResource compactColumnHeader}"
                                   ItemsSource="{Binding SelectedAttributes}"
                                   SelectionMode="Single"
                                   CanUserSortColumns="False"
@@ -310,12 +327,6 @@
                                             ToolTip="{Binding [identify_zoomTo], Source={StaticResource Localization}}"
                                             AutomationProperties.Name="{Binding [identify_zoomTo], Source={StaticResource Localization}}">
                                         <iconPacks:PackIconMaterial Kind="MagnifyExpand" Style="{StaticResource toolbarIcon}"/>
-                                    </Button>
-                                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
-                                            Command="{Binding FlashCommand}"
-                                            ToolTip="{Binding [identify_flash], Source={StaticResource Localization}}"
-                                            AutomationProperties.Name="{Binding [identify_flash], Source={StaticResource Localization}}">
-                                        <iconPacks:PackIconMaterial Kind="Flash" Style="{StaticResource toolbarIcon}"/>
                                     </Button>
                                 </StackPanel>
 
