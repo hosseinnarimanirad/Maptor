@@ -20,7 +20,9 @@ public class FieldAttribute : Attribute
 
 	public string? DisplayFormat { get; set; }
 
-	public FieldTextDirection TextDirection { get; set; } = FieldTextDirection.Auto;
+    public bool IsDisplayField { get; set; }
+
+    public FieldTextDirection TextDirection { get; set; } = FieldTextDirection.Auto;
 
 	//public FieldAttribute(string alias)
 	//{

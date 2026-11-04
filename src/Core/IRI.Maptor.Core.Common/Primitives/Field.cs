@@ -50,6 +50,8 @@ public class Field
 
     public string? DisplayFormat { get; set; }
 
+    public bool IsDisplayField { get; set; }
+
     public FieldTextDirection TextDirection { get; set; } = FieldTextDirection.Auto;
 
     /// <summary>
@@ -153,10 +155,12 @@ public class Field
                 CanWrite = fieldAttribute?.CanWrite ?? true,
                 Domain = domain,
                 DisplayFormat = fieldAttribute?.DisplayFormat,
+                IsDisplayField = fieldAttribute?.IsDisplayField ?? false,
                 TextDirection = fieldAttribute?.TextDirection ?? FieldTextDirection.Auto,
                 Precision = GetDefaultPrecision(underlyingType),
                 Scale = GetDefaultScale(underlyingType),
-                DateTimePrecision = GetDefaultDateTimePrecision(underlyingType)
+                DateTimePrecision = GetDefaultDateTimePrecision(underlyingType),
+                
             });
         }
 

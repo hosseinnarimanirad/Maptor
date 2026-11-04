@@ -43,6 +43,22 @@ public static class IdentifyAttributeHelper
 
         var attributes = feature.Attributes;
 
+        string? displayField = fields?.FirstOrDefault(f => f.IsDisplayField)?.Name ?? null;
+
+        if (!string.IsNullOrWhiteSpace(displayField))
+        {
+            object? displayValue = null;
+
+            attributes.TryGetValue(displayField, out displayValue);
+
+            string? displayText = displayValue?.ToString();
+
+            if (!string.IsNullOrWhiteSpace(displayText))
+            {
+                return displayText;
+            }
+        }
+
         if (attributes is not null && attributes.Count > 0)
         {
             var hasSchema = HasSchema(fields);
