@@ -4040,6 +4040,50 @@ public abstract class MapViewModelBase : ViewModelBase
 
     }
 
+    /// <summary>
+    /// Puts previous/next extent on the left and right buttons of a right-click menu, following the same
+    /// rule as the other previous/next buttons: previous sits on the reading-start side and points to it
+    /// (left in LTR, right in RTL). The menu lies on the map canvas, which is always LeftToRight, so the
+    /// left slot always shows a left chevron and the right slot a right one; only their meaning swaps.
+    /// Call it once while building the menu, and call <see cref="UpdateExtentHistoryMapOptions"/> from the
+    /// menu's <see cref="MapOptionsViewModel.PrepareAction"/> so a language switch shows on the next open.
+    /// </summary>
+    protected void SetExtentHistoryMapOptions(MapOptionsViewModel options)
+    {
+        // the menu's commands keep the predicates they were created with: read the direction at click time
+        options.CanExecuteLeftCommandAction = _ => LocalizationManager.Instance.IsRightToLeft ? NextExtentEnabled : PreviousExtentEnabled;
+        options.CanExecuteRightCommandAction = _ => LocalizationManager.Instance.IsRightToLeft ? PreviousExtentEnabled : NextExtentEnabled;
+
+        options.LeftCommandAction = _ => GoToExtentFromMapOptions(previous: !LocalizationManager.Instance.IsRightToLeft);
+        options.RightCommandAction = _ => GoToExtentFromMapOptions(previous: LocalizationManager.Instance.IsRightToLeft);
+
+        UpdateExtentHistoryMapOptions(options);
+    }
+
+    /// <summary>Refreshes the symbols and tooltips set by <see cref="SetExtentHistoryMapOptions"/> for the current language.</summary>
+    protected void UpdateExtentHistoryMapOptions(MapOptionsViewModel options)
+    {
+        var localization = LocalizationManager.Instance;
+        var previous = localization["cmd_general_previousExtent"];
+        var next = localization["cmd_general_nextExtent"];
+
+        options.LeftSymbol = MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.ChevronLeft);
+        options.RightSymbol = MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.ChevronRight);
+
+        options.LeftToolTip = localization.IsRightToLeft ? next : previous;
+        options.RightToolTip = localization.IsRightToLeft ? previous : next;
+    }
+
+    private void GoToExtentFromMapOptions(bool previous)
+    {
+        if (previous)
+            GoToPreviousExtent();
+        else
+            GoToNextExtent();
+
+        RemoveMapOptions();
+    }
+
     #endregion
 
 
