@@ -97,6 +97,34 @@ public class IdentifyLayerNode : Notifier, IIdentifyNode
 
     public GeometryType GeometryType { get; }
 
+    /// <summary>
+    /// The shape of the layer's symbol in the TOC (drawn by <c>ILayerToLegendConverter</c>): the
+    /// layer's own <c>SpatialModelMode</c>, or, when the layer does not say, the
+    /// geometry type of its hits.
+    /// </summary>
+    public SpatialModelMode SymbolMode
+    {
+        get
+        {
+            if (Layer is not null && Layer.SpatialModelMode != SpatialModelMode.None)
+                return Layer.SpatialModelMode;
+
+            return GeometryType switch
+            {
+                GeometryType.Point or GeometryType.MultiPoint => SpatialModelMode.Point,
+                GeometryType.LineString or GeometryType.MultiLineString => SpatialModelMode.Polyline,
+                GeometryType.Polygon or GeometryType.MultiPolygon => SpatialModelMode.Polygon,
+                _ => SpatialModelMode.None
+            };
+        }
+    }
+
+    /// <summary>The layer's symbology, whose stroke and fill colour the symbol as in the TOC; null for the drawings group.</summary>
+    public VisualParameters? Symbology => Layer?.DefaultSymbology;
+
+    /// <summary>True when <see cref="Symbology"/> has a stroke to draw the symbol with; otherwise the view uses the accent colour.</summary>
+    public bool HasSymbology => Symbology?.Stroke is not null;
+
     public IReadOnlyList<Field>? Fields { get; }
 
     /// <summary>Every hit, regardless of the filter.</summary>

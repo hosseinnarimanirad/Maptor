@@ -28,21 +28,47 @@
 
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
 
-            <!--tree rows-->
-            <!--layer row icon: the geometry type; a pencil in a muted colour for the drawings group-->
-            <Style x:Key="layerRowIcon" TargetType="iconPacks:PackIconMaterial">
-                <Setter Property="Kind" Value="{Binding GeometryType, Converter={StaticResource geometryTypeToMaterialIconConverter}}"/>
-                <Setter Property="Width" Value="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"/>
-                <Setter Property="Height" Value="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"/>
-                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsDrawingGroup}" Value="True">
-                        <Setter Property="Kind" Value="Draw"/>
-                        <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Muted}"/>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
+            <!--layer symbol (DataContext: IdentifyLayerNode): the same shape and colours as the layer's
+                row in the TOC (MapLegendItemView's symbology preview): no fill for lines, a thin stroke
+                for points; the accent colour when the layer has no symbology. The drawings group,
+                which stands for no single layer, keeps a muted pencil.-->
+            <DataTemplate x:Key="layerSymbol">
+                <Grid Width="16" Height="16" VerticalAlignment="Center">
+                    <Viewbox FlowDirection="LeftToRight"
+                             Visibility="{Binding IsDrawingGroup, Converter={StaticResource boolToInverseVisibilityConverter}}">
+                        <Path Margin="1" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"
+                              Data="{Binding SymbolMode, Converter={StaticResource iLayerToLegendConverter}, TargetNullValue={x:Static Geometry.Empty}}">
+                            <Path.Style>
+                                <Style TargetType="Path">
+                                    <Setter Property="Stroke" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                                    <Setter Property="Fill" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
+                                    <Setter Property="StrokeThickness" Value="3"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HasSymbology}" Value="True">
+                                            <Setter Property="Stroke" Value="{Binding Symbology.Stroke}"/>
+                                            <Setter Property="Fill" Value="{Binding Symbology.Fill}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding SymbolMode}" Value="Polyline">
+                                            <Setter Property="Fill" Value="Transparent"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding SymbolMode}" Value="Point">
+                                            <Setter Property="StrokeThickness" Value="1"/>
+                                            <Setter Property="Margin" Value="1.5"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Path.Style>
+                        </Path>
+                    </Viewbox>
+
+                    <iconPacks:PackIconMaterial Kind="Draw"
+                                                Width="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"
+                                                Height="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"
+                                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                Foreground="{DynamicResource IRI.Maptor.Brushes.Muted}"
+                                                Visibility="{Binding IsDrawingGroup, Converter={StaticResource boolToVisibilityConverter}}"/>
+                </Grid>
+            </DataTemplate>
 
             <!--tree rows-->
             <HierarchicalDataTemplate DataType="{x:Type identify:IdentifyLayerNode}" ItemsSource="{Binding VisibleFeatures}">
@@ -68,7 +94,8 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <iconPacks:PackIconMaterial Grid.Column="0" Style="{StaticResource layerRowIcon}" Margin="0,0,6,0"/>
+                        <ContentControl Grid.Column="0" Content="{Binding}" ContentTemplate="{StaticResource layerSymbol}"
+                                        Focusable="False" IsTabStop="False" Margin="0,0,6,0"/>
 
                         <TextBlock Grid.Column="1"
                                    Text="{Binding LayerName}"
@@ -331,9 +358,8 @@
                                 </StackPanel>
 
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0,8,0">
-                                    <iconPacks:PackIconMaterial DataContext="{Binding SelectedLayer}"
-                                                                Style="{StaticResource layerRowIcon}"
-                                                                Margin="0,0,6,0"/>
+                                    <ContentControl Content="{Binding SelectedLayer}" ContentTemplate="{StaticResource layerSymbol}"
+                                                    Focusable="False" IsTabStop="False" VerticalAlignment="Center" Margin="0,0,6,0"/>
                                     <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardTitle}"
                                                Text="{Binding SelectedLayer.LayerName}"
                                                TextTrimming="CharacterEllipsis"
