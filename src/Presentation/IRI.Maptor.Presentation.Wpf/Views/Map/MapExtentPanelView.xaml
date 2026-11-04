@@ -58,7 +58,7 @@
             <StackPanel>
                 <Border Style="{StaticResource sectionCard}">
 
-                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" FlowDirection="LeftToRight">
+                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Button Command="{Binding Map.ZoomInAtCenterCommand}" ToolTip="{Binding [cmd_general_zoomIn], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}">
                             <iconPacks:PackIconMaterial Kind="MagnifyPlus" />
                         </Button>
@@ -66,10 +66,10 @@
                             <iconPacks:PackIconMaterial Kind="MagnifyMinus" />
                         </Button>
                         <Button Command="{Binding Map.PreviousExtentCommand}" ToolTip="{Binding [cmd_general_previousExtent], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" Padding="6" Margin="0,0,4,4">
-                            <iconPacks:PackIconMaterial Kind="ArrowLeftBold"  FlowDirection="LeftToRight"/>
+                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronPrevious.Plain}"/>
                         </Button>
                         <Button Command="{Binding Map.NextExtentCommand}" ToolTip="{Binding [cmd_general_nextExtent], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" Padding="6" Margin="0,0,4,4">
-                            <iconPacks:PackIconMaterial Kind="ArrowRightBold"/>
+                            <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronNext.Plain}"/>
                         </Button>
                     </WrapPanel>
 

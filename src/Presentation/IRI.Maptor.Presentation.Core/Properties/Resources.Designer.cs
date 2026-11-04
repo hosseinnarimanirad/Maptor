@@ -385,6 +385,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Grids.
+        /// </summary>
+        public static string cmd_general_mapGrids {
+            get {
+                return ResourceManager.GetString("cmd_general_mapGrids", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Measure area.
         /// </summary>
         public static string cmd_general_measureArea {
@@ -453,6 +462,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string cmd_general_saveProjectAs {
             get {
                 return ResourceManager.GetString("cmd_general_saveProjectAs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MGRS grid.
+        /// </summary>
+        public static string cmd_general_toggleMgrsGrid {
+            get {
+                return ResourceManager.GetString("cmd_general_toggleMgrsGrid", resourceCulture);
             }
         }
         
@@ -718,6 +736,132 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save to recent colours.
+        /// </summary>
+        public static string colorPicker_addRecent {
+            get {
+                return ResourceManager.GetString("colorPicker_addRecent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Blue.
+        /// </summary>
+        public static string colorPicker_channel_blue {
+            get {
+                return ResourceManager.GetString("colorPicker_channel_blue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Brightness.
+        /// </summary>
+        public static string colorPicker_channel_brightness {
+            get {
+                return ResourceManager.GetString("colorPicker_channel_brightness", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Green.
+        /// </summary>
+        public static string colorPicker_channel_green {
+            get {
+                return ResourceManager.GetString("colorPicker_channel_green", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hue.
+        /// </summary>
+        public static string colorPicker_channel_hue {
+            get {
+                return ResourceManager.GetString("colorPicker_channel_hue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Red.
+        /// </summary>
+        public static string colorPicker_channel_red {
+            get {
+                return ResourceManager.GetString("colorPicker_channel_red", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saturation.
+        /// </summary>
+        public static string colorPicker_channel_saturation {
+            get {
+                return ResourceManager.GetString("colorPicker_channel_saturation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pick a colour from the screen (Esc cancels).
+        /// </summary>
+        public static string colorPicker_eyedropper {
+            get {
+                return ResourceManager.GetString("colorPicker_eyedropper", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hex colour code.
+        /// </summary>
+        public static string colorPicker_hex {
+            get {
+                return ResourceManager.GetString("colorPicker_hex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opacity.
+        /// </summary>
+        public static string colorPicker_opacity {
+            get {
+                return ResourceManager.GetString("colorPicker_opacity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Brand.
+        /// </summary>
+        public static string colorPicker_tab_brand {
+            get {
+                return ResourceManager.GetString("colorPicker_tab_brand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grid.
+        /// </summary>
+        public static string colorPicker_tab_grid {
+            get {
+                return ResourceManager.GetString("colorPicker_tab_grid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sliders.
+        /// </summary>
+        public static string colorPicker_tab_sliders {
+            get {
+                return ResourceManager.GetString("colorPicker_tab_sliders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spectrum.
+        /// </summary>
+        public static string colorPicker_tab_spectrum {
+            get {
+                return ResourceManager.GetString("colorPicker_tab_spectrum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Caps Lock is on.
         /// </summary>
         public static string common_capsLockWarning {
@@ -916,6 +1060,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter your current password..
+        /// </summary>
+        public static string dialog_changePassword_currentRequired {
+            get {
+                return ResourceManager.GetString("dialog_changePassword_currentRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter your desired password..
         /// </summary>
         public static string dialog_changePassword_enterPassword {
@@ -925,14 +1078,14 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Change Password.
+        ///   Looks up a localized string similar to The new password and its confirmation do not match..
         /// </summary>
-        public static string dialog_changePassword_title {
+        public static string dialog_changePassword_newPasswordsDiffer {
             get {
-                return ResourceManager.GetString("dialog_changePassword_title", resourceCulture);
+                return ResourceManager.GetString("dialog_changePassword_newPasswordsDiffer", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Your password was changed..
         /// </summary>
@@ -941,166 +1094,13 @@ namespace IRI.Maptor.Presentation.Core.Properties {
                 return ResourceManager.GetString("dialog_changePassword_success", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Enter your current password..
-        /// </summary>
-        public static string dialog_changePassword_currentRequired {
-            get {
-                return ResourceManager.GetString("dialog_changePassword_currentRequired", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to The new password and its confirmation do not match..
-        /// </summary>
-        public static string dialog_changePassword_newPasswordsDiffer {
-            get {
-                return ResourceManager.GetString("dialog_changePassword_newPasswordsDiffer", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to The password is incorrect..
-        /// </summary>
-        public static string message_error_invalidPassword {
-            get {
-                return ResourceManager.GetString("message_error_invalidPassword", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to User not found..
-        /// </summary>
-        public static string message_error_userNotFound {
-            get {
-                return ResourceManager.GetString("message_error_userNotFound", resourceCulture);
-            }
-        }
         
         /// <summary>
-        ///   Looks up a localized string similar to Blue.
+        ///   Looks up a localized string similar to Change Password.
         /// </summary>
-        public static string colorPicker_channel_blue {
+        public static string dialog_changePassword_title {
             get {
-                return ResourceManager.GetString("colorPicker_channel_blue", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Brightness.
-        /// </summary>
-        public static string colorPicker_channel_brightness {
-            get {
-                return ResourceManager.GetString("colorPicker_channel_brightness", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Green.
-        /// </summary>
-        public static string colorPicker_channel_green {
-            get {
-                return ResourceManager.GetString("colorPicker_channel_green", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hue.
-        /// </summary>
-        public static string colorPicker_channel_hue {
-            get {
-                return ResourceManager.GetString("colorPicker_channel_hue", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Red.
-        /// </summary>
-        public static string colorPicker_channel_red {
-            get {
-                return ResourceManager.GetString("colorPicker_channel_red", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Saturation.
-        /// </summary>
-        public static string colorPicker_channel_saturation {
-            get {
-                return ResourceManager.GetString("colorPicker_channel_saturation", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hex colour code.
-        /// </summary>
-        public static string colorPicker_hex {
-            get {
-                return ResourceManager.GetString("colorPicker_hex", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Opacity.
-        /// </summary>
-        public static string colorPicker_opacity {
-            get {
-                return ResourceManager.GetString("colorPicker_opacity", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Brand.
-        /// </summary>
-        public static string colorPicker_tab_brand {
-            get {
-                return ResourceManager.GetString("colorPicker_tab_brand", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Grid.
-        /// </summary>
-        public static string colorPicker_tab_grid {
-            get {
-                return ResourceManager.GetString("colorPicker_tab_grid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sliders.
-        /// </summary>
-        public static string colorPicker_tab_sliders {
-            get {
-                return ResourceManager.GetString("colorPicker_tab_sliders", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Spectrum.
-        /// </summary>
-        public static string colorPicker_tab_spectrum {
-            get {
-                return ResourceManager.GetString("colorPicker_tab_spectrum", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Save to recent colours.
-        /// </summary>
-        public static string colorPicker_addRecent {
-            get {
-                return ResourceManager.GetString("colorPicker_addRecent", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Pick a colour from the screen (Esc cancels).
-        /// </summary>
-        public static string colorPicker_eyedropper {
-            get {
-                return ResourceManager.GetString("colorPicker_eyedropper", resourceCulture);
+                return ResourceManager.GetString("dialog_changePassword_title", resourceCulture);
             }
         }
         
@@ -1411,7 +1411,7 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Line {0}: {1} columns, but the first data line has {2}.
+        ///   Looks up a localized string similar to Line {0}: {1} columns, but the first data line has {2}..
         /// </summary>
         public static string dialog_csvTsvOpen_validationColumnCount {
             get {
@@ -1420,7 +1420,7 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Line {0}: X or Y is not a number.
+        ///   Looks up a localized string similar to Line {0}: X or Y is not a number..
         /// </summary>
         public static string dialog_csvTsvOpen_validationNotNumber {
             get {
@@ -1429,7 +1429,7 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Line {0}: fewer than 2 columns. Check the CSV / TSV choice.
+        ///   Looks up a localized string similar to Line {0}: fewer than 2 columns. Check the CSV / TSV choice..
         /// </summary>
         public static string dialog_csvTsvOpen_validationTooFewColumns {
             get {
@@ -1438,7 +1438,7 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to At least {0} points are needed for this geometry type.
+        ///   Looks up a localized string similar to At least {0} points are needed for this geometry type..
         /// </summary>
         public static string dialog_csvTsvOpen_validationTooFewPoints {
             get {
@@ -2257,6 +2257,87 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copy reference.
+        /// </summary>
+        public static string dialog_mgrs_copy {
+            get {
+                return ResourceManager.GetString("dialog_mgrs_copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy position.
+        /// </summary>
+        public static string dialog_mgrs_copyCurrentPosition {
+            get {
+                return ResourceManager.GetString("dialog_mgrs_copyCurrentPosition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Under the pointer.
+        /// </summary>
+        public static string dialog_mgrs_currentPosition {
+            get {
+                return ResourceManager.GetString("dialog_mgrs_currentPosition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not a valid MGRS reference.
+        /// </summary>
+        public static string dialog_mgrs_invalid {
+            get {
+                return ResourceManager.GetString("dialog_mgrs_invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reference.
+        /// </summary>
+        public static string dialog_mgrs_reference {
+            get {
+                return ResourceManager.GetString("dialog_mgrs_reference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to MGRS.
+        /// </summary>
+        public static string dialog_mgrs_title {
+            get {
+                return ResourceManager.GetString("dialog_mgrs_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A zone, a grid zone, a 100 km square, or a full reference. The shorter it is, the larger the region..
+        /// </summary>
+        public static string dialog_mgrs_tooltip {
+            get {
+                return ResourceManager.GetString("dialog_mgrs_tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 39 · 39S · 39S WV · 39S WV 53516 39501.
+        /// </summary>
+        public static string dialog_mgrs_watermark {
+            get {
+                return ResourceManager.GetString("dialog_mgrs_watermark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom to.
+        /// </summary>
+        public static string dialog_mgrs_zoomTo {
+            get {
+                return ResourceManager.GetString("dialog_mgrs_zoomTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Deleting Features.
         /// </summary>
         public static string dialog_msg_confirmDeleteFeatures {
@@ -2437,6 +2518,24 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The SLD editor adds rules by attribute, labels and more. Once you save there, this layer opens in the SLD editor; Restore admin style brings the quick colours back..
+        /// </summary>
+        public static string dialog_symbology_advancedHint {
+            get {
+                return ResourceManager.GetString("dialog_symbology_advancedHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit in SLD editor.
+        /// </summary>
+        public static string dialog_symbology_editInSld {
+            get {
+                return ResourceManager.GetString("dialog_symbology_editInSld", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fill.
         /// </summary>
         public static string dialog_symbology_fill {
@@ -2446,11 +2545,38 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No fill.
+        /// </summary>
+        public static string dialog_symbology_noFill {
+            get {
+                return ResourceManager.GetString("dialog_symbology_noFill", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No outline.
+        /// </summary>
+        public static string dialog_symbology_noStroke {
+            get {
+                return ResourceManager.GetString("dialog_symbology_noStroke", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reset to default.
         /// </summary>
         public static string dialog_symbology_resetToDefault {
             get {
                 return ResourceManager.GetString("dialog_symbology_resetToDefault", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restore admin style.
+        /// </summary>
+        public static string dialog_symbology_restoreAdmin {
+            get {
+                return ResourceManager.GetString("dialog_symbology_restoreAdmin", resourceCulture);
             }
         }
         
@@ -2478,6 +2604,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string dialog_symbology_title {
             get {
                 return ResourceManager.GetString("dialog_symbology_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You changed this layer&apos;s colours on this computer..
+        /// </summary>
+        public static string dialog_symbology_userChanged {
+            get {
+                return ResourceManager.GetString("dialog_symbology_userChanged", resourceCulture);
             }
         }
         
@@ -2761,6 +2896,78 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Excel export dates.
+        /// </summary>
+        public static string featureTable_exportDates {
+            get {
+                return ResourceManager.GetString("featureTable_exportDates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Calendar.
+        /// </summary>
+        public static string featureTable_exportDates_calendar {
+            get {
+                return ResourceManager.GetString("featureTable_exportDates_calendar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gregorian.
+        /// </summary>
+        public static string featureTable_exportDates_gregorian {
+            get {
+                return ResourceManager.GetString("featureTable_exportDates_gregorian", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Iran time.
+        /// </summary>
+        public static string featureTable_exportDates_iran {
+            get {
+                return ResourceManager.GetString("featureTable_exportDates_iran", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This computer&apos;s time zone.
+        /// </summary>
+        public static string featureTable_exportDates_local {
+            get {
+                return ResourceManager.GetString("featureTable_exportDates_local", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Persian (Solar Hijri).
+        /// </summary>
+        public static string featureTable_exportDates_persian {
+            get {
+                return ResourceManager.GetString("featureTable_exportDates_persian", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time zone.
+        /// </summary>
+        public static string featureTable_exportDates_timeZone {
+            get {
+                return ResourceManager.GetString("featureTable_exportDates_timeZone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UTC.
+        /// </summary>
+        public static string featureTable_exportDates_utc {
+            get {
+                return ResourceManager.GetString("featureTable_exportDates_utc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clear Filter.
         /// </summary>
         public static string featureTable_filter_clear {
@@ -2914,6 +3121,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show only the unsaved changes.
+        /// </summary>
+        public static string featureTable_showUnsavedChanges {
+            get {
+                return ResourceManager.GetString("featureTable_showUnsavedChanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sort.
         /// </summary>
         public static string featureTable_sort_toggle {
@@ -2928,6 +3144,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string featureTable_undo {
             get {
                 return ResourceManager.GetString("featureTable_undo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} unsaved changes (not included in the totals).
+        /// </summary>
+        public static string featureTable_unsavedChangesNote {
+            get {
+                return ResourceManager.GetString("featureTable_unsavedChangesNote", resourceCulture);
             }
         }
         
@@ -3319,6 +3544,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zoom to current polygon.
+        /// </summary>
+        public static string geometryDetails_polygon_zoom {
+            get {
+                return ResourceManager.GetString("geometryDetails_polygon_zoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Polygon {0} of {1}.
         /// </summary>
         public static string geometryDetails_polygons_format {
@@ -3351,15 +3585,6 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string geometryDetails_polygons_valid {
             get {
                 return ResourceManager.GetString("geometryDetails_polygons_valid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Zoom to current polygon.
-        /// </summary>
-        public static string geometryDetails_polygon_zoom {
-            get {
-                return ResourceManager.GetString("geometryDetails_polygon_zoom", resourceCulture);
             }
         }
         
@@ -3679,6 +3904,78 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lat/Long grid.
+        /// </summary>
+        public static string layer_mapGrid_geodetic {
+            get {
+                return ResourceManager.GetString("layer_mapGrid_geodetic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grid values.
+        /// </summary>
+        public static string layer_mapGrid_labels {
+            get {
+                return ResourceManager.GetString("layer_mapGrid_labels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grid lines.
+        /// </summary>
+        public static string layer_mapGrid_lines {
+            get {
+                return ResourceManager.GetString("layer_mapGrid_lines", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UTM grid.
+        /// </summary>
+        public static string layer_mapGrid_utm {
+            get {
+                return ResourceManager.GetString("layer_mapGrid_utm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Squares.
+        /// </summary>
+        public static string layer_mgrsGrid_cells {
+            get {
+                return ResourceManager.GetString("layer_mgrsGrid_cells", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grid values.
+        /// </summary>
+        public static string layer_mgrsGrid_labels {
+            get {
+                return ResourceManager.GetString("layer_mgrsGrid_labels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Square names.
+        /// </summary>
+        public static string layer_mgrsGrid_squares {
+            get {
+                return ResourceManager.GetString("layer_mgrsGrid_squares", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MGRS grid.
+        /// </summary>
+        public static string layer_mgrsGrid_title {
+            get {
+                return ResourceManager.GetString("layer_mgrsGrid_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Analysis.
         /// </summary>
         public static string layerSettings_analysis_title {
@@ -3715,11 +4012,74 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Extent (UTM {0}):.
+        /// </summary>
+        public static string layerSettings_general_extentUtm {
+            get {
+                return ResourceManager.GetString("layerSettings_general_extentUtm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extent (WGS84):.
+        /// </summary>
+        public static string layerSettings_general_extentWgs84 {
+            get {
+                return ResourceManager.GetString("layerSettings_general_extentWgs84", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Features:.
+        /// </summary>
+        public static string layerSettings_general_featureCount {
+            get {
+                return ResourceManager.GetString("layerSettings_general_featureCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not available in Live mode (only the visible area is loaded).
+        /// </summary>
+        public static string layerSettings_general_featureCountLive {
+            get {
+                return ResourceManager.GetString("layerSettings_general_featureCountLive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Counted on the server, over all the features (edits you have not saved are not included).
+        /// </summary>
+        public static string layerSettings_general_featureCountServer {
+            get {
+                return ResourceManager.GetString("layerSettings_general_featureCountServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Feature Type:.
         /// </summary>
         public static string layerSettings_general_featureType {
             get {
                 return ResourceManager.GetString("layerSettings_general_featureType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fields:.
+        /// </summary>
+        public static string layerSettings_general_fieldCount {
+            get {
+                return ResourceManager.GetString("layerSettings_general_fieldCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geometry type:.
+        /// </summary>
+        public static string layerSettings_general_geometryType {
+            get {
+                return ResourceManager.GetString("layerSettings_general_geometryType", resourceCulture);
             }
         }
         
@@ -3733,6 +4093,33 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loading mode:.
+        /// </summary>
+        public static string layerSettings_general_loadMode {
+            get {
+                return ResourceManager.GetString("layerSettings_general_loadMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Load all at once (Cache).
+        /// </summary>
+        public static string layerSettings_general_loadModeCache {
+            get {
+                return ResourceManager.GetString("layerSettings_general_loadModeCache", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Load by map view (Live).
+        /// </summary>
+        public static string layerSettings_general_loadModeLive {
+            get {
+                return ResourceManager.GetString("layerSettings_general_loadModeLive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Opacity:.
         /// </summary>
         public static string layerSettings_general_opacity {
@@ -3742,7 +4129,16 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Source Address.
+        ///   Looks up a localized string similar to Source spatial reference:.
+        /// </summary>
+        public static string layerSettings_general_originalSrs {
+            get {
+                return ResourceManager.GetString("layerSettings_general_originalSrs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Source Address:.
         /// </summary>
         public static string layerSettings_general_sourceAddress {
             get {
@@ -3760,11 +4156,38 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Spatial reference:.
+        /// </summary>
+        public static string layerSettings_general_srs {
+            get {
+                return ResourceManager.GetString("layerSettings_general_srs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Layer summary.
+        /// </summary>
+        public static string layerSettings_general_summary {
+            get {
+                return ResourceManager.GetString("layerSettings_general_summary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to General.
         /// </summary>
         public static string layerSettings_general_title {
             get {
                 return ResourceManager.GetString("layerSettings_general_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string layerSettings_general_unknown {
+            get {
+                return ResourceManager.GetString("layerSettings_general_unknown", resourceCulture);
             }
         }
         
@@ -3796,11 +4219,479 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Area per feature ({0}).
+        /// </summary>
+        public static string layerSettings_statistics_areaPerFeature {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_areaPerFeature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} bins.
+        /// </summary>
+        public static string layerSettings_statistics_binCount {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_binCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Compute.
+        /// </summary>
+        public static string layerSettings_statistics_compute {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_compute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Count.
+        /// </summary>
+        public static string layerSettings_statistics_count {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_count", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Distinct values.
+        /// </summary>
+        public static string layerSettings_statistics_distinctCount {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_distinctCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Distribution.
+        /// </summary>
+        public static string layerSettings_statistics_distribution {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_distribution", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} of {1} domain values used.
+        /// </summary>
+        public static string layerSettings_statistics_domainUsage {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_domainUsage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Empty values.
+        /// </summary>
+        public static string layerSettings_statistics_emptyCount {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_emptyCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Empty geometries.
+        /// </summary>
+        public static string layerSettings_statistics_emptyGeometryCount {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_emptyGeometryCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pick a field and press Compute.
+        /// </summary>
+        public static string layerSettings_statistics_emptyState {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_emptyState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (empty).
+        /// </summary>
+        public static string layerSettings_statistics_emptyValue {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_emptyValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Computing the statistics failed:.
+        /// </summary>
+        public static string layerSettings_statistics_failed {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Features.
+        /// </summary>
+        public static string layerSettings_statistics_featureCount {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_featureCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Field.
+        /// </summary>
+        public static string layerSettings_statistics_field {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_field", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geodesic length (line layers) or area (polygon layers) of every feature, on the WGS84 ellipsoid..
+        /// </summary>
+        public static string layerSettings_statistics_geometryHint {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_geometryHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Group by.
+        /// </summary>
+        public static string layerSettings_statistics_groupByField {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_groupByField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Groups.
+        /// </summary>
+        public static string layerSettings_statistics_groupCount {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_groupCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Groups.
+        /// </summary>
+        public static string layerSettings_statistics_groups {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_groups", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Showing the first {0} of {1} groups..
+        /// </summary>
+        public static string layerSettings_statistics_groupsTruncated {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_groupsTruncated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} values could not be read as the field&apos;s type and are left out..
+        /// </summary>
+        public static string layerSettings_statistics_invalidNote {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_invalidNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Length per feature ({0}).
+        /// </summary>
+        public static string layerSettings_statistics_lengthPerFeature {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_lengthPerFeature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This layer is in Live mode: its features stay on the server, so its statistics are not available yet. Switch the layer to Cache mode to see them..
+        /// </summary>
+        public static string layerSettings_statistics_liveNotSupported {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_liveNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This layer is in Live mode: its statistics are computed by the server over all its features. Edits you have not saved are not included..
+        /// </summary>
+        public static string layerSettings_statistics_liveOnServer {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_liveOnServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maximum.
+        /// </summary>
+        public static string layerSettings_statistics_max {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_max", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Latest.
+        /// </summary>
+        public static string layerSettings_statistics_maxDate {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_maxDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mean.
+        /// </summary>
+        public static string layerSettings_statistics_mean {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_mean", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Median.
+        /// </summary>
+        public static string layerSettings_statistics_median {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_median", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minimum.
+        /// </summary>
+        public static string layerSettings_statistics_min {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_min", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Earliest.
+        /// </summary>
+        public static string layerSettings_statistics_minDate {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_minDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Field statistics.
+        /// </summary>
+        public static string layerSettings_statistics_modeField {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_modeField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geometry.
+        /// </summary>
+        public static string layerSettings_statistics_modeGeometry {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_modeGeometry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Group by field.
+        /// </summary>
+        public static string layerSettings_statistics_modeGroupBy {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_modeGroupBy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Length and area apply to line and polygon layers only..
+        /// </summary>
+        public static string layerSettings_statistics_noMeasureNote {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_noMeasureNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (none).
+        /// </summary>
+        public static string layerSettings_statistics_none {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_none", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Outside the domain.
+        /// </summary>
+        public static string layerSettings_statistics_outOfDomainCount {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_outOfDomainCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} features have a value outside the field&apos;s domain..
+        /// </summary>
+        public static string layerSettings_statistics_outOfDomainNote {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_outOfDomainNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not a value of the field&apos;s domain.
+        /// </summary>
+        public static string layerSettings_statistics_outOfDomainTooltip {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_outOfDomainTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorted by count.
+        /// </summary>
+        public static string layerSettings_statistics_sortedByCount {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_sortedByCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Standard deviation.
+        /// </summary>
+        public static string layerSettings_statistics_standardDeviation {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_standardDeviation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sum.
+        /// </summary>
+        public static string layerSettings_statistics_sum {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_sum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total of.
+        /// </summary>
+        public static string layerSettings_statistics_sumField {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_sumField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Details.
+        /// </summary>
+        public static string layerSettings_statistics_summary {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_summary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total of {0}.
+        /// </summary>
+        public static string layerSettings_statistics_sumOf {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_sumOf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Statistics.
         /// </summary>
         public static string layerSettings_statistics_title {
             get {
                 return ResourceManager.GetString("layerSettings_statistics_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} of {1} values.
+        /// </summary>
+        public static string layerSettings_statistics_topOfDistinct {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_topOfDistinct", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Most frequent values.
+        /// </summary>
+        public static string layerSettings_statistics_topValues {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_topValues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total.
+        /// </summary>
+        public static string layerSettings_statistics_total {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_total", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total area.
+        /// </summary>
+        public static string layerSettings_statistics_totalArea {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_totalArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total length.
+        /// </summary>
+        public static string layerSettings_statistics_totalLength {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_totalLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} geometries could not be measured and are left out..
+        /// </summary>
+        public static string layerSettings_statistics_unmeasuredNote {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_unmeasuredNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value.
+        /// </summary>
+        public static string layerSettings_statistics_value {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chart.
+        /// </summary>
+        public static string layerSettings_statistics_viewHistogram {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_viewHistogram", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top values.
+        /// </summary>
+        public static string layerSettings_statistics_viewTable {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_viewTable", resourceCulture);
             }
         }
         
@@ -3819,6 +4710,357 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string layerSettings_trackChanges_title {
             get {
                 return ResourceManager.GetString("layerSettings_trackChanges_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add.
+        /// </summary>
+        public static string layerStyles_add {
+            get {
+                return ResourceManager.GetString("layerStyles_add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add a style.
+        /// </summary>
+        public static string layerStyles_addFirst {
+            get {
+                return ResourceManager.GetString("layerStyles_addFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Users start on the default style and can switch to the others in the Symbology tab or from the map legend..
+        /// </summary>
+        public static string layerStyles_adminBanner {
+            get {
+                return ResourceManager.GetString("layerStyles_adminBanner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy.
+        /// </summary>
+        public static string layerStyles_copy {
+            get {
+                return ResourceManager.GetString("layerStyles_copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (copy).
+        /// </summary>
+        public static string layerStyles_copyTitle {
+            get {
+                return ResourceManager.GetString("layerStyles_copyTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default.
+        /// </summary>
+        public static string layerStyles_defaultBadge {
+            get {
+                return ResourceManager.GetString("layerStyles_defaultBadge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string layerStyles_delete {
+            get {
+                return ResourceManager.GetString("layerStyles_delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit.
+        /// </summary>
+        public static string layerStyles_edit {
+            get {
+                return ResourceManager.GetString("layerStyles_edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This layer is drawn with SLD styles: this label is drawn on top of whichever style is active..
+        /// </summary>
+        public static string layerStyles_labelsNote {
+            get {
+                return ResourceManager.GetString("layerStyles_labelsNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Style.
+        /// </summary>
+        public static string layerStyles_legend_pick {
+            get {
+                return ResourceManager.GetString("layerStyles_legend_pick", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Simple.
+        /// </summary>
+        public static string layerStyles_modeSimple {
+            get {
+                return ResourceManager.GetString("layerStyles_modeSimple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Styles (SLD).
+        /// </summary>
+        public static string layerStyles_modeStyles {
+            get {
+                return ResourceManager.GetString("layerStyles_modeStyles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move down.
+        /// </summary>
+        public static string layerStyles_moveDown {
+            get {
+                return ResourceManager.GetString("layerStyles_moveDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move up.
+        /// </summary>
+        public static string layerStyles_moveUp {
+            get {
+                return ResourceManager.GetString("layerStyles_moveUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Style {0}.
+        /// </summary>
+        public static string layerStyles_newTitle {
+            get {
+                return ResourceManager.GetString("layerStyles_newTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Legend: {0}.
+        /// </summary>
+        public static string layerStyles_previewOf {
+            get {
+                return ResourceManager.GetString("layerStyles_previewOf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} rules.
+        /// </summary>
+        public static string layerStyles_ruleCount {
+            get {
+                return ResourceManager.GetString("layerStyles_ruleCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set as default.
+        /// </summary>
+        public static string layerStyles_setDefault {
+            get {
+                return ResourceManager.GetString("layerStyles_setDefault", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One simple style from the colours below. Switch to Styles for rules by attribute and for several symbologies users can choose from..
+        /// </summary>
+        public static string layerStyles_simpleHint {
+            get {
+                return ResourceManager.GetString("layerStyles_simpleHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove the {0} style(s) of this layer? The simple colours will be used instead..
+        /// </summary>
+        public static string layerStyles_switchToSimpleConfirm {
+            get {
+                return ResourceManager.GetString("layerStyles_switchToSimpleConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Changed by you.
+        /// </summary>
+        public static string layerStyles_tab_changedMark {
+            get {
+                return ResourceManager.GetString("layerStyles_tab_changedMark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You changed these styles on this computer: {0}. The changes are kept in your project; Restore admin styles brings back the server&apos;s styles..
+        /// </summary>
+        public static string layerStyles_tab_changedStyles {
+            get {
+                return ResourceManager.GetString("layerStyles_tab_changedStyles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit style in SLD editor.
+        /// </summary>
+        public static string layerStyles_tab_editInSld {
+            get {
+                return ResourceManager.GetString("layerStyles_tab_editInSld", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export the legend as PNG.
+        /// </summary>
+        public static string layerStyles_tab_exportLegend {
+            get {
+                return ResourceManager.GetString("layerStyles_tab_exportLegend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You changed this layer&apos;s symbology. The change is kept in your project; Restore admin styles brings back the server&apos;s styles..
+        /// </summary>
+        public static string layerStyles_tab_hasChanges {
+            get {
+                return ResourceManager.GetString("layerStyles_tab_hasChanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Legend.
+        /// </summary>
+        public static string layerStyles_tab_legend {
+            get {
+                return ResourceManager.GetString("layerStyles_tab_legend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My changes.
+        /// </summary>
+        public static string layerStyles_tab_myChanges {
+            get {
+                return ResourceManager.GetString("layerStyles_tab_myChanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None: the layer is drawn as the server defines it..
+        /// </summary>
+        public static string layerStyles_tab_noChanges {
+            get {
+                return ResourceManager.GetString("layerStyles_tab_noChanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This layer has no symbology to set..
+        /// </summary>
+        public static string layerStyles_tab_notAvailable {
+            get {
+                return ResourceManager.GetString("layerStyles_tab_notAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quick edit.
+        /// </summary>
+        public static string layerStyles_tab_quickEdit {
+            get {
+                return ResourceManager.GetString("layerStyles_tab_quickEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restore admin styles.
+        /// </summary>
+        public static string layerStyles_tab_restore {
+            get {
+                return ResourceManager.GetString("layerStyles_tab_restore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Undo your changes to every style of this layer and draw it as the server defines it..
+        /// </summary>
+        public static string layerStyles_tab_restoreTip {
+            get {
+                return ResourceManager.GetString("layerStyles_tab_restoreTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This layer is drawn with simple colours; use Quick edit to change them..
+        /// </summary>
+        public static string layerStyles_tab_simpleHint {
+            get {
+                return ResourceManager.GetString("layerStyles_tab_simpleHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This layer has one style. The administrator can add more in the server layer settings..
+        /// </summary>
+        public static string layerStyles_tab_singleStyle {
+            get {
+                return ResourceManager.GetString("layerStyles_tab_singleStyle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Styles.
+        /// </summary>
+        public static string layerStyles_tab_styles {
+            get {
+                return ResourceManager.GetString("layerStyles_tab_styles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Style title.
+        /// </summary>
+        public static string layerStyles_titleWatermark {
+            get {
+                return ResourceManager.GetString("layerStyles_titleWatermark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Untitled style.
+        /// </summary>
+        public static string layerStyles_untitled {
+            get {
+                return ResourceManager.GetString("layerStyles_untitled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Whole layer.
+        /// </summary>
+        public static string layerStyles_wholeLayer {
+            get {
+                return ResourceManager.GetString("layerStyles_wholeLayer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The zoom range and the opacity apply to the layer whatever its symbology..
+        /// </summary>
+        public static string layerStyles_wholeLayerHint {
+            get {
+                return ResourceManager.GetString("layerStyles_wholeLayerHint", resourceCulture);
             }
         }
         
@@ -3850,11 +5092,20 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Vector.
+        ///   Looks up a localized string similar to Filter By Layer Type.
         /// </summary>
-        public static string legend_filter_groupVector {
+        public static string legend_filter_filterByLayerType {
             get {
-                return ResourceManager.GetString("legend_filter_groupVector", resourceCulture);
+                return ResourceManager.GetString("legend_filter_filterByLayerType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Other.
+        /// </summary>
+        public static string legend_filter_groupOther {
+            get {
+                return ResourceManager.GetString("legend_filter_groupOther", resourceCulture);
             }
         }
         
@@ -3877,20 +5128,11 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Other.
+        ///   Looks up a localized string similar to Vector.
         /// </summary>
-        public static string legend_filter_groupOther {
+        public static string legend_filter_groupVector {
             get {
-                return ResourceManager.GetString("legend_filter_groupOther", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to REST service.
-        /// </summary>
-        public static string legend_filter_kindRest {
-            get {
-                return ResourceManager.GetString("legend_filter_kindRest", resourceCulture);
+                return ResourceManager.GetString("legend_filter_groupVector", resourceCulture);
             }
         }
         
@@ -3900,15 +5142,6 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string legend_filter_kindGrpc {
             get {
                 return ResourceManager.GetString("legend_filter_kindGrpc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to World file.
-        /// </summary>
-        public static string legend_filter_kindWorldfile {
-            get {
-                return ResourceManager.GetString("legend_filter_kindWorldfile", resourceCulture);
             }
         }
         
@@ -3931,11 +5164,38 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to REST service.
+        /// </summary>
+        public static string legend_filter_kindRest {
+            get {
+                return ResourceManager.GetString("legend_filter_kindRest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to World file.
+        /// </summary>
+        public static string legend_filter_kindWorldfile {
+            get {
+                return ResourceManager.GetString("legend_filter_kindWorldfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Only.
         /// </summary>
         public static string legend_filter_only {
             get {
                 return ResourceManager.GetString("legend_filter_only", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search Layer.
+        /// </summary>
+        public static string legend_filter_searchLayerWatermark {
+            get {
+                return ResourceManager.GetString("legend_filter_searchLayerWatermark", resourceCulture);
             }
         }
         
@@ -3958,15 +5218,6 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tables.
-        /// </summary>
-        public static string legend_import_tables {
-            get {
-                return ResourceManager.GetString("legend_import_tables", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to JSON.
         /// </summary>
         public static string legend_import_json {
@@ -3976,20 +5227,11 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Filter By Layer Type.
+        ///   Looks up a localized string similar to Tables.
         /// </summary>
-        public static string legend_filter_filterByLayerType {
+        public static string legend_import_tables {
             get {
-                return ResourceManager.GetString("legend_filter_filterByLayerType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Search Layer.
-        /// </summary>
-        public static string legend_filter_searchLayerWatermark {
-            get {
-                return ResourceManager.GetString("legend_filter_searchLayerWatermark", resourceCulture);
+                return ResourceManager.GetString("legend_import_tables", resourceCulture);
             }
         }
         
@@ -4066,6 +5308,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not all features are shown: this area has more features than can be loaded at once. Zoom in to see all of them.
+        /// </summary>
+        public static string legendItem_zoomInToSeeAllFeatures {
+            get {
+                return ResourceManager.GetString("legendItem_zoomInToSeeAllFeatures", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Change password.
         /// </summary>
         public static string manageAccount_changePassword {
@@ -4120,38 +5371,20 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Next part.
-        /// </summary>
-        public static string mapPanel_currentPart_goToNextPart {
-            get {
-                return ResourceManager.GetString("mapPanel_currentPart_goToNextPart", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Previous part.
-        /// </summary>
-        public static string mapPanel_currentPart_goToPreviousPart {
-            get {
-                return ResourceManager.GetString("mapPanel_currentPart_goToPreviousPart", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Pan to current part.
-        /// </summary>
-        public static string mapPanel_currentPart_pan {
-            get {
-                return ResourceManager.GetString("mapPanel_currentPart_pan", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Height.
         /// </summary>
         public static string map_coordinatePanel_height {
             get {
                 return ResourceManager.GetString("map_coordinatePanel_height", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MGRS.
+        /// </summary>
+        public static string map_coordinatePanel_mgrs {
+            get {
+                return ResourceManager.GetString("map_coordinatePanel_mgrs", resourceCulture);
             }
         }
         
@@ -4368,6 +5601,33 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string mapPanel_currentPart_delete {
             get {
                 return ResourceManager.GetString("mapPanel_currentPart_delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next part.
+        /// </summary>
+        public static string mapPanel_currentPart_goToNextPart {
+            get {
+                return ResourceManager.GetString("mapPanel_currentPart_goToNextPart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous part.
+        /// </summary>
+        public static string mapPanel_currentPart_goToPreviousPart {
+            get {
+                return ResourceManager.GetString("mapPanel_currentPart_goToPreviousPart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pan to current part.
+        /// </summary>
+        public static string mapPanel_currentPart_pan {
+            get {
+                return ResourceManager.GetString("mapPanel_currentPart_pan", resourceCulture);
             }
         }
         
@@ -4687,6 +5947,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The password is incorrect..
+        /// </summary>
+        public static string message_error_invalidPassword {
+            get {
+                return ResourceManager.GetString("message_error_invalidPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File is locked or in used by another program.
         /// </summary>
         public static string message_error_lockedFile {
@@ -4719,6 +5988,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string message_error_userEmailAlreadyVerified {
             get {
                 return ResourceManager.GetString("message_error_userEmailAlreadyVerified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User not found..
+        /// </summary>
+        public static string message_error_userNotFound {
+            get {
+                return ResourceManager.GetString("message_error_userNotFound", resourceCulture);
             }
         }
         
@@ -4962,6 +6240,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string message_info_title {
             get {
                 return ResourceManager.GetString("message_info_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to These files could not be opened as drawings: {0}.
+        /// </summary>
+        public static string msg_drawingFile_openFailed {
+            get {
+                return ResourceManager.GetString("msg_drawingFile_openFailed", resourceCulture);
             }
         }
         
@@ -5443,6 +6730,978 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Group.
+        /// </summary>
+        public static string serverLayerSettings_badge_group {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_badge_group", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inactive.
+        /// </summary>
+        public static string serverLayerSettings_badge_inactive {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_badge_inactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Live.
+        /// </summary>
+        public static string serverLayerSettings_badge_live {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_badge_live", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unsaved.
+        /// </summary>
+        public static string serverLayerSettings_badge_unsaved {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_badge_unsaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete group.
+        /// </summary>
+        public static string serverLayerSettings_cmd_deleteGroup {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_cmd_deleteGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move down.
+        /// </summary>
+        public static string serverLayerSettings_cmd_moveDown {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_cmd_moveDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move to.
+        /// </summary>
+        public static string serverLayerSettings_cmd_moveTo {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_cmd_moveTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move up.
+        /// </summary>
+        public static string serverLayerSettings_cmd_moveUp {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_cmd_moveUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New group.
+        /// </summary>
+        public static string serverLayerSettings_cmd_newGroup {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_cmd_newGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server settings….
+        /// </summary>
+        public static string serverLayerSettings_cmd_open {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_cmd_open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rename.
+        /// </summary>
+        public static string serverLayerSettings_cmd_rename {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_cmd_rename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are unsaved changes. Discard them?.
+        /// </summary>
+        public static string serverLayerSettings_confirmDiscard {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_confirmDiscard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Someone else saved this item after you opened the window. Reload to get the latest version; your changes to it will be lost..
+        /// </summary>
+        public static string serverLayerSettings_conflict {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_conflict", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete the group &quot;{0}&quot;?.
+        /// </summary>
+        public static string serverLayerSettings_deleteGroup_confirm {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_deleteGroup_confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only an empty group can be deleted. Move its layers to another group first..
+        /// </summary>
+        public static string serverLayerSettings_deleteGroup_notEmpty {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_deleteGroup_notEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save or revert the moved layers before deleting a group..
+        /// </summary>
+        public static string serverLayerSettings_deleteGroup_pendingMoves {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_deleteGroup_pendingMoves", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An item appears twice in the request..
+        /// </summary>
+        public static string serverLayerSettings_error_duplicateRow {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_error_duplicateRow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Two styles have the same title..
+        /// </summary>
+        public static string serverLayerSettings_error_duplicateStyleTitle {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_error_duplicateStyleTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A group cannot be placed inside another group..
+        /// </summary>
+        public static string serverLayerSettings_error_groupInGroup {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_error_groupInGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The fill colour is not valid..
+        /// </summary>
+        public static string serverLayerSettings_error_invalidFillColor {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_error_invalidFillColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The label colour is not valid..
+        /// </summary>
+        public static string serverLayerSettings_error_invalidLabelColor {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_error_invalidLabelColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose how the layer loads..
+        /// </summary>
+        public static string serverLayerSettings_error_invalidLoadMode {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_error_invalidLoadMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The SLD style cannot be read..
+        /// </summary>
+        public static string serverLayerSettings_error_invalidSld {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_error_invalidSld", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The outline colour is not valid..
+        /// </summary>
+        public static string serverLayerSettings_error_invalidStrokeColor {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_error_invalidStrokeColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose the field the labels show..
+        /// </summary>
+        public static string serverLayerSettings_error_labelColumnRequired {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_error_labelColumnRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The label font size must be between 1 and 72..
+        /// </summary>
+        public static string serverLayerSettings_error_labelSizeOutOfRange {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_error_labelSizeOutOfRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Label zoom levels must be between 0 and 24..
+        /// </summary>
+        public static string serverLayerSettings_error_labelZoomOutOfRange {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_error_labelZoomOutOfRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The first label zoom level must not be greater than the second..
+        /// </summary>
+        public static string serverLayerSettings_error_labelZoomRangeInverted {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_error_labelZoomRangeInverted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom levels must be between 0 and 24..
+        /// </summary>
+        public static string serverLayerSettings_error_layerZoomOutOfRange {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_error_layerZoomOutOfRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The first zoom level must not be greater than the second..
+        /// </summary>
+        public static string serverLayerSettings_error_layerZoomRangeInverted {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_error_layerZoomRangeInverted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opacity must be between 0% and 100%..
+        /// </summary>
+        public static string serverLayerSettings_error_opacityOutOfRange {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_error_opacityOutOfRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The outline width must be between 0 and 50..
+        /// </summary>
+        public static string serverLayerSettings_error_strokeThicknessOutOfRange {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_error_strokeThicknessOutOfRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When a layer has several styles, each needs a title..
+        /// </summary>
+        public static string serverLayerSettings_error_styleTitleRequired {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_error_styleTitleRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter a title..
+        /// </summary>
+        public static string serverLayerSettings_error_titleRequired {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_error_titleRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The title is too long..
+        /// </summary>
+        public static string serverLayerSettings_error_titleTooLong {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_error_titleTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The target group no longer exists..
+        /// </summary>
+        public static string serverLayerSettings_error_unknownGroup {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_error_unknownGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The label field is not a field of this layer..
+        /// </summary>
+        public static string serverLayerSettings_error_unknownLabelColumn {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_error_unknownLabelColumn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An item no longer exists on the server..
+        /// </summary>
+        public static string serverLayerSettings_error_unknownRow {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_error_unknownRow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Active.
+        /// </summary>
+        public static string serverLayerSettings_field_active {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_field_active", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expanded in the layer list.
+        /// </summary>
+        public static string serverLayerSettings_field_expanded {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_field_expanded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fill.
+        /// </summary>
+        public static string serverLayerSettings_field_fill {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_field_fill", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Group.
+        /// </summary>
+        public static string serverLayerSettings_field_group {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_field_group", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This layer has labels.
+        /// </summary>
+        public static string serverLayerSettings_field_hasLabels {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_field_hasLabels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Id.
+        /// </summary>
+        public static string serverLayerSettings_field_id {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_field_id", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Colour.
+        /// </summary>
+        public static string serverLayerSettings_field_labelColor {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_field_labelColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Label field.
+        /// </summary>
+        public static string serverLayerSettings_field_labelColumn {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_field_labelColumn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Font size.
+        /// </summary>
+        public static string serverLayerSettings_field_labelSize {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_field_labelSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show labels when the map opens.
+        /// </summary>
+        public static string serverLayerSettings_field_labelsOn {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_field_labelsOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visible when the map opens.
+        /// </summary>
+        public static string serverLayerSettings_field_onByDefault {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_field_onByDefault", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opacity.
+        /// </summary>
+        public static string serverLayerSettings_field_opacity {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_field_opacity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preview.
+        /// </summary>
+        public static string serverLayerSettings_field_preview {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_field_preview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Included in map search.
+        /// </summary>
+        public static string serverLayerSettings_field_searchable {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_field_searchable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service URL.
+        /// </summary>
+        public static string serverLayerSettings_field_serviceUrl {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_field_serviceUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Outline.
+        /// </summary>
+        public static string serverLayerSettings_field_stroke {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_field_stroke", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Outline width.
+        /// </summary>
+        public static string serverLayerSettings_field_strokeWidth {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_field_strokeWidth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Table.
+        /// </summary>
+        public static string serverLayerSettings_field_table {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_field_table", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title.
+        /// </summary>
+        public static string serverLayerSettings_field_title {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_field_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to From level.
+        /// </summary>
+        public static string serverLayerSettings_field_zoomFrom {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_field_zoomFrom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to to level.
+        /// </summary>
+        public static string serverLayerSettings_field_zoomTo {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_field_zoomTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Group &quot;{0}&quot; created..
+        /// </summary>
+        public static string serverLayerSettings_group_created {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_group_created", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Group &quot;{0}&quot; deleted..
+        /// </summary>
+        public static string serverLayerSettings_group_deleted {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_group_deleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An inactive layer or group is hidden from every user..
+        /// </summary>
+        public static string serverLayerSettings_hint_active {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_hint_active", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saved changes reach other users the next time they sign in or reload the layers..
+        /// </summary>
+        public static string serverLayerSettings_hint_appliesNext {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_hint_appliesNext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Drag layers to reorder them or to move them into another group..
+        /// </summary>
+        public static string serverLayerSettings_hint_dragDrop {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_hint_dragDrop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Leave a level empty for no limit. Level 0 shows the whole world; level 18 shows street detail..
+        /// </summary>
+        public static string serverLayerSettings_hint_zoom {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_hint_zoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export import model….
+        /// </summary>
+        public static string serverLayerSettings_importModel_export {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_importModel_export", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export import model: save the data model of every active layer (tables, columns, types, domains) as the file the import tool reads.
+        /// </summary>
+        public static string serverLayerSettings_importModel_exportTip {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_importModel_exportTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The import model could not be saved..
+        /// </summary>
+        public static string serverLayerSettings_importModel_failed {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_importModel_failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import model of {0} layers saved in {1}..
+        /// </summary>
+        public static string serverLayerSettings_importModel_saved {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_importModel_saved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Layers: {0}.
+        /// </summary>
+        public static string serverLayerSettings_layerCount {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_layerCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The layer settings could not be loaded from the server..
+        /// </summary>
+        public static string serverLayerSettings_loadFailed {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_loadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Load all at once (Cache).
+        /// </summary>
+        public static string serverLayerSettings_mode_cache {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_mode_cache", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The whole layer is downloaded once, when the map opens. Best for small and medium layers..
+        /// </summary>
+        public static string serverLayerSettings_mode_cacheDescription {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_mode_cacheDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Load by map view (Live).
+        /// </summary>
+        public static string serverLayerSettings_mode_live {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_mode_live", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only the features in the visible area are downloaded, as the map moves; the attribute table and search ask the server. Best for very large layers..
+        /// </summary>
+        public static string serverLayerSettings_mode_liveDescription {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_mode_liveDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top level (no group).
+        /// </summary>
+        public static string serverLayerSettings_moveTo_topLevel {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_moveTo_topLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New group.
+        /// </summary>
+        public static string serverLayerSettings_newGroup_title {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_newGroup_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No limit.
+        /// </summary>
+        public static string serverLayerSettings_noLimit {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_noLimit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No layer or group matches the search..
+        /// </summary>
+        public static string serverLayerSettings_noMatch {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_noMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a layer or group to edit it..
+        /// </summary>
+        public static string serverLayerSettings_noSelection {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_noSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This item no longer exists on the server..
+        /// </summary>
+        public static string serverLayerSettings_notFound {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_notFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The server did not accept the new order..
+        /// </summary>
+        public static string serverLayerSettings_orderRejected {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_orderRejected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reload from server.
+        /// </summary>
+        public static string serverLayerSettings_reload {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_reload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The layer settings were saved. Reload the map&apos;s server layers now to see them? Unsaved feature edits will be lost..
+        /// </summary>
+        public static string serverLayerSettings_reloadMapConfirm {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_reloadMapConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saved: {0} · Not saved: {1}.
+        /// </summary>
+        public static string serverLayerSettings_result_partial {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_result_partial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Changes saved ({0})..
+        /// </summary>
+        public static string serverLayerSettings_result_saved {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_result_saved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Try again.
+        /// </summary>
+        public static string serverLayerSettings_retry {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_retry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Revert.
+        /// </summary>
+        public static string serverLayerSettings_revert {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_revert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The changes could not be sent to the server..
+        /// </summary>
+        public static string serverLayerSettings_saveFailed {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_saveFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search layers and groups.
+        /// </summary>
+        public static string serverLayerSettings_searchPlaceholder {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_searchPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data source.
+        /// </summary>
+        public static string serverLayerSettings_section_source {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_section_source", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Style.
+        /// </summary>
+        public static string serverLayerSettings_section_style {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_section_style", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visibility.
+        /// </summary>
+        public static string serverLayerSettings_section_visibility {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_section_visibility", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visible zoom range.
+        /// </summary>
+        public static string serverLayerSettings_section_zoom {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_section_zoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The server did not accept these changes..
+        /// </summary>
+        public static string serverLayerSettings_serverRejected {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_serverRejected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Drawn with an SLD style. The colours below are not used while it is set..
+        /// </summary>
+        public static string serverLayerSettings_sld_active {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_sld_active", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit SLD….
+        /// </summary>
+        public static string serverLayerSettings_sld_edit {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_sld_edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Drawn with the simple style below..
+        /// </summary>
+        public static string serverLayerSettings_sld_none {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_sld_none", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove SLD.
+        /// </summary>
+        public static string serverLayerSettings_sld_remove {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_sld_remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unsaved changes: {0}.
+        /// </summary>
+        public static string serverLayerSettings_status_changes {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_status_changes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to With errors: {0}.
+        /// </summary>
+        public static string serverLayerSettings_status_invalid {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_status_invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No unsaved changes.
+        /// </summary>
+        public static string serverLayerSettings_status_noChanges {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_status_noChanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display.
+        /// </summary>
+        public static string serverLayerSettings_tab_display {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_tab_display", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to General.
+        /// </summary>
+        public static string serverLayerSettings_tab_general {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_tab_general", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Labels.
+        /// </summary>
+        public static string serverLayerSettings_tab_labels {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_tab_labels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading.
+        /// </summary>
+        public static string serverLayerSettings_tab_loading {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_tab_loading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server layer settings.
+        /// </summary>
+        public static string serverLayerSettings_title {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top level.
+        /// </summary>
+        public static string serverLayerSettings_topLevel {
+            get {
+                return ResourceManager.GetString("serverLayerSettings_topLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Draw Point.
         /// </summary>
         public static string sketchBar_title_drawPoint {
@@ -5502,6 +7761,51 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string sketchBar_title_measureLength {
             get {
                 return ResourceManager.GetString("sketchBar_title_measureLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter.
+        /// </summary>
+        public static string sldEditor_badge_filter {
+            get {
+                return ResourceManager.GetString("sldEditor_badge_filter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scale range.
+        /// </summary>
+        public static string sldEditor_badge_scale {
+            get {
+                return ResourceManager.GetString("sldEditor_badge_scale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Flat.
+        /// </summary>
+        public static string sldEditor_cap_butt {
+            get {
+                return ResourceManager.GetString("sldEditor_cap_butt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Round.
+        /// </summary>
+        public static string sldEditor_cap_round {
+            get {
+                return ResourceManager.GetString("sldEditor_cap_round", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Square.
+        /// </summary>
+        public static string sldEditor_cap_square {
+            get {
+                return ResourceManager.GetString("sldEditor_cap_square", resourceCulture);
             }
         }
         
@@ -5920,11 +8224,218 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dash-dot.
+        /// </summary>
+        public static string sldEditor_dash_dashDot {
+            get {
+                return ResourceManager.GetString("sldEditor_dash_dashDot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dashed.
+        /// </summary>
+        public static string sldEditor_dash_dashed {
+            get {
+                return ResourceManager.GetString("sldEditor_dash_dashed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dotted.
+        /// </summary>
+        public static string sldEditor_dash_dotted {
+            get {
+                return ResourceManager.GetString("sldEditor_dash_dotted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Long dash.
+        /// </summary>
+        public static string sldEditor_dash_longDash {
+            get {
+                return ResourceManager.GetString("sldEditor_dash_longDash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solid.
+        /// </summary>
+        public static string sldEditor_dash_solid {
+            get {
+                return ResourceManager.GetString("sldEditor_dash_solid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bold.
+        /// </summary>
+        public static string sldEditor_field_bold {
+            get {
+                return ResourceManager.GetString("sldEditor_field_bold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Line ends.
+        /// </summary>
+        public static string sldEditor_field_cap {
+            get {
+                return ResourceManager.GetString("sldEditor_field_cap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Colour.
+        /// </summary>
+        public static string sldEditor_field_color {
+            get {
+                return ResourceManager.GetString("sldEditor_field_color", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pattern offset.
+        /// </summary>
+        public static string sldEditor_field_dashOffset {
+            get {
+                return ResourceManager.GetString("sldEditor_field_dashOffset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dash pattern.
+        /// </summary>
+        public static string sldEditor_field_dashPattern {
+            get {
+                return ResourceManager.GetString("sldEditor_field_dashPattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Font.
+        /// </summary>
+        public static string sldEditor_field_font {
+            get {
+                return ResourceManager.GetString("sldEditor_field_font", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The layer&apos;s geometry.
+        /// </summary>
+        public static string sldEditor_field_geometryDefault {
+            get {
+                return ResourceManager.GetString("sldEditor_field_geometryDefault", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Draw a halo around the text.
+        /// </summary>
+        public static string sldEditor_field_haloOn {
+            get {
+                return ResourceManager.GetString("sldEditor_field_haloOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Italic.
+        /// </summary>
+        public static string sldEditor_field_italic {
+            get {
+                return ResourceManager.GetString("sldEditor_field_italic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Corners.
+        /// </summary>
+        public static string sldEditor_field_join {
+            get {
+                return ResourceManager.GetString("sldEditor_field_join", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text from field.
+        /// </summary>
+        public static string sldEditor_field_labelField {
+            get {
+                return ResourceManager.GetString("sldEditor_field_labelField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose or type a field.
+        /// </summary>
+        public static string sldEditor_field_labelFieldWatermark {
+            get {
+                return ResourceManager.GetString("sldEditor_field_labelFieldWatermark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opacity.
+        /// </summary>
+        public static string sldEditor_field_opacity {
+            get {
+                return ResourceManager.GetString("sldEditor_field_opacity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rotation.
+        /// </summary>
+        public static string sldEditor_field_rotation {
+            get {
+                return ResourceManager.GetString("sldEditor_field_rotation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shape.
+        /// </summary>
+        public static string sldEditor_field_shape {
+            get {
+                return ResourceManager.GetString("sldEditor_field_shape", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Size.
+        /// </summary>
+        public static string sldEditor_field_size {
+            get {
+                return ResourceManager.GetString("sldEditor_field_size", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Width.
+        /// </summary>
+        public static string sldEditor_field_width {
+            get {
+                return ResourceManager.GetString("sldEditor_field_width", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Advanced filter (not editable here).
         /// </summary>
         public static string sldEditor_filter_advancedFilter {
             get {
                 return ResourceManager.GetString("sldEditor_filter_advancedFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This rule has a filter that cannot be shown here. It is kept as it is unless you choose a field above..
+        /// </summary>
+        public static string sldEditor_filter_advancedNotice {
+            get {
+                return ResourceManager.GetString("sldEditor_filter_advancedNotice", resourceCulture);
             }
         }
         
@@ -5965,6 +8476,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Draw only features that match a condition.
+        /// </summary>
+        public static string sldEditor_filter_onlyMatching {
+            get {
+                return ResourceManager.GetString("sldEditor_filter_onlyMatching", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Operator:.
         /// </summary>
         public static string sldEditor_filter_operator {
@@ -6001,6 +8521,33 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bevelled.
+        /// </summary>
+        public static string sldEditor_join_bevel {
+            get {
+                return ResourceManager.GetString("sldEditor_join_bevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sharp.
+        /// </summary>
+        public static string sldEditor_join_mitre {
+            get {
+                return ResourceManager.GetString("sldEditor_join_mitre", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Round.
+        /// </summary>
+        public static string sldEditor_join_round {
+            get {
+                return ResourceManager.GetString("sldEditor_join_round", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dash Array:.
         /// </summary>
         public static string sldEditor_lineSymbolizer_dashArray {
@@ -6024,6 +8571,60 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string sldEditor_lineSymbolizer_dashOffset {
             get {
                 return ResourceManager.GetString("sldEditor_lineSymbolizer_dashOffset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Circle.
+        /// </summary>
+        public static string sldEditor_mark_circle {
+            get {
+                return ResourceManager.GetString("sldEditor_mark_circle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cross.
+        /// </summary>
+        public static string sldEditor_mark_cross {
+            get {
+                return ResourceManager.GetString("sldEditor_mark_cross", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Square.
+        /// </summary>
+        public static string sldEditor_mark_square {
+            get {
+                return ResourceManager.GetString("sldEditor_mark_square", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Star.
+        /// </summary>
+        public static string sldEditor_mark_star {
+            get {
+                return ResourceManager.GetString("sldEditor_mark_star", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Triangle.
+        /// </summary>
+        public static string sldEditor_mark_triangle {
+            get {
+                return ResourceManager.GetString("sldEditor_mark_triangle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X.
+        /// </summary>
+        public static string sldEditor_mark_x {
+            get {
+                return ResourceManager.GetString("sldEditor_mark_x", resourceCulture);
             }
         }
         
@@ -6055,6 +8656,60 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to equals.
+        /// </summary>
+        public static string sldEditor_op_equal {
+            get {
+                return ResourceManager.GetString("sldEditor_op_equal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to greater than.
+        /// </summary>
+        public static string sldEditor_op_greaterThan {
+            get {
+                return ResourceManager.GetString("sldEditor_op_greaterThan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to at least.
+        /// </summary>
+        public static string sldEditor_op_greaterThanOrEqual {
+            get {
+                return ResourceManager.GetString("sldEditor_op_greaterThanOrEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to less than.
+        /// </summary>
+        public static string sldEditor_op_lessThan {
+            get {
+                return ResourceManager.GetString("sldEditor_op_lessThan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to at most.
+        /// </summary>
+        public static string sldEditor_op_lessThanOrEqual {
+            get {
+                return ResourceManager.GetString("sldEditor_op_lessThanOrEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to is not.
+        /// </summary>
+        public static string sldEditor_op_notEqual {
+            get {
+                return ResourceManager.GetString("sldEditor_op_notEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mark Type:.
         /// </summary>
         public static string sldEditor_pointSymbolizer_markType {
@@ -6078,6 +8733,42 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string sldEditor_pointSymbolizer_size {
             get {
                 return ResourceManager.GetString("sldEditor_pointSymbolizer_size", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Label.
+        /// </summary>
+        public static string sldEditor_preview_labelSample {
+            get {
+                return ResourceManager.GetString("sldEditor_preview_labelSample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Legend.
+        /// </summary>
+        public static string sldEditor_preview_legend {
+            get {
+                return ResourceManager.GetString("sldEditor_preview_legend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a rule to preview it..
+        /// </summary>
+        public static string sldEditor_preview_none {
+            get {
+                return ResourceManager.GetString("sldEditor_preview_none", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preview.
+        /// </summary>
+        public static string sldEditor_preview_title {
+            get {
+                return ResourceManager.GetString("sldEditor_preview_title", resourceCulture);
             }
         }
         
@@ -6163,6 +8854,213 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to copy.
+        /// </summary>
+        public static string sldEditor_rule_copySuffix {
+            get {
+                return ResourceManager.GetString("sldEditor_rule_copySuffix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The title is the text the map legend shows. The name identifies the rule inside the SLD..
+        /// </summary>
+        public static string sldEditor_rule_detailsHint {
+            get {
+                return ResourceManager.GetString("sldEditor_rule_detailsHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rule {0}.
+        /// </summary>
+        public static string sldEditor_rule_newTitle {
+            get {
+                return ResourceManager.GetString("sldEditor_rule_newTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The text the map legend shows for this rule.
+        /// </summary>
+        public static string sldEditor_rule_titleHint {
+            get {
+                return ResourceManager.GetString("sldEditor_rule_titleHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Legend text.
+        /// </summary>
+        public static string sldEditor_rule_titleWatermark {
+            get {
+                return ResourceManager.GetString("sldEditor_rule_titleWatermark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rules: {0}.
+        /// </summary>
+        public static string sldEditor_rules_count {
+            get {
+                return ResourceManager.GetString("sldEditor_rules_count", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete rule (Del).
+        /// </summary>
+        public static string sldEditor_rules_delete {
+            get {
+                return ResourceManager.GetString("sldEditor_rules_delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duplicate rule (Ctrl+D).
+        /// </summary>
+        public static string sldEditor_rules_duplicate {
+            get {
+                return ResourceManager.GetString("sldEditor_rules_duplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Draws nothing.
+        /// </summary>
+        public static string sldEditor_rules_empty {
+            get {
+                return ResourceManager.GetString("sldEditor_rules_empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A feature is drawn by every rule it matches; lower rules draw on top..
+        /// </summary>
+        public static string sldEditor_rules_hint {
+            get {
+                return ResourceManager.GetString("sldEditor_rules_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move down (Alt+Down).
+        /// </summary>
+        public static string sldEditor_rules_moveDown {
+            get {
+                return ResourceManager.GetString("sldEditor_rules_moveDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move up (Alt+Up).
+        /// </summary>
+        public static string sldEditor_rules_moveUp {
+            get {
+                return ResourceManager.GetString("sldEditor_rules_moveUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This style has no rules yet..
+        /// </summary>
+        public static string sldEditor_rules_none {
+            get {
+                return ResourceManager.GetString("sldEditor_rules_none", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a rule on the left to edit it, or add a new one..
+        /// </summary>
+        public static string sldEditor_rules_noSelection {
+            get {
+                return ResourceManager.GetString("sldEditor_rules_noSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All scales.
+        /// </summary>
+        public static string sldEditor_scale_all {
+            get {
+                return ResourceManager.GetString("sldEditor_scale_all", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Between 1:{0} and 1:{1}.
+        /// </summary>
+        public static string sldEditor_scale_between {
+            get {
+                return ResourceManager.GetString("sldEditor_scale_between", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Closer than 1:{0}.
+        /// </summary>
+        public static string sldEditor_scale_closerThan {
+            get {
+                return ResourceManager.GetString("sldEditor_scale_closerThan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to From 1:{0} outwards.
+        /// </summary>
+        public static string sldEditor_scale_fartherThan {
+            get {
+                return ResourceManager.GetString("sldEditor_scale_fartherThan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The rule is drawn only between the two limits. Leave a limit empty for none. 1:5,000 is closer in than 1:50,000..
+        /// </summary>
+        public static string sldEditor_scale_hint {
+            get {
+                return ResourceManager.GetString("sldEditor_scale_hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The zoomed-in limit must be smaller than the zoomed-out limit, or the rule is never drawn..
+        /// </summary>
+        public static string sldEditor_scale_inverted {
+            get {
+                return ResourceManager.GetString("sldEditor_scale_inverted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoomed-out limit.
+        /// </summary>
+        public static string sldEditor_scale_maxLabel {
+            get {
+                return ResourceManager.GetString("sldEditor_scale_maxLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoomed-in limit.
+        /// </summary>
+        public static string sldEditor_scale_minLabel {
+            get {
+                return ResourceManager.GetString("sldEditor_scale_minLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No limit.
+        /// </summary>
+        public static string sldEditor_scale_noLimit {
+            get {
+                return ResourceManager.GetString("sldEditor_scale_noLimit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Max Scale:.
         /// </summary>
         public static string sldEditor_scaleRange_maxScale {
@@ -6195,6 +9093,195 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string sldEditor_scaleRange_minWatermark {
             get {
                 return ResourceManager.GetString("sldEditor_scaleRange_minWatermark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ends and corners.
+        /// </summary>
+        public static string sldEditor_section_ends {
+            get {
+                return ResourceManager.GetString("sldEditor_section_ends", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fill.
+        /// </summary>
+        public static string sldEditor_section_fill {
+            get {
+                return ResourceManager.GetString("sldEditor_section_fill", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geometry.
+        /// </summary>
+        public static string sldEditor_section_geometry {
+            get {
+                return ResourceManager.GetString("sldEditor_section_geometry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Halo.
+        /// </summary>
+        public static string sldEditor_section_halo {
+            get {
+                return ResourceManager.GetString("sldEditor_section_halo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Outline.
+        /// </summary>
+        public static string sldEditor_section_outline {
+            get {
+                return ResourceManager.GetString("sldEditor_section_outline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pattern.
+        /// </summary>
+        public static string sldEditor_section_pattern {
+            get {
+                return ResourceManager.GetString("sldEditor_section_pattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Style name and description.
+        /// </summary>
+        public static string sldEditor_style_panel {
+            get {
+                return ResourceManager.GetString("sldEditor_style_panel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add a symbol:.
+        /// </summary>
+        public static string sldEditor_symbolizer_add {
+            get {
+                return ResourceManager.GetString("sldEditor_symbolizer_add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Line.
+        /// </summary>
+        public static string sldEditor_symbolizer_line {
+            get {
+                return ResourceManager.GetString("sldEditor_symbolizer_line", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move down.
+        /// </summary>
+        public static string sldEditor_symbolizer_moveDown {
+            get {
+                return ResourceManager.GetString("sldEditor_symbolizer_moveDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move up.
+        /// </summary>
+        public static string sldEditor_symbolizer_moveUp {
+            get {
+                return ResourceManager.GetString("sldEditor_symbolizer_moveUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This rule draws nothing yet. Add a symbol below..
+        /// </summary>
+        public static string sldEditor_symbolizer_none {
+            get {
+                return ResourceManager.GetString("sldEditor_symbolizer_none", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Symbols are drawn in list order: lower ones are drawn on top..
+        /// </summary>
+        public static string sldEditor_symbolizer_orderHint {
+            get {
+                return ResourceManager.GetString("sldEditor_symbolizer_orderHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Marker.
+        /// </summary>
+        public static string sldEditor_symbolizer_point {
+            get {
+                return ResourceManager.GetString("sldEditor_symbolizer_point", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fill.
+        /// </summary>
+        public static string sldEditor_symbolizer_polygon {
+            get {
+                return ResourceManager.GetString("sldEditor_symbolizer_polygon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Raster.
+        /// </summary>
+        public static string sldEditor_symbolizer_raster {
+            get {
+                return ResourceManager.GetString("sldEditor_symbolizer_raster", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove symbol.
+        /// </summary>
+        public static string sldEditor_symbolizer_remove {
+            get {
+                return ResourceManager.GetString("sldEditor_symbolizer_remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Label.
+        /// </summary>
+        public static string sldEditor_symbolizer_text {
+            get {
+                return ResourceManager.GetString("sldEditor_symbolizer_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Details.
+        /// </summary>
+        public static string sldEditor_tab_details {
+            get {
+                return ResourceManager.GetString("sldEditor_tab_details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter and scale.
+        /// </summary>
+        public static string sldEditor_tab_filterScale {
+            get {
+                return ResourceManager.GetString("sldEditor_tab_filterScale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Symbology.
+        /// </summary>
+        public static string sldEditor_tab_symbology {
+            get {
+                return ResourceManager.GetString("sldEditor_tab_symbology", resourceCulture);
             }
         }
         
@@ -6285,6 +9372,222 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string sldEditor_textSymbolizer_labelProperty {
             get {
                 return ResourceManager.GetString("sldEditor_textSymbolizer_labelProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy.
+        /// </summary>
+        public static string sldEditor_xml_copy {
+            get {
+                return ResourceManager.GetString("sldEditor_xml_copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updates as you edit. This is what Apply and OK save..
+        /// </summary>
+        public static string sldEditor_xml_live {
+            get {
+                return ResourceManager.GetString("sldEditor_xml_live", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Colors.
+        /// </summary>
+        public static string sldGenerator_colors {
+            get {
+                return ResourceManager.GetString("sldGenerator_colors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Domain colors.
+        /// </summary>
+        public static string sldGenerator_colorsDomain {
+            get {
+                return ResourceManager.GetString("sldGenerator_colorsDomain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Built-in palette.
+        /// </summary>
+        public static string sldGenerator_colorsPalette {
+            get {
+                return ResourceManager.GetString("sldGenerator_colorsPalette", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading the values failed:.
+        /// </summary>
+        public static string sldGenerator_failed {
+            get {
+                return ResourceManager.GetString("sldGenerator_failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Field.
+        /// </summary>
+        public static string sldGenerator_field {
+            get {
+                return ResourceManager.GetString("sldGenerator_field", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate.
+        /// </summary>
+        public static string sldGenerator_generate {
+            get {
+                return ResourceManager.GetString("sldGenerator_generate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geometry.
+        /// </summary>
+        public static string sldGenerator_geometry {
+            get {
+                return ResourceManager.GetString("sldGenerator_geometry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Line.
+        /// </summary>
+        public static string sldGenerator_geometryLine {
+            get {
+                return ResourceManager.GetString("sldGenerator_geometryLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Point.
+        /// </summary>
+        public static string sldGenerator_geometryPoint {
+            get {
+                return ResourceManager.GetString("sldGenerator_geometryPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Polygon.
+        /// </summary>
+        public static string sldGenerator_geometryPolygon {
+            get {
+                return ResourceManager.GetString("sldGenerator_geometryPolygon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add a rule for other values.
+        /// </summary>
+        public static string sldGenerator_includeOther {
+            get {
+                return ResourceManager.GetString("sldGenerator_includeOther", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No field to categorize by.
+        /// </summary>
+        public static string sldGenerator_noField {
+            get {
+                return ResourceManager.GetString("sldGenerator_noField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The field has no values.
+        /// </summary>
+        public static string sldGenerator_noValues {
+            get {
+                return ResourceManager.GetString("sldGenerator_noValues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Other values.
+        /// </summary>
+        public static string sldGenerator_otherValues {
+            get {
+                return ResourceManager.GetString("sldGenerator_otherValues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preview.
+        /// </summary>
+        public static string sldGenerator_preview {
+            get {
+                return ResourceManager.GetString("sldGenerator_preview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (the first {0} are shown).
+        /// </summary>
+        public static string sldGenerator_previewCut {
+            get {
+                return ResourceManager.GetString("sldGenerator_previewCut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replace the current rules.
+        /// </summary>
+        public static string sldGenerator_replaceExisting {
+            get {
+                return ResourceManager.GetString("sldGenerator_replaceExisting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} rules.
+        /// </summary>
+        public static string sldGenerator_ruleCount {
+            get {
+                return ResourceManager.GetString("sldGenerator_ruleCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate rules from field values.
+        /// </summary>
+        public static string sldGenerator_title {
+            get {
+                return ResourceManager.GetString("sldGenerator_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Values.
+        /// </summary>
+        public static string sldGenerator_values {
+            get {
+                return ResourceManager.GetString("sldGenerator_values", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Values in the layer.
+        /// </summary>
+        public static string sldGenerator_valuesData {
+            get {
+                return ResourceManager.GetString("sldGenerator_valuesData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All domain values.
+        /// </summary>
+        public static string sldGenerator_valuesDomain {
+            get {
+                return ResourceManager.GetString("sldGenerator_valuesDomain", resourceCulture);
             }
         }
         
@@ -6492,6 +9795,429 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string srs_webMercatorTitle {
             get {
                 return ResourceManager.GetString("srs_webMercatorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Amber.
+        /// </summary>
+        public static string textMarker_color_amber {
+            get {
+                return ResourceManager.GetString("textMarker_color_amber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Black.
+        /// </summary>
+        public static string textMarker_color_black {
+            get {
+                return ResourceManager.GetString("textMarker_color_black", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Blue.
+        /// </summary>
+        public static string textMarker_color_blue {
+            get {
+                return ResourceManager.GetString("textMarker_color_blue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Brown.
+        /// </summary>
+        public static string textMarker_color_brown {
+            get {
+                return ResourceManager.GetString("textMarker_color_brown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crimson.
+        /// </summary>
+        public static string textMarker_color_crimson {
+            get {
+                return ResourceManager.GetString("textMarker_color_crimson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cyan.
+        /// </summary>
+        public static string textMarker_color_cyan {
+            get {
+                return ResourceManager.GetString("textMarker_color_cyan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Green.
+        /// </summary>
+        public static string textMarker_color_green {
+            get {
+                return ResourceManager.GetString("textMarker_color_green", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indigo.
+        /// </summary>
+        public static string textMarker_color_indigo {
+            get {
+                return ResourceManager.GetString("textMarker_color_indigo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lime.
+        /// </summary>
+        public static string textMarker_color_lime {
+            get {
+                return ResourceManager.GetString("textMarker_color_lime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lime Green.
+        /// </summary>
+        public static string textMarker_color_limeGreen {
+            get {
+                return ResourceManager.GetString("textMarker_color_limeGreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Magenta.
+        /// </summary>
+        public static string textMarker_color_magenta {
+            get {
+                return ResourceManager.GetString("textMarker_color_magenta", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mauve.
+        /// </summary>
+        public static string textMarker_color_mauve {
+            get {
+                return ResourceManager.GetString("textMarker_color_mauve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Olive.
+        /// </summary>
+        public static string textMarker_color_olive {
+            get {
+                return ResourceManager.GetString("textMarker_color_olive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Orange.
+        /// </summary>
+        public static string textMarker_color_orange {
+            get {
+                return ResourceManager.GetString("textMarker_color_orange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pink.
+        /// </summary>
+        public static string textMarker_color_pink {
+            get {
+                return ResourceManager.GetString("textMarker_color_pink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Red.
+        /// </summary>
+        public static string textMarker_color_red {
+            get {
+                return ResourceManager.GetString("textMarker_color_red", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Steel.
+        /// </summary>
+        public static string textMarker_color_steel {
+            get {
+                return ResourceManager.GetString("textMarker_color_steel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Taupe.
+        /// </summary>
+        public static string textMarker_color_taupe {
+            get {
+                return ResourceManager.GetString("textMarker_color_taupe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Teal.
+        /// </summary>
+        public static string textMarker_color_teal {
+            get {
+                return ResourceManager.GetString("textMarker_color_teal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Theme highlight.
+        /// </summary>
+        public static string textMarker_color_themeHighlight {
+            get {
+                return ResourceManager.GetString("textMarker_color_themeHighlight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Violet.
+        /// </summary>
+        public static string textMarker_color_violet {
+            get {
+                return ResourceManager.GetString("textMarker_color_violet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to White.
+        /// </summary>
+        public static string textMarker_color_white {
+            get {
+                return ResourceManager.GetString("textMarker_color_white", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yellow.
+        /// </summary>
+        public static string textMarker_color_yellow {
+            get {
+                return ResourceManager.GetString("textMarker_color_yellow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Align center.
+        /// </summary>
+        public static string textMarker_tooltip_alignCenter {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_alignCenter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Align left.
+        /// </summary>
+        public static string textMarker_tooltip_alignLeft {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_alignLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Align right.
+        /// </summary>
+        public static string textMarker_tooltip_alignRight {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_alignRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Background (Box only).
+        /// </summary>
+        public static string textMarker_tooltip_background {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_background", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bold.
+        /// </summary>
+        public static string textMarker_tooltip_bold {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_bold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy text.
+        /// </summary>
+        public static string textMarker_tooltip_copyText {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_copyText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Decrease font size.
+        /// </summary>
+        public static string textMarker_tooltip_decreaseFontSize {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_decreaseFontSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete label.
+        /// </summary>
+        public static string textMarker_tooltip_delete {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Erase text.
+        /// </summary>
+        public static string textMarker_tooltip_erase {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_erase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Font.
+        /// </summary>
+        public static string textMarker_tooltip_fontFamily {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_fontFamily", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Font size.
+        /// </summary>
+        public static string textMarker_tooltip_fontSize {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_fontSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Box.
+        /// </summary>
+        public static string textMarker_tooltip_frameBox {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_frameBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Halo.
+        /// </summary>
+        public static string textMarker_tooltip_frameHalo {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_frameHalo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plain text.
+        /// </summary>
+        public static string textMarker_tooltip_framePlain {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_framePlain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Increase font size.
+        /// </summary>
+        public static string textMarker_tooltip_increaseFontSize {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_increaseFontSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Italic.
+        /// </summary>
+        public static string textMarker_tooltip_italic {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_italic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Left to right (LTR).
+        /// </summary>
+        public static string textMarker_tooltip_leftToRight {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_leftToRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upright.
+        /// </summary>
+        public static string textMarker_tooltip_resetRotation {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_resetRotation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Right to left (RTL).
+        /// </summary>
+        public static string textMarker_tooltip_rightToLeft {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_rightToLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Drag to rotate. Shift: 15° steps. Double-click: upright.
+        /// </summary>
+        public static string textMarker_tooltip_rotateHandle {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_rotateHandle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rotation (degrees, clockwise).
+        /// </summary>
+        public static string textMarker_tooltip_rotation {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_rotation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text color.
+        /// </summary>
+        public static string textMarker_tooltip_textColor {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_textColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Underline.
+        /// </summary>
+        public static string textMarker_tooltip_underline {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_underline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Drag to change the width. Double-click: automatic width.
+        /// </summary>
+        public static string textMarker_tooltip_widthHandle {
+            get {
+                return ResourceManager.GetString("textMarker_tooltip_widthHandle", resourceCulture);
             }
         }
         
