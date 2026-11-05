@@ -87,6 +87,12 @@ public class VectorLayer : SymbolizableLayer
 
     public TileManager TileManager = new TileManager();
 
+    /// <summary>
+    /// Buttons the identify window shows while one feature of this layer is selected (e.g. a
+    /// tower's photos). Empty by default; the application adds them when it creates the layer.
+    /// </summary>
+    public List<Models.Identify.IdentifyFeatureAction> IdentifyFeatureActions { get; set; } = new();
+
     #endregion
 
     #region Constructors

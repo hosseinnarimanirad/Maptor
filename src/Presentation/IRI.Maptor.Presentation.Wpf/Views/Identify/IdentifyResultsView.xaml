@@ -327,6 +327,45 @@
                                             AutomationProperties.Name="{Binding [identify_showInTable], Source={StaticResource Localization}}">
                                         <iconPacks:PackIconMaterial Kind="TableArrowRight" Style="{StaticResource toolbarIcon}"/>
                                     </Button>
+
+                                    <!--the layer's own buttons for this feature (VectorLayer.IdentifyFeatureActions):
+                                        circle icons like their neighbours; a short badge (e.g. a tower's image count)
+                                        sits on the circle's corner, the full text is the tooltip-->
+                                    <ItemsControl ItemsSource="{Binding FeatureActions}" Focusable="False"
+                                                  Visibility="{Binding HasFeatureActions, Converter={StaticResource boolToVisibilityConverter}}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate DataType="{x:Type identify:IdentifyFeatureActionItem}">
+                                                <Grid Visibility="{Binding IsVisible, Converter={StaticResource boolToVisibilityConverter}}">
+                                                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                                                            Command="{Binding Command}"
+                                                            ToolTip="{Binding ToolTip}"
+                                                            ToolTipService.ShowOnDisabled="True"
+                                                            AutomationProperties.Name="{Binding Text}">
+                                                        <Path Data="{Binding PathMarkup}" Stretch="Uniform" FlowDirection="LeftToRight"
+                                                              Width="18" Height="18" Margin="4"
+                                                              Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                                                    </Button>
+
+                                                    <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-3,-3,0"
+                                                            MinWidth="16" Height="16" Padding="3,0" CornerRadius="8"
+                                                            IsHitTestVisible="False"
+                                                            BorderThickness="1"
+                                                            BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
+                                                            Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                                                            Visibility="{Binding HasBadge, Converter={StaticResource boolToVisibilityConverter}}">
+                                                        <TextBlock Text="{Binding Badge}" FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Micro}" FontWeight="Bold"
+                                                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                                   Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                                                    </Border>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
                                 </StackPanel>
 
                                 <StackPanel VerticalAlignment="Center" Margin="4,0,8,0">

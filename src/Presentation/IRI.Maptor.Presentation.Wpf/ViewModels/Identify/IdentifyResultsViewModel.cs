@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -280,6 +281,8 @@ public class IdentifyResultsViewModel : Notifier
 
         CommandManager.InvalidateRequerySuggested();
 
+        RebuildFeatureActions();
+
         _ = HighlightSelectionAsync();
     }
 
@@ -346,6 +349,51 @@ public class IdentifyResultsViewModel : Notifier
     }
 
     public ICommand ClearFilterCommand { get; }
+
+    #endregion
+
+    #region Layer actions (IdentifyFeatureAction)
+
+    private CancellationTokenSource? _featureActionsCancellation;
+
+    /// <summary>
+    /// The selected feature's layer actions (<see cref="VectorLayer.IdentifyFeatureActions"/>), rebuilt
+    /// on every selection; empty for a layer row, a drawing, or a layer without actions.
+    /// </summary>
+    public ObservableCollection<IdentifyFeatureActionItem> FeatureActions { get; } = new ObservableCollection<IdentifyFeatureActionItem>();
+
+    public bool HasFeatureActions => FeatureActions.Count > 0;
+
+    private void RebuildFeatureActions()
+    {
+        // whatever the previous selection was still asking for is no longer wanted. Cancelled, not
+        // disposed: a request in flight may still hold the token, and the source holds no timer.
+        _featureActionsCancellation?.Cancel();
+        _featureActionsCancellation = null;
+
+        FeatureActions.Clear();
+
+        if (SelectedFeature is { Drawing: null } feature
+            && feature.Layer.Layer is VectorLayer layer
+            && layer.IdentifyFeatureActions is { Count: > 0 } actions)
+        {
+            _featureActionsCancellation = new CancellationTokenSource();
+
+            var token = _featureActionsCancellation.Token;
+
+            foreach (var action in actions.Where(a => a is not null))
+                FeatureActions.Add(new IdentifyFeatureActionItem(action, layer, feature.Feature, token));
+
+            foreach (var item in FeatureActions)
+                _ = item.RefreshAsync();
+        }
+
+        RaisePropertyChanged(nameof(HasFeatureActions));
+    }
+
+    #endregion
+
+    #region Command implementations
 
     private void ZoomToSelection()
     {
