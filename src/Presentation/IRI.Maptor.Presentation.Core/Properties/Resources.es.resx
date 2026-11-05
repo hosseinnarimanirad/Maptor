@@ -3010,4 +3010,28 @@
   <data name="identify_showInTable" xml:space="preserve">
     <value>Mostrar en la tabla de atributos</value>
   </data>
+  <data name="common_showPassword" xml:space="preserve">
+    <value>Mostrar contraseña</value>
+  </data>
+  <data name="common_hidePassword" xml:space="preserve">
+    <value>Ocultar contraseña</value>
+  </data>
+  <data name="dialog_generatedPassword_title" xml:space="preserve">
+    <value>Nueva contraseña</value>
+  </data>
+  <data name="dialog_generatedPassword_message" xml:space="preserve">
+    <value>Se ha restablecido la contraseña de {0}. Entregue esta nueva contraseña al usuario:</value>
+  </data>
+  <data name="dialog_generatedPassword_copy" xml:space="preserve">
+    <value>Copiar contraseña</value>
+  </data>
+  <data name="dialog_generatedPassword_copied" xml:space="preserve">
+    <value>Copiada. El portapapeles se borrará en 60 segundos.</value>
+  </data>
+  <data name="dialog_generatedPassword_copyFailed" xml:space="preserve">
+    <value>Otro programa está usando el portapapeles. Seleccione la contraseña y cópiela manualmente.</value>
+  </data>
+  <data name="dialog_generatedPassword_note" xml:space="preserve">
+    <value>Pida al usuario que cambie esta contraseña después de iniciar sesión.</value>
+  </data>
 </root>

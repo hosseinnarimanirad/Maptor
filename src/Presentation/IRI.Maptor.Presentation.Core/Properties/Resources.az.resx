@@ -3010,4 +3010,28 @@
   <data name="identify_showInTable" xml:space="preserve">
     <value>Atribut cədvəlində göstər</value>
   </data>
+  <data name="common_showPassword" xml:space="preserve">
+    <value>Parolu göstər</value>
+  </data>
+  <data name="common_hidePassword" xml:space="preserve">
+    <value>Parolu gizlət</value>
+  </data>
+  <data name="dialog_generatedPassword_title" xml:space="preserve">
+    <value>Yeni parol</value>
+  </data>
+  <data name="dialog_generatedPassword_message" xml:space="preserve">
+    <value>{0} istifadəçisinin parolu sıfırlandı. Bu yeni parolu istifadəçiyə verin:</value>
+  </data>
+  <data name="dialog_generatedPassword_copy" xml:space="preserve">
+    <value>Parolu kopyala</value>
+  </data>
+  <data name="dialog_generatedPassword_copied" xml:space="preserve">
+    <value>Kopyalandı. Mübadilə buferi 60 saniyədən sonra təmizlənəcək.</value>
+  </data>
+  <data name="dialog_generatedPassword_copyFailed" xml:space="preserve">
+    <value>Mübadilə buferi başqa proqram tərəfindən istifadə olunur. Parolu seçib əl ilə kopyalayın.</value>
+  </data>
+  <data name="dialog_generatedPassword_note" xml:space="preserve">
+    <value>İstifadəçidən daxil olduqdan sonra bu parolu dəyişməsini xahiş edin.</value>
+  </data>
 </root>

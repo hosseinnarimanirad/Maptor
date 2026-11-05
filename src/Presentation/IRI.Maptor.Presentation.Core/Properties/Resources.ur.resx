@@ -3010,4 +3010,28 @@
   <data name="identify_showInTable" xml:space="preserve">
     <value>خصوصیات کے جدول میں دکھائیں</value>
   </data>
+  <data name="common_showPassword" xml:space="preserve">
+    <value>پاس ورڈ دکھائیں</value>
+  </data>
+  <data name="common_hidePassword" xml:space="preserve">
+    <value>پاس ورڈ چھپائیں</value>
+  </data>
+  <data name="dialog_generatedPassword_title" xml:space="preserve">
+    <value>نیا پاس ورڈ</value>
+  </data>
+  <data name="dialog_generatedPassword_message" xml:space="preserve">
+    <value>{0} کا پاس ورڈ ری سیٹ کر دیا گیا ہے۔ یہ نیا پاس ورڈ صارف کو دیں:</value>
+  </data>
+  <data name="dialog_generatedPassword_copy" xml:space="preserve">
+    <value>پاس ورڈ کاپی کریں</value>
+  </data>
+  <data name="dialog_generatedPassword_copied" xml:space="preserve">
+    <value>کاپی ہو گیا۔ کلپ بورڈ 60 سیکنڈ بعد صاف ہو جائے گا۔</value>
+  </data>
+  <data name="dialog_generatedPassword_copyFailed" xml:space="preserve">
+    <value>کلپ بورڈ کسی اور پروگرام کے استعمال میں ہے۔ پاس ورڈ منتخب کر کے خود کاپی کریں۔</value>
+  </data>
+  <data name="dialog_generatedPassword_note" xml:space="preserve">
+    <value>صارف سے کہیں کہ سائن ان کے بعد یہ پاس ورڈ تبدیل کرے۔</value>
+  </data>
 </root>

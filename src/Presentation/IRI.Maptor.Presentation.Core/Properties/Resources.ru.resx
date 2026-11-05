@@ -3010,4 +3010,28 @@
   <data name="identify_showInTable" xml:space="preserve">
     <value>Показать в таблице атрибутов</value>
   </data>
+  <data name="common_showPassword" xml:space="preserve">
+    <value>Показать пароль</value>
+  </data>
+  <data name="common_hidePassword" xml:space="preserve">
+    <value>Скрыть пароль</value>
+  </data>
+  <data name="dialog_generatedPassword_title" xml:space="preserve">
+    <value>Новый пароль</value>
+  </data>
+  <data name="dialog_generatedPassword_message" xml:space="preserve">
+    <value>Пароль пользователя {0} сброшен. Передайте пользователю этот новый пароль:</value>
+  </data>
+  <data name="dialog_generatedPassword_copy" xml:space="preserve">
+    <value>Копировать пароль</value>
+  </data>
+  <data name="dialog_generatedPassword_copied" xml:space="preserve">
+    <value>Скопировано. Буфер обмена будет очищен через 60 секунд.</value>
+  </data>
+  <data name="dialog_generatedPassword_copyFailed" xml:space="preserve">
+    <value>Буфер обмена занят другой программой. Выделите пароль и скопируйте его вручную.</value>
+  </data>
+  <data name="dialog_generatedPassword_note" xml:space="preserve">
+    <value>Попросите пользователя сменить этот пароль после входа.</value>
+  </data>
 </root>

@@ -3990,4 +3990,28 @@
   <data name="identify_showInTable" xml:space="preserve">
     <value>نمایش در اطلاعات توصیفی</value>
   </data>
+  <data name="common_showPassword" xml:space="preserve">
+    <value>نمایش رمز عبور</value>
+  </data>
+  <data name="common_hidePassword" xml:space="preserve">
+    <value>پنهان کردن رمز عبور</value>
+  </data>
+  <data name="dialog_generatedPassword_title" xml:space="preserve">
+    <value>رمز عبور جدید</value>
+  </data>
+  <data name="dialog_generatedPassword_message" xml:space="preserve">
+    <value>رمز عبور {0} بازنشانی شد. این رمز عبور جدید را به کاربر بدهید:</value>
+  </data>
+  <data name="dialog_generatedPassword_copy" xml:space="preserve">
+    <value>کپی رمز عبور</value>
+  </data>
+  <data name="dialog_generatedPassword_copied" xml:space="preserve">
+    <value>کپی شد. حافظهٔ موقت پس از ۶۰ ثانیه پاک می‌شود.</value>
+  </data>
+  <data name="dialog_generatedPassword_copyFailed" xml:space="preserve">
+    <value>حافظهٔ موقت در اختیار برنامهٔ دیگری است. رمز را انتخاب کنید و دستی کپی کنید.</value>
+  </data>
+  <data name="dialog_generatedPassword_note" xml:space="preserve">
+    <value>از کاربر بخواهید پس از ورود، این رمز عبور را تغییر دهد.</value>
+  </data>
 </root>

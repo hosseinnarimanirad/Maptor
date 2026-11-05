@@ -3010,4 +3010,28 @@
   <data name="identify_showInTable" xml:space="preserve">
     <value>Mostra nella tabella attributi</value>
   </data>
+  <data name="common_showPassword" xml:space="preserve">
+    <value>Mostra password</value>
+  </data>
+  <data name="common_hidePassword" xml:space="preserve">
+    <value>Nascondi password</value>
+  </data>
+  <data name="dialog_generatedPassword_title" xml:space="preserve">
+    <value>Nuova password</value>
+  </data>
+  <data name="dialog_generatedPassword_message" xml:space="preserve">
+    <value>La password di {0} è stata reimpostata. Comunica questa nuova password all'utente:</value>
+  </data>
+  <data name="dialog_generatedPassword_copy" xml:space="preserve">
+    <value>Copia password</value>
+  </data>
+  <data name="dialog_generatedPassword_copied" xml:space="preserve">
+    <value>Copiata. Gli appunti verranno svuotati tra 60 secondi.</value>
+  </data>
+  <data name="dialog_generatedPassword_copyFailed" xml:space="preserve">
+    <value>Gli appunti sono in uso da un altro programma. Seleziona la password e copiala manualmente.</value>
+  </data>
+  <data name="dialog_generatedPassword_note" xml:space="preserve">
+    <value>Chiedi all'utente di cambiare questa password dopo l'accesso.</value>
+  </data>
 </root>

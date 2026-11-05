@@ -3010,4 +3010,28 @@
   <data name="identify_showInTable" xml:space="preserve">
     <value>پیشاندان لە خشتەی تایبەتمەندییەکان</value>
   </data>
+  <data name="common_showPassword" xml:space="preserve">
+    <value>پیشاندانی وشەی نهێنی</value>
+  </data>
+  <data name="common_hidePassword" xml:space="preserve">
+    <value>شاردنەوەی وشەی نهێنی</value>
+  </data>
+  <data name="dialog_generatedPassword_title" xml:space="preserve">
+    <value>وشەی نهێنی نوێ</value>
+  </data>
+  <data name="dialog_generatedPassword_message" xml:space="preserve">
+    <value>وشەی نهێنی {0} ڕێکخرایەوە. ئەم وشە نهێنییە نوێیە بدە بە بەکارهێنەر:</value>
+  </data>
+  <data name="dialog_generatedPassword_copy" xml:space="preserve">
+    <value>کۆپیکردنی وشەی نهێنی</value>
+  </data>
+  <data name="dialog_generatedPassword_copied" xml:space="preserve">
+    <value>کۆپی کرا. کلیپبۆرد دوای ٦٠ چرکە پاک دەکرێتەوە.</value>
+  </data>
+  <data name="dialog_generatedPassword_copyFailed" xml:space="preserve">
+    <value>کلیپبۆرد لەلایەن بەرنامەیەکی ترەوە بەکاردێت. وشەی نهێنی هەڵبژێرە و بە دەست کۆپی بکە.</value>
+  </data>
+  <data name="dialog_generatedPassword_note" xml:space="preserve">
+    <value>داوا لە بەکارهێنەر بکە دوای چوونەژوورەوە ئەم وشە نهێنییە بگۆڕێت.</value>
+  </data>
 </root>

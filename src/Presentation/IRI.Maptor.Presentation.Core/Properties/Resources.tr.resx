@@ -3010,4 +3010,28 @@
   <data name="identify_showInTable" xml:space="preserve">
     <value>Öznitelik tablosunda göster</value>
   </data>
+  <data name="common_showPassword" xml:space="preserve">
+    <value>Parolayı göster</value>
+  </data>
+  <data name="common_hidePassword" xml:space="preserve">
+    <value>Parolayı gizle</value>
+  </data>
+  <data name="dialog_generatedPassword_title" xml:space="preserve">
+    <value>Yeni parola</value>
+  </data>
+  <data name="dialog_generatedPassword_message" xml:space="preserve">
+    <value>{0} kullanıcısının parolası sıfırlandı. Bu yeni parolayı kullanıcıya verin:</value>
+  </data>
+  <data name="dialog_generatedPassword_copy" xml:space="preserve">
+    <value>Parolayı kopyala</value>
+  </data>
+  <data name="dialog_generatedPassword_copied" xml:space="preserve">
+    <value>Kopyalandı. Pano 60 saniye sonra temizlenecek.</value>
+  </data>
+  <data name="dialog_generatedPassword_copyFailed" xml:space="preserve">
+    <value>Pano başka bir program tarafından kullanılıyor. Parolayı seçip elle kopyalayın.</value>
+  </data>
+  <data name="dialog_generatedPassword_note" xml:space="preserve">
+    <value>Kullanıcıdan oturum açtıktan sonra bu parolayı değiştirmesini isteyin.</value>
+  </data>
 </root>

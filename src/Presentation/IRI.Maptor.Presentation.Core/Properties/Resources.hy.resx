@@ -3010,4 +3010,28 @@
   <data name="identify_showInTable" xml:space="preserve">
     <value>Ցույց տալ հատկանիշների աղյուսակում</value>
   </data>
+  <data name="common_showPassword" xml:space="preserve">
+    <value>Ցույց տալ գաղտնաբառը</value>
+  </data>
+  <data name="common_hidePassword" xml:space="preserve">
+    <value>Թաքցնել գաղտնաբառը</value>
+  </data>
+  <data name="dialog_generatedPassword_title" xml:space="preserve">
+    <value>Նոր գաղտնաբառ</value>
+  </data>
+  <data name="dialog_generatedPassword_message" xml:space="preserve">
+    <value>{0}-ի գաղտնաբառը վերակայվել է։ Տվեք այս նոր գաղտնաբառը օգտատիրոջը.</value>
+  </data>
+  <data name="dialog_generatedPassword_copy" xml:space="preserve">
+    <value>Պատճենել գաղտնաբառը</value>
+  </data>
+  <data name="dialog_generatedPassword_copied" xml:space="preserve">
+    <value>Պատճենվեց։ Սեղմատախտակը կմաքրվի 60 վայրկյանից։</value>
+  </data>
+  <data name="dialog_generatedPassword_copyFailed" xml:space="preserve">
+    <value>Սեղմատախտակն օգտագործվում է այլ ծրագրի կողմից։ Ընտրեք գաղտնաբառը և պատճենեք ձեռքով։</value>
+  </data>
+  <data name="dialog_generatedPassword_note" xml:space="preserve">
+    <value>Խնդրեք օգտատիրոջը մուտք գործելուց հետո փոխել այս գաղտնաբառը։</value>
+  </data>
 </root>

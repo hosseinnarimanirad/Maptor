@@ -3010,4 +3010,28 @@
   <data name="identify_showInTable" xml:space="preserve">
     <value>عرض في جدول السمات</value>
   </data>
+  <data name="common_showPassword" xml:space="preserve">
+    <value>إظهار كلمة المرور</value>
+  </data>
+  <data name="common_hidePassword" xml:space="preserve">
+    <value>إخفاء كلمة المرور</value>
+  </data>
+  <data name="dialog_generatedPassword_title" xml:space="preserve">
+    <value>كلمة مرور جديدة</value>
+  </data>
+  <data name="dialog_generatedPassword_message" xml:space="preserve">
+    <value>تمت إعادة تعيين كلمة مرور {0}. أعطِ كلمة المرور الجديدة هذه للمستخدم:</value>
+  </data>
+  <data name="dialog_generatedPassword_copy" xml:space="preserve">
+    <value>نسخ كلمة المرور</value>
+  </data>
+  <data name="dialog_generatedPassword_copied" xml:space="preserve">
+    <value>تم النسخ. سيتم مسح الحافظة بعد 60 ثانية.</value>
+  </data>
+  <data name="dialog_generatedPassword_copyFailed" xml:space="preserve">
+    <value>الحافظة مستخدمة من برنامج آخر. حدّد كلمة المرور وانسخها يدويًا.</value>
+  </data>
+  <data name="dialog_generatedPassword_note" xml:space="preserve">
+    <value>اطلب من المستخدم تغيير كلمة المرور هذه بعد تسجيل الدخول.</value>
+  </data>
 </root>

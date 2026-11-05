@@ -3010,4 +3010,28 @@
   <data name="identify_showInTable" xml:space="preserve">
     <value>Mostrar na tabela de atributos</value>
   </data>
+  <data name="common_showPassword" xml:space="preserve">
+    <value>Mostrar senha</value>
+  </data>
+  <data name="common_hidePassword" xml:space="preserve">
+    <value>Ocultar senha</value>
+  </data>
+  <data name="dialog_generatedPassword_title" xml:space="preserve">
+    <value>Nova senha</value>
+  </data>
+  <data name="dialog_generatedPassword_message" xml:space="preserve">
+    <value>A senha de {0} foi redefinida. Entregue esta nova senha ao usuário:</value>
+  </data>
+  <data name="dialog_generatedPassword_copy" xml:space="preserve">
+    <value>Copiar senha</value>
+  </data>
+  <data name="dialog_generatedPassword_copied" xml:space="preserve">
+    <value>Copiada. A área de transferência será limpa em 60 segundos.</value>
+  </data>
+  <data name="dialog_generatedPassword_copyFailed" xml:space="preserve">
+    <value>A área de transferência está em uso por outro programa. Selecione a senha e copie-a manualmente.</value>
+  </data>
+  <data name="dialog_generatedPassword_note" xml:space="preserve">
+    <value>Peça ao usuário que altere esta senha após entrar.</value>
+  </data>
 </root>

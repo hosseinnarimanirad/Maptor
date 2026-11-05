@@ -3010,4 +3010,28 @@
   <data name="identify_showInTable" xml:space="preserve">
     <value>在属性表中显示</value>
   </data>
+  <data name="common_showPassword" xml:space="preserve">
+    <value>显示密码</value>
+  </data>
+  <data name="common_hidePassword" xml:space="preserve">
+    <value>隐藏密码</value>
+  </data>
+  <data name="dialog_generatedPassword_title" xml:space="preserve">
+    <value>新密码</value>
+  </data>
+  <data name="dialog_generatedPassword_message" xml:space="preserve">
+    <value>{0} 的密码已重置。请将此新密码交给该用户：</value>
+  </data>
+  <data name="dialog_generatedPassword_copy" xml:space="preserve">
+    <value>复制密码</value>
+  </data>
+  <data name="dialog_generatedPassword_copied" xml:space="preserve">
+    <value>已复制。剪贴板将在 60 秒后清除。</value>
+  </data>
+  <data name="dialog_generatedPassword_copyFailed" xml:space="preserve">
+    <value>剪贴板正被其他程序使用。请选中密码并手动复制。</value>
+  </data>
+  <data name="dialog_generatedPassword_note" xml:space="preserve">
+    <value>请用户登录后更改此密码。</value>
+  </data>
 </root>

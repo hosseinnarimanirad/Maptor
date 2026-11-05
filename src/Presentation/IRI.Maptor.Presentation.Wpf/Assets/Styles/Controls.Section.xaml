@@ -77,10 +77,14 @@
 
     <!--Titles-->
 
-    <!--caption of a panel's title band; sits on Border.PanelHeader-->
+    <!--caption of a panel's title band; sits on Border.PanelHeader. That band is accent-filled, so
+        the caption takes the accent's foreground (IdealForeground, as TextBlock.HeaderTitle does):
+        inheriting the window's text colour put black on the accent in the light theme. Like every
+        IdealForeground caption it is white in both modes, so do not place it on a plain surface.-->
     <Style x:Key="IRI.Maptor.Styles.TextBlock.PanelTitle"
            TargetType="TextBlock"
            BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}">
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
         <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.BodyLarge}"/>
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="VerticalAlignment" Value="Center"/>

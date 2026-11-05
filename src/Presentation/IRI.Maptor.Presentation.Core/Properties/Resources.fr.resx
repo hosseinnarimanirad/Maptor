@@ -3010,4 +3010,28 @@
   <data name="identify_showInTable" xml:space="preserve">
     <value>Afficher dans la table attributaire</value>
   </data>
+  <data name="common_showPassword" xml:space="preserve">
+    <value>Afficher le mot de passe</value>
+  </data>
+  <data name="common_hidePassword" xml:space="preserve">
+    <value>Masquer le mot de passe</value>
+  </data>
+  <data name="dialog_generatedPassword_title" xml:space="preserve">
+    <value>Nouveau mot de passe</value>
+  </data>
+  <data name="dialog_generatedPassword_message" xml:space="preserve">
+    <value>Le mot de passe de {0} a été réinitialisé. Communiquez ce nouveau mot de passe à l'utilisateur :</value>
+  </data>
+  <data name="dialog_generatedPassword_copy" xml:space="preserve">
+    <value>Copier le mot de passe</value>
+  </data>
+  <data name="dialog_generatedPassword_copied" xml:space="preserve">
+    <value>Copié. Le presse-papiers sera vidé dans 60 secondes.</value>
+  </data>
+  <data name="dialog_generatedPassword_copyFailed" xml:space="preserve">
+    <value>Le presse-papiers est utilisé par un autre programme. Sélectionnez le mot de passe et copiez-le manuellement.</value>
+  </data>
+  <data name="dialog_generatedPassword_note" xml:space="preserve">
+    <value>Demandez à l'utilisateur de changer ce mot de passe après sa connexion.</value>
+  </data>
 </root>

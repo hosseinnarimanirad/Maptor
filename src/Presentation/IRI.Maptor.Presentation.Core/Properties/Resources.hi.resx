@@ -3010,4 +3010,28 @@
   <data name="identify_showInTable" xml:space="preserve">
     <value>विशेषता तालिका में दिखाएँ</value>
   </data>
+  <data name="common_showPassword" xml:space="preserve">
+    <value>पासवर्ड दिखाएँ</value>
+  </data>
+  <data name="common_hidePassword" xml:space="preserve">
+    <value>पासवर्ड छिपाएँ</value>
+  </data>
+  <data name="dialog_generatedPassword_title" xml:space="preserve">
+    <value>नया पासवर्ड</value>
+  </data>
+  <data name="dialog_generatedPassword_message" xml:space="preserve">
+    <value>{0} का पासवर्ड रीसेट कर दिया गया है। यह नया पासवर्ड उपयोगकर्ता को दें:</value>
+  </data>
+  <data name="dialog_generatedPassword_copy" xml:space="preserve">
+    <value>पासवर्ड कॉपी करें</value>
+  </data>
+  <data name="dialog_generatedPassword_copied" xml:space="preserve">
+    <value>कॉपी हो गया। क्लिपबोर्ड 60 सेकंड बाद साफ़ हो जाएगा।</value>
+  </data>
+  <data name="dialog_generatedPassword_copyFailed" xml:space="preserve">
+    <value>क्लिपबोर्ड किसी अन्य प्रोग्राम द्वारा उपयोग में है। पासवर्ड चुनें और हाथ से कॉपी करें।</value>
+  </data>
+  <data name="dialog_generatedPassword_note" xml:space="preserve">
+    <value>उपयोगकर्ता से कहें कि साइन इन करने के बाद यह पासवर्ड बदल दें।</value>
+  </data>
 </root>

@@ -3616,6 +3616,78 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Show password.
+        /// </summary>
+        public static string common_showPassword {
+            get {
+                return ResourceManager.GetString("common_showPassword", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Hide password.
+        /// </summary>
+        public static string common_hidePassword {
+            get {
+                return ResourceManager.GetString("common_hidePassword", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to New password.
+        /// </summary>
+        public static string dialog_generatedPassword_title {
+            get {
+                return ResourceManager.GetString("dialog_generatedPassword_title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The password of {0} has been reset. Give this new password to the user:.
+        /// </summary>
+        public static string dialog_generatedPassword_message {
+            get {
+                return ResourceManager.GetString("dialog_generatedPassword_message", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Copy password.
+        /// </summary>
+        public static string dialog_generatedPassword_copy {
+            get {
+                return ResourceManager.GetString("dialog_generatedPassword_copy", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Copied. The clipboard is cleared after 60 seconds..
+        /// </summary>
+        public static string dialog_generatedPassword_copied {
+            get {
+                return ResourceManager.GetString("dialog_generatedPassword_copied", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The clipboard is in use by another program. Select the password and copy it by hand..
+        /// </summary>
+        public static string dialog_generatedPassword_copyFailed {
+            get {
+                return ResourceManager.GetString("dialog_generatedPassword_copyFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Ask the user to change this password after signing in..
+        /// </summary>
+        public static string dialog_generatedPassword_note {
+            get {
+                return ResourceManager.GetString("dialog_generatedPassword_note", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Features found.
         /// </summary>
         public static string identify_featuresFound {

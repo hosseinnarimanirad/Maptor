@@ -4086,4 +4086,28 @@
   <data name="identify_showInTable" xml:space="preserve">
     <value>Show in attribute table</value>
   </data>
+  <data name="common_showPassword" xml:space="preserve">
+    <value>Show password</value>
+  </data>
+  <data name="common_hidePassword" xml:space="preserve">
+    <value>Hide password</value>
+  </data>
+  <data name="dialog_generatedPassword_title" xml:space="preserve">
+    <value>New password</value>
+  </data>
+  <data name="dialog_generatedPassword_message" xml:space="preserve">
+    <value>The password of {0} has been reset. Give this new password to the user:</value>
+  </data>
+  <data name="dialog_generatedPassword_copy" xml:space="preserve">
+    <value>Copy password</value>
+  </data>
+  <data name="dialog_generatedPassword_copied" xml:space="preserve">
+    <value>Copied. The clipboard is cleared after 60 seconds.</value>
+  </data>
+  <data name="dialog_generatedPassword_copyFailed" xml:space="preserve">
+    <value>The clipboard is in use by another program. Select the password and copy it by hand.</value>
+  </data>
+  <data name="dialog_generatedPassword_note" xml:space="preserve">
+    <value>Ask the user to change this password after signing in.</value>
+  </data>
 </root>
