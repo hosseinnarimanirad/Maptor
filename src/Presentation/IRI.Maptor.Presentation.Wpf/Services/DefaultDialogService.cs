@@ -733,6 +733,16 @@ public class DefaultDialogService : IDialogService
             .ContinueWith(_ => { }, TaskContinuationOptions.None);
     }
 
+    public Task ShowGeneratedPasswordAsync(string userName, string password, object? ownerWindow = null)
+    {
+        if (string.IsNullOrEmpty(password))
+            throw new ArgumentException("Password cannot be null or empty.", nameof(password));
+
+        var viewModel = new GeneratedPasswordDialogViewModel(userName, password);
+
+        return ShowDialogAsync(ownerWindow, new GeneratedPasswordDialogView(), viewModel);
+    }
+
 
     #endregion
 

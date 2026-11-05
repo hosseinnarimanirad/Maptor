@@ -32,7 +32,8 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconMaterial Kind="Email" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.FieldAdornment}"/>
-                <TextBox Grid.Column="1"
+                <TextBox x:Name="email" Grid.Column="1"
+                         PreviewKeyDown="email_PreviewKeyDown"
                          Style="{StaticResource IRI.Maptor.Styles.TextBox.Large}" FlowDirection="LeftToRight"
                          mahApp:TextBoxHelper.Watermark="{Binding [common_email], Source={StaticResource Localization}}">
                     <!--<i1:Interaction.Triggers>
@@ -59,6 +60,7 @@
                 </Grid.ColumnDefinitions> 
                 <iconPacks:PackIconPhosphorIcons Kind="PasswordFill" Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}"/>
                 <PasswordBox x:Name="key" Grid.Column="1"
+                             PreviewKeyDown="key_PreviewKeyDown"
                              Style="{StaticResource IRI.Maptor.Styles.Security.PasswordBox}"
                              mahApp:TextBoxHelper.Watermark="{Binding [common_password], Source={StaticResource Localization}}"/>
             </Grid>
@@ -78,6 +80,7 @@
                     </StackPanel>
                 </Viewbox>
                 <PasswordBox x:Name="confirmPassword" Grid.Column="1"
+                             PreviewKeyDown="confirmPassword_PreviewKeyDown"
                              Style="{StaticResource IRI.Maptor.Styles.Security.PasswordBox}"
                              mahApp:TextBoxHelper.Watermark="{Binding [common_confirmPassword], Source={StaticResource Localization}}"/>
             </Grid>

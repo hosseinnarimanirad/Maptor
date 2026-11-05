@@ -68,6 +68,12 @@ public interface IDialogService
 
     Task ShowMessage_DoneSuccessfully(object? ownerWindow = null);
 
+    /// <summary>
+    /// Hands the administrator a password the server just generated for <paramref name="userName"/> (password
+    /// reset): shown selectable with a Copy button; nothing reaches the clipboard unless that button is pressed.
+    /// </summary>
+    Task ShowGeneratedPasswordAsync(string userName, string password, object? ownerWindow = null);
+
     // ********************************************************************
     //                          SignUp Dialog
     // ********************************************************************

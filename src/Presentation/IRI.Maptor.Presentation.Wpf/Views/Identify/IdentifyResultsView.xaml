@@ -12,7 +12,7 @@
              xmlns:viewModels="clr-namespace:IRI.Maptor.Presentation.Wpf.ViewModels.Identify"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=viewModels:IdentifyResultsViewModel}"
-             d:DesignWidth="760" d:DesignHeight="460"
+             d:DesignWidth="560" d:DesignHeight="460"
              Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
 
     <!--Master–detail view of an identify click: layer → feature tree on the leading side,

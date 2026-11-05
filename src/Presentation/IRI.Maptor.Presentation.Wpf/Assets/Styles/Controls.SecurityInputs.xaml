@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-                    xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core">
+                    xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
+                    xmlns:behaviors="clr-namespace:IRI.Maptor.Presentation.Wpf.Behaviors">
 
     <!--Replaces SecurityInputStyles.xaml (Step 4).
 
@@ -50,30 +51,138 @@
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="Margin" Value="2"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="mahApp:PasswordBoxHelper.CapsLockWarningToolTip" Value="{Binding [common_capsLockWarning], Source={StaticResource Localization}}"/>
-        <Setter Property="mahApp:PasswordBoxHelper.RevealButtonContent">
-            <Setter.Value>
-                <Button/>
-            </Setter.Value>
-        </Setter>
-        <!--The template supplies the reveal button's *content*, so it must be a glyph, not
-            another Button. It previously held a bare red 30x30 rectangle.-->
-        <Setter Property="mahApp:PasswordBoxHelper.RevealButtonContentTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <iconPacks:PackIconMaterial Kind="Eye" Width="16" Height="16"
-                                                VerticalAlignment="Center"
-                                                HorizontalAlignment="Center"
-                                                Foreground="{DynamicResource IRI.Maptor.Brushes.Muted}"/>
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
         <Setter Property="ContextMenu">
             <Setter.Value>
                 <ContextMenu FlowDirection="{Binding CurrentFlowDirection, Source={StaticResource Localization}}">
                     <!--no Cut/Copy: lifting a password out of the box is not an affordance we offer-->
                     <MenuItem Header="{Binding [cmd_contextMenu_paste], Source={StaticResource Localization}}" Command="ApplicationCommands.Paste"/>
                 </ContextMenu>
+            </Setter.Value>
+        </Setter>
+        <!--Show-password toggle and Caps Lock warning (2026-11-05). MahApps' own template offers neither as
+            wanted: its reveal button exists only in MahApps.Styles.PasswordBox.Button.Revealed and shows the
+            password only while held down, and its Caps Lock hint is a small icon with a tooltip. So this style
+            has its own template: the base's frame, content host and watermark (the only MahApps feature these
+            screens use), plus the eye toggle and a warning line under the field, driven by PasswordBoxAssist.-->
+        <Setter Property="behaviors:PasswordBoxAssist.IsEnabled" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="PasswordBox">
+                    <Grid x:Name="root">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Border x:Name="Base" Grid.Row="0"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="{TemplateBinding mahApp:ControlsHelper.CornerRadius}"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+
+                        <Grid Grid.Row="0" Margin="{TemplateBinding BorderThickness}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <ScrollViewer x:Name="PART_ContentHost" Grid.Column="0"
+                                          BorderThickness="0" Background="{x:Null}" IsTabStop="False"
+                                          Padding="{TemplateBinding Padding}" VerticalAlignment="Stretch"/>
+
+                            <!--the password in plain text while revealed; PasswordBoxAssist keeps it in step with the
+                                PasswordBox and empties it when hidden. Explicit null style: the theme's plain TextBox,
+                                not the app's implicit MahApps one with its own frame, watermark and menu.-->
+                            <TextBox x:Name="PART_RevealedText" Grid.Column="0"
+                                     Style="{x:Null}"
+                                     Visibility="Collapsed"
+                                     FlowDirection="LeftToRight"
+                                     TextAlignment="Center"
+                                     VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                     Padding="{TemplateBinding Padding}"
+                                     BorderThickness="0"
+                                     Background="Transparent"
+                                     Foreground="{TemplateBinding Foreground}"
+                                     CaretBrush="{TemplateBinding CaretBrush}"
+                                     SelectionBrush="{TemplateBinding SelectionBrush}"
+                                     FontFamily="{TemplateBinding FontFamily}"
+                                     FontSize="{TemplateBinding FontSize}"
+                                     IsUndoEnabled="False"
+                                     ContextMenu="{TemplateBinding ContextMenu}"/>
+
+                            <TextBlock x:Name="PART_Message" Grid.Column="0"
+                                       Style="{DynamicResource MahApps.Styles.TextBlock.Watermark}"
+                                       Text="{TemplateBinding mahApp:TextBoxHelper.Watermark}"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       Padding="{TemplateBinding Padding}"
+                                       Margin="4,0"
+                                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                       IsHitTestVisible="False"
+                                       Visibility="Collapsed"/>
+
+                            <ToggleButton x:Name="PART_RevealToggle" Grid.Column="1"
+                                          IsChecked="{Binding Path=(behaviors:PasswordBoxAssist.IsRevealed), RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                          Focusable="False" IsTabStop="False" Cursor="Hand"
+                                          Width="30" Margin="0,0,2,0"
+                                          ToolTip="{Binding [common_showPassword], Source={StaticResource Localization}}"
+                                          AutomationProperties.Name="{Binding [common_showPassword], Source={StaticResource Localization}}">
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Border Background="Transparent">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                                <iconPacks:PackIconMaterial x:Name="revealIcon" Kind="EyeOutline" Width="16" Height="16"
+                                                            Foreground="{DynamicResource IRI.Maptor.Brushes.Muted}"/>
+                            </ToggleButton>
+                        </Grid>
+
+                        <!--below the field, inside its frame: an icon-only hint in the corner is easy to miss-->
+                        <StackPanel x:Name="PART_CapsLockWarning" Grid.Row="1"
+                                    Orientation="Horizontal" HorizontalAlignment="Center" Margin="4,0,4,4"
+                                    Visibility="Collapsed">
+                            <iconPacks:PackIconMaterial Kind="AppleKeyboardCaps" Width="12" Height="12" VerticalAlignment="Center"
+                                                        Margin="0,0,4,0" Foreground="{DynamicResource IRI.Maptor.Brushes.Warning}"/>
+                            <TextBlock Text="{Binding [common_capsLockWarning], Source={StaticResource Localization}}"
+                                       FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Caption}"
+                                       Foreground="{DynamicResource IRI.Maptor.Brushes.Warning}"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="mahApp:TextBoxHelper.HasText" Value="False">
+                            <Setter TargetName="PART_Message" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                        <!--empty and focused: the watermark steps back, as in MahApps' template-->
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="mahApp:TextBoxHelper.HasText" Value="False"/>
+                                <Condition Property="IsKeyboardFocusWithin" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="PART_Message" Property="Opacity" Value="0.2"/>
+                        </MultiTrigger>
+                        <Trigger Property="behaviors:PasswordBoxAssist.IsRevealed" Value="True">
+                            <Setter TargetName="PART_ContentHost" Property="Visibility" Value="Hidden"/>
+                            <Setter TargetName="PART_RevealedText" Property="Visibility" Value="Visible"/>
+                            <Setter TargetName="revealIcon" Property="Kind" Value="EyeOffOutline"/>
+                            <Setter TargetName="PART_RevealToggle" Property="ToolTip" Value="{Binding [common_hidePassword], Source={StaticResource Localization}}"/>
+                            <Setter TargetName="PART_RevealToggle" Property="AutomationProperties.Name" Value="{Binding [common_hidePassword], Source={StaticResource Localization}}"/>
+                        </Trigger>
+                        <Trigger SourceName="PART_RevealToggle" Property="IsMouseOver" Value="True">
+                            <Setter TargetName="revealIcon" Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                        </Trigger>
+                        <Trigger Property="behaviors:PasswordBoxAssist.IsCapsLockWarningVisible" Value="True">
+                            <Setter TargetName="PART_CapsLockWarning" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="root" Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>

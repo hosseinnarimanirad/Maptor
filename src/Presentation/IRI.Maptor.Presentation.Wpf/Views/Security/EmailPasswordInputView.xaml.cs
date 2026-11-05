@@ -73,9 +73,25 @@ namespace IRI.Maptor.Presentation.Wpf.Controls.Security
         public static readonly DependencyProperty EnterCommandParameterProperty =
             DependencyProperty.Register(nameof(EnterCommandParameter), typeof(object), typeof(EmailPasswordInputView), new PropertyMetadata(null));
 
+        // an app that remembers the last e-mail (Saba, Gas) has it filled in already: start at the password
         private void root_Loaded(object sender, RoutedEventArgs e)
         {
-            this.email.Focus();
+            if (string.IsNullOrWhiteSpace(UserNameOrEmail))
+                this.email.Focus();
+            else
+                this.key.Focus();
+        }
+
+        // Enter in the e-mail field moves on to the password (leaving the field also commits the e-mail,
+        // whose binding updates on lost focus); Enter in the password signs in (EnterCommand)
+        private void email_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key != System.Windows.Input.Key.Enter)
+                return;
+
+            e.Handled = true;
+
+            this.key.Focus();
         }
     }
 }
