@@ -120,12 +120,31 @@
                 </Border>
             </HierarchicalDataTemplate>
 
+            <!--"[id] label": the id is its own LTR text block, so the brackets and digits never get
+                reordered by the bidi algorithm next to a Persian or a Latin label; docked on the
+                leading side, it stays in front of the label in both reading directions-->
+            <Style x:Key="featureIdText" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}">
+                <Setter Property="Text" Value="{Binding IdText}"/>
+                <Setter Property="FlowDirection" Value="LeftToRight"/>
+                <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Muted}"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="0,0,6,0"/>
+                <Setter Property="DockPanel.Dock" Value="Left"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IdText}" Value="{x:Null}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
             <DataTemplate DataType="{x:Type identify:IdentifyFeatureNode}">
-                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}"
-                           Text="{Binding Title}"
-                           ToolTip="{Binding Title}"
-                           TextTrimming="CharacterEllipsis"
-                           VerticalAlignment="Center"/>
+                <DockPanel LastChildFill="True" ToolTip="{Binding}">
+                    <TextBlock Style="{StaticResource featureIdText}"/>
+                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}"
+                               Text="{Binding Title}"
+                               TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center"/>
+                </DockPanel>
             </DataTemplate>
 
             <!--attribute grid: tighter than the shared list grid (rows 30 → 24, cell padding 8,5 → 6,2)
@@ -304,11 +323,14 @@
                                 </StackPanel>
 
                                 <StackPanel VerticalAlignment="Center" Margin="4,0,8,0">
-                                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardTitle}"
-                                               Text="{Binding SelectedFeature.Title}"
-                                               ToolTip="{Binding SelectedFeature.Title}"
-                                               TextTrimming="CharacterEllipsis"
-                                               Margin="0"/>
+                                    <DockPanel DataContext="{Binding SelectedFeature}" LastChildFill="True" ToolTip="{Binding}">
+                                        <TextBlock Style="{StaticResource featureIdText}" FontSize="{Binding FontSize, ElementName=selectedFeatureTitle}"/>
+                                        <TextBlock x:Name="selectedFeatureTitle"
+                                                   Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardTitle}"
+                                                   Text="{Binding Title}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   Margin="0"/>
+                                    </DockPanel>
                                     <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}"
                                                Text="{Binding SelectedLayer.LayerName}"
                                                TextTrimming="CharacterEllipsis"/>

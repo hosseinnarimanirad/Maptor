@@ -24,7 +24,10 @@ public class IdentifyFeatureNode : Notifier, IIdentifyNode
 
         _fields = layer.Fields;
 
-        Title = IdentifyAttributeHelper.ResolveTitle(feature, _fields);
+        Title = IdentifyAttributeHelper.ResolveTitle(feature, _fields, layer.LabelColumn);
+
+        // two features can share a label (two busbars "BUS82"): the id tells them apart
+        IdText = $"[{feature.Id}]";
     }
 
     /// <summary>A drawing item under the drawings group: titled with its legend name, its own fields.</summary>
@@ -41,6 +44,10 @@ public class IdentifyFeatureNode : Notifier, IIdentifyNode
         Title = string.IsNullOrWhiteSpace(drawing.LayerName)
                     ? IdentifyAttributeHelper.ResolveTitle(Feature, _fields)
                     : drawing.LayerName;
+
+        // a drawing is named by its legend title; only a nameless one falls back to its id
+        if (string.IsNullOrWhiteSpace(Title))
+            IdText = $"[{Feature.Id}]";
     }
 
     private readonly IReadOnlyList<Field>? _fields;
@@ -54,8 +61,20 @@ public class IdentifyFeatureNode : Notifier, IIdentifyNode
 
     public int Id => Feature.Id;
 
-    /// <summary>Label → first text attribute → #Id. Computed once at construction.</summary>
+    /// <summary>
+    /// The feature's label (<see cref="IdentifyAttributeHelper.ResolveTitle"/>), or a drawing's legend name;
+    /// may be empty. Computed once at construction.
+    /// </summary>
     public string Title { get; }
+
+    /// <summary>
+    /// "[Id]", shown in front of <see cref="Title"/> so features with the same label stay distinguishable.
+    /// Null for a drawing item, which is named by its legend title and has no meaningful id.
+    /// Kept apart from the title so the view can keep the Latin digits left-to-right in an RTL list.
+    /// </summary>
+    public string? IdText { get; }
+
+    public bool HasTitle => !string.IsNullOrWhiteSpace(Title);
 
     public GeometryType GeometryType => Feature.GeometryType;
 
@@ -95,8 +114,11 @@ public class IdentifyFeatureNode : Notifier, IIdentifyNode
         if (Title.Contains(filter, comparison))
             return true;
 
+        if (IdText is not null && IdText.Contains(filter, comparison))
+            return true;
+
         return Attributes.Any(r => r.DisplayText.Contains(filter, comparison) || r.DisplayName.Contains(filter, comparison));
     }
 
-    public override string ToString() => $"{Layer.LayerName} / {Title}";
+    public override string ToString() => $"{Layer.LayerName} / {IdText} {Title}".Trim();
 }

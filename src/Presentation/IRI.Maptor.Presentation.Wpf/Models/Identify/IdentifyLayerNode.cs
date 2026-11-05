@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 
 using IRI.Maptor.Presentation.Core;
+using IRI.Maptor.Presentation.Wpf.Cartography.Symbologies;
 using IRI.Maptor.Presentation.Wpf.Helpers;
 using IRI.Maptor.Presentation.Wpf.Layers;
 using IRI.Maptor.Core.Common.Enums;
@@ -118,6 +119,16 @@ public class IdentifyLayerNode : Notifier, IIdentifyNode
             };
         }
     }
+
+    /// <summary>
+    /// The layer's label column: the attribute its label symbolizer draws (an app sets it from the
+    /// server's layer settings, e.g. <c>LabelColumn</c>). Wins over the data model's display field when
+    /// naming a feature. Null for the drawings group or a layer without labels.
+    /// </summary>
+    public string? LabelColumn =>
+        Layer?.Symbolizers?.OfType<LabelSymbolizer>()
+                           .Select(s => s.LabelAttribute)
+                           .FirstOrDefault(a => !string.IsNullOrWhiteSpace(a));
 
     /// <summary>The layer's symbology, whose stroke and fill colour the symbol as in the TOC; null for the drawings group.</summary>
     public VisualParameters? Symbology => Layer?.DefaultSymbology;

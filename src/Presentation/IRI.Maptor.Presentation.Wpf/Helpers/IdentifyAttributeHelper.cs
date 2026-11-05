@@ -30,34 +30,30 @@ public static class IdentifyAttributeHelper
     public const string DefaultNumericFormat = "#,0.####";
 
     /// <summary>
-    /// Title fallback chain: <see cref="Feature{T}.Label"/> → first non-empty string attribute
-    /// that <see cref="BuildRows"/> would show (schema order; any attribute when there is no schema) → <c>#Id</c>.
+    /// The feature's label, the first non-empty one of:
+    /// <list type="number">
+    /// <item>the layer's label column (<paramref name="labelColumn"/>: what the administrator set in the layer settings),</item>
+    /// <item>the field the data model marks <see cref="Field.IsDisplayField"/>,</item>
+    /// <item><see cref="Feature{T}.Label"/> (sources that name their own label attribute: shapefile, KML, ...),</item>
+    /// <item>the first non-empty string attribute that <see cref="BuildRows"/> would show (schema order; any attribute when there is no schema).</item>
+    /// </list>
+    /// Empty when none has a value; the view puts the feature's id in front of it, so a row is never blank.
     /// </summary>
-    public static string ResolveTitle(Feature<Point> feature, IReadOnlyList<Field>? fields)
+    public static string ResolveTitle(Feature<Point> feature, IReadOnlyList<Field>? fields, string? labelColumn = null)
     {
         if (feature is null)
             return string.Empty;
 
-        if (!string.IsNullOrWhiteSpace(feature.Label))
-            return feature.Label.Trim();
-
         var attributes = feature.Attributes;
 
-        string? displayField = fields?.FirstOrDefault(f => f.IsDisplayField)?.Name ?? null;
+        if (TryGetText(attributes, labelColumn, fields, out var labelText))
+            return labelText;
 
-        if (!string.IsNullOrWhiteSpace(displayField))
-        {
-            object? displayValue = null;
+        if (TryGetText(attributes, fields?.FirstOrDefault(f => f?.IsDisplayField == true)?.Name, fields, out var displayText))
+            return displayText;
 
-            attributes.TryGetValue(displayField, out displayValue);
-
-            string? displayText = displayValue?.ToString();
-
-            if (!string.IsNullOrWhiteSpace(displayText))
-            {
-                return displayText;
-            }
-        }
+        if (!string.IsNullOrWhiteSpace(feature.Label))
+            return feature.Label.Trim();
 
         if (attributes is not null && attributes.Count > 0)
         {
@@ -76,7 +72,25 @@ public static class IdentifyAttributeHelper
             }
         }
 
-        return $"#{feature.Id}";
+        return string.Empty;
+    }
+
+    /// <summary>The named attribute as display text (numbers and dates formatted as in the grid); false when it is absent or blank.</summary>
+    private static bool TryGetText(Dictionary<string, object>? attributes, string? name, IReadOnlyList<Field>? fields, out string text)
+    {
+        text = string.Empty;
+
+        if (attributes is null || string.IsNullOrWhiteSpace(name))
+            return false;
+
+        var value = TryGetValue(attributes, name);
+
+        if (value is null || value is DBNull)
+            return false;
+
+        text = FormatValue(value, FindField(fields, name)).Trim();
+
+        return text.Length > 0;
     }
 
     /// <summary>
