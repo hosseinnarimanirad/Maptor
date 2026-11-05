@@ -3007,4 +3007,7 @@
   <data name="colorPicker_addRecent" xml:space="preserve">
     <value>Պահել վերջին գույներում</value>
   </data>
+  <data name="identify_showInTable" xml:space="preserve">
+    <value>Ցույց տալ հատկանիշների աղյուսակում</value>
+  </data>
 </root>

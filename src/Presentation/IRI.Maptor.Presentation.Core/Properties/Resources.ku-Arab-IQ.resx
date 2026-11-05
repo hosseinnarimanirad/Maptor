@@ -3007,4 +3007,7 @@
   <data name="colorPicker_addRecent" xml:space="preserve">
     <value>پاشەکەوتکردن لە ڕەنگە دواییەکان</value>
   </data>
+  <data name="identify_showInTable" xml:space="preserve">
+    <value>پیشاندان لە خشتەی تایبەتمەندییەکان</value>
+  </data>
 </root>

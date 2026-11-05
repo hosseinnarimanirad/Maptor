@@ -3605,7 +3605,16 @@ namespace IRI.Maptor.Presentation.Core.Properties {
                 return ResourceManager.GetString("identify_copyAttributes", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Show in attribute table.
+        /// </summary>
+        public static string identify_showInTable {
+            get {
+                return ResourceManager.GetString("identify_showInTable", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Features found.
         /// </summary>

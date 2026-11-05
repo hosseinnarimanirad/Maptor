@@ -3007,4 +3007,7 @@
   <data name="colorPicker_addRecent" xml:space="preserve">
     <value>حفظ في الألوان الأخيرة</value>
   </data>
+  <data name="identify_showInTable" xml:space="preserve">
+    <value>عرض في جدول السمات</value>
+  </data>
 </root>

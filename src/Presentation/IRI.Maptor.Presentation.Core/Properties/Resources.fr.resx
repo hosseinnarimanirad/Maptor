@@ -3007,4 +3007,7 @@
   <data name="colorPicker_addRecent" xml:space="preserve">
     <value>Ajouter aux couleurs récentes</value>
   </data>
+  <data name="identify_showInTable" xml:space="preserve">
+    <value>Afficher dans la table attributaire</value>
+  </data>
 </root>

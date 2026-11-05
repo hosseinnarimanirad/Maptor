@@ -358,7 +358,10 @@ public partial class FeatureTable : UserControl
             inpc.PropertyChanged -= Layer_PropertyChanged;
 
         if (_currentLayer != null)
+        {
             _currentLayer.RequestClearRowSelection = null;
+            _currentLayer.RequestScrollIntoView = null;
+        }
 
         UnsubscribeFromFeaturesCollection();
         _currentLayer = null;
@@ -373,6 +376,21 @@ public partial class FeatureTable : UserControl
             inpc.PropertyChanged += Layer_PropertyChanged;
 
         layer.RequestClearRowSelection = () => grid.UnselectAll();
+
+        // after the page rebinds (Background priority), so the row exists in the grid
+        layer.RequestScrollIntoView = feature =>
+            grid.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (grid.Items.Contains(feature))
+                    grid.ScrollIntoView(feature);
+            }), System.Windows.Threading.DispatcherPriority.Background);
+
+        // a ShowAndSelect made before this view was bound: once the grid has its rows, select and scroll
+        grid.Dispatcher.BeginInvoke(new Action(() =>
+        {
+            if (ReferenceEquals(_currentLayer, layer) && layer.TakePendingShow() is { } pending)
+                layer.RequestScrollIntoView?.Invoke(pending);
+        }), System.Windows.Threading.DispatcherPriority.Background);
 
         // Subscribe to the current Features collection
         SubscribeToFeaturesCollection(layer.Features);

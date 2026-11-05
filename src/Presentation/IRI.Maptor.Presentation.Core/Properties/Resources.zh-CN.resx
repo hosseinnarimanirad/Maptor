@@ -3007,4 +3007,7 @@
   <data name="colorPicker_addRecent" xml:space="preserve">
     <value>保存到最近使用的颜色</value>
   </data>
+  <data name="identify_showInTable" xml:space="preserve">
+    <value>在属性表中显示</value>
+  </data>
 </root>

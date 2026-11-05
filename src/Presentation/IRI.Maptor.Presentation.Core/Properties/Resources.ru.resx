@@ -3007,4 +3007,7 @@
   <data name="colorPicker_addRecent" xml:space="preserve">
     <value>Сохранить в недавние цвета</value>
   </data>
+  <data name="identify_showInTable" xml:space="preserve">
+    <value>Показать в таблице атрибутов</value>
+  </data>
 </root>

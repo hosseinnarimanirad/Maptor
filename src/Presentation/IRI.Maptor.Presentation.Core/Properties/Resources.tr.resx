@@ -3007,4 +3007,7 @@
   <data name="colorPicker_addRecent" xml:space="preserve">
     <value>Son renklere kaydet</value>
   </data>
+  <data name="identify_showInTable" xml:space="preserve">
+    <value>Öznitelik tablosunda göster</value>
+  </data>
 </root>

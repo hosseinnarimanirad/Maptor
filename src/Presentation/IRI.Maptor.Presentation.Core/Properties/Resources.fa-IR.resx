@@ -3987,4 +3987,7 @@
   <data name="colorPicker_addRecent" xml:space="preserve">
     <value>افزودن به رنگ‌های اخیر</value>
   </data>
+  <data name="identify_showInTable" xml:space="preserve">
+    <value>نمایش در اطلاعات توصیفی</value>
+  </data>
 </root>

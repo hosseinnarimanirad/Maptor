@@ -3007,4 +3007,7 @@
   <data name="colorPicker_addRecent" xml:space="preserve">
     <value>حالیہ رنگوں میں محفوظ کریں</value>
   </data>
+  <data name="identify_showInTable" xml:space="preserve">
+    <value>خصوصیات کے جدول میں دکھائیں</value>
+  </data>
 </root>

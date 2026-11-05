@@ -123,6 +123,9 @@ public class SelectedLayer : Notifier
     // wired by FeatureTable so the view can drop the DataGrid row selection
     public Action? RequestClearRowSelection { get; set; }
 
+    // wired by FeatureTable so the view can scroll a row into sight (ShowAndSelect)
+    public Action<Feature<Point>>? RequestScrollIntoView { get; set; }
+
     public Action<ILayer>? RequestRefreshLayer { get; set; }
 
     public Func<DomainException, Task>? RequestShowErrorMessageAsync { get; set; }
@@ -338,6 +341,98 @@ public class SelectedLayer : Notifier
     public void UpdateHighlightedFeatures(IEnumerable<Feature<Point>> items)
     {
         HighlightedFeatures = new ObservableCollection<Feature<Point>>(items);
+    }
+
+    /// <summary>
+    /// Brings the given features into this (client-side) table: a feature the table already lists (same
+    /// object, or same non-zero Id) keeps the table's own row, so unsaved edits on it survive; any other one
+    /// is appended to the rows. Column filters that would hide one of them are cleared, the table moves to
+    /// the page of the first one, highlights those on that page and asks the view to scroll to it.
+    /// Not for a server-paged table, whose rows are only the current server page.
+    /// </summary>
+    /// <returns>The table's rows standing for <paramref name="features"/>.</returns>
+    public IReadOnlyList<Feature<Point>> ShowAndSelect(IEnumerable<Feature<Point>> features)
+    {
+        if (IsServerPaged)
+            throw new InvalidOperationException("A server-paged table cannot list arbitrary features.");
+
+        Features ??= new ObservableCollection<Feature<Point>>();
+
+        var rows = new List<Feature<Point>>();
+
+        foreach (var feature in features ?? Enumerable.Empty<Feature<Point>>())
+        {
+            if (feature is null)
+                continue;
+
+            var row = Features.FirstOrDefault(f => ReferenceEquals(f, feature) || (feature.Id != 0 && f.Id == feature.Id));
+
+            if (row is null)
+            {
+                row = feature;
+                Features.Add(row);
+            }
+
+            if (!rows.Contains(row))
+                rows.Add(row);
+        }
+
+        if (AssociatedLayer != null)
+            AssociatedLayer.NumberOfSelectedFeatures = CountOfSelectedFeatures;
+
+        if (rows.Count == 0)
+            return rows;
+
+        _viewFeatures = null;
+
+        // a row hidden by the user's column filters could not be shown: drop the filters (the sort stays)
+        if (FilterManager.HasActiveFilter && !rows.All(FilterManager.Matches))
+        {
+            FilterManager.ClearAll(raiseEvent: false);
+            _viewFeatures = null;
+        }
+
+        var index = ViewFeatures.ToList().IndexOf(rows[0]);
+
+        _currentPageIndex = index < 0 ? 0 : index / SelectedPageSize;
+
+        RefreshPagingView(preserveSelection: false);
+
+        var page = CurrentPageFeatures;
+
+        var highlighted = rows.Where(page.Contains).ToList();
+
+        UpdateHighlightedFeatures(highlighted);
+
+        // The table view may not be bound to this tab yet (a new tab, or another tab on show). Binding the
+        // grid then resets its row selection, so the view re-applies the highlight and scrolls when it
+        // subscribes (TakePendingShow).
+        if (RequestScrollIntoView is not null)
+            RequestScrollIntoView(rows[0]);
+        else
+            _pendingShow = highlighted;
+
+        return rows;
+    }
+
+    private List<Feature<Point>>? _pendingShow;
+
+    /// <summary>
+    /// Re-applies what <see cref="ShowAndSelect"/> did before a view was bound: highlights those rows again
+    /// and returns the one to scroll to; null when nothing is pending. Called by the view once it is bound.
+    /// </summary>
+    public Feature<Point>? TakePendingShow()
+    {
+        var rows = _pendingShow;
+
+        _pendingShow = null;
+
+        if (rows is null || rows.Count == 0)
+            return null;
+
+        UpdateHighlightedFeatures(rows);
+
+        return rows[0];
     }
 
     public async Task RefreshSelectedFeaturesOnMap(IEnumerable<Feature<Point>> enumerable, double? strokeThickness)

@@ -2188,7 +2188,53 @@ public abstract class MapViewModelBase : ViewModelBase
 
         viewModel.RequestSelectDrawing = SelectDrawingItemFromIdentify;
 
+        viewModel.RequestShowInAttributeTable = ShowInAttributeTableAsync;
+
         return viewModel;
+    }
+
+    /// <summary>
+    /// Shows the given features of <paramref name="layer"/> in its attribute-table tab, highlighted and
+    /// scrolled into view. Without a tab, one is opened listing just them (as a map selection would). An
+    /// existing in-memory tab (the layer's full table, or a selection) keeps its rows and gains any feature it
+    /// does not list yet. A Live layer's server-paged tab holds only one server page, so it is replaced by a
+    /// selection tab listing these features (user decision 2026-11-05).
+    /// </summary>
+    public async Task ShowInAttributeTableAsync(VectorLayer layer, IReadOnlyList<Feature<Point>> features)
+    {
+        if (layer is null || features is null || features.Count == 0)
+            return;
+
+        var existing = SelectedLayers?.SingleOrDefault(l => l.Id == layer.LayerId);
+
+        if (existing is not null && existing.IsServerPaged)
+        {
+            RemoveSelectedLayer(existing);
+            existing = null;
+        }
+
+        if (existing is null)
+        {
+            existing = new SelectedLayer(this.DialogService, layer, layer.GetFields())
+            {
+                ShowSelectedOnMap = true,
+                Features = new ObservableCollection<Feature<Point>>(),
+            };
+
+            await AddSelectedLayer(existing);
+        }
+
+        existing.ShowAndSelect(features);
+
+        CurrentLayer = existing;
+
+        this.ShowAttributeTable = true;
+
+        // the tab's rows changed: redraw its selection, which clears the highlight layer, then the highlighted rows
+        if (existing.ShowSelectedOnMap)
+            await ShowSelectedFeatures(existing.GetSelectedFeatures(), layer.DefaultSymbology?.StrokeThickness);
+
+        await existing.RefreshHighlightedFeaturesOnMap(existing.HighlightedFeatures);
     }
 
     // the drawing the identify results selected in the drawing legend; only this one is released

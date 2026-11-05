@@ -42,6 +42,8 @@ public class IdentifyResultsViewModel : Notifier
 
         CopyAttributesCommand = new RelayCommand(_ => CopySelectedAttributes(), _ => SelectedFeature is not null);
 
+        ShowInAttributeTableCommand = new RelayCommand(async _ => await ShowSelectionInAttributeTableAsync(), _ => CanShowInAttributeTable);
+
         ClearFilterCommand = new RelayCommand(_ => FilterText = string.Empty, _ => !string.IsNullOrEmpty(FilterText));
 
         Localization.LanguageChanged += OnLanguageChanged;
@@ -63,6 +65,9 @@ public class IdentifyResultsViewModel : Notifier
     /// or, with null, release the legend selection an earlier call made.
     /// </summary>
     public Action<DrawingItemLayer?>? RequestSelectDrawing { get; set; }
+
+    /// <summary>Show these features of the layer in its attribute-table tab (added if missing, highlighted, scrolled to).</summary>
+    public Func<VectorLayer, IReadOnlyList<Feature<Point>>, Task>? RequestShowInAttributeTable { get; set; }
 
     #endregion
 
@@ -271,6 +276,7 @@ public class IdentifyResultsViewModel : Notifier
         RaisePropertyChanged(nameof(SelectedAttributes));
         RaisePropertyChanged(nameof(IsFeatureSelected));
         RaisePropertyChanged(nameof(IsLayerSelected));
+        RaisePropertyChanged(nameof(CanShowInAttributeTable));
 
         CommandManager.InvalidateRequerySuggested();
 
@@ -322,6 +328,22 @@ public class IdentifyResultsViewModel : Notifier
     public ICommand ZoomToCommand { get; }
 
     public ICommand CopyAttributesCommand { get; }
+
+    public ICommand ShowInAttributeTableCommand { get; }
+
+    /// <summary>A data layer's feature or layer node is selected (a drawing has no attribute table).</summary>
+    public bool CanShowInAttributeTable => SelectedLayer?.Layer is not null && GetSelectedFeatures().Count > 0;
+
+    private async Task ShowSelectionInAttributeTableAsync()
+    {
+        if (SelectedLayer?.Layer is not VectorLayer layer || RequestShowInAttributeTable is null)
+            return;
+
+        var features = GetSelectedFeatures();
+
+        if (features.Count > 0)
+            await RequestShowInAttributeTable(layer, features);
+    }
 
     public ICommand ClearFilterCommand { get; }
 
