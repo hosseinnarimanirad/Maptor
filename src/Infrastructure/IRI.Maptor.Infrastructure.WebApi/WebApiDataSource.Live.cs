@@ -341,6 +341,12 @@ public partial class WebApiDataSource : IServerQueryableVectorDataSource
             : FilterLive(g => g.Intersects(geometry));
     }
 
+    public FeatureSet<Point> GetLoadedFeatures()
+    {
+        lock (_liveSync)
+            return _webMercatorFeatureSet ?? FeatureSet<Point>.Empty;
+    }
+
     private FeatureSet<Point> FilterLive(Predicate<Geometry<Point>> predicate)
     {
         lock (_liveSync)

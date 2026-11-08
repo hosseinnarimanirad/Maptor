@@ -42,6 +42,11 @@ public class LayerSettingsViewModel : DialogViewModelBase
     /// <summary>The Symbology tab: the layer's styles, switching, and the user's own changes.</summary>
     public LayerSettings_SymbologyViewModel? Symbology { get; init; }
 
+    /// <summary>The Geometry tab: invalid geometries, shown on the map, fixed as tracked edits.</summary>
+    public LayerSettings_GeometryViewModel? Geometry { get; init; }
+
+    public bool HasGeometryTab => Geometry is not null;
+
     /// <summary>The read-only layer facts shown on the General tab.</summary>
     public LayerSettings_GeneralSummaryViewModel Summary { get; }
 

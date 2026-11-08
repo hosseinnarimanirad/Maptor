@@ -75,6 +75,11 @@
                 <TabItem Header="{Binding [layerSettings_statistics_title], Source={StaticResource Localization}}">
                     <maptor:LayerSettings_StatisticsView DataContext="{Binding Statistics}"/>
                 </TabItem>
+                <!--vector layers only: other layers have no geometries to check-->
+                <TabItem Header="{Binding [layerSettings_geometry_title], Source={StaticResource Localization}}"
+                         Visibility="{Binding HasGeometryTab, Converter={StaticResource boolToVisibilityConverter}}">
+                    <maptor:LayerSettings_GeometryView DataContext="{Binding Geometry}"/>
+                </TabItem>
                 <TabItem IsEnabled="False" Header="{Binding [layerSettings_analysis_title], Source={StaticResource Localization}}"
                          ToolTip="{Binding [layerSettings_notYetAvailable], Source={StaticResource Localization}}"/>
                 <TabItem IsEnabled="False" Header="{Binding [layerSettings_security_title], Source={StaticResource Localization}}"

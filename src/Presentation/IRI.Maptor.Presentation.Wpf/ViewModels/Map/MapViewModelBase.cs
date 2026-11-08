@@ -2001,6 +2001,61 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// Zooms to <paramref name="feature"/> and highlights it, like a row selected in the identify window. A
+    /// geometry with no usable extent (empty, NaN coordinates) is highlighted where possible but not zoomed to.
+    /// </summary>
+    public async Task ShowFeatureOnMapAsync(Feature<Point> feature)
+    {
+        var geometry = feature?.TheGeometry;
+
+        if (geometry is null || geometry.IsEmpty())
+        {
+            ClearFeatureHighlight();
+            return;
+        }
+
+        var extent = geometry.GetBoundingBox();
+
+        if (!extent.IsNaN())
+            Zoom(geometry);
+
+        await ShowHighlightedFeatures([feature!], null);
+    }
+
+    /// <summary>Removes the highlight drawn by <see cref="ShowFeatureOnMapAsync"/>.</summary>
+    public void ClearFeatureHighlight()
+    {
+        ClearLayer(LayerType.Highlight, true);
+        ClearLayer(LayerType.AnimatingItem, true);
+    }
+
+    /// <summary>
+    /// Saves the pending edits of <paramref name="layer"/>: through its attribute-table tab when one is open (the
+    /// table then shows the saved state), otherwise straight to its data source.
+    /// </summary>
+    public async Task SaveLayerChangesAsync(ILayer layer)
+    {
+        var selectedLayer = SelectedLayers.FirstOrDefault(s => ReferenceEquals(s.AssociatedLayer, layer));
+
+        if (selectedLayer is not null)
+        {
+            await selectedLayer.SaveChangesAsync();
+        }
+        else if (layer?.DataSource is IEditableVectorDataSource editable)
+        {
+            await editable.SaveChangesAsync();
+        }
+
+        Refresh(isNewExtent: true);
+    }
+
+    /// <summary>
+    /// Whether the signed-in user may change feature geometries. True here; an application with permissions
+    /// overrides it (it also gates fixing geometries in Layer Settings › Geometry).
+    /// </summary>
+    public virtual bool CanEditGeometry => true;
+
     public void FlashHighlightedFeatures(Feature<Point> geometry)
     {
         var point = geometry?.TheGeometry?.AsPoint();

@@ -45,8 +45,11 @@ public class FeatureValidationResult<T> where T : IPoint, new()
     /// <summary>True when every problem of this feature is fixed automatically (wrong ring orientation only).</summary>
     public bool HasAutomaticFixesOnly => Issues.All(i => i.IsFixedAutomatically);
 
-    /// <summary>The repaired geometry when <see cref="Outcome"/> is <see cref="GeometryRepairOutcome.Repaired"/>; otherwise null.</summary>
-    internal Geometry<T>? RepairedGeometry { get; }
+    /// <summary>
+    /// The repaired geometry when <see cref="Outcome"/> is <see cref="GeometryRepairOutcome.Repaired"/>; otherwise null.
+    /// A new geometry: the feature's own is not changed (apply it e.g. as an edit of the feature).
+    /// </summary>
+    public Geometry<T>? RepairedGeometry { get; }
 }
 
 /// <summary>

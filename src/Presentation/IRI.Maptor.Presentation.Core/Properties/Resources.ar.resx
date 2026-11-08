@@ -3040,4 +3040,109 @@
   <data name="notification_geometryIssues_orientationFixed" xml:space="preserve">
     <value>تم تصحيح اتجاه الحلقات في {0} من المعالم في «{1}».</value>
   </data>
+  <data name="layerSettings_geometry_title" xml:space="preserve">
+    <value>الهندسة</value>
+  </data>
+  <data name="layerSettings_geometry_intro" xml:space="preserve">
+    <value>يفحص هندسة معالم الطبقة بحثًا عن مشكلات تعيق التحرير أو القياس أو الحفظ. حدّد معلمًا لعرضه على الخريطة.</value>
+  </data>
+  <data name="layerSettings_geometry_check" xml:space="preserve">
+    <value>فحص</value>
+  </data>
+  <data name="layerSettings_geometry_liveNote" xml:space="preserve">
+    <value>طبقة مباشرة: تُفحص المعالم المحمّلة حتى الآن فقط. حرّك الخريطة أو كبّرها لتحميل المزيد، ثم افحص مجددًا.</value>
+  </data>
+  <data name="layerSettings_geometry_notEditable" xml:space="preserve">
+    <value>لا يمكن تحرير هذه الطبقة، لذا يتم الإبلاغ عن المشكلات فقط.</value>
+  </data>
+  <data name="layerSettings_geometry_noPermission" xml:space="preserve">
+    <value>ليس لديك صلاحية تحرير الهندسة، لذا يتم الإبلاغ عن المشكلات فقط.</value>
+  </data>
+  <data name="layerSettings_geometry_failed" xml:space="preserve">
+    <value>فشل فحص الهندسة:</value>
+  </data>
+  <data name="layerSettings_geometry_noProblems" xml:space="preserve">
+    <value>لا توجد مشكلات هندسية في {0} من المعالم.</value>
+  </data>
+  <data name="layerSettings_geometry_summary" xml:space="preserve">
+    <value>{0} من أصل {1} من المعالم بها مشكلات هندسية.</value>
+  </data>
+  <data name="layerSettings_geometry_orientationNote" xml:space="preserve">
+    <value>{0} من المعالم حلقاتها في الاتجاه الخاطئ؛ «إصلاح الكل» يصححها أيضًا.</value>
+  </data>
+  <data name="layerSettings_geometry_fixed" xml:space="preserve">
+    <value>تم إصلاح {0} من المعالم. احفظ للإبقاء على التغييرات.</value>
+  </data>
+  <data name="layerSettings_geometry_deleteConfirm" xml:space="preserve">
+    <value>حذف «{0}»؟ لا يمكن إصلاح هندسته.</value>
+  </data>
+  <data name="layerSettings_geometry_deleted" xml:space="preserve">
+    <value>تم حذف «{0}». احفظ للإبقاء على التغيير.</value>
+  </data>
+  <data name="layerSettings_geometry_saved" xml:space="preserve">
+    <value>تم حفظ التغييرات.</value>
+  </data>
+  <data name="layerSettings_geometry_columnFeature" xml:space="preserve">
+    <value>المعلم</value>
+  </data>
+  <data name="layerSettings_geometry_columnProblem" xml:space="preserve">
+    <value>المشكلة</value>
+  </data>
+  <data name="layerSettings_geometry_columnFix" xml:space="preserve">
+    <value>الإصلاح</value>
+  </data>
+  <data name="layerSettings_geometry_empty" xml:space="preserve">
+    <value>اضغط «فحص» للبحث عن الهندسات غير الصالحة في هذه الطبقة.</value>
+  </data>
+  <data name="layerSettings_geometry_delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="layerSettings_geometry_fix" xml:space="preserve">
+    <value>إصلاح</value>
+  </data>
+  <data name="layerSettings_geometry_fixAll" xml:space="preserve">
+    <value>إصلاح الكل</value>
+  </data>
+  <data name="geometryIssue_kind_noGeometry" xml:space="preserve">
+    <value>بلا هندسة</value>
+  </data>
+  <data name="geometryIssue_kind_closedRing" xml:space="preserve">
+    <value>الحلقة تكرر نقطتها الأولى في النهاية</value>
+  </data>
+  <data name="geometryIssue_kind_repeatedPoint" xml:space="preserve">
+    <value>نقطة مكررة متتالية</value>
+  </data>
+  <data name="geometryIssue_kind_tooFewPoints" xml:space="preserve">
+    <value>عدد النقاط غير كافٍ</value>
+  </data>
+  <data name="geometryIssue_kind_zeroAreaRing" xml:space="preserve">
+    <value>حلقة مساحتها صفر</value>
+  </data>
+  <data name="geometryIssue_kind_invalidCoordinate" xml:space="preserve">
+    <value>إحداثي غير صالح (NaN أو لا نهائي)</value>
+  </data>
+  <data name="geometryIssue_kind_coordinateOutOfRange" xml:space="preserve">
+    <value>إحداثي خارج النطاق</value>
+  </data>
+  <data name="geometryIssue_kind_wrongRingOrientation" xml:space="preserve">
+    <value>حلقة في الاتجاه الخاطئ</value>
+  </data>
+  <data name="geometryIssue_outcome_repaired" xml:space="preserve">
+    <value>سيتم إصلاحه</value>
+  </data>
+  <data name="geometryIssue_outcome_removed" xml:space="preserve">
+    <value>لا يتبقى شيء: حذف</value>
+  </data>
+  <data name="geometryIssue_outcome_unrepairable" xml:space="preserve">
+    <value>لا يمكن إصلاحه: حذف</value>
+  </data>
+  <data name="geometryIssue_location_part" xml:space="preserve">
+    <value>الجزء {0}</value>
+  </data>
+  <data name="geometryIssue_location_ring" xml:space="preserve">
+    <value>الحلقة {0}</value>
+  </data>
+  <data name="geometryIssue_featureLabel" xml:space="preserve">
+    <value>المعلم {0}</value>
+  </data>
 </root>

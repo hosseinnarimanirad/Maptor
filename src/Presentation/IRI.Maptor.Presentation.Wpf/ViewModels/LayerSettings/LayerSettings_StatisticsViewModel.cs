@@ -74,7 +74,8 @@ public class LayerSettings_StatisticsViewModel : ViewModelBase
 
     private readonly VectorLayer? _layer;
 
-    // read once per dialog: the dialog is modal, so the layer cannot change under it
+    // read again by every compute: the dialog is modeless, so the layer can be edited (or its geometries fixed)
+    // while it is open; the measures belong to the features read with them
     private IReadOnlyList<Feature<Point>>? _features;
 
     private GeometryMeasureKind _measureKind;
@@ -387,8 +388,9 @@ public class LayerSettings_StatisticsViewModel : ViewModelBase
                 return;
             }
 
-            if (_features is null)
             {
+                _measures = null;
+
                 var featureSet = await _layer.GetFeaturesAsync();
 
                 _features = featureSet?.Features.ToList() ?? [];

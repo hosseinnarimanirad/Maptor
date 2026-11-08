@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using System.Collections.Generic;
 
 using IRI.Maptor.Extensions;
 
@@ -213,8 +214,25 @@ public static class DefaultActions
         view.Show();
     }
 
-    public static async Task GetDefaultShowLayerSettingsView(IDialogService dialogService, Window ownerWindow, ILayer layer, MapViewModelBase viewModel)
+    // one Layer Settings window per layer: asking again brings the open one to the front
+    private static readonly Dictionary<ILayer, Window> _openLayerSettings = new();
+
+    /// <summary>
+    /// Opens Layer Settings for <paramref name="layer"/>. Modeless (since 2026-11-08): the map stays usable, so the
+    /// Geometry tab can show a feature on it and the user can pan or edit while the window is open.
+    /// </summary>
+    public static Task GetDefaultShowLayerSettingsView(IDialogService dialogService, Window ownerWindow, ILayer layer, MapViewModelBase viewModel)
     {
+        if (_openLayerSettings.TryGetValue(layer, out var openView))
+        {
+            if (openView.WindowState == WindowState.Minimized)
+                openView.WindowState = WindowState.Normal;
+
+            openView.Activate();
+
+            return Task.CompletedTask;
+        }
+
         var view = new IRI.Maptor.Presentation.Wpf.Controls.Dialogs.LayerSettingsDialogView();
 
         LayerSettings_VectorExportViewModel exportViewModel = new LayerSettings_VectorExportViewModel(viewModel, layer as VectorLayer)
@@ -232,17 +250,45 @@ public static class DefaultActions
             RequestAdvancedEdit = () => ShowSldEditorView(view, layer, viewModel),
         };
 
+        // vector layers only; selecting a problem shows the feature on the map behind the (modeless) window
+        LayerSettings_GeometryViewModel? geometryViewModel = layer is VectorLayer vectorLayer
+            ? new LayerSettings_GeometryViewModel(vectorLayer, viewModel.CanEditGeometry)
+            {
+                RequestShowOnMap = viewModel.ShowFeatureOnMapAsync,
+                RequestClearHighlight = viewModel.ClearFeatureHighlight,
+                RequestRefreshMap = () => viewModel.Refresh(isNewExtent: true),
+                RequestSaveAsync = () => viewModel.SaveLayerChangesAsync(layer),
+                RequestConfirmAsync = async question => await dialogService.ShowYesNoDialogAsync(question, view) == true,
+            }
+            : null;
+
         LayerSettingsViewModel layerSettingsViewModel = new LayerSettingsViewModel(layer, exportViewModel, statisticsViewModel)
         {
             Symbology = symbologyViewModel,
+            Geometry = geometryViewModel,
         };
 
-        await dialogService.ShowDialogAsync(ownerWindow, view, layerSettingsViewModel);
+        view.DataContext = layerSettingsViewModel;
 
+        if (ownerWindow is not null)
+        {
+            view.Owner = ownerWindow;
+            view.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        }
 
-        //view.DataContext = layerSettingsViewModel;
-        //view.Owner = ownerWindow;
-        //view.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        //view.ShowDialog();
+        view.Closed += (_, _) =>
+        {
+            _openLayerSettings.Remove(layer);
+
+            // leave no highlight behind from the Geometry tab (other highlights are not touched)
+            if (geometryViewModel?.SelectedProblem is not null)
+                viewModel.ClearFeatureHighlight();
+        };
+
+        _openLayerSettings[layer] = view;
+
+        view.Show();
+
+        return Task.CompletedTask;
     }
 }

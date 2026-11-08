@@ -3040,4 +3040,109 @@
   <data name="notification_geometryIssues_orientationFixed" xml:space="preserve">
     <value>Направление колец исправлено у {0} объектов в «{1}».</value>
   </data>
+  <data name="layerSettings_geometry_title" xml:space="preserve">
+    <value>Геометрия</value>
+  </data>
+  <data name="layerSettings_geometry_intro" xml:space="preserve">
+    <value>Проверяет геометрию объектов слоя на проблемы, мешающие редактированию, измерению или сохранению. Выберите объект, чтобы увидеть его на карте.</value>
+  </data>
+  <data name="layerSettings_geometry_check" xml:space="preserve">
+    <value>Проверить</value>
+  </data>
+  <data name="layerSettings_geometry_liveNote" xml:space="preserve">
+    <value>Живой слой: проверяются только уже загруженные объекты. Переместите или приблизьте карту, чтобы загрузить больше, и проверьте снова.</value>
+  </data>
+  <data name="layerSettings_geometry_notEditable" xml:space="preserve">
+    <value>Этот слой нельзя редактировать, поэтому о проблемах только сообщается.</value>
+  </data>
+  <data name="layerSettings_geometry_noPermission" xml:space="preserve">
+    <value>У вас нет прав на редактирование геометрии, поэтому о проблемах только сообщается.</value>
+  </data>
+  <data name="layerSettings_geometry_failed" xml:space="preserve">
+    <value>Проверка геометрии не удалась:</value>
+  </data>
+  <data name="layerSettings_geometry_noProblems" xml:space="preserve">
+    <value>В {0} объектах нет проблем с геометрией.</value>
+  </data>
+  <data name="layerSettings_geometry_summary" xml:space="preserve">
+    <value>{0} из {1} объектов имеют проблемы с геометрией.</value>
+  </data>
+  <data name="layerSettings_geometry_orientationNote" xml:space="preserve">
+    <value>У {0} объектов кольца направлены неверно; «Исправить все» исправляет и их.</value>
+  </data>
+  <data name="layerSettings_geometry_fixed" xml:space="preserve">
+    <value>Исправлено объектов: {0}. Сохраните, чтобы оставить изменения.</value>
+  </data>
+  <data name="layerSettings_geometry_deleteConfirm" xml:space="preserve">
+    <value>Удалить «{0}»? Его геометрию нельзя исправить.</value>
+  </data>
+  <data name="layerSettings_geometry_deleted" xml:space="preserve">
+    <value>«{0}» удалён. Сохраните, чтобы оставить изменение.</value>
+  </data>
+  <data name="layerSettings_geometry_saved" xml:space="preserve">
+    <value>Изменения сохранены.</value>
+  </data>
+  <data name="layerSettings_geometry_columnFeature" xml:space="preserve">
+    <value>Объект</value>
+  </data>
+  <data name="layerSettings_geometry_columnProblem" xml:space="preserve">
+    <value>Проблема</value>
+  </data>
+  <data name="layerSettings_geometry_columnFix" xml:space="preserve">
+    <value>Исправление</value>
+  </data>
+  <data name="layerSettings_geometry_empty" xml:space="preserve">
+    <value>Нажмите «Проверить», чтобы найти неверные геометрии в этом слое.</value>
+  </data>
+  <data name="layerSettings_geometry_delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="layerSettings_geometry_fix" xml:space="preserve">
+    <value>Исправить</value>
+  </data>
+  <data name="layerSettings_geometry_fixAll" xml:space="preserve">
+    <value>Исправить все</value>
+  </data>
+  <data name="geometryIssue_kind_noGeometry" xml:space="preserve">
+    <value>Нет геометрии</value>
+  </data>
+  <data name="geometryIssue_kind_closedRing" xml:space="preserve">
+    <value>Кольцо повторяет первую точку в конце</value>
+  </data>
+  <data name="geometryIssue_kind_repeatedPoint" xml:space="preserve">
+    <value>Повторяющаяся точка</value>
+  </data>
+  <data name="geometryIssue_kind_tooFewPoints" xml:space="preserve">
+    <value>Слишком мало точек</value>
+  </data>
+  <data name="geometryIssue_kind_zeroAreaRing" xml:space="preserve">
+    <value>Кольцо нулевой площади</value>
+  </data>
+  <data name="geometryIssue_kind_invalidCoordinate" xml:space="preserve">
+    <value>Неверная координата (NaN или бесконечность)</value>
+  </data>
+  <data name="geometryIssue_kind_coordinateOutOfRange" xml:space="preserve">
+    <value>Координата вне допустимого диапазона</value>
+  </data>
+  <data name="geometryIssue_kind_wrongRingOrientation" xml:space="preserve">
+    <value>Кольцо в неверном направлении</value>
+  </data>
+  <data name="geometryIssue_outcome_repaired" xml:space="preserve">
+    <value>Будет исправлен</value>
+  </data>
+  <data name="geometryIssue_outcome_removed" xml:space="preserve">
+    <value>Ничего не остаётся: удалить</value>
+  </data>
+  <data name="geometryIssue_outcome_unrepairable" xml:space="preserve">
+    <value>Нельзя исправить: удалить</value>
+  </data>
+  <data name="geometryIssue_location_part" xml:space="preserve">
+    <value>часть {0}</value>
+  </data>
+  <data name="geometryIssue_location_ring" xml:space="preserve">
+    <value>кольцо {0}</value>
+  </data>
+  <data name="geometryIssue_featureLabel" xml:space="preserve">
+    <value>Объект {0}</value>
+  </data>
 </root>

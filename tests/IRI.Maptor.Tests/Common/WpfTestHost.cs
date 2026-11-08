@@ -46,6 +46,28 @@ internal static class WpfTestHost
         if (failure is not null)
             throw new InvalidOperationException($"WPF test body threw: {failure}", failure);
     }
+
+    /// <summary>
+    /// Merges the MahApps control styles and a theme into the test <see cref="Application"/>, so a view whose own
+    /// dictionaries build on them (Controls.All.xaml) can be constructed. Call inside <see cref="Run"/>.
+    /// </summary>
+    public static void EnsureMahAppsResources()
+    {
+        var resources = Application.Current.Resources;
+
+        if (resources.Contains("MahApps.Styles.Button"))
+            return;
+
+        foreach (var source in new[]
+                 {
+                     "pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml",
+                     "pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml",
+                     "pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml",
+                 })
+        {
+            resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri(source, UriKind.Absolute) });
+        }
+    }
 }
 
 [CollectionDefinition(WpfCollection.Name)]

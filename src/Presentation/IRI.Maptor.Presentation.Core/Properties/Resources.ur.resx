@@ -3040,4 +3040,109 @@
   <data name="notification_geometryIssues_orientationFixed" xml:space="preserve">
     <value>«{1}» کے {0} فیچرز میں رنگ کی سمت درست کر دی گئی۔</value>
   </data>
+  <data name="layerSettings_geometry_title" xml:space="preserve">
+    <value>جیومیٹری</value>
+  </data>
+  <data name="layerSettings_geometry_intro" xml:space="preserve">
+    <value>لیئر کے فیچرز کی جیومیٹری میں ایسے مسائل جانچتا ہے جو ترمیم، پیمائش یا محفوظ کرنے میں رکاوٹ بنتے ہیں۔ کسی فیچر کو نقشے پر دیکھنے کے لیے اسے منتخب کریں۔</value>
+  </data>
+  <data name="layerSettings_geometry_check" xml:space="preserve">
+    <value>جانچیں</value>
+  </data>
+  <data name="layerSettings_geometry_liveNote" xml:space="preserve">
+    <value>لائیو لیئر: صرف اب تک لوڈ ہونے والے فیچرز جانچے جاتے ہیں۔ مزید لوڈ کرنے کے لیے نقشہ سرکائیں یا زوم کریں، پھر دوبارہ جانچیں۔</value>
+  </data>
+  <data name="layerSettings_geometry_notEditable" xml:space="preserve">
+    <value>اس لیئر میں ترمیم نہیں ہو سکتی، اس لیے مسائل صرف بتائے جاتے ہیں۔</value>
+  </data>
+  <data name="layerSettings_geometry_noPermission" xml:space="preserve">
+    <value>آپ کو جیومیٹری میں ترمیم کی اجازت نہیں، اس لیے مسائل صرف بتائے جاتے ہیں۔</value>
+  </data>
+  <data name="layerSettings_geometry_failed" xml:space="preserve">
+    <value>جیومیٹری کی جانچ ناکام رہی:</value>
+  </data>
+  <data name="layerSettings_geometry_noProblems" xml:space="preserve">
+    <value>{0} فیچرز میں جیومیٹری کا کوئی مسئلہ نہیں۔</value>
+  </data>
+  <data name="layerSettings_geometry_summary" xml:space="preserve">
+    <value>{1} میں سے {0} فیچرز کی جیومیٹری میں مسائل ہیں۔</value>
+  </data>
+  <data name="layerSettings_geometry_orientationNote" xml:space="preserve">
+    <value>{0} فیچرز کے رنگ غلط سمت میں ہیں؛ "سب درست کریں" انہیں بھی درست کرتا ہے۔</value>
+  </data>
+  <data name="layerSettings_geometry_fixed" xml:space="preserve">
+    <value>{0} فیچرز درست کیے گئے۔ تبدیلیاں رکھنے کے لیے محفوظ کریں۔</value>
+  </data>
+  <data name="layerSettings_geometry_deleteConfirm" xml:space="preserve">
+    <value>"{0}" حذف کریں؟ اس کی جیومیٹری درست نہیں ہو سکتی۔</value>
+  </data>
+  <data name="layerSettings_geometry_deleted" xml:space="preserve">
+    <value>"{0}" حذف کر دیا گیا۔ تبدیلی رکھنے کے لیے محفوظ کریں۔</value>
+  </data>
+  <data name="layerSettings_geometry_saved" xml:space="preserve">
+    <value>تبدیلیاں محفوظ ہو گئیں۔</value>
+  </data>
+  <data name="layerSettings_geometry_columnFeature" xml:space="preserve">
+    <value>فیچر</value>
+  </data>
+  <data name="layerSettings_geometry_columnProblem" xml:space="preserve">
+    <value>مسئلہ</value>
+  </data>
+  <data name="layerSettings_geometry_columnFix" xml:space="preserve">
+    <value>درستی</value>
+  </data>
+  <data name="layerSettings_geometry_empty" xml:space="preserve">
+    <value>اس لیئر میں غلط جیومیٹری تلاش کرنے کے لیے "جانچیں" دبائیں۔</value>
+  </data>
+  <data name="layerSettings_geometry_delete" xml:space="preserve">
+    <value>حذف کریں</value>
+  </data>
+  <data name="layerSettings_geometry_fix" xml:space="preserve">
+    <value>درست کریں</value>
+  </data>
+  <data name="layerSettings_geometry_fixAll" xml:space="preserve">
+    <value>سب درست کریں</value>
+  </data>
+  <data name="geometryIssue_kind_noGeometry" xml:space="preserve">
+    <value>کوئی جیومیٹری نہیں</value>
+  </data>
+  <data name="geometryIssue_kind_closedRing" xml:space="preserve">
+    <value>رنگ آخر میں اپنا پہلا نقطہ دہراتا ہے</value>
+  </data>
+  <data name="geometryIssue_kind_repeatedPoint" xml:space="preserve">
+    <value>دہرایا گیا نقطہ</value>
+  </data>
+  <data name="geometryIssue_kind_tooFewPoints" xml:space="preserve">
+    <value>بہت کم نقاط</value>
+  </data>
+  <data name="geometryIssue_kind_zeroAreaRing" xml:space="preserve">
+    <value>صفر رقبے والا رنگ</value>
+  </data>
+  <data name="geometryIssue_kind_invalidCoordinate" xml:space="preserve">
+    <value>غلط کوآرڈینیٹ (NaN یا لامحدود)</value>
+  </data>
+  <data name="geometryIssue_kind_coordinateOutOfRange" xml:space="preserve">
+    <value>حد سے باہر کوآرڈینیٹ</value>
+  </data>
+  <data name="geometryIssue_kind_wrongRingOrientation" xml:space="preserve">
+    <value>غلط سمت میں رنگ</value>
+  </data>
+  <data name="geometryIssue_outcome_repaired" xml:space="preserve">
+    <value>درست کیا جائے گا</value>
+  </data>
+  <data name="geometryIssue_outcome_removed" xml:space="preserve">
+    <value>کچھ باقی نہیں رہتا: حذف کریں</value>
+  </data>
+  <data name="geometryIssue_outcome_unrepairable" xml:space="preserve">
+    <value>درست نہیں ہو سکتا: حذف کریں</value>
+  </data>
+  <data name="geometryIssue_location_part" xml:space="preserve">
+    <value>حصہ {0}</value>
+  </data>
+  <data name="geometryIssue_location_ring" xml:space="preserve">
+    <value>رنگ {0}</value>
+  </data>
+  <data name="geometryIssue_featureLabel" xml:space="preserve">
+    <value>فیچر {0}</value>
+  </data>
 </root>

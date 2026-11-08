@@ -315,6 +315,8 @@ public class FeatureStatisticsExecutorTest
 
         public event EventHandler<bool>? ViewTruncatedChanged { add { } remove { } }
 
+        public FeatureSet<Point> GetLoadedFeatures() => _webMercatorFeatureSet;
+
         public Task<IRI.Maptor.Core.Persistence.Abstractions.FeatureQueryPage> QueryPageAsync(FeatureQueryDto query, System.Threading.CancellationToken cancellationToken = default)
             => Task.FromResult(new IRI.Maptor.Core.Persistence.Abstractions.FeatureQueryPage { TotalCount = 4_000_000 });
 

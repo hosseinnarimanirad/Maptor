@@ -3040,4 +3040,109 @@
   <data name="notification_geometryIssues_orientationFixed" xml:space="preserve">
     <value>«{1}»-ի {0} օբյեկտում օղակների ուղղությունը շտկվեց։</value>
   </data>
+  <data name="layerSettings_geometry_title" xml:space="preserve">
+    <value>Երկրաչափություն</value>
+  </data>
+  <data name="layerSettings_geometry_intro" xml:space="preserve">
+    <value>Ստուգում է շերտի օբյեկտների երկրաչափությունը՝ խմբագրմանը, չափմանը կամ պահպանմանը խանգարող խնդիրների համար։ Ընտրեք օբյեկտը՝ այն քարտեզի վրա տեսնելու համար։</value>
+  </data>
+  <data name="layerSettings_geometry_check" xml:space="preserve">
+    <value>Ստուգել</value>
+  </data>
+  <data name="layerSettings_geometry_liveNote" xml:space="preserve">
+    <value>Կենդանի շերտ. ստուգվում են միայն մինչ այժմ բեռնված օբյեկտները։ Ավելին բեռնելու համար տեղաշարժեք կամ մեծացրեք քարտեզը, ապա նորից ստուգեք։</value>
+  </data>
+  <data name="layerSettings_geometry_notEditable" xml:space="preserve">
+    <value>Այս շերտը հնարավոր չէ խմբագրել, ուստի խնդիրները միայն հաղորդվում են։</value>
+  </data>
+  <data name="layerSettings_geometry_noPermission" xml:space="preserve">
+    <value>Դուք երկրաչափությունը խմբագրելու թույլտվություն չունեք, ուստի խնդիրները միայն հաղորդվում են։</value>
+  </data>
+  <data name="layerSettings_geometry_failed" xml:space="preserve">
+    <value>Երկրաչափության ստուգումը ձախողվեց՝</value>
+  </data>
+  <data name="layerSettings_geometry_noProblems" xml:space="preserve">
+    <value>{0} օբյեկտում երկրաչափական խնդիրներ չկան։</value>
+  </data>
+  <data name="layerSettings_geometry_summary" xml:space="preserve">
+    <value>{1} օբյեկտից {0}-ն ունի երկրաչափական խնդիրներ։</value>
+  </data>
+  <data name="layerSettings_geometry_orientationNote" xml:space="preserve">
+    <value>{0} օբյեկտի օղակները սխալ ուղղությամբ են. «Ուղղել բոլորը»-ն ուղղում է նաև դրանք։</value>
+  </data>
+  <data name="layerSettings_geometry_fixed" xml:space="preserve">
+    <value>{0} օբյեկտ ուղղվեց։ Պահպանեք՝ փոփոխությունները պահելու համար։</value>
+  </data>
+  <data name="layerSettings_geometry_deleteConfirm" xml:space="preserve">
+    <value>Ջնջե՞լ «{0}»-ը։ Դրա երկրաչափությունը հնարավոր չէ վերականգնել։</value>
+  </data>
+  <data name="layerSettings_geometry_deleted" xml:space="preserve">
+    <value>«{0}»-ը ջնջվեց։ Պահպանեք՝ փոփոխությունը պահելու համար։</value>
+  </data>
+  <data name="layerSettings_geometry_saved" xml:space="preserve">
+    <value>Փոփոխությունները պահպանվեցին։</value>
+  </data>
+  <data name="layerSettings_geometry_columnFeature" xml:space="preserve">
+    <value>Օբյեկտ</value>
+  </data>
+  <data name="layerSettings_geometry_columnProblem" xml:space="preserve">
+    <value>Խնդիր</value>
+  </data>
+  <data name="layerSettings_geometry_columnFix" xml:space="preserve">
+    <value>Ուղղում</value>
+  </data>
+  <data name="layerSettings_geometry_empty" xml:space="preserve">
+    <value>Սեղմեք «Ստուգել»՝ այս շերտում անվավեր երկրաչափություններ գտնելու համար։</value>
+  </data>
+  <data name="layerSettings_geometry_delete" xml:space="preserve">
+    <value>Ջնջել</value>
+  </data>
+  <data name="layerSettings_geometry_fix" xml:space="preserve">
+    <value>Ուղղել</value>
+  </data>
+  <data name="layerSettings_geometry_fixAll" xml:space="preserve">
+    <value>Ուղղել բոլորը</value>
+  </data>
+  <data name="geometryIssue_kind_noGeometry" xml:space="preserve">
+    <value>Երկրաչափություն չկա</value>
+  </data>
+  <data name="geometryIssue_kind_closedRing" xml:space="preserve">
+    <value>Օղակը վերջում կրկնում է իր առաջին կետը</value>
+  </data>
+  <data name="geometryIssue_kind_repeatedPoint" xml:space="preserve">
+    <value>Կրկնվող կետ</value>
+  </data>
+  <data name="geometryIssue_kind_tooFewPoints" xml:space="preserve">
+    <value>Չափազանց քիչ կետեր</value>
+  </data>
+  <data name="geometryIssue_kind_zeroAreaRing" xml:space="preserve">
+    <value>Զրո մակերեսով օղակ</value>
+  </data>
+  <data name="geometryIssue_kind_invalidCoordinate" xml:space="preserve">
+    <value>Անվավեր կոորդինատ (NaN կամ անվերջ)</value>
+  </data>
+  <data name="geometryIssue_kind_coordinateOutOfRange" xml:space="preserve">
+    <value>Կոորդինատը միջակայքից դուրս է</value>
+  </data>
+  <data name="geometryIssue_kind_wrongRingOrientation" xml:space="preserve">
+    <value>Սխալ ուղղությամբ օղակ</value>
+  </data>
+  <data name="geometryIssue_outcome_repaired" xml:space="preserve">
+    <value>Կուղղվի</value>
+  </data>
+  <data name="geometryIssue_outcome_removed" xml:space="preserve">
+    <value>Ոչինչ չի մնում. ջնջել</value>
+  </data>
+  <data name="geometryIssue_outcome_unrepairable" xml:space="preserve">
+    <value>Հնարավոր չէ ուղղել. ջնջել</value>
+  </data>
+  <data name="geometryIssue_location_part" xml:space="preserve">
+    <value>մաս {0}</value>
+  </data>
+  <data name="geometryIssue_location_ring" xml:space="preserve">
+    <value>օղակ {0}</value>
+  </data>
+  <data name="geometryIssue_featureLabel" xml:space="preserve">
+    <value>Օբյեկտ {0}</value>
+  </data>
 </root>

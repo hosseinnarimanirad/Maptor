@@ -3040,4 +3040,109 @@
   <data name="notification_geometryIssues_orientationFixed" xml:space="preserve">
     <value>"{1}" के {0} फ़ीचर में रिंग की दिशा ठीक की गई।</value>
   </data>
+  <data name="layerSettings_geometry_title" xml:space="preserve">
+    <value>ज्यामिति</value>
+  </data>
+  <data name="layerSettings_geometry_intro" xml:space="preserve">
+    <value>लेयर के फ़ीचर की ज्यामिति में ऐसी समस्याएँ जाँचता है जो संपादन, माप या सहेजने में बाधा डालती हैं। किसी फ़ीचर को मानचित्र पर देखने के लिए उसे चुनें।</value>
+  </data>
+  <data name="layerSettings_geometry_check" xml:space="preserve">
+    <value>जाँचें</value>
+  </data>
+  <data name="layerSettings_geometry_liveNote" xml:space="preserve">
+    <value>लाइव लेयर: केवल अब तक लोड हुए फ़ीचर जाँचे जाते हैं। अधिक लोड करने के लिए मानचित्र खिसकाएँ या ज़ूम करें, फिर दोबारा जाँचें।</value>
+  </data>
+  <data name="layerSettings_geometry_notEditable" xml:space="preserve">
+    <value>इस लेयर को संपादित नहीं किया जा सकता, इसलिए समस्याएँ केवल बताई जाती हैं।</value>
+  </data>
+  <data name="layerSettings_geometry_noPermission" xml:space="preserve">
+    <value>आपको ज्यामिति संपादित करने की अनुमति नहीं है, इसलिए समस्याएँ केवल बताई जाती हैं।</value>
+  </data>
+  <data name="layerSettings_geometry_failed" xml:space="preserve">
+    <value>ज्यामिति जाँच विफल रही:</value>
+  </data>
+  <data name="layerSettings_geometry_noProblems" xml:space="preserve">
+    <value>{0} फ़ीचर में कोई ज्यामिति समस्या नहीं है।</value>
+  </data>
+  <data name="layerSettings_geometry_summary" xml:space="preserve">
+    <value>{1} में से {0} फ़ीचर की ज्यामिति में समस्याएँ हैं।</value>
+  </data>
+  <data name="layerSettings_geometry_orientationNote" xml:space="preserve">
+    <value>{0} फ़ीचर के रिंग गलत दिशा में हैं; "सभी ठीक करें" इन्हें भी ठीक करता है।</value>
+  </data>
+  <data name="layerSettings_geometry_fixed" xml:space="preserve">
+    <value>{0} फ़ीचर ठीक किए गए। बदलाव रखने के लिए सहेजें।</value>
+  </data>
+  <data name="layerSettings_geometry_deleteConfirm" xml:space="preserve">
+    <value>"{0}" हटाएँ? इसकी ज्यामिति ठीक नहीं की जा सकती।</value>
+  </data>
+  <data name="layerSettings_geometry_deleted" xml:space="preserve">
+    <value>"{0}" हटाया गया। बदलाव रखने के लिए सहेजें।</value>
+  </data>
+  <data name="layerSettings_geometry_saved" xml:space="preserve">
+    <value>बदलाव सहेजे गए।</value>
+  </data>
+  <data name="layerSettings_geometry_columnFeature" xml:space="preserve">
+    <value>फ़ीचर</value>
+  </data>
+  <data name="layerSettings_geometry_columnProblem" xml:space="preserve">
+    <value>समस्या</value>
+  </data>
+  <data name="layerSettings_geometry_columnFix" xml:space="preserve">
+    <value>सुधार</value>
+  </data>
+  <data name="layerSettings_geometry_empty" xml:space="preserve">
+    <value>इस लेयर में अमान्य ज्यामिति खोजने के लिए "जाँचें" दबाएँ।</value>
+  </data>
+  <data name="layerSettings_geometry_delete" xml:space="preserve">
+    <value>हटाएँ</value>
+  </data>
+  <data name="layerSettings_geometry_fix" xml:space="preserve">
+    <value>ठीक करें</value>
+  </data>
+  <data name="layerSettings_geometry_fixAll" xml:space="preserve">
+    <value>सभी ठीक करें</value>
+  </data>
+  <data name="geometryIssue_kind_noGeometry" xml:space="preserve">
+    <value>कोई ज्यामिति नहीं</value>
+  </data>
+  <data name="geometryIssue_kind_closedRing" xml:space="preserve">
+    <value>रिंग अंत में अपना पहला बिंदु दोहराती है</value>
+  </data>
+  <data name="geometryIssue_kind_repeatedPoint" xml:space="preserve">
+    <value>दोहराया गया बिंदु</value>
+  </data>
+  <data name="geometryIssue_kind_tooFewPoints" xml:space="preserve">
+    <value>बहुत कम बिंदु</value>
+  </data>
+  <data name="geometryIssue_kind_zeroAreaRing" xml:space="preserve">
+    <value>शून्य क्षेत्रफल वाली रिंग</value>
+  </data>
+  <data name="geometryIssue_kind_invalidCoordinate" xml:space="preserve">
+    <value>अमान्य निर्देशांक (NaN या अनंत)</value>
+  </data>
+  <data name="geometryIssue_kind_coordinateOutOfRange" xml:space="preserve">
+    <value>सीमा से बाहर निर्देशांक</value>
+  </data>
+  <data name="geometryIssue_kind_wrongRingOrientation" xml:space="preserve">
+    <value>गलत दिशा में रिंग</value>
+  </data>
+  <data name="geometryIssue_outcome_repaired" xml:space="preserve">
+    <value>ठीक किया जाएगा</value>
+  </data>
+  <data name="geometryIssue_outcome_removed" xml:space="preserve">
+    <value>कुछ नहीं बचता: हटाएँ</value>
+  </data>
+  <data name="geometryIssue_outcome_unrepairable" xml:space="preserve">
+    <value>ठीक नहीं हो सकता: हटाएँ</value>
+  </data>
+  <data name="geometryIssue_location_part" xml:space="preserve">
+    <value>भाग {0}</value>
+  </data>
+  <data name="geometryIssue_location_ring" xml:space="preserve">
+    <value>रिंग {0}</value>
+  </data>
+  <data name="geometryIssue_featureLabel" xml:space="preserve">
+    <value>फ़ीचर {0}</value>
+  </data>
 </root>

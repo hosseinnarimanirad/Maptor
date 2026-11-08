@@ -3040,4 +3040,109 @@
   <data name="notification_geometryIssues_orientationFixed" xml:space="preserve">
     <value>Direção dos anéis corrigida em {0} feições de "{1}".</value>
   </data>
+  <data name="layerSettings_geometry_title" xml:space="preserve">
+    <value>Geometria</value>
+  </data>
+  <data name="layerSettings_geometry_intro" xml:space="preserve">
+    <value>Verifica as geometrias das feições da camada em busca de problemas que impedem editar, medir ou salvar. Selecione uma feição para vê-la no mapa.</value>
+  </data>
+  <data name="layerSettings_geometry_check" xml:space="preserve">
+    <value>Verificar</value>
+  </data>
+  <data name="layerSettings_geometry_liveNote" xml:space="preserve">
+    <value>Camada ao vivo: apenas as feições carregadas até agora são verificadas. Mova ou aproxime o mapa para carregar mais e verifique novamente.</value>
+  </data>
+  <data name="layerSettings_geometry_notEditable" xml:space="preserve">
+    <value>Esta camada não pode ser editada, então os problemas são apenas informados.</value>
+  </data>
+  <data name="layerSettings_geometry_noPermission" xml:space="preserve">
+    <value>Você não tem permissão para editar geometrias, então os problemas são apenas informados.</value>
+  </data>
+  <data name="layerSettings_geometry_failed" xml:space="preserve">
+    <value>A verificação de geometrias falhou:</value>
+  </data>
+  <data name="layerSettings_geometry_noProblems" xml:space="preserve">
+    <value>Nenhum problema de geometria em {0} feições.</value>
+  </data>
+  <data name="layerSettings_geometry_summary" xml:space="preserve">
+    <value>{0} de {1} feições têm problemas de geometria.</value>
+  </data>
+  <data name="layerSettings_geometry_orientationNote" xml:space="preserve">
+    <value>{0} feições têm anéis na direção errada; "Corrigir tudo" também os corrige.</value>
+  </data>
+  <data name="layerSettings_geometry_fixed" xml:space="preserve">
+    <value>{0} feições corrigidas. Salve para manter as alterações.</value>
+  </data>
+  <data name="layerSettings_geometry_deleteConfirm" xml:space="preserve">
+    <value>Excluir "{0}"? Sua geometria não pode ser reparada.</value>
+  </data>
+  <data name="layerSettings_geometry_deleted" xml:space="preserve">
+    <value>"{0}" excluída. Salve para manter a alteração.</value>
+  </data>
+  <data name="layerSettings_geometry_saved" xml:space="preserve">
+    <value>Alterações salvas.</value>
+  </data>
+  <data name="layerSettings_geometry_columnFeature" xml:space="preserve">
+    <value>Feição</value>
+  </data>
+  <data name="layerSettings_geometry_columnProblem" xml:space="preserve">
+    <value>Problema</value>
+  </data>
+  <data name="layerSettings_geometry_columnFix" xml:space="preserve">
+    <value>Correção</value>
+  </data>
+  <data name="layerSettings_geometry_empty" xml:space="preserve">
+    <value>Clique em Verificar para procurar geometrias inválidas nesta camada.</value>
+  </data>
+  <data name="layerSettings_geometry_delete" xml:space="preserve">
+    <value>Excluir</value>
+  </data>
+  <data name="layerSettings_geometry_fix" xml:space="preserve">
+    <value>Corrigir</value>
+  </data>
+  <data name="layerSettings_geometry_fixAll" xml:space="preserve">
+    <value>Corrigir tudo</value>
+  </data>
+  <data name="geometryIssue_kind_noGeometry" xml:space="preserve">
+    <value>Sem geometria</value>
+  </data>
+  <data name="geometryIssue_kind_closedRing" xml:space="preserve">
+    <value>O anel repete o primeiro ponto no final</value>
+  </data>
+  <data name="geometryIssue_kind_repeatedPoint" xml:space="preserve">
+    <value>Ponto repetido</value>
+  </data>
+  <data name="geometryIssue_kind_tooFewPoints" xml:space="preserve">
+    <value>Poucos pontos</value>
+  </data>
+  <data name="geometryIssue_kind_zeroAreaRing" xml:space="preserve">
+    <value>Anel com área zero</value>
+  </data>
+  <data name="geometryIssue_kind_invalidCoordinate" xml:space="preserve">
+    <value>Coordenada inválida (NaN ou infinita)</value>
+  </data>
+  <data name="geometryIssue_kind_coordinateOutOfRange" xml:space="preserve">
+    <value>Coordenada fora do intervalo</value>
+  </data>
+  <data name="geometryIssue_kind_wrongRingOrientation" xml:space="preserve">
+    <value>Anel na direção errada</value>
+  </data>
+  <data name="geometryIssue_outcome_repaired" xml:space="preserve">
+    <value>Será reparada</value>
+  </data>
+  <data name="geometryIssue_outcome_removed" xml:space="preserve">
+    <value>Nada resta: excluir</value>
+  </data>
+  <data name="geometryIssue_outcome_unrepairable" xml:space="preserve">
+    <value>Não pode ser reparada: excluir</value>
+  </data>
+  <data name="geometryIssue_location_part" xml:space="preserve">
+    <value>parte {0}</value>
+  </data>
+  <data name="geometryIssue_location_ring" xml:space="preserve">
+    <value>anel {0}</value>
+  </data>
+  <data name="geometryIssue_featureLabel" xml:space="preserve">
+    <value>Feição {0}</value>
+  </data>
 </root>

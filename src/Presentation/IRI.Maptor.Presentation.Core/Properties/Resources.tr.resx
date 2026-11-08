@@ -3040,4 +3040,109 @@
   <data name="notification_geometryIssues_orientationFixed" xml:space="preserve">
     <value>"{1}" katmanında {0} öğenin halka yönü düzeltildi.</value>
   </data>
+  <data name="layerSettings_geometry_title" xml:space="preserve">
+    <value>Geometri</value>
+  </data>
+  <data name="layerSettings_geometry_intro" xml:space="preserve">
+    <value>Katmandaki öğelerin geometrisini düzenlemeyi, ölçmeyi veya kaydetmeyi engelleyen sorunlar için denetler. Haritada görmek için bir öğe seçin.</value>
+  </data>
+  <data name="layerSettings_geometry_check" xml:space="preserve">
+    <value>Denetle</value>
+  </data>
+  <data name="layerSettings_geometry_liveNote" xml:space="preserve">
+    <value>Canlı katman: yalnızca şimdiye kadar yüklenen öğeler denetlenir. Daha fazlasını yüklemek için haritayı kaydırın veya yakınlaştırın, sonra yeniden denetleyin.</value>
+  </data>
+  <data name="layerSettings_geometry_notEditable" xml:space="preserve">
+    <value>Bu katman düzenlenemez, bu nedenle sorunlar yalnızca bildirilir.</value>
+  </data>
+  <data name="layerSettings_geometry_noPermission" xml:space="preserve">
+    <value>Geometri düzenleme izniniz yok, bu nedenle sorunlar yalnızca bildirilir.</value>
+  </data>
+  <data name="layerSettings_geometry_failed" xml:space="preserve">
+    <value>Geometri denetimi başarısız oldu:</value>
+  </data>
+  <data name="layerSettings_geometry_noProblems" xml:space="preserve">
+    <value>{0} öğede geometri sorunu yok.</value>
+  </data>
+  <data name="layerSettings_geometry_summary" xml:space="preserve">
+    <value>{1} öğeden {0} tanesinin geometrisinde sorun var.</value>
+  </data>
+  <data name="layerSettings_geometry_orientationNote" xml:space="preserve">
+    <value>{0} öğenin halkaları yanlış yönde; "Tümünü düzelt" bunları da düzeltir.</value>
+  </data>
+  <data name="layerSettings_geometry_fixed" xml:space="preserve">
+    <value>{0} öğe düzeltildi. Değişiklikleri korumak için kaydedin.</value>
+  </data>
+  <data name="layerSettings_geometry_deleteConfirm" xml:space="preserve">
+    <value>"{0}" silinsin mi? Geometrisi onarılamaz.</value>
+  </data>
+  <data name="layerSettings_geometry_deleted" xml:space="preserve">
+    <value>"{0}" silindi. Değişikliği korumak için kaydedin.</value>
+  </data>
+  <data name="layerSettings_geometry_saved" xml:space="preserve">
+    <value>Değişiklikler kaydedildi.</value>
+  </data>
+  <data name="layerSettings_geometry_columnFeature" xml:space="preserve">
+    <value>Öğe</value>
+  </data>
+  <data name="layerSettings_geometry_columnProblem" xml:space="preserve">
+    <value>Sorun</value>
+  </data>
+  <data name="layerSettings_geometry_columnFix" xml:space="preserve">
+    <value>Düzeltme</value>
+  </data>
+  <data name="layerSettings_geometry_empty" xml:space="preserve">
+    <value>Bu katmandaki geçersiz geometrileri bulmak için Denetle'ye basın.</value>
+  </data>
+  <data name="layerSettings_geometry_delete" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="layerSettings_geometry_fix" xml:space="preserve">
+    <value>Düzelt</value>
+  </data>
+  <data name="layerSettings_geometry_fixAll" xml:space="preserve">
+    <value>Tümünü düzelt</value>
+  </data>
+  <data name="geometryIssue_kind_noGeometry" xml:space="preserve">
+    <value>Geometri yok</value>
+  </data>
+  <data name="geometryIssue_kind_closedRing" xml:space="preserve">
+    <value>Halka ilk noktasını sonda tekrarlıyor</value>
+  </data>
+  <data name="geometryIssue_kind_repeatedPoint" xml:space="preserve">
+    <value>Tekrarlanan nokta</value>
+  </data>
+  <data name="geometryIssue_kind_tooFewPoints" xml:space="preserve">
+    <value>Çok az nokta</value>
+  </data>
+  <data name="geometryIssue_kind_zeroAreaRing" xml:space="preserve">
+    <value>Alanı sıfır olan halka</value>
+  </data>
+  <data name="geometryIssue_kind_invalidCoordinate" xml:space="preserve">
+    <value>Geçersiz koordinat (NaN veya sonsuz)</value>
+  </data>
+  <data name="geometryIssue_kind_coordinateOutOfRange" xml:space="preserve">
+    <value>Aralık dışı koordinat</value>
+  </data>
+  <data name="geometryIssue_kind_wrongRingOrientation" xml:space="preserve">
+    <value>Yanlış yönde halka</value>
+  </data>
+  <data name="geometryIssue_outcome_repaired" xml:space="preserve">
+    <value>Onarılacak</value>
+  </data>
+  <data name="geometryIssue_outcome_removed" xml:space="preserve">
+    <value>Hiçbir şey kalmıyor: sil</value>
+  </data>
+  <data name="geometryIssue_outcome_unrepairable" xml:space="preserve">
+    <value>Onarılamaz: sil</value>
+  </data>
+  <data name="geometryIssue_location_part" xml:space="preserve">
+    <value>parça {0}</value>
+  </data>
+  <data name="geometryIssue_location_ring" xml:space="preserve">
+    <value>halka {0}</value>
+  </data>
+  <data name="geometryIssue_featureLabel" xml:space="preserve">
+    <value>Öğe {0}</value>
+  </data>
 </root>

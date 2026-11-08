@@ -47,6 +47,12 @@ public interface IServerQueryableVectorDataSource : IVectorDataSource
     bool IsViewTruncated { get; }
 
     event EventHandler<bool>? ViewTruncatedChanged;
+
+    /// <summary>
+    /// The features already in memory (the tiles fetched so far, or the whole layer once it was read), without
+    /// asking the server for more. Includes local edits. Used to check what the user has seen, e.g. geometries.
+    /// </summary>
+    FeatureSet<Point> GetLoadedFeatures();
 }
 
 public class FeatureQueryPage

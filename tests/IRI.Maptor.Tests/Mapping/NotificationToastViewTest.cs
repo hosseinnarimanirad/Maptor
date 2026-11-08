@@ -3,51 +3,53 @@ using System.Windows;
 using System.Windows.Controls;
 
 using IRI.Maptor.Presentation.Wpf.Controls.Dialogs;
+using IRI.Maptor.Presentation.Wpf.Controls.LayerSettings;
 using IRI.Maptor.Tests.Common;
 
 namespace IRI.Maptor.Tests.Mapping;
 
 /// <summary>
-/// The notification window opened by IDialogService.ShowNotification: it must build (every StaticResource it uses
-/// resolves) and must not take focus or appear in the taskbar. Constructed only, never shown.
+/// The views added for invalid geometries must build, i.e. every StaticResource they use resolves: the notification
+/// window (IDialogService.ShowNotification; it must also take no focus and stay out of the taskbar) and
+/// Layer Settings › Geometry. Constructed only, never shown.
 /// </summary>
+/// <remarks>
+/// SharedResourceDictionary caches its dictionaries process-wide, and each <see cref="WpfTestHost.Run"/> runs on a
+/// new thread, so a view built after another test's view would use styles owned by that test's (finished) thread.
+/// That is a test-host artefact (the app has one UI thread); the cache is emptied first so this run builds its own.
+/// </remarks>
 [Collection(WpfCollection.Name)]
 public class NotificationToastViewTest
 {
-    private static void EnsureMahAppsResources()
+    private static void ClearSharedResourceDictionaryCache()
     {
-        var resources = Application.Current.Resources;
+        var cache = typeof(IRI.Maptor.Presentation.Wpf.Helpers.SharedResourceDictionary)
+            .GetField("_cache", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!
+            .GetValue(null) as System.Collections.IDictionary;
 
-        if (resources.Contains("MahApps.Styles.Button"))
-            return;
-
-        foreach (var source in new[]
-                 {
-                     "pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml",
-                     "pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml",
-                     "pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml",
-                 })
-        {
-            resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri(source, UriKind.Absolute) });
-        }
+        lock (cache!)
+            cache.Clear();
     }
 
     [Fact]
-    public void Builds_ShowsTheMessage_AndTakesNoFocus()
+    public void GeometryViews_Build()
     {
         WpfTestHost.Run(() =>
         {
-            EnsureMahAppsResources();
+            ClearSharedResourceDictionaryCache();
 
-            var view = new NotificationToastView("3 features have geometry problems.");
+            WpfTestHost.EnsureMahAppsResources();
 
-            Assert.False(view.ShowActivated);
-            Assert.False(view.ShowInTaskbar);
-            Assert.Equal(WindowStyle.None, view.WindowStyle);
+            var toast = new NotificationToastView("3 features have geometry problems.");
 
-            var message = (TextBlock)view.FindName("messageText");
+            Assert.False(toast.ShowActivated);
+            Assert.False(toast.ShowInTaskbar);
+            Assert.Equal(WindowStyle.None, toast.WindowStyle);
+            Assert.Equal("3 features have geometry problems.", ((TextBlock)toast.FindName("messageText")).Text);
 
-            Assert.Equal("3 features have geometry problems.", message.Text);
+            var geometryTab = new LayerSettings_GeometryView();
+
+            Assert.NotNull(geometryTab.Content);
         });
     }
 }

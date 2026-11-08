@@ -3040,4 +3040,109 @@
   <data name="notification_geometryIssues_orientationFixed" xml:space="preserve">
     <value>ئاراستەی ئەڵقەکان لە {0} دیاردەی «{1}» ڕاست کرایەوە.</value>
   </data>
+  <data name="layerSettings_geometry_title" xml:space="preserve">
+    <value>ئەندازە</value>
+  </data>
+  <data name="layerSettings_geometry_intro" xml:space="preserve">
+    <value>ئەندازەی دیاردەکانی چینەکە بۆ ئەو کێشانە دەپشکنێت کە ڕێگری لە دەستکاری، پێوان یان پاشەکەوتکردن دەکەن. دیاردەیەک هەڵبژێرە بۆ بینینی لەسەر نەخشە.</value>
+  </data>
+  <data name="layerSettings_geometry_check" xml:space="preserve">
+    <value>پشکنین</value>
+  </data>
+  <data name="layerSettings_geometry_liveNote" xml:space="preserve">
+    <value>چینی ڕاستەوخۆ: تەنها ئەو دیاردانەی تا ئێستا بارکراون دەپشکنرێن. نەخشەکە بجوڵێنە یان گەورەی بکە بۆ بارکردنی زیاتر، پاشان دووبارە بپشکنە.</value>
+  </data>
+  <data name="layerSettings_geometry_notEditable" xml:space="preserve">
+    <value>ئەم چینە دەستکاری ناکرێت، بۆیە کێشەکان تەنها ڕاپۆرت دەکرێن.</value>
+  </data>
+  <data name="layerSettings_geometry_noPermission" xml:space="preserve">
+    <value>مۆڵەتی دەستکاریکردنی ئەندازەت نییە، بۆیە کێشەکان تەنها ڕاپۆرت دەکرێن.</value>
+  </data>
+  <data name="layerSettings_geometry_failed" xml:space="preserve">
+    <value>پشکنینی ئەندازە سەرکەوتوو نەبوو:</value>
+  </data>
+  <data name="layerSettings_geometry_noProblems" xml:space="preserve">
+    <value>لە {0} دیاردەدا هیچ کێشەیەکی ئەندازەیی نییە.</value>
+  </data>
+  <data name="layerSettings_geometry_summary" xml:space="preserve">
+    <value>{0} لە {1} دیاردە کێشەی ئەندازەییان هەیە.</value>
+  </data>
+  <data name="layerSettings_geometry_orientationNote" xml:space="preserve">
+    <value>ئەڵقەکانی {0} دیاردە ئاراستەیان هەڵەیە؛ «ڕاستکردنەوەی هەموو» ئەوانیش ڕاست دەکاتەوە.</value>
+  </data>
+  <data name="layerSettings_geometry_fixed" xml:space="preserve">
+    <value>{0} دیاردە ڕاستکرانەوە. بۆ هێشتنەوەی گۆڕانکارییەکان پاشەکەوت بکە.</value>
+  </data>
+  <data name="layerSettings_geometry_deleteConfirm" xml:space="preserve">
+    <value>«{0}» بسڕدرێتەوە؟ ئەندازەکەی ڕاست ناکرێتەوە.</value>
+  </data>
+  <data name="layerSettings_geometry_deleted" xml:space="preserve">
+    <value>«{0}» سڕایەوە. بۆ هێشتنەوەی گۆڕانکارییەکە پاشەکەوت بکە.</value>
+  </data>
+  <data name="layerSettings_geometry_saved" xml:space="preserve">
+    <value>گۆڕانکارییەکان پاشەکەوت کران.</value>
+  </data>
+  <data name="layerSettings_geometry_columnFeature" xml:space="preserve">
+    <value>دیاردە</value>
+  </data>
+  <data name="layerSettings_geometry_columnProblem" xml:space="preserve">
+    <value>کێشە</value>
+  </data>
+  <data name="layerSettings_geometry_columnFix" xml:space="preserve">
+    <value>ڕاستکردنەوە</value>
+  </data>
+  <data name="layerSettings_geometry_empty" xml:space="preserve">
+    <value>«پشکنین» دابگرە بۆ دۆزینەوەی ئەندازەی نادروست لەم چینەدا.</value>
+  </data>
+  <data name="layerSettings_geometry_delete" xml:space="preserve">
+    <value>سڕینەوە</value>
+  </data>
+  <data name="layerSettings_geometry_fix" xml:space="preserve">
+    <value>ڕاستکردنەوە</value>
+  </data>
+  <data name="layerSettings_geometry_fixAll" xml:space="preserve">
+    <value>ڕاستکردنەوەی هەموو</value>
+  </data>
+  <data name="geometryIssue_kind_noGeometry" xml:space="preserve">
+    <value>بێ ئەندازە</value>
+  </data>
+  <data name="geometryIssue_kind_closedRing" xml:space="preserve">
+    <value>ئەڵقە خاڵی یەکەمی لە کۆتاییدا دووبارە دەکاتەوە</value>
+  </data>
+  <data name="geometryIssue_kind_repeatedPoint" xml:space="preserve">
+    <value>خاڵی دووبارە</value>
+  </data>
+  <data name="geometryIssue_kind_tooFewPoints" xml:space="preserve">
+    <value>خاڵ زۆر کەمە</value>
+  </data>
+  <data name="geometryIssue_kind_zeroAreaRing" xml:space="preserve">
+    <value>ئەڵقەی ڕووبەر سفر</value>
+  </data>
+  <data name="geometryIssue_kind_invalidCoordinate" xml:space="preserve">
+    <value>کۆئۆردیناتی نادروست (NaN یان بێکۆتا)</value>
+  </data>
+  <data name="geometryIssue_kind_coordinateOutOfRange" xml:space="preserve">
+    <value>کۆئۆردینات لە دەرەوەی مەودادایە</value>
+  </data>
+  <data name="geometryIssue_kind_wrongRingOrientation" xml:space="preserve">
+    <value>ئەڵقەی ئاراستە هەڵە</value>
+  </data>
+  <data name="geometryIssue_outcome_repaired" xml:space="preserve">
+    <value>ڕاست دەکرێتەوە</value>
+  </data>
+  <data name="geometryIssue_outcome_removed" xml:space="preserve">
+    <value>هیچ نامێنێتەوە: بیسڕەوە</value>
+  </data>
+  <data name="geometryIssue_outcome_unrepairable" xml:space="preserve">
+    <value>ڕاست ناکرێتەوە: بیسڕەوە</value>
+  </data>
+  <data name="geometryIssue_location_part" xml:space="preserve">
+    <value>بەشی {0}</value>
+  </data>
+  <data name="geometryIssue_location_ring" xml:space="preserve">
+    <value>ئەڵقەی {0}</value>
+  </data>
+  <data name="geometryIssue_featureLabel" xml:space="preserve">
+    <value>دیاردە {0}</value>
+  </data>
 </root>

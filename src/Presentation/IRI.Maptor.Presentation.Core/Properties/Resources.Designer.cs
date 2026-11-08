@@ -3659,6 +3659,321 @@ namespace IRI.Maptor.Presentation.Core.Properties {
                 return ResourceManager.GetString("notification_geometryIssues_orientationFixed", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geometry.
+        /// </summary>
+        public static string layerSettings_geometry_title {
+            get {
+                return ResourceManager.GetString("layerSettings_geometry_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Checks the layer's feature geometries for problems that break editing, measuring or saving. Select a feature to see it on the map..
+        /// </summary>
+        public static string layerSettings_geometry_intro {
+            get {
+                return ResourceManager.GetString("layerSettings_geometry_intro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check.
+        /// </summary>
+        public static string layerSettings_geometry_check {
+            get {
+                return ResourceManager.GetString("layerSettings_geometry_check", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Live layer: only the features loaded so far are checked. Pan or zoom the map to load more, then check again..
+        /// </summary>
+        public static string layerSettings_geometry_liveNote {
+            get {
+                return ResourceManager.GetString("layerSettings_geometry_liveNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This layer can't be edited, so problems are only reported..
+        /// </summary>
+        public static string layerSettings_geometry_notEditable {
+            get {
+                return ResourceManager.GetString("layerSettings_geometry_notEditable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You don't have permission to edit geometries, so problems are only reported..
+        /// </summary>
+        public static string layerSettings_geometry_noPermission {
+            get {
+                return ResourceManager.GetString("layerSettings_geometry_noPermission", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The geometry check failed:.
+        /// </summary>
+        public static string layerSettings_geometry_failed {
+            get {
+                return ResourceManager.GetString("layerSettings_geometry_failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No geometry problems in {0} features..
+        /// </summary>
+        public static string layerSettings_geometry_noProblems {
+            get {
+                return ResourceManager.GetString("layerSettings_geometry_noProblems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} of {1} features have geometry problems..
+        /// </summary>
+        public static string layerSettings_geometry_summary {
+            get {
+                return ResourceManager.GetString("layerSettings_geometry_summary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} features have rings in the wrong direction; Fix all corrects them too..
+        /// </summary>
+        public static string layerSettings_geometry_orientationNote {
+            get {
+                return ResourceManager.GetString("layerSettings_geometry_orientationNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} features fixed. Save to keep the changes..
+        /// </summary>
+        public static string layerSettings_geometry_fixed {
+            get {
+                return ResourceManager.GetString("layerSettings_geometry_fixed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete &quot;{0}&quot;? Its geometry can't be repaired..
+        /// </summary>
+        public static string layerSettings_geometry_deleteConfirm {
+            get {
+                return ResourceManager.GetString("layerSettings_geometry_deleteConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;{0}&quot; deleted. Save to keep the change..
+        /// </summary>
+        public static string layerSettings_geometry_deleted {
+            get {
+                return ResourceManager.GetString("layerSettings_geometry_deleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Changes saved..
+        /// </summary>
+        public static string layerSettings_geometry_saved {
+            get {
+                return ResourceManager.GetString("layerSettings_geometry_saved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Feature.
+        /// </summary>
+        public static string layerSettings_geometry_columnFeature {
+            get {
+                return ResourceManager.GetString("layerSettings_geometry_columnFeature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Problem.
+        /// </summary>
+        public static string layerSettings_geometry_columnProblem {
+            get {
+                return ResourceManager.GetString("layerSettings_geometry_columnProblem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fix.
+        /// </summary>
+        public static string layerSettings_geometry_columnFix {
+            get {
+                return ResourceManager.GetString("layerSettings_geometry_columnFix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Press Check to look for invalid geometries in this layer..
+        /// </summary>
+        public static string layerSettings_geometry_empty {
+            get {
+                return ResourceManager.GetString("layerSettings_geometry_empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string layerSettings_geometry_delete {
+            get {
+                return ResourceManager.GetString("layerSettings_geometry_delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fix.
+        /// </summary>
+        public static string layerSettings_geometry_fix {
+            get {
+                return ResourceManager.GetString("layerSettings_geometry_fix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fix all.
+        /// </summary>
+        public static string layerSettings_geometry_fixAll {
+            get {
+                return ResourceManager.GetString("layerSettings_geometry_fixAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No geometry.
+        /// </summary>
+        public static string geometryIssue_kind_noGeometry {
+            get {
+                return ResourceManager.GetString("geometryIssue_kind_noGeometry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ring repeats its first point at the end.
+        /// </summary>
+        public static string geometryIssue_kind_closedRing {
+            get {
+                return ResourceManager.GetString("geometryIssue_kind_closedRing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Same point repeated.
+        /// </summary>
+        public static string geometryIssue_kind_repeatedPoint {
+            get {
+                return ResourceManager.GetString("geometryIssue_kind_repeatedPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Too few points.
+        /// </summary>
+        public static string geometryIssue_kind_tooFewPoints {
+            get {
+                return ResourceManager.GetString("geometryIssue_kind_tooFewPoints", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ring with zero area.
+        /// </summary>
+        public static string geometryIssue_kind_zeroAreaRing {
+            get {
+                return ResourceManager.GetString("geometryIssue_kind_zeroAreaRing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid coordinate (NaN or infinite).
+        /// </summary>
+        public static string geometryIssue_kind_invalidCoordinate {
+            get {
+                return ResourceManager.GetString("geometryIssue_kind_invalidCoordinate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coordinate out of range.
+        /// </summary>
+        public static string geometryIssue_kind_coordinateOutOfRange {
+            get {
+                return ResourceManager.GetString("geometryIssue_kind_coordinateOutOfRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ring in the wrong direction.
+        /// </summary>
+        public static string geometryIssue_kind_wrongRingOrientation {
+            get {
+                return ResourceManager.GetString("geometryIssue_kind_wrongRingOrientation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Will be repaired.
+        /// </summary>
+        public static string geometryIssue_outcome_repaired {
+            get {
+                return ResourceManager.GetString("geometryIssue_outcome_repaired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nothing left: delete.
+        /// </summary>
+        public static string geometryIssue_outcome_removed {
+            get {
+                return ResourceManager.GetString("geometryIssue_outcome_removed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can't be repaired: delete.
+        /// </summary>
+        public static string geometryIssue_outcome_unrepairable {
+            get {
+                return ResourceManager.GetString("geometryIssue_outcome_unrepairable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to part {0}.
+        /// </summary>
+        public static string geometryIssue_location_part {
+            get {
+                return ResourceManager.GetString("geometryIssue_location_part", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ring {0}.
+        /// </summary>
+        public static string geometryIssue_location_ring {
+            get {
+                return ResourceManager.GetString("geometryIssue_location_ring", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Feature {0}.
+        /// </summary>
+        public static string geometryIssue_featureLabel {
+            get {
+                return ResourceManager.GetString("geometryIssue_featureLabel", resourceCulture);
+            }
+        }
 
         /// <summary>
         ///   Looks up a localized string similar to The password of {0} has been reset. Give this new password to the user:.
