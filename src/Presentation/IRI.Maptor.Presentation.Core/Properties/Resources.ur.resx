@@ -3145,4 +3145,10 @@
   <data name="geometryIssue_featureLabel" xml:space="preserve">
     <value>فیچر {0}</value>
   </data>
+  <data name="msg_geometryIssues_fixAndEdit" xml:space="preserve">
+    <value>اس جیومیٹری میں مسائل ہیں: {0}۔ اسے درست کر کے ترمیم شروع کریں؟ درستی ترمیم مکمل ہونے پر لاگو ہوتی ہے۔</value>
+  </data>
+  <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
+    <value>اس جیومیٹری میں ترمیم نہیں ہو سکتی کیونکہ اسے درست نہیں کیا جا سکتا: {0}۔</value>
+  </data>
 </root>

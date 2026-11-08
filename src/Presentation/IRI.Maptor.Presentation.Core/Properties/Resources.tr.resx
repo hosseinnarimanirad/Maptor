@@ -3145,4 +3145,10 @@
   <data name="geometryIssue_featureLabel" xml:space="preserve">
     <value>Öğe {0}</value>
   </data>
+  <data name="msg_geometryIssues_fixAndEdit" xml:space="preserve">
+    <value>Bu geometride sorunlar var: {0}. Düzeltilip düzenlemeye başlansın mı? Düzeltme, düzenleme bitince uygulanır.</value>
+  </data>
+  <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
+    <value>Bu geometri onarılamadığı için düzenlenemez: {0}.</value>
+  </data>
 </root>

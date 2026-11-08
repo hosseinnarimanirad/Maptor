@@ -418,7 +418,17 @@ public class LegendCommand : LegendCommandBase
         {
             layer.IsBusy = true;
 
-            var editResult = await map.EditAsync(layer.Geometry, map.MapSettings.EditingOptions);
+            // a drawing imported from a file can be invalid: repaired first (asked), or not edited
+            var geometryToEdit = await map.GetGeometryToEditAsync(layer.Geometry);
+
+            if (geometryToEdit is null)
+            {
+                layer.IsBusy = false;
+
+                return;
+            }
+
+            var editResult = await map.EditAsync(geometryToEdit, map.MapSettings.EditingOptions);
 
             if (!(editResult.IsCanceled == true))
             {

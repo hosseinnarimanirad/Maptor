@@ -3145,4 +3145,10 @@
   <data name="geometryIssue_featureLabel" xml:space="preserve">
     <value>المعلم {0}</value>
   </data>
+  <data name="msg_geometryIssues_fixAndEdit" xml:space="preserve">
+    <value>هذه الهندسة بها مشكلات: {0}. هل تريد إصلاحها وبدء التحرير؟ يُطبَّق الإصلاح عند إنهاء التحرير.</value>
+  </data>
+  <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
+    <value>لا يمكن تحرير هذه الهندسة لأنه لا يمكن إصلاحها: {0}.</value>
+  </data>
 </root>

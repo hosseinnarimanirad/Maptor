@@ -3145,4 +3145,10 @@
   <data name="geometryIssue_featureLabel" xml:space="preserve">
     <value>要素 {0}</value>
   </data>
+  <data name="msg_geometryIssues_fixAndEdit" xml:space="preserve">
+    <value>此几何存在问题：{0}。是否修复并开始编辑？修复将在完成编辑时应用。</value>
+  </data>
+  <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
+    <value>此几何无法修复，因此无法编辑：{0}。</value>
+  </data>
 </root>

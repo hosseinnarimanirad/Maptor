@@ -3145,4 +3145,10 @@
   <data name="geometryIssue_featureLabel" xml:space="preserve">
     <value>फ़ीचर {0}</value>
   </data>
+  <data name="msg_geometryIssues_fixAndEdit" xml:space="preserve">
+    <value>इस ज्यामिति में समस्याएँ हैं: {0}। इसे ठीक करके संपादन शुरू करें? सुधार संपादन पूरा होने पर लागू होता है।</value>
+  </data>
+  <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
+    <value>इस ज्यामिति को संपादित नहीं किया जा सकता क्योंकि इसे ठीक नहीं किया जा सकता: {0}।</value>
+  </data>
 </root>

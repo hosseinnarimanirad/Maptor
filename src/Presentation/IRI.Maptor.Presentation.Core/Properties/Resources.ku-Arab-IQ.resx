@@ -3145,4 +3145,10 @@
   <data name="geometryIssue_featureLabel" xml:space="preserve">
     <value>دیاردە {0}</value>
   </data>
+  <data name="msg_geometryIssues_fixAndEdit" xml:space="preserve">
+    <value>ئەم ئەندازەیە کێشەی هەیە: {0}. ڕاست بکرێتەوە و دەستکاری دەست پێ بکات؟ ڕاستکردنەوەکە لە کۆتایی دەستکارییەکەدا جێبەجێ دەکرێت.</value>
+  </data>
+  <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
+    <value>ئەم ئەندازەیە دەستکاری ناکرێت، چونکە ڕاست ناکرێتەوە: {0}.</value>
+  </data>
 </root>

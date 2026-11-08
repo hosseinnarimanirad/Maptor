@@ -3974,6 +3974,24 @@ namespace IRI.Maptor.Presentation.Core.Properties {
                 return ResourceManager.GetString("geometryIssue_featureLabel", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This geometry has problems: {0}. Fix it and start editing? The fix is applied when you finish editing..
+        /// </summary>
+        public static string msg_geometryIssues_fixAndEdit {
+            get {
+                return ResourceManager.GetString("msg_geometryIssues_fixAndEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This geometry can't be edited because it can't be repaired: {0}..
+        /// </summary>
+        public static string msg_geometryIssues_cannotEdit {
+            get {
+                return ResourceManager.GetString("msg_geometryIssues_cannotEdit", resourceCulture);
+            }
+        }
 
         /// <summary>
         ///   Looks up a localized string similar to The password of {0} has been reset. Give this new password to the user:.

@@ -3145,4 +3145,10 @@
   <data name="geometryIssue_featureLabel" xml:space="preserve">
     <value>Obyekt {0}</value>
   </data>
+  <data name="msg_geometryIssues_fixAndEdit" xml:space="preserve">
+    <value>Bu həndəsədə problem var: {0}. Düzəldilsin və redaktəyə başlanılsın? Düzəliş redaktə bitəndə tətbiq olunur.</value>
+  </data>
+  <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
+    <value>Bu həndəsə redaktə edilə bilməz, çünki düzəldilə bilmir: {0}.</value>
+  </data>
 </root>

@@ -3145,4 +3145,10 @@
   <data name="geometryIssue_featureLabel" xml:space="preserve">
     <value>Объект {0}</value>
   </data>
+  <data name="msg_geometryIssues_fixAndEdit" xml:space="preserve">
+    <value>В этой геометрии есть проблемы: {0}. Исправить её и начать редактирование? Исправление применяется по завершении редактирования.</value>
+  </data>
+  <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
+    <value>Эту геометрию нельзя редактировать, так как её нельзя исправить: {0}.</value>
+  </data>
 </root>

@@ -4221,4 +4221,10 @@
   <data name="geometryIssue_featureLabel" xml:space="preserve">
     <value>Feature {0}</value>
   </data>
+  <data name="msg_geometryIssues_fixAndEdit" xml:space="preserve">
+    <value>This geometry has problems: {0}. Fix it and start editing? The fix is applied when you finish editing.</value>
+  </data>
+  <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
+    <value>This geometry can't be edited because it can't be repaired: {0}.</value>
+  </data>
 </root>

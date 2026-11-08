@@ -3145,4 +3145,10 @@
   <data name="geometryIssue_featureLabel" xml:space="preserve">
     <value>Օբյեկտ {0}</value>
   </data>
+  <data name="msg_geometryIssues_fixAndEdit" xml:space="preserve">
+    <value>Այս երկրաչափությունն ունի խնդիրներ՝ {0}։ Ուղղե՞լ և սկսել խմբագրումը։ Ուղղումը կիրառվում է խմբագրումն ավարտելիս։</value>
+  </data>
+  <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
+    <value>Այս երկրաչափությունը հնարավոր չէ խմբագրել, քանի որ այն հնարավոր չէ ուղղել՝ {0}։</value>
+  </data>
 </root>

@@ -1849,7 +1849,18 @@ public abstract class MapViewModelBase : ViewModelBase
             {
                 selectedLayer.AssociatedLayer.IsBusy = true;
 
-                var editResult = await EditAsync(oldFeature.TheGeometry, MapSettings.EditingOptions);
+                // an invalid geometry is repaired first (asked), or not edited; a repaired one differs from the
+                // stored one, so finishing the edit stores the fix even without further changes
+                var geometryToEdit = await GetGeometryToEditAsync(oldFeature.TheGeometry);
+
+                if (geometryToEdit is null)
+                {
+                    selectedLayer.AssociatedLayer.IsBusy = false;
+
+                    return;
+                }
+
+                var editResult = await EditAsync(geometryToEdit, MapSettings.EditingOptions);
 
                 if (!editResult.HasNotNullResult())
                 {
@@ -3356,6 +3367,39 @@ public abstract class MapViewModelBase : ViewModelBase
 
     //*****************************************Editing***************************************************************
     #region Editing
+
+    /// <summary>
+    /// Checks a geometry before it is edited (<see cref="GeometryValidator"/>): the editor needs a valid one (a
+    /// closed ring, for example, makes its area readout throw). Valid, or only a ring in the wrong direction (the
+    /// editor fixes that itself): the geometry as it is. Repairable: asks "Fix and edit?" and returns the repaired
+    /// geometry, or null when the user says no. Unrepairable: says why and returns null.
+    /// </summary>
+    public async Task<Geometry<Point>?> GetGeometryToEditAsync(Geometry<Point>? geometry)
+    {
+        if (geometry is null)
+            return null;
+
+        var result = GeometryValidator.Validate(new Feature<Point>(geometry));
+
+        if (result is null || result.HasAutomaticFixesOnly)
+            return geometry;
+
+        var problems = string.Join(", ", result.Issues
+            .Where(i => !i.IsFixedAutomatically)
+            .Select(ViewModels.LayerSettings.GeometryIssueTexts.IssueText)
+            .Distinct());
+
+        if (result.Outcome != GeometryRepairOutcome.Repaired)
+        {
+            await DialogService.ShowMessageAsync(string.Format(LocalizationManager.Instance["msg_geometryIssues_cannotEdit"], problems), null);
+
+            return null;
+        }
+
+        var answer = await DialogService.ShowYesNoDialogAsync(string.Format(LocalizationManager.Instance["msg_geometryIssues_fixAndEdit"], problems));
+
+        return answer == true ? result.RepairedGeometry : null;
+    }
 
     public Task<Response<Geometry<Point>>> EditAsync(Geometry<Point> geometry, EditableFeatureLayerOptions? options)
     {

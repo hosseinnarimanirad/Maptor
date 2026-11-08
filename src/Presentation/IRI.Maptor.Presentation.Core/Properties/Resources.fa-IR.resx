@@ -4125,4 +4125,10 @@
   <data name="geometryIssue_featureLabel" xml:space="preserve">
     <value>عارضه {0}</value>
   </data>
+  <data name="msg_geometryIssues_fixAndEdit" xml:space="preserve">
+    <value>این هندسه مشکل دارد: {0}. اصلاح شود و ویرایش آغاز شود؟ اصلاح با پایان ویرایش اعمال می‌شود.</value>
+  </data>
+  <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
+    <value>این هندسه قابل ویرایش نیست، چون قابل اصلاح نیست: {0}.</value>
+  </data>
 </root>

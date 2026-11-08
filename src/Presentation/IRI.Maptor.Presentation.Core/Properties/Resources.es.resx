@@ -3145,4 +3145,10 @@
   <data name="geometryIssue_featureLabel" xml:space="preserve">
     <value>Entidad {0}</value>
   </data>
+  <data name="msg_geometryIssues_fixAndEdit" xml:space="preserve">
+    <value>Esta geometría tiene problemas: {0}. ¿Corregirla y empezar a editar? La corrección se aplica al terminar la edición.</value>
+  </data>
+  <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
+    <value>Esta geometría no se puede editar porque no se puede reparar: {0}.</value>
+  </data>
 </root>
