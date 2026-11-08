@@ -25,6 +25,7 @@ using IRI.Maptor.Core.Common.Exceptions;
 using IRI.Maptor.Core.Common.Primitives;
 using IRI.Maptor.Core.Spatial.Helpers;
 using IRI.Maptor.Core.Spatial.Primitives;
+using IRI.Maptor.Core.Spatial.Validation;
 using IRI.Maptor.Core.Common.Abstractions;
 using IRI.Maptor.Core.Spatial.GeoJsonFormat;
 using IRI.Maptor.Core.SpatialReferenceSystem;
@@ -5319,6 +5320,60 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+    #region Geometry check on open
+
+    /// <summary>
+    /// Checks the features of a file being added (<see cref="GeometryValidator"/>; cheap next to reading the file).
+    /// The layer is always added: wrong ring orientation is fixed, every other problem is kept as read and reported
+    /// in a notification that points to Layer Settings › Geometry. Returns the features to add, in the same order.
+    /// </summary>
+    protected async Task<List<Feature<Point>>> CheckGeometriesOnOpenAsync(IReadOnlyList<Feature<Point>> features, string layerName)
+    {
+        if (features is null || features.Count == 0)
+            return features?.ToList() ?? new List<Feature<Point>>();
+
+        var report = await Task.Run(() => GeometryValidator.Validate(features));
+
+        if (report.IsClean)
+            return features.ToList();
+
+        var message = report.NeedsUserDecision
+            ? string.Format(LocalizationManager.Instance["notification_geometryIssues_found"], report.InvalidFeatureCount, layerName)
+            : string.Format(LocalizationManager.Instance["notification_geometryIssues_orientationFixed"], report.AutomaticallyFixedFeatureCount, layerName);
+
+        DialogService.ShowNotification(message);
+
+        return GeometryRepair.KeepAsIs(report);
+    }
+
+    /// <summary>
+    /// The same check for a data source a reader has just built (GeoJSON, TopoJSON, EsriJSON, CSV/TSV): orientation
+    /// fixes are written back to the source's features, which nothing has used yet.
+    /// </summary>
+    protected async Task CheckGeometriesOnOpenAsync(MemoryDataSource dataSource, string layerName)
+    {
+        var featureSet = await dataSource.GetAsFeatureSetAsync();
+
+        var features = featureSet?.Features;
+
+        if (features is null || features.Count == 0)
+            return;
+
+        var checkedFeatures = await CheckGeometriesOnOpenAsync(features, layerName);
+
+        // KeepAsIs keeps every feature in order; only features with a fixed orientation are new objects
+        if (checkedFeatures.Count != features.Count)
+            return;
+
+        for (int i = 0; i < features.Count; i++)
+        {
+            if (!ReferenceEquals(checkedFeatures[i], features[i]))
+                features[i].TheGeometry = checkedFeatures[i].TheGeometry;
+        }
+    }
+
+    #endregion
+
 
     public void Refresh(bool isNewExtent)
     {
@@ -5604,6 +5659,9 @@ public abstract class MapViewModelBase : ViewModelBase
                 //return;
             }
 
+            // checked while still geodetic, so out-of-range longitudes/latitudes are found
+            features = await CheckGeometriesOnOpenAsync(features, Path.GetFileNameWithoutExtension(fileName));
+
             features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
 
             // Group by geometry category (Point/Polyline/Polygon) so that a KML with mixed feature
@@ -5748,6 +5806,9 @@ public abstract class MapViewModelBase : ViewModelBase
 
                 return;
             }
+
+            // checked while still geodetic, so out-of-range longitudes/latitudes are found
+            features = await CheckGeometriesOnOpenAsync(features, Path.GetFileNameWithoutExtension(fileName));
 
             features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
 
@@ -5922,6 +5983,9 @@ public abstract class MapViewModelBase : ViewModelBase
                 //return;
             }
 
+            // checked while still geodetic, so out-of-range longitudes/latitudes are found
+            features = await CheckGeometriesOnOpenAsync(features, Path.GetFileNameWithoutExtension(fileName));
+
             features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
 
             var dataSource = GpxDataSource.Create(fileName, features);
@@ -6026,6 +6090,8 @@ public abstract class MapViewModelBase : ViewModelBase
             // sub-layers ("-other" annotation sub-layers stay non-searchable on their own flag)
             GroupLayer groupLayer = new GroupLayer(Path.GetFileNameWithoutExtension(fileName)) { IsSearchable = true };
 
+            var groupFeatures = new List<List<Feature<Point>>>(groups.Count);
+
             foreach (var group in groups)
             {
                 var features = group.Select(f =>
@@ -6049,8 +6115,18 @@ public abstract class MapViewModelBase : ViewModelBase
                     //return;
                 }
 
-                features = features.Select(f => f.Project(SrsBases.WebMercator/*new WebMercator()*/)).ToList();
+                groupFeatures.Add(features.Select(f => f.Project(SrsBases.WebMercator/*new WebMercator()*/)).ToList());
+            }
 
+            // one check (and one notification) for the whole file; KeepAsIs keeps every feature in order,
+            // so the checked list is cut back into the groups by their sizes
+            var checkedFeatures = await CheckGeometriesOnOpenAsync(groupFeatures.SelectMany(g => g).ToList(), Path.GetFileNameWithoutExtension(fileName));
+
+            for (int i = 0, start = 0; i < groupFeatures.Count; start += groupFeatures[i].Count, i++)
+                groupFeatures[i] = checkedFeatures.GetRange(start, groupFeatures[i].Count);
+
+            foreach (var (group, features) in groups.Zip(groupFeatures))
+            {
                 var dataSource = DxfDataSource.Create(fileName, features, sourceSrid);
 
                 //var geometryType = features.First().GeometryType/*TheGeometry.Type*/;
@@ -6578,6 +6654,8 @@ public abstract class MapViewModelBase : ViewModelBase
                 ? Path.GetFileNameWithoutExtension(filePath)
                 : (isCsv ? "CSV Import" : "TSV Import");
 
+            await CheckGeometriesOnOpenAsync(dataSource, layerName);
+
             AddLayer(new VectorLayer(
                             layerName,
                             dataSource,
@@ -6635,6 +6713,8 @@ public abstract class MapViewModelBase : ViewModelBase
             var layerName = !string.IsNullOrEmpty(filePath)
                 ? Path.GetFileNameWithoutExtension(filePath)
                 : "GeoJSON Import";
+
+            await CheckGeometriesOnOpenAsync(dataSource, layerName);
 
             AddLayer(new VectorLayer(layerName, dataSource,
                 [SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1)],
@@ -6725,6 +6805,8 @@ public abstract class MapViewModelBase : ViewModelBase
                 ? Path.GetFileNameWithoutExtension(filePath)
                 : "TopoJSON Import";
 
+            await CheckGeometriesOnOpenAsync(dataSource, layerName);
+
             AddLayer(new VectorLayer(layerName, dataSource,
                 [SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1)],
                 LayerType.VectorLayer,
@@ -6786,6 +6868,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
             if (dataSource is null)
                 return;
+
+            await CheckGeometriesOnOpenAsync(dataSource, Path.GetFileNameWithoutExtension(fileName));
 
             // read esri geojsons
             //var esriFeatureSet = await EsriJsonFeatureSet.Load(fileName);

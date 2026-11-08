@@ -3034,4 +3034,10 @@
   <data name="dialog_generatedPassword_note" xml:space="preserve">
     <value>İstifadəçidən daxil olduqdan sonra bu parolu dəyişməsini xahiş edin.</value>
   </data>
+  <data name="notification_geometryIssues_found" xml:space="preserve">
+    <value>«{1}» qatında {0} obyektin həndəsəsində problem var. Qat parametrləri › Həndəsə bölməsinə baxın.</value>
+  </data>
+  <data name="notification_geometryIssues_orientationFixed" xml:space="preserve">
+    <value>«{1}» qatında {0} obyektin halqa istiqaməti düzəldildi.</value>
+  </data>
 </root>

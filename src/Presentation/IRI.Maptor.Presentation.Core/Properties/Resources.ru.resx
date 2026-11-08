@@ -3034,4 +3034,10 @@
   <data name="dialog_generatedPassword_note" xml:space="preserve">
     <value>Попросите пользователя сменить этот пароль после входа.</value>
   </data>
+  <data name="notification_geometryIssues_found" xml:space="preserve">
+    <value>{0} объектов в «{1}» имеют проблемы с геометрией. См. Настройки слоя › Геометрия.</value>
+  </data>
+  <data name="notification_geometryIssues_orientationFixed" xml:space="preserve">
+    <value>Направление колец исправлено у {0} объектов в «{1}».</value>
+  </data>
 </root>

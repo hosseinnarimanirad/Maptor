@@ -3034,4 +3034,10 @@
   <data name="dialog_generatedPassword_note" xml:space="preserve">
     <value>Խնդրեք օգտատիրոջը մուտք գործելուց հետո փոխել այս գաղտնաբառը։</value>
   </data>
+  <data name="notification_geometryIssues_found" xml:space="preserve">
+    <value>«{1}»-ում {0} օբյեկտ ունի երկրաչափական խնդիրներ։ Տե՛ս Շերտի կարգավորումներ › Երկրաչափություն։</value>
+  </data>
+  <data name="notification_geometryIssues_orientationFixed" xml:space="preserve">
+    <value>«{1}»-ի {0} օբյեկտում օղակների ուղղությունը շտկվեց։</value>
+  </data>
 </root>

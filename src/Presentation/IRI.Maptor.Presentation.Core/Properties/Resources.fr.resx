@@ -3034,4 +3034,10 @@
   <data name="dialog_generatedPassword_note" xml:space="preserve">
     <value>Demandez à l'utilisateur de changer ce mot de passe après sa connexion.</value>
   </data>
+  <data name="notification_geometryIssues_found" xml:space="preserve">
+    <value>{0} entités de « {1} » ont des problèmes de géométrie. Voir Paramètres de la couche › Géométrie.</value>
+  </data>
+  <data name="notification_geometryIssues_orientationFixed" xml:space="preserve">
+    <value>Sens des anneaux corrigé pour {0} entités de « {1} ».</value>
+  </data>
 </root>

@@ -743,6 +743,37 @@ public class DefaultDialogService : IDialogService
         return ShowDialogAsync(ownerWindow, new GeneratedPasswordDialogView(), viewModel);
     }
 
+    private NotificationToastView? _currentNotification;
+
+    public void ShowNotification(string message, object? ownerWindow = null)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+            return;
+
+        var owner = ResolveOwnerWindow(ownerWindow);
+
+        GetDispatcher(owner).Invoke(() =>
+        {
+            // one at a time: a new message replaces the one still showing
+            _currentNotification?.Close();
+
+            var toast = new NotificationToastView(message);
+
+            if (owner is { IsVisible: true })
+                toast.Owner = owner;
+
+            toast.Closed += (_, _) =>
+            {
+                if (ReferenceEquals(_currentNotification, toast))
+                    _currentNotification = null;
+            };
+
+            _currentNotification = toast;
+
+            toast.Show();
+        });
+    }
+
 
     #endregion
 

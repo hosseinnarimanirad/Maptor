@@ -3034,4 +3034,10 @@
   <data name="dialog_generatedPassword_note" xml:space="preserve">
     <value>اطلب من المستخدم تغيير كلمة المرور هذه بعد تسجيل الدخول.</value>
   </data>
+  <data name="notification_geometryIssues_found" xml:space="preserve">
+    <value>{0} من المعالم في «{1}» بها مشكلات هندسية. راجع إعدادات الطبقة › الهندسة.</value>
+  </data>
+  <data name="notification_geometryIssues_orientationFixed" xml:space="preserve">
+    <value>تم تصحيح اتجاه الحلقات في {0} من المعالم في «{1}».</value>
+  </data>
 </root>

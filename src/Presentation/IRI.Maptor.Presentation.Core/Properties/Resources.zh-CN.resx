@@ -3034,4 +3034,10 @@
   <data name="dialog_generatedPassword_note" xml:space="preserve">
     <value>请用户登录后更改此密码。</value>
   </data>
+  <data name="notification_geometryIssues_found" xml:space="preserve">
+    <value>“{1}”中有 {0} 个要素存在几何问题。请查看 图层设置 › 几何。</value>
+  </data>
+  <data name="notification_geometryIssues_orientationFixed" xml:space="preserve">
+    <value>已更正“{1}”中 {0} 个要素的环方向。</value>
+  </data>
 </root>

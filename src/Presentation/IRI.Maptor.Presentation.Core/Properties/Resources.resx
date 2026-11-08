@@ -4110,4 +4110,10 @@
   <data name="dialog_generatedPassword_note" xml:space="preserve">
     <value>Ask the user to change this password after signing in.</value>
   </data>
+  <data name="notification_geometryIssues_found" xml:space="preserve">
+    <value>{0} features in "{1}" have geometry problems. See Layer Settings › Geometry.</value>
+  </data>
+  <data name="notification_geometryIssues_orientationFixed" xml:space="preserve">
+    <value>Ring direction corrected in {0} features of "{1}".</value>
+  </data>
 </root>

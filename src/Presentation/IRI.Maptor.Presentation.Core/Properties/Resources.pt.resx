@@ -3034,4 +3034,10 @@
   <data name="dialog_generatedPassword_note" xml:space="preserve">
     <value>Peça ao usuário que altere esta senha após entrar.</value>
   </data>
+  <data name="notification_geometryIssues_found" xml:space="preserve">
+    <value>{0} feições em "{1}" têm problemas de geometria. Veja Configurações da Camada › Geometria.</value>
+  </data>
+  <data name="notification_geometryIssues_orientationFixed" xml:space="preserve">
+    <value>Direção dos anéis corrigida em {0} feições de "{1}".</value>
+  </data>
 </root>

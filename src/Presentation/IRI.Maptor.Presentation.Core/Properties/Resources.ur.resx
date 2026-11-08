@@ -3034,4 +3034,10 @@
   <data name="dialog_generatedPassword_note" xml:space="preserve">
     <value>صارف سے کہیں کہ سائن ان کے بعد یہ پاس ورڈ تبدیل کرے۔</value>
   </data>
+  <data name="notification_geometryIssues_found" xml:space="preserve">
+    <value>«{1}» میں {0} فیچرز کی جیومیٹری میں مسائل ہیں۔ لیئر کی ترتیبات › جیومیٹری دیکھیں۔</value>
+  </data>
+  <data name="notification_geometryIssues_orientationFixed" xml:space="preserve">
+    <value>«{1}» کے {0} فیچرز میں رنگ کی سمت درست کر دی گئی۔</value>
+  </data>
 </root>

@@ -75,6 +75,16 @@ public interface IDialogService
     Task ShowGeneratedPasswordAsync(string userName, string password, object? ownerWindow = null);
 
     // ********************************************************************
+    //                          Notification
+    // ********************************************************************
+
+    /// <summary>
+    /// Shows a short, non-blocking message at the bottom of the owner window: it takes no focus, closes itself
+    /// after a few seconds or on click, and replaces a notification that is still showing. Returns at once.
+    /// </summary>
+    void ShowNotification(string message, object? ownerWindow = null);
+
+    // ********************************************************************
     //                          SignUp Dialog
     // ********************************************************************
     //Task<SignUpDialogViewModel?> ShowUserNameSignUpDialogAsync<T>();

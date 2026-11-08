@@ -3643,6 +3643,24 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to {0} features in &quot;{1}&quot; have geometry problems. See Layer Settings › Geometry..
+        /// </summary>
+        public static string notification_geometryIssues_found {
+            get {
+                return ResourceManager.GetString("notification_geometryIssues_found", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Ring direction corrected in {0} features of &quot;{1}&quot;..
+        /// </summary>
+        public static string notification_geometryIssues_orientationFixed {
+            get {
+                return ResourceManager.GetString("notification_geometryIssues_orientationFixed", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to The password of {0} has been reset. Give this new password to the user:.
         /// </summary>
         public static string dialog_generatedPassword_message {

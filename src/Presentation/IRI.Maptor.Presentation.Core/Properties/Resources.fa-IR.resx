@@ -4014,4 +4014,10 @@
   <data name="dialog_generatedPassword_note" xml:space="preserve">
     <value>از کاربر بخواهید پس از ورود، این رمز عبور را تغییر دهد.</value>
   </data>
+  <data name="notification_geometryIssues_found" xml:space="preserve">
+    <value>{0} عارضه در «{1}» مشکل هندسی دارند. به تنظیمات لایه › هندسه مراجعه کنید.</value>
+  </data>
+  <data name="notification_geometryIssues_orientationFixed" xml:space="preserve">
+    <value>جهت حلقه‌ها در {0} عارضهٔ «{1}» اصلاح شد.</value>
+  </data>
 </root>
