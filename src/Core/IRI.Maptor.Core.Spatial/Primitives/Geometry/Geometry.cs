@@ -5073,11 +5073,17 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
             var firstPoint = points[0];
 
-            // in some cases (e.g. reading KML files) the last point is repeated
+            // in some cases (e.g. reading KML files) the last point is repeated,
+            // sometimes more than once (e.g. "... A A"): drop every trailing copy
             //if (lastPoint.X == firstPoint.X && lastPoint.Y == firstPoint.Y)
             if (firstPoint.HaveTheSameXY(lastPoint))
             {
-                result.Points = points.Take(points.Count - 1).ToList();
+                var count = points.Count - 1;
+
+                while (count > 1 && firstPoint.HaveTheSameXY(points[count - 1]))
+                    count--;
+
+                result.Points = points.Take(count).ToList();
 
                 return result;
             }

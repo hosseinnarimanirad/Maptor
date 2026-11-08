@@ -367,7 +367,9 @@ public static class KmlReader
             return Geometry<PointZ>.CreatePolygonRing(pointZList, /*GeometryType.LineString, true,*/ srid);
         }
 
-        var pointList = points.Cast<Point>().ToList();
+        // 2D ring, or a ring mixing "lon,lat" and "lon,lat,alt" coordinates: use plain 2D points so
+        // the closing point is recognised (PointZ.HaveTheSameXY never matches a plain Point)
+        var pointList = points.Select(p => new Point(p.X, p.Y)).ToList();
         return   Geometry<Point>.CreatePolygonRing(pointList, /*GeometryType.LineString, true,*/ srid);
     }
 
