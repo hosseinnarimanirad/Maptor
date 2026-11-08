@@ -9,9 +9,9 @@ using IRI.Maptor.Presentation.Core.Localization;
 namespace IRI.Maptor.Presentation.Wpf.Controls.Dialogs;
 
 /// <summary>
-/// A short, non-blocking message shown at the bottom centre of its owner window. It takes no focus, closes itself
-/// after <see cref="DisplayTime"/> (the timer pauses while the mouse is over it) and closes on click.
-/// Opened through <see cref="Services.IDialogService.ShowNotification"/>.
+/// A short, non-blocking message shown at the bottom centre of its owner window, with an optional title. It takes
+/// no focus and closes on click; unless told otherwise it also closes itself after <see cref="DisplayTime"/> (the
+/// timer pauses while the mouse is over it). Opened through <see cref="Services.IDialogService.ShowNotification"/>.
 /// </summary>
 public partial class NotificationToastView : Window
 {
@@ -20,31 +20,44 @@ public partial class NotificationToastView : Window
     // distance between the toast and the owner's bottom edge (device-independent pixels)
     private const double BottomOffset = 48;
 
-    private readonly DispatcherTimer _timer;
+    // null when the toast stays until the user closes it
+    private readonly DispatcherTimer? _timer;
 
-    public NotificationToastView(string message)
+    public NotificationToastView(string message, string? title = null, bool closesAutomatically = true)
     {
         InitializeComponent();
 
         messageText.Text = message;
 
+        if (!string.IsNullOrWhiteSpace(title))
+        {
+            titleText.Text = title;
+            titleText.Visibility = Visibility.Visible;
+        }
+
         FlowDirection = LocalizationManager.Instance.IsRightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
 
-        _timer = new DispatcherTimer { Interval = DisplayTime };
-        _timer.Tick += (_, _) => Close();
+        if (closesAutomatically)
+        {
+            _timer = new DispatcherTimer { Interval = DisplayTime };
+            _timer.Tick += (_, _) => Close();
+
+            MouseEnter += (_, _) => _timer.Stop();
+            MouseLeave += (_, _) => _timer.Start();
+            Closed += (_, _) => _timer.Stop();
+        }
 
         Loaded += (_, _) =>
         {
             PlaceOverOwner();
-            _timer.Start();
+            _timer?.Start();
         };
 
-        MouseEnter += (_, _) => _timer.Stop();
-        MouseLeave += (_, _) => _timer.Start();
         MouseLeftButtonUp += (_, _) => Close();
-
-        Closed += (_, _) => _timer.Stop();
     }
+
+    /// <summary>True when the toast closes itself after <see cref="DisplayTime"/>.</summary>
+    public bool ClosesAutomatically => _timer is not null;
 
     private void OnCloseClick(object sender, RoutedEventArgs e) => Close();
 

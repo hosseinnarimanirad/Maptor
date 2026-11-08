@@ -79,10 +79,12 @@ public interface IDialogService
     // ********************************************************************
 
     /// <summary>
-    /// Shows a short, non-blocking message at the bottom of the owner window: it takes no focus, closes itself
-    /// after a few seconds or on click, and replaces a notification that is still showing. Returns at once.
+    /// Shows a short, non-blocking message at the bottom of the owner window: it takes no focus, closes on click
+    /// and, unless <paramref name="closesAutomatically"/> is false, after a few seconds; it replaces a notification
+    /// that is still showing. <paramref name="title"/> (optional) is shown above the message. The text is drawn as
+    /// given (no digit substitution), so callers localize digits themselves. Returns at once.
     /// </summary>
-    void ShowNotification(string message, object? ownerWindow = null);
+    void ShowNotification(string message, object? ownerWindow = null, string? title = null, bool closesAutomatically = true);
 
     // ********************************************************************
     //                          SignUp Dialog

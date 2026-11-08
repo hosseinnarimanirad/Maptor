@@ -46,6 +46,15 @@ public class NotificationToastViewTest
             Assert.False(toast.ShowInTaskbar);
             Assert.Equal(WindowStyle.None, toast.WindowStyle);
             Assert.Equal("3 features have geometry problems.", ((TextBlock)toast.FindName("messageText")).Text);
+            Assert.True(toast.ClosesAutomatically);
+            Assert.Equal(Visibility.Collapsed, ((TextBlock)toast.FindName("titleText")).Visibility);
+
+            // with a title, and staying until closed (e.g. an access history reporting failed sign-ins)
+            var sticky = new NotificationToastView("Last sign-in: 1405/08/17 09:12 (10.0.0.5)", "Access history", closesAutomatically: false);
+
+            Assert.False(sticky.ClosesAutomatically);
+            Assert.Equal("Access history", ((TextBlock)sticky.FindName("titleText")).Text);
+            Assert.Equal(Visibility.Visible, ((TextBlock)sticky.FindName("titleText")).Visibility);
 
             var geometryTab = new LayerSettings_GeometryView();
 

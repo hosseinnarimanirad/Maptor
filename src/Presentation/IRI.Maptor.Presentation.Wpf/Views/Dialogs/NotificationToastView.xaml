@@ -40,8 +40,15 @@
                     Click="OnCloseClick">
                 <iconPacks:PackIconMaterial Kind="Close" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}" Margin="0"/>
             </Button>
-            <TextBlock x:Name="messageText" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}"
-                       TextWrapping="Wrap" VerticalAlignment="Center"/>
+            <!--drawn as given (European digits): callers localize digits themselves, and text such as an IP
+                address must not be turned into Persian digits (see MessageBoxView)-->
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock x:Name="titleText" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}"
+                           FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,4"
+                           NumberSubstitution.Substitution="European" Visibility="Collapsed"/>
+                <TextBlock x:Name="messageText" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}"
+                           TextWrapping="Wrap" NumberSubstitution.Substitution="European"/>
+            </StackPanel>
         </DockPanel>
     </Border>
 </Window>

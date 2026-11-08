@@ -5436,9 +5436,10 @@ public abstract class MapViewModelBase : ViewModelBase
         if (report.IsClean)
             return features.ToList();
 
+        // the notification draws text as given, so the counts are localized here (Persian digits in Persian)
         var message = report.NeedsUserDecision
-            ? string.Format(LocalizationManager.Instance["notification_geometryIssues_found"], report.InvalidFeatureCount, layerName)
-            : string.Format(LocalizationManager.Instance["notification_geometryIssues_orientationFixed"], report.AutomaticallyFixedFeatureCount, layerName);
+            ? string.Format(LocalizationManager.Instance["notification_geometryIssues_found"], LocalizationManager.GetLocalizedNumberString(report.InvalidFeatureCount), layerName)
+            : string.Format(LocalizationManager.Instance["notification_geometryIssues_orientationFixed"], LocalizationManager.GetLocalizedNumberString(report.AutomaticallyFixedFeatureCount), layerName);
 
         DialogService.ShowNotification(message);
 

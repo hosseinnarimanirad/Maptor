@@ -745,7 +745,7 @@ public class DefaultDialogService : IDialogService
 
     private NotificationToastView? _currentNotification;
 
-    public void ShowNotification(string message, object? ownerWindow = null)
+    public void ShowNotification(string message, object? ownerWindow = null, string? title = null, bool closesAutomatically = true)
     {
         if (string.IsNullOrWhiteSpace(message))
             return;
@@ -757,7 +757,7 @@ public class DefaultDialogService : IDialogService
             // one at a time: a new message replaces the one still showing
             _currentNotification?.Close();
 
-            var toast = new NotificationToastView(message);
+            var toast = new NotificationToastView(message, title, closesAutomatically);
 
             if (owner is { IsVisible: true })
                 toast.Owner = owner;
