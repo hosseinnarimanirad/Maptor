@@ -5793,11 +5793,12 @@ public abstract class MapViewModelBase : ViewModelBase
                 // searchable so identify/search descend into the sub-layers (each keeps its own flag)
                 var groupLayer = new GroupLayer(Path.GetFileNameWithoutExtension(fileName)) { IsSearchable = true };
 
-                foreach (var group in groups)
+                // the sub-layers share the file: saving one writes all of them (KmlDataSource.CreateForFile)
+                var dataSources = KmlDataSource.CreateForFile(fileName, groups.Select(g => g.ToList()));
+
+                foreach (var (group, dataSource) in groups.Zip(dataSources))
                 {
                     var groupFeatures = group.ToList();
-
-                    var dataSource = KmlDataSource.Create(fileName, groupFeatures);
 
                     var symbolizers = groupFeatures.CreateSymbolizersFromKml(groupFeatures.First().GeometryType);
 
@@ -5941,11 +5942,12 @@ public abstract class MapViewModelBase : ViewModelBase
                 // searchable so identify/search descend into the sub-layers (each keeps its own flag)
                 var groupLayer = new GroupLayer(Path.GetFileNameWithoutExtension(fileName)) { IsSearchable = true };
 
-                foreach (var group in groups)
+                // the sub-layers share the file: saving one writes all of them (KmzDataSource.CreateForFile)
+                var dataSources = KmzDataSource.CreateForFile(fileName, groups.Select(g => g.ToList()));
+
+                foreach (var (group, dataSource) in groups.Zip(dataSources))
                 {
                     var groupFeatures = group.ToList();
-
-                    var dataSource = KmzDataSource.Create(fileName, groupFeatures);
 
                     var symbolizers = groupFeatures.CreateSymbolizersFromKml(groupFeatures.First().GeometryType);
 

@@ -33,17 +33,46 @@ public class KmlDataSource : MemoryDataSource
         _fileName = fileName ?? throw new ArgumentNullException(nameof(fileName));
     }
 
+    // the sources that share this file (one per sub-layer, see CreateForFile); null for a file with one source
+    private IReadOnlyList<KmlDataSource>? _fileSources;
+
     public override string ToString() => $"{nameof(KmlDataSource)}";
 
+    /// <summary>
+    /// Writes the file. When the file was split into sub-layers (<see cref="CreateForFile"/>), the file holds all of
+    /// them, so all are written and all their edits count as saved; writing only this one would drop the others.
+    /// </summary>
     public override async Task SaveChangesAsync()
     {
-        var kmlFeatures = _webMercatorFeatureSet.Features.ToKmlFeatures();
+        var sources = _fileSources ?? [this];
+
+        var kmlFeatures = sources.SelectMany(s => s._webMercatorFeatureSet.Features).ToKmlFeatures();
 
         await KmlWriter.WriteToFileAsync(kmlFeatures, _fileName);
 
-        _webMercatorFeatureSet.ApplyChanges();
+        foreach (var source in sources)
+        {
+            source._webMercatorFeatureSet.ApplyChanges();
 
-        UpdateHasPendingChanges();
+            source.UpdateHasPendingChanges();
+        }
+    }
+
+    /// <summary>
+    /// One source per group of features of the same file (e.g. its points, lines and polygons as sub-layers). They
+    /// share the file: saving any of them writes every group.
+    /// </summary>
+    public static List<KmlDataSource> CreateForFile(string fileName, IEnumerable<List<Feature<Point>>> featureGroups)
+    {
+        var sources = featureGroups.Select(group => Create(fileName, group)).ToList();
+
+        if (sources.Count > 1)
+        {
+            foreach (var source in sources)
+                source._fileSources = sources;
+        }
+
+        return sources;
     }
 
     /// <summary>
