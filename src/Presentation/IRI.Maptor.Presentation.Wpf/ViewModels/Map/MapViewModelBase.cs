@@ -553,7 +553,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public ILayer GetSelectedLayerInToc()
     {
-        return Layers.SingleOrDefault(l => l.IsSelectedInToc);
+        // not SingleOrDefault: it throws if two layers are ever selected at once
+        return Layers.FirstOrDefault(l => l.IsSelectedInToc);
     }
 
     private ObservableCollection<DrawingItemLayer> _drawingItems = new ObservableCollection<DrawingItemLayer>();

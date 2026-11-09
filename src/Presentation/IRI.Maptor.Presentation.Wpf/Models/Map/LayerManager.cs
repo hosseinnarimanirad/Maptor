@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Threading;
 
 using IRI.Maptor.Extensions;
@@ -62,6 +63,10 @@ public class LayerManager : Notifier
 
         layer.OnLayerInitialized -= Layer_OnLayerInitialized;
         layer.OnLayerInitialized += Layer_OnLayerInitialized;
+
+        // not OnIsSelectedInTocChanged: its add accessor keeps only the first subscriber
+        layer.PropertyChanged -= Layer_PropertyChanged;
+        layer.PropertyChanged += Layer_PropertyChanged;
 
         UpdateIsInRange(layer, inverseMapScale);
 
@@ -147,7 +152,16 @@ public class LayerManager : Notifier
     {
         Remove(CurrentLayers, rule, forceRemove, keepEmptyParentGroup);
 
-        _allLayers.RemoveAll(layer => (forceRemove || layer?.CanUserDelete == true) && rule(layer));
+        _allLayers.RemoveAll(layer =>
+        {
+            if (!((forceRemove || layer?.CanUserDelete == true) && rule(layer)))
+                return false;
+
+            if (layer is not null)
+                layer.PropertyChanged -= Layer_PropertyChanged;
+
+            return true;
+        });
     }
 
     private void Remove(ObservableCollection<ILayer> layers, Predicate<ILayer> rule, bool forceRemove, bool keepEmptyParentGroup)
@@ -370,6 +384,41 @@ public class LayerManager : Notifier
                             .Where(i => !double.IsNaN(i.Width) && !double.IsNaN(i.Height));
 
         return BoundingBox.GetMergedBoundingBox(extents);
+    }
+
+    #endregion
+
+    #region Toc selection
+
+    /// <summary>
+    /// The layers whose legend row has an options strip (its commands), shown while the layer is
+    /// selected in the TOC: the non-group layer types the legend lists. Drawings are left out, as
+    /// the drawing legend keeps its own selection.
+    /// </summary>
+    private static bool HasTocOptions(ILayer? layer) =>
+        layer is { IsGroupLayer: false, Type: LayerType.VectorLayer or LayerType.Raster or LayerType.ImagePyramid };
+
+    /// <summary>
+    /// At most one layer shows its options: selecting a layer in the TOC deselects the others.
+    /// The legend row's RadioButton cannot enforce this, because each one sits alone in its own
+    /// TreeViewItem (so WPF puts it in a group of its own) and a row recycled out of view has no
+    /// RadioButton at all. So the rule is enforced here, on the layers themselves.
+    /// </summary>
+    private void Layer_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(ILayer.IsSelectedInToc))
+            return;
+
+        if (sender is not ILayer layer || !layer.IsSelectedInToc || !HasTocOptions(layer))
+            return;
+
+        // a snapshot: deselecting a layer runs its own handlers
+        foreach (var other in _allLayers.ToList())
+        {
+            // deselecting raises this handler again, but for a layer that is no longer selected
+            if (!ReferenceEquals(other, layer) && other.IsSelectedInToc && HasTocOptions(other))
+                other.IsSelectedInToc = false;
+        }
     }
 
     #endregion
