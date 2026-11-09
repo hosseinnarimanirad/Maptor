@@ -2236,16 +2236,26 @@ public abstract class MapViewModelBase : ViewModelBase
             if (features.Count == 0)
                 return;
 
-            // a single feature goes through the point-aware zoom (a point's extent is degenerate)
-            if (features.Count == 1)
-            {
-                Zoom(features[0].TheGeometry);
-                return;
-            }
-
+            // same zoom as the feature table: an extent that collapses to a point (a point, or
+            // points at one location) centres on it and zooms in one step per press, instead
+            // of jumping to the fixed level Zoom(geometry) uses for a point
             var extent = BoundingBox.GetMergedBoundingBox(features.Select(f => f.TheGeometry.GetBoundingBox()));
 
             ZoomToExtent(extent, false, true);
+        };
+
+        // same as the feature table's pan: the centre of the features' extent, scale unchanged
+        viewModel.RequestPanTo = features =>
+        {
+            if (features.Count == 0)
+                return;
+
+            var extent = BoundingBox.GetMergedBoundingBox(features.Select(f => f.TheGeometry.GetBoundingBox()));
+
+            if (extent.IsNaN())
+                return;
+
+            PanTo(extent.Center, null);
         };
 
         viewModel.RequestClearHighlight = () =>

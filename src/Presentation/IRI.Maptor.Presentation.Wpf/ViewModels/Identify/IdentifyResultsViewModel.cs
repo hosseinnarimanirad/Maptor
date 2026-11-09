@@ -41,6 +41,8 @@ public class IdentifyResultsViewModel : Notifier
     {
         ZoomToCommand = new RelayCommand(_ => ZoomToSelection(), _ => SelectedNode is not null);
 
+        PanToCommand = new RelayCommand(_ => PanToSelection(), _ => SelectedNode is not null);
+
         CopyAttributesCommand = new RelayCommand(_ => CopySelectedAttributes(), _ => SelectedFeature is not null);
 
         ShowInAttributeTableCommand = new RelayCommand(async _ => await ShowSelectionInAttributeTableAsync(), _ => CanShowInAttributeTable);
@@ -54,6 +56,9 @@ public class IdentifyResultsViewModel : Notifier
 
     /// <summary>Zoom the map so all given features are visible.</summary>
     public Action<IReadOnlyList<Feature<Point>>>? RequestZoomTo { get; set; }
+
+    /// <summary>Centre the map on the given features, keeping the current scale.</summary>
+    public Action<IReadOnlyList<Feature<Point>>>? RequestPanTo { get; set; }
 
     /// <summary>Draw the highlight overlay for the given features; second argument is the layer's stroke thickness.</summary>
     public Func<IReadOnlyList<Feature<Point>>, double?, Task>? RequestHighlightAsync { get; set; }
@@ -330,6 +335,8 @@ public class IdentifyResultsViewModel : Notifier
 
     public ICommand ZoomToCommand { get; }
 
+    public ICommand PanToCommand { get; }
+
     public ICommand CopyAttributesCommand { get; }
 
     public ICommand ShowInAttributeTableCommand { get; }
@@ -401,6 +408,14 @@ public class IdentifyResultsViewModel : Notifier
 
         if (features.Count > 0)
             RequestZoomTo?.Invoke(features);
+    }
+
+    private void PanToSelection()
+    {
+        var features = GetSelectedFeatures();
+
+        if (features.Count > 0)
+            RequestPanTo?.Invoke(features);
     }
 
     private void CopySelectedAttributes()
