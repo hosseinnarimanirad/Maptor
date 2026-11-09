@@ -112,6 +112,9 @@
     <!--dialog and screen titles-->
     <sys:Double x:Key="IRI.Maptor.Styles.Size.Text.Title">20</sys:Double>
 
+    <!--widest a tooltip may grow before its text wraps; see Controls.ToolTip.xaml-->
+    <sys:Double x:Key="IRI.Maptor.Styles.Size.ToolTip.MaxWidth">360</sys:Double>
+
     <!--Icon sizing. Written as raw Width/Height in nearly every view audited.-->
 
     <!--glyph inside a form field's adornment column-->

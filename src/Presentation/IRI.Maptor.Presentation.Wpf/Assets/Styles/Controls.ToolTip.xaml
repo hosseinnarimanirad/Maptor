@@ -1,0 +1,39 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:helpers="clr-namespace:IRI.Maptor.Presentation.Wpf.Helpers">
+
+    <!--Tooltips. Until 2026-11-09 there was no ToolTip style in the system, so a long tooltip ran
+        as one line across the screen (the Go To quick-entry hint was wider than its dialog).
+
+        This implicit style caps the width and wraps plain-text tooltips. It changes nothing else:
+        it is BasedOn MahApps' own tooltip style, so colours, padding and theme follow MahApps as
+        before. Tooltips whose content is not a string (a StackPanel, an image) keep their own
+        layout and only get the width cap.
+
+        A tooltip is for a short name or hint. A how-to with examples belongs in an InfoTip.-->
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Common.Metrics.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="IRI.Maptor.Styles.ToolTip" TargetType="ToolTip" BasedOn="{StaticResource MahApps.Styles.ToolTip}">
+        <Setter Property="MaxWidth" Value="{StaticResource IRI.Maptor.Styles.Size.ToolTip.MaxWidth}"/>
+        <!--Text goes through a wrapping TextBlock; anything else keeps the default presentation.
+            A DataTemplate keyed by string in Style.Resources is NOT picked up by the ContentPresenter
+            (measured 2026-11-09: the text stayed on one line and was cut at MaxWidth), hence the selector.-->
+        <Setter Property="ContentTemplateSelector">
+            <Setter.Value>
+                <helpers:TextToolTipTemplateSelector>
+                    <helpers:TextToolTipTemplateSelector.TextTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
+                        </DataTemplate>
+                    </helpers:TextToolTipTemplateSelector.TextTemplate>
+                </helpers:TextToolTipTemplateSelector>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="ToolTip" BasedOn="{StaticResource IRI.Maptor.Styles.ToolTip}"/>
+
+</ResourceDictionary>
