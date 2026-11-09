@@ -12,7 +12,7 @@ namespace IRI.Maptor.Presentation.Wpf.ViewModels.Dialogs;
 /// <param name="IsLongitudeFirst">X,Y (true) or Y,X order; used by GeoJSON and CSV/TSV.</param>
 /// <param name="UseFirstLineAsHeader">CSV/TSV: the first line holds the column names.</param>
 /// <param name="GeometryType">CSV/TSV: what the points make (point, polyline, polygon).</param>
-public record ImportOptions(
+public record ImportOptionsDialogResult(
     DataSourceKind Kind,
     string? FilePath,
     string? RawText,

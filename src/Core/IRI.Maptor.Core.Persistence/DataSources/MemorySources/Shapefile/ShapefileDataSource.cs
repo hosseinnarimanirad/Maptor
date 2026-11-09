@@ -41,19 +41,35 @@ public class ShapefileDataSource : MemoryDataSource
     private Func<Feature<Point>, List<object>> _inverseAttributeMap;
 
     /// <summary>
+    /// The SRID the user chose for a shapefile without a readable .prj; null when the .prj gives the SRS.
+    /// Saved with a project so the layer opens the same way again.
+    /// </summary>
+    public int? AssumedSrid { get; }
+
+    /// <summary>
     /// Lazy constructor: reads only shapefile header for extent/geometry type; does not load features.
-    /// Call LoadAsync() to load the full data.
+    /// Call LoadAsync() to load the full data. <c>fallbackSrid</c> is used only when the .prj is missing or cannot be read.
     /// </summary>
     internal ShapefileDataSource(string shapefileName,
                                 //SrsBase? targetSrs,
                                 Encoding? encoding,
                                 Func<Geometry<Point>, Dictionary<string, object>, Feature<Point>> createFeatureFunc,
-                                Func<Feature<Point>, List<object>> inverseAttributeMap)
+                                Func<Feature<Point>, List<object>> inverseAttributeMap,
+                                int? fallbackSrid = null)
     {
         _shapefileName = shapefileName;
 
-        _sourceSrs = ShapefileFormat.Shapefile.TryGetSrs(shapefileName)
-            ?? throw new NotImplementedException("Shapefile SRS could not be determined.");
+        var prjSrs = ShapefileFormat.Shapefile.TryGetSrs(shapefileName);
+
+        if (prjSrs is null && fallbackSrid > 0)
+        {
+            prjSrs = SrsBase.Create(fallbackSrid.Value)
+                ?? throw new NotSupportedException($"SRID {fallbackSrid} is not supported.");
+
+            AssumedSrid = fallbackSrid;
+        }
+
+        _sourceSrs = prjSrs ?? throw new NotImplementedException("Shapefile SRS could not be determined.");
 
         //_targetSrs = targetSrs;
 
@@ -123,7 +139,8 @@ public class ShapefileDataSource : MemoryDataSource
 
             System.Diagnostics.Debug.WriteLine($"***** LoadAsync shapefile - attributes read {DateTime.Now.ToLongTimeString()}");
 
-            var geometries = await ShapefileFormat.Shapefile.ReadShapesAsync(_shapefileName);
+            // Without a .prj the shapes would carry SRID 0; give them the SRID the user chose.
+            var geometries = await ShapefileFormat.Shapefile.ReadShapesAsync(_shapefileName, AssumedSrid);
 
             System.Diagnostics.Debug.WriteLine($"***** LoadAsync shapefile - geometry read {DateTime.Now.ToLongTimeString()}");
 

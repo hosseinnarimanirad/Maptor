@@ -53,47 +53,60 @@ public class EsriJsonDataSource : MemoryDataSource
     }
 
     /// <summary>
-    /// Creates a TopoJsonDataSource from a TopoJSON file.
+    /// Creates an EsriJsonDataSource from an Esri JSON file. <c>fallbackSrid</c> (the user's choice) is used only
+    /// when the file names no spatial reference.
     /// </summary>
-    public static async Task<EsriJsonDataSource?> CreateFromFileAsync(string fileName)
+    public static async Task<EsriJsonDataSource?> CreateFromFileAsync(string fileName, int? fallbackSrid = null)
     {
         if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
-            throw new FileNotFoundException($"TopoJSON file not found: {fileName}", fileName);
+            throw new FileNotFoundException($"Esri JSON file not found: {fileName}", fileName);
 
         var jsonString = await File.ReadAllTextAsync(fileName);
 
-        return CreateFromJson(jsonString, fileName);
+        return CreateFromJson(jsonString, fileName, fallbackSrid);
     }
 
     /// <summary>
-    /// Creates a TopoJsonDataSource from pasted or in-memory JSON text.
+    /// Creates an EsriJsonDataSource from pasted or in-memory JSON text. <c>fallbackSrid</c> (the user's choice) is
+    /// used only when the text names no spatial reference.
     /// </summary>
-    public static Task<EsriJsonDataSource?> CreateFromTextAsync(string jsonText)
+    public static Task<EsriJsonDataSource?> CreateFromTextAsync(string jsonText, int? fallbackSrid = null)
     {
         if (string.IsNullOrWhiteSpace(jsonText))
             throw new ArgumentException("JSON text cannot be empty.", nameof(jsonText));
 
-        var ds = CreateFromJson(jsonText, string.Empty);
-         
+        var ds = CreateFromJson(jsonText, string.Empty, fallbackSrid);
+
         return Task.FromResult<EsriJsonDataSource?>(ds);
     }
 
-    private static EsriJsonDataSource? CreateFromJson(string jsonString, string fileName)
+    private static EsriJsonDataSource? CreateFromJson(string jsonString, string fileName, int? fallbackSrid)
     {
         var esriJsonGeometry = EsriJsonFeatureSet.Parse(jsonString);
 
         if (esriJsonGeometry is null)
             return null;
 
+        var fileSrid = esriJsonGeometry.SpatialReference?.LatestWkid ?? esriJsonGeometry.SpatialReference?.Wkid ?? 0;
+
+        if (fileSrid <= 0 && fallbackSrid > 0)
+        {
+            esriJsonGeometry.SpatialReference = new EsriJsonSpatialReference { Wkid = fallbackSrid.Value };
+
+            fileSrid = fallbackSrid.Value;
+        }
+
         var features = esriJsonGeometry.AsFeatureSet().Project(SrsBases.WebMercator);
-
-
 
         if (features.IsNullOrEmpty())
             throw new InvalidOperationException(string.IsNullOrEmpty(fileName)
                 ? "No features found in the JSON text."
-                : $"No features found in GeoJSON file: {fileName}");
+                : $"No features found in Esri JSON file: {fileName}");
 
-        return new EsriJsonDataSource(fileName ?? string.Empty, features.Features, features.Srid);
+        // The SRS the data came in, so a save writes it back in that SRS. Before, the SRID after projection
+        // (Web Mercator) was kept, and a save rewrote the file in Web Mercator.
+        var sourceSrid = fileSrid > 0 && SrsBase.Create(fileSrid) is not null ? fileSrid : features.Srid;
+
+        return new EsriJsonDataSource(fileName ?? string.Empty, features.Features, sourceSrid);
     }
 }

@@ -3220,4 +3220,10 @@
   <data name="dialog_importOptions_validationNoPoints" xml:space="preserve">
     <value>Aucun point n'a été trouvé dans les données.</value>
   </data>
+  <data name="dialog_importFile_allSupportedFiles" xml:space="preserve">
+    <value>Tous les fichiers pris en charge</value>
+  </data>
+  <data name="message_error_unsupportedFileFormat" xml:space="preserve">
+    <value>Ce format de fichier n'est pas pris en charge. Formats pris en charge : shapefile, KML, KMZ, GPX, GeoPackage, DXF, GeoJSON, TopoJSON, Esri JSON, CSV et TSV.</value>
+  </data>
 </root>

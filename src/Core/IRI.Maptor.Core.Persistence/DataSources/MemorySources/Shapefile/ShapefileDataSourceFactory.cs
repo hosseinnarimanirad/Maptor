@@ -60,8 +60,9 @@ public static class ShapefileDataSourceFactory
 
     /// <summary>
     /// Creates a shapefile data source with header-only (lazy) load. Layer can be added immediately;
-    /// call LoadAsync() (e.g. via LayerManager) to load full data in the background.
+    /// call LoadAsync() (e.g. via LayerManager) to load full data in the background. <c>fallbackSrid</c> is the SRS to
+    /// use when the .prj is missing or cannot be read (the user's choice).
     /// </summary>
-    public static ShapefileDataSource CreateLazy(string shapefileName, /*SrsBase? targetSrs = null,*/ Encoding? encoding = null)
-        => new ShapefileDataSource(shapefileName, /*targetSrs, */encoding, mapShapeToFeature, inverseAttributeMap);
+    public static ShapefileDataSource CreateLazy(string shapefileName, /*SrsBase? targetSrs = null,*/ Encoding? encoding = null, int? fallbackSrid = null)
+        => new ShapefileDataSource(shapefileName, /*targetSrs, */encoding, mapShapeToFeature, inverseAttributeMap, fallbackSrid);
 }

@@ -3220,4 +3220,10 @@
   <data name="dialog_importOptions_validationNoPoints" xml:space="preserve">
     <value>هیچ خاڵێک لە داتاکەدا نەدۆزرایەوە.</value>
   </data>
+  <data name="dialog_importFile_allSupportedFiles" xml:space="preserve">
+    <value>هەموو فایلە پشتگیریکراوەکان</value>
+  </data>
+  <data name="message_error_unsupportedFileFormat" xml:space="preserve">
+    <value>فۆرماتی ئەم فایلە پشتگیری ناکرێت. فۆرماتە پشتگیریکراوەکان: شەیپفایل، KML، KMZ، GPX، GeoPackage، DXF، GeoJSON، TopoJSON، Esri JSON، CSV و TSV.</value>
+  </data>
 </root>

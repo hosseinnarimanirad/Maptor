@@ -4191,4 +4191,10 @@
   <data name="dialog_importOptions_validationNoPoints" xml:space="preserve">
     <value>هیچ نقطه‌ای در داده پیدا نشد.</value>
   </data>
+  <data name="dialog_importFile_allSupportedFiles" xml:space="preserve">
+    <value>همهٔ فایل‌های پشتیبانی‌شده</value>
+  </data>
+  <data name="message_error_unsupportedFileFormat" xml:space="preserve">
+    <value>قالب این فایل پشتیبانی نمی‌شود. قالب‌های پشتیبانی‌شده: شیپ‌فایل، KML، KMZ، GPX، GeoPackage، DXF، GeoJSON، TopoJSON، Esri JSON، CSV و TSV.</value>
+  </data>
 </root>

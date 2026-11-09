@@ -762,7 +762,7 @@ public class ImportOptionsDialogViewModel : DialogViewModelBase
     public RelayCommand CancelCommand { get; }
 
     /// <summary>Set when the user presses Open.</summary>
-    public ImportOptions? Result { get; private set; }
+    public ImportOptionsDialogResult? Result { get; private set; }
 
     /// <summary>
     /// Why Open is disabled, or null when it is enabled. Shown in the dialog footer so the user is not left
@@ -842,7 +842,7 @@ public class ImportOptionsDialogViewModel : DialogViewModelBase
         if (IsPasteMode)
             text = IsDelimited ? GetDelimitedTextToImport() : _rawText;
 
-        Result = new ImportOptions(
+        Result = new ImportOptionsDialogResult(
             _kind,
             FilePath,
             text,

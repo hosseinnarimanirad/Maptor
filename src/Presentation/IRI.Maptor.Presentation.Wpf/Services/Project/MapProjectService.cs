@@ -193,6 +193,10 @@ public class MapProjectService
             SourceSrid = topoJson.OriginalSrid,
             RawText = topoJson.RawJson,
         },
+        // only when the user chose the CRS (no readable .prj): a shapefile with a .prj needs no options
+        ShapefileDataSource { AssumedSrid: int assumedSrid } => new ImportOptions { SourceSrid = assumedSrid },
+        // a fallback on replay: the file's own spatial reference wins when it names one
+        EsriJsonDataSource esriJson => new ImportOptions { SourceSrid = esriJson.OriginalSrid },
         _ when dataSource.DataSourceKind == DataSourceKind.Dxf => new ImportOptions { SourceSrid = dataSource.OriginalSrid },
         _ when dataSource.DataSourceKind is DataSourceKind.Worldfile or DataSourceKind.GeoTiff => new ImportOptions { SourceSrid = dataSource.Srid },
         _ => null,
@@ -371,7 +375,7 @@ public class MapProjectService
         switch (entry.Kind)
         {
             case DataSourceKind.Shapefile:
-                await _map.AddShapefile(path!, owner);
+                await _map.AddShapefile(path!, owner, options?.SourceSrid);
                 break;
 
             case DataSourceKind.Kml:
@@ -391,7 +395,7 @@ public class MapProjectService
                 break;
 
             case DataSourceKind.EsriJson:
-                await _map.AddEsriJson(path!, owner);
+                await _map.AddEsriJson(path!, owner, options?.SourceSrid);
                 break;
 
             case DataSourceKind.Worldfile:

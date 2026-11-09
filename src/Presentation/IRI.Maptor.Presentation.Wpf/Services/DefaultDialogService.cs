@@ -944,7 +944,7 @@ public class DefaultDialogService : IDialogService
             vm => ((GeoJsonTopoJsonOpenDialogViewModel)vm).RequestClose = () => dialog.Close());
     }
 
-    public Task<ImportOptions?> ShowImportOptionsDialogAsync(DataSourceKind? kind, string? filePath, object? ownerWindow = null)
+    public Task<ImportOptionsDialogResult?> ShowImportOptionsDialogAsync(DataSourceKind? kind, string? filePath, object? ownerWindow = null)
     {
         var viewModel = new ImportOptionsDialogViewModel(this, kind, filePath);
         var dialog = new ImportOptionsDialogView();

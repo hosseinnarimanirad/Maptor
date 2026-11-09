@@ -3220,4 +3220,10 @@
   <data name="dialog_importOptions_validationNoPoints" xml:space="preserve">
     <value>数据中未找到任何点。</value>
   </data>
+  <data name="dialog_importFile_allSupportedFiles" xml:space="preserve">
+    <value>所有支持的文件</value>
+  </data>
+  <data name="message_error_unsupportedFileFormat" xml:space="preserve">
+    <value>不支持此文件格式。支持的格式：Shapefile、KML、KMZ、GPX、GeoPackage、DXF、GeoJSON、TopoJSON、Esri JSON、CSV 和 TSV。</value>
+  </data>
 </root>

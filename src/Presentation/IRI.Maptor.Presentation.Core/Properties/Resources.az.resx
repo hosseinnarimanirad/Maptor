@@ -3220,4 +3220,10 @@
   <data name="dialog_importOptions_validationNoPoints" xml:space="preserve">
     <value>Məlumatda heç bir nöqtə tapılmadı.</value>
   </data>
+  <data name="dialog_importFile_allSupportedFiles" xml:space="preserve">
+    <value>Bütün dəstəklənən fayllar</value>
+  </data>
+  <data name="message_error_unsupportedFileFormat" xml:space="preserve">
+    <value>Bu fayl formatı dəstəklənmir. Dəstəklənən formatlar: Shapefile, KML, KMZ, GPX, GeoPackage, DXF, GeoJSON, TopoJSON, Esri JSON, CSV və TSV.</value>
+  </data>
 </root>

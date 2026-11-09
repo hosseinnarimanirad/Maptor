@@ -149,6 +149,6 @@ public interface IDialogService
     /// preview of the first 50 points). Pass the chosen file and its detected kind, or null for both to paste text.
     /// </summary>
     /// <returns>The options, or null when the user cancels.</returns>
-    Task<ImportOptions?> ShowImportOptionsDialogAsync(DataSourceKind? kind, string? filePath, object? ownerWindow = null);
+    Task<ImportOptionsDialogResult?> ShowImportOptionsDialogAsync(DataSourceKind? kind, string? filePath, object? ownerWindow = null);
 
 }

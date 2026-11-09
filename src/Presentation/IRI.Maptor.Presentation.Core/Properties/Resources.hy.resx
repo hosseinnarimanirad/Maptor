@@ -3220,4 +3220,10 @@
   <data name="dialog_importOptions_validationNoPoints" xml:space="preserve">
     <value>Տվյալներում կետեր չեն գտնվել։</value>
   </data>
+  <data name="dialog_importFile_allSupportedFiles" xml:space="preserve">
+    <value>Բոլոր աջակցվող ֆայլերը</value>
+  </data>
+  <data name="message_error_unsupportedFileFormat" xml:space="preserve">
+    <value>Այս ֆայլի ձևաչափը չի աջակցվում։ Աջակցվող ձևաչափեր՝ Shapefile, KML, KMZ, GPX, GeoPackage, DXF, GeoJSON, TopoJSON, Esri JSON, CSV և TSV։</value>
+  </data>
 </root>

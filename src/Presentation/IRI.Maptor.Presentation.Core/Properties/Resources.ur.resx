@@ -3220,4 +3220,10 @@
   <data name="dialog_importOptions_validationNoPoints" xml:space="preserve">
     <value>ڈیٹا میں کوئی پوائنٹ نہیں ملا۔</value>
   </data>
+  <data name="dialog_importFile_allSupportedFiles" xml:space="preserve">
+    <value>تمام معاون فائلیں</value>
+  </data>
+  <data name="message_error_unsupportedFileFormat" xml:space="preserve">
+    <value>اس فائل کا فارمیٹ معاون نہیں ہے۔ معاون فارمیٹس: شیپ فائل، KML، KMZ، GPX، GeoPackage، DXF، GeoJSON، TopoJSON، Esri JSON، CSV اور TSV۔</value>
+  </data>
 </root>

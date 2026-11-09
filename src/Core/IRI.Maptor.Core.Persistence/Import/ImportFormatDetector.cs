@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.Json;
 
 using IRI.Maptor.Core.Common.Enums;
+using IRI.Maptor.Core.Common.Attributes;
 
 namespace IRI.Maptor.Core.Persistence.Import;
 
@@ -216,6 +217,41 @@ public static class ImportFormatDetector
             default:
                 return false;
         }
+    }
+
+    /// <summary>
+    /// The open-file dialog filter for <see cref="FileKinds"/>: "All supported files" first (selected by default),
+    /// then each format's own filter from <see cref="DataSourceKindInfoAttribute"/>, without repeats.
+    /// </summary>
+    /// <param name="allSupportedLabel">The localized name of the first entry, e.g. "All supported files".</param>
+    public static string GetFileDialogFilter(string allSupportedLabel)
+    {
+        var entries = new List<(string Name, string Patterns)>();
+
+        foreach (var kind in FileKinds)
+        {
+            var parts = IRI.Maptor.Extensions.DataSourceKindExtensions.GetFileFilter(kind).Split('|');
+
+            for (int i = 0; i + 1 < parts.Length; i += 2)
+            {
+                var entry = (parts[i].Trim(), parts[i + 1].Trim());
+
+                if (entry.Item1.Length > 0 && entry.Item2.Length > 0 && !entries.Contains(entry))
+                    entries.Add(entry);
+            }
+        }
+
+        var allPatterns = entries
+            .SelectMany(e => e.Patterns.Split(';'))
+            .Select(p => p.Trim())
+            .Where(p => p.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase);
+
+        var label = string.IsNullOrWhiteSpace(allSupportedLabel) ? "All supported files" : allSupportedLabel.Replace("|", " ");
+
+        var all = string.Join(";", allPatterns);
+
+        return string.Join("|", new[] { $"{label}|{all}" }.Concat(entries.Select(e => $"{e.Name}|{e.Patterns}")));
     }
 
     private static byte[] ReadStart(string filePath, int maxBytes)

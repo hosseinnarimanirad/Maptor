@@ -30,6 +30,7 @@ using IRI.Maptor.Core.Common.Abstractions;
 using IRI.Maptor.Core.Spatial.GeoJsonFormat;
 using IRI.Maptor.Core.SpatialReferenceSystem;
 using IRI.Maptor.Core.Persistence.DataSources;
+using IRI.Maptor.Core.Persistence.Import;
 using IRI.Maptor.Core.Persistence.Abstractions;
 using IRI.Maptor.Core.Persistence.RasterDataSources;
 using IRI.Maptor.Core.SpatialReferenceSystem.MapProjections;
@@ -5680,11 +5681,12 @@ public abstract class MapViewModelBase : ViewModelBase
         System.Diagnostics.Debug.WriteLine($"***** AddShapefile end {DateTime.Now.ToLongTimeString()}");
     }
 
-    public async Task AddShapefile(string fileName, object owner)
+    /// <summary><c>fallbackSrid</c>: the CRS the user chose for a shapefile without a readable .prj; the .prj wins when there is one.</summary>
+    public async Task AddShapefile(string fileName, object owner, int? fallbackSrid = null)
     {
         try
         {
-            var dataSource = ShapefileDataSourceFactory.CreateLazy(fileName, /*SrsBases.WebMercator,*/ null);
+            var dataSource = ShapefileDataSourceFactory.CreateLazy(fileName, /*SrsBases.WebMercator,*/ null, fallbackSrid);
 
             var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(fileName),
                                 dataSource,
@@ -6975,7 +6977,8 @@ public abstract class MapViewModelBase : ViewModelBase
         await AddEsriJson(fileName, owner);
     }
 
-    public async Task AddEsriJson(string fileName, object owner)
+    /// <summary><c>fallbackSrid</c>: the CRS the user chose for a file that names none; the file's spatial reference wins when it has one.</summary>
+    public async Task AddEsriJson(string fileName, object owner, int? fallbackSrid = null)
     {
         try
         {
@@ -6984,7 +6987,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             //List<Feature<Point>> features;
 
-            var dataSource = await EsriJsonDataSource.CreateFromFileAsync(fileName);
+            var dataSource = await EsriJsonDataSource.CreateFromFileAsync(fileName, fallbackSrid);
 
             if (dataSource is null)
                 return;
@@ -7028,6 +7031,165 @@ public abstract class MapViewModelBase : ViewModelBase
         finally
         {
             IsBusy = false;
+        }
+    }
+
+    #endregion
+
+
+    //*****************************************Add data from file*****************************************************
+    #region Add data from file (one command for every vector format)
+
+    /// <summary>
+    /// The size limit for adding a file of this format, in the measure the per-format commands use (file length
+    /// / 10 000), or null for none. Shapefiles: 2000; <c>MapSettings.AllowLargeDataLoading</c> lifts it. Apps
+    /// override this to change a limit.
+    /// </summary>
+    protected virtual int? GetImportSizeLimit(DataSourceKind kind) => kind == DataSourceKind.Shapefile ? 2000 : null;
+
+    private bool ExceedsImportSizeLimit(DataSourceKind kind, string fileName)
+    {
+        if (kind == DataSourceKind.Shapefile && MapSettings?.AllowLargeDataLoading == true)
+            return false;
+
+        var limit = GetImportSizeLimit(kind);
+
+        return limit.HasValue && new FileInfo(fileName).Length / 10000.0 > limit.Value;
+    }
+
+    /// <summary>
+    /// "Add data from file": one file of any supported vector format (<see cref="ImportFormatDetector.FileKinds"/>).
+    /// The format comes from the file itself, so the user never has to know whether it is, say, KML or KMZ.
+    /// </summary>
+    public virtual async Task AddDataFromFile(object owner)
+    {
+        // No IsBusy before the dialogs (see AddDxffile); it is raised once the file is being read.
+        var filter = ImportFormatDetector.GetFileDialogFilter(LocalizationManager.Instance["dialog_importFile_allSupportedFiles"]);
+
+        var fileName = await DialogService.ShowOpenFileDialogAsync(filter, owner);
+
+        if (string.IsNullOrWhiteSpace(fileName))
+            return;
+
+        await AddDataFromFile(fileName, owner);
+    }
+
+    /// <summary>
+    /// Works out the format of <paramref name="fileName"/> and adds it: straight away when the file holds
+    /// everything needed (KML, KMZ, GPX, GeoPackage, shapefile with a .prj), otherwise after the import options
+    /// dialog (CRS and the format's own options). Unknown formats and files over the size limit get a message.
+    /// </summary>
+    public async Task AddDataFromFile(string fileName, object owner)
+    {
+        DataSourceKind kind;
+
+        try
+        {
+            if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
+                throw new MaptorFileNotFoundException(fileName);
+
+            kind = ImportFormatDetector.DetectFromFile(fileName) ?? throw MaptorUnsupportedFileFormatException.Instance;
+
+            if (ExceedsImportSizeLimit(kind, fileName))
+                throw MaptorFileSizeExceedToOpenException.Instance;
+        }
+        catch (Exception ex)
+        {
+            await ShowExceptionMessageAsync(ex);
+
+            return;
+        }
+
+        if (ImportFormatDetector.CanAddWithoutOptions(kind, fileName))
+        {
+            // Each reader resets IsBusy when it is done.
+            IsBusy = true;
+
+            switch (kind)
+            {
+                case DataSourceKind.Shapefile:
+                    await AddShapefile(fileName, owner);
+                    break;
+
+                case DataSourceKind.Kml:
+                    await AddKmlfile(fileName, owner);
+                    break;
+
+                case DataSourceKind.Kmz:
+                    await AddKmzfile(fileName, owner);
+                    break;
+
+                case DataSourceKind.Gpx:
+                    await AddGpxfile(fileName, owner);
+                    break;
+
+                case DataSourceKind.GeoPackage:
+                    await AddGeoPackage(fileName);
+                    break;
+
+                default:
+                    IsBusy = false;
+                    break;
+            }
+
+            return;
+        }
+
+        var options = await DialogService.ShowImportOptionsDialogAsync(kind, fileName, owner);
+
+        if (options is null)
+            return;
+
+        await AddData(options, owner);
+    }
+
+    /// <summary>
+    /// Adds what the import options dialog returned, with the existing reader of its format.
+    /// </summary>
+    public async Task AddData(Dialogs.ImportOptionsDialogResult options, object owner)
+    {
+        // Each reader resets IsBusy when it is done.
+        IsBusy = true;
+
+        switch (options.Kind)
+        {
+            case DataSourceKind.Csv:
+            case DataSourceKind.Tsv:
+                await AddDelimitedTextFile(
+                    options.FilePath,
+                    options.RawText,
+                    options.Kind == DataSourceKind.Csv,
+                    options.SourceSrid,
+                    options.IsLongitudeFirst,
+                    options.UseFirstLineAsHeader,
+                    options.GeometryType);
+                break;
+
+            case DataSourceKind.GeoJson:
+                await AddGeoJson(options.FilePath, options.RawText, options.IsLongitudeFirst, options.SourceSrid);
+                break;
+
+            case DataSourceKind.TopoJson:
+                await AddTopoJson(options.FilePath, options.RawText, options.SourceSrid);
+                break;
+
+            case DataSourceKind.EsriJson when options.FilePath is not null:
+                await AddEsriJson(options.FilePath, owner, options.SourceSrid);
+                break;
+
+            case DataSourceKind.Dxf when options.FilePath is not null:
+                await AddDxffile(options.FilePath, owner, options.SourceSrid);
+                break;
+
+            case DataSourceKind.Shapefile when options.FilePath is not null:
+                await AddShapefile(options.FilePath, owner, options.SourceSrid);
+                break;
+
+            default:
+                // e.g. pasted Esri JSON, which comes with "paste data" (step 4 of the import redesign)
+                IsBusy = false;
+                await ShowExceptionMessageAsync(MaptorUnsupportedFileFormatException.Instance);
+                break;
         }
     }
 
@@ -7209,6 +7371,11 @@ public abstract class MapViewModelBase : ViewModelBase
     //        return _moveLayerDownCommand;
     //    }
     //}
+
+
+    private RelayCommand? _addDataFromFileCommand;
+    /// <summary>One command for every vector file format; the format is worked out from the file.</summary>
+    public RelayCommand AddDataFromFileCommand => _addDataFromFileCommand ??= new RelayCommand(async param => await AddDataFromFile(param));
 
 
     private RelayCommand _addShapefileCommand;

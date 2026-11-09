@@ -2284,6 +2284,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All supported files.
+        /// </summary>
+        public static string dialog_importFile_allSupportedFiles {
+            get {
+                return ResourceManager.GetString("dialog_importFile_allSupportedFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Latitude.
         /// </summary>
         public static string dialog_importOptions_columnLatitude {
@@ -3822,6 +3831,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
             }
         }
 
+        /// <summary>
+        ///   Looks up a localized string similar to This file format is not supported. Supported formats: shapefile, KML, KMZ, GPX, GeoPackage, DXF, GeoJSON, TopoJSON, Esri JSON, CSV and TSV..
+        /// </summary>
+        public static string message_error_unsupportedFileFormat {
+            get {
+                return ResourceManager.GetString("message_error_unsupportedFileFormat", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to {0} features in &quot;{1}&quot; have geometry problems. See Layer Settings › Geometry..
         /// </summary>

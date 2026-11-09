@@ -3220,4 +3220,10 @@
   <data name="dialog_importOptions_validationNoPoints" xml:space="preserve">
     <value>لم يُعثر على أي نقاط في البيانات.</value>
   </data>
+  <data name="dialog_importFile_allSupportedFiles" xml:space="preserve">
+    <value>كل الملفات المدعومة</value>
+  </data>
+  <data name="message_error_unsupportedFileFormat" xml:space="preserve">
+    <value>تنسيق هذا الملف غير مدعوم. التنسيقات المدعومة: Shapefile و KML و KMZ و GPX و GeoPackage و DXF و GeoJSON و TopoJSON و Esri JSON و CSV و TSV.</value>
+  </data>
 </root>

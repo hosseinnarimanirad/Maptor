@@ -3220,4 +3220,10 @@
   <data name="dialog_importOptions_validationNoPoints" xml:space="preserve">
     <value>डेटा में कोई बिंदु नहीं मिला।</value>
   </data>
+  <data name="dialog_importFile_allSupportedFiles" xml:space="preserve">
+    <value>सभी समर्थित फ़ाइलें</value>
+  </data>
+  <data name="message_error_unsupportedFileFormat" xml:space="preserve">
+    <value>यह फ़ाइल फ़ॉर्मेट समर्थित नहीं है। समर्थित फ़ॉर्मेट: शेपफ़ाइल, KML, KMZ, GPX, GeoPackage, DXF, GeoJSON, TopoJSON, Esri JSON, CSV और TSV।</value>
+  </data>
 </root>
