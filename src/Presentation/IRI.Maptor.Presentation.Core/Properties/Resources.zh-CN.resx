@@ -3182,7 +3182,7 @@
     <value>格式</value>
   </data>
   <data name="dialog_importOptions_pasteWatermark" xml:space="preserve">
-    <value>在此粘贴 GeoJSON、TopoJSON、Esri JSON、CSV 或 TSV 文本。格式将根据文本自动识别。</value>
+    <value>在此粘贴 GeoJSON、TopoJSON、Esri JSON、KML、CSV 或 TSV 文本。格式将根据文本自动识别。</value>
   </data>
   <data name="dialog_importOptions_srsFromFile" xml:space="preserve">
     <value>来自文件 (EPSG:{0})</value>
@@ -3225,5 +3225,8 @@
   </data>
   <data name="message_error_unsupportedFileFormat" xml:space="preserve">
     <value>不支持此文件格式。支持的格式：Shapefile、KML、KMZ、GPX、GeoPackage、DXF、GeoJSON、TopoJSON、Esri JSON、CSV 和 TSV。</value>
+  </data>
+  <data name="dialog_importOptions_srsKmlHint" xml:space="preserve">
+    <value>KML 坐标始终为 WGS84 经纬度。</value>
   </data>
 </root>

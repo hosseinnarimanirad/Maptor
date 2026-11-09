@@ -28,12 +28,20 @@ public class EsriJsonDataSource : MemoryDataSource
 
     public override DataSourceKind DataSourceKind => DataSourceKind.EsriJson;
 
-    private EsriJsonDataSource(string fileName, IEnumerable<Feature<Point>> features, int sourceSrid)
+    /// <summary>
+    /// The pasted JSON when created with <see cref="CreateFromTextAsync"/>; null for a file. A project saves it so the
+    /// layer can be built again.
+    /// </summary>
+    public string? RawJson { get; }
+
+    private EsriJsonDataSource(string fileName, IEnumerable<Feature<Point>> features, int sourceSrid, string? rawJson)
         : base(features, resetIds: true, kind: DataSourceKind.Kml)
     {
         _fileName = fileName ?? throw new ArgumentNullException(nameof(fileName));
 
         _sourceSrid = sourceSrid;
+
+        RawJson = rawJson;
     }
 
     public override string ToString() => $"{nameof(EsriJsonDataSource)}";
@@ -107,6 +115,6 @@ public class EsriJsonDataSource : MemoryDataSource
         // (Web Mercator) was kept, and a save rewrote the file in Web Mercator.
         var sourceSrid = fileSrid > 0 && SrsBase.Create(fileSrid) is not null ? fileSrid : features.Srid;
 
-        return new EsriJsonDataSource(fileName ?? string.Empty, features.Features, sourceSrid);
+        return new EsriJsonDataSource(fileName ?? string.Empty, features.Features, sourceSrid, string.IsNullOrEmpty(fileName) ? jsonString : null);
     }
 }

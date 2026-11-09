@@ -44,6 +44,8 @@ public sealed class AddDataFromFileTest : IDisposable
 
         public List<Type> Errors { get; } = new();
 
+        public List<string> ErrorMessages { get; } = new();
+
         public ImportOptionsDialogResult? OptionsResult { get; set; }
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
@@ -56,6 +58,7 @@ public sealed class AddDataFromFileTest : IDisposable
 
                 case nameof(IDialogService.ShowErrorMessage):
                     Errors.Add(args![0]!.GetType());
+                    ErrorMessages.Add(((Exception)args[0]!).Message);
                     return Task.CompletedTask;
             }
 

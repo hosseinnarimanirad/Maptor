@@ -3182,7 +3182,7 @@
     <value>فارمیٹ</value>
   </data>
   <data name="dialog_importOptions_pasteWatermark" xml:space="preserve">
-    <value>GeoJSON، TopoJSON، Esri JSON، CSV یا TSV متن یہاں پیسٹ کریں۔ فارمیٹ متن سے پہچانا جاتا ہے۔</value>
+    <value>GeoJSON، TopoJSON، Esri JSON، KML، CSV یا TSV متن یہاں پیسٹ کریں۔ فارمیٹ متن سے پہچانا جاتا ہے۔</value>
   </data>
   <data name="dialog_importOptions_srsFromFile" xml:space="preserve">
     <value>فائل سے (EPSG:{0})</value>
@@ -3225,5 +3225,8 @@
   </data>
   <data name="message_error_unsupportedFileFormat" xml:space="preserve">
     <value>اس فائل کا فارمیٹ معاون نہیں ہے۔ معاون فارمیٹس: شیپ فائل، KML، KMZ، GPX، GeoPackage، DXF، GeoJSON، TopoJSON، Esri JSON، CSV اور TSV۔</value>
+  </data>
+  <data name="dialog_importOptions_srsKmlHint" xml:space="preserve">
+    <value>KML کوآرڈینیٹس ہمیشہ WGS84 میں طول البلد/عرض البلد ہوتے ہیں۔</value>
   </data>
 </root>

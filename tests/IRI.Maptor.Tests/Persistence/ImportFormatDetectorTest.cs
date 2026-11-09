@@ -145,6 +145,9 @@ public sealed class ImportFormatDetectorTest : IDisposable
     [InlineData("x\ty\n51.3\t35.7", DataSourceKind.Tsv)]
     [InlineData("x,y\n51.3,35.7", DataSourceKind.Csv)]
     [InlineData("51.3 35.7", DataSourceKind.Csv)]
+    [InlineData("<kml></kml>", DataSourceKind.Kml)]
+    [InlineData("<?xml version=\"1.0\"?>\r\n<!-- exported -->\r\n<kml xmlns=\"http://www.opengis.net/kml/2.2\"><Document/></kml>", DataSourceKind.Kml)]
+    [InlineData("<kml:kml xmlns:kml=\"http://www.opengis.net/kml/2.2\"/>", DataSourceKind.Kml)]
     public void PastedTextIsDetected(string text, DataSourceKind expected)
     {
         Assert.Equal(expected, ImportFormatDetector.DetectFromText(text));
@@ -154,7 +157,8 @@ public sealed class ImportFormatDetectorTest : IDisposable
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   \r\n ")]
-    [InlineData("<kml></kml>")]
+    [InlineData("<gpx version=\"1.1\"></gpx>")]
+    [InlineData("<kmlish/>")]
     [InlineData("""{"name":"x"}""")]
     public void PastedTextOfNoSupportedKindIsNull(string? text)
     {

@@ -168,6 +168,8 @@ public class MapProjectService
             TextDataSource text => !string.IsNullOrWhiteSpace(text.RawText),
             GeoJsonDataSource geoJson => !string.IsNullOrWhiteSpace(geoJson.RawJson),
             TopoJsonDataSource topoJson => !string.IsNullOrWhiteSpace(topoJson.RawJson),
+            EsriJsonDataSource esriJson => !string.IsNullOrWhiteSpace(esriJson.RawJson),
+            KmlDataSource kml => !string.IsNullOrWhiteSpace(kml.RawKml),
             _ => false,
         };
     }
@@ -196,7 +198,9 @@ public class MapProjectService
         // only when the user chose the CRS (no readable .prj): a shapefile with a .prj needs no options
         ShapefileDataSource { AssumedSrid: int assumedSrid } => new ImportOptions { SourceSrid = assumedSrid },
         // a fallback on replay: the file's own spatial reference wins when it names one
-        EsriJsonDataSource esriJson => new ImportOptions { SourceSrid = esriJson.OriginalSrid },
+        EsriJsonDataSource esriJson => new ImportOptions { SourceSrid = esriJson.OriginalSrid, RawText = esriJson.RawJson },
+        // pasted KML only: a KML file needs no options (always WGS84)
+        KmlDataSource { RawKml: not null } kml => new ImportOptions { RawText = kml.RawKml },
         _ when dataSource.DataSourceKind == DataSourceKind.Dxf => new ImportOptions { SourceSrid = dataSource.OriginalSrid },
         _ when dataSource.DataSourceKind is DataSourceKind.Worldfile or DataSourceKind.GeoTiff => new ImportOptions { SourceSrid = dataSource.Srid },
         _ => null,
@@ -378,6 +382,10 @@ public class MapProjectService
                 await _map.AddShapefile(path!, owner, options?.SourceSrid);
                 break;
 
+            case DataSourceKind.Kml when path is null:
+                await _map.AddKmlText(options!.RawText!);
+                break;
+
             case DataSourceKind.Kml:
                 await _map.AddKmlfile(path!, owner);
                 break;
@@ -392,6 +400,10 @@ public class MapProjectService
 
             case DataSourceKind.Dxf:
                 await _map.AddDxffile(path!, owner, options?.SourceSrid ?? SridHelper.GeodeticWGS84);
+                break;
+
+            case DataSourceKind.EsriJson when path is null:
+                await _map.AddEsriJsonText(options!.RawText!, options.SourceSrid);
                 break;
 
             case DataSourceKind.EsriJson:

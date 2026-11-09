@@ -3182,7 +3182,7 @@
     <value>फ़ॉर्मेट</value>
   </data>
   <data name="dialog_importOptions_pasteWatermark" xml:space="preserve">
-    <value>GeoJSON, TopoJSON, Esri JSON, CSV या TSV टेक्स्ट यहाँ पेस्ट करें। फ़ॉर्मेट टेक्स्ट से पहचाना जाता है।</value>
+    <value>GeoJSON, TopoJSON, Esri JSON, KML, CSV या TSV टेक्स्ट यहाँ पेस्ट करें। फ़ॉर्मेट टेक्स्ट से पहचाना जाता है।</value>
   </data>
   <data name="dialog_importOptions_srsFromFile" xml:space="preserve">
     <value>फ़ाइल से (EPSG:{0})</value>
@@ -3225,5 +3225,8 @@
   </data>
   <data name="message_error_unsupportedFileFormat" xml:space="preserve">
     <value>यह फ़ाइल फ़ॉर्मेट समर्थित नहीं है। समर्थित फ़ॉर्मेट: शेपफ़ाइल, KML, KMZ, GPX, GeoPackage, DXF, GeoJSON, TopoJSON, Esri JSON, CSV और TSV।</value>
+  </data>
+  <data name="dialog_importOptions_srsKmlHint" xml:space="preserve">
+    <value>KML निर्देशांक हमेशा WGS84 में देशांतर/अक्षांश होते हैं।</value>
   </data>
 </root>

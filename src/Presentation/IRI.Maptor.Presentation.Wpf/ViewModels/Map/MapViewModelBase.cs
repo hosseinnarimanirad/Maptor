@@ -5784,62 +5784,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
             features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
 
-            // Group by geometry category (Point/Polyline/Polygon) so that a KML with mixed feature
-            // types (e.g. points + polygon) is loaded as a GroupLayer with one VectorLayer per
-            // category - single- and multi-part of the same kind (Polygon + MultiPolygon) merge.
-            var groups = features.GroupBy(f => f.GeometryType.GetCategory()).ToList();
-
-            if (groups.Count == 1)
-            {
-                var dataSource = KmlDataSource.Create(fileName, features);
-
-                var symbolizers = features.CreateSymbolizersFromKml(features.First().GeometryType);
-
-                var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(fileName),
-                                    dataSource,
-                                    symbolizers,
-                                    LayerType.VectorLayer,
-                                    RenderMode.Default,
-                                    RasterizationMethod.GdiPlus,
-                                    ScaleInterval.All,
-                                    LegendViewModel.DefaultTocGroup)
-                {
-                    IsSearchable = true
-                };
-
-                AddLayer(vectorLayer);
-            }
-            else
-            {
-                // searchable so identify/search descend into the sub-layers (each keeps its own flag)
-                var groupLayer = new GroupLayer(Path.GetFileNameWithoutExtension(fileName)) { IsSearchable = true };
-
-                // the sub-layers share the file: saving one writes all of them (KmlDataSource.CreateForFile)
-                var dataSources = KmlDataSource.CreateForFile(fileName, groups.Select(g => g.ToList()));
-
-                foreach (var (group, dataSource) in groups.Zip(dataSources))
-                {
-                    var groupFeatures = group.ToList();
-
-                    var symbolizers = groupFeatures.CreateSymbolizersFromKml(groupFeatures.First().GeometryType);
-
-                    var vectorLayer = new VectorLayer($"{Path.GetFileNameWithoutExtension(fileName)}-{group.Key}",
-                                        dataSource,
-                                        symbolizers,
-                                        LayerType.VectorLayer,
-                                        RenderMode.Default,
-                                        RasterizationMethod.GdiPlus,
-                                        ScaleInterval.All,
-                                        LegendViewModel.DefaultTocGroup)
-                    {
-                        IsSearchable = true
-                    };
-
-                    groupLayer.AddSubLayer(vectorLayer);
-                }
-
-                AddLayer(groupLayer);
-            }
+            // the sub-layers share the file: saving one writes all of them (KmlDataSource.CreateForFile)
+            AddKmlLayers(Path.GetFileNameWithoutExtension(fileName), features, groups => KmlDataSource.CreateForFile(fileName, groups));
         }
         //catch (IOException)
         //{
@@ -5860,6 +5806,121 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             IsBusy = false;
         }
+    }
+
+    /// <summary>
+    /// Adds pasted KML text as a layer (one sub-layer per geometry category, as for a file). The text is kept on the
+    /// data source so a project can rebuild the layer; there is no file, so saving edits writes nothing.
+    /// </summary>
+    public async Task AddKmlText(string rawKml)
+    {
+        try
+        {
+            IsBusy = true;
+
+            if (string.IsNullOrWhiteSpace(rawKml))
+                return;
+
+            // same two readers, in the same order, as AddKmlfile
+            var features = await Task.Run(() =>
+            {
+                try
+                {
+                    var parsed = KmlReader.ParseFeatures(rawKml).ToFeatures();
+
+                    if (!parsed.IsNullOrEmpty())
+                        return parsed;
+                }
+                catch
+                {
+                }
+
+                try
+                {
+                    return KmlReader.Parse(rawKml).ToFeatures();
+                }
+                catch
+                {
+                    return new List<Feature<Point>>();
+                }
+            });
+
+            if (features.IsNullOrEmpty())
+                throw MaptorEmptyFileException.Instance;
+
+            const string layerName = "KML Import";
+
+            // checked while still geodetic, so out-of-range longitudes/latitudes are found
+            features = await CheckGeometriesOnOpenAsync(features, layerName);
+
+            features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
+
+            AddKmlLayers(layerName, features, groups => KmlDataSource.CreateFromText(rawKml, groups));
+        }
+        catch (Exception ex)
+        {
+            await ShowExceptionMessageAsync(ex);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    /// <summary>
+    /// The layers of KML features already in Web Mercator. They are grouped by geometry category (Point/Polyline/Polygon),
+    /// so a KML with mixed feature types (e.g. points + polygon) is loaded as a GroupLayer with one VectorLayer per
+    /// category; single- and multi-part of the same kind (Polygon + MultiPolygon) merge. One category gives one plain
+    /// layer. <paramref name="createDataSources"/> makes one data source per group, in order.
+    /// </summary>
+    private void AddKmlLayers(string layerName, List<Feature<Point>> features, Func<IEnumerable<List<Feature<Point>>>, List<KmlDataSource>> createDataSources)
+    {
+        var groups = features.GroupBy(f => f.GeometryType.GetCategory()).ToList();
+
+        var dataSources = createDataSources(groups.Select(g => g.ToList()));
+
+        if (groups.Count == 1)
+        {
+            var symbolizers = features.CreateSymbolizersFromKml(features.First().GeometryType);
+
+            AddLayer(new VectorLayer(layerName,
+                                dataSources[0],
+                                symbolizers,
+                                LayerType.VectorLayer,
+                                RenderMode.Default,
+                                RasterizationMethod.GdiPlus,
+                                ScaleInterval.All,
+                                LegendViewModel.DefaultTocGroup)
+            {
+                IsSearchable = true
+            });
+
+            return;
+        }
+
+        // searchable so identify/search descend into the sub-layers (each keeps its own flag)
+        var groupLayer = new GroupLayer(layerName) { IsSearchable = true };
+
+        foreach (var (group, dataSource) in groups.Zip(dataSources))
+        {
+            var groupFeatures = group.ToList();
+
+            var symbolizers = groupFeatures.CreateSymbolizersFromKml(groupFeatures.First().GeometryType);
+
+            groupLayer.AddSubLayer(new VectorLayer($"{layerName}-{group.Key}",
+                                dataSource,
+                                symbolizers,
+                                LayerType.VectorLayer,
+                                RenderMode.Default,
+                                RasterizationMethod.GdiPlus,
+                                ScaleInterval.All,
+                                LegendViewModel.DefaultTocGroup)
+            {
+                IsSearchable = true
+            });
+        }
+
+        AddLayer(groupLayer);
     }
 
     public virtual async Task AddKmzfile(object owner, int? maxSizeInKB)
@@ -7037,6 +7098,50 @@ public abstract class MapViewModelBase : ViewModelBase
     #endregion
 
 
+    /// <summary>
+    /// Adds pasted Esri JSON as a layer. <paramref name="fallbackSrid"/> (the user's choice) is used only when the text
+    /// names no spatial reference. The text is kept on the data source so a project can rebuild the layer.
+    /// </summary>
+    public async Task AddEsriJsonText(string rawJson, int? fallbackSrid)
+    {
+        try
+        {
+            IsBusy = true;
+
+            if (string.IsNullOrWhiteSpace(rawJson))
+                return;
+
+            var dataSource = await EsriJsonDataSource.CreateFromTextAsync(rawJson, fallbackSrid);
+
+            if (dataSource is null)
+                return;
+
+            const string layerName = "Esri JSON Import";
+
+            await CheckGeometriesOnOpenAsync(dataSource, layerName);
+
+            AddLayer(new VectorLayer(layerName,
+                                dataSource,
+                                [SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1)],
+                                LayerType.VectorLayer,
+                                RenderMode.Default,
+                                RasterizationMethod.GdiPlus,
+                                ScaleInterval.All,
+                                LegendViewModel.DefaultTocGroup)
+            {
+                IsSearchable = true
+            });
+        }
+        catch (Exception ex)
+        {
+            await ShowExceptionMessageAsync(ex);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
     //*****************************************Add data from file*****************************************************
     #region Add data from file (one command for every vector format)
 
@@ -7144,6 +7249,21 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
     /// <summary>
+    /// "Paste data": the import options dialog in paste mode. The format is guessed from the text (GeoJSON, TopoJSON,
+    /// Esri JSON, KML, CSV, TSV) and can be changed there; the layer is added with that format's reader.
+    /// </summary>
+    public virtual async Task PasteData(object owner)
+    {
+        // No IsBusy before the dialog (see AddDxffile); the readers raise it.
+        var options = await DialogService.ShowImportOptionsDialogAsync(null, null, owner);
+
+        if (options is null)
+            return;
+
+        await AddData(options, owner);
+    }
+
+    /// <summary>
     /// Adds what the import options dialog returned, with the existing reader of its format.
     /// </summary>
     public async Task AddData(Dialogs.ImportOptionsDialogResult options, object owner)
@@ -7177,6 +7297,14 @@ public abstract class MapViewModelBase : ViewModelBase
                 await AddEsriJson(options.FilePath, owner, options.SourceSrid);
                 break;
 
+            case DataSourceKind.EsriJson when options.RawText is not null:
+                await AddEsriJsonText(options.RawText, options.SourceSrid);
+                break;
+
+            case DataSourceKind.Kml when options.RawText is not null:
+                await AddKmlText(options.RawText);
+                break;
+
             case DataSourceKind.Dxf when options.FilePath is not null:
                 await AddDxffile(options.FilePath, owner, options.SourceSrid);
                 break;
@@ -7186,7 +7314,7 @@ public abstract class MapViewModelBase : ViewModelBase
                 break;
 
             default:
-                // e.g. pasted Esri JSON, which comes with "paste data" (step 4 of the import redesign)
+                // a kind the options dialog never returns (e.g. a DXF without a file)
                 IsBusy = false;
                 await ShowExceptionMessageAsync(MaptorUnsupportedFileFormatException.Instance);
                 break;
@@ -7376,6 +7504,11 @@ public abstract class MapViewModelBase : ViewModelBase
     private RelayCommand? _addDataFromFileCommand;
     /// <summary>One command for every vector file format; the format is worked out from the file.</summary>
     public RelayCommand AddDataFromFileCommand => _addDataFromFileCommand ??= new RelayCommand(async param => await AddDataFromFile(param));
+
+
+    private RelayCommand? _pasteDataCommand;
+    /// <summary>Pasted GeoJSON, TopoJSON, Esri JSON, KML, CSV or TSV text; the format is guessed from the text.</summary>
+    public RelayCommand PasteDataCommand => _pasteDataCommand ??= new RelayCommand(async param => await PasteData(param));
 
 
     private RelayCommand _addShapefileCommand;

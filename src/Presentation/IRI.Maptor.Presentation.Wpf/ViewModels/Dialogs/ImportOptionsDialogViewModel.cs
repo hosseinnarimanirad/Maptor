@@ -12,6 +12,8 @@ using IRI.Maptor.Core.Common.Enums;
 using IRI.Maptor.Core.Common.Helpers;
 using IRI.Maptor.Core.Common.Primitives;
 using IRI.Maptor.Core.Common.Exceptions;
+using IRI.Maptor.Core.Ogc.Kml;
+using IRI.Maptor.Core.Spatial.Primitives;
 using IRI.Maptor.Core.Spatial.IO.Dxf;
 using IRI.Maptor.Core.Spatial.IO.EsriJson;
 using IRI.Maptor.Core.Spatial.IO.TopoJson;
@@ -220,6 +222,7 @@ public class ImportOptionsDialogViewModel : DialogViewModelBase
         RaisePropertyChanged(nameof(ShowsOrderOptions));
         RaisePropertyChanged(nameof(ShowsText));
         RaisePropertyChanged(nameof(PreviewHint));
+        RaisePropertyChanged(nameof(SrsLockedHint));
     }
 
     #endregion
@@ -345,7 +348,12 @@ public class ImportOptionsDialogViewModel : DialogViewModelBase
 
     public bool IsUtmSelected => SelectedSrsOption?.IsUtm == true;
 
-    /// <summary>False when the file names its CRS (DXF, Esri JSON): that CRS is used as it is.</summary>
+    /// <summary>Why the CRS cannot be changed (shown when <see cref="CanUserChooseSrs"/> is false).</summary>
+    public string SrsLockedHint => _kind == DataSourceKind.Kml
+        ? LocalizationManager.Instance["dialog_importOptions_srsKmlHint"]
+        : LocalizationManager.Instance["dialog_importOptions_srsFromFileHint"];
+
+    /// <summary>False when the data names its CRS (DXF, Esri JSON) or the format fixes it (KML): that CRS is used as it is.</summary>
     public bool CanUserChooseSrs
     {
         get => _canUserChooseSrs;
@@ -619,6 +627,13 @@ public class ImportOptionsDialogViewModel : DialogViewModelBase
                     return Array.Empty<Point>();
                 return ReadEsriJsonPoints(CurrentText, out detectedSrid);
 
+            case DataSourceKind.Kml:
+                if (string.IsNullOrWhiteSpace(CurrentText))
+                    return Array.Empty<Point>();
+                // KML coordinates are WGS84 by definition
+                detectedSrid = SridHelper.GeodeticWGS84;
+                return ReadKmlPoints(CurrentText);
+
             case DataSourceKind.Dxf:
                 detectedSrid = _fileSrid;
                 return _filePoints;
@@ -629,6 +644,31 @@ public class ImportOptionsDialogViewModel : DialogViewModelBase
             default:
                 return Array.Empty<Point>();
         }
+    }
+
+    /// <summary>The first points of pasted KML, read as MapViewModelBase.AddKmlText reads it (features first, then plain geometries).</summary>
+    private static IReadOnlyList<Point> ReadKmlPoints(string kml)
+    {
+        List<Feature<Point>> features;
+
+        try
+        {
+            features = KmlReader.ParseFeatures(kml).ToFeatures();
+        }
+        catch
+        {
+            features = new List<Feature<Point>>();
+        }
+
+        if (features.Count == 0)
+            features = KmlReader.Parse(kml).ToFeatures();
+
+        return features
+            .Where(f => f?.TheGeometry is not null)
+            .SelectMany(f => f.TheGeometry.GetAllPoints())
+            .Take(PreviewPointCount)
+            .Select(p => new Point(p.X, p.Y))
+            .ToList();
     }
 
     private static IReadOnlyList<Point> ReadEsriJsonPoints(string json, out int detectedSrid)

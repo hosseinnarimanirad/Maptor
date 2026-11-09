@@ -4249,7 +4249,7 @@
     <value>Format</value>
   </data>
   <data name="dialog_importOptions_pasteWatermark" xml:space="preserve">
-    <value>Paste GeoJSON, TopoJSON, Esri JSON, CSV or TSV text here. The format is detected from the text.</value>
+    <value>Paste GeoJSON, TopoJSON, Esri JSON, KML, CSV or TSV text here. The format is detected from the text.</value>
   </data>
   <data name="dialog_importOptions_srsFromFile" xml:space="preserve">
     <value>From the file (EPSG:{0})</value>
@@ -4292,5 +4292,8 @@
   </data>
   <data name="message_error_unsupportedFileFormat" xml:space="preserve">
     <value>This file format is not supported. Supported formats: shapefile, KML, KMZ, GPX, GeoPackage, DXF, GeoJSON, TopoJSON, Esri JSON, CSV and TSV.</value>
+  </data>
+  <data name="dialog_importOptions_srsKmlHint" xml:space="preserve">
+    <value>KML coordinates are always longitude/latitude in WGS84.</value>
   </data>
 </root>

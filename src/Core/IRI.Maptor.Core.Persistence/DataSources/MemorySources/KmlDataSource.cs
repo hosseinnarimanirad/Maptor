@@ -21,16 +21,25 @@ public class KmlDataSource : MemoryDataSource
 {
     private readonly string _fileName;
 
-    public override SourceLocation? Location => new FileLocation { Path = _fileName };
+    // null for pasted KML (RawKml set): there is no file to point at or write
+    public override SourceLocation? Location => string.IsNullOrEmpty(_fileName) ? null : new FileLocation { Path = _fileName };
 
     public override DataSourceKind DataSourceKind => DataSourceKind.Kml;
 
     public override int OriginalSrid => SridHelper.GeodeticWGS84;
 
-    private KmlDataSource(string fileName, List<Feature<Point>> features)
+    /// <summary>
+    /// The pasted KML when created with <see cref="CreateFromText"/>; null for a file. A project saves it so the
+    /// layer can be built again.
+    /// </summary>
+    public string? RawKml { get; }
+
+    private KmlDataSource(string fileName, List<Feature<Point>> features, string? rawKml = null)
         : base(features, resetIds: true, kind: DataSourceKind.Kml)
     {
         _fileName = fileName ?? throw new ArgumentNullException(nameof(fileName));
+
+        RawKml = rawKml;
     }
 
     // the sources that share this file (one per sub-layer, see CreateForFile); null for a file with one source
@@ -46,9 +55,13 @@ public class KmlDataSource : MemoryDataSource
     {
         var sources = _fileSources ?? [this];
 
-        var kmlFeatures = sources.SelectMany(s => s._webMercatorFeatureSet.Features).ToKmlFeatures();
+        // pasted KML has no file: the edits are only accepted in memory, as for pasted GeoJSON
+        if (!string.IsNullOrEmpty(_fileName))
+        {
+            var kmlFeatures = sources.SelectMany(s => s._webMercatorFeatureSet.Features).ToKmlFeatures();
 
-        await KmlWriter.WriteToFileAsync(kmlFeatures, _fileName);
+            await KmlWriter.WriteToFileAsync(kmlFeatures, _fileName);
+        }
 
         foreach (var source in sources)
         {
@@ -63,9 +76,29 @@ public class KmlDataSource : MemoryDataSource
     /// share the file: saving any of them writes every group.
     /// </summary>
     public static List<KmlDataSource> CreateForFile(string fileName, IEnumerable<List<Feature<Point>>> featureGroups)
-    {
-        var sources = featureGroups.Select(group => Create(fileName, group)).ToList();
+        => Link(featureGroups.Select(group => Create(fileName, group)).ToList());
 
+    /// <summary>
+    /// One source per group of features of pasted KML (same grouping as <see cref="CreateForFile"/>). Each keeps
+    /// <paramref name="rawKml"/>, so a project can rebuild the layer; there is no file, so saving writes nothing.
+    /// Features should already be in Web Mercator.
+    /// </summary>
+    public static List<KmlDataSource> CreateFromText(string rawKml, IEnumerable<List<Feature<Point>>> featureGroups)
+    {
+        if (string.IsNullOrWhiteSpace(rawKml))
+            throw new ArgumentNullException(nameof(rawKml));
+
+        return Link(featureGroups.Select(group =>
+        {
+            if (group == null || group.Count == 0)
+                throw new ArgumentException("At least one feature is required.", nameof(featureGroups));
+
+            return new KmlDataSource(string.Empty, group, rawKml);
+        }).ToList());
+    }
+
+    private static List<KmlDataSource> Link(List<KmlDataSource> sources)
+    {
         if (sources.Count > 1)
         {
             foreach (var source in sources)

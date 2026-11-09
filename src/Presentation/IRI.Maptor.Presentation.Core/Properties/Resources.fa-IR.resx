@@ -4153,7 +4153,7 @@
     <value>قالب</value>
   </data>
   <data name="dialog_importOptions_pasteWatermark" xml:space="preserve">
-    <value>متن GeoJSON، TopoJSON، Esri JSON، CSV یا TSV را اینجا جایگذاری کنید. قالب از روی متن تشخیص داده می‌شود.</value>
+    <value>متن GeoJSON، TopoJSON، Esri JSON، KML، CSV یا TSV را اینجا جایگذاری کنید. قالب از روی متن تشخیص داده می‌شود.</value>
   </data>
   <data name="dialog_importOptions_srsFromFile" xml:space="preserve">
     <value>از فایل (EPSG:{0})</value>
@@ -4196,5 +4196,8 @@
   </data>
   <data name="message_error_unsupportedFileFormat" xml:space="preserve">
     <value>قالب این فایل پشتیبانی نمی‌شود. قالب‌های پشتیبانی‌شده: شیپ‌فایل، KML، KMZ، GPX، GeoPackage، DXF، GeoJSON، TopoJSON، Esri JSON، CSV و TSV.</value>
+  </data>
+  <data name="dialog_importOptions_srsKmlHint" xml:space="preserve">
+    <value>مختصات KML همیشه طول و عرض جغرافیایی در WGS84 است.</value>
   </data>
 </root>

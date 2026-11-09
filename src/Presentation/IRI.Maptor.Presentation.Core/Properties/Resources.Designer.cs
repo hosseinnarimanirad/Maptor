@@ -2347,7 +2347,7 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Paste GeoJSON, TopoJSON, Esri JSON, CSV or TSV text here. The format is detected from the text..
+        ///   Looks up a localized string similar to Paste GeoJSON, TopoJSON, Esri JSON, KML, CSV or TSV text here. The format is detected from the text..
         /// </summary>
         public static string dialog_importOptions_pasteWatermark {
             get {
@@ -2379,6 +2379,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string dialog_importOptions_srsFromFileHint {
             get {
                 return ResourceManager.GetString("dialog_importOptions_srsFromFileHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to KML coordinates are always longitude/latitude in WGS84..
+        /// </summary>
+        public static string dialog_importOptions_srsKmlHint {
+            get {
+                return ResourceManager.GetString("dialog_importOptions_srsKmlHint", resourceCulture);
             }
         }
         

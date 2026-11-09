@@ -3182,7 +3182,7 @@
     <value>Biçim</value>
   </data>
   <data name="dialog_importOptions_pasteWatermark" xml:space="preserve">
-    <value>GeoJSON, TopoJSON, Esri JSON, CSV veya TSV metnini buraya yapıştırın. Biçim metinden algılanır.</value>
+    <value>GeoJSON, TopoJSON, Esri JSON, KML, CSV veya TSV metnini buraya yapıştırın. Biçim metinden algılanır.</value>
   </data>
   <data name="dialog_importOptions_srsFromFile" xml:space="preserve">
     <value>Dosyadan (EPSG:{0})</value>
@@ -3225,5 +3225,8 @@
   </data>
   <data name="message_error_unsupportedFileFormat" xml:space="preserve">
     <value>Bu dosya biçimi desteklenmiyor. Desteklenen biçimler: Shapefile, KML, KMZ, GPX, GeoPackage, DXF, GeoJSON, TopoJSON, Esri JSON, CSV ve TSV.</value>
+  </data>
+  <data name="dialog_importOptions_srsKmlHint" xml:space="preserve">
+    <value>KML koordinatları her zaman WGS84'te boylam/enlemdir.</value>
   </data>
 </root>

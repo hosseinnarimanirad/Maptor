@@ -89,7 +89,7 @@
                               SelectedItem="{Binding SelectedSrsOption, Mode=TwoWay}"/>
                 </Grid>
                 <TextBlock Margin="36,4,4,0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldHint}"
-                           Text="{Binding [dialog_importOptions_srsFromFileHint], Source={StaticResource Localization}}"
+                           Text="{Binding SrsLockedHint}"
                            Visibility="{Binding CanUserChooseSrs, Converter={StaticResource boolToInverseVisibilityConverter}}"/>
             </StackPanel>
         </Border>

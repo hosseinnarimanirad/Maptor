@@ -3182,7 +3182,7 @@
     <value>التنسيق</value>
   </data>
   <data name="dialog_importOptions_pasteWatermark" xml:space="preserve">
-    <value>الصق هنا نص GeoJSON أو TopoJSON أو Esri JSON أو CSV أو TSV. يُكتشف التنسيق من النص.</value>
+    <value>الصق هنا نص GeoJSON أو TopoJSON أو Esri JSON أو KML أو CSV أو TSV. يُكتشف التنسيق من النص.</value>
   </data>
   <data name="dialog_importOptions_srsFromFile" xml:space="preserve">
     <value>من الملف (EPSG:{0})</value>
@@ -3225,5 +3225,8 @@
   </data>
   <data name="message_error_unsupportedFileFormat" xml:space="preserve">
     <value>تنسيق هذا الملف غير مدعوم. التنسيقات المدعومة: Shapefile و KML و KMZ و GPX و GeoPackage و DXF و GeoJSON و TopoJSON و Esri JSON و CSV و TSV.</value>
+  </data>
+  <data name="dialog_importOptions_srsKmlHint" xml:space="preserve">
+    <value>إحداثيات KML دائمًا خطوط طول وعرض بنظام WGS84.</value>
   </data>
 </root>

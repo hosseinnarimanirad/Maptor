@@ -41,6 +41,7 @@ public static class ImportFormatDetector
         DataSourceKind.GeoJson,
         DataSourceKind.TopoJson,
         DataSourceKind.EsriJson,
+        DataSourceKind.Kml,
         DataSourceKind.Csv,
         DataSourceKind.Tsv,
     };
@@ -92,9 +93,9 @@ public static class ImportFormatDetector
     }
 
     /// <summary>
-    /// The format of pasted text: JSON by its content, otherwise TSV when a line has a tab and CSV for any
-    /// other text (the CSV reader also takes two numbers separated by spaces). Null for empty text, XML and
-    /// JSON that matches no supported kind.
+    /// The format of pasted text: JSON by its content, KML for XML with a <c>kml</c> element, otherwise TSV when a
+    /// line has a tab and CSV for any other text (the CSV reader also takes two numbers separated by spaces). Null
+    /// for empty text, other XML and JSON that matches no supported kind.
     /// </summary>
     public static DataSourceKind? DetectFromText(string? text)
     {
@@ -114,7 +115,14 @@ public static class ImportFormatDetector
         }
 
         if (trimmed[0] == '<')
-            return null;
+        {
+            // the root element, after any XML declaration or comment, is <kml> (with or without a prefix)
+            var head = trimmed.Length > TextSniffChars ? trimmed.Substring(0, TextSniffChars) : trimmed;
+
+            return System.Text.RegularExpressions.Regex.IsMatch(head, @"<(\w+:)?kml[\s>/]", System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+                ? DataSourceKind.Kml
+                : null;
+        }
 
         return HasTabInFirstLines(trimmed) ? DataSourceKind.Tsv : DataSourceKind.Csv;
     }

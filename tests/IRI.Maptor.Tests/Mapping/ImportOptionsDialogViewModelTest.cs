@@ -306,6 +306,35 @@ public sealed class ImportOptionsDialogViewModelTest : IDisposable
     }
 
     [Fact]
+    public void PastedKmlIsWgs84AndLocked()
+    {
+        var vm = Paste("""<kml xmlns="http://www.opengis.net/kml/2.2"><Placemark><Point><coordinates>51.3,35.7,0</coordinates></Point></Placemark></kml>""");
+
+        Assert.Equal(DataSourceKind.Kml, vm.Kind);
+        Assert.False(vm.CanUserChooseSrs);
+        Assert.Equal(SridHelper.GeodeticWGS84, vm.EffectiveSelectedSrid);
+        Assert.Single(vm.SamplePoints);
+        Assert.Equal(51.3, vm.SamplePoints[0].Longitude!.Value, 6);
+        Assert.False(vm.ShowsLongitudeFirst);
+        Assert.Null(vm.ValidationMessage);
+
+        vm.OpenCommand.Execute(null);
+
+        Assert.Equal(DataSourceKind.Kml, vm.Result!.Kind);
+        Assert.Contains("<kml", vm.Result.RawText);
+    }
+
+    [Fact]
+    public void KmlWithoutGeometryCannotBeOpened()
+    {
+        var vm = Paste("""<kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>empty</name></Document></kml>""");
+
+        Assert.Equal(DataSourceKind.Kml, vm.Kind);
+        Assert.NotNull(vm.ValidationMessage);
+        Assert.False(vm.OpenCommand.CanExecute(null));
+    }
+
+    [Fact]
     public void FileWithoutAKindIsRejected()
     {
         Assert.Throws<ArgumentNullException>(() => new ImportOptionsDialogViewModel(Dialogs, null, Path.Combine(_folder, "a.json")));
