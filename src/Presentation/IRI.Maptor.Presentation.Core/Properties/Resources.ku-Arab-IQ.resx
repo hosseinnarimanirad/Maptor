@@ -3172,4 +3172,52 @@
   <data name="dialog_goto_formatDms" xml:space="preserve">
     <value>پلە، خولەک، چرکە</value>
   </data>
+  <data name="dialog_importOptions_pasteTitle" xml:space="preserve">
+    <value>لکاندنی داتا</value>
+  </data>
+  <data name="dialog_importOptions_pastedText" xml:space="preserve">
+    <value>دەقی لکێنراو</value>
+  </data>
+  <data name="dialog_importOptions_format" xml:space="preserve">
+    <value>فۆرمات</value>
+  </data>
+  <data name="dialog_importOptions_pasteWatermark" xml:space="preserve">
+    <value>دەقی GeoJSON، TopoJSON، Esri JSON، CSV یان TSV لێرە بلکێنە. فۆرماتەکە لە دەقەکەوە دەناسرێتەوە.</value>
+  </data>
+  <data name="dialog_importOptions_srsFromFile" xml:space="preserve">
+    <value>لە فایلەکەوە (EPSG:{0})</value>
+  </data>
+  <data name="dialog_importOptions_srsFromFileHint" xml:space="preserve">
+    <value>فایلەکە سیستەمی کۆردیناتی خۆی دیاری دەکات، بۆیە ئەوە بەکاردێت.</value>
+  </data>
+  <data name="dialog_importOptions_preview" xml:space="preserve">
+    <value>پێشبینین (یەکەم 50 خاڵ)</value>
+  </data>
+  <data name="dialog_importOptions_extentHint" xml:space="preserve">
+    <value>شەیپفایلەکە لێرە بە تەواوی ناخوێندرێتەوە: پێشبینینەکە دوو گۆشەی ڕووبەرەکەی پیشان دەدات.</value>
+  </data>
+  <data name="dialog_importOptions_columnLongitude" xml:space="preserve">
+    <value>هێڵی درێژی</value>
+  </data>
+  <data name="dialog_importOptions_columnLatitude" xml:space="preserve">
+    <value>هێڵی پانی</value>
+  </data>
+  <data name="dialog_importOptions_warnNotDegrees" xml:space="preserve">
+    <value>خاڵی {0} (X = {1}، Y = {2}) لە دەرەوەی مەودای درێژی/پانییە. سیستەمی کۆردینات یان ڕیزبەندی X/Y بپشکنە.</value>
+  </data>
+  <data name="dialog_importOptions_warnLooksLikeDegrees" xml:space="preserve">
+    <value>کۆردیناتەکان وەک درێژی/پانی بە پلە دەردەکەون، نەک مەتر. سیستەمی کۆردینات بپشکنە.</value>
+  </data>
+  <data name="dialog_importOptions_warnOutsideRange" xml:space="preserve">
+    <value>خاڵی {0} (X = {1}، Y = {2}) لە دەرەوەی مەودای ئاسایی ئەم سیستەمی کۆردیناتەیە. سیستەمی کۆردینات یان ڕیزبەندی X/Y بپشکنە.</value>
+  </data>
+  <data name="dialog_importOptions_validationUnreadable" xml:space="preserve">
+    <value>داتاکە نەتوانرا وەک {0} بخوێندرێتەوە. فۆرماتێکی تر هەڵبژێرە یان داتاکە بپشکنە.</value>
+  </data>
+  <data name="dialog_importOptions_validationNoText" xml:space="preserve">
+    <value>سەرەتا داتاکە بلکێنە.</value>
+  </data>
+  <data name="dialog_importOptions_validationNoPoints" xml:space="preserve">
+    <value>هیچ خاڵێک لە داتاکەدا نەدۆزرایەوە.</value>
+  </data>
 </root>

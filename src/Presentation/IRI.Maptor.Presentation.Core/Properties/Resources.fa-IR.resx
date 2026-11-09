@@ -4143,4 +4143,52 @@
   <data name="dialog_goto_quickEntryTipFooter" xml:space="preserve">
     <value>ارقام فارسی و عربی (۴۵۶، ٤٥٦) هم پذیرفته می‌شود.</value>
   </data>
+  <data name="dialog_importOptions_pasteTitle" xml:space="preserve">
+    <value>جایگذاری داده</value>
+  </data>
+  <data name="dialog_importOptions_pastedText" xml:space="preserve">
+    <value>متن جایگذاری‌شده</value>
+  </data>
+  <data name="dialog_importOptions_format" xml:space="preserve">
+    <value>قالب</value>
+  </data>
+  <data name="dialog_importOptions_pasteWatermark" xml:space="preserve">
+    <value>متن GeoJSON، TopoJSON، Esri JSON، CSV یا TSV را اینجا جایگذاری کنید. قالب از روی متن تشخیص داده می‌شود.</value>
+  </data>
+  <data name="dialog_importOptions_srsFromFile" xml:space="preserve">
+    <value>از فایل (EPSG:{0})</value>
+  </data>
+  <data name="dialog_importOptions_srsFromFileHint" xml:space="preserve">
+    <value>سیستم مختصات در خود فایل آمده است و همان به کار می‌رود.</value>
+  </data>
+  <data name="dialog_importOptions_preview" xml:space="preserve">
+    <value>پیش‌نمایش (۵۰ نقطه اول)</value>
+  </data>
+  <data name="dialog_importOptions_extentHint" xml:space="preserve">
+    <value>شیپ‌فایل اینجا کامل خوانده نمی‌شود: پیش‌نمایش دو گوشهٔ محدودهٔ آن را نشان می‌دهد.</value>
+  </data>
+  <data name="dialog_importOptions_columnLongitude" xml:space="preserve">
+    <value>طول جغرافیایی</value>
+  </data>
+  <data name="dialog_importOptions_columnLatitude" xml:space="preserve">
+    <value>عرض جغرافیایی</value>
+  </data>
+  <data name="dialog_importOptions_warnNotDegrees" xml:space="preserve">
+    <value>نقطهٔ {0} (X = {1}، Y = {2}) بیرون از بازهٔ طول و عرض جغرافیایی است. سیستم مختصات یا ترتیب X/Y را بررسی کنید.</value>
+  </data>
+  <data name="dialog_importOptions_warnLooksLikeDegrees" xml:space="preserve">
+    <value>مختصات به طول و عرض جغرافیایی بر حسب درجه می‌ماند، نه متر. سیستم مختصات را بررسی کنید.</value>
+  </data>
+  <data name="dialog_importOptions_warnOutsideRange" xml:space="preserve">
+    <value>نقطهٔ {0} (X = {1}، Y = {2}) بیرون از بازهٔ معمول این سیستم مختصات است. سیستم مختصات یا ترتیب X/Y را بررسی کنید.</value>
+  </data>
+  <data name="dialog_importOptions_validationUnreadable" xml:space="preserve">
+    <value>داده را نمی‌توان به صورت {0} خواند. قالب دیگری انتخاب کنید یا داده را بررسی کنید.</value>
+  </data>
+  <data name="dialog_importOptions_validationNoText" xml:space="preserve">
+    <value>ابتدا داده را جایگذاری کنید.</value>
+  </data>
+  <data name="dialog_importOptions_validationNoPoints" xml:space="preserve">
+    <value>هیچ نقطه‌ای در داده پیدا نشد.</value>
+  </data>
 </root>

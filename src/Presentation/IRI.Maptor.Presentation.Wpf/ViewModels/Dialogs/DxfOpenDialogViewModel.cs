@@ -21,6 +21,11 @@ public class PointDisplay
     public int Index { get; init; }
     public double X { get; init; }
     public double Y { get; init; }
+
+    /// <summary>The point in WGS84 for the chosen CRS; null when it cannot be worked out.</summary>
+    public double? Longitude { get; init; }
+
+    public double? Latitude { get; init; }
 }
 
 public class DxfOpenDialogViewModel : DialogViewModelBase

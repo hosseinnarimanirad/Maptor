@@ -4239,4 +4239,52 @@
   <data name="dialog_goto_quickEntryTipFooter" xml:space="preserve">
     <value>Persian and Eastern Arabic digits (۴۵۶, ٤٥٦) work too.</value>
   </data>
+  <data name="dialog_importOptions_pasteTitle" xml:space="preserve">
+    <value>Paste data</value>
+  </data>
+  <data name="dialog_importOptions_pastedText" xml:space="preserve">
+    <value>Pasted text</value>
+  </data>
+  <data name="dialog_importOptions_format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="dialog_importOptions_pasteWatermark" xml:space="preserve">
+    <value>Paste GeoJSON, TopoJSON, Esri JSON, CSV or TSV text here. The format is detected from the text.</value>
+  </data>
+  <data name="dialog_importOptions_srsFromFile" xml:space="preserve">
+    <value>From the file (EPSG:{0})</value>
+  </data>
+  <data name="dialog_importOptions_srsFromFileHint" xml:space="preserve">
+    <value>The file names its coordinate system, so that one is used.</value>
+  </data>
+  <data name="dialog_importOptions_preview" xml:space="preserve">
+    <value>Preview (first 50 points)</value>
+  </data>
+  <data name="dialog_importOptions_extentHint" xml:space="preserve">
+    <value>A shapefile is not read in full here: the preview shows the two corners of its extent.</value>
+  </data>
+  <data name="dialog_importOptions_columnLongitude" xml:space="preserve">
+    <value>Longitude</value>
+  </data>
+  <data name="dialog_importOptions_columnLatitude" xml:space="preserve">
+    <value>Latitude</value>
+  </data>
+  <data name="dialog_importOptions_warnNotDegrees" xml:space="preserve">
+    <value>Point {0} (X = {1}, Y = {2}) is outside the longitude/latitude range. Check the coordinate system or the X/Y order.</value>
+  </data>
+  <data name="dialog_importOptions_warnLooksLikeDegrees" xml:space="preserve">
+    <value>The coordinates look like longitude/latitude in degrees, not metres. Check the coordinate system.</value>
+  </data>
+  <data name="dialog_importOptions_warnOutsideRange" xml:space="preserve">
+    <value>Point {0} (X = {1}, Y = {2}) is outside the usual range of this coordinate system. Check the coordinate system or the X/Y order.</value>
+  </data>
+  <data name="dialog_importOptions_validationUnreadable" xml:space="preserve">
+    <value>The data could not be read as {0}. Choose another format or check the data.</value>
+  </data>
+  <data name="dialog_importOptions_validationNoText" xml:space="preserve">
+    <value>Paste the data first.</value>
+  </data>
+  <data name="dialog_importOptions_validationNoPoints" xml:space="preserve">
+    <value>No points were found in the data.</value>
+  </data>
 </root>

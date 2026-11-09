@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 using IRI.Maptor.Core.Common.Enums;
+using IRI.Maptor.Core.Common.Primitives;
 using IRI.Maptor.Core.Persistence.DataSources;
 
 namespace IRI.Maptor.Presentation.Wpf.ViewModels.Dialogs;
@@ -138,6 +140,63 @@ public static class DelimitedTextValidator
 
         return dataLines > 0 ? string.Join(Environment.NewLine, lines) : text;
     }
+
+    /// <summary>
+    /// The first <paramref name="maxPoints"/> points of the text, read with the same column rules as
+    /// <see cref="Validate"/> (X/Y by header name for point imports). Lines that are not two numbers are skipped.
+    /// </summary>
+    public static IReadOnlyList<Point> ExtractSamplePoints(
+        string text,
+        char delimiter,
+        bool useFirstLineAsHeader,
+        bool isLongitudeFirst,
+        GeometryType geometryType,
+        bool skipPreviewMarker = false,
+        int maxPoints = 50)
+    {
+        var result = new List<Point>();
+
+        var lines = (text ?? string.Empty).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+
+        int xIndex = isLongitudeFirst ? 0 : 1;
+        int yIndex = isLongitudeFirst ? 1 : 0;
+
+        bool headerPending = useFirstLineAsHeader;
+
+        foreach (var line in lines)
+        {
+            if (result.Count >= maxPoints)
+                break;
+
+            if (string.IsNullOrWhiteSpace(line))
+                continue;
+
+            if (skipPreviewMarker && line.StartsWith("... (", StringComparison.Ordinal))
+                continue;
+
+            var cells = line.Split(delimiter);
+
+            if (headerPending)
+            {
+                headerPending = false;
+
+                if (geometryType == GeometryType.Point)
+                    (xIndex, yIndex) = TextDataSource.FindXyColumnIndices(cells, isLongitudeFirst);
+
+                continue;
+            }
+
+            if (Math.Max(xIndex, yIndex) >= cells.Length || !TryParse(cells[xIndex], out var x) || !TryParse(cells[yIndex], out var y))
+                continue;
+
+            result.Add(new Point(x, y));
+        }
+
+        return result;
+    }
+
+    private static bool TryParse(string cell, out double value) =>
+        double.TryParse(cell, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out value);
 
     // Matches double.Parse(s, CultureInfo.InvariantCulture) used by the import.
     private static bool IsNumber(string cell) =>

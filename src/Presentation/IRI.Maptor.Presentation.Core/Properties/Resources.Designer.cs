@@ -2284,6 +2284,150 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Latitude.
+        /// </summary>
+        public static string dialog_importOptions_columnLatitude {
+            get {
+                return ResourceManager.GetString("dialog_importOptions_columnLatitude", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Longitude.
+        /// </summary>
+        public static string dialog_importOptions_columnLongitude {
+            get {
+                return ResourceManager.GetString("dialog_importOptions_columnLongitude", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A shapefile is not read in full here: the preview shows the two corners of its extent..
+        /// </summary>
+        public static string dialog_importOptions_extentHint {
+            get {
+                return ResourceManager.GetString("dialog_importOptions_extentHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Format.
+        /// </summary>
+        public static string dialog_importOptions_format {
+            get {
+                return ResourceManager.GetString("dialog_importOptions_format", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pasted text.
+        /// </summary>
+        public static string dialog_importOptions_pastedText {
+            get {
+                return ResourceManager.GetString("dialog_importOptions_pastedText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste data.
+        /// </summary>
+        public static string dialog_importOptions_pasteTitle {
+            get {
+                return ResourceManager.GetString("dialog_importOptions_pasteTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste GeoJSON, TopoJSON, Esri JSON, CSV or TSV text here. The format is detected from the text..
+        /// </summary>
+        public static string dialog_importOptions_pasteWatermark {
+            get {
+                return ResourceManager.GetString("dialog_importOptions_pasteWatermark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preview (first 50 points).
+        /// </summary>
+        public static string dialog_importOptions_preview {
+            get {
+                return ResourceManager.GetString("dialog_importOptions_preview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to From the file (EPSG:{0}).
+        /// </summary>
+        public static string dialog_importOptions_srsFromFile {
+            get {
+                return ResourceManager.GetString("dialog_importOptions_srsFromFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The file names its coordinate system, so that one is used..
+        /// </summary>
+        public static string dialog_importOptions_srsFromFileHint {
+            get {
+                return ResourceManager.GetString("dialog_importOptions_srsFromFileHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No points were found in the data..
+        /// </summary>
+        public static string dialog_importOptions_validationNoPoints {
+            get {
+                return ResourceManager.GetString("dialog_importOptions_validationNoPoints", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste the data first..
+        /// </summary>
+        public static string dialog_importOptions_validationNoText {
+            get {
+                return ResourceManager.GetString("dialog_importOptions_validationNoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The data could not be read as {0}. Choose another format or check the data..
+        /// </summary>
+        public static string dialog_importOptions_validationUnreadable {
+            get {
+                return ResourceManager.GetString("dialog_importOptions_validationUnreadable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The coordinates look like longitude/latitude in degrees, not metres. Check the coordinate system..
+        /// </summary>
+        public static string dialog_importOptions_warnLooksLikeDegrees {
+            get {
+                return ResourceManager.GetString("dialog_importOptions_warnLooksLikeDegrees", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Point {0} (X = {1}, Y = {2}) is outside the longitude/latitude range. Check the coordinate system or the X/Y order..
+        /// </summary>
+        public static string dialog_importOptions_warnNotDegrees {
+            get {
+                return ResourceManager.GetString("dialog_importOptions_warnNotDegrees", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Point {0} (X = {1}, Y = {2}) is outside the usual range of this coordinate system. Check the coordinate system or the X/Y order..
+        /// </summary>
+        public static string dialog_importOptions_warnOutsideRange {
+            get {
+                return ResourceManager.GetString("dialog_importOptions_warnOutsideRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Layer Settings.
         /// </summary>
         public static string dialog_layerSettings_title {

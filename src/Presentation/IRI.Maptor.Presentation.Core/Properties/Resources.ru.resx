@@ -3172,4 +3172,52 @@
   <data name="dialog_goto_formatDms" xml:space="preserve">
     <value>Градусы, минуты, секунды</value>
   </data>
+  <data name="dialog_importOptions_pasteTitle" xml:space="preserve">
+    <value>Вставка данных</value>
+  </data>
+  <data name="dialog_importOptions_pastedText" xml:space="preserve">
+    <value>Вставленный текст</value>
+  </data>
+  <data name="dialog_importOptions_format" xml:space="preserve">
+    <value>Формат</value>
+  </data>
+  <data name="dialog_importOptions_pasteWatermark" xml:space="preserve">
+    <value>Вставьте сюда текст GeoJSON, TopoJSON, Esri JSON, CSV или TSV. Формат определяется по тексту.</value>
+  </data>
+  <data name="dialog_importOptions_srsFromFile" xml:space="preserve">
+    <value>Из файла (EPSG:{0})</value>
+  </data>
+  <data name="dialog_importOptions_srsFromFileHint" xml:space="preserve">
+    <value>В файле указана его система координат, поэтому используется она.</value>
+  </data>
+  <data name="dialog_importOptions_preview" xml:space="preserve">
+    <value>Предпросмотр (первые 50 точек)</value>
+  </data>
+  <data name="dialog_importOptions_extentHint" xml:space="preserve">
+    <value>Здесь shapefile не читается целиком: в предпросмотре показаны два угла его охвата.</value>
+  </data>
+  <data name="dialog_importOptions_columnLongitude" xml:space="preserve">
+    <value>Долгота</value>
+  </data>
+  <data name="dialog_importOptions_columnLatitude" xml:space="preserve">
+    <value>Широта</value>
+  </data>
+  <data name="dialog_importOptions_warnNotDegrees" xml:space="preserve">
+    <value>Точка {0} (X = {1}, Y = {2}) вне диапазона долготы/широты. Проверьте систему координат или порядок X/Y.</value>
+  </data>
+  <data name="dialog_importOptions_warnLooksLikeDegrees" xml:space="preserve">
+    <value>Координаты похожи на долготу/широту в градусах, а не на метры. Проверьте систему координат.</value>
+  </data>
+  <data name="dialog_importOptions_warnOutsideRange" xml:space="preserve">
+    <value>Точка {0} (X = {1}, Y = {2}) вне обычного диапазона этой системы координат. Проверьте систему координат или порядок X/Y.</value>
+  </data>
+  <data name="dialog_importOptions_validationUnreadable" xml:space="preserve">
+    <value>Не удалось прочитать данные как {0}. Выберите другой формат или проверьте данные.</value>
+  </data>
+  <data name="dialog_importOptions_validationNoText" xml:space="preserve">
+    <value>Сначала вставьте данные.</value>
+  </data>
+  <data name="dialog_importOptions_validationNoPoints" xml:space="preserve">
+    <value>В данных не найдено ни одной точки.</value>
+  </data>
 </root>

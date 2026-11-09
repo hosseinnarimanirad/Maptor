@@ -140,4 +140,15 @@ public interface IDialogService
     // ********************************************************************
     Task<GeoJsonTopoJsonOptions?> ShowGeoJsonTopoJsonOpenDialogAsync(object? ownerWindow = null, bool isGeoJson = true, int? initialSrid = null);
 
+    // ********************************************************************
+    //                          Import Options Dialog
+    // ********************************************************************
+
+    /// <summary>
+    /// The one options dialog for formats that cannot be added from the file alone (CRS and format options,
+    /// preview of the first 50 points). Pass the chosen file and its detected kind, or null for both to paste text.
+    /// </summary>
+    /// <returns>The options, or null when the user cancels.</returns>
+    Task<ImportOptions?> ShowImportOptionsDialogAsync(DataSourceKind? kind, string? filePath, object? ownerWindow = null);
+
 }

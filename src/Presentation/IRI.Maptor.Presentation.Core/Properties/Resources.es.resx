@@ -3172,4 +3172,52 @@
   <data name="dialog_goto_formatDms" xml:space="preserve">
     <value>Grados, minutos, segundos</value>
   </data>
+  <data name="dialog_importOptions_pasteTitle" xml:space="preserve">
+    <value>Pegar datos</value>
+  </data>
+  <data name="dialog_importOptions_pastedText" xml:space="preserve">
+    <value>Texto pegado</value>
+  </data>
+  <data name="dialog_importOptions_format" xml:space="preserve">
+    <value>Formato</value>
+  </data>
+  <data name="dialog_importOptions_pasteWatermark" xml:space="preserve">
+    <value>Pegue aquí texto GeoJSON, TopoJSON, Esri JSON, CSV o TSV. El formato se detecta a partir del texto.</value>
+  </data>
+  <data name="dialog_importOptions_srsFromFile" xml:space="preserve">
+    <value>Del archivo (EPSG:{0})</value>
+  </data>
+  <data name="dialog_importOptions_srsFromFileHint" xml:space="preserve">
+    <value>El archivo indica su sistema de coordenadas, por lo que se usa ese.</value>
+  </data>
+  <data name="dialog_importOptions_preview" xml:space="preserve">
+    <value>Vista previa (primeros 50 puntos)</value>
+  </data>
+  <data name="dialog_importOptions_extentHint" xml:space="preserve">
+    <value>Aquí el shapefile no se lee completo: la vista previa muestra las dos esquinas de su extensión.</value>
+  </data>
+  <data name="dialog_importOptions_columnLongitude" xml:space="preserve">
+    <value>Longitud</value>
+  </data>
+  <data name="dialog_importOptions_columnLatitude" xml:space="preserve">
+    <value>Latitud</value>
+  </data>
+  <data name="dialog_importOptions_warnNotDegrees" xml:space="preserve">
+    <value>El punto {0} (X = {1}, Y = {2}) está fuera del rango de longitud/latitud. Compruebe el sistema de coordenadas o el orden X/Y.</value>
+  </data>
+  <data name="dialog_importOptions_warnLooksLikeDegrees" xml:space="preserve">
+    <value>Las coordenadas parecen longitud/latitud en grados, no metros. Compruebe el sistema de coordenadas.</value>
+  </data>
+  <data name="dialog_importOptions_warnOutsideRange" xml:space="preserve">
+    <value>El punto {0} (X = {1}, Y = {2}) está fuera del rango habitual de este sistema de coordenadas. Compruebe el sistema de coordenadas o el orden X/Y.</value>
+  </data>
+  <data name="dialog_importOptions_validationUnreadable" xml:space="preserve">
+    <value>No se pudieron leer los datos como {0}. Elija otro formato o revise los datos.</value>
+  </data>
+  <data name="dialog_importOptions_validationNoText" xml:space="preserve">
+    <value>Pegue primero los datos.</value>
+  </data>
+  <data name="dialog_importOptions_validationNoPoints" xml:space="preserve">
+    <value>No se encontraron puntos en los datos.</value>
+  </data>
 </root>

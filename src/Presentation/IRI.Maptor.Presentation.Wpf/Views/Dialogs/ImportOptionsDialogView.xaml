@@ -1,0 +1,347 @@
+<mahApp:MetroWindow x:Class="IRI.Maptor.Presentation.Wpf.Controls.Dialogs.ImportOptionsDialogView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:helpers="clr-namespace:IRI.Maptor.Presentation.Wpf.Helpers"
+    xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
+    xmlns:dialogs="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls.Dialogs"
+    xmlns:maptorEnums="clr-namespace:IRI.Maptor.Core.Common.Enums;assembly=IRI.Maptor.Core.Common"
+
+    Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Dialog}"
+    Title="{Binding Title}"
+    SizeToContent="Manual" ResizeMode="CanResizeWithGrip"
+    Width="600" Height="720" MinWidth="520" MinHeight="520" MaxWidth="1000"
+    WindowStartupLocation="CenterOwner">
+
+    <mahApp:MetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+        </ResourceDictionary>
+    </mahApp:MetroWindow.Resources>
+
+    <Grid Margin="{StaticResource IRI.Maptor.Styles.Thickness.DialogContent}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Source: file name (or "Pasted text") and its format. The format can be changed when more than one fits. -->
+        <Border Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <iconPacks:PackIconMaterial Kind="FileOutline" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.FieldAdornment}"
+                                            Visibility="{Binding IsPasteMode, Converter={StaticResource boolToInverseVisibilityConverter}}"/>
+                <iconPacks:PackIconMaterial Kind="ClipboardTextOutline" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.FieldAdornment}"
+                                            Visibility="{Binding IsPasteMode, Converter={StaticResource boolToVisibilityConverter}}"/>
+
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="4,0" TextTrimming="CharacterEllipsis"
+                           Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldValue}"
+                           Text="{Binding FileName}" ToolTip="{Binding FilePath}" FlowDirection="LeftToRight" HorizontalAlignment="Left"
+                           Visibility="{Binding IsPasteMode, Converter={StaticResource boolToInverseVisibilityConverter}}"/>
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="4,0"
+                           Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldValue}"
+                           Text="{Binding [dialog_importOptions_pastedText], Source={StaticResource Localization}}"
+                           Visibility="{Binding IsPasteMode, Converter={StaticResource boolToVisibilityConverter}}"/>
+
+                <ComboBox Grid.Column="2" MinWidth="130"
+                          ItemsSource="{Binding AvailableKinds}"
+                          DisplayMemberPath="DisplayName"
+                          SelectedItem="{Binding SelectedKindOption, Mode=TwoWay}"
+                          Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}"
+                          ToolTip="{Binding [dialog_importOptions_format], Source={StaticResource Localization}}"
+                          AutomationProperties.Name="{Binding [dialog_importOptions_format], Source={StaticResource Localization}}"
+                          Visibility="{Binding CanChooseKind, Converter={StaticResource boolToVisibilityConverter}}"/>
+                <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="8,0" FontWeight="Bold"
+                           Text="{Binding FormatName}"
+                           Visibility="{Binding CanChooseKind, Converter={StaticResource boolToInverseVisibilityConverter}}"/>
+            </Grid>
+        </Border>
+
+        <!-- Spatial reference -->
+        <Border Grid.Row="1" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="32"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <iconPacks:PackIconPhosphorIcons Kind="Globe" Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}"/>
+                    <ComboBox Grid.Column="1"
+                              ItemsSource="{Binding AvailableSrsOptions}"
+                              DisplayMemberPath="DisplayName"
+                              IsEnabled="{Binding CanUserChooseSrs}"
+                              Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}"
+                              SelectedItem="{Binding SelectedSrsOption, Mode=TwoWay}"/>
+                </Grid>
+                <TextBlock Margin="36,4,4,0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldHint}"
+                           Text="{Binding [dialog_importOptions_srsFromFileHint], Source={StaticResource Localization}}"
+                           Visibility="{Binding CanUserChooseSrs, Converter={StaticResource boolToInverseVisibilityConverter}}"/>
+            </StackPanel>
+        </Border>
+
+        <!-- UTM zone (when UTM is selected) -->
+        <Border Grid.Row="2" Style="{StaticResource IRI.Maptor.Styles.Border.Card}"
+                Visibility="{Binding IsUtmSelected, Converter={StaticResource boolToVisibilityConverter}}"
+                IsEnabled="{Binding CanUserChooseSrs}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <iconPacks:PackIconPhosphorIcons Kind="MapTrifoldFill" Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}"/>
+                <mahApp:NumericUpDown Grid.Column="1" Minimum="1" Maximum="60"
+                                      mahApp:ControlsHelper.CornerRadius="4"
+                                      Value="{Binding UtmZone, Mode=TwoWay}"
+                                      Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Normal}"/>
+                <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="8,2,4,0">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Text" Value="{Binding [srs_northernHemisphere], Source={StaticResource Localization}}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsNorthHemisphere}" Value="False">
+                                    <Setter Property="Text" Value="{Binding [srs_southernHemisphere], Source={StaticResource Localization}}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <ToggleButton Grid.Column="3" IsChecked="{Binding IsNorthHemisphere, Mode=TwoWay}"
+                              Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" FlowDirection="LeftToRight"
+                              ToolTip="{Binding [dialog_dxfOpen_hemisphereTooltip], Source={StaticResource Localization}}"
+                              AutomationProperties.Name="{Binding [dialog_dxfOpen_hemisphereTooltip], Source={StaticResource Localization}}">
+                    <iconPacks:PackIconPhosphorIcons Kind="CircleHalfFill" RenderTransformOrigin="0.5,0.5"
+                                                     Margin="0" Width="24" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <iconPacks:PackIconPhosphorIcons.Style>
+                            <Style TargetType="iconPacks:PackIconPhosphorIcons" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}">
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsNorthHemisphere}" Value="False">
+                                        <Setter Property="RenderTransform">
+                                            <Setter.Value>
+                                                <RotateTransform Angle="90"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </iconPacks:PackIconPhosphorIcons.Style>
+                    </iconPacks:PackIconPhosphorIcons>
+                </ToggleButton>
+            </Grid>
+        </Border>
+
+        <!-- X/Y order and pretty JSON (GeoJSON, CSV/TSV; pretty JSON only for pasted JSON) -->
+        <Border Grid.Row="3" Style="{StaticResource IRI.Maptor.Styles.Border.Card}"
+                Visibility="{Binding ShowsOrderOptions, Converter={StaticResource boolToVisibilityConverter}}">
+            <DockPanel>
+                <iconPacks:PackIconPhosphorIcons DockPanel.Dock="Left" Kind="ListNumbers" Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}"/>
+
+                <ToggleButton DockPanel.Dock="Right" IsChecked="{Binding IsPrettyJson, Mode=TwoWay}"
+                              Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" FlowDirection="LeftToRight"
+                              ToolTip="{Binding [dialog_common_formatJson], Source={StaticResource Localization}}"
+                              AutomationProperties.Name="{Binding [dialog_common_formatJson], Source={StaticResource Localization}}"
+                              Visibility="{Binding ShowsPrettyJson, Converter={StaticResource boolToVisibilityConverter}}">
+                    <iconPacks:PackIconMaterial Kind="FileTree" Margin="0" Width="24" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </ToggleButton>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
+                            Visibility="{Binding ShowsLongitudeFirst, Converter={StaticResource boolToVisibilityConverter}}">
+                    <TextBlock Text="{Binding [dialog_common_xyOrder], Source={StaticResource Localization}}"
+                               VerticalAlignment="Center" Margin="8,0" FontWeight="Bold"/>
+                    <CheckBox Content="{Binding [dialog_common_eastingFirst], Source={StaticResource Localization}}"
+                              Style="{StaticResource IRI.Maptor.Styles.CheckBox.Normal}"
+                              IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- CSV/TSV: what the points make, and the header line -->
+        <Border Grid.Row="4" Style="{StaticResource IRI.Maptor.Styles.Border.Card}"
+                Visibility="{Binding ShowsDelimitedOptions, Converter={StaticResource boolToVisibilityConverter}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <iconPacks:PackIconPhosphorIcons Kind="ShapesLight" Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}"
+                                                 ToolTip="{Binding [dialog_csvTsvOpen_geometryType], Source={StaticResource Localization}}"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <RadioButton GroupName="ImportGeometry" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
+                                 IsChecked="{Binding SelectedGeometryMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorEnums:GeometryType.Polygon}}"
+                                 ToolTip="{Binding [common_geometryType_polygon], Source={StaticResource Localization}}"
+                                 AutomationProperties.Name="{Binding [common_geometryType_polygon], Source={StaticResource Localization}}">
+                        <iconPacks:PackIconPhosphorIcons Kind="Polygon"/>
+                    </RadioButton>
+                    <RadioButton GroupName="ImportGeometry" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
+                                 IsChecked="{Binding SelectedGeometryMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorEnums:GeometryType.LineString}}"
+                                 ToolTip="{Binding [common_geometryType_polyline], Source={StaticResource Localization}}"
+                                 AutomationProperties.Name="{Binding [common_geometryType_polyline], Source={StaticResource Localization}}">
+                        <iconPacks:PackIconPhosphorIcons Kind="LineSegments"/>
+                    </RadioButton>
+                    <RadioButton GroupName="ImportGeometry" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
+                                 IsChecked="{Binding SelectedGeometryMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorEnums:GeometryType.Point}}"
+                                 ToolTip="{Binding [common_geometryType_point], Source={StaticResource Localization}}"
+                                 AutomationProperties.Name="{Binding [common_geometryType_point], Source={StaticResource Localization}}">
+                        <Viewbox>
+                            <iconPacks:PackIconPhosphorIcons Kind="DotOutlineThin" Margin="20" Padding="0"/>
+                        </Viewbox>
+                    </RadioButton>
+                </StackPanel>
+                <CheckBox Grid.Column="3" VerticalAlignment="Center"
+                          Content="{Binding [dialog_csvTsvOpen_useFirstLineAsHeader], Source={StaticResource Localization}}"
+                          Style="{StaticResource IRI.Maptor.Styles.CheckBox.Normal}"
+                          IsChecked="{Binding UseFirstLineAsHeader, Mode=TwoWay}"/>
+            </Grid>
+        </Border>
+
+        <!-- Data: the pasted text (editable) or a CSV/TSV file's first lines (read-only) above the preview of the first points -->
+        <Grid Grid.Row="5">
+            <Grid.RowDefinitions>
+                <RowDefinition>
+                    <RowDefinition.Style>
+                        <Style TargetType="RowDefinition">
+                            <Setter Property="Height" Value="0"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ShowsText}" Value="True">
+                                    <Setter Property="Height" Value="*"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </RowDefinition.Style>
+                </RowDefinition>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBox x:Name="dataTextBox" Grid.Row="0" Margin="4,0" MinHeight="80"
+                     Background="Transparent"
+                     Style="{StaticResource IRI.Maptor.Styles.TextBox}"
+                     Text="{Binding RawText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                     TextWrapping="NoWrap" AcceptsReturn="True" AcceptsTab="True"
+                     VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                     FontFamily="Consolas" FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"
+                     Padding="4" FlowDirection="LeftToRight"
+                     IsReadOnly="{Binding IsTextReadOnly}"
+                     Visibility="{Binding ShowsText, Converter={StaticResource boolToVisibilityConverter}}"/>
+
+            <!-- Watermark outside the LTR box so it follows the app direction (RTL in Persian). -->
+            <TextBlock Grid.Row="0" Margin="12,8" IsHitTestVisible="False"
+                       HorizontalAlignment="Stretch" VerticalAlignment="Top" TextWrapping="Wrap"
+                       Opacity="0.6" FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"
+                       Text="{Binding [dialog_importOptions_pasteWatermark], Source={StaticResource Localization}}">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsPasteMode}" Value="True"/>
+                                    <Condition Binding="{Binding Text, ElementName=dataTextBox}" Value=""/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+            <StackPanel Grid.Row="1">
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}"
+                           Text="{Binding [dialog_importOptions_preview], Source={StaticResource Localization}}"/>
+                <TextBlock Margin="4,0,4,4" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldHint}"
+                           Text="{Binding PreviewHint}"
+                           Visibility="{Binding PreviewHint, Converter={StaticResource stringNotNullOrEmptyToVisibilityConverter}}"/>
+            </StackPanel>
+
+            <Grid Grid.Row="2" Margin="4,0,4,8">
+                <DataGrid ItemsSource="{Binding SamplePoints}"
+                          IsReadOnly="True"
+                          AutoGenerateColumns="False"
+                          MinHeight="100"
+                          HeadersVisibility="Column"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="False"
+                          CanUserReorderColumns="False"
+                          SelectionMode="Single"
+                          GridLinesVisibility="Horizontal"
+                          FlowDirection="LeftToRight"
+                          BorderBrush="{DynamicResource MahApps.Brushes.Gray7}"
+                          BorderThickness="1"
+                          FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Small}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Index}" Width="40">
+                            <DataGridTextColumn.Header>
+                                <TextBlock Text="{Binding [dialog_dxfOpen_columnIndex], Source={StaticResource Localization}}"/>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding X, StringFormat=N6}" Width="*">
+                            <DataGridTextColumn.Header>
+                                <TextBlock Text="{Binding [dialog_dxfOpen_columnX], Source={StaticResource Localization}}"/>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Y, StringFormat=N6}" Width="*">
+                            <DataGridTextColumn.Header>
+                                <TextBlock Text="{Binding [dialog_dxfOpen_columnY], Source={StaticResource Localization}}"/>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Longitude, StringFormat=N6}" Width="*">
+                            <DataGridTextColumn.Header>
+                                <TextBlock Text="{Binding [dialog_importOptions_columnLongitude], Source={StaticResource Localization}}"/>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Latitude, StringFormat=N6}" Width="*">
+                            <DataGridTextColumn.Header>
+                                <TextBlock Text="{Binding [dialog_importOptions_columnLatitude], Source={StaticResource Localization}}"/>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <mahApp:ProgressRing Width="32" Height="32" IsActive="{Binding IsLoading}"
+                                     Visibility="{Binding IsLoading, Converter={StaticResource boolToVisibilityConverter}}"/>
+            </Grid>
+        </Grid>
+
+        <!-- The coordinates may not be in the chosen CRS: a hint, Open stays enabled. -->
+        <Border Grid.Row="6" Style="{StaticResource IRI.Maptor.Styles.Border.Banner.Warning}" Margin="4,0,4,4"
+                Visibility="{Binding CoordinateWarning, Converter={StaticResource stringNotNullOrEmptyToVisibilityConverter}}">
+            <DockPanel>
+                <iconPacks:PackIconMaterial DockPanel.Dock="Left" Kind="AlertOutline" Width="16" Height="16" Margin="0,0,8,0"
+                                            VerticalAlignment="Top" Foreground="{DynamicResource IRI.Maptor.Brushes.Warning}"/>
+                <TextBlock Text="{Binding CoordinateWarning}" TextWrapping="Wrap"
+                           Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldValue}"/>
+            </DockPanel>
+        </Border>
+
+        <dialogs:DialogFooterView Grid.Row="7"
+                                  StatusText="{Binding ValidationMessage}"
+                                  SecondaryText="{Binding [dialog_common_cancel], Source={StaticResource Localization}}"
+                                  SecondaryCommand="{Binding CancelCommand}"
+                                  PrimaryText="{Binding [common_open], Source={StaticResource Localization}}"
+                                  PrimaryIconKind="FolderOpen"
+                                  PrimaryCommand="{Binding OpenCommand}"/>
+    </Grid>
+</mahApp:MetroWindow>

@@ -3172,4 +3172,52 @@
   <data name="dialog_goto_formatDms" xml:space="preserve">
     <value>Derece, dakika, saniye</value>
   </data>
+  <data name="dialog_importOptions_pasteTitle" xml:space="preserve">
+    <value>Veri yapıştır</value>
+  </data>
+  <data name="dialog_importOptions_pastedText" xml:space="preserve">
+    <value>Yapıştırılan metin</value>
+  </data>
+  <data name="dialog_importOptions_format" xml:space="preserve">
+    <value>Biçim</value>
+  </data>
+  <data name="dialog_importOptions_pasteWatermark" xml:space="preserve">
+    <value>GeoJSON, TopoJSON, Esri JSON, CSV veya TSV metnini buraya yapıştırın. Biçim metinden algılanır.</value>
+  </data>
+  <data name="dialog_importOptions_srsFromFile" xml:space="preserve">
+    <value>Dosyadan (EPSG:{0})</value>
+  </data>
+  <data name="dialog_importOptions_srsFromFileHint" xml:space="preserve">
+    <value>Dosya kendi koordinat sistemini belirtiyor, bu yüzden o kullanılır.</value>
+  </data>
+  <data name="dialog_importOptions_preview" xml:space="preserve">
+    <value>Önizleme (ilk 50 nokta)</value>
+  </data>
+  <data name="dialog_importOptions_extentHint" xml:space="preserve">
+    <value>Shapefile burada tamamen okunmaz: önizleme, kapsamının iki köşesini gösterir.</value>
+  </data>
+  <data name="dialog_importOptions_columnLongitude" xml:space="preserve">
+    <value>Boylam</value>
+  </data>
+  <data name="dialog_importOptions_columnLatitude" xml:space="preserve">
+    <value>Enlem</value>
+  </data>
+  <data name="dialog_importOptions_warnNotDegrees" xml:space="preserve">
+    <value>{0}. nokta (X = {1}, Y = {2}) boylam/enlem aralığının dışında. Koordinat sistemini veya X/Y sırasını kontrol edin.</value>
+  </data>
+  <data name="dialog_importOptions_warnLooksLikeDegrees" xml:space="preserve">
+    <value>Koordinatlar metre değil, derece cinsinden boylam/enlem gibi görünüyor. Koordinat sistemini kontrol edin.</value>
+  </data>
+  <data name="dialog_importOptions_warnOutsideRange" xml:space="preserve">
+    <value>{0}. nokta (X = {1}, Y = {2}) bu koordinat sisteminin olağan aralığının dışında. Koordinat sistemini veya X/Y sırasını kontrol edin.</value>
+  </data>
+  <data name="dialog_importOptions_validationUnreadable" xml:space="preserve">
+    <value>Veriler {0} olarak okunamadı. Başka bir biçim seçin veya verileri kontrol edin.</value>
+  </data>
+  <data name="dialog_importOptions_validationNoText" xml:space="preserve">
+    <value>Önce verileri yapıştırın.</value>
+  </data>
+  <data name="dialog_importOptions_validationNoPoints" xml:space="preserve">
+    <value>Verilerde hiç nokta bulunamadı.</value>
+  </data>
 </root>
