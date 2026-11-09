@@ -3247,4 +3247,22 @@
   <data name="cmd_legend_pasteData" xml:space="preserve">
     <value>Colar dados</value>
   </data>
+  <data name="identify_geometry_area" xml:space="preserve">
+    <value>Área</value>
+  </data>
+  <data name="identify_geometry_length" xml:space="preserve">
+    <value>Comprimento</value>
+  </data>
+  <data name="identify_geometry_perimeter" xml:space="preserve">
+    <value>Perímetro</value>
+  </data>
+  <data name="identify_geometry_points" xml:space="preserve">
+    <value>Pontos</value>
+  </data>
+  <data name="identify_geometry_parts" xml:space="preserve">
+    <value>Partes</value>
+  </data>
+  <data name="identify_geometry_holes" xml:space="preserve">
+    <value>Furos</value>
+  </data>
 </root>

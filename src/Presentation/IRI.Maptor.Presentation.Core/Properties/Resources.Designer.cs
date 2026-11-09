@@ -3832,6 +3832,60 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Area.
+        /// </summary>
+        public static string identify_geometry_area {
+            get {
+                return ResourceManager.GetString("identify_geometry_area", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Length.
+        /// </summary>
+        public static string identify_geometry_length {
+            get {
+                return ResourceManager.GetString("identify_geometry_length", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Perimeter.
+        /// </summary>
+        public static string identify_geometry_perimeter {
+            get {
+                return ResourceManager.GetString("identify_geometry_perimeter", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Points.
+        /// </summary>
+        public static string identify_geometry_points {
+            get {
+                return ResourceManager.GetString("identify_geometry_points", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Parts.
+        /// </summary>
+        public static string identify_geometry_parts {
+            get {
+                return ResourceManager.GetString("identify_geometry_parts", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Holes.
+        /// </summary>
+        public static string identify_geometry_holes {
+            get {
+                return ResourceManager.GetString("identify_geometry_holes", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Show password.
         /// </summary>
         public static string common_showPassword {

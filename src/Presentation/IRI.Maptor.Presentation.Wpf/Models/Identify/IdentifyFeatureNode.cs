@@ -81,6 +81,24 @@ public class IdentifyFeatureNode : Notifier, IIdentifyNode
     /// <summary>Built lazily; identify result sets are small, so this is cheap and keeps construction light.</summary>
     public IReadOnlyList<IdentifyAttributeRow> Attributes => _attributes ??= IdentifyAttributeHelper.BuildRows(Feature, _fields);
 
+    private bool _isGeometrySummaryBuilt;
+    private IdentifyGeometrySummary? _geometrySummary;
+
+    /// <summary>Length/area/perimeter and point/part/hole counts; null for an empty geometry. Built on first use.</summary>
+    public IdentifyGeometrySummary? GeometrySummary
+    {
+        get
+        {
+            if (!_isGeometrySummaryBuilt)
+            {
+                _geometrySummary = IdentifyGeometrySummary.Create(Feature.TheGeometry);
+                _isGeometrySummaryBuilt = true;
+            }
+
+            return _geometrySummary;
+        }
+    }
+
 
     private bool _isSelected;
     public bool IsSelected

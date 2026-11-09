@@ -21,7 +21,7 @@ public static class UnitHelper
         }
         else
         {
-            return string.Format(CultureInfo.InvariantCulture, "{0:N1} Km", length / 1E3);
+            return string.Format(CultureInfo.InvariantCulture, "{0:N1} km", length / 1E3);
         }
         //else
         //{
@@ -37,7 +37,7 @@ public static class UnitHelper
         }
         else
         {
-            return string.Format(CultureInfo.InvariantCulture, "{0:N1} Km\xB2", area / 1E6);
+            return string.Format(CultureInfo.InvariantCulture, "{0:N1} km\xB2", area / 1E6);
         }
     }
 

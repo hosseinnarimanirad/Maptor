@@ -3247,4 +3247,22 @@
   <data name="cmd_legend_pasteData" xml:space="preserve">
     <value>Տեղադրել տվյալներ</value>
   </data>
+  <data name="identify_geometry_area" xml:space="preserve">
+    <value>Մակերես</value>
+  </data>
+  <data name="identify_geometry_length" xml:space="preserve">
+    <value>Երկարություն</value>
+  </data>
+  <data name="identify_geometry_perimeter" xml:space="preserve">
+    <value>Պարագիծ</value>
+  </data>
+  <data name="identify_geometry_points" xml:space="preserve">
+    <value>Կետեր</value>
+  </data>
+  <data name="identify_geometry_parts" xml:space="preserve">
+    <value>Մասեր</value>
+  </data>
+  <data name="identify_geometry_holes" xml:space="preserve">
+    <value>Անցքեր</value>
+  </data>
 </root>

@@ -4218,4 +4218,22 @@
   <data name="cmd_legend_pasteData" xml:space="preserve">
     <value>جایگذاری داده</value>
   </data>
+  <data name="identify_geometry_area" xml:space="preserve">
+    <value>مساحت</value>
+  </data>
+  <data name="identify_geometry_length" xml:space="preserve">
+    <value>طول</value>
+  </data>
+  <data name="identify_geometry_perimeter" xml:space="preserve">
+    <value>محیط</value>
+  </data>
+  <data name="identify_geometry_points" xml:space="preserve">
+    <value>نقاط</value>
+  </data>
+  <data name="identify_geometry_parts" xml:space="preserve">
+    <value>بخش‌ها</value>
+  </data>
+  <data name="identify_geometry_holes" xml:space="preserve">
+    <value>حفره‌ها</value>
+  </data>
 </root>

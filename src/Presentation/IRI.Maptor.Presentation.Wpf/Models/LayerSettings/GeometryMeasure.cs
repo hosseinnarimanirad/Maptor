@@ -93,7 +93,8 @@ public static class GeometryMeasure
         }
     }
 
-    private static Geometry<Point>? ToGeodeticWgs84(Geometry<Point> geometry)
+    /// <summary>The geometry in geodetic WGS84; null when its SRID cannot be brought there. Throws on a broken geometry.</summary>
+    internal static Geometry<Point>? ToGeodeticWgs84(Geometry<Point> geometry)
     {
         switch (geometry.Srid)
         {

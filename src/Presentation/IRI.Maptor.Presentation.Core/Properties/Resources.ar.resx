@@ -3247,4 +3247,22 @@
   <data name="cmd_legend_pasteData" xml:space="preserve">
     <value>لصق البيانات</value>
   </data>
+  <data name="identify_geometry_area" xml:space="preserve">
+    <value>المساحة</value>
+  </data>
+  <data name="identify_geometry_length" xml:space="preserve">
+    <value>الطول</value>
+  </data>
+  <data name="identify_geometry_perimeter" xml:space="preserve">
+    <value>المحيط</value>
+  </data>
+  <data name="identify_geometry_points" xml:space="preserve">
+    <value>النقاط</value>
+  </data>
+  <data name="identify_geometry_parts" xml:space="preserve">
+    <value>الأجزاء</value>
+  </data>
+  <data name="identify_geometry_holes" xml:space="preserve">
+    <value>الثقوب</value>
+  </data>
 </root>

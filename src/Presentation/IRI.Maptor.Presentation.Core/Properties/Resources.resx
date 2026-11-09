@@ -4314,4 +4314,22 @@
   <data name="cmd_legend_pasteData" xml:space="preserve">
     <value>Paste data</value>
   </data>
+  <data name="identify_geometry_area" xml:space="preserve">
+    <value>Area</value>
+  </data>
+  <data name="identify_geometry_length" xml:space="preserve">
+    <value>Length</value>
+  </data>
+  <data name="identify_geometry_perimeter" xml:space="preserve">
+    <value>Perimeter</value>
+  </data>
+  <data name="identify_geometry_points" xml:space="preserve">
+    <value>Points</value>
+  </data>
+  <data name="identify_geometry_parts" xml:space="preserve">
+    <value>Parts</value>
+  </data>
+  <data name="identify_geometry_holes" xml:space="preserve">
+    <value>Holes</value>
+  </data>
 </root>

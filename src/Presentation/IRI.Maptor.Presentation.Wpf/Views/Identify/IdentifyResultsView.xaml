@@ -195,6 +195,24 @@
             </Style>
 
             <Style x:Key="toolbarIcon" TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
+
+            <!--geometry strip: "name: value" pairs that wrap; the name is muted, the value follows the
+                reading direction's leading side but is itself LTR (Latin digits and units)-->
+            <Style x:Key="geometryFact" TargetType="StackPanel">
+                <Setter Property="Orientation" Value="Horizontal"/>
+                <Setter Property="Margin" Value="0,2,16,2"/>
+            </Style>
+
+            <Style x:Key="geometryFactName" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="0,0,4,0"/>
+            </Style>
+
+            <Style x:Key="geometryFactValue" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}">
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="FlowDirection" Value="LeftToRight"/>
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -298,9 +316,10 @@
             <Border Grid.Column="2" Style="{StaticResource IRI.Maptor.Styles.Border.Panel}">
                 <Grid>
 
-                    <!--a feature: toolbar, title, attribute table-->
+                    <!--a feature: toolbar, title, geometry strip, attribute table-->
                     <Grid Visibility="{Binding IsFeatureSelected, Converter={StaticResource boolToVisibilityConverter}}">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
@@ -391,7 +410,51 @@
                             </DockPanel>
                         </Border>
 
-                        <DataGrid Grid.Row="1"
+                        <!--geometry strip (IdentifyGeometrySummary): geodesic length / area / perimeter and the
+                            point, part and hole counts; only the facts that apply, nothing for a single point.
+                            The fallback hides it while the path has a null (no summary for an empty geometry).-->
+                        <Border x:Name="geometryStrip"
+                                Grid.Row="1"
+                                DataContext="{Binding SelectedFeature.GeometrySummary}"
+                                BorderThickness="0,0,0,1"
+                                BorderBrush="{DynamicResource MahApps.Brushes.Gray8}"
+                                Padding="8,4"
+                                Visibility="{Binding HasAny, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
+                            <WrapPanel Orientation="Horizontal">
+                                <StackPanel Style="{StaticResource geometryFact}"
+                                            Visibility="{Binding ShowLength, Converter={StaticResource boolToVisibilityConverter}}">
+                                    <TextBlock Style="{StaticResource geometryFactName}" Text="{Binding [identify_geometry_length], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
+                                    <TextBlock Style="{StaticResource geometryFactValue}" Text="{Binding LengthLabel}"/>
+                                </StackPanel>
+                                <StackPanel Style="{StaticResource geometryFact}"
+                                            Visibility="{Binding ShowArea, Converter={StaticResource boolToVisibilityConverter}}">
+                                    <TextBlock Style="{StaticResource geometryFactName}" Text="{Binding [identify_geometry_area], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
+                                    <TextBlock Style="{StaticResource geometryFactValue}" Text="{Binding AreaLabel}"/>
+                                </StackPanel>
+                                <StackPanel Style="{StaticResource geometryFact}"
+                                            Visibility="{Binding ShowPerimeter, Converter={StaticResource boolToVisibilityConverter}}">
+                                    <TextBlock Style="{StaticResource geometryFactName}" Text="{Binding [identify_geometry_perimeter], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
+                                    <TextBlock Style="{StaticResource geometryFactValue}" Text="{Binding PerimeterLabel}"/>
+                                </StackPanel>
+                                <StackPanel Style="{StaticResource geometryFact}"
+                                            Visibility="{Binding ShowPoints, Converter={StaticResource boolToVisibilityConverter}}">
+                                    <TextBlock Style="{StaticResource geometryFactName}" Text="{Binding [identify_geometry_points], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
+                                    <TextBlock Style="{StaticResource geometryFactValue}" Text="{Binding NumberOfPoints, StringFormat='{}{0:N0}'}"/>
+                                </StackPanel>
+                                <StackPanel Style="{StaticResource geometryFact}"
+                                            Visibility="{Binding ShowParts, Converter={StaticResource boolToVisibilityConverter}}">
+                                    <TextBlock Style="{StaticResource geometryFactName}" Text="{Binding [identify_geometry_parts], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
+                                    <TextBlock Style="{StaticResource geometryFactValue}" Text="{Binding NumberOfParts, StringFormat='{}{0:N0}'}"/>
+                                </StackPanel>
+                                <StackPanel Style="{StaticResource geometryFact}"
+                                            Visibility="{Binding ShowHoles, Converter={StaticResource boolToVisibilityConverter}}">
+                                    <TextBlock Style="{StaticResource geometryFactName}" Text="{Binding [identify_geometry_holes], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
+                                    <TextBlock Style="{StaticResource geometryFactValue}" Text="{Binding NumberOfHoles, StringFormat='{}{0:N0}'}"/>
+                                </StackPanel>
+                            </WrapPanel>
+                        </Border>
+
+                        <DataGrid Grid.Row="2"
                                   Style="{StaticResource IRI.Maptor.Styles.DataGrid.ReadOnly}"
                                   RowStyle="{StaticResource compactRow}"
                                   CellStyle="{StaticResource compactCell}"

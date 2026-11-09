@@ -3247,4 +3247,22 @@
   <data name="cmd_legend_pasteData" xml:space="preserve">
     <value>ڈیٹا پیسٹ کریں</value>
   </data>
+  <data name="identify_geometry_area" xml:space="preserve">
+    <value>رقبہ</value>
+  </data>
+  <data name="identify_geometry_length" xml:space="preserve">
+    <value>لمبائی</value>
+  </data>
+  <data name="identify_geometry_perimeter" xml:space="preserve">
+    <value>احاطہ</value>
+  </data>
+  <data name="identify_geometry_points" xml:space="preserve">
+    <value>نقاط</value>
+  </data>
+  <data name="identify_geometry_parts" xml:space="preserve">
+    <value>حصے</value>
+  </data>
+  <data name="identify_geometry_holes" xml:space="preserve">
+    <value>سوراخ</value>
+  </data>
 </root>
