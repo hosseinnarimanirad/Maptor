@@ -2140,7 +2140,43 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Type or paste a position in any common notation: decimal degrees, degrees-minutes-seconds with N/S/E/W, a UTM reading, or a Google Maps / OpenStreetMap link. Persian digits are fine..
+        ///   Looks up a localized string similar to Persian and Eastern Arabic digits (۴۵۶, ٤٥٦) work too..
+        /// </summary>
+        public static string dialog_goto_quickEntryTipFooter {
+            get {
+                return ResourceManager.GetString("dialog_goto_quickEntryTipFooter", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Map link.
+        /// </summary>
+        public static string dialog_goto_quickEntryTipMapLink {
+            get {
+                return ResourceManager.GetString("dialog_goto_quickEntryTipMapLink", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Type or paste a position in one of these forms. Click an example to try it..
+        /// </summary>
+        public static string dialog_goto_quickEntryTipText {
+            get {
+                return ResourceManager.GetString("dialog_goto_quickEntryTipText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to What you can type here.
+        /// </summary>
+        public static string dialog_goto_quickEntryTipTitle {
+            get {
+                return ResourceManager.GetString("dialog_goto_quickEntryTipTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Type or paste coordinates or a map link..
         /// </summary>
         public static string dialog_goto_quickEntryTooltip {
             get {

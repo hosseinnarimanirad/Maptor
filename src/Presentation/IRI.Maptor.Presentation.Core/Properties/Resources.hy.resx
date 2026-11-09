@@ -3151,4 +3151,25 @@
   <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
     <value>Այս երկրաչափությունը հնարավոր չէ խմբագրել, քանի որ այն հնարավոր չէ ուղղել՝ {0}։</value>
   </data>
+  <data name="dialog_goto_quickEntryTooltip" xml:space="preserve">
+    <value>Մուտքագրեք կամ տեղադրեք կոորդինատներ կամ քարտեզի հղում։</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipTitle" xml:space="preserve">
+    <value>Ինչ կարող եք մուտքագրել այստեղ</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipText" xml:space="preserve">
+    <value>Մուտքագրեք կամ տեղադրեք դիրքը այս ձևերից մեկով։ Սեղմեք օրինակի վրա՝ փորձելու համար։</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipMapLink" xml:space="preserve">
+    <value>Քարտեզի հղում</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipFooter" xml:space="preserve">
+    <value>Պարսկական և արևելյան արաբական թվանշանները (۴۵۶, ٤٥٦) նույնպես ընդունվում են։</value>
+  </data>
+  <data name="dialog_goto_formatDecimal" xml:space="preserve">
+    <value>Տասնորդական աստիճաններ</value>
+  </data>
+  <data name="dialog_goto_formatDms" xml:space="preserve">
+    <value>Աստիճան, րոպե, վայրկյան</value>
+  </data>
 </root>

@@ -75,11 +75,11 @@
 
         <DockPanel LastChildFill="True">
             <Button DockPanel.Dock="Right"
-                    Style="{StaticResource IRI.Maptor.Styles.Button.IconSquare}"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                     Command="{Binding CopyCurrentPositionCommand}"
                     ToolTip="{Binding [dialog_mgrs_copyCurrentPosition], Source={StaticResource Localization}}"
                     AutomationProperties.Name="{Binding [dialog_mgrs_copyCurrentPosition], Source={StaticResource Localization}}">
-                <iconPacks:PackIconMaterial Kind="ContentCopy" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}" Margin="0"/>
+                <iconPacks:PackIconMaterial Kind="ContentCopy" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
             </Button>
 
             <StackPanel>

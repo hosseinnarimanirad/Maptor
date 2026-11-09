@@ -7,6 +7,8 @@
              xmlns:globalization="clr-namespace:System.Globalization;assembly=System.Runtime"
              xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
              xmlns:goto="clr-namespace:IRI.Maptor.Presentation.Wpf.Models.GoTo"
+             xmlns:controls="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls"
+             xmlns:models="clr-namespace:IRI.Maptor.Presentation.Wpf.Models"
              x:Name="root"
              NumberSubstitution.Substitution="European">
 
@@ -111,26 +113,52 @@
     <StackPanel>
 
         <!--═══ Quick entry ═══════════════════════════════════════════════════════════════-->
-        <Grid Margin="0,0,0,2" FlowDirection="LeftToRight">
-            <TextBox x:Name="quickEntryBox"
-                     Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En}"
-                     Margin="0" Padding="34,4,8,4"
-                     BorderThickness="1" BorderBrush="{DynamicResource MahApps.Brushes.Gray8}"
-                     Text="{Binding QuickEntryText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     mahApp:TextBoxHelper.ClearTextButton="True"
-                     mahApp:TextBoxHelper.Watermark="{Binding [dialog_goto_quickEntryWatermark], Source={StaticResource Localization}}"
-                     mahApp:TextBoxHelper.WatermarkTrimming="CharacterEllipsis"
-                     mahApp:TextBoxHelper.WatermarkAlignment="Left"
-                     AutomationProperties.Name="{Binding [dialog_goto_quickEntry], Source={StaticResource Localization}}"
-                     ToolTip="{Binding [dialog_goto_quickEntryTooltip], Source={StaticResource Localization}}"/>
-            <!--leading glyph, drawn over the box's left padding-->
-            <iconPacks:PackIconMaterial Kind="MapSearchOutline" FlowDirection="LeftToRight"
-                                        Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.FieldAdornment}"
-                                        Width="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"
-                                        Height="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"
-                                        HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"
-                                        IsHitTestVisible="False"/>
-        </Grid>
+        <!--The box, and at its end edge (follows the UI language) the tip that teaches the
+            accepted forms. Clicking an example fills the box. The tooltip on the box stays one
+            short line; the formats live in the tip, where they can be read and tried.-->
+        <DockPanel Margin="0,0,0,2">
+            <controls:InfoTip DockPanel.Dock="Right" Margin="4,0,0,0" VerticalAlignment="Center"
+                              Title="{Binding [dialog_goto_quickEntryTipTitle], Source={StaticResource Localization}}"
+                              Text="{Binding [dialog_goto_quickEntryTipText], Source={StaticResource Localization}}"
+                              Footer="{Binding [dialog_goto_quickEntryTipFooter], Source={StaticResource Localization}}"
+                              ExampleCommand="{Binding UseQuickEntryExampleCommand}">
+                <!--one example per form CoordinateTextParser reads; every one must parse when clicked
+                    (GoToViewModelTest.QuickEntryTipExamplesAllResolve keeps them honest)-->
+                <controls:InfoTip.Examples>
+                    <models:InfoTipExampleCollection>
+                        <models:InfoTipExample Label="{Binding [dialog_goto_formatDecimal], Source={StaticResource Localization}}"
+                                               Value="35.6892, 51.3890"/>
+                        <models:InfoTipExample Label="{Binding [dialog_goto_formatDms], Source={StaticResource Localization}}"
+                                               Value="35°41′21″N 51°23′20″E"/>
+                        <models:InfoTipExample Label="UTM"
+                                               Value="39N 534123 3950123"/>
+                        <models:InfoTipExample Label="{Binding [dialog_goto_quickEntryTipMapLink], Source={StaticResource Localization}}"
+                                               Value="https://www.google.com/maps/@35.6892,51.389,15z"/>
+                    </models:InfoTipExampleCollection>
+                </controls:InfoTip.Examples>
+            </controls:InfoTip>
+
+            <Grid FlowDirection="LeftToRight">
+                <TextBox x:Name="quickEntryBox"
+                         Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En}"
+                         Margin="0" Padding="34,4,8,4"
+                         BorderThickness="1" BorderBrush="{DynamicResource MahApps.Brushes.Gray8}"
+                         Text="{Binding QuickEntryText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         mahApp:TextBoxHelper.ClearTextButton="True"
+                         mahApp:TextBoxHelper.Watermark="{Binding [dialog_goto_quickEntryWatermark], Source={StaticResource Localization}}"
+                         mahApp:TextBoxHelper.WatermarkTrimming="CharacterEllipsis"
+                         mahApp:TextBoxHelper.WatermarkAlignment="Left"
+                         AutomationProperties.Name="{Binding [dialog_goto_quickEntry], Source={StaticResource Localization}}"
+                         ToolTip="{Binding [dialog_goto_quickEntryTooltip], Source={StaticResource Localization}}"/>
+                <!--leading glyph, drawn over the box's left padding-->
+                <iconPacks:PackIconMaterial Kind="MapSearchOutline" FlowDirection="LeftToRight"
+                                            Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.FieldAdornment}"
+                                            Width="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"
+                                            Height="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"
+                                            HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"
+                                            IsHitTestVisible="False"/>
+            </Grid>
+        </DockPanel>
 
         <!--what the parser made of it: the label follows the UI direction, the reading is its own
             left-to-right element (one string would let bidi reorder the lat, lon pair after Persian text)-->

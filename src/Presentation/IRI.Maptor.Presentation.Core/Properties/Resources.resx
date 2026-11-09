@@ -2393,7 +2393,7 @@
     <value>Paste coordinates — 35.6892, 51.3890 · 35°41′21″N 51°23′20″E · 39N 534123 3950123 · map link</value>
   </data>
   <data name="dialog_goto_quickEntryTooltip" xml:space="preserve">
-    <value>Type or paste a position in any common notation: decimal degrees, degrees-minutes-seconds with N/S/E/W, a UTM reading, or a Google Maps / OpenStreetMap link. Persian digits are fine.</value>
+    <value>Type or paste coordinates or a map link.</value>
   </data>
   <data name="dialog_goto_quickEntryRecognized" xml:space="preserve">
     <value>Recognized:</value>
@@ -4226,5 +4226,17 @@
   </data>
   <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
     <value>This geometry can't be edited because it can't be repaired: {0}.</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipTitle" xml:space="preserve">
+    <value>What you can type here</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipText" xml:space="preserve">
+    <value>Type or paste a position in one of these forms. Click an example to try it.</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipMapLink" xml:space="preserve">
+    <value>Map link</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipFooter" xml:space="preserve">
+    <value>Persian and Eastern Arabic digits (۴۵۶, ٤٥٦) work too.</value>
   </data>
 </root>

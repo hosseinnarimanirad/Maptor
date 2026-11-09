@@ -23,7 +23,8 @@
         <maptor:MgrsGoToView x:Name="mainView" Grid.Row="0"/>
 
         <!--Modeless like the Go To window, so the footer carries the map actions rather than
-            OK/Cancel. Zoom to is the default; Copy is an icon button at the start edge, and puts
+            OK/Cancel. Zoom to is the default; Copy is a round icon button (CircleLight, as in the
+            Go To window) at the start edge, and puts
             the reference on the clipboard in its conventional spacing rather than as typed. There
             is nothing to pan to: a reference names a region, not a point.-->
         <dialogs:DialogFooterView Grid.Row="1"
@@ -33,11 +34,11 @@
                                   PrimaryIconKind="MagnifyExpand"
                                   PrimaryCommand="{Binding ZoomToCommand}">
             <dialogs:DialogFooterView.LeadingContent>
-                <Button Style="{StaticResource IRI.Maptor.Styles.Button.IconSquare}"
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                         Command="{Binding CopyCommand}"
                         ToolTip="{Binding [dialog_mgrs_copy], Source={StaticResource Localization}}"
                         AutomationProperties.Name="{Binding [dialog_mgrs_copy], Source={StaticResource Localization}}">
-                    <iconPacks:PackIconMaterial Kind="ContentCopy" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}" Margin="0"/>
+                    <iconPacks:PackIconMaterial Kind="ContentCopy" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
                 </Button>
             </dialogs:DialogFooterView.LeadingContent>
         </dialogs:DialogFooterView>

@@ -3151,4 +3151,25 @@
   <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
     <value>Cette géométrie ne peut pas être modifiée, car elle ne peut pas être réparée : {0}.</value>
   </data>
+  <data name="dialog_goto_quickEntryTooltip" xml:space="preserve">
+    <value>Saisissez ou collez des coordonnées ou un lien de carte.</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipTitle" xml:space="preserve">
+    <value>Ce que vous pouvez saisir ici</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipText" xml:space="preserve">
+    <value>Saisissez ou collez une position sous l'une de ces formes. Cliquez sur un exemple pour l'essayer.</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipMapLink" xml:space="preserve">
+    <value>Lien de carte</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipFooter" xml:space="preserve">
+    <value>Les chiffres persans et arabes orientaux (۴۵۶, ٤٥٦) sont aussi acceptés.</value>
+  </data>
+  <data name="dialog_goto_formatDecimal" xml:space="preserve">
+    <value>Degrés décimaux</value>
+  </data>
+  <data name="dialog_goto_formatDms" xml:space="preserve">
+    <value>Degrés, minutes, secondes</value>
+  </data>
 </root>

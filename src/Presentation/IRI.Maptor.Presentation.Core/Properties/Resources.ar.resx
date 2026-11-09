@@ -3151,4 +3151,25 @@
   <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
     <value>لا يمكن تحرير هذه الهندسة لأنه لا يمكن إصلاحها: {0}.</value>
   </data>
+  <data name="dialog_goto_quickEntryTooltip" xml:space="preserve">
+    <value>اكتب أو الصق إحداثيات أو رابط خريطة.</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipTitle" xml:space="preserve">
+    <value>ما الذي يمكنك كتابته هنا</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipText" xml:space="preserve">
+    <value>اكتب أو الصق موقعًا بأحد هذه الأشكال. انقر على مثال لتجربته.</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipMapLink" xml:space="preserve">
+    <value>رابط خريطة</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipFooter" xml:space="preserve">
+    <value>الأرقام الفارسية والهندية (۴۵۶، ٤٥٦) مقبولة أيضًا.</value>
+  </data>
+  <data name="dialog_goto_formatDecimal" xml:space="preserve">
+    <value>درجات عشرية</value>
+  </data>
+  <data name="dialog_goto_formatDms" xml:space="preserve">
+    <value>درجات، دقائق، ثوانٍ</value>
+  </data>
 </root>

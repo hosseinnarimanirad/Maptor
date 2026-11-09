@@ -2359,7 +2359,7 @@
     <value>مختصات یا پیوند نقشه را اینجا بچسبانید…</value>
   </data>
   <data name="dialog_goto_quickEntryTooltip" xml:space="preserve">
-    <value>موقعیت را با هر نشانه‌گذاری رایج وارد یا بچسبانید: درجهٔ اعشاری، درجه-دقیقه-ثانیه با N/S/E/W، مختصات UTM، یا پیوند Google Maps / OpenStreetMap. ارقام فارسی هم پذیرفته می‌شود.</value>
+    <value>مختصات یا پیوند نقشه را وارد یا بچسبانید.</value>
   </data>
   <data name="dialog_goto_quickEntryRecognized" xml:space="preserve">
     <value>تشخیص داده شد:</value>
@@ -4130,5 +4130,17 @@
   </data>
   <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
     <value>این هندسه قابل ویرایش نیست، چون قابل اصلاح نیست: {0}.</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipTitle" xml:space="preserve">
+    <value>چه چیزی می‌توانید وارد کنید</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipText" xml:space="preserve">
+    <value>موقعیت را با یکی از این قالب‌ها وارد یا بچسبانید. برای امتحان، روی یک نمونه بزنید.</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipMapLink" xml:space="preserve">
+    <value>پیوند نقشه</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipFooter" xml:space="preserve">
+    <value>ارقام فارسی و عربی (۴۵۶، ٤٥٦) هم پذیرفته می‌شود.</value>
   </data>
 </root>

@@ -3151,4 +3151,25 @@
   <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
     <value>Эту геометрию нельзя редактировать, так как её нельзя исправить: {0}.</value>
   </data>
+  <data name="dialog_goto_quickEntryTooltip" xml:space="preserve">
+    <value>Введите или вставьте координаты или ссылку на карту.</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipTitle" xml:space="preserve">
+    <value>Что можно ввести здесь</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipText" xml:space="preserve">
+    <value>Введите или вставьте положение в одном из этих форматов. Нажмите на пример, чтобы попробовать.</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipMapLink" xml:space="preserve">
+    <value>Ссылка на карту</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipFooter" xml:space="preserve">
+    <value>Также принимаются персидские и восточноарабские цифры (۴۵۶, ٤٥٦).</value>
+  </data>
+  <data name="dialog_goto_formatDecimal" xml:space="preserve">
+    <value>Десятичные градусы</value>
+  </data>
+  <data name="dialog_goto_formatDms" xml:space="preserve">
+    <value>Градусы, минуты, секунды</value>
+  </data>
 </root>

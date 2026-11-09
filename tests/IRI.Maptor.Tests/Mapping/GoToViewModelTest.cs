@@ -572,4 +572,29 @@ public class GoToViewModelTest
 
         Assert.Null(vm.CopyText);
     }
+
+    // ── Quick-entry tip ──────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// The examples the quick-entry InfoTip shows (GoToView.xaml). Clicking one puts it in the box,
+    /// so each must be read by the parser and land on the same spot. Keep in step with the XAML.
+    /// </summary>
+    [Theory]
+    [InlineData("35.6892, 51.3890")]
+    [InlineData("35°41′21″N 51°23′20″E")]
+    [InlineData("39N 534123 3950123")]
+    [InlineData("https://www.google.com/maps/@35.6892,51.389,15z")]
+    public void QuickEntryTipExamplesAllResolve(string example)
+    {
+        var vm = Create();
+
+        Assert.True(vm.UseQuickEntryExampleCommand.CanExecute(example));
+        vm.UseQuickEntryExampleCommand.Execute(example);
+
+        Assert.Equal(example, vm.QuickEntryText);
+        Assert.True(vm.IsQuickEntryRecognized, example);
+
+        // all four name central Tehran; the UTM one is about 1 km west of the others
+        AssertPoint(vm, 35.689, 51.389, 0.02);
+    }
 }

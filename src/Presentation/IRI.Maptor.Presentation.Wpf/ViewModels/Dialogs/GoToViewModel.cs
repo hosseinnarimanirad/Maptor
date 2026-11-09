@@ -1269,6 +1269,14 @@ public class GoToViewModel : Notifier
 
     #region Commands
 
+    private RelayCommand? _useQuickEntryExampleCommand;
+    /// <summary>
+    /// Puts an example (one the quick-entry tip shows) into the quick-entry box, where it is
+    /// resolved exactly like typed or pasted text. The parameter is the example text.
+    /// </summary>
+    public RelayCommand UseQuickEntryExampleCommand => _useQuickEntryExampleCommand ??= new RelayCommand(
+        p => { if (p is string text) QuickEntryText = text; });
+
     private RelayCommand? _zoomToCommand;
     public RelayCommand ZoomToCommand => _zoomToCommand ??= new RelayCommand(
         _ => { if (_wgs84Point is not null) _requestZoomTo?.Invoke(_wgs84Point); },

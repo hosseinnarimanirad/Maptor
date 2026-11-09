@@ -3151,4 +3151,25 @@
   <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
     <value>Bu həndəsə redaktə edilə bilməz, çünki düzəldilə bilmir: {0}.</value>
   </data>
+  <data name="dialog_goto_quickEntryTooltip" xml:space="preserve">
+    <value>Koordinatları və ya xəritə linkini yazın və ya yapışdırın.</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipTitle" xml:space="preserve">
+    <value>Bura nə yaza bilərsiniz</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipText" xml:space="preserve">
+    <value>Mövqeyi bu formalardan birində yazın və ya yapışdırın. Sınamaq üçün nümunəyə klikləyin.</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipMapLink" xml:space="preserve">
+    <value>Xəritə linki</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipFooter" xml:space="preserve">
+    <value>Fars və şərqi ərəb rəqəmləri (۴۵۶, ٤٥٦) də qəbul olunur.</value>
+  </data>
+  <data name="dialog_goto_formatDecimal" xml:space="preserve">
+    <value>Onluq dərəcələr</value>
+  </data>
+  <data name="dialog_goto_formatDms" xml:space="preserve">
+    <value>Dərəcə, dəqiqə, saniyə</value>
+  </data>
 </root>

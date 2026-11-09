@@ -3151,4 +3151,25 @@
   <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
     <value>इस ज्यामिति को संपादित नहीं किया जा सकता क्योंकि इसे ठीक नहीं किया जा सकता: {0}।</value>
   </data>
+  <data name="dialog_goto_quickEntryTooltip" xml:space="preserve">
+    <value>निर्देशांक या मानचित्र लिंक लिखें या चिपकाएँ।</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipTitle" xml:space="preserve">
+    <value>यहाँ आप क्या लिख सकते हैं</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipText" xml:space="preserve">
+    <value>इनमें से किसी एक रूप में स्थिति लिखें या चिपकाएँ। आज़माने के लिए किसी उदाहरण पर क्लिक करें।</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipMapLink" xml:space="preserve">
+    <value>मानचित्र लिंक</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipFooter" xml:space="preserve">
+    <value>फ़ारसी और पूर्वी अरबी अंक (۴۵۶, ٤٥٦) भी स्वीकार्य हैं।</value>
+  </data>
+  <data name="dialog_goto_formatDecimal" xml:space="preserve">
+    <value>दशमलव डिग्री</value>
+  </data>
+  <data name="dialog_goto_formatDms" xml:space="preserve">
+    <value>डिग्री, मिनट, सेकंड</value>
+  </data>
 </root>

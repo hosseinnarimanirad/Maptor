@@ -3151,4 +3151,25 @@
   <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
     <value>此几何无法修复，因此无法编辑：{0}。</value>
   </data>
+  <data name="dialog_goto_quickEntryTooltip" xml:space="preserve">
+    <value>输入或粘贴坐标或地图链接。</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipTitle" xml:space="preserve">
+    <value>可以在这里输入什么</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipText" xml:space="preserve">
+    <value>以下列任一形式输入或粘贴位置。点击示例即可试用。</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipMapLink" xml:space="preserve">
+    <value>地图链接</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipFooter" xml:space="preserve">
+    <value>也接受波斯数字和东阿拉伯数字（۴۵۶、٤٥٦）。</value>
+  </data>
+  <data name="dialog_goto_formatDecimal" xml:space="preserve">
+    <value>十进制度</value>
+  </data>
+  <data name="dialog_goto_formatDms" xml:space="preserve">
+    <value>度、分、秒</value>
+  </data>
 </root>

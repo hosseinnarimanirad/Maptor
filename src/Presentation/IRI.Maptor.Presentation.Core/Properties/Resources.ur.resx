@@ -3151,4 +3151,25 @@
   <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
     <value>اس جیومیٹری میں ترمیم نہیں ہو سکتی کیونکہ اسے درست نہیں کیا جا سکتا: {0}۔</value>
   </data>
+  <data name="dialog_goto_quickEntryTooltip" xml:space="preserve">
+    <value>کوآرڈینیٹس یا نقشے کا لنک لکھیں یا چسپاں کریں۔</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipTitle" xml:space="preserve">
+    <value>آپ یہاں کیا لکھ سکتے ہیں</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipText" xml:space="preserve">
+    <value>ان میں سے کسی ایک شکل میں مقام لکھیں یا چسپاں کریں۔ آزمانے کے لیے کسی مثال پر کلک کریں۔</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipMapLink" xml:space="preserve">
+    <value>نقشے کا لنک</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipFooter" xml:space="preserve">
+    <value>فارسی اور عربی ہندسے (۴۵۶، ٤٥٦) بھی قبول ہیں۔</value>
+  </data>
+  <data name="dialog_goto_formatDecimal" xml:space="preserve">
+    <value>اعشاری درجے</value>
+  </data>
+  <data name="dialog_goto_formatDms" xml:space="preserve">
+    <value>درجے، منٹ، سیکنڈ</value>
+  </data>
 </root>

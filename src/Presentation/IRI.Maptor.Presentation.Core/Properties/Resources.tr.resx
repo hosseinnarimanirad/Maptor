@@ -3151,4 +3151,25 @@
   <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
     <value>Bu geometri onarılamadığı için düzenlenemez: {0}.</value>
   </data>
+  <data name="dialog_goto_quickEntryTooltip" xml:space="preserve">
+    <value>Koordinatları veya bir harita bağlantısını yazın ya da yapıştırın.</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipTitle" xml:space="preserve">
+    <value>Buraya ne yazabilirsiniz</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipText" xml:space="preserve">
+    <value>Konumu bu biçimlerden birinde yazın veya yapıştırın. Denemek için bir örneğe tıklayın.</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipMapLink" xml:space="preserve">
+    <value>Harita bağlantısı</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipFooter" xml:space="preserve">
+    <value>Farsça ve Doğu Arap rakamları (۴۵۶, ٤٥٦) da kabul edilir.</value>
+  </data>
+  <data name="dialog_goto_formatDecimal" xml:space="preserve">
+    <value>Ondalık derece</value>
+  </data>
+  <data name="dialog_goto_formatDms" xml:space="preserve">
+    <value>Derece, dakika, saniye</value>
+  </data>
 </root>

@@ -3151,4 +3151,25 @@
   <data name="msg_geometryIssues_cannotEdit" xml:space="preserve">
     <value>ئەم ئەندازەیە دەستکاری ناکرێت، چونکە ڕاست ناکرێتەوە: {0}.</value>
   </data>
+  <data name="dialog_goto_quickEntryTooltip" xml:space="preserve">
+    <value>هاوپێوەرەکان یان بەستەری نەخشە بنووسە یان بیلکێنە.</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipTitle" xml:space="preserve">
+    <value>لێرە دەتوانیت چی بنووسیت</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipText" xml:space="preserve">
+    <value>شوێنێک بە یەکێک لەم شێوانە بنووسە یان بیلکێنە. بۆ تاقیکردنەوە، کرتە لە نموونەیەک بکە.</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipMapLink" xml:space="preserve">
+    <value>بەستەری نەخشە</value>
+  </data>
+  <data name="dialog_goto_quickEntryTipFooter" xml:space="preserve">
+    <value>ژمارە فارسی و عەرەبییەکانیش (۴۵۶، ٤٥٦) وەردەگیرێن.</value>
+  </data>
+  <data name="dialog_goto_formatDecimal" xml:space="preserve">
+    <value>پلەی دەیی</value>
+  </data>
+  <data name="dialog_goto_formatDms" xml:space="preserve">
+    <value>پلە، خولەک، چرکە</value>
+  </data>
 </root>

@@ -27,9 +27,10 @@
 
         <!--Every action on one row. The window is modeless and stays open while the map moves,
             so the footer carries the map actions rather than OK/Cancel: Zoom to is the default
-            (Enter), Pan to sits beside it; Copy and Add to drawing are icon buttons at the start
-            edge. Close lives in the title bar and on Esc. All four commands carry CanExecute,
-            so they grey out while the input does not resolve.-->
+            (Enter), Pan to sits beside it; Copy and Add to drawing are round icon buttons
+            (CircleLight, the system's icon-button style) at the start edge. Close lives in the
+            title bar and on Esc. All four commands carry CanExecute, so they grey out while the
+            input does not resolve.-->
         <dialogs:DialogFooterView Grid.Row="1"
                                   ShowSecondary="False"
                                   ShowTertiary="True"
@@ -41,18 +42,18 @@
                                   PrimaryCommand="{Binding ZoomToCommand}">
             <dialogs:DialogFooterView.LeadingContent>
                 <StackPanel Orientation="Horizontal">
-                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.IconSquare}"
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                             Command="{Binding CopyCommand}"
                             ToolTip="{Binding [dialog_goto_copy], Source={StaticResource Localization}}"
                             AutomationProperties.Name="{Binding [dialog_goto_copy], Source={StaticResource Localization}}">
-                        <iconPacks:PackIconMaterial Kind="ContentCopy" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}" Margin="0"/>
+                        <iconPacks:PackIconMaterial Kind="ContentCopy" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
                     </Button>
                     <!--MapPinPlusFill is the drawing items symbol (legend title and every "to drawings" command)-->
-                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.IconSquare}"
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                             Command="{Binding AddToDrawingCommand}"
                             ToolTip="{Binding [dialog_goto_addToDrawing], Source={StaticResource Localization}}"
                             AutomationProperties.Name="{Binding [dialog_goto_addToDrawing], Source={StaticResource Localization}}">
-                        <iconPacks:PackIconPhosphorIcons Kind="MapPinPlusFill" Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.ButtonContent}" Margin="0"/>
+                        <iconPacks:PackIconPhosphorIcons Kind="MapPinPlusFill" Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.CircleLightButtonContent}"/>
                     </Button>
                 </StackPanel>
             </dialogs:DialogFooterView.LeadingContent>
