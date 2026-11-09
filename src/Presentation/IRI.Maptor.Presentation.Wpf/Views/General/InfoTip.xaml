@@ -1,0 +1,183 @@
+<UserControl x:Class="IRI.Maptor.Presentation.Wpf.Controls.InfoTip"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:helpers="clr-namespace:IRI.Maptor.Presentation.Wpf.Helpers"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
+             xmlns:models="clr-namespace:IRI.Maptor.Presentation.Wpf.Models"
+             x:Name="root"
+             Focusable="False"
+             PreviewKeyDown="Popup_KeyDown">
+
+    <!--Educational tip: a lightbulb button and the pop-up it opens. See InfoTip.xaml.cs for when to
+        use it instead of a tooltip.-->
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+
+            <!--The trigger: a bare glyph, so it can sit inside or beside an input without adding a
+                frame. Muted at rest; accent on hover, while open and on keyboard focus.-->
+            <Style x:Key="TipToggle" TargetType="{x:Type ToggleButton}">
+                <Setter Property="Width" Value="26"/>
+                <Setter Property="Height" Value="26"/>
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Muted}"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                            <Border x:Name="chrome" Background="{TemplateBinding Background}"
+                                    CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                                    <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}"/>
+                                </Trigger>
+                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                                    <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}"/>
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <!--while the pop-up is open a click on the button is the pop-up's "click outside":
+                        it closes the pop-up, and the button must not then reopen it-->
+                    <DataTrigger Binding="{Binding IsOpen, ElementName=popup}" Value="True">
+                        <Setter Property="IsHitTestVisible" Value="False"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <!--An example row. A button so it can be clicked when ExampleCommand is set; without a
+                command it is plain text (no hover, no hand cursor).-->
+            <Style x:Key="ExampleRow" TargetType="{x:Type Button}">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="Padding" Value="8,5"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border x:Name="chrome" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}"
+                                    CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
+                                </Trigger>
+                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ExampleCommand, ElementName=root}" Value="{x:Null}">
+                        <Setter Property="IsHitTestVisible" Value="False"/>
+                        <Setter Property="Focusable" Value="False"/>
+                        <Setter Property="Cursor" Value="Arrow"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <ToggleButton x:Name="toggle"
+                      Style="{StaticResource TipToggle}"
+                      IsChecked="{Binding IsOpen, ElementName=root, Mode=TwoWay}"
+                      ToolTip="{Binding Title, ElementName=root}"
+                      AutomationProperties.Name="{Binding Title, ElementName=root}">
+            <iconPacks:PackIconMaterial Kind="LightbulbOnOutline"
+                                        Width="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"
+                                        Height="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"/>
+        </ToggleButton>
+
+        <Popup x:Name="popup"
+               IsOpen="{Binding IsOpen, ElementName=root, Mode=TwoWay}"
+               PlacementTarget="{Binding ElementName=toggle}"
+               Placement="Bottom" VerticalOffset="4"
+               StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
+
+            <!--the pop-up reads in the UI language's direction even when the InfoTip sits in a
+                left-to-right block (an input for Latin text); the margin leaves room for the shadow-->
+            <Border Style="{StaticResource IRI.Maptor.Styles.Border.Popup}"
+                    Margin="0,0,8,8" Padding="12,10"
+                    MaxWidth="{StaticResource IRI.Maptor.Styles.Size.InfoTip.MaxWidth}"
+                    FlowDirection="{Binding CurrentFlowDirection, Source={StaticResource Localization}}">
+                <Border.Effect>
+                    <StaticResource ResourceKey="IRI.Maptor.Effects.Elevation2"/>
+                </Border.Effect>
+
+                <StackPanel>
+                    <!--title, led by the same lightbulb so the pop-up is visibly the button's-->
+                    <DockPanel Margin="0,0,0,4">
+                        <iconPacks:PackIconMaterial DockPanel.Dock="Left" Kind="LightbulbOnOutline"
+                                                    Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                                    Width="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"
+                                                    Height="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"
+                                                    VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldValue}"
+                                   FontWeight="SemiBold" TextWrapping="Wrap" TextTrimming="None"
+                                   Text="{Binding Title, ElementName=root}"/>
+                    </DockPanel>
+
+                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldValue}"
+                               TextWrapping="Wrap" TextTrimming="None" Margin="0,2,0,6"
+                               Text="{Binding Text, ElementName=root}"
+                               Visibility="{Binding Text, ElementName=root, Converter={StaticResource stringNotNullOrEmptyToVisibilityConverter}}"/>
+
+                    <!--label column shared across rows, so the examples line up-->
+                    <ItemsControl ItemsSource="{Binding Examples, ElementName=root}"
+                                  Grid.IsSharedSizeScope="True" Focusable="False" Margin="-8,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type models:InfoTipExample}">
+                                <Button Style="{StaticResource ExampleRow}" Click="Example_Click"
+                                        AutomationProperties.Name="{Binding Value}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" SharedSizeGroup="label"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}"
+                                                   Margin="0,0,12,0" Text="{Binding Label}"/>
+                                        <!--the example: its own left-to-right element in the Latin face.
+                                            Left is resolved in the parent's direction, so it sits at the
+                                            start edge of the UI language (right in Persian); stretched,
+                                            its LTR text would hug the far edge instead.-->
+                                        <TextBlock Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldValue.Latin}"
+                                                   HorizontalAlignment="Left"
+                                                   TextWrapping="Wrap" TextTrimming="None"
+                                                   Text="{Binding Value}"/>
+                                    </Grid>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}"
+                               TextWrapping="Wrap" Margin="0,6,0,0"
+                               Text="{Binding Footer, ElementName=root}"
+                               Visibility="{Binding Footer, ElementName=root, Converter={StaticResource stringNotNullOrEmptyToVisibilityConverter}}"/>
+                </StackPanel>
+            </Border>
+        </Popup>
+    </Grid>
+</UserControl>

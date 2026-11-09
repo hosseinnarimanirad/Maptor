@@ -58,27 +58,6 @@
             <!--a field row's label-->
             <Style x:Key="RowLabel" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}"/>
 
-            <!--The position line's readings are always Latin digits, so they use the same face as
-                the E / N boxes (IRI.Maptor.Styles.TextBox.Normal.En): Segoe UI under a Persian UI,
-                where the base TextBlock style would switch them to the Persian font.-->
-            <Style x:Key="ReadingValue" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.FieldValue}">
-                <Setter Property="FlowDirection" Value="LeftToRight"/>
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding Source={StaticResource Localization}, Path=IsPersian}" Value="True">
-                        <Setter Property="FontFamily" Value="Segoe UI"/>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-
-            <Style x:Key="ReadingCaption" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}">
-                <Setter Property="FlowDirection" Value="LeftToRight"/>
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding Source={StaticResource Localization}, Path=IsPersian}" Value="True">
-                        <Setter Property="FontFamily" Value="Segoe UI"/>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-
             <!--One geodetic axis in DMS: three cells, their unit glyphs and the hemisphere. The
                 DataContext is a DmsAxisModel. Left-to-right as a block so the order D M S survives
                 an RTL window.-->
@@ -456,9 +435,10 @@
             <StackPanel Orientation="Horizontal" Margin="8,0,0,0" FlowDirection="LeftToRight" VerticalAlignment="Center"
                         Visibility="{Binding IsValid, Converter={StaticResource boolToVisibilityConverter}}"
                         ToolTip="{Binding ResultDmsText}">
-                <TextBlock Style="{StaticResource ReadingValue}" FontWeight="SemiBold"
+                <!--always Latin digits, so the .Latin styles: the same face as the E / N boxes-->
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldValue.Latin}" FontWeight="SemiBold"
                            Text="{Binding ResultDecimalText}"/>
-                <TextBlock Style="{StaticResource ReadingCaption}" Margin="8,0,0,0" VerticalAlignment="Center"
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.Caption.Latin}" Margin="8,0,0,0" VerticalAlignment="Center"
                            Text="{Binding ResultUtmText}"/>
             </StackPanel>
 

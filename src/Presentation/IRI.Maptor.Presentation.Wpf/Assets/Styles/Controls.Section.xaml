@@ -124,6 +124,20 @@
         <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
     </Style>
 
+    <!--a value that is always Latin (coordinates, codes, examples): left to right, and in the face
+        the .En text boxes use (Segoe UI under a Persian UI, where the base style would pick the
+        Persian font). Companion of TextBlock.Caption.Latin in Controls.TextBlock.xaml.-->
+    <Style x:Key="IRI.Maptor.Styles.TextBlock.FieldValue.Latin"
+           TargetType="TextBlock"
+           BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.FieldValue}">
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Source={StaticResource Localization}, Path=IsPersian}" Value="True">
+                <Setter Property="FontFamily" Value="Segoe UI"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
     <!--description line under a field-->
     <Style x:Key="IRI.Maptor.Styles.TextBlock.FieldHint"
            TargetType="TextBlock"

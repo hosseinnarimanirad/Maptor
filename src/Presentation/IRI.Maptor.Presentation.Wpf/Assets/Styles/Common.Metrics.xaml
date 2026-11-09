@@ -115,6 +115,9 @@
     <!--widest a tooltip may grow before its text wraps; see Controls.ToolTip.xaml-->
     <sys:Double x:Key="IRI.Maptor.Styles.Size.ToolTip.MaxWidth">360</sys:Double>
 
+    <!--widest an InfoTip pop-up may grow; room for a label column plus a Latin example-->
+    <sys:Double x:Key="IRI.Maptor.Styles.Size.InfoTip.MaxWidth">420</sys:Double>
+
     <!--Icon sizing. Written as raw Width/Height in nearly every view audited.-->
 
     <!--glyph inside a form field's adornment column-->
