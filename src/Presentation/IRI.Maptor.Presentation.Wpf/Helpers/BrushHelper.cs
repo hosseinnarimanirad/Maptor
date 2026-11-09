@@ -9,20 +9,15 @@ namespace IRI.Maptor.Presentation.Wpf.Helpers;
 
 public static class BrushHelper
 {
-    public static Brush PickBrush()
-    {
-        Type brushesType = typeof(Brushes);
+    /// <summary>
+    /// A colour for a new layer or symbol. Same as <see cref="PickGoodBrush"/>: it used to pick any
+    /// named WPF brush, which included Transparent and near-white ones, so a new layer could open
+    /// invisible.
+    /// </summary>
+    public static Brush PickBrush() => PickGoodBrush();
 
-        PropertyInfo[] properties = brushesType.GetProperties();
-
-        int randomIndex = RandomHelper.Get(properties.Length);
-
-        var result = properties[randomIndex].GetValue(null, null) as SolidColorBrush ?? Brushes.Transparent;
-
-        return new SolidColorBrush(result.Color);
-    }
-
-    public static Brush PickGoodBrush() => new SolidColorBrush(ColorHelper.GetRandomWpfColor());
+    /// <summary>The next colour of the curated palette, round-robin (<see cref="ColorHelper.GetNextWpfColor"/>).</summary>
+    public static Brush PickGoodBrush() => new SolidColorBrush(ColorHelper.GetNextWpfColor());
 
     public static List<SolidColorBrush> GetAllKnownColors()
     {

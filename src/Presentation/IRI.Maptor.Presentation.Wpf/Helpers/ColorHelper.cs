@@ -79,6 +79,17 @@ public static class ColorHelper
         return ToWpfColor(goodColors[randomIndex]);
     }
 
+    /// <summary>
+    /// The next colour of the palette, round-robin, so layers opened one after another get
+    /// different colours (thread-safe).
+    /// </summary>
+    public static Color GetNextWpfColor()
+    {
+        int index = (int)((uint)(System.Threading.Interlocked.Increment(ref _nextColorIndex)) % (uint)goodColors.Length);
+
+        return ToWpfColor(goodColors[index]);
+    }
+
     private readonly static string[] goodColors =
     {
         "#FFE51400", //red
@@ -89,7 +100,11 @@ public static class ColorHelper
         "#FFA4C401", //lime    
         "#FFF572D0", //pink 
         "#FFE4C802", //yellow
-        "#FF835A2C", //brown 
+        "#FF835A2C", //brown
     };
+
+    // declared after goodColors: static fields initialise in textual order.
+    // Starts at a random entry so each session doesn't open its first layer in the same colour.
+    private static int _nextColorIndex = RandomHelper.Get(goodColors.Length);
       
 }
