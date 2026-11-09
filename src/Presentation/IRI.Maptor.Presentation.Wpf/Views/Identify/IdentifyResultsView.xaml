@@ -476,7 +476,7 @@
                                       ToolTip="{Binding [identify_geometry_unit], Source={StaticResource Localization}}"
                                       AutomationProperties.Name="{Binding [identify_geometry_unit], Source={StaticResource Localization}}"
                                       Visibility="{Binding HasMeasures, Converter={StaticResource boolToVisibilityConverter}}"/>
-                          ب  <WrapPanel Orientation="Horizontal">
+                            <WrapPanel Orientation="Horizontal">
                                 <HeaderedContentControl Style="{StaticResource geometryFact}"
                                                         Tag="{x:Static iconPacks:PackIconMaterialKind.VectorPolyline}"
                                                         Header="{Binding [identify_geometry_length], Source={StaticResource Localization}}"
