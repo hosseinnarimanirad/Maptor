@@ -529,6 +529,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add data.
+        /// </summary>
+        public static string cmd_legend_addData {
+            get {
+                return ResourceManager.GetString("cmd_legend_addData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add DXF.
         /// </summary>
         public static string cmd_legend_addDxf {
@@ -624,6 +633,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string cmd_legend_moveUp {
             get {
                 return ResourceManager.GetString("cmd_legend_moveUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste data.
+        /// </summary>
+        public static string cmd_legend_pasteData {
+            get {
+                return ResourceManager.GetString("cmd_legend_pasteData", resourceCulture);
             }
         }
         

@@ -3241,4 +3241,10 @@
   <data name="ribbon_vector_pasteTooltip" xml:space="preserve">
     <value>چینێک لە دەقی کۆپیکراوەوە زیاد بکە: GeoJSON، TopoJSON، Esri JSON، KML، CSV یان TSV.</value>
   </data>
+  <data name="cmd_legend_addData" xml:space="preserve">
+    <value>زیادکردنی داتا</value>
+  </data>
+  <data name="cmd_legend_pasteData" xml:space="preserve">
+    <value>لکاندنی داتا</value>
+  </data>
 </root>

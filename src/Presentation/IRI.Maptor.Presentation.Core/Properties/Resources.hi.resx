@@ -3241,4 +3241,10 @@
   <data name="ribbon_vector_pasteTooltip" xml:space="preserve">
     <value>कॉपी किए गए टेक्स्ट से लेयर जोड़ें: GeoJSON, TopoJSON, Esri JSON, KML, CSV या TSV।</value>
   </data>
+  <data name="cmd_legend_addData" xml:space="preserve">
+    <value>डेटा जोड़ें</value>
+  </data>
+  <data name="cmd_legend_pasteData" xml:space="preserve">
+    <value>डेटा पेस्ट करें</value>
+  </data>
 </root>

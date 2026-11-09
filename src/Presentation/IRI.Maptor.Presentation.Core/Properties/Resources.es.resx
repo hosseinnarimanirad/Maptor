@@ -3241,4 +3241,10 @@
   <data name="ribbon_vector_pasteTooltip" xml:space="preserve">
     <value>Añade una capa desde texto copiado: GeoJSON, TopoJSON, Esri JSON, KML, CSV o TSV.</value>
   </data>
+  <data name="cmd_legend_addData" xml:space="preserve">
+    <value>Añadir datos</value>
+  </data>
+  <data name="cmd_legend_pasteData" xml:space="preserve">
+    <value>Pegar datos</value>
+  </data>
 </root>

@@ -3241,4 +3241,10 @@
   <data name="ribbon_vector_pasteTooltip" xml:space="preserve">
     <value>إضافة طبقة من نص منسوخ: GeoJSON أو TopoJSON أو Esri JSON أو KML أو CSV أو TSV.</value>
   </data>
+  <data name="cmd_legend_addData" xml:space="preserve">
+    <value>إضافة بيانات</value>
+  </data>
+  <data name="cmd_legend_pasteData" xml:space="preserve">
+    <value>لصق البيانات</value>
+  </data>
 </root>

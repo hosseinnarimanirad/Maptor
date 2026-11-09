@@ -3241,4 +3241,10 @@
   <data name="ribbon_vector_pasteTooltip" xml:space="preserve">
     <value>从复制的文本添加图层：GeoJSON、TopoJSON、Esri JSON、KML、CSV 或 TSV。</value>
   </data>
+  <data name="cmd_legend_addData" xml:space="preserve">
+    <value>添加数据</value>
+  </data>
+  <data name="cmd_legend_pasteData" xml:space="preserve">
+    <value>粘贴数据</value>
+  </data>
 </root>

@@ -3241,4 +3241,10 @@
   <data name="ribbon_vector_pasteTooltip" xml:space="preserve">
     <value>Ավելացնել շերտ պատճենված տեքստից՝ GeoJSON, TopoJSON, Esri JSON, KML, CSV կամ TSV։</value>
   </data>
+  <data name="cmd_legend_addData" xml:space="preserve">
+    <value>Ավելացնել տվյալներ</value>
+  </data>
+  <data name="cmd_legend_pasteData" xml:space="preserve">
+    <value>Տեղադրել տվյալներ</value>
+  </data>
 </root>

@@ -3241,4 +3241,10 @@
   <data name="ribbon_vector_pasteTooltip" xml:space="preserve">
     <value>Kopyalanan metinden katman ekler: GeoJSON, TopoJSON, Esri JSON, KML, CSV veya TSV.</value>
   </data>
+  <data name="cmd_legend_addData" xml:space="preserve">
+    <value>Veri ekle</value>
+  </data>
+  <data name="cmd_legend_pasteData" xml:space="preserve">
+    <value>Veri yapıştır</value>
+  </data>
 </root>

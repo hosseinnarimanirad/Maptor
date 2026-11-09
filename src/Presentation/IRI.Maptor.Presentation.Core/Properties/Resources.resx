@@ -4308,4 +4308,10 @@
   <data name="ribbon_vector_pasteTooltip" xml:space="preserve">
     <value>Add a layer from copied text: GeoJSON, TopoJSON, Esri JSON, KML, CSV or TSV.</value>
   </data>
+  <data name="cmd_legend_addData" xml:space="preserve">
+    <value>Add data</value>
+  </data>
+  <data name="cmd_legend_pasteData" xml:space="preserve">
+    <value>Paste data</value>
+  </data>
 </root>

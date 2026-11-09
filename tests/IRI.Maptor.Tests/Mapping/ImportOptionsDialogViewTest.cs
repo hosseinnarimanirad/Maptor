@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 
@@ -46,6 +47,44 @@ public class ImportOptionsDialogViewTest
 
             Assert.NotNull(view.Content);
             Assert.NotNull(view.FindName("dataTextBox"));
+        });
+    }
+
+    /// <summary>
+    /// The legend's import pop-up has the two ways in of the ribbon, "add data" and "paste data", and no row per
+    /// format any more.
+    /// </summary>
+    [Fact]
+    public void LegendImportPopup_HasAddAndPasteOnly()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var cache = typeof(IRI.Maptor.Presentation.Wpf.Helpers.SharedResourceDictionary)
+                .GetField("_cache", BindingFlags.NonPublic | BindingFlags.Static)!
+                .GetValue(null) as System.Collections.IDictionary;
+
+            lock (cache!)
+                cache.Clear();
+
+            WpfTestHost.EnsureMahAppsResources();
+
+            var styles = new Uri("pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml", UriKind.Absolute);
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = styles });
+
+            // the legend takes iranSans from the application, as in the apps
+            var fonts = new Uri("pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Fonts.xaml", UriKind.Absolute);
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = fonts });
+
+            var legend = new IRI.Maptor.Presentation.Wpf.Controls.MapLegendView();
+
+            var popup = Assert.IsType<System.Windows.Controls.Primitives.Popup>(legend.FindName("importLayerPopup"));
+            var panel = Assert.IsType<System.Windows.Controls.StackPanel>(((System.Windows.Controls.Border)popup.Child).Child);
+
+            var commands = panel.Children.OfType<System.Windows.Controls.Button>()
+                .Select(b => System.Windows.Data.BindingOperations.GetBinding(b, System.Windows.Controls.Primitives.ButtonBase.CommandProperty)?.Path.Path)
+                .ToList();
+
+            Assert.Equal(new[] { "AddDataFromFileCommand", "PasteDataCommand" }, commands);
         });
     }
 }

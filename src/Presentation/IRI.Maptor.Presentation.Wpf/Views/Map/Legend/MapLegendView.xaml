@@ -118,28 +118,27 @@
                 </Grid>
             </HierarchicalDataTemplate>
 
-            <!--import-layer popup row. Tag carries the DataSourceKind: its colour and glyph form the
-                chip, the same chip the legend shows beside a layer of that kind, so the colour is
-                learned here and recognised there. Content is the format name + its extensions.-->
+            <!--import-layer popup row: one per way in (a file, or pasted text); the format is worked out
+                from the data, so there is no row per format any more. Tag carries the row's
+                PackIconMaterialKind. Content is the caption + a secondary line (importMenuDetail).-->
             <Style x:Key="importMenuItem" TargetType="Button">
                 <Setter Property="Background" Value="Transparent"/>
                 <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                 <Setter Property="MinWidth" Value="220"/>
+                <Setter Property="MaxWidth" Value="300"/>
                 <Setter Property="Cursor" Value="Hand"/>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
-                            <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="6,4" Margin="0,1">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="6,5" Margin="0,1">
                                 <DockPanel>
-                                    <Border DockPanel.Dock="Left" VerticalAlignment="Center"
-                                            Style="{StaticResource IRI.Maptor.Styles.Border.Menu}"
-                                            Background="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource dataSourceKindToBrushConverter}}">
-                                        <Path Style="{StaticResource IRI.Maptor.Styles.Path.Menu}"
-                                              Data="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource dataSourceKindToGeometryConverter}}"/>
-                                    </Border>
-                                    <ContentPresenter Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                    <iconPacks:PackIconMaterial DockPanel.Dock="Left" VerticalAlignment="Top" Margin="0,2,0,0"
+                                                                Width="18" Height="18"
+                                                                Kind="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
+                                                                Foreground="{TemplateBinding Foreground}"/>
+                                    <ContentPresenter Margin="10,0,0,0" VerticalAlignment="Center"/>
                                 </DockPanel>
                             </Border>
                         </ControlTemplate>
@@ -163,14 +162,16 @@
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="TextWrapping" Value="NoWrap"/>
             </Style>
-            <!--secondary text: inherits the row foreground (so it also turns white on hover) at lower opacity-->
-            <Style x:Key="importMenuExtension" TargetType="TextBlock">
-                <Setter Property="DockPanel.Dock" Value="Right"/>
+            <!--secondary line (extensions / format names, untranslated: they are what the user sees on the
+                file): inherits the row foreground (so it also turns white on hover) at lower opacity. Its
+                FlowDirection stays the app's, so it lines up under the caption in Persian too.-->
+            <Style x:Key="importMenuDetail" TargetType="TextBlock">
                 <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Caption}"/>
                 <Setter Property="Opacity" Value=".65"/>
-                <Setter Property="FlowDirection" Value="LeftToRight"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
+                <Setter Property="Margin" Value="0,1,0,0"/>
             </Style>
+            <!--no longer used by the import popup; kept as the base of kindFilterGroupHeader-->
             <Style x:Key="importMenuGroup" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}">
                 <Setter Property="Margin" Value="6,8,6,2"/>
             </Style>
@@ -486,95 +487,23 @@
                         <Border.Effect>
                             <StaticResource ResourceKey="IRI.Maptor.Effects.Elevation2"/>
                         </Border.Effect>
-                        <!--format names and extensions stay untranslated: they are what the user sees on the file-->
+                        <!--two ways in, as in the ribbon: a file of any supported format, or pasted text-->
                         <StackPanel>
-                            <TextBlock Style="{StaticResource importMenuGroup}" Margin="6,2,6,2"
-                                       Text="{Binding [legend_import_gisFiles], Source={StaticResource Localization}}"/>
-                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static sta:DataSourceKind.Shapefile}" Command="{Binding AddShapefileCommand}"
-                                    ToolTip="{Binding [cmd_general_addShapefile], Source={StaticResource Localization}}"
-                                    AutomationProperties.Name="{Binding [cmd_general_addShapefile], Source={StaticResource Localization}}">
-                                <DockPanel>
-                                    <TextBlock Style="{StaticResource importMenuExtension}" Text=".shp"/>
-                                    <TextBlock Style="{StaticResource importMenuName}" Text="Shapefile"/>
-                                </DockPanel>
+                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static iconPacks:PackIconMaterialKind.FilePlusOutline}"
+                                    Command="{Binding AddDataFromFileCommand}"
+                                    AutomationProperties.Name="{Binding [cmd_legend_addData], Source={StaticResource Localization}}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource importMenuName}" Text="{Binding [cmd_legend_addData], Source={StaticResource Localization}}"/>
+                                    <TextBlock Style="{StaticResource importMenuDetail}" Text="SHP  KML  KMZ  GPX  GPKG  DXF  GeoJSON  TopoJSON  Esri JSON  CSV  TSV"/>
+                                </StackPanel>
                             </Button>
-                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static sta:DataSourceKind.Dxf}" Command="{Binding AddDxffileCommand}"
-                                    ToolTip="{Binding [cmd_legend_addDxf], Source={StaticResource Localization}}"
-                                    AutomationProperties.Name="{Binding [cmd_legend_addDxf], Source={StaticResource Localization}}">
-                                <DockPanel>
-                                    <TextBlock Style="{StaticResource importMenuExtension}" Text=".dxf"/>
-                                    <TextBlock Style="{StaticResource importMenuName}" Text="DXF"/>
-                                </DockPanel>
-                            </Button>
-                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static sta:DataSourceKind.Gpx}" Command="{Binding AddGpxfileCommand}"
-                                    ToolTip="{Binding [cmd_legend_addGpx], Source={StaticResource Localization}}"
-                                    AutomationProperties.Name="{Binding [cmd_legend_addGpx], Source={StaticResource Localization}}">
-                                <DockPanel>
-                                    <TextBlock Style="{StaticResource importMenuExtension}" Text=".gpx"/>
-                                    <TextBlock Style="{StaticResource importMenuName}" Text="GPX"/>
-                                </DockPanel>
-                            </Button>
-                            <TextBlock Style="{StaticResource importMenuGroup}"
-                                       Text="{Binding [legend_import_googleEarth], Source={StaticResource Localization}}"/>
-                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static sta:DataSourceKind.Kml}" Command="{Binding AddKmlfileCommand}"
-                                    ToolTip="{Binding [cmd_legend_addKml], Source={StaticResource Localization}}"
-                                    AutomationProperties.Name="{Binding [cmd_legend_addKml], Source={StaticResource Localization}}">
-                                <DockPanel>
-                                    <TextBlock Style="{StaticResource importMenuExtension}" Text=".kml"/>
-                                    <TextBlock Style="{StaticResource importMenuName}" Text="KML"/>
-                                </DockPanel>
-                            </Button>
-                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static sta:DataSourceKind.Kmz}" Command="{Binding AddKmzfileCommand}"
-                                    ToolTip="{Binding [cmd_legend_addKmz], Source={StaticResource Localization}}"
-                                    AutomationProperties.Name="{Binding [cmd_legend_addKmz], Source={StaticResource Localization}}">
-                                <DockPanel>
-                                    <TextBlock Style="{StaticResource importMenuExtension}" Text=".kmz"/>
-                                    <TextBlock Style="{StaticResource importMenuName}" Text="KMZ"/>
-                                </DockPanel>
-                            </Button>
-                            <TextBlock Style="{StaticResource importMenuGroup}"
-                                       Text="{Binding [legend_import_tables], Source={StaticResource Localization}}"/>
-                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static sta:DataSourceKind.Csv}" Command="{Binding AddCsvCommand}"
-                                    ToolTip="{Binding [cmd_legend_addCsv], Source={StaticResource Localization}}"
-                                    AutomationProperties.Name="{Binding [cmd_legend_addCsv], Source={StaticResource Localization}}">
-                                <DockPanel>
-                                    <TextBlock Style="{StaticResource importMenuExtension}" Text=".csv  .txt"/>
-                                    <TextBlock Style="{StaticResource importMenuName}" Text="CSV"/>
-                                </DockPanel>
-                            </Button>
-                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static sta:DataSourceKind.Tsv}" Command="{Binding AddTsvCommand}"
-                                    ToolTip="{Binding [cmd_legend_addTsv], Source={StaticResource Localization}}"
-                                    AutomationProperties.Name="{Binding [cmd_legend_addTsv], Source={StaticResource Localization}}">
-                                <DockPanel>
-                                    <TextBlock Style="{StaticResource importMenuExtension}" Text=".tsv  .txt"/>
-                                    <TextBlock Style="{StaticResource importMenuName}" Text="TSV"/>
-                                </DockPanel>
-                            </Button>
-                            <TextBlock Style="{StaticResource importMenuGroup}"
-                                       Text="{Binding [legend_import_json], Source={StaticResource Localization}}"/>
-                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static sta:DataSourceKind.GeoJson}" Command="{Binding AddGeoJSONfileCommand}"
-                                    ToolTip="{Binding [cmd_general_addGeoJson], Source={StaticResource Localization}}"
-                                    AutomationProperties.Name="{Binding [cmd_general_addGeoJson], Source={StaticResource Localization}}">
-                                <DockPanel>
-                                    <TextBlock Style="{StaticResource importMenuExtension}" Text=".geojson  .json"/>
-                                    <TextBlock Style="{StaticResource importMenuName}" Text="GeoJSON"/>
-                                </DockPanel>
-                            </Button>
-                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static sta:DataSourceKind.TopoJson}" Command="{Binding AddTopoJsonCommand}"
-                                    ToolTip="{Binding [cmd_legend_addTopoJson], Source={StaticResource Localization}}"
-                                    AutomationProperties.Name="{Binding [cmd_legend_addTopoJson], Source={StaticResource Localization}}">
-                                <DockPanel>
-                                    <TextBlock Style="{StaticResource importMenuExtension}" Text=".topojson  .json"/>
-                                    <TextBlock Style="{StaticResource importMenuName}" Text="TopoJSON"/>
-                                </DockPanel>
-                            </Button>
-                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static sta:DataSourceKind.EsriJson}" Command="{Binding AddEsriJsonCommand}"
-                                    ToolTip="{Binding [cmd_legend_addEsriJson], Source={StaticResource Localization}}"
-                                    AutomationProperties.Name="{Binding [cmd_legend_addEsriJson], Source={StaticResource Localization}}">
-                                <DockPanel>
-                                    <TextBlock Style="{StaticResource importMenuExtension}" Text=".json"/>
-                                    <TextBlock Style="{StaticResource importMenuName}" Text="EsriJSON"/>
-                                </DockPanel>
+                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static iconPacks:PackIconMaterialKind.ContentPaste}"
+                                    Command="{Binding PasteDataCommand}"
+                                    AutomationProperties.Name="{Binding [cmd_legend_pasteData], Source={StaticResource Localization}}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource importMenuName}" Text="{Binding [cmd_legend_pasteData], Source={StaticResource Localization}}"/>
+                                    <TextBlock Style="{StaticResource importMenuDetail}" Text="GeoJSON  TopoJSON  Esri JSON  KML  CSV  TSV"/>
+                                </StackPanel>
                             </Button>
                         </StackPanel>
                     </Border>
