@@ -139,8 +139,9 @@
             </controls:InfoTip>
 
             <Grid FlowDirection="LeftToRight">
+                <!--.UiWatermark: Latin input, hint in the UI language and direction-->
                 <TextBox x:Name="quickEntryBox"
-                         Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En}"
+                         Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En.UiWatermark}"
                          Margin="0" Padding="34,4,8,4"
                          BorderThickness="1" BorderBrush="{DynamicResource MahApps.Brushes.Gray8}"
                          Text="{Binding QuickEntryText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
