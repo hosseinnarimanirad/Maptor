@@ -3229,4 +3229,16 @@
   <data name="dialog_importOptions_srsKmlHint" xml:space="preserve">
     <value>KML کوآرڈینیٹس ہمیشہ WGS84 میں طول البلد/عرض البلد ہوتے ہیں۔</value>
   </data>
+  <data name="ribbon_vector_addFromFile" xml:space="preserve">
+    <value>ڈیٹا شامل کریں</value>
+  </data>
+  <data name="ribbon_vector_addFromFileTooltip" xml:space="preserve">
+    <value>فائل سے لیئر شامل کریں۔ فارمیٹ (شیپ فائل، KML، KMZ، GPX، GeoPackage، DXF، GeoJSON، TopoJSON، Esri JSON، CSV، TSV) خود فائل سے پہچانا جاتا ہے۔</value>
+  </data>
+  <data name="ribbon_vector_paste" xml:space="preserve">
+    <value>ڈیٹا پیسٹ کریں</value>
+  </data>
+  <data name="ribbon_vector_pasteTooltip" xml:space="preserve">
+    <value>کاپی کیے گئے متن سے لیئر شامل کریں: GeoJSON، TopoJSON، Esri JSON، KML، CSV یا TSV۔</value>
+  </data>
 </root>

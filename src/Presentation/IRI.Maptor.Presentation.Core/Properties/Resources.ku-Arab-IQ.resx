@@ -3229,4 +3229,16 @@
   <data name="dialog_importOptions_srsKmlHint" xml:space="preserve">
     <value>کۆردیناتەکانی KML هەمیشە درێژی/پانین لە WGS84 دا.</value>
   </data>
+  <data name="ribbon_vector_addFromFile" xml:space="preserve">
+    <value>زیادکردنی داتا</value>
+  </data>
+  <data name="ribbon_vector_addFromFileTooltip" xml:space="preserve">
+    <value>چینێک لە فایلێکەوە زیاد بکە. فۆرماتەکە (شەیپفایل، KML، KMZ، GPX، GeoPackage، DXF، GeoJSON، TopoJSON، Esri JSON، CSV، TSV) لە خودی فایلەکەوە دەناسرێتەوە.</value>
+  </data>
+  <data name="ribbon_vector_paste" xml:space="preserve">
+    <value>لکاندنی داتا</value>
+  </data>
+  <data name="ribbon_vector_pasteTooltip" xml:space="preserve">
+    <value>چینێک لە دەقی کۆپیکراوەوە زیاد بکە: GeoJSON، TopoJSON، Esri JSON، KML، CSV یان TSV.</value>
+  </data>
 </root>

@@ -7342,6 +7342,42 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add data.
+        /// </summary>
+        public static string ribbon_vector_addFromFile {
+            get {
+                return ResourceManager.GetString("ribbon_vector_addFromFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add a layer from a file. The format (shapefile, KML, KMZ, GPX, GeoPackage, DXF, GeoJSON, TopoJSON, Esri JSON, CSV, TSV) is detected from the file itself..
+        /// </summary>
+        public static string ribbon_vector_addFromFileTooltip {
+            get {
+                return ResourceManager.GetString("ribbon_vector_addFromFileTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste data.
+        /// </summary>
+        public static string ribbon_vector_paste {
+            get {
+                return ResourceManager.GetString("ribbon_vector_paste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add a layer from copied text: GeoJSON, TopoJSON, Esri JSON, KML, CSV or TSV..
+        /// </summary>
+        public static string ribbon_vector_pasteTooltip {
+            get {
+                return ResourceManager.GetString("ribbon_vector_pasteTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Vector.
         /// </summary>
         public static string ribbon_vector_title {

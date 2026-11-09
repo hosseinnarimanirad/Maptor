@@ -3229,4 +3229,16 @@
   <data name="dialog_importOptions_srsKmlHint" xml:space="preserve">
     <value>KML निर्देशांक हमेशा WGS84 में देशांतर/अक्षांश होते हैं।</value>
   </data>
+  <data name="ribbon_vector_addFromFile" xml:space="preserve">
+    <value>डेटा जोड़ें</value>
+  </data>
+  <data name="ribbon_vector_addFromFileTooltip" xml:space="preserve">
+    <value>फ़ाइल से लेयर जोड़ें। फ़ॉर्मेट (शेपफ़ाइल, KML, KMZ, GPX, GeoPackage, DXF, GeoJSON, TopoJSON, Esri JSON, CSV, TSV) फ़ाइल से ही पहचाना जाता है।</value>
+  </data>
+  <data name="ribbon_vector_paste" xml:space="preserve">
+    <value>डेटा पेस्ट करें</value>
+  </data>
+  <data name="ribbon_vector_pasteTooltip" xml:space="preserve">
+    <value>कॉपी किए गए टेक्स्ट से लेयर जोड़ें: GeoJSON, TopoJSON, Esri JSON, KML, CSV या TSV।</value>
+  </data>
 </root>

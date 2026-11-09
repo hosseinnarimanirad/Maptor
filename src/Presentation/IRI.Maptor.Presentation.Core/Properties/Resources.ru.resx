@@ -3229,4 +3229,16 @@
   <data name="dialog_importOptions_srsKmlHint" xml:space="preserve">
     <value>Координаты KML всегда задаются долготой/широтой в WGS84.</value>
   </data>
+  <data name="ribbon_vector_addFromFile" xml:space="preserve">
+    <value>Добавить данные</value>
+  </data>
+  <data name="ribbon_vector_addFromFileTooltip" xml:space="preserve">
+    <value>Добавляет слой из файла. Формат (shapefile, KML, KMZ, GPX, GeoPackage, DXF, GeoJSON, TopoJSON, Esri JSON, CSV, TSV) определяется по самому файлу.</value>
+  </data>
+  <data name="ribbon_vector_paste" xml:space="preserve">
+    <value>Вставить данные</value>
+  </data>
+  <data name="ribbon_vector_pasteTooltip" xml:space="preserve">
+    <value>Добавляет слой из скопированного текста: GeoJSON, TopoJSON, Esri JSON, KML, CSV или TSV.</value>
+  </data>
 </root>

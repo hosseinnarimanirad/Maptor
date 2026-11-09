@@ -3229,4 +3229,16 @@
   <data name="dialog_importOptions_srsKmlHint" xml:space="preserve">
     <value>Las coordenadas KML son siempre longitud/latitud en WGS84.</value>
   </data>
+  <data name="ribbon_vector_addFromFile" xml:space="preserve">
+    <value>Añadir datos</value>
+  </data>
+  <data name="ribbon_vector_addFromFileTooltip" xml:space="preserve">
+    <value>Añade una capa desde un archivo. El formato (shapefile, KML, KMZ, GPX, GeoPackage, DXF, GeoJSON, TopoJSON, Esri JSON, CSV, TSV) se detecta a partir del propio archivo.</value>
+  </data>
+  <data name="ribbon_vector_paste" xml:space="preserve">
+    <value>Pegar datos</value>
+  </data>
+  <data name="ribbon_vector_pasteTooltip" xml:space="preserve">
+    <value>Añade una capa desde texto copiado: GeoJSON, TopoJSON, Esri JSON, KML, CSV o TSV.</value>
+  </data>
 </root>

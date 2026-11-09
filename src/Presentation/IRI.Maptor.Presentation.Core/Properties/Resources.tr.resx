@@ -3229,4 +3229,16 @@
   <data name="dialog_importOptions_srsKmlHint" xml:space="preserve">
     <value>KML koordinatları her zaman WGS84'te boylam/enlemdir.</value>
   </data>
+  <data name="ribbon_vector_addFromFile" xml:space="preserve">
+    <value>Veri ekle</value>
+  </data>
+  <data name="ribbon_vector_addFromFileTooltip" xml:space="preserve">
+    <value>Bir dosyadan katman ekler. Biçim (Shapefile, KML, KMZ, GPX, GeoPackage, DXF, GeoJSON, TopoJSON, Esri JSON, CSV, TSV) dosyanın kendisinden algılanır.</value>
+  </data>
+  <data name="ribbon_vector_paste" xml:space="preserve">
+    <value>Veri yapıştır</value>
+  </data>
+  <data name="ribbon_vector_pasteTooltip" xml:space="preserve">
+    <value>Kopyalanan metinden katman ekler: GeoJSON, TopoJSON, Esri JSON, KML, CSV veya TSV.</value>
+  </data>
 </root>

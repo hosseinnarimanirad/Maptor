@@ -3229,4 +3229,16 @@
   <data name="dialog_importOptions_srsKmlHint" xml:space="preserve">
     <value>إحداثيات KML دائمًا خطوط طول وعرض بنظام WGS84.</value>
   </data>
+  <data name="ribbon_vector_addFromFile" xml:space="preserve">
+    <value>إضافة بيانات</value>
+  </data>
+  <data name="ribbon_vector_addFromFileTooltip" xml:space="preserve">
+    <value>إضافة طبقة من ملف. يُكتشف التنسيق (Shapefile و KML و KMZ و GPX و GeoPackage و DXF و GeoJSON و TopoJSON و Esri JSON و CSV و TSV) من الملف نفسه.</value>
+  </data>
+  <data name="ribbon_vector_paste" xml:space="preserve">
+    <value>لصق البيانات</value>
+  </data>
+  <data name="ribbon_vector_pasteTooltip" xml:space="preserve">
+    <value>إضافة طبقة من نص منسوخ: GeoJSON أو TopoJSON أو Esri JSON أو KML أو CSV أو TSV.</value>
+  </data>
 </root>

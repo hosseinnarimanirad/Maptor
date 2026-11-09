@@ -3229,4 +3229,16 @@
   <data name="dialog_importOptions_srsKmlHint" xml:space="preserve">
     <value>KML 坐标始终为 WGS84 经纬度。</value>
   </data>
+  <data name="ribbon_vector_addFromFile" xml:space="preserve">
+    <value>添加数据</value>
+  </data>
+  <data name="ribbon_vector_addFromFileTooltip" xml:space="preserve">
+    <value>从文件添加图层。格式（Shapefile、KML、KMZ、GPX、GeoPackage、DXF、GeoJSON、TopoJSON、Esri JSON、CSV、TSV）根据文件本身自动识别。</value>
+  </data>
+  <data name="ribbon_vector_paste" xml:space="preserve">
+    <value>粘贴数据</value>
+  </data>
+  <data name="ribbon_vector_pasteTooltip" xml:space="preserve">
+    <value>从复制的文本添加图层：GeoJSON、TopoJSON、Esri JSON、KML、CSV 或 TSV。</value>
+  </data>
 </root>

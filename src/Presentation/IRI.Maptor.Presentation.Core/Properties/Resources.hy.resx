@@ -3229,4 +3229,16 @@
   <data name="dialog_importOptions_srsKmlHint" xml:space="preserve">
     <value>KML կոորդինատները միշտ երկայնություն/լայնություն են WGS84-ում։</value>
   </data>
+  <data name="ribbon_vector_addFromFile" xml:space="preserve">
+    <value>Ավելացնել տվյալներ</value>
+  </data>
+  <data name="ribbon_vector_addFromFileTooltip" xml:space="preserve">
+    <value>Ավելացնել շերտ ֆայլից։ Ձևաչափը (Shapefile, KML, KMZ, GPX, GeoPackage, DXF, GeoJSON, TopoJSON, Esri JSON, CSV, TSV) որոշվում է հենց ֆայլից։</value>
+  </data>
+  <data name="ribbon_vector_paste" xml:space="preserve">
+    <value>Տեղադրել տվյալներ</value>
+  </data>
+  <data name="ribbon_vector_pasteTooltip" xml:space="preserve">
+    <value>Ավելացնել շերտ պատճենված տեքստից՝ GeoJSON, TopoJSON, Esri JSON, KML, CSV կամ TSV։</value>
+  </data>
 </root>

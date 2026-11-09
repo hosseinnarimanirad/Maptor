@@ -4200,4 +4200,16 @@
   <data name="dialog_importOptions_srsKmlHint" xml:space="preserve">
     <value>مختصات KML همیشه طول و عرض جغرافیایی در WGS84 است.</value>
   </data>
+  <data name="ribbon_vector_addFromFile" xml:space="preserve">
+    <value>افزودن داده</value>
+  </data>
+  <data name="ribbon_vector_addFromFileTooltip" xml:space="preserve">
+    <value>افزودن لایه از فایل. قالب (شیپ‌فایل، KML، KMZ، GPX، GeoPackage، DXF، GeoJSON، TopoJSON، Esri JSON، CSV، TSV) از روی خود فایل تشخیص داده می‌شود.</value>
+  </data>
+  <data name="ribbon_vector_paste" xml:space="preserve">
+    <value>جایگذاری داده</value>
+  </data>
+  <data name="ribbon_vector_pasteTooltip" xml:space="preserve">
+    <value>افزودن لایه از متن کپی‌شده: GeoJSON، TopoJSON، Esri JSON، KML، CSV یا TSV.</value>
+  </data>
 </root>
