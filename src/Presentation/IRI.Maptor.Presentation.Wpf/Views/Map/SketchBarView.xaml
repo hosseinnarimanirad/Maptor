@@ -295,7 +295,7 @@
                             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                                         ToolTip="{Binding [geometryDetails_currentPoint_zoom], Source={StaticResource Localization}}"
                                         Command="{Binding PanToCurrentPointCommand}" >
-                                <iconPacks:Material Kind="Crosshairs"/>
+                                <iconPacks:Material Kind="HandBackRight"/>
                             </Button>
                             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                                         ToolTip="{Binding [mapPanel_currentPoint_copyCoordinate], Source={StaticResource Localization}}"
@@ -349,7 +349,7 @@
                             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                                     ToolTip="{Binding [mapPanel_currentPart_pan], Source={StaticResource Localization}}"
                                     Command="{Binding PanToCurrentPartCommand}" >
-                                <iconPacks:Material Kind="Crosshairs"/>
+                                <iconPacks:Material Kind="HandBackRight"/>
                             </Button>
                             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" IsEnabled="False"
                                     ToolTip="{Binding [mapPanel_currentPart_add], Source={StaticResource Localization}}"

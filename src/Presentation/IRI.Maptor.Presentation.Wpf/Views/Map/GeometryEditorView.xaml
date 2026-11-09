@@ -635,7 +635,7 @@
                     Command="{Binding PanToCurrentPointCommand}"
                     IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
                     ToolTip="{Binding [geometryDetails_currentPoint_zoom], Source={StaticResource Localization}}">
-                <iconPacks:PackIconMaterial Kind="Crosshairs"/>
+                <iconPacks:PackIconMaterial Kind="HandBackRight"/>
             </Button>
             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                     Command="{Binding CopyCurrentPointCommand}"

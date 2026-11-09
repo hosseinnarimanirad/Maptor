@@ -485,4 +485,91 @@ public class GoToViewModelTest
         Assert.Equal(59, lon.Minutes);
         Assert.True(lon.IsValid);
     }
+
+    // ── Copy: the selected system, as the fields hold it ─────────────────────────────
+
+    /// <summary>A fresh dialog fed <paramref name="text"/> through the quick-entry box must land on the same spot.</summary>
+    private static void AssertReadsBack(string text, double lat, double lon)
+    {
+        var other = Create();
+        other.QuickEntryText = text;
+
+        Assert.True(other.IsQuickEntryRecognized, text);
+        AssertPoint(other, lat, lon, 1e-5);
+    }
+
+    [Fact]
+    public void CopyDecimalIsLatLonInDecimalDegrees()
+    {
+        var vm = Create();
+        vm.GeodeticFormat = GeodeticFormat.DecimalDegrees;
+        vm.LatitudeText = "35 41 58.92 N";
+        vm.LongitudeText = "۵۱٫۳۳۸";
+
+        Assert.Equal("35.6997, 51.338", vm.CopyText);
+        AssertReadsBack(vm.CopyText!, Lat, Lon);
+    }
+
+    [Fact]
+    public void CopyDmsIsDmsWithHemispheres()
+    {
+        var vm = Create();
+        vm.Latitude.Degrees = 35; vm.Latitude.Minutes = 41; vm.Latitude.Seconds = 58.92; vm.Latitude.Hemisphere = "S";
+        vm.Longitude.Degrees = 51; vm.Longitude.Minutes = 20; vm.Longitude.Seconds = 16.8; vm.Longitude.Hemisphere = "E";
+
+        Assert.Equal("35°41′58.92″ S, 51°20′16.80″ E", vm.CopyText);
+        AssertReadsBack(vm.CopyText!, -Lat, Lon);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void CopyUtmIsZoneHemisphereEastingNorthing(bool isNorth)
+    {
+        var vm = Create();
+        vm.SetWgs84Point(new Point(Lon, isNorth ? Lat : -Lat));
+        vm.Mode = GoToMode.Utm;
+
+        var text = vm.CopyText;
+
+        Assert.NotNull(text);
+        Assert.StartsWith(isNorth ? "39N " : "39S ", text);
+        Assert.Equal($"39{(isNorth ? "N" : "S")} {vm.EastingText} {vm.NorthingText}", text);
+        AssertReadsBack(text!, isNorth ? Lat : -Lat, Lon);
+    }
+
+    [Fact]
+    public void CopyProjectedIsXy()
+    {
+        var vm = Create();
+        vm.SetWgs84Point(new Point(Lon, Lat));
+        vm.Mode = GoToMode.Projected;
+
+        Assert.Equal($"{vm.XText}, {vm.YText}", vm.CopyText);
+    }
+
+    [Fact]
+    public void CopyKeepsTheSelectedDatum()
+    {
+        var vm = Create();
+        vm.GeodeticFormat = GeodeticFormat.DecimalDegrees;
+        vm.LatitudeText = "35.6997";
+        vm.LongitudeText = "51.338";
+
+        vm.Datum = vm.Ellipsoids.First(e => !e.AreTheSame(Ellipsoids.WGS84));
+
+        // the typed numbers on the chosen datum, not the WGS 84 result
+        Assert.Equal("35.6997, 51.338", vm.CopyText);
+        Assert.NotEqual(vm.ResultDecimalText, vm.CopyText);
+    }
+
+    [Fact]
+    public void CopyIsNullWhileInvalid()
+    {
+        var vm = Create();
+        vm.GeodeticFormat = GeodeticFormat.DecimalDegrees;
+        vm.LatitudeText = "95";
+
+        Assert.Null(vm.CopyText);
+    }
 }

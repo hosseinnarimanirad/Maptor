@@ -62,7 +62,7 @@ public static class FeatureTableCommands
     // Centres the map on the selected features and keeps the current scale.
     public static FeatureTableCommand CreatePanToCommand(MapViewModelBase map)
     {
-        var markup = new MahApps.Metro.IconPacks.PackIconMaterial() { Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.Crosshairs }.Data;
+        var markup = new MahApps.Metro.IconPacks.PackIconMaterial() { Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.HandBackRight }.Data;
 
         var result = new FeatureTableCommand()
         {

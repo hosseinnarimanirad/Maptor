@@ -34,6 +34,9 @@ public class GoToViewModel : Notifier
 {
     private const double UtmSouthFalseNorthing = 10_000_000;
 
+    /// <summary>The level Zoom to jumps to when the map is further out; from there on each press is one step.</summary>
+    private const int FirstZoomLevel = 13;
+
     private readonly Action<Point> _requestPanTo;
     private readonly Action<Point> _requestZoomTo;
     private readonly Action<Point> _requestAddToDrawingItem;
@@ -85,7 +88,15 @@ public class GoToViewModel : Notifier
             {
                 var webMercatorPoint = MapProjects.GeodeticWgs84ToWebMercator(p);
 
-                mapPresenter.ZoomAndCenterToGoogleZoomLevel(13, webMercatorPoint, () => mapPresenter.FlashPoint(webMercatorPoint));
+                Action flash = () => mapPresenter.FlashPoint(webMercatorPoint);
+
+                // From far out (e.g. the whole country), the first press jumps straight to a street-level
+                // view. After that, each press zooms in one more step, as the Identify and feature-table zooms do:
+                // an extent that collapses to a point centres on it and takes a single zoom step.
+                if (mapPresenter.NearestGoogleZoomLevel < FirstZoomLevel)
+                    mapPresenter.ZoomAndCenterToGoogleZoomLevel(FirstZoomLevel, webMercatorPoint, flash);
+                else
+                    mapPresenter.ZoomToExtent(new BoundingBox(webMercatorPoint.X, webMercatorPoint.Y, webMercatorPoint.X, webMercatorPoint.Y), false, true, flash);
             },
             p =>
             {
@@ -887,7 +898,7 @@ public class GoToViewModel : Notifier
     public bool HasWarningMessage => !string.IsNullOrEmpty(WarningMessage);
 
     private string _resultDecimalText = string.Empty;
-    /// <summary>"35.689200, 51.389000" — what Copy puts on the clipboard.</summary>
+    /// <summary>"35.689200, 51.389000": the WGS 84 reading on the position line.</summary>
     public string ResultDecimalText
     {
         get => _resultDecimalText;
@@ -1273,17 +1284,67 @@ public class GoToViewModel : Notifier
         _ => { if (_wgs84Point is not null) _requestAddToDrawingItem?.Invoke(_wgs84Point); },
         _ => IsValid);
 
+    /// <summary>
+    /// What Copy puts on the clipboard: the position in the selected system, on the selected
+    /// datum, i.e. what the fields hold, normalized. UTM and both geodetic notations come out
+    /// in a form the quick-entry box reads back; null while the input does not resolve.
+    /// <list type="bullet">
+    /// <item>decimal: <c>35.6892, 51.389</c> (lat, lon)</item>
+    /// <item>DMS: <c>35°41′21.12″ N, 51°23′20.40″ E</c></item>
+    /// <item>UTM: <c>39N 534123.4 3950123.5</c> (northing as entered, with the southern false northing)</item>
+    /// <item>projected: <c>5720863.2, 4256325.8</c> (x, y)</item>
+    /// </list>
+    /// </summary>
+    public string? CopyText
+    {
+        get
+        {
+            if (!IsValid)
+                return null;
+
+            switch (Mode)
+            {
+                case GoToMode.Geodetic when GeodeticFormat == GeodeticFormat.DegreesMinutesSeconds:
+                    return DegreeHelper.ToDmsWithHemisphere(Latitude.Value, isLatitude: true)
+                        + ", " + DegreeHelper.ToDmsWithHemisphere(Longitude.Value, isLatitude: false);
+
+                case GoToMode.Geodetic:
+                    return CoordinateTextParser.TryParseAngle(LatitudeText, out var latitude)
+                           && CoordinateTextParser.TryParseAngle(LongitudeText, out var longitude)
+                        ? FormatDegrees(latitude) + ", " + FormatDegrees(longitude)
+                        : null;
+
+                case GoToMode.Utm:
+                    return CoordinateTextParser.TryParseNumber(EastingText, out var easting)
+                           && CoordinateTextParser.TryParseNumber(NorthingText, out var northing)
+                        ? FormattableString.Invariant($"{UtmZone}{(IsNorthernHemisphere ? "N" : "S")} {FormatMetres(easting)} {FormatMetres(northing)}")
+                        : null;
+
+                case GoToMode.Projected:
+                    return CoordinateTextParser.TryParseNumber(XText, out var x)
+                           && CoordinateTextParser.TryParseNumber(YText, out var y)
+                        ? FormatMetres(x) + ", " + FormatMetres(y)
+                        : null;
+
+                default:
+                    return null;
+            }
+        }
+    }
+
     private RelayCommand? _copyCommand;
-    /// <summary>Puts the WGS 84 "lat, lon" reading on the clipboard.</summary>
+    /// <summary>Puts <see cref="CopyText"/> on the clipboard.</summary>
     public RelayCommand CopyCommand => _copyCommand ??= new RelayCommand(
         _ =>
         {
-            if (!IsValid)
+            var text = CopyText;
+
+            if (string.IsNullOrEmpty(text))
                 return;
 
             try
             {
-                Clipboard.SetText(ResultDecimalText);
+                Clipboard.SetText(text);
             }
             catch (Exception)
             {

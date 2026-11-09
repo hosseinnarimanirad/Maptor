@@ -319,7 +319,7 @@
                                             Command="{Binding PanToCommand}"
                                             ToolTip="{Binding [featureTable_panToFeature], Source={StaticResource Localization}}"
                                             AutomationProperties.Name="{Binding [featureTable_panToFeature], Source={StaticResource Localization}}">
-                                        <iconPacks:PackIconMaterial Kind="Crosshairs" Style="{StaticResource toolbarIcon}"/>
+                                        <iconPacks:PackIconMaterial Kind="HandBackRight" Style="{StaticResource toolbarIcon}"/>
                                     </Button>
                                     <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                                             Command="{Binding CopyAttributesCommand}"
@@ -435,7 +435,7 @@
                                             Command="{Binding PanToCommand}"
                                             ToolTip="{Binding [featureTable_panToFeature], Source={StaticResource Localization}}"
                                             AutomationProperties.Name="{Binding [featureTable_panToFeature], Source={StaticResource Localization}}">
-                                        <iconPacks:PackIconMaterial Kind="Crosshairs" Style="{StaticResource toolbarIcon}"/>
+                                        <iconPacks:PackIconMaterial Kind="HandBackRight" Style="{StaticResource toolbarIcon}"/>
                                     </Button>
                                     <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                                             Command="{Binding ShowInAttributeTableCommand}"
