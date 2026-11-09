@@ -325,6 +325,10 @@ public class ImportOptionsDialogViewModel : DialogViewModelBase
         get => _selectedSrsOption;
         set
         {
+            // WPF can push null (or the same item) back while the options list changes: that is not a choice
+            if (value is null || ReferenceEquals(value, _selectedSrsOption))
+                return;
+
             if (!_settingInternally)
                 _userChoseSrs = true;
 
@@ -523,8 +527,9 @@ public class ImportOptionsDialogViewModel : DialogViewModelBase
         }
         catch (Exception ex)
         {
+            // the localized text: a DomainException's Message is not translated
             _previewError = ex is IOException or UnauthorizedAccessException
-                ? MaptorLockedFileException.Instance.Message
+                ? LocalizationManager.Instance[MaptorLockedFileException.Instance.MessageResourceKey]
                 : string.Format(LocalizationManager.Instance["dialog_importOptions_validationUnreadable"], FormatName);
         }
         finally
@@ -679,6 +684,10 @@ public class ImportOptionsDialogViewModel : DialogViewModelBase
             throw new InvalidDataException("No Esri JSON features.");
 
         detectedSrid = featureSet.SpatialReference?.LatestWkid ?? featureSet.SpatialReference?.Wkid ?? 0;
+
+        // ArcGIS often writes Esri's own code for Web Mercator (102100); show it as the Web Mercator choice
+        if (detectedSrid == SridHelper.EsriWebMercator)
+            detectedSrid = SridHelper.WebMercator;
 
         var result = new List<Point>();
 

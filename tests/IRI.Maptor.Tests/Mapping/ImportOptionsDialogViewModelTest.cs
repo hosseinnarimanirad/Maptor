@@ -335,6 +335,48 @@ public sealed class ImportOptionsDialogViewModelTest : IDisposable
     }
 
     [Fact]
+    public void EsriWebMercatorCodeSelectsWebMercator()
+    {
+        // ArcGIS writes 102100 for Web Mercator; it is not an EPSG code, so no "From the file (EPSG:102100)" choice
+        var vm = Paste(EsriJsonWebMercator.Replace("\"wkid\":3857", "\"wkid\":102100"));
+
+        Assert.Equal(SridHelper.WebMercator, vm.EffectiveSelectedSrid);
+        Assert.Equal(3, vm.AvailableSrsOptions.Count);
+        Assert.False(vm.CanUserChooseSrs);
+    }
+
+    [Fact]
+    public async Task LockedFileShowsTheTranslatedMessage()
+    {
+        var path = Path.Combine(_folder, "locked.json");
+        File.WriteAllText(path, GeoJsonDegrees);
+
+        using (new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+        {
+            var vm = new ImportOptionsDialogViewModel(Dialogs, DataSourceKind.GeoJson, path);
+            await vm.Initialization;
+
+            Assert.Equal(IRI.Maptor.Presentation.Core.Localization.LocalizationManager.Instance["message_error_lockedFile"], vm.ValidationMessage);
+            Assert.DoesNotContain("Exception", vm.ValidationMessage);
+        }
+    }
+
+    [Fact]
+    public void NullPushedBackByTheComboIsNotAChoice()
+    {
+        var vm = Paste(GeoJsonDegrees);
+
+        vm.SelectedSrsOption = null;
+
+        Assert.Equal(SridHelper.GeodeticWGS84, vm.EffectiveSelectedSrid);
+
+        // still guessing: projected values switch the CRS to UTM
+        vm.RawText = GeoJsonUtm;
+
+        Assert.True(vm.IsUtmSelected);
+    }
+
+    [Fact]
     public void FileWithoutAKindIsRejected()
     {
         Assert.Throws<ArgumentNullException>(() => new ImportOptionsDialogViewModel(Dialogs, null, Path.Combine(_folder, "a.json")));
