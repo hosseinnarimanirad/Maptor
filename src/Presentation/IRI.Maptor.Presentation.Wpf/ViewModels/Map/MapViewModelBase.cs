@@ -747,10 +747,17 @@ public abstract class MapViewModelBase : ViewModelBase
 
             _isConnected = value;
             RaisePropertyChanged();
+            RaisePropertyChanged(nameof(IsDisconnected));
 
             RequestSetConnectedState?.Invoke(value);
         }
     }
+
+    /// <summary>
+    /// True only once a check has reported no connection. Unlike <c>!IsConnected</c>, it stays false
+    /// while no check has finished yet, so a "not connected" banner bound to it does not flash at start-up.
+    /// </summary>
+    public bool IsDisconnected => _isConnected == false;
 
 
     private MapStatus _mapStatus;
