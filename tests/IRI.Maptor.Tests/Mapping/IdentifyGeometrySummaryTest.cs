@@ -135,6 +135,32 @@ public class IdentifyGeometrySummaryTest
         Assert.Equal(a.Perimeter!.Value, b.Perimeter!.Value, 2);
     }
 
+    [Theory]
+    [InlineData(MeasureDisplayUnit.Meter, "1,500 m", "2,000,000 m\xB2")]
+    [InlineData(MeasureDisplayUnit.Kilometer, "1.5 km", "2 km\xB2")]
+    // feet and miles through UnitConversion, i.e. the US survey foot (1200/3937 m)
+    [InlineData(MeasureDisplayUnit.Foot, "4,921.25 ft", "21,527,734.72 ft\xB2")]
+    [InlineData(MeasureDisplayUnit.Mile, "0.9321 mi", "0.7722 mi\xB2")]
+    public void OneUnit_DrivesLengthAndItsSquareForArea(MeasureDisplayUnit unit, string length, string area)
+    {
+        Assert.Equal(length, MeasureDisplayFormatter.FormatLength(1500, unit));
+        Assert.Equal(area, MeasureDisplayFormatter.FormatArea(2e6, unit));
+    }
+
+    [Fact]
+    public void AutoUnit_IsTheSizeBasedLabel()
+    {
+        Assert.Equal(UnitHelper.GetLengthLabel(1500), MeasureDisplayFormatter.FormatLength(1500, MeasureDisplayUnit.Auto));
+        Assert.Equal(UnitHelper.GetAreaLabel(350), MeasureDisplayFormatter.FormatArea(350, MeasureDisplayUnit.Auto));
+    }
+
+    [Fact]
+    public void SmallValueInALargeUnit_DoesNotReadZero()
+    {
+        // a 350 m² parcel in mi²
+        Assert.Equal("0.00013514 mi\xB2", MeasureDisplayFormatter.FormatArea(350, MeasureDisplayUnit.Mile));
+    }
+
     [Fact]
     public void UnitLabels_UseLowerCaseKm()
     {

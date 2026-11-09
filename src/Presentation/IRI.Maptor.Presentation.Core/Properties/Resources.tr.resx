@@ -3265,4 +3265,10 @@
   <data name="identify_geometry_holes" xml:space="preserve">
     <value>Delikler</value>
   </data>
+  <data name="identify_geometry_unit" xml:space="preserve">
+    <value>Birim</value>
+  </data>
+  <data name="identify_geometry_unitAuto" xml:space="preserve">
+    <value>Otomatik</value>
+  </data>
 </root>

@@ -3265,4 +3265,10 @@
   <data name="identify_geometry_holes" xml:space="preserve">
     <value>الثقوب</value>
   </data>
+  <data name="identify_geometry_unit" xml:space="preserve">
+    <value>الوحدة</value>
+  </data>
+  <data name="identify_geometry_unitAuto" xml:space="preserve">
+    <value>تلقائي</value>
+  </data>
 </root>

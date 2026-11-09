@@ -3265,4 +3265,10 @@
   <data name="identify_geometry_holes" xml:space="preserve">
     <value>Boşluqlar</value>
   </data>
+  <data name="identify_geometry_unit" xml:space="preserve">
+    <value>Vahid</value>
+  </data>
+  <data name="identify_geometry_unitAuto" xml:space="preserve">
+    <value>Avtomatik</value>
+  </data>
 </root>

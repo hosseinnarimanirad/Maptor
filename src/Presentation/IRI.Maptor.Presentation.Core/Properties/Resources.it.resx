@@ -3265,4 +3265,10 @@
   <data name="identify_geometry_holes" xml:space="preserve">
     <value>Fori</value>
   </data>
+  <data name="identify_geometry_unit" xml:space="preserve">
+    <value>Unità</value>
+  </data>
+  <data name="identify_geometry_unitAuto" xml:space="preserve">
+    <value>Automatico</value>
+  </data>
 </root>

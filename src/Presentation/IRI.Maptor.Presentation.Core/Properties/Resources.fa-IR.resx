@@ -4236,4 +4236,10 @@
   <data name="identify_geometry_holes" xml:space="preserve">
     <value>حفره‌ها</value>
   </data>
+  <data name="identify_geometry_unit" xml:space="preserve">
+    <value>واحد</value>
+  </data>
+  <data name="identify_geometry_unitAuto" xml:space="preserve">
+    <value>خودکار</value>
+  </data>
 </root>

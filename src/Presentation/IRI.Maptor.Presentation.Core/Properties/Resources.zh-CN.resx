@@ -3265,4 +3265,10 @@
   <data name="identify_geometry_holes" xml:space="preserve">
     <value>孔数</value>
   </data>
+  <data name="identify_geometry_unit" xml:space="preserve">
+    <value>单位</value>
+  </data>
+  <data name="identify_geometry_unitAuto" xml:space="preserve">
+    <value>自动</value>
+  </data>
 </root>

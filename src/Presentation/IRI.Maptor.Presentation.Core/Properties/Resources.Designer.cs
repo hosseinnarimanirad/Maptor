@@ -3832,6 +3832,24 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Unit.
+        /// </summary>
+        public static string identify_geometry_unit {
+            get {
+                return ResourceManager.GetString("identify_geometry_unit", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Auto.
+        /// </summary>
+        public static string identify_geometry_unitAuto {
+            get {
+                return ResourceManager.GetString("identify_geometry_unitAuto", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Area.
         /// </summary>
         public static string identify_geometry_area {

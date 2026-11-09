@@ -4332,4 +4332,10 @@
   <data name="identify_geometry_holes" xml:space="preserve">
     <value>Holes</value>
   </data>
+  <data name="identify_geometry_unit" xml:space="preserve">
+    <value>Unit</value>
+  </data>
+  <data name="identify_geometry_unitAuto" xml:space="preserve">
+    <value>Auto</value>
+  </data>
 </root>

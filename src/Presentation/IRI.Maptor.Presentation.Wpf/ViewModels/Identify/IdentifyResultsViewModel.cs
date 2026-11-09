@@ -235,6 +235,58 @@ public class IdentifyResultsViewModel : Notifier
 
     public IReadOnlyList<IdentifyAttributeRow>? SelectedAttributes => SelectedFeature?.Attributes;
 
+    #region Geometry strip measures
+
+    private MeasureDisplayUnit _measureUnit = MeasureDisplayUnit.Auto;
+    /// <summary>
+    /// The unit of the geometry strip's length, perimeter and area (its square). Kept on this instance, which
+    /// lives as long as the map, so the choice holds for every feature selected in the session.
+    /// </summary>
+    public MeasureDisplayUnit MeasureUnit
+    {
+        get { return _measureUnit; }
+        set
+        {
+            if (_measureUnit == value)
+                return;
+
+            _measureUnit = value;
+            RaisePropertyChanged();
+            RaiseMeasureTexts();
+        }
+    }
+
+    /// <summary>Auto (localized), then the unit symbols; rebuilt on each read so a language switch relabels Auto.</summary>
+    public IReadOnlyList<MeasureDisplayUnitOption> MeasureUnitOptions =>
+        Enum.GetValues<MeasureDisplayUnit>()
+            .Select(u => new MeasureDisplayUnitOption(u, u == MeasureDisplayUnit.Auto ? Localization["identify_geometry_unitAuto"] : MeasureDisplayFormatter.GetSymbol(u)))
+            .ToList();
+
+    private IdentifyGeometrySummary? SelectedGeometry => SelectedFeature?.GeometrySummary;
+
+    /// <summary>True when the strip shows a length, a perimeter or an area: the unit combo is shown only then.</summary>
+    public bool HasMeasures => SelectedGeometry is { } g && (g.ShowLength || g.ShowArea || g.ShowPerimeter);
+
+    public string? GeometryLengthText => FormatMeasure(SelectedGeometry?.Length, MeasureDisplayFormatter.FormatLength);
+
+    public string? GeometryAreaText => FormatMeasure(SelectedGeometry?.Area, MeasureDisplayFormatter.FormatArea);
+
+    public string? GeometryPerimeterText => FormatMeasure(SelectedGeometry?.Perimeter, MeasureDisplayFormatter.FormatLength);
+
+    // the digits go into the string (Persian digits in Persian), as the rest of the codebase does
+    private string? FormatMeasure(double? value, Func<double, MeasureDisplayUnit, string> format) =>
+        value is double v ? LocalizationManager.GetLocalizedNumberString(format(v, MeasureUnit)) : null;
+
+    private void RaiseMeasureTexts()
+    {
+        RaisePropertyChanged(nameof(HasMeasures));
+        RaisePropertyChanged(nameof(GeometryLengthText));
+        RaisePropertyChanged(nameof(GeometryAreaText));
+        RaisePropertyChanged(nameof(GeometryPerimeterText));
+    }
+
+    #endregion
+
     /// <summary>Features the current selection stands for: the feature itself, or a layer's visible hits.</summary>
     public IReadOnlyList<Feature<Point>> GetSelectedFeatures()
     {
@@ -283,6 +335,7 @@ public class IdentifyResultsViewModel : Notifier
         RaisePropertyChanged(nameof(IsFeatureSelected));
         RaisePropertyChanged(nameof(IsLayerSelected));
         RaisePropertyChanged(nameof(CanShowInAttributeTable));
+        RaiseMeasureTexts();
 
         CommandManager.InvalidateRequerySuggested();
 
@@ -490,6 +543,13 @@ public class IdentifyResultsViewModel : Notifier
 
         RaisePropertyChanged(nameof(SummaryText));
         RaisePropertyChanged(nameof(LocationText));
+
+        // the geometry strip's values carry their digits in the string (Persian digits in Persian):
+        // re-raising the selection makes the count bindings, and their converter, run again;
+        // the measures and the unit list ("Auto") are rebuilt here
+        RaisePropertyChanged(nameof(SelectedFeature));
+        RaisePropertyChanged(nameof(MeasureUnitOptions));
+        RaiseMeasureTexts();
     }
 
     #endregion

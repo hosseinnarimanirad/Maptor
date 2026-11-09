@@ -196,22 +196,53 @@
 
             <Style x:Key="toolbarIcon" TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
 
-            <!--geometry strip: "name: value" pairs that wrap; the name is muted, the value follows the
-                reading direction's leading side but is itself LTR (Latin digits and units)-->
-            <Style x:Key="geometryFact" TargetType="StackPanel">
-                <Setter Property="Orientation" Value="Horizontal"/>
-                <Setter Property="Margin" Value="0,2,16,2"/>
-            </Style>
+            <!--geometry strip tile: accent icon on the leading side, the muted name above, the value below
+                it, larger and bold. Header = name, Content = value text, Tag = PackIconMaterialKind.
+                The value is LTR (number then unit) and gets Persian digits in Persian through
+                localizedNumberConverter at the binding, so the digits are in the string itself, as the
+                rest of the codebase does (see MessageBoxView).-->
+            <Style x:Key="geometryFact" TargetType="HeaderedContentControl">
+                <Setter Property="Focusable" Value="False"/>
+                <Setter Property="IsTabStop" Value="False"/>
+                <Setter Property="Margin" Value="0,2,20,2"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="HeaderedContentControl">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
 
-            <Style x:Key="geometryFactName" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}">
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="Margin" Value="0,0,4,0"/>
-            </Style>
+                                <iconPacks:PackIconMaterial Grid.RowSpan="2"
+                                                            Kind="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
+                                                            Width="18" Height="18"
+                                                            Margin="0,0,8,0"
+                                                            VerticalAlignment="Center"
+                                                            Foreground="{DynamicResource MahApps.Brushes.Accent}"/>
 
-            <Style x:Key="geometryFactValue" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}">
-                <Setter Property="FontWeight" Value="SemiBold"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="FlowDirection" Value="LeftToRight"/>
+                                <TextBlock Grid.Column="1" Grid.Row="0"
+                                           Style="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}"
+                                           Text="{TemplateBinding Header}"
+                                           Margin="0"/>
+
+                                <TextBlock x:Name="factValue" Grid.Column="1" Grid.Row="1"
+                                           Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}"
+                                           Text="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
+                                           FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.BodyLarge}"
+                                           FontWeight="Bold"
+                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                                           FlowDirection="LeftToRight"
+                                           HorizontalAlignment="Left"
+                                           Margin="0"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -412,46 +443,72 @@
 
                         <!--geometry strip (IdentifyGeometrySummary): geodesic length / area / perimeter and the
                             point, part and hole counts; only the facts that apply, nothing for a single point.
-                            The fallback hides it while the path has a null (no summary for an empty geometry).-->
+                            An accent-tinted band of icon tiles, so it reads as its own section between the
+                            toolbar and the attribute table. The fallback hides it while the path has a null
+                            (no summary for an empty geometry). The measures are view-model texts (unit and
+                            digits applied there). The counts spell out the full SelectedFeature.GeometrySummary
+                            path on purpose: on a language change the view model re-raises SelectedFeature,
+                            which re-runs each path and its digit converter. A DataContext of the summary would
+                            not: it is the same object, so nothing would update.-->
                         <Border x:Name="geometryStrip"
                                 Grid.Row="1"
-                                DataContext="{Binding SelectedFeature.GeometrySummary}"
-                                BorderThickness="0,0,0,1"
-                                BorderBrush="{DynamicResource MahApps.Brushes.Gray8}"
-                                Padding="8,4"
-                                Visibility="{Binding HasAny, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
-                            <WrapPanel Orientation="Horizontal">
-                                <StackPanel Style="{StaticResource geometryFact}"
-                                            Visibility="{Binding ShowLength, Converter={StaticResource boolToVisibilityConverter}}">
-                                    <TextBlock Style="{StaticResource geometryFactName}" Text="{Binding [identify_geometry_length], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
-                                    <TextBlock Style="{StaticResource geometryFactValue}" Text="{Binding LengthLabel}"/>
-                                </StackPanel>
-                                <StackPanel Style="{StaticResource geometryFact}"
-                                            Visibility="{Binding ShowArea, Converter={StaticResource boolToVisibilityConverter}}">
-                                    <TextBlock Style="{StaticResource geometryFactName}" Text="{Binding [identify_geometry_area], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
-                                    <TextBlock Style="{StaticResource geometryFactValue}" Text="{Binding AreaLabel}"/>
-                                </StackPanel>
-                                <StackPanel Style="{StaticResource geometryFact}"
-                                            Visibility="{Binding ShowPerimeter, Converter={StaticResource boolToVisibilityConverter}}">
-                                    <TextBlock Style="{StaticResource geometryFactName}" Text="{Binding [identify_geometry_perimeter], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
-                                    <TextBlock Style="{StaticResource geometryFactValue}" Text="{Binding PerimeterLabel}"/>
-                                </StackPanel>
-                                <StackPanel Style="{StaticResource geometryFact}"
-                                            Visibility="{Binding ShowPoints, Converter={StaticResource boolToVisibilityConverter}}">
-                                    <TextBlock Style="{StaticResource geometryFactName}" Text="{Binding [identify_geometry_points], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
-                                    <TextBlock Style="{StaticResource geometryFactValue}" Text="{Binding NumberOfPoints, StringFormat='{}{0:N0}'}"/>
-                                </StackPanel>
-                                <StackPanel Style="{StaticResource geometryFact}"
-                                            Visibility="{Binding ShowParts, Converter={StaticResource boolToVisibilityConverter}}">
-                                    <TextBlock Style="{StaticResource geometryFactName}" Text="{Binding [identify_geometry_parts], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
-                                    <TextBlock Style="{StaticResource geometryFactValue}" Text="{Binding NumberOfParts, StringFormat='{}{0:N0}'}"/>
-                                </StackPanel>
-                                <StackPanel Style="{StaticResource geometryFact}"
-                                            Visibility="{Binding ShowHoles, Converter={StaticResource boolToVisibilityConverter}}">
-                                    <TextBlock Style="{StaticResource geometryFactName}" Text="{Binding [identify_geometry_holes], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
-                                    <TextBlock Style="{StaticResource geometryFactValue}" Text="{Binding NumberOfHoles, StringFormat='{}{0:N0}'}"/>
-                                </StackPanel>
+                                Style="{StaticResource IRI.Maptor.Styles.Border.Banner.Accent}"
+                                Margin="0" CornerRadius="0"
+                                Padding="12,8"
+                                Visibility="{Binding SelectedFeature.GeometrySummary.HasAny, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
+                            <DockPanel LastChildFill="True">
+                            <!--one unit for every measure: a length unit, its square for the area; on the trailing
+                                side, shown only when there is a length, perimeter or area to convert. The choice
+                                lives on the view model, so it holds for the session.-->
+                            <ComboBox x:Name="measureUnitCombo"
+                                      DockPanel.Dock="Right"
+                                      Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal}"
+                                      FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"
+                                      MinHeight="{StaticResource IRI.Maptor.Styles.Size.Control.Compact}"
+                                      Padding="4,3"
+                                      MinWidth="80"
+                                      Margin="8,0,0,0"
+                                      VerticalAlignment="Center"
+                                      ItemsSource="{Binding MeasureUnitOptions}"
+                                      DisplayMemberPath="Label"
+                                      SelectedValuePath="Unit"
+                                      SelectedValue="{Binding MeasureUnit}"
+                                      ToolTip="{Binding [identify_geometry_unit], Source={StaticResource Localization}}"
+                                      AutomationProperties.Name="{Binding [identify_geometry_unit], Source={StaticResource Localization}}"
+                                      Visibility="{Binding HasMeasures, Converter={StaticResource boolToVisibilityConverter}}"/>
+                          ب  <WrapPanel Orientation="Horizontal">
+                                <HeaderedContentControl Style="{StaticResource geometryFact}"
+                                                        Tag="{x:Static iconPacks:PackIconMaterialKind.VectorPolyline}"
+                                                        Header="{Binding [identify_geometry_length], Source={StaticResource Localization}}"
+                                                        Content="{Binding GeometryLengthText}"
+                                                        Visibility="{Binding SelectedFeature.GeometrySummary.ShowLength, Converter={StaticResource boolToVisibilityConverter}}"/>
+                                <HeaderedContentControl Style="{StaticResource geometryFact}"
+                                                        Tag="{x:Static iconPacks:PackIconMaterialKind.VectorSquare}"
+                                                        Header="{Binding [identify_geometry_area], Source={StaticResource Localization}}"
+                                                        Content="{Binding GeometryAreaText}"
+                                                        Visibility="{Binding SelectedFeature.GeometrySummary.ShowArea, Converter={StaticResource boolToVisibilityConverter}}"/>
+                                <HeaderedContentControl Style="{StaticResource geometryFact}"
+                                                        Tag="{x:Static iconPacks:PackIconMaterialKind.VectorPolygon}"
+                                                        Header="{Binding [identify_geometry_perimeter], Source={StaticResource Localization}}"
+                                                        Content="{Binding GeometryPerimeterText}"
+                                                        Visibility="{Binding SelectedFeature.GeometrySummary.ShowPerimeter, Converter={StaticResource boolToVisibilityConverter}}"/>
+                                <HeaderedContentControl Style="{StaticResource geometryFact}"
+                                                        Tag="{x:Static iconPacks:PackIconMaterialKind.ScatterPlotOutline}"
+                                                        Header="{Binding [identify_geometry_points], Source={StaticResource Localization}}"
+                                                        Content="{Binding SelectedFeature.GeometrySummary.NumberOfPoints, Converter={StaticResource localizedNumberConverter}}"
+                                                        Visibility="{Binding SelectedFeature.GeometrySummary.ShowPoints, Converter={StaticResource boolToVisibilityConverter}}"/>
+                                <HeaderedContentControl Style="{StaticResource geometryFact}"
+                                                        Tag="{x:Static iconPacks:PackIconMaterialKind.VectorUnion}"
+                                                        Header="{Binding [identify_geometry_parts], Source={StaticResource Localization}}"
+                                                        Content="{Binding SelectedFeature.GeometrySummary.NumberOfParts, Converter={StaticResource localizedNumberConverter}}"
+                                                        Visibility="{Binding SelectedFeature.GeometrySummary.ShowParts, Converter={StaticResource boolToVisibilityConverter}}"/>
+                                <HeaderedContentControl Style="{StaticResource geometryFact}"
+                                                        Tag="{x:Static iconPacks:PackIconMaterialKind.VectorDifference}"
+                                                        Header="{Binding [identify_geometry_holes], Source={StaticResource Localization}}"
+                                                        Content="{Binding SelectedFeature.GeometrySummary.NumberOfHoles, Converter={StaticResource localizedNumberConverter}}"
+                                                        Visibility="{Binding SelectedFeature.GeometrySummary.ShowHoles, Converter={StaticResource boolToVisibilityConverter}}"/>
                             </WrapPanel>
+                            </DockPanel>
                         </Border>
 
                         <DataGrid Grid.Row="2"

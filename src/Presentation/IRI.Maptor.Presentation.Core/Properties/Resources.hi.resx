@@ -3265,4 +3265,10 @@
   <data name="identify_geometry_holes" xml:space="preserve">
     <value>छिद्र</value>
   </data>
+  <data name="identify_geometry_unit" xml:space="preserve">
+    <value>इकाई</value>
+  </data>
+  <data name="identify_geometry_unitAuto" xml:space="preserve">
+    <value>स्वचालित</value>
+  </data>
 </root>

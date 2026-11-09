@@ -2,7 +2,6 @@ using System.Linq;
 
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Core.Common.Enums;
-using IRI.Maptor.Core.Common.Helpers;
 using IRI.Maptor.Core.Spatial.Analysis;
 using IRI.Maptor.Core.Spatial.Primitives;
 using IRI.Maptor.Presentation.Wpf.Models.LayerSettings;
@@ -39,12 +38,6 @@ public sealed class IdentifyGeometrySummary
 
     /// <summary>Inner rings over all the polygons.</summary>
     public int NumberOfHoles { get; private init; }
-
-    public string? LengthLabel => Length is double value ? UnitHelper.GetLengthLabel(value) : null;
-
-    public string? AreaLabel => Area is double value ? UnitHelper.GetAreaLabel(value) : null;
-
-    public string? PerimeterLabel => Perimeter is double value ? UnitHelper.GetLengthLabel(value) : null;
 
     public bool ShowLength => Length.HasValue;
 
