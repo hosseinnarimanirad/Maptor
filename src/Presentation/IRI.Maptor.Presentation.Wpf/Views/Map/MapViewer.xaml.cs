@@ -217,6 +217,12 @@ public partial class MapViewer : NotifiableUserControl
     public Cursor IdentifyCursor { get; set; } = Cursors.Cross/*Cursors.Arrow*/;
     public Cursor DrawTextCursor { get; set; } = Cursors.Cross;
 
+    // Cursors for states that are not a MapAction (MapExtraCursor). Null keeps the older behaviour:
+    // no change while dragging, and Measure shows the Polyline/Polygon draw cursor.
+    public Cursor? PanDraggingCursor { get; set; }
+    public Cursor? MeasureLengthCursor { get; set; }
+    public Cursor? MeasureAreaCursor { get; set; }
+
     private Dictionary<MapAction, Cursor> CursorSettings;
 
     // The cursor last applied by SetCursor — the active interaction's cursor (draw/measure/identify),
@@ -552,6 +558,8 @@ public partial class MapViewer : NotifiableUserControl
         presenter.RequestSetDefaultCursor = this.SetDefaultCursor;
 
         presenter.RequestApplyCursorSet = this.ApplyCursorSet;
+
+        presenter.RequestApplyExtraCursorSet = this.ApplyExtraCursorSet;
 
         presenter.RequestUpdateMapCursor = this.UpdateMapCursor;
 
@@ -2519,6 +2527,25 @@ public partial class MapViewer : NotifiableUserControl
         this.SetCursor(this.CursorSettings[this.MapAction]);
     }
 
+    public void ApplyExtraCursorSet(IReadOnlyDictionary<MapExtraCursor, Cursor> cursors)
+    {
+        foreach (var entry in cursors)
+        {
+            switch (entry.Key)
+            {
+                case MapExtraCursor.PanDragging:
+                    PanDraggingCursor = entry.Value;
+                    break;
+                case MapExtraCursor.MeasureLength:
+                    MeasureLengthCursor = entry.Value;
+                    break;
+                case MapExtraCursor.MeasureArea:
+                    MeasureAreaCursor = entry.Value;
+                    break;
+            }
+        }
+    }
+
     private void UpdateCursorProperty(MapAction action, Cursor cursor)
     {
         switch (action)
@@ -3212,6 +3239,7 @@ public partial class MapViewer : NotifiableUserControl
             _v.mapView.MouseMove -= _v.mapView_MouseMoveForPan;
             _v.mapView.MouseUp -= _v.mapView_MouseUpForPan;
             _v.IsPanning = false;
+            _v.RestoreCursorAfterPanDrag();
         }
     }
 
@@ -3423,6 +3451,16 @@ public partial class MapViewer : NotifiableUserControl
         _activeInteraction.Attach();
     }
 
+    /// <summary>
+    /// Ends the grabbing hand of a pan drag: back to the tool's cursor, but only while the grabbing
+    /// hand is still showing (a tool switched mid-drag has already set its own cursor).
+    /// </summary>
+    private void RestoreCursorAfterPanDrag()
+    {
+        if (PanDraggingCursor != null && ReferenceEquals(this.mapView.Cursor, PanDraggingCursor))
+            this.mapView.Cursor = _activeCursor;
+    }
+
     public void ReleasePanMode()
     {
         //this.CurrentMouseAction = MapAction.None;
@@ -3449,6 +3487,11 @@ public partial class MapViewer : NotifiableUserControl
 
         this.IsPanning = true;
         //Abort();
+
+        // Grabbing hand while the map is held. Set on mapView directly, not through SetCursor, so
+        // _activeCursor keeps the tool's cursor for RestoreCursorAfterPanDrag.
+        if (PanDraggingCursor != null)
+            this.mapView.Cursor = PanDraggingCursor;
 
         Mouse.Capture(this.mapView);
 
@@ -3493,6 +3536,8 @@ public partial class MapViewer : NotifiableUserControl
         this.IsPanning = false;
 
         this.mapView.ReleaseMouseCapture();
+
+        RestoreCursorAfterPanDrag();
 
         if (shouldRefreshOnPanMouseUp)
         {
@@ -4410,7 +4455,11 @@ public partial class MapViewer : NotifiableUserControl
         return newToken;
     }
 
-    public async Task<Response<Geometry<sb.Point>>> GetDrawingAsync(DrawMode mode, bool continuousDrawing = false)
+    public Task<Response<Geometry<sb.Point>>> GetDrawingAsync(DrawMode mode, bool continuousDrawing = false)
+        => GetDrawingAsync(mode, continuousDrawing, cursor: null);
+
+    // cursor: null = the draw tool's cursor for the mode; Measure passes its own
+    private async Task<Response<Geometry<sb.Point>>> GetDrawingAsync(DrawMode mode, bool continuousDrawing, Cursor? cursor)
     {
         this._continuousDrawing = continuousDrawing;
 
@@ -4437,7 +4486,7 @@ public partial class MapViewer : NotifiableUserControl
             // tool switch (e.g. Measure Length -> Measure Area).
             this._presenter.ShowMapInfoPanel = mode != DrawMode.Rectangle;
 
-            var task = GetDrawing(mode);     // synchronously assigns _drawingCancellationToken
+            var task = GetDrawing(mode, cursor);     // synchronously assigns _drawingCancellationToken
 
             myToken = _drawingCancellationToken;   // capture this session's token (reference only)
 
@@ -4542,7 +4591,7 @@ public partial class MapViewer : NotifiableUserControl
     }
 
 
-    private Task<Response<Geometry<sb.Point>>> GetDrawing(DrawMode mode)
+    private Task<Response<Geometry<sb.Point>>> GetDrawing(DrawMode mode, Cursor? cursor)
     {
         drawingTcs = new TaskCompletionSource<Response<Geometry<sb.Point>>>();
 
@@ -4580,7 +4629,7 @@ public partial class MapViewer : NotifiableUserControl
             _ => MapAction.DrawPolygon
         };
 
-        this.SetCursor(this.CursorSettings[mapAction]);
+        this.SetCursor(cursor ?? this.CursorSettings[mapAction]);
 
         cts.Token.Register(() =>
         {
@@ -5040,7 +5089,16 @@ public partial class MapViewer : NotifiableUserControl
             //    await _selectPointCancellationToken.CancelAsync();
             //}
 
-            var task = SelectThePoint();              // synchronously installs _selectPointCancellationToken
+            // continuousMode = the Identify / Add-text tool loops: show that tool's cursor. A one-off
+            // point pick (RequestGetPoint) keeps the Draw-point crosshair.
+            var cursor = !continuousMode ? this.DrawPointCursor : this._presenter.MapAction switch
+            {
+                MapAction.Identify => this.IdentifyCursor,
+                MapAction.DrawText => this.DrawTextCursor,
+                _ => this.DrawPointCursor,
+            };
+
+            var task = SelectThePoint(cursor);        // synchronously installs _selectPointCancellationToken
 
             myToken = _selectPointCancellationToken;  // capture this session's token (reference only)
 
@@ -5097,7 +5155,7 @@ public partial class MapViewer : NotifiableUserControl
     /// Uses ClickOrPanGesture so all handlers are named and fully removable;
     /// no anonymous closure can survive a MapAction switch.
     /// </summary>
-    private Task<sb.Point> SelectThePoint()
+    private Task<sb.Point> SelectThePoint(Cursor cursor)
     {
         //_selectPointCancelationToken = new CancellationTokenSource();
         var cts = GetNewSelectPointToken();
@@ -5105,7 +5163,7 @@ public partial class MapViewer : NotifiableUserControl
 
         ResetMapViewEvents();
 
-        this.SetCursor(this.DrawPointCursor);
+        this.SetCursor(cursor);
 
         var gesture = new ClickOrPanGesture(
             this,
@@ -5615,7 +5673,9 @@ public partial class MapViewer : NotifiableUserControl
 
         try
         {
-            var result = await GetDrawingAsync(mode);
+            // same Polyline = length / otherwise area split as the view model's Measure
+            var result = await GetDrawingAsync(mode, continuousDrawing: false,
+                cursor: mode == DrawMode.Polyline ? MeasureLengthCursor : MeasureAreaCursor);
 
             return result;
         }

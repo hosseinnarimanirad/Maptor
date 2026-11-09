@@ -270,6 +270,8 @@ __pycache__/
 # /tools, because git cannot re-include a path whose parent directory is itself excluded.
 /tools/*
 !/tools/StyleProbe/
+# the cursor generator is the source of the map .cur files, so it is tracked too
+!/tools/CursorGenerator/
 /scripts
 /CLAUDE.md
 /MaptorMobile.zip

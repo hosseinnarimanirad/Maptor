@@ -1443,6 +1443,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public Action<IReadOnlyDictionary<MapAction, Cursor>>? RequestApplyCursorSet;
 
+    public Action<IReadOnlyDictionary<MapExtraCursor, Cursor>>? RequestApplyExtraCursorSet;
+
     public Action RequestUpdateMapCursor;
 
     public Func<double> RequestGetActualWidth;
@@ -3233,6 +3235,8 @@ public abstract class MapViewModelBase : ViewModelBase
     public void SetMapCursors()
     {
         RequestApplyCursorSet?.Invoke(MapCursorHelper.CreateDefaultSet());
+
+        RequestApplyExtraCursorSet?.Invoke(MapCursorHelper.CreateDefaultExtraSet());
     }
 
     [Obsolete("Use SetMapCursors() instead.")]

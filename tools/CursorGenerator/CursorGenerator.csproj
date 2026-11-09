@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--A dev tool, not a shipped artefact: it writes the map cursor files under
+      src/Presentation/IRI.Maptor.Presentation.Wpf/Assets/Cursors/MaptorCursorSet and is deliberately
+      NOT in IRI.Maptor.sln (same rule as tools/StyleProbe). README.md beside this file has the command.-->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--source of the open / grabbing hand shapes (Phosphor Icons, MIT)-->
+    <PackageReference Include="MahApps.Metro.IconPacks.PhosphorIcons" />
+  </ItemGroup>
+
+</Project>
