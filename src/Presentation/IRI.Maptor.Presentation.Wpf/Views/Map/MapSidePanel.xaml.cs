@@ -47,16 +47,16 @@ public partial class MapSidePanel : NotifiableUserControl
     }
 
     public static readonly DependencyProperty IconKindProperty = DependencyProperty.Register(
-        nameof(IconKind), typeof(PackIconPhosphorIconsKind?), typeof(MapSidePanel),
-        new PropertyMetadata(null, (d, e) => ((MapSidePanel)d).UpdateIcon()));
+        nameof(IconKind), typeof(PackIconMaterialKind), typeof(MapSidePanel),
+        new PropertyMetadata(PackIconMaterialKind.None, (d, e) => ((MapSidePanel)d).UpdateIcon()));
 
     /// <summary>
-    /// The icon before the title, the one on the command that opens the panel; none when null. Phosphor icons, like
-    /// the legend's card headers.
+    /// The icon before the title; none while <see cref="PackIconMaterialKind.None"/>. A Material icon, so it can be
+    /// the same as on the ribbon command that opens the panel.
     /// </summary>
-    public PackIconPhosphorIconsKind? IconKind
+    public PackIconMaterialKind IconKind
     {
-        get => (PackIconPhosphorIconsKind?)GetValue(IconKindProperty);
+        get => (PackIconMaterialKind)GetValue(IconKindProperty);
         set => SetValue(IconKindProperty, value);
     }
 
@@ -196,9 +196,9 @@ public partial class MapSidePanel : NotifiableUserControl
         if (headerIcon is null)
             return;
 
-        if (IconKind is PackIconPhosphorIconsKind kind)
+        if (IconKind != PackIconMaterialKind.None)
         {
-            headerIcon.Kind = kind;
+            headerIcon.Kind = IconKind;
             headerIcon.Visibility = Visibility.Visible;
         }
         else

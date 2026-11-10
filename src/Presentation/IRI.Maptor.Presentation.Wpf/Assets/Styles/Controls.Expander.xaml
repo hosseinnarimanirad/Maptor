@@ -364,6 +364,17 @@
         <Setter Property="FlowDirection" Value="LeftToRight"/>
     </Style>
 
+    <!--the same, for a Material icon: MapSidePanel shows the Material icon of the ribbon command
+        that opens it-->
+    <Style x:Key="IRI.Maptor.Styles.PackIconMaterial.CardHeader" TargetType="iconPacks:PackIconMaterial">
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="Width" Value="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"/>
+        <Setter Property="Height" Value="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"/>
+        <Setter Property="Margin" Value="0,0,8,0"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+    </Style>
+
     <!--the title: takes size and weight from the header row, keeps the base style's Persian font-->
     <Style x:Key="IRI.Maptor.Styles.TextBlock.CardHeaderTitle" TargetType="TextBlock"
            BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}">

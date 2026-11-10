@@ -45,8 +45,8 @@
                             Style="{StaticResource IRI.Maptor.Styles.Button.PanelClose}"
                             Click="CloseButton_Click"/>
                     <!--shown only when IconKind is set (code-behind)-->
-                    <iconPacks:PackIconPhosphorIcons x:Name="headerIcon" DockPanel.Dock="Left" Visibility="Collapsed"
-                                                     Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.CardHeader}"/>
+                    <iconPacks:PackIconMaterial x:Name="headerIcon" DockPanel.Dock="Left" Visibility="Collapsed"
+                                                Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CardHeader}"/>
                     <TextBlock Text="{Binding Title, ElementName=root}"
                                Style="{StaticResource IRI.Maptor.Styles.TextBlock}"
                                FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.BodyLarge}" FontWeight="SemiBold"

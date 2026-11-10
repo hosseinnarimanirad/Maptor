@@ -101,5 +101,51 @@
             </Setter.Value>
         </Setter>
     </Style>
- 
+
+    <!--A ghost toggle for a panel header (the attribute table card's menu): the toggle sibling of
+        Button.PanelClose, 28 px round, no border, grey on hover, accent tint while checked.
+        A PackIcon's own style sets its Foreground, so the icon must bind back to this toggle:
+            Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type ToggleButton}}}"
+        (2026-11-10)-->
+    <Style x:Key="IRI.Maptor.Styles.ToggleButton.PanelGhost" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Width" Value="28"/>
+        <Setter Property="Height" Value="28"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray3}"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border x:Name="chrome" Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1"
+                            CornerRadius="14" SnapsToDevicePixels="True">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          Margin="{TemplateBinding Padding}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="chrome" Property="Background" Value="{DynamicResource MahApps.Brushes.Gray9}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="chrome" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="chrome" Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

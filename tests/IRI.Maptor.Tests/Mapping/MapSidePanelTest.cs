@@ -27,14 +27,14 @@ public class MapSidePanelTest
         {
             var panel = BuildPanel(out _);
 
-            var icon = Assert.IsType<PackIconPhosphorIcons>(panel.FindName("headerIcon"));
+            var icon = Assert.IsType<PackIconMaterial>(panel.FindName("headerIcon"));
             Assert.Equal(Visibility.Collapsed, icon.Visibility);
 
-            panel.IconKind = PackIconPhosphorIconsKind.StackFill;
+            panel.IconKind = PackIconMaterialKind.TransmissionTower;
             Assert.Equal(Visibility.Visible, icon.Visibility);
-            Assert.Equal(PackIconPhosphorIconsKind.StackFill, icon.Kind);
+            Assert.Equal(PackIconMaterialKind.TransmissionTower, icon.Kind);
 
-            panel.IconKind = null;
+            panel.IconKind = PackIconMaterialKind.None;
             Assert.Equal(Visibility.Collapsed, icon.Visibility);
         });
     }
