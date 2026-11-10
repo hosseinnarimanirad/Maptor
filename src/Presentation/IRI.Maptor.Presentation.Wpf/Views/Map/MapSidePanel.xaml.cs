@@ -65,9 +65,13 @@ public partial class MapSidePanel : NotifiableUserControl
     }
 
     public static readonly DependencyProperty MaxWidthRatioProperty = DependencyProperty.Register(
-        nameof(MaxWidthRatio), typeof(double), typeof(MapSidePanel), new PropertyMetadata(0.6, (d, e) => ((MapSidePanel)d).ApplyWidth()));
+        nameof(MaxWidthRatio), typeof(double), typeof(MapSidePanel), new PropertyMetadata(0.5, (d, e) => ((MapSidePanel)d).ApplyWidth()));
 
-    /// <summary>The largest share of the host's width the panel may take (0 to 1).</summary>
+    /// <summary>
+    /// The largest share of the host's width the panel may take (0 to 1). The host usually holds a
+    /// legend as well, so the map gets less than the rest: with a 400 px legend on a 1366 px window,
+    /// the default 0.5 leaves the map about 280 px.
+    /// </summary>
     public double MaxWidthRatio
     {
         get => (double)GetValue(MaxWidthRatioProperty);
