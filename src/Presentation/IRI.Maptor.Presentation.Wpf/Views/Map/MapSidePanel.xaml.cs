@@ -4,6 +4,8 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Markup;
 using System.Windows.Media;
 
+using MahApps.Metro.IconPacks;
+
 namespace IRI.Maptor.Presentation.Wpf.Controls;
 
 /// <summary>
@@ -18,7 +20,7 @@ namespace IRI.Maptor.Presentation.Wpf.Controls;
 /// <para>
 /// The width starts at <see cref="PreferredWidth"/>; the user resizes it with the edge that faces
 /// the map, and the panel keeps that width while the application runs (closing and reopening
-/// does not reset it). It is kept between <see cref="FrameworkElement.MinWidth"/> and
+/// does not reset it; double-clicking the edge does). It is kept between <see cref="FrameworkElement.MinWidth"/> and
 /// <see cref="MaxWidthRatio"/> of the host's width, so the map keeps a usable share.
 /// </para>
 /// </summary>
@@ -42,6 +44,20 @@ public partial class MapSidePanel : NotifiableUserControl
     {
         get => (string)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
+    }
+
+    public static readonly DependencyProperty IconKindProperty = DependencyProperty.Register(
+        nameof(IconKind), typeof(PackIconPhosphorIconsKind?), typeof(MapSidePanel),
+        new PropertyMetadata(null, (d, e) => ((MapSidePanel)d).UpdateIcon()));
+
+    /// <summary>
+    /// The icon before the title, the one on the command that opens the panel; none when null. Phosphor icons, like
+    /// the legend's card headers.
+    /// </summary>
+    public PackIconPhosphorIconsKind? IconKind
+    {
+        get => (PackIconPhosphorIconsKind?)GetValue(IconKindProperty);
+        set => SetValue(IconKindProperty, value);
     }
 
     public static readonly DependencyProperty PanelContentProperty = DependencyProperty.Register(
@@ -92,6 +108,8 @@ public partial class MapSidePanel : NotifiableUserControl
         this.HorizontalAlignment = HorizontalAlignment.Stretch;
 
         UpdateVisibility();
+
+        UpdateIcon();
 
         this.Loaded += (s, e) => AttachHost();
         this.Unloaded += (s, e) => DetachHost();
@@ -160,6 +178,33 @@ public partial class MapSidePanel : NotifiableUserControl
         _userWidth = Clamp(current - e.HorizontalChange);
 
         this.Width = _userWidth;
+    }
+
+    // double-click on the edge: forget the dragged width, back to PreferredWidth
+    private void ResizeThumb_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        _userWidth = double.NaN;
+
+        ApplyWidth();
+
+        e.Handled = true;
+    }
+
+    private void UpdateIcon()
+    {
+        // called from the constructor before InitializeComponent has run only if a style sets IconKind
+        if (headerIcon is null)
+            return;
+
+        if (IconKind is PackIconPhosphorIconsKind kind)
+        {
+            headerIcon.Kind = kind;
+            headerIcon.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            headerIcon.Visibility = Visibility.Collapsed;
+        }
     }
 
     private void CloseButton_Click(object sender, RoutedEventArgs e) => this.IsOpen = false;

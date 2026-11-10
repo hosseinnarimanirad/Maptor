@@ -19,55 +19,51 @@
 
     <!--Docked beside the map, never over it: the map's extent ends where this panel starts.
         DockPanel mirrors with the flow direction, so Dock="Left" puts the resize edge on the side
-        that faces the map in both layouts (the panel sits after the map: left of it in RTL).-->
-    <DockPanel Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
+        that faces the map in both layouts (the panel sits after the map: left of it in RTL).
 
-        <!--resize edge: a 1px rule with a wider invisible grip-->
-        <Thumb x:Name="resizeThumb" DockPanel.Dock="Left" Width="6" Cursor="SizeWE" Focusable="False"
-               DragDelta="ResizeThumb_DragDelta">
-            <Thumb.Template>
-                <ControlTemplate TargetType="{x:Type Thumb}">
-                    <Border Background="Transparent">
-                        <Border x:Name="rule" Width="1" HorizontalAlignment="Left"
-                                Background="{DynamicResource MahApps.Brushes.Gray8}"/>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="rule" Property="Width" Value="3"/>
-                            <Setter TargetName="rule" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-                        </Trigger>
-                        <Trigger Property="IsDragging" Value="True">
-                            <Setter TargetName="rule" Property="Width" Value="3"/>
-                            <Setter TargetName="rule" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Thumb.Template>
-        </Thumb>
+        The panel is a card like the legend and the attribute table (Expander.Card): same surface,
+        same 40 px header row, same 14 px semibold title. The resize edge sits in the gap between
+        the map and the card and looks like the window's splitters (Thumb.PanelEdge).-->
+    <DockPanel>
 
-        <!--title band-->
-        <DockPanel DockPanel.Dock="Top" Margin="8,6,4,0" LastChildFill="True">
-            <Button DockPanel.Dock="Right" VerticalAlignment="Center"
-                    Style="{StaticResource IRI.Maptor.Styles.Button.IconSquare}"
-                    ToolTip="{Binding [dialog_common_close], Source={StaticResource Localization}}"
-                    AutomationProperties.Name="{Binding [dialog_common_close], Source={StaticResource Localization}}"
-                    Click="CloseButton_Click">
-                <iconPacks:PackIconMaterial Kind="Close" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}" Margin="0"/>
-            </Button>
-            <TextBlock Text="{Binding Title, ElementName=root}" VerticalAlignment="Center"
-                       FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Action}" FontWeight="SemiBold"
-                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                       TextTrimming="CharacterEllipsis"/>
-        </DockPanel>
+        <!--resize edge: drag to resize, double-click for PreferredWidth again-->
+        <Thumb x:Name="resizeThumb" DockPanel.Dock="Left"
+               Style="{StaticResource IRI.Maptor.Styles.Thumb.PanelEdge}"
+               DragDelta="ResizeThumb_DragDelta"
+               MouseDoubleClick="ResizeThumb_MouseDoubleClick"/>
 
-        <Border DockPanel.Dock="Top" Style="{StaticResource IRI.Maptor.Styles.Border.Divider}" Margin="0,6,0,0"/>
+        <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                BorderBrush="{DynamicResource MahApps.Brushes.Gray8}"
+                BorderThickness="{StaticResource IRI.Maptor.Styles.Thickness.Border}"
+                CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"
+                SnapsToDevicePixels="True">
+            <DockPanel>
+                <!--header row: icon, title, close-->
+                <DockPanel DockPanel.Dock="Top" MinHeight="{StaticResource IRI.Maptor.Styles.Size.Control.Large}"
+                           Margin="12,0,6,0" LastChildFill="True">
+                    <Button DockPanel.Dock="Right" Margin="8,0,0,0"
+                            Style="{StaticResource IRI.Maptor.Styles.Button.PanelClose}"
+                            Click="CloseButton_Click"/>
+                    <!--shown only when IconKind is set (code-behind)-->
+                    <iconPacks:PackIconPhosphorIcons x:Name="headerIcon" DockPanel.Dock="Left" Visibility="Collapsed"
+                                                     Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.CardHeader}"/>
+                    <TextBlock Text="{Binding Title, ElementName=root}"
+                               Style="{StaticResource IRI.Maptor.Styles.TextBlock}"
+                               FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.BodyLarge}" FontWeight="SemiBold"
+                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                               VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                </DockPanel>
 
-        <!--the hosted view; PanelContent, not this control's own Content (that is the tree above).
-            No horizontal scrolling, as in the flyouts this replaces: the view takes the panel's width,
-            and wide tables scroll inside their own grids.-->
-        <ScrollViewer x:Name="scrollViewer" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"
-                      Padding="8,4">
-            <ContentPresenter Content="{Binding PanelContent, ElementName=root}"/>
-        </ScrollViewer>
+                <Border DockPanel.Dock="Top" Height="1" Background="{DynamicResource MahApps.Brushes.Gray8}"/>
+
+                <!--the hosted view; PanelContent, not this control's own Content (that is the tree above).
+                    No horizontal scrolling, as in the flyouts this replaces: the view takes the panel's width,
+                    and wide tables scroll inside their own grids.-->
+                <ScrollViewer x:Name="scrollViewer" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"
+                              Padding="8,6">
+                    <ContentPresenter Content="{Binding PanelContent, ElementName=root}"/>
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
     </DockPanel>
 </maptor:NotifiableUserControl>

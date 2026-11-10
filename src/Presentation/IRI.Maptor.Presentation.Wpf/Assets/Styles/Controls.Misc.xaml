@@ -85,6 +85,112 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 
+    <!--Splitters between the docked panels of a main window (legend | map, map / attribute table)
+        and the edge of MapSidePanel: an 8 px gap with a 1 px rule in its middle and a short centred
+        handle, the same handle as VerticalResizeGrip, so it reads as grabbable before the mouse finds
+        it. Rule and handle turn accent on hover and while dragging. Live resize (no preview), so
+        the panels follow the mouse. Double-click to reset: Helpers/GridSplitterReset. (2026-11-10)-->
+    <Style x:Key="IRI.Maptor.Styles.GridSplitter.Panel.Vertical" TargetType="GridSplitter">
+        <Setter Property="Width" Value="8"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="ResizeDirection" Value="Columns"/>
+        <Setter Property="ResizeBehavior" Value="PreviousAndNext"/>
+        <Setter Property="ShowsPreview" Value="False"/>
+        <Setter Property="Cursor" Value="SizeWE"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type GridSplitter}">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Border x:Name="rule" Width="1" HorizontalAlignment="Center"
+                                Background="{DynamicResource MahApps.Brushes.Gray8}"/>
+                        <Border x:Name="handle" Width="3" Height="32" CornerRadius="1.5"
+                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Background="{DynamicResource MahApps.Brushes.Gray7}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="rule" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                            <Setter TargetName="handle" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                        </Trigger>
+                        <Trigger Property="IsDragging" Value="True">
+                            <Setter TargetName="rule" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                            <Setter TargetName="handle" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.GridSplitter.Panel.Horizontal" TargetType="GridSplitter">
+        <Setter Property="Height" Value="8"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="ResizeDirection" Value="Rows"/>
+        <Setter Property="ResizeBehavior" Value="PreviousAndNext"/>
+        <Setter Property="ShowsPreview" Value="False"/>
+        <Setter Property="Cursor" Value="SizeNS"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type GridSplitter}">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Border x:Name="rule" Height="1" VerticalAlignment="Center"
+                                Background="{DynamicResource MahApps.Brushes.Gray8}"/>
+                        <Border x:Name="handle" Width="32" Height="3" CornerRadius="1.5"
+                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Background="{DynamicResource MahApps.Brushes.Gray7}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="rule" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                            <Setter TargetName="handle" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                        </Trigger>
+                        <Trigger Property="IsDragging" Value="True">
+                            <Setter TargetName="rule" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                            <Setter TargetName="handle" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--The same look for a plain Thumb used as a resize edge (MapSidePanel's edge facing the map).-->
+    <Style x:Key="IRI.Maptor.Styles.Thumb.PanelEdge" TargetType="{x:Type Thumb}">
+        <Setter Property="Width" Value="8"/>
+        <Setter Property="Cursor" Value="SizeWE"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Border x:Name="rule" Width="1" HorizontalAlignment="Center"
+                                Background="{DynamicResource MahApps.Brushes.Gray8}"/>
+                        <Border x:Name="handle" Width="3" Height="32" CornerRadius="1.5"
+                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Background="{DynamicResource MahApps.Brushes.Gray7}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="rule" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                            <Setter TargetName="handle" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                        </Trigger>
+                        <Trigger Property="IsDragging" Value="True">
+                            <Setter TargetName="rule" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                            <Setter TargetName="handle" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!--Glyph roles. Controls.Path.xaml covers glyphs *inside a button*; these two cover the
         other two roles that kept being written as raw Width/Height: a status dot in a list row,
         and the muted icon in a form field's adornment column.-->
