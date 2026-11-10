@@ -53,6 +53,56 @@ public class CardExpanderStyleTest
         });
     }
 
+    [Fact]
+    public void Card_Collapsed_ShrinksToItsHeader_ButTheRailKeepsTheHeight()
+    {
+        WpfTestHost.Run(() =>
+        {
+            Assert.Equal(VerticalAlignment.Top, BuildCard("IRI.Maptor.Styles.Expander.Card", ExpandDirection.Down, isExpanded: false).VerticalAlignment);
+            Assert.Equal(VerticalAlignment.Stretch, BuildCard("IRI.Maptor.Styles.Expander.Card", ExpandDirection.Down, isExpanded: true).VerticalAlignment);
+            Assert.Equal(VerticalAlignment.Stretch, BuildCard("IRI.Maptor.Styles.Expander.Card", ExpandDirection.Right, isExpanded: false).VerticalAlignment);
+        });
+    }
+
+    [Fact]
+    public void Card_PassesHorizontalContentAlignmentToItsHeader()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var expander = BuildCard("IRI.Maptor.Styles.Expander.Card", ExpandDirection.Down, isExpanded: true, HorizontalAlignment.Stretch);
+
+            var toggle = (ToggleButton)expander.Template.FindName("headerToggle", expander);
+            Assert.Equal(HorizontalAlignment.Stretch, toggle.HorizontalContentAlignment);
+        });
+    }
+
+    /// <summary>
+    /// ToggleButton.PanelEdgeTab, the legend's show/hide tab on the map edge: shown (checked), the chevron points to the
+    /// reading start (left in this left-to-right test); hidden, to the map.
+    /// </summary>
+    [Theory]
+    [InlineData(true, PackIconMaterialKind.ChevronLeft)]
+    [InlineData(false, PackIconMaterialKind.ChevronRight)]
+    public void PanelEdgeTab_ChevronFollowsTheState(bool isChecked, PackIconMaterialKind expected)
+    {
+        WpfTestHost.Run(() =>
+        {
+            var styles = LoadStyles();
+
+            var tab = new ToggleButton { Style = (Style)styles["IRI.Maptor.Styles.ToggleButton.PanelEdgeTab"], IsChecked = isChecked };
+
+            var host = new Grid { Width = 300, Height = 300 };
+            host.Resources.MergedDictionaries.Add(styles);
+            host.Children.Add(tab);
+            host.Measure(new Size(300, 300));
+            host.Arrange(new Rect(0, 0, 300, 300));
+            host.UpdateLayout();
+
+            var icon = (PackIconMaterial)tab.Template.FindName("icon", tab);
+            Assert.Equal(expected, icon.Kind);
+        });
+    }
+
     [Theory]
     [InlineData(false, PackIconMaterialKind.ChevronDown)]
     [InlineData(true, PackIconMaterialKind.ChevronUp)]
@@ -66,7 +116,7 @@ public class CardExpanderStyleTest
         });
     }
 
-    private static Expander BuildCard(string styleKey, ExpandDirection direction, bool isExpanded)
+    private static ResourceDictionary LoadStyles()
     {
         var cache = typeof(IRI.Maptor.Presentation.Wpf.Helpers.SharedResourceDictionary)
             .GetField("_cache", BindingFlags.NonPublic | BindingFlags.Static)!
@@ -77,10 +127,16 @@ public class CardExpanderStyleTest
 
         WpfTestHost.EnsureMahAppsResources();
 
-        var styles = new ResourceDictionary
+        return new ResourceDictionary
         {
             Source = new Uri("pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml", UriKind.Absolute)
         };
+    }
+
+    private static Expander BuildCard(string styleKey, ExpandDirection direction, bool isExpanded,
+        HorizontalAlignment headerAlignment = HorizontalAlignment.Left)
+    {
+        var styles = LoadStyles();
 
         var header = new StackPanel { Orientation = Orientation.Horizontal };
         header.Children.Add(new PackIconPhosphorIcons { Style = (Style)styles["IRI.Maptor.Styles.PackIconPhosphorIcons.CardHeader"] });
@@ -92,6 +148,7 @@ public class CardExpanderStyleTest
             Style = (Style)styles[styleKey],
             ExpandDirection = direction,
             IsExpanded = isExpanded,
+            HorizontalContentAlignment = headerAlignment,
             Header = header,
             Content = new TextBlock { Text = "content" },
         };

@@ -227,9 +227,17 @@ public static class ThemeHelper
         var target = Translate(theme);
 
         if (IsApplied && target == _current)
+        {
+            // a runtime-generated accent translates to the same target, but its colour did change
+            ApplyAccentTints(target.Mode);
             return;
+        }
 
         ApplyStatusPalette(target);
+
+        // after the status palette: that one is re-appended above, and it carries fallback values
+        // for these keys, so the tints must be appended after it to win
+        ApplyAccentTints(target.Mode);
 
         _current = target;
         IsApplied = true;
@@ -311,6 +319,41 @@ public static class ThemeHelper
             merged.Remove(dictionary);
 
         merged.Add(status);
+    }
+
+    // the accent tints, one instance kept for the application's life and refilled on every change
+    private static readonly ResourceDictionary _accentTints = new();
+
+    /// <summary>
+    /// The <see cref="AccentTint"/> brushes for the current accent. Computed here, as solid colours
+    /// blended over the theme background, because XAML cannot derive a tint from
+    /// <c>MahApps.Colors.Accent</c>, and a semi-transparent brush would change with whatever is under
+    /// it. Status.Light/Dark.xaml carry neutral fallbacks for a host that never applies a theme.
+    /// </summary>
+    private static void ApplyAccentTints(ThemeMode mode)
+    {
+        var app = Application.Current;
+
+        if (app?.Resources is null)
+            return;
+
+        if (app.TryFindResource("MahApps.Colors.Accent") is not System.Windows.Media.Color accent)
+            return;
+
+        var dark = mode == ThemeMode.Dark;
+
+        var background = app.TryFindResource("MahApps.Colors.ThemeBackground") is System.Windows.Media.Color themeBackground
+            ? themeBackground
+            : dark ? System.Windows.Media.Color.FromRgb(0x25, 0x25, 0x25) : System.Windows.Media.Colors.White;
+
+        _accentTints[AccentTint.Key] = AccentTint.BlendBrush(background, accent, dark ? AccentTint.DarkAmount : AccentTint.LightAmount);
+        _accentTints[AccentTint.HoverKey] = AccentTint.BlendBrush(background, accent, dark ? AccentTint.DarkHoverAmount : AccentTint.LightHoverAmount);
+        _accentTints[AccentTint.BorderKey] = AccentTint.BlendBrush(background, accent, dark ? AccentTint.DarkBorderAmount : AccentTint.LightBorderAmount);
+
+        var merged = app.Resources.MergedDictionaries;
+
+        merged.Remove(_accentTints);
+        merged.Add(_accentTints);
     }
 
     private static ResourceDictionary LoadDictionary(string packUri)

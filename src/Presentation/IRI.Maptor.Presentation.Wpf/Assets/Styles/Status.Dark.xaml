@@ -28,4 +28,9 @@
     <SolidColorBrush x:Key="IRI.Maptor.Brushes.Surface.Hover"  Color="#37373B" po:Freeze="True"/>
     <SolidColorBrush x:Key="IRI.Maptor.Brushes.Surface.Border" Color="#3F3F44" po:Freeze="True"/>
 
+    <!--Accent tints: computed by ThemeHelper from the applied accent; neutral fallbacks here.-->
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Accent.Tint"        Color="#2C2C2F" po:Freeze="True"/>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Accent.Tint.Hover"  Color="#37373B" po:Freeze="True"/>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Accent.Tint.Border" Color="#3F3F44" po:Freeze="True"/>
+
 </ResourceDictionary>

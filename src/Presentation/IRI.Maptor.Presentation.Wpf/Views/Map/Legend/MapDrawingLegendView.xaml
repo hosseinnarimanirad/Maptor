@@ -216,7 +216,7 @@
             <!--a tinted band with ghost buttons, the same as the layers toolbar in MapLegendView
                 (2026-11-10: was an accent band of round accent buttons above a dashed line)-->
             <Border Background="{DynamicResource IRI.Maptor.Brushes.Surface.Subtle}"
-                    BorderBrush="{DynamicResource IRI.Maptor.Brushes.Surface.Border}" BorderThickness="0,1,0,1">
+                    BorderBrush="{DynamicResource IRI.Maptor.Brushes.Surface.Border}" BorderThickness="0,0,0,1">
                 <DockPanel Margin="8,5" HorizontalAlignment="Left" >
                     <!--<Button Command="{Binding MoveDrawingItemUpCommand}"
                             Style="{StaticResource IRI.Maptor.Styles.Button.PanelGhost}"

@@ -36,4 +36,11 @@
     <SolidColorBrush x:Key="IRI.Maptor.Brushes.Surface.Hover"  Color="#E8EBEF" po:Freeze="True"/>
     <SolidColorBrush x:Key="IRI.Maptor.Brushes.Surface.Border" Color="#D5D9DF" po:Freeze="True"/>
 
+    <!--Accent tints: header bands of cards, panels and dialogs. ThemeHelper computes the real values
+        from the applied accent and appends them after this dictionary; these neutral values are only
+        the fallback for a host that never applies a theme.-->
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Accent.Tint"        Color="#F6F7F9" po:Freeze="True"/>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Accent.Tint.Hover"  Color="#E8EBEF" po:Freeze="True"/>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Accent.Tint.Border" Color="#D5D9DF" po:Freeze="True"/>
+
 </ResourceDictionary>

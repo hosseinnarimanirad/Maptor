@@ -1,6 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" >
- 
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
+
+    <ResourceDictionary.MergedDictionaries>
+        <!--ToggleButton.PanelEdgeTab: the Plain chevrons-->
+        <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.Path.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
     <Style x:Key="IRI.Maptor.Styles.ToggleButton.CircleLight" TargetType="{x:Type ToggleButton}">
         <Setter Property="Margin" Value="2"/>
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
@@ -137,11 +143,60 @@
                             <Setter TargetName="chrome" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
                             <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
                         </Trigger>
+
                         <Trigger Property="IsKeyboardFocused" Value="True">
                             <Setter TargetName="chrome" Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Opacity" Value="0.5"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--A tab stuck to the edge of the map, beside a side column it hides and shows (the legend,
+        2026-11-10; the Google Maps side-panel pattern). Put it inside the map's grid with
+        HorizontalAlignment="Left": in a right-to-left window that is the right edge, where the legend
+        is. Checked = the column is shown. The chevron follows the previous/next rule: shown, it points
+        to the reading start (hide the column into the window edge); hidden, to the map (bring it back).
+        The flat side is the one against the column, so it reads as part of the column's edge.-->
+    <Style x:Key="IRI.Maptor.Styles.ToggleButton.PanelEdgeTab" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Width" Value="20"/>
+        <Setter Property="Height" Value="44"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource IRI.Maptor.Brushes.Surface.Border}"/>
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray2}"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border x:Name="chrome" Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0,1,1,1"
+                            CornerRadius="0,6,6,0" SnapsToDevicePixels="True">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="4" ShadowDepth="1" Opacity="0.18"/>
+                        </Border.Effect>
+                        <iconPacks:PackIconMaterial x:Name="icon" Width="12" Height="12"
+                                                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                    Foreground="{TemplateBinding Foreground}"
+                                                    Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronNext.Plain}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <!--swap the Style, not Kind: a template value would outrank the style's flow trigger-->
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="icon" Property="Style" Value="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronPrevious.Plain}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="chrome" Property="Background" Value="{DynamicResource IRI.Maptor.Brushes.Accent.Tint}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="chrome" Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

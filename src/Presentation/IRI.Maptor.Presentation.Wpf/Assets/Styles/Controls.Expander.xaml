@@ -169,9 +169,13 @@
         their style. The template triggers swap the chevron's Style instead.-->
     <Style x:Key="IRI.Maptor.Styles.ToggleButton.CardHeader" TargetType="{x:Type ToggleButton}">
         <Setter Property="Cursor" Value="Hand"/>
-        <!--a tinted band, so the header reads as a header against the white card body (2026-11-10:
-            an all-white header merged with its content)-->
-        <Setter Property="Background" Value="{DynamicResource IRI.Maptor.Brushes.Surface.Subtle}"/>
+        <!--a light accent tint (ThemeHelper.ApplyAccentTints), so the header reads as a header and
+            carries the app's colour without the weight of a solid accent bar (2026-11-10: a neutral
+            band was too colourless, the solid accent of the dialogs too saturated)-->
+        <Setter Property="Background" Value="{DynamicResource IRI.Maptor.Brushes.Accent.Tint}"/>
+        <!--the hover band. BorderBrush because the template draws no border, so the property is free
+            and a BasedOn style (CardSectionHeader) can give its own hover colour-->
+        <Setter Property="BorderBrush" Value="{DynamicResource IRI.Maptor.Brushes.Accent.Tint.Hover}"/>
         <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
         <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.BodyLarge}"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
@@ -200,7 +204,7 @@
                     <!--Order matters: a later trigger wins over an earlier one on the same property.-->
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="headerRoot" Property="Background" Value="{DynamicResource IRI.Maptor.Brushes.Surface.Hover}"/>
+                            <Setter TargetName="headerRoot" Property="Background" Value="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}"/>
                             <Setter TargetName="chevron" Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
                         </Trigger>
 
@@ -251,11 +255,13 @@
     </Style>
 
     <!--The header row of Expander.CardSection: one step smaller, inset, with its own rounded hover band.
-        No tint at rest: the card header above is the tinted band, and the section's own toolbar
-        (legend) is tinted too, so a white section header keeps the levels apart.-->
+        No tint at rest: the card header above is the accent-tinted band, and the section's own toolbar
+        (legend) is a neutral band, so a white section header keeps the levels apart. Its hover band is
+        the neutral Surface.Hover, not the accent tint: only card headers carry the accent.-->
     <Style x:Key="IRI.Maptor.Styles.ToggleButton.CardSectionHeader" TargetType="{x:Type ToggleButton}"
            BasedOn="{StaticResource IRI.Maptor.Styles.ToggleButton.CardHeader}">
         <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource IRI.Maptor.Brushes.Surface.Hover}"/>
         <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Body}"/>
         <Setter Property="MinHeight" Value="{StaticResource IRI.Maptor.Styles.Size.Control.Default}"/>
         <Setter Property="Padding" Value="8,0,6,0"/>
@@ -287,15 +293,18 @@
                             <!--Content="{TemplateBinding Header}" is set here, on the toggle, not
                                 inside the toggle's own template, where the templated parent is the
                                 toggle and has no Header.-->
+                            <!--HorizontalContentAlignment passes through, so a card can set Stretch and dock
+                                its own header button (the legend's fold button) at the end of the row-->
                             <ToggleButton x:Name="headerToggle" Grid.Row="0"
                                           Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CardHeader}"
                                           IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           Content="{TemplateBinding Header}"
                                           ContentTemplate="{TemplateBinding HeaderTemplate}"
                                           ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"/>
 
                             <Border x:Name="divider" Grid.Row="1" Height="1" Visibility="Collapsed"
-                                    Background="{DynamicResource IRI.Maptor.Brushes.Surface.Border}"/>
+                                    Background="{DynamicResource IRI.Maptor.Brushes.Accent.Tint.Border}"/>
 
                             <ContentPresenter x:Name="body" Grid.Row="2" Margin="{TemplateBinding Padding}" Visibility="Collapsed"/>
                         </Grid>
@@ -307,13 +316,20 @@
                             <!--the hover band follows the card's top corners only-->
                             <Setter TargetName="headerToggle" Property="mahApp:ControlsHelper.CornerRadius" Value="7,7,0,0"/>
                         </Trigger>
-                        <!--the rail: the whole card height is the toggle-->
+                        <!--collapsed, a card is just its header: it must not keep the height of the
+                            space it was given (the last card of a DockPanel would stay a tall empty box)-->
+                        <Trigger Property="IsExpanded" Value="False">
+                            <Setter Property="VerticalAlignment" Value="Top"/>
+                        </Trigger>
+                        <!--the rail: the whole card height is the toggle (after the trigger above, so
+                            the rail keeps the full height)-->
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="ExpandDirection" Value="Right"/>
                                 <Condition Property="IsExpanded" Value="False"/>
                             </MultiTrigger.Conditions>
                             <Setter TargetName="headerToggle" Property="Grid.RowSpan" Value="3"/>
+                            <Setter Property="VerticalAlignment" Value="Stretch"/>
                         </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

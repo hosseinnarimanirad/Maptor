@@ -32,16 +32,18 @@
                DragDelta="ResizeThumb_DragDelta"
                MouseDoubleClick="ResizeThumb_MouseDoubleClick"/>
 
-        <!--Tinted (Surface.Subtle) throughout, header included: the header matches the legend card's
-            header band, and the white step cards of the hosted views stand out against it.-->
+        <!--Content area tinted neutral (Surface.Subtle), so the white step cards of the hosted views
+            stand out; the header band is the accent tint, as on the legend and attribute table cards.-->
         <Border Background="{DynamicResource IRI.Maptor.Brushes.Surface.Subtle}"
                 BorderBrush="{DynamicResource IRI.Maptor.Brushes.Surface.Border}"
                 BorderThickness="{StaticResource IRI.Maptor.Styles.Thickness.Border}"
                 CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"
                 SnapsToDevicePixels="True">
             <DockPanel>
-                <!--header row: icon, title, close-->
-                <DockPanel DockPanel.Dock="Top" MinHeight="{StaticResource IRI.Maptor.Styles.Size.Control.Large}"
+                <!--header row: icon, title, close, on the same accent-tinted band as the card headers
+                    (radius 7: the inner curve of the 1 px border)-->
+                <Border DockPanel.Dock="Top" Background="{DynamicResource IRI.Maptor.Brushes.Accent.Tint}" CornerRadius="7,7,0,0">
+                <DockPanel MinHeight="{StaticResource IRI.Maptor.Styles.Size.Control.Large}"
                            Margin="12,0,6,0" LastChildFill="True">
                     <Button DockPanel.Dock="Right" Margin="8,0,0,0"
                             Style="{StaticResource IRI.Maptor.Styles.Button.PanelClose}"
@@ -55,8 +57,9 @@
                                Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                 </DockPanel>
+                </Border>
 
-                <Border DockPanel.Dock="Top" Height="1" Background="{DynamicResource IRI.Maptor.Brushes.Surface.Border}"/>
+                <Border DockPanel.Dock="Top" Height="1" Background="{DynamicResource IRI.Maptor.Brushes.Accent.Tint.Border}"/>
 
                 <!--the hosted view; PanelContent, not this control's own Content (that is the tree above).
                     No horizontal scrolling, as in the flyouts this replaces: the view takes the panel's width,

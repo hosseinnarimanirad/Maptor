@@ -341,7 +341,7 @@
         <!--filter and tools: a tinted band with a rule under it, ghost buttons (2026-11-10: was an
             accent band of round accent buttons above a dashed line, the loudest thing on screen)-->
         <Border Grid.Row="0" Background="{DynamicResource IRI.Maptor.Brushes.Surface.Subtle}"
-                BorderBrush="{DynamicResource IRI.Maptor.Brushes.Surface.Border}" BorderThickness="0,1,0,1"
+                BorderBrush="{DynamicResource IRI.Maptor.Brushes.Surface.Border}" BorderThickness="0,0,0,1"
                 Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}">
             <Grid Margin="8,5">
                 <Grid.ColumnDefinitions>
