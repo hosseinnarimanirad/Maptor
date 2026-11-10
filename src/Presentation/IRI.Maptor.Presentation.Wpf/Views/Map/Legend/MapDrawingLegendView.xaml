@@ -60,22 +60,19 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="Expander">
-                                <!--Height 38 = 1px border + 36 content + 1px border. The content buttons are
-                                    32x32 with Margin=2, so they need exactly 36; anything less clips them.
-                                    Padding is left-only because the trailing button's own 2px margin already
-                                    supplies the right inset, which keeps the collapsed pill a true 38x38 circle.-->
+                                <!--Height 34 = 1px border + 32 content + 1px border. The ghost buttons inside
+                                    are 30 px with a 1 px side margin and centre vertically in the 32.
+                                    Padding 1 on both sides keeps the collapsed pill a true 34x34 circle.
+                                    (2026-11-10: was an accent-bordered pill with a dark round header button
+                                    and a shadow; now a quiet outlined pill on the toolbar band.)-->
                                 <Border x:Name="expanderBorder"
                                     Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                                     BorderThickness="1"
-                                    BorderBrush="{DynamicResource MahApps.Brushes.Accent2}"
-                                    Margin="0" Height="38" Padding="2,0,0,0" CornerRadius="19">
-                                    <Border.Effect>
-                                        <StaticResource ResourceKey="IRI.Maptor.Effects.Elevation1"/>
-                                    </Border.Effect>
+                                    BorderBrush="{DynamicResource IRI.Maptor.Brushes.Surface.Border}"
+                                    Margin="0" Height="34" Padding="1,0" CornerRadius="17">
                                     <StackPanel Orientation="Horizontal" Margin="0">
                                         <ToggleButton x:Name="HeaderSite"
-                                                      Margin="0,0,2,0" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleDark}"                                   
-                                                      Width="32" Height="32"
+                                                      Margin="0" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.PanelGhost}"
                                                       IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                                             <!--<ToggleButton.Style >
                                                 <Style TargetType="ToggleButton" BasedOn="{StaticResource MahApps.Styles.ToggleButton.Circle}">
@@ -119,8 +116,8 @@
                                                 <ScaleTransform ScaleX="0"/>
                                             </StackPanel.LayoutTransform>
 
-                                            <Border Width="1" Margin="0,7"
-                                                    Background="{DynamicResource MahApps.Brushes.Accent2}"/>
+                                            <Border Width="1" Margin="2,7"
+                                                    Background="{DynamicResource IRI.Maptor.Brushes.Surface.Border}"/>
 
                                             <ContentPresenter x:Name="ExpandSite"
                                                   ContentSource="Content"
@@ -136,8 +133,9 @@
                                         be set, though - a zero-scaled ExpandHost has no size but stays tab-focusable.
                                         Collapse is deliberately faster than expand so that swapping between the two
                                         expanders shrinks before it grows, which keeps the centred DockPanel steady.-->
+                                    <!--the open group's header shows as checked (accent tint) through
+                                        ToggleButton.PanelGhost; it used to be painted Highlight here-->
                                     <Trigger Property="IsExpanded" Value="True">
-                                        <Setter TargetName="HeaderSite" Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight }"/>
 
                                         <Trigger.EnterActions>
                                             <BeginStoryboard>
@@ -215,28 +213,30 @@
         <ScrollViewer HorizontalScrollBarVisibility="Auto"
                         VerticalScrollBarVisibility="Auto"
                         Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}">
-            <Border Background="{DynamicResource MahApps.Brushes.Accent3}"
-                    Margin="2" CornerRadius="4">
-                <DockPanel Margin="4" HorizontalAlignment="Left" >
+            <!--a tinted band with ghost buttons, the same as the layers toolbar in MapLegendView
+                (2026-11-10: was an accent band of round accent buttons above a dashed line)-->
+            <Border Background="{DynamicResource IRI.Maptor.Brushes.Surface.Subtle}"
+                    BorderBrush="{DynamicResource IRI.Maptor.Brushes.Surface.Border}" BorderThickness="0,1,0,1">
+                <DockPanel Margin="8,5" HorizontalAlignment="Left" >
                     <!--<Button Command="{Binding MoveDrawingItemUpCommand}"
-                            Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                            Style="{StaticResource IRI.Maptor.Styles.Button.PanelGhost}"
                             ToolTip="{Binding [cmd_drawingLegend_moveUp], Source={StaticResource Localization}}" 
                             IsEnabled="{Binding CanMoveDrawingItemUp}">
                         <iconPacks:PackIconMaterial Kind="ArrangeBringForward" />
                     </Button>
                     <Button Command="{Binding MoveDrawingItemDownCommand}"
-                            Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                            Style="{StaticResource IRI.Maptor.Styles.Button.PanelGhost}"
                             ToolTip="{Binding [cmd_drawingLegend_moveDown], Source={StaticResource Localization}}"                  
                             IsEnabled="{Binding CanMoveDrawingItemDown}">
                         <iconPacks:PackIconMaterial Kind="ArrangeSendBackward" />
                     </Button>-->
                     <Button Command="{Binding SaveDrawingItemFileCommand}"
-                            Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"  
+                            Style="{StaticResource IRI.Maptor.Styles.Button.PanelGhost}"  
                             ToolTip="{Binding [cmd_drawingLegend_saveAll], Source={StaticResource Localization}}">
                         <iconPacks:PackIconMaterial Kind="ContentSaveAll"/>
                     </Button>
                     <Button Command="{Binding OpenDrawingItemFileCommand}"
-                                Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"  
+                                Style="{StaticResource IRI.Maptor.Styles.Button.PanelGhost}"  
                                 ToolTip="{Binding [cmd_drawingLegend_openAll], Source={StaticResource Localization}}">
                         <iconPacks:PackIconMaterial Kind="FileMultiple" />
                     </Button>
@@ -244,22 +244,22 @@
                     <Expander Style="{StaticResource toggleHorizontalExpander}"
                             IsExpanded="{Binding ElementName=root, Path=SelectedExpanderIndex, Converter={StaticResource indexToBoolConverter}, ConverterParameter=1}">
                         <Expander.Header>
-                            <iconPacks:PackIconMaterial Kind="FilePlusOutline" Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                            <iconPacks:PackIconMaterial Kind="FilePlusOutline"/>
                         </Expander.Header>
                         <StackPanel Orientation="Horizontal" Margin="0" VerticalAlignment="Center" >
  
                             <Button Command="{Binding AddGeoJsonToDrawingItemsCommand}"
-                                Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"                                
+                                Style="{StaticResource IRI.Maptor.Styles.Button.PanelGhost}"                                
                                 ToolTip="{Binding [cmd_general_addGeoJson], Source={StaticResource Localization}}">
                                 <Path Style="{StaticResource IRI.Maptor.Styles.Path.ButtonContent}" Data="{StaticResource json}"/>
                             </Button>
                             <Button Command="{Binding AddLongLatTxtToDrawingItemsCommand}"
-                                Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"                                
+                                Style="{StaticResource IRI.Maptor.Styles.Button.PanelGhost}"                                
                                 ToolTip="{Binding [cmd_drawingLegend_addLatLongTxt], Source={StaticResource Localization}}">
                                 <Path Style="{StaticResource IRI.Maptor.Styles.Path.ButtonContent}" Data="{StaticResource txt}"/>
                             </Button>
                             <Button Command="{Binding AddShapefileToDrawingItemsCommand}"
-                                Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"                                
+                                Style="{StaticResource IRI.Maptor.Styles.Button.PanelGhost}"                                
                                 ToolTip="{Binding [cmd_general_addShapefile], Source={StaticResource Localization}}">
                                 <Path Style="{StaticResource IRI.Maptor.Styles.Path.ButtonContent}" Data="{StaticResource shp}" />
                             </Button>
@@ -269,32 +269,32 @@
                     <Expander Style="{StaticResource toggleHorizontalExpander}"  
                             IsExpanded="{Binding ElementName=root, Path=SelectedExpanderIndex, Converter={StaticResource indexToBoolConverter}, ConverterParameter=2}">
                         <Expander.Header>
-                            <iconPacks:PackIconMaterial Kind="PencilPlus" Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                            <iconPacks:PackIconMaterial Kind="PencilPlus"/>
                         </Expander.Header>
                         <StackPanel Orientation="Horizontal">
-                            <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
+                            <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.PanelGhost}"
                                 IsChecked="{Binding IsDrawPointMode, Mode=TwoWay}"
                                 ToolTip="{Binding [cmd_general_drawPoint], Source={StaticResource Localization}}"  >
                                 <iconPacks:PackIconMaterial Kind="VectorPointPlus" Width="14"/>
                             </ToggleButton>
 
-                            <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
+                            <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.PanelGhost}"
                                 IsChecked="{Binding IsDrawPolylineMode, Mode=TwoWay}"
                                 ToolTip="{Binding [cmd_general_drawPolyline], Source={StaticResource Localization}}">
                                 <iconPacks:PackIconMaterial Kind="VectorPolylinePlus"/>
                             </ToggleButton>
-                            <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
+                            <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.PanelGhost}"
                                 IsChecked="{Binding IsDrawRectangleMode, Mode=TwoWay}"
                                 ToolTip="{Binding [cmd_general_drawRectangle], Source={StaticResource Localization}}">
                                 <iconPacks:PackIconMaterial Kind="ShapeRectanglePlus"/>
                             </ToggleButton>
 
-                            <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
+                            <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.PanelGhost}"
                                 IsChecked="{Binding IsDrawPolygonMode, Mode=TwoWay}"
                                 ToolTip="{Binding [cmd_general_drawPolygon], Source={StaticResource Localization}}">
                                 <iconPacks:PackIconMaterial Kind="ShapePolygonPlus"/>
                             </ToggleButton>
-                            <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
+                            <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.PanelGhost}"
                                 IsChecked="{Binding IsDrawTextMode, Mode=TwoWay}"
                                 ToolTip="{Binding [cmd_general_addTextToMap], Source={StaticResource Localization}}">
                                 <iconPacks:PackIconMaterial Kind="FormatAnnotationPlus"/>
@@ -306,11 +306,7 @@
             </Border>
         </ScrollViewer>
 
-        <Line Grid.Row="1" X1="0" X2="100" Stretch="Fill" Opacity="1" Margin="0,4" 
-              StrokeThickness="1"
-              StrokeDashArray="8 2"
-              Stroke="{DynamicResource MahApps.Brushes.Highlight}" 
-              Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}"/>
+        <!--row 1 held a dashed accent line under the tools; the band's own bottom rule replaces it-->
 
         <!--empty state: says what the area is for instead of showing a blank list-->
         <TextBlock Grid.Row="2" IsHitTestVisible="False" Panel.ZIndex="1" Margin="8,12"

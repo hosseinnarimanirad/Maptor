@@ -399,6 +399,52 @@
         </Setter>
     </Style>
 
+    <!--A ghost icon button for a panel toolbar (the legend's tool rows): 30 px round, no border, grey
+        icon, grey circle on hover, accent tint when pressed. ToggleButton.PanelGhost is its toggle
+        twin. The icon takes this button's Foreground through PackIconMaterial.CircleLightButtonContent
+        / Path.ButtonContent, which bind to the ancestor ButtonBase. (2026-11-10: replaces the round
+        accent CircleLight buttons in the legend, which outshouted the light cards.)-->
+    <Style x:Key="IRI.Maptor.Styles.Button.PanelGhost" TargetType="{x:Type Button}">
+        <Setter Property="Width" Value="30"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="1,0"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray2}"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="chrome" Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1"
+                            CornerRadius="15" SnapsToDevicePixels="True">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          Margin="{TemplateBinding Padding}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="chrome" Property="Background" Value="{DynamicResource IRI.Maptor.Brushes.Surface.Hover}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="chrome" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="chrome" Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="{StaticResource IRI.Maptor.Styles.Opacity.Disabled}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 
     <!--Circle buttons-->
 

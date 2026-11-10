@@ -23,4 +23,17 @@
     <SolidColorBrush x:Key="IRI.Maptor.Brushes.Muted"        Color="#5F6368" po:Freeze="True"/>
     <SolidColorBrush x:Key="IRI.Maptor.Brushes.Muted.Fill"   Color="#ECECEE" po:Freeze="True"/>
 
+    <!--Surface levels of a main window (2026-11-10). Not a status, but they need the same light/dark
+        swap and MahApps' grey ramp does not give it: in the dark theme its Gray10 is LIGHTER than
+        the theme background, which would make the cards look sunk into the window.
+          Canvas  the window behind the cards (the gaps between panels)
+          Card    MahApps.Brushes.ThemeBackground, unchanged
+          Subtle  bands inside a card: header row, toolbars, a tool panel's content area
+          Hover   a Subtle band under the mouse
+          Border  card outlines and the rules inside them-->
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Surface.Canvas" Color="#ECEEF1" po:Freeze="True"/>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Surface.Subtle" Color="#F6F7F9" po:Freeze="True"/>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Surface.Hover"  Color="#E8EBEF" po:Freeze="True"/>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Surface.Border" Color="#D5D9DF" po:Freeze="True"/>
+
 </ResourceDictionary>

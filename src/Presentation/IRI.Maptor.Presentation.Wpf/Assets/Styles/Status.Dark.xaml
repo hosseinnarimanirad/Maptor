@@ -21,4 +21,11 @@
     <SolidColorBrush x:Key="IRI.Maptor.Brushes.Muted"        Color="#9AA0A6" po:Freeze="True"/>
     <SolidColorBrush x:Key="IRI.Maptor.Brushes.Muted.Fill"   Color="#2E2E31" po:Freeze="True"/>
 
+    <!--Surface levels, DARK: the canvas is darker than the cards (theme background #252525), the
+        bands inside a card a step lighter. See Status.Light.xaml.-->
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Surface.Canvas" Color="#1A1A1C" po:Freeze="True"/>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Surface.Subtle" Color="#2C2C2F" po:Freeze="True"/>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Surface.Hover"  Color="#37373B" po:Freeze="True"/>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Surface.Border" Color="#3F3F44" po:Freeze="True"/>
+
 </ResourceDictionary>

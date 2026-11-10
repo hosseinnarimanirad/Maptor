@@ -338,11 +338,12 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <!--filter and tools-->
-        <Border Grid.Row="0" Background="{DynamicResource MahApps.Brushes.Accent3}"
-                Margin="2" CornerRadius="4"
+        <!--filter and tools: a tinted band with a rule under it, ghost buttons (2026-11-10: was an
+            accent band of round accent buttons above a dashed line, the loudest thing on screen)-->
+        <Border Grid.Row="0" Background="{DynamicResource IRI.Maptor.Brushes.Surface.Subtle}"
+                BorderBrush="{DynamicResource IRI.Maptor.Brushes.Surface.Border}" BorderThickness="0,1,0,1"
                 Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}">
-            <Grid Margin="4">
+            <Grid Margin="8,5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
@@ -356,24 +357,24 @@
                       mahApp:TextBoxHelper.Watermark="{Binding [legend_filter_searchLayerWatermark], Source={StaticResource Localization}}" 
                       mahApp:TextBoxHelper.ClearTextButton="True"
                       Style="{StaticResource IRI.Maptor.Styles.TextBox.OnTint}"/>
-                <Button Grid.Column="1" Margin="4,0" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
+                <Button Grid.Column="1" Margin="4,0,1,0" Style="{StaticResource IRI.Maptor.Styles.Button.PanelGhost}"
                     Command="{Binding LegendViewModel.ClearFilterCommand, ElementName=root}"
                     IsEnabled="{Binding LegendViewModel.HasActiveFilter, ElementName=root}"
                     ToolTip="{Binding [legend_filter_clear], Source={StaticResource Localization}}"
                     VerticalAlignment="Center" >
                     <iconPacks:PackIconMaterial Kind="FilterOff"/>
                 </Button>
-                <!--outline funnel while nothing is hidden; filled funnel on the full accent while the
+                <!--outline funnel while nothing is hidden; filled accent funnel on an accent tint while the
                     layer-type filter hides layers (the open/hover states of the template still win)-->
                 <ToggleButton Grid.Column="2" x:Name="dataSourceKindFilterToggle"
-                          VerticalAlignment="Center" Margin="4,0"
+                          VerticalAlignment="Center"
                           ToolTip="{Binding [legend_filter_filterByLayerType], Source={StaticResource Localization}}">
                     <ToggleButton.Style>
-                        <Style TargetType="ToggleButton" BasedOn="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}">
+                        <Style TargetType="ToggleButton" BasedOn="{StaticResource IRI.Maptor.Styles.ToggleButton.PanelGhost}">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding LegendViewModel.IsDataSourceKindFilterActive, ElementName=root}" Value="True">
-                                    <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-                                    <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                                    <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -468,7 +469,7 @@
                 </Popup>
 
                 <ToggleButton Grid.Column="5" x:Name="importLayerToggle"
-                              Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
+                              Style="{StaticResource IRI.Maptor.Styles.ToggleButton.PanelGhost}"
                               VerticalAlignment="Center" Margin="0"
                               ToolTip="{Binding [cmd_legend_importLayer], Source={StaticResource Localization}}">
                     <iconPacks:PackIconMaterial Kind="LayersPlus"/>
@@ -510,12 +511,7 @@
                 </Popup>
             </Grid>
         </Border>
-        
-        <Line Grid.Row="1" X1="0" X2="100" Stretch="Fill" Opacity="1" Margin="0,4" 
-                StrokeThickness="1"
-                StrokeDashArray="8 2"
-                Stroke="{DynamicResource MahApps.Brushes.Highlight}"  
-                Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}"/>
+        <!--row 1 held a dashed accent line under the tools; the band's own bottom rule replaces it-->
 
         <TreeView Grid.Row="2"
                   ItemsSource="{Binding Source={StaticResource collectionViewSource}}"

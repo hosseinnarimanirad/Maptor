@@ -32,8 +32,10 @@
                DragDelta="ResizeThumb_DragDelta"
                MouseDoubleClick="ResizeThumb_MouseDoubleClick"/>
 
-        <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
-                BorderBrush="{DynamicResource MahApps.Brushes.Gray8}"
+        <!--Tinted (Surface.Subtle) throughout, header included: the header matches the legend card's
+            header band, and the white step cards of the hosted views stand out against it.-->
+        <Border Background="{DynamicResource IRI.Maptor.Brushes.Surface.Subtle}"
+                BorderBrush="{DynamicResource IRI.Maptor.Brushes.Surface.Border}"
                 BorderThickness="{StaticResource IRI.Maptor.Styles.Thickness.Border}"
                 CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"
                 SnapsToDevicePixels="True">
@@ -54,7 +56,7 @@
                                VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                 </DockPanel>
 
-                <Border DockPanel.Dock="Top" Height="1" Background="{DynamicResource MahApps.Brushes.Gray8}"/>
+                <Border DockPanel.Dock="Top" Height="1" Background="{DynamicResource IRI.Maptor.Brushes.Surface.Border}"/>
 
                 <!--the hosted view; PanelContent, not this control's own Content (that is the tree above).
                     No horizontal scrolling, as in the flyouts this replaces: the view takes the panel's width,

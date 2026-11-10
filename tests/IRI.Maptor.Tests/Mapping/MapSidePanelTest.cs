@@ -143,6 +143,39 @@ public class MapSidePanelTest
         });
     }
 
+    /// <summary>The drawings legend after its toolbar became a ghost-button band (2026-11-10) still builds.</summary>
+    [Fact]
+    public void DrawingLegendView_Builds()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var styles = LoadStyles();
+            Application.Current.Resources.MergedDictionaries.Add(styles);
+
+            // converters, shapes (json/txt/shp glyphs) and iranSans come from the application, as in the apps
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary
+            {
+                Source = new Uri("pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Shapes/Others.xaml", UriKind.Absolute)
+            });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary
+            {
+                Source = new Uri("pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Converters.xaml", UriKind.Absolute)
+            });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary
+            {
+                Source = new Uri("pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Fonts.xaml", UriKind.Absolute)
+            });
+
+            var view = new MapDrawingLegendView();
+
+            var host = new Grid { Width = 400, Height = 500 };
+            host.Children.Add(view);
+            Layout(host, 400, 500);
+
+            Assert.NotNull(view.Content);
+        });
+    }
+
     private static MapSidePanel BuildPanel(out Grid host)
     {
         var styles = LoadStyles();
