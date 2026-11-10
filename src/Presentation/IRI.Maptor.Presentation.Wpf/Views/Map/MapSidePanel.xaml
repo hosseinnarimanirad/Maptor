@@ -1,0 +1,73 @@
+<maptor:NotifiableUserControl x:Class="IRI.Maptor.Presentation.Wpf.Controls.MapSidePanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:helpers="clr-namespace:IRI.Maptor.Presentation.Wpf.Helpers"
+             xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             x:Name="root"
+             d:DesignHeight="600" d:DesignWidth="400">
+    <maptor:NotifiableUserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </maptor:NotifiableUserControl.Resources>
+
+    <!--Docked beside the map, never over it: the map's extent ends where this panel starts.
+        DockPanel mirrors with the flow direction, so Dock="Left" puts the resize edge on the side
+        that faces the map in both layouts (the panel sits after the map: left of it in RTL).-->
+    <DockPanel Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
+
+        <!--resize edge: a 1px rule with a wider invisible grip-->
+        <Thumb x:Name="resizeThumb" DockPanel.Dock="Left" Width="6" Cursor="SizeWE" Focusable="False"
+               DragDelta="ResizeThumb_DragDelta">
+            <Thumb.Template>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Border Background="Transparent">
+                        <Border x:Name="rule" Width="1" HorizontalAlignment="Left"
+                                Background="{DynamicResource MahApps.Brushes.Gray8}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="rule" Property="Width" Value="3"/>
+                            <Setter TargetName="rule" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                        </Trigger>
+                        <Trigger Property="IsDragging" Value="True">
+                            <Setter TargetName="rule" Property="Width" Value="3"/>
+                            <Setter TargetName="rule" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Thumb.Template>
+        </Thumb>
+
+        <!--title band-->
+        <DockPanel DockPanel.Dock="Top" Margin="8,6,4,0" LastChildFill="True">
+            <Button DockPanel.Dock="Right" VerticalAlignment="Center"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.IconSquare}"
+                    ToolTip="{Binding [dialog_common_close], Source={StaticResource Localization}}"
+                    AutomationProperties.Name="{Binding [dialog_common_close], Source={StaticResource Localization}}"
+                    Click="CloseButton_Click">
+                <iconPacks:PackIconMaterial Kind="Close" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}" Margin="0"/>
+            </Button>
+            <TextBlock Text="{Binding Title, ElementName=root}" VerticalAlignment="Center"
+                       FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Action}" FontWeight="SemiBold"
+                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                       TextTrimming="CharacterEllipsis"/>
+        </DockPanel>
+
+        <Border DockPanel.Dock="Top" Style="{StaticResource IRI.Maptor.Styles.Border.Divider}" Margin="0,6,0,0"/>
+
+        <!--the hosted view; PanelContent, not this control's own Content (that is the tree above).
+            No horizontal scrolling, as in the flyouts this replaces: the view takes the panel's width,
+            and wide tables scroll inside their own grids.-->
+        <ScrollViewer x:Name="scrollViewer" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"
+                      Padding="8,4">
+            <ContentPresenter Content="{Binding PanelContent, ElementName=root}"/>
+        </ScrollViewer>
+    </DockPanel>
+</maptor:NotifiableUserControl>

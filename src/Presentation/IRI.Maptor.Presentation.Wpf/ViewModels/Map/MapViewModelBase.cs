@@ -245,10 +245,21 @@ public abstract class MapViewModelBase : ViewModelBase
         get { return _isMapExtentPanelShown; }
         set
         {
+            if (_isMapExtentPanelShown == value)
+                return;
+
             _isMapExtentPanelShown = value;
             RaisePropertyChanged();
+
+            OnMapExtentPanelShownChanged(value);
         }
     }
+
+    /// <summary>
+    /// Called after <see cref="IsMapExtentPanelShown"/> changes. An application that shows several
+    /// side panels one at a time overrides it to close the others when this one opens.
+    /// </summary>
+    protected virtual void OnMapExtentPanelShownChanged(bool isShown) { }
 
 
     private SketchBarViewModel _sketchBar;
