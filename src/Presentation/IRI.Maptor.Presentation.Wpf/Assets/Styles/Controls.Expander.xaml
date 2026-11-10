@@ -5,6 +5,9 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Common.Metrics.xaml"/>
+        <!--Expander.Card: the double-chevron styles and the base TextBlock style (Persian font)-->
+        <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.Path.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.TextBlock.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <!--A collapsible section that looks like the rest of our cards: a bordered surface with a
@@ -126,6 +129,256 @@
     <Style x:Key="IRI.Maptor.Styles.TextBlock.ExpanderHeaderCount" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
         <Setter Property="Opacity" Value="0.75"/>
+        <Setter Property="Margin" Value="6,0,0,0"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <!--=====================================================================================
+        Card panels (main-layout polish, 2026-11-10)
+
+        Expander.Card is a docked panel of the main window (legend, attribute table): a light
+        surface with a header row (icon, title, count, chevron), the same family as MapSidePanel.
+        Expander.CardSection is a lighter collapsible section INSIDE a card (drawings and layers
+        in the legend card).
+
+        ExpandDirection says which way the panel grows, and so where the chevron points:
+          Down   content opens below the header (chevron down when closed, up when open)
+          Up     a panel at the bottom of the window that grows upward (attribute table):
+                 the header stays on top, chevron up when closed, down when open
+          Right  a side panel that folds towards the reading start (legend): open, the header
+                 is a normal row with a double chevron pointing to the reading start; closed,
+                 the whole card becomes a narrow rail with the chevron on top and the header
+                 turned 90 degrees, so pass the header unrotated.
+        Left is treated as Down.
+
+        Header content: PackIconPhosphorIcons.CardHeader, the title (TextBlock.CardHeaderTitle,
+        or plain text: the header row sets the size and weight), then TextBlock.CardHeaderCount.
+        ======================================================================================-->
+
+    <!--chevrons of the header row; only Kind differs, size and colour come from the template-->
+    <Style x:Key="IRI.Maptor.Styles.PackIconMaterial.CardChevron.Down" TargetType="iconPacks:PackIconMaterial">
+        <Setter Property="Kind" Value="ChevronDown"/>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.PackIconMaterial.CardChevron.Up" TargetType="iconPacks:PackIconMaterial">
+        <Setter Property="Kind" Value="ChevronUp"/>
+    </Style>
+
+    <!--The header row of Expander.Card. The chevron's Kind is never set in the template: a template
+        value outranks a style trigger, and the double chevrons swap Kind with the flow direction in
+        their style. The template triggers swap the chevron's Style instead.-->
+    <Style x:Key="IRI.Maptor.Styles.ToggleButton.CardHeader" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+        <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.BodyLarge}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="MinHeight" Value="{StaticResource IRI.Maptor.Styles.Size.Control.Large}"/>
+        <Setter Property="Padding" Value="12,0,10,0"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border x:Name="headerRoot" Background="{TemplateBinding Background}"
+                            Padding="{TemplateBinding Padding}"
+                            CornerRadius="{TemplateBinding mahApp:ControlsHelper.CornerRadius}">
+                        <DockPanel>
+                            <iconPacks:PackIconMaterial x:Name="chevron" DockPanel.Dock="Right"
+                                                        Width="12" Height="12" Margin="8,0,0,0"
+                                                        VerticalAlignment="Center" HorizontalAlignment="Center"
+                                                        Foreground="{DynamicResource MahApps.Brushes.Gray3}"
+                                                        Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CardChevron.Down}"/>
+                            <ContentPresenter x:Name="content" VerticalAlignment="Center" RecognizesAccessKey="True"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                        </DockPanel>
+                    </Border>
+                    <!--Order matters: a later trigger wins over an earlier one on the same property.-->
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="headerRoot" Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}"/>
+                            <Setter TargetName="chevron" Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                        </Trigger>
+
+                        <!--Down: open points up-->
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="chevron" Property="Style" Value="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CardChevron.Up}"/>
+                        </Trigger>
+
+                        <!--Up: closed points up, open points down-->
+                        <DataTrigger Binding="{Binding ExpandDirection, RelativeSource={RelativeSource AncestorType={x:Type Expander}}}" Value="Up">
+                            <Setter TargetName="chevron" Property="Style" Value="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CardChevron.Up}"/>
+                        </DataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding ExpandDirection, RelativeSource={RelativeSource AncestorType={x:Type Expander}}}" Value="Up"/>
+                                <Condition Binding="{Binding IsChecked, RelativeSource={RelativeSource Self}}" Value="True"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="chevron" Property="Style" Value="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CardChevron.Down}"/>
+                        </MultiDataTrigger>
+
+                        <!--Right, open: a normal row; the chevron points to the reading start (fold away)-->
+                        <DataTrigger Binding="{Binding ExpandDirection, RelativeSource={RelativeSource AncestorType={x:Type Expander}}}" Value="Right">
+                            <Setter TargetName="chevron" Property="Style" Value="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronDoublePrevious.Plain}"/>
+                        </DataTrigger>
+                        <!--Right, closed: the rail. Chevron on top pointing to the map (unfold),
+                            header turned to read along the rail.-->
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding ExpandDirection, RelativeSource={RelativeSource AncestorType={x:Type Expander}}}" Value="Right"/>
+                                <Condition Binding="{Binding IsChecked, RelativeSource={RelativeSource Self}}" Value="False"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="chevron" Property="Style" Value="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronDoubleNext.Plain}"/>
+                            <Setter TargetName="chevron" Property="DockPanel.Dock" Value="Top"/>
+                            <Setter TargetName="chevron" Property="Margin" Value="0,0,0,10"/>
+                            <Setter TargetName="content" Property="VerticalAlignment" Value="Top"/>
+                            <Setter TargetName="content" Property="HorizontalAlignment" Value="Center"/>
+                            <Setter TargetName="content" Property="LayoutTransform">
+                                <Setter.Value>
+                                    <RotateTransform Angle="90"/>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="headerRoot" Property="Padding" Value="8,12"/>
+                        </MultiDataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--The header row of Expander.CardSection: one step smaller, inset, with its own rounded hover band.-->
+    <Style x:Key="IRI.Maptor.Styles.ToggleButton.CardSectionHeader" TargetType="{x:Type ToggleButton}"
+           BasedOn="{StaticResource IRI.Maptor.Styles.ToggleButton.CardHeader}">
+        <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Body}"/>
+        <Setter Property="MinHeight" Value="{StaticResource IRI.Maptor.Styles.Size.Control.Default}"/>
+        <Setter Property="Padding" Value="8,0,6,0"/>
+        <Setter Property="Margin" Value="4,2"/>
+        <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}"/>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.Expander.Card" TargetType="{x:Type Expander}">
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
+        <Setter Property="BorderThickness" Value="{StaticResource IRI.Maptor.Styles.Thickness.Border}"/>
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Expander}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <!--Content="{TemplateBinding Header}" is set here, on the toggle, not
+                                inside the toggle's own template, where the templated parent is the
+                                toggle and has no Header.-->
+                            <ToggleButton x:Name="headerToggle" Grid.Row="0"
+                                          Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CardHeader}"
+                                          IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                          Content="{TemplateBinding Header}"
+                                          ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                          ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"/>
+
+                            <Border x:Name="divider" Grid.Row="1" Height="1" Visibility="Collapsed"
+                                    Background="{DynamicResource MahApps.Brushes.Gray8}"/>
+
+                            <ContentPresenter x:Name="body" Grid.Row="2" Margin="{TemplateBinding Padding}" Visibility="Collapsed"/>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded" Value="True">
+                            <Setter TargetName="divider" Property="Visibility" Value="Visible"/>
+                            <Setter TargetName="body" Property="Visibility" Value="Visible"/>
+                            <!--the hover band follows the card's top corners only-->
+                            <Setter TargetName="headerToggle" Property="mahApp:ControlsHelper.CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.SurfaceTop}"/>
+                        </Trigger>
+                        <!--the rail: the whole card height is the toggle-->
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="ExpandDirection" Value="Right"/>
+                                <Condition Property="IsExpanded" Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="headerToggle" Property="Grid.RowSpan" Value="3"/>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--A section inside a card: no surface of its own, a rule above it (set BorderThickness="0" on
+        the first section when the card header's divider is right above it).-->
+    <Style x:Key="IRI.Maptor.Styles.Expander.CardSection" TargetType="{x:Type Expander}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
+        <Setter Property="BorderThickness" Value="0,1,0,0"/>
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Expander}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <ToggleButton x:Name="headerToggle" Grid.Row="0"
+                                          Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CardSectionHeader}"
+                                          IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                          Content="{TemplateBinding Header}"
+                                          ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                          ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"/>
+                            <ContentPresenter x:Name="body" Grid.Row="1" Margin="{TemplateBinding Padding}" Visibility="Collapsed"/>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded" Value="True">
+                            <Setter TargetName="body" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--Header pieces for Expander.Card / Expander.CardSection and the MapSidePanel header-->
+    <Style x:Key="IRI.Maptor.Styles.PackIconPhosphorIcons.CardHeader" TargetType="iconPacks:PackIconPhosphorIcons">
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="Width" Value="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"/>
+        <Setter Property="Height" Value="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"/>
+        <Setter Property="Margin" Value="0,0,8,0"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+    </Style>
+
+    <!--the title: takes size and weight from the header row, keeps the base style's Persian font-->
+    <Style x:Key="IRI.Maptor.Styles.TextBlock.CardHeaderTitle" TargetType="TextBlock"
+           BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}">
+        <Setter Property="FontSize" Value="{Binding FontSize, RelativeSource={RelativeSource AncestorType={x:Type ToggleButton}}}"/>
+        <Setter Property="FontWeight" Value="{Binding FontWeight, RelativeSource={RelativeSource AncestorType={x:Type ToggleButton}}}"/>
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.TextBlock.CardHeaderCount" TargetType="TextBlock"
+           BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}">
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray3}"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"/>
         <Setter Property="Margin" Value="6,0,0,0"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>

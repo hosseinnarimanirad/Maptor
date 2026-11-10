@@ -145,6 +145,30 @@
         </Style.Triggers>
     </Style>
 
+    <!--Double-chevron variant of the two above, same rule: the collapse/expand chevron of a side
+        panel that folds towards the reading start (Expander.Card with ExpandDirection="Right").-->
+    <Style x:Key="IRI.Maptor.Styles.PackIconMaterial.ChevronDoublePrevious.Plain" TargetType="iconPacks:PackIconMaterial">
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+        <Setter Property="Kind" Value="ChevronDoubleLeft"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Source={x:Static localization:LocalizationManager.Instance}, Path=CurrentFlowDirection}"
+                         Value="RightToLeft">
+                <Setter Property="Kind" Value="ChevronDoubleRight"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.PackIconMaterial.ChevronDoubleNext.Plain" TargetType="iconPacks:PackIconMaterial">
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+        <Setter Property="Kind" Value="ChevronDoubleRight"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Source={x:Static localization:LocalizationManager.Instance}, Path=CurrentFlowDirection}"
+                         Value="RightToLeft">
+                <Setter Property="Kind" Value="ChevronDoubleLeft"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
     <!--Bold-arrow variant of ChevronPrevious.Plain/ChevronNext.Plain, for the previous/next map
         extent buttons. Same rule and same LeftToRight FlowDirection.-->
     <Style x:Key="IRI.Maptor.Styles.PackIconMaterial.ArrowPrevious.Plain" TargetType="iconPacks:PackIconMaterial">
