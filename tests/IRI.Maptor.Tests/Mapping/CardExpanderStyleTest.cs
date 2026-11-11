@@ -217,6 +217,33 @@ public class CardExpanderStyleTest
         });
     }
 
+    /// <summary>Compact review, Step 5 (2026-11-11): the tab track is a 4 px rectangle and each tab 2 px, no pill.</summary>
+    [Fact]
+    public void Tabs_AreSquareish_TrackFourTabTwo()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var styles = LoadStyles();
+
+            Assert.Equal(new CornerRadius(4), (CornerRadius)styles["IRI.Maptor.Styles.CornerRadius.TabTrack"]);
+            Assert.Equal(new CornerRadius(2), (CornerRadius)styles["IRI.Maptor.Styles.CornerRadius.Tab"]);
+
+            var tabs = new TabControl { Style = (Style)styles["IRI.Maptor.Styles.TabControl"] };
+            var tab = new TabItem { Header = "A", Style = (Style)styles["IRI.Maptor.Styles.TabItem"] };
+            tabs.Items.Add(tab);
+
+            var host = new Grid { Width = 300, Height = 200 };
+            host.Resources.MergedDictionaries.Add(styles);
+            host.Children.Add(tabs);
+            host.Measure(new Size(300, 200));
+            host.Arrange(new Rect(0, 0, 300, 200));
+            host.UpdateLayout();
+
+            var pill = (Border)tab.Template.FindName("pill", tab);
+            Assert.Equal(new CornerRadius(2), pill.CornerRadius);
+        });
+    }
+
     private static ResourceDictionary LoadStyles()
     {
         var cache = typeof(IRI.Maptor.Presentation.Wpf.Helpers.SharedResourceDictionary)

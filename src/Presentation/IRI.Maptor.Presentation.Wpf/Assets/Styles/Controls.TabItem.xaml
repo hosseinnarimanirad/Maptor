@@ -20,7 +20,7 @@
     <ControlTemplate x:Key="IRI.Maptor.Styles.TabItem.Template" TargetType="{x:Type TabItem}">
         <Border x:Name="pill"
                 Background="{TemplateBinding Background}"
-                CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}"
+                CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Tab}"
                 Margin="1,0" SnapsToDevicePixels="True">
             <ContentPresenter ContentSource="Header"
                               Margin="{TemplateBinding Padding}"

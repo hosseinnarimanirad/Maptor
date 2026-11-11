@@ -36,9 +36,11 @@
         follows the panel's corner exactly. Keep its value in step with Surface.-->
     <CornerRadius x:Key="IRI.Maptor.Styles.CornerRadius.SurfaceTop">6,6,0,0</CornerRadius>
 
-    <!--the tab strip's rounded track. Must stay equal to Control + TabTrackPadding, or the
-        track's curve and the selected pill's curve will not be concentric.-->
-    <CornerRadius x:Key="IRI.Maptor.Styles.CornerRadius.TabTrack">9</CornerRadius>
+    <!--the tab strip's track and the tabs inside it: 4 and 2, like the segmented choice (RadioButton.Segment),
+        no pill (compact review, Step 5, 2026-11-11; were 9 and 6, a round pill track). The tab radius is about the
+        track's minus TabTrackPadding, so the two curves nest.-->
+    <CornerRadius x:Key="IRI.Maptor.Styles.CornerRadius.TabTrack">4</CornerRadius>
+    <CornerRadius x:Key="IRI.Maptor.Styles.CornerRadius.Tab">2</CornerRadius>
 
     <!--breathing room between the track edge and the pills inside it-->
     <Thickness x:Key="IRI.Maptor.Styles.Thickness.TabTrackPadding">3</Thickness>

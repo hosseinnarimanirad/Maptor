@@ -41,7 +41,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type RepeatButton}">
                     <Border x:Name="chrome" Background="{TemplateBinding Background}"
-                            CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}"
+                            CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Tab}"
                             SnapsToDevicePixels="True">
                         <ContentPresenter Margin="{TemplateBinding Padding}"
                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
