@@ -5447,8 +5447,14 @@ public partial class MapViewer : NotifiableUserControl
         }
     }
 
-    // Esc = the sketch bar's visible Cancel (or Delete, for a measurement) button;
-    // asks first when a drawing or an edit would be lost
+    // Esc (2026-11-11, user decision): ends what is going on, then the tool, back to Pan.
+    //  - Draw line / polygon / rectangle (the ribbon tools, which loop): TWO steps. With a sketch in progress, Esc is
+    //    the sketch bar's Cancel (asks first) and the tool stays armed for the next feature; with nothing in
+    //    progress, Esc leaves the tool (Pan). Draw point finishes on its click, so for it Esc always leaves the tool.
+    //  - Identify, zoom in/out/rectangle, add text: ONE step, back to Pan.
+    //  - A measurement: Cancel while drawing it, Delete once drawn (Measure is a one-shot command, the map is in Pan).
+    //  - Editing a geometry: the sketch bar's Cancel (asks first when there are changes).
+    // Not while typing (a text box, including a text on the map, keeps Esc for itself).
     private async void HostWindow_KeyDownForSketchBar(object sender, KeyEventArgs e)
     {
         if (e.Handled || e.Key != Key.Escape || _presenter == null || Keyboard.FocusedElement is System.Windows.Controls.Primitives.TextBoxBase)
@@ -5461,6 +5467,16 @@ public partial class MapViewer : NotifiableUserControl
 
         if (_presenter.IsDrawMode)
         {
+            // second step of a draw tool: armed, nothing drawn yet -> leave the tool
+            if (drawingLayer == null && !isMeasure && _presenter.MapAction.IsDrawAction())
+            {
+                e.Handled = true;
+
+                _presenter.MapAction = MapAction.Pan;
+
+                return;
+            }
+
             command = _presenter.CancelNewDrawingCommand;
             hasChanges = drawingLayer != null;
         }
@@ -5468,6 +5484,15 @@ public partial class MapViewer : NotifiableUserControl
         {
             command = isMeasure ? CurrentEditingLayer.DeleteCommand : CurrentEditingLayer.CancelEditingCommand;
             hasChanges = CurrentEditingLayer.HasChanges;
+        }
+        else if (_presenter.MapAction is not (MapAction.Pan or MapAction.None))
+        {
+            // identify, zoom, add text (or a draw tool between two sketches): one step, back to Pan
+            e.Handled = true;
+
+            _presenter.MapAction = MapAction.Pan;
+
+            return;
         }
         else
         {
