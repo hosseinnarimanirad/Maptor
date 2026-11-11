@@ -91,9 +91,14 @@
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
                 <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
             </Trigger>
+            <!--disabled: the normal text, faded like every other disabled control (Opacity.Disabled). Until
+                2026-11-11 it was the Muted grey, which on the grey track had too little contrast in dark.-->
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Muted}"/>
+                <!--ThemeForeground also for a checked one: its fill goes, so IdealForeground (white) would vanish on
+                    the light track-->
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
                 <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Opacity" Value="{StaticResource IRI.Maptor.Styles.Opacity.Disabled}"/>
                 <Setter Property="Cursor" Value="Arrow"/>
             </Trigger>
         </Style.Triggers>

@@ -58,7 +58,7 @@
                        PlacementTarget="{Binding ElementName=filterToggle}"
                        Placement="Bottom" StaysOpen="False" AllowsTransparency="True"
                        PopupAnimation="Slide">
-                    <Border Background="White" BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
+                    <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}" BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
                             BorderThickness="1" Padding="6" CornerRadius="4" MinWidth="180">
                         <Border.Effect>
                             <StaticResource ResourceKey="IRI.Maptor.Effects.Elevation2"/>

@@ -31,6 +31,27 @@ public static class AccentTint
 
     public const double DarkAmount = 0.22, DarkHoverAmount = 0.30, DarkBorderAmount = 0.48;
 
+    /// <summary>
+    /// MahApps' key for the veil laid over a disabled input (TextBox, ComboBox, NumericUpDown, …). MahApps uses 65 %
+    /// white (#A5FFFFFF) in both themes, which turns a disabled input into a light grey slab on a dark window
+    /// (2026-11-11). In the dark theme <see cref="ThemeHelper"/> replaces it with <see cref="DisabledOverlay"/>.
+    /// </summary>
+    public const string DisabledOverlayKey = "MahApps.Brushes.Control.Disabled";
+
+    /// <summary>How much of the theme background the dark disabled veil keeps (about 60 %).</summary>
+    public const byte DisabledOverlayAlpha = 0x99;
+
+    /// <summary>
+    /// The disabled veil for a dark theme: the theme background, semi-transparent, so a disabled input fades into
+    /// the surface instead of lighting up. Frozen.
+    /// </summary>
+    public static SolidColorBrush DisabledOverlay(Color background)
+    {
+        var brush = new SolidColorBrush(Color.FromArgb(DisabledOverlayAlpha, background.R, background.G, background.B));
+        brush.Freeze();
+        return brush;
+    }
+
     /// <summary><paramref name="amount"/> (0 to 1) of <paramref name="accent"/> over <paramref name="background"/>, opaque.</summary>
     public static Color Blend(Color background, Color accent, double amount)
     {

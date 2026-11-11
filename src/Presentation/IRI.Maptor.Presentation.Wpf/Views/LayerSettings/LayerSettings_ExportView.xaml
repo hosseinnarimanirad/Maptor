@@ -146,8 +146,7 @@
                         </iconPacks:PackIconPhosphorIcons.Style>
                     </iconPacks:PackIconPhosphorIcons>
                 </ToggleButton>
-                <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" Margin="10,0,2,0"
-                           Foreground="Black">
+                <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" Margin="10,0,2,0">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}">
                             <!--<Setter Property="FontFamily" Value="{StaticResource iranSans}"/>-->

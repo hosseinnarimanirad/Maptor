@@ -65,7 +65,7 @@
                            Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
             </GroupBox.Header>
             <StackPanel>
-                <Border BorderBrush="LightGray" BorderThickness="0,0,0,2" Padding="4,2" Margin="0,0,0,4">
+                <Border BorderBrush="{DynamicResource MahApps.Brushes.Gray8}" BorderThickness="0,0,0,2" Padding="4,2" Margin="0,0,0,4">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="150"/>
@@ -73,14 +73,14 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="{Binding [featureChanges_attributeName], Source={StaticResource Localization}}" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                        <TextBlock Grid.Column="1" Text="{Binding [featureChanges_oldValue], Source={StaticResource Localization}}" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="Gray" Margin="4,0,0,0"/>
+                        <TextBlock Grid.Column="1" Text="{Binding [featureChanges_oldValue], Source={StaticResource Localization}}" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource IRI.Maptor.Brushes.Muted}" Margin="4,0,0,0"/>
                         <TextBlock Grid.Column="2" Text="{Binding [featureChanges_newValue], Source={StaticResource Localization}}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="4,0,0,0"/>
                     </Grid>
                 </Border>
                 <ItemsControl ItemsSource="{Binding ChangedAttributes}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border BorderBrush="LightGray" BorderThickness="0,0,0,1" Padding="4,2" Margin="0,0,0,2">
+                            <Border BorderBrush="{DynamicResource MahApps.Brushes.Gray8}" BorderThickness="0,0,0,1" Padding="4,2" Margin="0,0,0,2">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="150"/>
@@ -88,7 +88,7 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" Text="{Binding DisplayName}" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                                    <TextBlock Grid.Column="1" Text="{Binding OldValue, TargetNullValue='-'}" VerticalAlignment="Center" Foreground="Gray" Margin="4,0,0,0"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding OldValue, TargetNullValue='-'}" VerticalAlignment="Center" Foreground="{DynamicResource IRI.Maptor.Brushes.Muted}" Margin="4,0,0,0"/>
                                     <TextBlock Grid.Column="2" Text="{Binding NewValue, TargetNullValue='-'}" VerticalAlignment="Center" Margin="4,0,0,0"/>
                                 </Grid>
                             </Border>

@@ -34,24 +34,27 @@
                 </Style.Triggers>
             </Style>-->
 
+            <!--white cards on the side panel's grey body, like the other side-panel views (2026-11-11). Until
+                then: accent-tinted cards with white (IdealForeground) text, unreadable in the light theme.-->
             <Style x:Key="sectionCard" TargetType="Border">
-                <Setter Property="Padding" Value="4"/>
-                <Setter Property="CornerRadius" Value="4"/>
-                <Setter Property="Margin" Value="0,4"/>
-                <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
+                <Setter Property="Padding" Value="10,8"/>
+                <Setter Property="CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}"/>
+                <Setter Property="Margin" Value="{StaticResource IRI.Maptor.Styles.Thickness.StackGap}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource IRI.Maptor.Brushes.Surface.Border}"/>
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
             </Style>
 
             <Style x:Key="sectionLabel" TargetType="TextBlock">
-                <Setter Property="FontWeight" Value="Bold"/>
-                <Setter Property="FontSize" Value="14"/>
-                <Setter Property="Margin" Value="0,2,0,8"/>
-                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
-                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Body}"/>
+                <Setter Property="Margin" Value="0,0,0,6"/>
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
             </Style>
         </ResourceDictionary>
     </maptor:NotifiableUserControl.Resources>
-    <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}" CornerRadius="4" Padding="0,1"
+    <Border Background="Transparent" Padding="0"
             VerticalAlignment="Top">
         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
                       Style="{StaticResource MahApps.Styles.ScrollViewer}">
@@ -97,8 +100,7 @@
                                 Text="{Binding NewBookmarkTitle, UpdateSourceTrigger=PropertyChanged}"
                                 mahApp:TextBoxHelper.Watermark="{Binding [mapExtent_new_extentTitle], Source={StaticResource Localization}}" 
                                 mahApp:TextBoxHelper.ClearTextButton="True"
-                                Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
-                                Background="White"/>
+                                Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"/>
                     </Grid>
                 </Border>
 
@@ -122,12 +124,12 @@
                             </Grid.ColumnDefinitions>
                             <Grid.Resources>
                                 <Style x:Key="boldText" TargetType="TextBlock">
-                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
                                     <Setter Property="Margin" Value="4,2"/>
                                     <Setter Property="FontWeight" Value="SemiBold"/>
                                 </Style>
                                 <Style x:Key="normalText" TargetType="TextBlock">
-                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
                                     <Setter Property="FlowDirection" Value="LeftToRight"/>
                                 </Style>
                             </Grid.Resources>
@@ -173,7 +175,7 @@
                                 <Style x:Key="labelBorder"  TargetType="Border">
                                     <Setter Property="BorderThickness" Value="0"/>
                                     <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-                                    <Setter Property="BorderBrush" Value="White"/>
+                                    <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
                                     <Setter Property="BorderThickness" Value="1"/>
                                     <Setter Property="CornerRadius" Value="4"/>
                                     <Setter Property="Padding" Value="1"/>
@@ -184,10 +186,13 @@
                                     <Setter Property="FontWeight" Value="Normal"/>
                                     <Setter Property="Margin" Value="4,0"/>
                                     <Setter Property="FlowDirection" Value="LeftToRight"/>
+                                    <!--on the accent label-->
+                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
                                 </Style>
                             </Grid.Resources>
 
-                            <Border Margin="30" Height="75" Width="100" BorderBrush="White" BorderThickness="4"/>
+                            <!--the extent frame: was White, invisible on the white card-->
+                            <Border Margin="30" Height="75" Width="100" BorderBrush="{DynamicResource MahApps.Brushes.Gray6}" BorderThickness="2"/>
 
                             <Border Style="{StaticResource labelBorder}" HorizontalAlignment="Center" VerticalAlignment="Top">
                                 <TextBlock Text="{Binding TopLabel, FallbackValue='NaN', Converter={StaticResource localizedNumberConverter}}"
@@ -237,22 +242,20 @@
                                    Text="{Binding [mapExtent_gotoScale_title], Source={StaticResource Localization}}"/>
                         <mahApp:ToggleSwitch Grid.Row="1" Grid.ColumnSpan="2"
                                              Style="{StaticResource IRI.Maptor.Styles.ToggleSwitch.Small}"
-                                             Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
                                              IsOn="{Binding UseGroundScaleForStandardScales}"
                                              OnContent="{Binding [mapExtent_gotoScale_useGroundScaleForStandardScales], Source={StaticResource Localization}}"
                                              OffContent="{Binding [mapExtent_gotoScale_useWebMercatorScaleForStandardScales], Source={StaticResource Localization}}"/>
                         <Border Grid.Row="2" Grid.Column="0" CornerRadius="4" Background="{DynamicResource MahApps.Brushes.ControlBackground}">
                             <ComboBox Grid.Row="1" Grid.Column="0"
-                                        ItemsSource="{Binding ScaleItemsView}" Foreground="Black"
+                                        ItemsSource="{Binding ScaleItemsView}"
                                         SelectedItem="{Binding SelectedScaleItem, Mode=TwoWay}"
                                         Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}"
-                                        DisplayMemberPath="DisplayLabel" Background="White">
+                                        DisplayMemberPath="DisplayLabel">
                                 <ComboBox.GroupStyle>
                                     <GroupStyle>
                                         <GroupStyle.HeaderTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding Name}"
-                                                                   Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
                                                                    FontWeight="Bold" Margin="0,4,0,2"/>
                                             </DataTemplate>
                                         </GroupStyle.HeaderTemplate>
@@ -275,7 +278,7 @@
                         <ItemsControl ItemsSource="{Binding Bookmarks}" Margin="0">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Margin="0,0,0,2" Background="{DynamicResource MahApps.Brushes.Badged.Background}" Padding="2" CornerRadius="5">
+                                    <Border Margin="0,0,0,4" Background="{DynamicResource IRI.Maptor.Brushes.Surface.Subtle}" Padding="4" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}">
                                         <Grid >
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="79"/>
@@ -290,7 +293,6 @@
                                                 <Image Source="{Binding Thumbnail}" Stretch="Uniform"/>
                                             </Border>
                                             <TextBlock Grid.Column="1" Text="{Binding Title}"
-                                                       Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
                                                        VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                                             <Button Grid.Column="2" ToolTip="Delete"
                                                     Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"

@@ -15,10 +15,13 @@ public partial class MapExtentPanelView : NotifiableUserControl
     //    typeof(MapExtentPanelView),
     //    new PropertyMetadata(null, OnMapPresenterChanged));
 
+    // No Unloaded clean-up (removed 2026-11-11): the view model is MapViewModelBase.MapExtentPanel, owned by the map
+    // and bound in by the host. Disposing it here and setting DataContext = null broke the panel for good the first
+    // time the view was unloaded and loaded again (e.g. a theme change re-templating the side panel): every value
+    // showed NaN or nothing. ClearViewModel stays for the commented-out MapPresenter path, which created its own.
     public MapExtentPanelView()
     {
         InitializeComponent();
-        Unloaded += (_, _) => ClearViewModel();
     }
 
     //public MapViewModelBase? MapPresenter

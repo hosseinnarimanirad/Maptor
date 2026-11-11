@@ -44,4 +44,17 @@ public class AccentTintTest
         Assert.True(tint.G < 0x60, "and is still a dark colour");
         Assert.True(AccentTint.BlendBrush(dark, accent, AccentTint.DarkAmount).IsFrozen);
     }
+
+    [Fact]
+    public void DisabledOverlay_IsTheDarkBackground_SemiTransparent()
+    {
+        var dark = Color.FromRgb(0x25, 0x25, 0x25);
+
+        var veil = AccentTint.DisabledOverlay(dark);
+
+        Assert.Equal(Color.FromArgb(AccentTint.DisabledOverlayAlpha, 0x25, 0x25, 0x25), veil.Color);
+        Assert.True(veil.IsFrozen);
+        // MahApps' own key, so its templates pick it up
+        Assert.Equal("MahApps.Brushes.Control.Disabled", AccentTint.DisabledOverlayKey);
+    }
 }
