@@ -137,6 +137,12 @@ internal static class Ink
     public static readonly Brush Black = Freeze(new SolidColorBrush(Colors.Black));
     public static readonly Brush White = Freeze(new SolidColorBrush(Colors.White));
 
+    // badge colours (2026-11-11, the user's choice): only the small badge is coloured, the crosshair, arrow, hands
+    // and magnifiers stay black on white. Dark enough to read on the white outline over any base map.
+    public static readonly Brush Draw = Freeze(new SolidColorBrush(Color.FromRgb(0x15, 0x65, 0xC0)));     // blue
+    public static readonly Brush Measure = Freeze(new SolidColorBrush(Color.FromRgb(0xE6, 0x51, 0x00)));  // deep orange
+    public static readonly Brush Info = Freeze(new SolidColorBrush(Color.FromRgb(0x00, 0x67, 0xC0)));     // Windows info blue
+
     /// <summary>Width of the white outline around black ink, in design units, on each side.</summary>
     public const double Halo = 1.0;
 
@@ -153,19 +159,19 @@ internal static class Ink
     public static Pen Pen(Brush brush, double thickness, PenLineCap cap = PenLineCap.Round)
         => Freeze(new Pen(brush, thickness) { StartLineCap = cap, EndLineCap = cap, LineJoin = PenLineJoin.Round });
 
-    /// <summary>A black stroke (design units) with its white outline, as two ops.</summary>
-    public static (Op Halo, Op Ink) Stroke(Geometry design, double width, double s, PenLineCap cap = PenLineCap.Round)
+    /// <summary>A stroke (design units; black unless <paramref name="ink"/>) with its white outline, as two ops.</summary>
+    public static (Op Halo, Op Ink) Stroke(Geometry design, double width, double s, PenLineCap cap = PenLineCap.Round, Brush? ink = null)
     {
         var g = Scaled(design, s);
         return (new Op(g, null, Pen(White, (width + 2 * Halo) * s, PenLineCap.Round)),
-                new Op(g, null, Pen(Black, width * s, cap)));
+                new Op(g, null, Pen(ink ?? Black, width * s, cap)));
     }
 
-    /// <summary>A black fill (design units) with its white outline, as two ops.</summary>
-    public static (Op Halo, Op Ink) Fill(Geometry design, double s)
+    /// <summary>A fill (design units; black unless <paramref name="ink"/>) with its white outline, as two ops.</summary>
+    public static (Op Halo, Op Ink) Fill(Geometry design, double s, Brush? ink = null)
     {
         var g = Scaled(design, s);
-        return (new Op(g, White, Pen(White, 2 * Halo * s)), new Op(g, Black, null));
+        return (new Op(g, White, Pen(White, 2 * Halo * s)), new Op(g, ink ?? Black, null));
     }
 
     /// <summary>All halos first, then all ink, so no outline paints over another part's ink.</summary>
@@ -274,21 +280,21 @@ internal static class CursorSet
     // the same number of each (Crosshair splits the list in half).
 
     private static List<Op> PointBadge(double s)
-        => Ink.Compose(Ink.Fill(Ink.Circle(25.5, 25.5, 3.4), s));
+        => Ink.Compose(Ink.Fill(Ink.Circle(25.5, 25.5, 3.4), s, Ink.Draw));
 
     private static List<Op> PolylineBadge(double s)
-        => Ink.Compose(Ink.Stroke(Ink.Poly(false, 20.5, 30, 23.5, 22.5, 27, 27.5, 30.5, 20.5), 1.6, s));
+        => Ink.Compose(Ink.Stroke(Ink.Poly(false, 20.5, 30, 23.5, 22.5, 27, 27.5, 30.5, 20.5), 1.6, s, ink: Ink.Draw));
 
     private static List<Op> PolygonBadge(double s)
-        => Ink.Compose(Ink.Stroke(Ink.Poly(true, 20.5, 25.5, 24.5, 20.5, 30.5, 22, 30, 30, 22, 30.5), 1.6, s));
+        => Ink.Compose(Ink.Stroke(Ink.Poly(true, 20.5, 25.5, 24.5, 20.5, 30.5, 22, 30, 30, 22, 30.5), 1.6, s, ink: Ink.Draw));
 
     private static List<Op> RectangleBadge(double s)
-        => Ink.Compose(Ink.Stroke(Ink.Rect(20.5, 21.5, 30.5, 29.5), 1.6, s, PenLineCap.Square));
+        => Ink.Compose(Ink.Stroke(Ink.Rect(20.5, 21.5, 30.5, 29.5), 1.6, s, PenLineCap.Square, Ink.Draw));
 
     private static List<Op> TextBadge(double s)
-        => Ink.Compose(Ink.Fill(Ink.Group(Ink.Rect(20, 20, 31, 22.6), Ink.Rect(24.2, 20, 26.8, 31)), s));
+        => Ink.Compose(Ink.Fill(Ink.Group(Ink.Rect(20, 20, 31, 22.6), Ink.Rect(24.2, 20, 26.8, 31)), s, Ink.Draw));
 
-    // A white tile with black ink: the white body is the outline, so halo = tile, ink = lines.
+    // A white tile with coloured ink (the measure colour): the white body is the outline, so halo = tile, ink = lines.
     private static List<Op> Tile(double s, Geometry frame, params Geometry[] lines)
     {
         var tile = Ink.Scaled(frame, s);
@@ -297,7 +303,7 @@ internal static class CursorSet
         return new List<Op>
         {
             new(tile, Ink.White, Ink.Pen(Ink.White, 2 * Ink.Halo * s, PenLineCap.Square)),
-            new(Ink.Group(tile, ink), null, Ink.Pen(Ink.Black, 1.0 * s, PenLineCap.Flat)),
+            new(Ink.Group(tile, ink), null, Ink.Pen(Ink.Measure, 1.0 * s, PenLineCap.Flat)),
         };
     }
 
@@ -353,7 +359,7 @@ internal static class CursorSet
             Ink.Circle(24.5, 21.4, 1.25),
             Ink.Rect(23.45, 23.4, 25.55, 28.6)), s);
 
-        var (badgeHalo, badgeInk) = Ink.Fill(badge, s);
+        var (badgeHalo, badgeInk) = Ink.Fill(badge, s, Ink.Info);
 
         var ops = new List<Op>
         {

@@ -3238,6 +3238,7 @@ public partial class MapViewer : NotifiableUserControl
             _v.mapView.MouseDown -= _v.mapView_MouseDownForPan;
             _v.mapView.MouseMove -= _v.mapView_MouseMoveForPan;
             _v.mapView.MouseUp -= _v.mapView_MouseUpForPan;
+            _v.mapView.LostMouseCapture -= _v.mapView_LostMouseCaptureForPan;
             _v.IsPanning = false;
             _v.RestoreCursorAfterPanDrag();
         }
@@ -3507,7 +3508,14 @@ public partial class MapViewer : NotifiableUserControl
 
         this.mapView.MouseUp -= mapView_MouseUpForPan;
         this.mapView.MouseUp += mapView_MouseUpForPan;
+
+        // the button may be released where the map never sees it (another window, Alt+Tab, a dialog taking
+        // capture): end the drag when the capture goes, or the handlers and the closed hand would stay
+        this.mapView.LostMouseCapture -= mapView_LostMouseCaptureForPan;
+        this.mapView.LostMouseCapture += mapView_LostMouseCaptureForPan;
     }
+
+    private void mapView_LostMouseCaptureForPan(object sender, MouseEventArgs e) => EndPanDrag();
 
     private void mapView_MouseMoveForPan(object sender, MouseEventArgs e)
     {
@@ -3527,15 +3535,22 @@ public partial class MapViewer : NotifiableUserControl
         }
     }
 
-    private void mapView_MouseUpForPan(object sender, MouseButtonEventArgs e)
+    private void mapView_MouseUpForPan(object sender, MouseButtonEventArgs e) => EndPanDrag();
+
+    // Ends a pan drag, from the mouse-up or from a lost capture; safe to call twice (releasing the capture below
+    // raises LostMouseCapture, whose handler is detached first).
+    private void EndPanDrag()
     {
+        this.mapView.LostMouseCapture -= mapView_LostMouseCaptureForPan;
+
         this.mapView.MouseMove -= mapView_MouseMoveForPan;
 
         this.mapView.MouseUp -= mapView_MouseUpForPan;
 
         this.IsPanning = false;
 
-        this.mapView.ReleaseMouseCapture();
+        if (this.mapView.IsMouseCaptured)
+            this.mapView.ReleaseMouseCapture();
 
         RestoreCursorAfterPanDrag();
 
@@ -3554,6 +3569,7 @@ public partial class MapViewer : NotifiableUserControl
         this.mapView.MouseDown -= mapView_MouseDownForPan;
         this.mapView.MouseMove -= mapView_MouseMoveForPan;
         this.mapView.MouseUp -= mapView_MouseUpForPan;
+        this.mapView.LostMouseCapture -= mapView_LostMouseCaptureForPan;
     }
 
     /// <summary>
