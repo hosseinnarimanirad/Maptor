@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Markup;
@@ -61,13 +63,48 @@ public partial class MapSidePanel : NotifiableUserControl
     }
 
     public static readonly DependencyProperty PanelContentProperty = DependencyProperty.Register(
-        nameof(PanelContent), typeof(object), typeof(MapSidePanel), new PropertyMetadata(null));
+        nameof(PanelContent), typeof(object), typeof(MapSidePanel), new PropertyMetadata(null, OnPanelContentChanged));
 
-    /// <summary>The hosted view (what used to be the flyout's content).</summary>
+    /// <summary>
+    /// The hosted view (what used to be the flyout's content). It is this panel's logical child (2026-11-11), so it
+    /// inherits the panel's DataContext from the moment it is set, as the content of a ContentControl does. Before,
+    /// it had no logical parent and got the DataContext only through the visual tree once the panel was first
+    /// laid out; the map extent panel in Saba showed no data (NaN) while every code-built test worked.
+    /// </summary>
     public object PanelContent
     {
         get => GetValue(PanelContentProperty);
         set => SetValue(PanelContentProperty, value);
+    }
+
+    private static void OnPanelContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var panel = (MapSidePanel)d;
+
+        if (e.OldValue is not null)
+            panel.RemoveLogicalChild(e.OldValue);
+
+        if (e.NewValue is not null)
+            panel.AddLogicalChild(e.NewValue);
+    }
+
+    protected override IEnumerator LogicalChildren
+    {
+        get
+        {
+            var children = new List<object>();
+
+            var baseChildren = base.LogicalChildren;
+
+            if (baseChildren is not null)
+                while (baseChildren.MoveNext())
+                    children.Add(baseChildren.Current);
+
+            if (PanelContent is not null)
+                children.Add(PanelContent);
+
+            return children.GetEnumerator();
+        }
     }
 
     public static readonly DependencyProperty PreferredWidthProperty = DependencyProperty.Register(

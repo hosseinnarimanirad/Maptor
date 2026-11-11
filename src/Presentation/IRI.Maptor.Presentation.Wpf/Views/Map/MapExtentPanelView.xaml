@@ -118,19 +118,24 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
+                            <!--label *, value Auto (2026-11-11): with the label column Auto, the long Persian labels
+                                took the whole width of the side panel and squeezed the values to nothing-->
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <Grid.Resources>
                                 <Style x:Key="boldText" TargetType="TextBlock">
                                     <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
-                                    <Setter Property="Margin" Value="4,2"/>
+                                    <Setter Property="Margin" Value="0,2,8,2"/>
                                     <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
                                 </Style>
                                 <Style x:Key="normalText" TargetType="TextBlock">
                                     <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
                                     <Setter Property="FlowDirection" Value="LeftToRight"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
                                 </Style>
                             </Grid.Resources>
 

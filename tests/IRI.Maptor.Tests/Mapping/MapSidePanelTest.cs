@@ -39,6 +39,31 @@ public class MapSidePanelTest
         });
     }
 
+    /// <summary>
+    /// The hosted view is the panel's logical child, so it has the panel's DataContext at once, even while the panel
+    /// is closed and was never laid out (2026-11-11: Saba's map extent panel showed NaN, its view had no data).
+    /// </summary>
+    [Fact]
+    public void PanelContent_IsALogicalChild_AndInheritsTheDataContext()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var content = new Border();
+            var panel = new MapSidePanel { IsOpen = false, PanelContent = content };
+
+            Assert.Same(panel, LogicalTreeHelper.GetParent(content));
+
+            var data = new object();
+            panel.DataContext = data;
+            Assert.Same(data, content.DataContext);
+
+            var other = new Border();
+            panel.PanelContent = other;
+            Assert.Null(LogicalTreeHelper.GetParent(content));
+            Assert.Same(panel, LogicalTreeHelper.GetParent(other));
+        });
+    }
+
     [Fact]
     public void Panel_DoubleClickOnEdge_GoesBackToPreferredWidth()
     {

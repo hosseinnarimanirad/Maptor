@@ -181,6 +181,39 @@ public class CardExpanderStyleTest
         });
     }
 
+    /// <summary>
+    /// Compact review, Step 4 (2026-11-11): no round button below 30 px (the panel close button was 28), and the
+    /// CircleLight.Flat styles draw the solid circle without its drop shadow.
+    /// </summary>
+    [Theory]
+    [InlineData("IRI.Maptor.Styles.Button.CircleLight.Flat", false)]
+    [InlineData("IRI.Maptor.Styles.ToggleButton.CircleLight.Flat", true)]
+    public void CircleLightFlat_HasNoShadow_AndPanelCloseIs30(string styleKey, bool toggle)
+    {
+        WpfTestHost.Run(() =>
+        {
+            var styles = LoadStyles();
+
+            var close = new Button { Style = (Style)styles["IRI.Maptor.Styles.Button.PanelClose"] };
+            Assert.Equal(30, close.Width);
+            Assert.Equal(30, close.Height);
+
+            ButtonBase button = toggle ? new ToggleButton() : new Button();
+            button.Style = (Style)styles[styleKey];
+
+            var host = new Grid { Width = 100, Height = 100 };
+            host.Resources.MergedDictionaries.Add(styles);
+            host.Children.Add(button);
+            host.Measure(new Size(100, 100));
+            host.Arrange(new Rect(0, 0, 100, 100));
+            host.UpdateLayout();
+
+            Assert.True(IRI.Maptor.Presentation.Wpf.Helpers.CircleButton.GetIsFlat(button));
+            var ellipse = (System.Windows.Shapes.Ellipse)button.Template.FindName("ellipse", button);
+            Assert.Null(ellipse.Effect);
+        });
+    }
+
     private static ResourceDictionary LoadStyles()
     {
         var cache = typeof(IRI.Maptor.Presentation.Wpf.Helpers.SharedResourceDictionary)

@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:helpers="clr-namespace:IRI.Maptor.Presentation.Wpf.Helpers"
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
 
     <ResourceDictionary.MergedDictionaries>
@@ -55,10 +56,20 @@
                             <Setter Property="BorderBrush" Value="DarkGray"/>
                             <Setter Property="Opacity" Value="0.9"/>
                         </Trigger>
+                        <!--last, so it also wins over the hover shadow: helpers:CircleButton.IsFlat (CircleLight.Flat)-->
+                        <Trigger Property="helpers:CircleButton.IsFlat" Value="True">
+                            <Setter TargetName="ellipse" Property="Effect" Value="{x:Null}"/>
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <!--CircleLight without the drop shadow (also on hover), for inside a white panel or dialog (2026-11-11)-->
+    <Style x:Key="IRI.Maptor.Styles.ToggleButton.CircleLight.Flat" TargetType="{x:Type ToggleButton}"
+           BasedOn="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}">
+        <Setter Property="helpers:CircleButton.IsFlat" Value="True"/>
     </Style>
 
     <Style x:Key="IRI.Maptor.Styles.ToggleButton.CircleDark" TargetType="{x:Type ToggleButton}">

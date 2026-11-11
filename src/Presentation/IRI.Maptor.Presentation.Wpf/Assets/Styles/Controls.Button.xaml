@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                    xmlns:helpers="clr-namespace:IRI.Maptor.Presentation.Wpf.Helpers"
                     xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core">
 
     <ResourceDictionary.MergedDictionaries>
@@ -236,66 +237,8 @@
     </Style>
 
 
-    <Style x:Key="IRI.Maptor.Styles.Button.Dialogs.Primary.Circle" 
-       TargetType="{x:Type Button}" 
-       BasedOn="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}">
-        <!-- Override shape: square & round -->
-        <Setter Property="Width" Value="32"/>
-        <Setter Property="Height" Value="32"/>
-        <Setter Property="MinWidth" Value="0"/>
-        <Setter Property="MinHeight" Value="0"/>
-        <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="16"/>
-        <!-- half of 32 -->
-        <!-- Layout adjustments for circular icon button -->
-        <Setter Property="Margin" Value="0 0 8 0"/>
-        <!-- or adjust as needed -->
-        <Setter Property="Padding" Value="0"/>
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Style.Triggers>
-            <!-- Override hover trigger to keep circular shape -->
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="16"/>
-                <!-- Inherits Background and BorderBrush from base trigger, but we must ensure CornerRadius stays 16 -->
-            </Trigger>
-            <!-- Override pressed trigger to keep circular shape -->
-            <Trigger Property="IsPressed" Value="True">
-                <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="16"/>
-            </Trigger>
-            <!-- Optional: keep focus visual without changing corner radius -->
-            <Trigger Property="IsFocused" Value="True">
-                <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="16"/>
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
-    <Style x:Key="IRI.Maptor.Styles.Button.Dialogs.Secondary.Circle" 
-       TargetType="{x:Type Button}" 
-       BasedOn="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Secondary}">
-        <Setter Property="Width" Value="32"/>
-        <Setter Property="Height" Value="32"/>
-        <Setter Property="MinWidth" Value="0"/>
-        <Setter Property="MinHeight" Value="0"/>
-        <Setter Property="Padding" Value="0"/>
-        <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="16"/>
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Style.Triggers>
-            <!-- Override hover trigger to keep circular shape -->
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="16"/>
-                <!-- Inherits Background and BorderBrush from base trigger, but we must ensure CornerRadius stays 16 -->
-            </Trigger>
-            <!-- Override pressed trigger to keep circular shape -->
-            <Trigger Property="IsPressed" Value="True">
-                <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="16"/>
-            </Trigger>
-            <!-- Optional: keep focus visual without changing corner radius -->
-            <Trigger Property="IsFocused" Value="True">
-                <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="16"/>
-            </Trigger>
-        </Style.Triggers>
-    </Style>
+    <!--Button.Dialogs.Primary.Circle / Secondary.Circle removed 2026-11-11 (compact review, Step 4): no users.
+        Round icon buttons are Button.CircleLight (solid) or Button.PanelGhost (on a toolbar band).-->
 
 
 
@@ -354,8 +297,8 @@
             <Button Style="{StaticResource IRI.Maptor.Styles.Button.PanelClose}" Click="…"/>
         The tooltip and the automation name ("Close") come with the style. (2026-11-10)-->
     <Style x:Key="IRI.Maptor.Styles.Button.PanelClose" TargetType="{x:Type Button}">
-        <Setter Property="Width" Value="28"/>
-        <Setter Property="Height" Value="28"/>
+        <Setter Property="Width" Value="30"/>
+        <Setter Property="Height" Value="30"/>
         <Setter Property="Padding" Value="0"/>
         <Setter Property="Margin" Value="0"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
@@ -371,7 +314,7 @@
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border x:Name="chrome" Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1"
-                            CornerRadius="14" SnapsToDevicePixels="True">
+                            CornerRadius="15" SnapsToDevicePixels="True">
                         <iconPacks:PackIconMaterial Kind="Close" Width="12" Height="12"
                                                     HorizontalAlignment="Center" VerticalAlignment="Center"
                                                     Foreground="{TemplateBinding Foreground}"/>
@@ -509,6 +452,10 @@
                             <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray7}"/>
                             <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray4}"/>
                         </Trigger>
+                        <!--last, so it also wins over the hover shadow: helpers:CircleButton.IsFlat (CircleLight.Flat)-->
+                        <Trigger Property="helpers:CircleButton.IsFlat" Value="True">
+                            <Setter TargetName="ellipse" Property="Effect" Value="{x:Null}"/>
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -529,6 +476,13 @@
                 </Style>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <!--CircleLight without the drop shadow (also on hover): for solid round buttons inside a white panel or
+        dialog, where the shadow only adds weight. Keep plain CircleLight over the map. (2026-11-11)-->
+    <Style x:Key="IRI.Maptor.Styles.Button.CircleLight.Flat" TargetType="{x:Type Button}"
+           BasedOn="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
+        <Setter Property="helpers:CircleButton.IsFlat" Value="True"/>
     </Style>
 
     <!--Destructive action (delete) in a row of CircleLight buttons. At rest it looks like its
@@ -668,7 +622,7 @@
     </Style>
 
     <!--Square command-bar button: the add/remove/move-up/move-down cluster above a list.
-        Dialogs.Secondary.Circle is the round sibling; a command bar of six of these reads
+        Button.CircleLight is the round sibling; a command bar of six of these reads
         better square, and the SLD editor's rule toolbar writes Width="32" Height="32"
         Margin="2" by hand twelve times because this did not exist.-->
     <Style x:Key="IRI.Maptor.Styles.Button.IconSquare"
