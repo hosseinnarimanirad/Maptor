@@ -132,19 +132,6 @@ public class CardExpanderStyleTest
         });
     }
 
-    [Theory]
-    [InlineData(false, PackIconMaterialKind.ChevronDown)]
-    [InlineData(true, PackIconMaterialKind.ChevronUp)]
-    public void CardSection_Builds(bool isExpanded, PackIconMaterialKind expected)
-    {
-        WpfTestHost.Run(() =>
-        {
-            var expander = BuildCard("IRI.Maptor.Styles.Expander.CardSection", ExpandDirection.Down, isExpanded);
-
-            Assert.Equal(expected, FindChevron(expander).Kind);
-        });
-    }
-
     private static ResourceDictionary LoadStyles()
     {
         var cache = typeof(IRI.Maptor.Presentation.Wpf.Helpers.SharedResourceDictionary)

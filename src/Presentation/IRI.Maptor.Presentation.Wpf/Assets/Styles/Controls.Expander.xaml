@@ -95,51 +95,13 @@
         <Setter Property="Padding" Value="12,10"/>
     </Style>
 
-    <!--The stock MahApps expander with an accent header bar, for side panels (legend, drawings).
-        The whole header bar is the clickable toggle, so the hand cursor goes on that toggle, not on
-        the header content: content gets the cursor only over its own text and icons. The header
-        toggles are reached through MahApps' ExpanderHelper.Header*Style attached properties.
-        Header content: leading icon (14 px), 6 px gap, title, then an optional count.-->
-    <Style x:Key="IRI.Maptor.Styles.ToggleButton.ExpanderHeader.Down" TargetType="{x:Type ToggleButton}"
-           BasedOn="{StaticResource MahApps.Styles.ToggleButton.ExpanderHeader.Down}">
-        <Setter Property="Cursor" Value="Hand"/>
-    </Style>
-
-    <Style x:Key="IRI.Maptor.Styles.ToggleButton.ExpanderHeader.Right" TargetType="{x:Type ToggleButton}"
-           BasedOn="{StaticResource MahApps.Styles.ToggleButton.ExpanderHeader.Right}">
-        <Setter Property="Cursor" Value="Hand"/>
-    </Style>
-
-    <Style x:Key="IRI.Maptor.Styles.Expander.Panel" TargetType="{x:Type Expander}"
-           BasedOn="{StaticResource MahApps.Styles.Expander}">
-        <Setter Property="mahApp:ExpanderHelper.HeaderDownStyle" Value="{StaticResource IRI.Maptor.Styles.ToggleButton.ExpanderHeader.Down}"/>
-        <Setter Property="mahApp:ExpanderHelper.HeaderRightStyle" Value="{StaticResource IRI.Maptor.Styles.ToggleButton.ExpanderHeader.Right}"/>
-    </Style>
-
-    <!--Header pieces for IRI.Maptor.Styles.Expander.Panel: the leading icon and the count after the title.-->
-    <Style x:Key="IRI.Maptor.Styles.PackIconPhosphorIcons.ExpanderHeader" TargetType="iconPacks:PackIconPhosphorIcons">
-        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
-        <Setter Property="Width" Value="14"/>
-        <Setter Property="Height" Value="14"/>
-        <Setter Property="Margin" Value="0,0,6,0"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="FlowDirection" Value="LeftToRight"/>
-    </Style>
-
-    <Style x:Key="IRI.Maptor.Styles.TextBlock.ExpanderHeaderCount" TargetType="TextBlock">
-        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
-        <Setter Property="Opacity" Value="0.75"/>
-        <Setter Property="Margin" Value="6,0,0,0"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-    </Style>
-
     <!--=====================================================================================
         Card panels (main-layout polish, 2026-11-10)
 
         Expander.Card is a docked panel of the main window (legend, attribute table): a light
         surface with a header row (icon, title, count, chevron), the same family as MapSidePanel.
-        Expander.CardSection is a lighter collapsible section INSIDE a card (drawings and layers
-        in the legend card).
+        (2026-11-11: the lighter Expander.CardSection for sections inside a card, and the old
+        accent-bar Expander.Panel, were removed once the legend became two cards.)
 
         ExpandDirection says which way the panel grows, and so where the chevron points:
           Down   content opens below the header (chevron down when closed, up when open)
@@ -174,7 +136,7 @@
             band was too colourless, the solid accent of the dialogs too saturated)-->
         <Setter Property="Background" Value="{DynamicResource IRI.Maptor.Brushes.Accent.Tint}"/>
         <!--the hover band. BorderBrush because the template draws no border, so the property is free
-            and a BasedOn style (CardSectionHeader) can give its own hover colour-->
+            and a BasedOn style can give its own hover colour-->
         <Setter Property="BorderBrush" Value="{DynamicResource IRI.Maptor.Brushes.Accent.Tint.Hover}"/>
         <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
         <!--compact, CAD-style (2026-11-11): 32 px row, 13 px title (was 40 / 14)-->
@@ -255,21 +217,6 @@
         </Setter>
     </Style>
 
-    <!--The header row of Expander.CardSection: one step smaller, inset, with its own rounded hover band.
-        No tint at rest: the card header above is the accent-tinted band, and the section's own toolbar
-        (legend) is a neutral band, so a white section header keeps the levels apart. Its hover band is
-        the neutral Surface.Hover, not the accent tint: only card headers carry the accent.-->
-    <Style x:Key="IRI.Maptor.Styles.ToggleButton.CardSectionHeader" TargetType="{x:Type ToggleButton}"
-           BasedOn="{StaticResource IRI.Maptor.Styles.ToggleButton.CardHeader}">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource IRI.Maptor.Brushes.Surface.Hover}"/>
-        <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Body}"/>
-        <Setter Property="MinHeight" Value="28"/>
-        <Setter Property="Padding" Value="8,0,6,0"/>
-        <Setter Property="Margin" Value="4,2"/>
-        <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}"/>
-    </Style>
-
     <Style x:Key="IRI.Maptor.Styles.Expander.Card" TargetType="{x:Type Expander}">
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource IRI.Maptor.Brushes.Surface.Border}"/>
@@ -295,7 +242,7 @@
                                 inside the toggle's own template, where the templated parent is the
                                 toggle and has no Header.-->
                             <!--HorizontalContentAlignment passes through, so a card can set Stretch and dock
-                                its own header button (the legend's fold button) at the end of the row-->
+                                its own header button at the end of the row-->
                             <ToggleButton x:Name="headerToggle" Grid.Row="0"
                                           Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CardHeader}"
                                           IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
@@ -338,46 +285,7 @@
         </Setter>
     </Style>
 
-    <!--A section inside a card: no surface of its own, a rule above it (set BorderThickness="0" on
-        the first section when the card header's divider is right above it).-->
-    <Style x:Key="IRI.Maptor.Styles.Expander.CardSection" TargetType="{x:Type Expander}">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource IRI.Maptor.Brushes.Surface.Border}"/>
-        <Setter Property="BorderThickness" Value="0,1,0,0"/>
-        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
-        <Setter Property="Padding" Value="0"/>
-        <Setter Property="SnapsToDevicePixels" Value="True"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Expander}">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <ToggleButton x:Name="headerToggle" Grid.Row="0"
-                                          Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CardSectionHeader}"
-                                          IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
-                                          Content="{TemplateBinding Header}"
-                                          ContentTemplate="{TemplateBinding HeaderTemplate}"
-                                          ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"/>
-                            <ContentPresenter x:Name="body" Grid.Row="1" Margin="{TemplateBinding Padding}" Visibility="Collapsed"/>
-                        </Grid>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsExpanded" Value="True">
-                            <Setter TargetName="body" Property="Visibility" Value="Visible"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!--Header pieces for Expander.Card / Expander.CardSection and the MapSidePanel header-->
+    <!--Header pieces for Expander.Card and the MapSidePanel header-->
     <Style x:Key="IRI.Maptor.Styles.PackIconPhosphorIcons.CardHeader" TargetType="iconPacks:PackIconPhosphorIcons">
         <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
         <Setter Property="Width" Value="{StaticResource IRI.Maptor.Styles.Size.Icon.Small}"/>
