@@ -66,8 +66,10 @@
                      Width="{Binding ElementName=root, Path=DotSize}"
                      Height="{Binding ElementName=root, Path=DotSize}" />
         </StackPanel>
+        <!--the dots' colour, so the text suits whatever the host put the indicator on (it was fixed
+            White, which vanished on a light card)-->
         <TextBlock Text="{Binding [common_loadingText], Source={StaticResource Localization}}"
-                Foreground="White"
+                Foreground="{Binding ElementName=root, Path=DotBrush}"
                 FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.BodyLarge}"
                 FontWeight="SemiBold"
                 HorizontalAlignment="Center"
