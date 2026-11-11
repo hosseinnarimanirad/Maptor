@@ -350,6 +350,12 @@ public static class ThemeHelper
         _accentTints[AccentTint.HoverKey] = AccentTint.BlendBrush(background, accent, dark ? AccentTint.DarkHoverAmount : AccentTint.LightHoverAmount);
         _accentTints[AccentTint.BorderKey] = AccentTint.BlendBrush(background, accent, dark ? AccentTint.DarkBorderAmount : AccentTint.LightBorderAmount);
 
+        var foreground = app.TryFindResource("MahApps.Colors.ThemeForeground") is System.Windows.Media.Color themeForeground
+            ? themeForeground
+            : dark ? System.Windows.Media.Colors.White : System.Windows.Media.Colors.Black;
+
+        _accentTints[AccentTint.TextKey] = AccentTint.TextOnAccentFill(accent, foreground, dark);
+
         // the disabled-input veil: kept here, not in Status.Dark.xaml, because this dictionary is the one
         // re-appended after MahApps' theme on every change (an accent change re-adds the theme dictionary after
         // the status palette). Light keeps MahApps' own white veil.

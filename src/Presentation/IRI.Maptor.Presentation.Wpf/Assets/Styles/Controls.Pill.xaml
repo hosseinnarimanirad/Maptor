@@ -60,7 +60,8 @@
     </Style>
 
     <Style x:Key="IRI.Maptor.Styles.Pill.Text.Accent" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.Pill.Text}">
-        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <!--Accent text in light, theme foreground in dark (ThemeHelper computes it; see AccentTint.TextKey).-->
+        <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Accent.Text}"/>
     </Style>
 
     <!--Compact variant for badges inside a dense list row, where the full-size pill crowds the

@@ -57,4 +57,14 @@ public class AccentTintTest
         // MahApps' own key, so its templates pick it up
         Assert.Equal("MahApps.Brushes.Control.Disabled", AccentTint.DisabledOverlayKey);
     }
+
+    [Fact]
+    public void TextOnAccentFill_IsTheAccentInLight_TheForegroundInDark()
+    {
+        var accent = Color.FromRgb(0x60, 0xA9, 0x17);
+
+        Assert.Equal(accent, AccentTint.TextOnAccentFill(accent, Colors.Black, dark: false).Color);
+        Assert.Equal(Colors.White, AccentTint.TextOnAccentFill(accent, Colors.White, dark: true).Color);
+        Assert.True(AccentTint.TextOnAccentFill(accent, Colors.White, dark: true).IsFrozen);
+    }
 }

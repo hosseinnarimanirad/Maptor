@@ -32,6 +32,21 @@ public static class AccentTint
     public const double DarkAmount = 0.22, DarkHoverAmount = 0.30, DarkBorderAmount = 0.48;
 
     /// <summary>
+    /// Text on an accent pill (<c>Pill.Text.Accent</c>, on the <c>MahApps.Brushes.Accent4</c> fill). Light: the accent
+    /// itself. Dark: the theme foreground, because accent text on the dark accent fill measured about 2.8:1 contrast
+    /// (2026-11-12, user choice: dark only, light keeps its accent text).
+    /// </summary>
+    public const string TextKey = "IRI.Maptor.Brushes.Accent.Text";
+
+    /// <summary>The <see cref="TextKey"/> brush: <paramref name="accent"/> in light, <paramref name="foreground"/> in dark. Frozen.</summary>
+    public static SolidColorBrush TextOnAccentFill(Color accent, Color foreground, bool dark)
+    {
+        var brush = new SolidColorBrush(dark ? foreground : accent);
+        brush.Freeze();
+        return brush;
+    }
+
+    /// <summary>
     /// MahApps' key for the veil laid over a disabled input (TextBox, ComboBox, NumericUpDown, …). MahApps uses 65 %
     /// white (#A5FFFFFF) in both themes, which turns a disabled input into a light grey slab on a dark window
     /// (2026-11-11). In the dark theme <see cref="ThemeHelper"/> replaces it with <see cref="DisabledOverlay"/>.

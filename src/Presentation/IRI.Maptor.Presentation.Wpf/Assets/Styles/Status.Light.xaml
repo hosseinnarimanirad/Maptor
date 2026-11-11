@@ -42,5 +42,6 @@
     <SolidColorBrush x:Key="IRI.Maptor.Brushes.Accent.Tint"        Color="#F6F7F9" po:Freeze="True"/>
     <SolidColorBrush x:Key="IRI.Maptor.Brushes.Accent.Tint.Hover"  Color="#E8EBEF" po:Freeze="True"/>
     <SolidColorBrush x:Key="IRI.Maptor.Brushes.Accent.Tint.Border" Color="#D5D9DF" po:Freeze="True"/>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Accent.Text"        Color="#000000" po:Freeze="True"/>
 
 </ResourceDictionary>
