@@ -103,6 +103,35 @@ public class CardExpanderStyleTest
         });
     }
 
+    /// <summary>RadioButton.Segment and Border.SegmentTrack (compact segmented choice, 2026-11-11) build and lay out.</summary>
+    [Fact]
+    public void Segment_Builds_Compact()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var styles = LoadStyles();
+
+            var a = new RadioButton { Style = (Style)styles["IRI.Maptor.Styles.RadioButton.Segment"], Content = "A", GroupName = "g", IsChecked = true };
+            var b = new RadioButton { Style = (Style)styles["IRI.Maptor.Styles.RadioButton.Segment"], Content = "B", GroupName = "g" };
+            var row = new StackPanel { Orientation = Orientation.Horizontal };
+            row.Children.Add(a);
+            row.Children.Add(b);
+            // VerticalAlignment Top: in a view the track sits in a StackPanel at its own height, not stretched
+            var track = new Border { Style = (Style)styles["IRI.Maptor.Styles.Border.SegmentTrack"], Child = row, VerticalAlignment = VerticalAlignment.Top };
+
+            var host = new Grid { Width = 300, Height = 100 };
+            host.Resources.MergedDictionaries.Add(styles);
+            host.Children.Add(track);
+            host.Measure(new Size(300, 100));
+            host.Arrange(new Rect(0, 0, 300, 100));
+            host.UpdateLayout();
+
+            Assert.NotNull(a.Template.FindName("pill", a));
+            // compact: a 24 px row plus the track's 2 px padding on each side
+            Assert.True(track.ActualHeight <= 30, $"track is {track.ActualHeight} px high");
+        });
+    }
+
     [Theory]
     [InlineData(false, PackIconMaterialKind.ChevronDown)]
     [InlineData(true, PackIconMaterialKind.ChevronUp)]

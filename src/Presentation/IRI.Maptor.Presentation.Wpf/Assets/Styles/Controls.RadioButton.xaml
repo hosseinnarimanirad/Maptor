@@ -4,6 +4,11 @@
                     xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
                     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls">
 
+    <ResourceDictionary.MergedDictionaries>
+        <!--RadioButton.Segment: the radius and size tokens-->
+        <ResourceDictionary Source="/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Common.Metrics.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
     <!--Required by RadioButton.Form's IsPersian trigger below. Without it that style failed to
         load and the key was silently missing at runtime, so the views asking for it fell back to
         unstyled radio buttons. See the same note in Controls.ComboBox.xaml.-->
@@ -27,6 +32,70 @@
     </Style>
 
     <Style x:Key="IRI.Maptor.Styles.RadioButton.Form.Latin" TargetType="RadioButton" BasedOn="{StaticResource IRI.Maptor.Styles.RadioButton.Base}">
-        <Setter Property="Margin" Value="0,0,16,0"/> 
+        <Setter Property="Margin" Value="0,0,16,0"/>
+    </Style>
+
+    <!--Segmented choice: a row of RadioButtons that reads as one control, a compact CAD-style
+        segmented button (2026-11-11: the Saba advanced-search pop-up used flat grey blocks that read as
+        disabled buttons). Same colours as the tab strip (grey track, accent for the chosen one), but
+        small radii and a 24 px row, no pills: Maptor's UI is meant to be dense like a CAD tool. Put the
+        radios in a horizontal StackPanel inside a Border.SegmentTrack. An icon in the content must bind
+        its Foreground to the RadioButton:
+            Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"-->
+    <Style x:Key="IRI.Maptor.Styles.Border.SegmentTrack" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray9}"/>
+        <Setter Property="CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}"/>
+        <Setter Property="Padding" Value="2"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.RadioButton.Segment" TargetType="RadioButton">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+        <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"/>
+        <Setter Property="Padding" Value="8,1"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="MinHeight" Value="{StaticResource IRI.Maptor.Styles.Size.Control.Compact}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <!--2 = the track's 4 minus its 2 px padding, so the corners nest-->
+                    <Border x:Name="pill" Background="{TemplateBinding Background}"
+                            CornerRadius="2"
+                            Padding="{TemplateBinding Padding}"
+                            BorderThickness="1" BorderBrush="Transparent">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          RecognizesAccessKey="True"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="pill" Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <!--order as in TabItem: hover, then selected (keeps its fill under the pointer), then disabled-->
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Source={StaticResource Localization}, Path=IsPersian}" Value="True">
+                <Setter Property="FontFamily" Value="{DynamicResource iranSans}"/>
+            </DataTrigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Muted}"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Cursor" Value="Arrow"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 </ResourceDictionary>

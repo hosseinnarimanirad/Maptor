@@ -27,21 +27,23 @@
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource IRI.Maptor.Brushes.Surface.Border}"/>
         <Setter Property="BorderThickness" Value="{StaticResource IRI.Maptor.Styles.Thickness.Border}"/>
-        <Setter Property="CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"/>
+        <!--4, like the main window's cards (compact, CAD-style, 2026-11-11; was Surface, 8)-->
+        <Setter Property="CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}"/>
     </Style>
 
     <!--title band at the top of a Border.Panel; its caption is TextBlock.PanelTitle. A light accent
         tint with a tinted rule under it, the same band as the main window's card headers
         (Expander.Card, MapSidePanel). Until 2026-11-10 it was filled with the full accent and white
-        text, which was too saturated: buttons on it should be Button.PanelGhost. Radius 7,7,0,0 is
-        the inner curve of the panel's 1 px border.-->
+        text, which was too saturated: buttons on it should be Button.PanelGhost. Compact like the
+        card headers (2026-11-11): 32 px; radius 3,3,0,0 is the inner curve of Border.Panel's 4 px
+        corner and 1 px border.-->
     <Style x:Key="IRI.Maptor.Styles.Border.PanelHeader" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource IRI.Maptor.Brushes.Accent.Tint}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource IRI.Maptor.Brushes.Accent.Tint.Border}"/>
         <Setter Property="BorderThickness" Value="0,0,0,1"/>
-        <Setter Property="CornerRadius" Value="7,7,0,0"/>
-        <Setter Property="Padding" Value="12,6"/>
-        <Setter Property="MinHeight" Value="{StaticResource IRI.Maptor.Styles.Size.Control.Large}"/>
+        <Setter Property="CornerRadius" Value="3,3,0,0"/>
+        <Setter Property="Padding" Value="10,2"/>
+        <Setter Property="MinHeight" Value="{StaticResource IRI.Maptor.Styles.Size.Control.Default}"/>
     </Style>
 
     <!--the strip that carries a view's refresh/action buttons above its content-->

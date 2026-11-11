@@ -163,8 +163,8 @@
         to the reading start (hide the column into the window edge); hidden, to the map (bring it back).
         The flat side is the one against the column, so it reads as part of the column's edge.-->
     <Style x:Key="IRI.Maptor.Styles.ToggleButton.PanelEdgeTab" TargetType="{x:Type ToggleButton}">
-        <Setter Property="Width" Value="20"/>
-        <Setter Property="Height" Value="44"/>
+        <Setter Property="Width" Value="18"/>
+        <Setter Property="Height" Value="40"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
         <Setter Property="Cursor" Value="Hand"/>
@@ -177,7 +177,7 @@
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
                     <Border x:Name="chrome" Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0,1,1,1"
-                            CornerRadius="0,6,6,0" SnapsToDevicePixels="True">
+                            CornerRadius="0,4,4,0" SnapsToDevicePixels="True">
                         <Border.Effect>
                             <DropShadowEffect BlurRadius="4" ShadowDepth="1" Opacity="0.18"/>
                         </Border.Effect>
