@@ -48,7 +48,8 @@
                 </StackPanel>
             </Button>
 
-            <Button IsDefault="True"
+            <!--drawn as a secondary button when IsDismissOnly (code-behind swaps the Style)-->
+            <Button x:Name="primaryButton" IsDefault="True"
                     Click="OnPrimaryButtonClick"
                     Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}"
                     Command="{Binding PrimaryCommand, ElementName=root}"

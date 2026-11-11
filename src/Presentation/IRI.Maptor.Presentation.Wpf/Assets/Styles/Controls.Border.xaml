@@ -25,16 +25,23 @@
         float directly on the window background. Pair with Border.PanelHeader for a title band.-->
     <Style x:Key="IRI.Maptor.Styles.Border.Panel" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource IRI.Maptor.Brushes.Surface.Border}"/>
         <Setter Property="BorderThickness" Value="{StaticResource IRI.Maptor.Styles.Thickness.Border}"/>
         <Setter Property="CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"/>
     </Style>
 
-    <!--accent title band at the top of a panel; its caption is TextBlock.HeaderTitle-->
+    <!--title band at the top of a Border.Panel; its caption is TextBlock.PanelTitle. A light accent
+        tint with a tinted rule under it, the same band as the main window's card headers
+        (Expander.Card, MapSidePanel). Until 2026-11-10 it was filled with the full accent and white
+        text, which was too saturated: buttons on it should be Button.PanelGhost. Radius 7,7,0,0 is
+        the inner curve of the panel's 1 px border.-->
     <Style x:Key="IRI.Maptor.Styles.Border.PanelHeader" TargetType="Border">
-        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-        <Setter Property="CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.SurfaceTop}"/>
-        <Setter Property="Padding" Value="10,6"/>
+        <Setter Property="Background" Value="{DynamicResource IRI.Maptor.Brushes.Accent.Tint}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource IRI.Maptor.Brushes.Accent.Tint.Border}"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        <Setter Property="CornerRadius" Value="7,7,0,0"/>
+        <Setter Property="Padding" Value="12,6"/>
+        <Setter Property="MinHeight" Value="{StaticResource IRI.Maptor.Styles.Size.Control.Large}"/>
     </Style>
 
     <!--the strip that carries a view's refresh/action buttons above its content-->

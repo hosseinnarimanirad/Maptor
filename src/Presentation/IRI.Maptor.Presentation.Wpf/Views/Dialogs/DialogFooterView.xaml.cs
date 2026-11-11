@@ -212,6 +212,35 @@ public partial class DialogFooterView : UserControl
 
 
     /// <summary>
+    /// True for a dialog whose only button just closes it (a read-only or apply-as-you-go dialog):
+    /// the button is then drawn as a secondary button. A solid accent button should mean "do
+    /// something"; a Close in that dress drew the eye to the least important action (2026-11-10,
+    /// the Saba user and role management windows). False by default, so other dialogs are unchanged.
+    /// </summary>
+    public bool IsDismissOnly
+    {
+        get { return (bool)GetValue(IsDismissOnlyProperty); }
+        set { SetValue(IsDismissOnlyProperty, value); }
+    }
+
+    public static readonly DependencyProperty IsDismissOnlyProperty =
+        DependencyProperty.Register(nameof(IsDismissOnly), typeof(bool), typeof(DialogFooterView),
+            new PropertyMetadata(false, (d, e) => ((DialogFooterView)d).UpdatePrimaryStyle()));
+
+    private void UpdatePrimaryStyle()
+    {
+        // before InitializeComponent, or a style missing from the merged dictionaries: leave it
+        if (primaryButton is null)
+            return;
+
+        var key = IsDismissOnly ? "IRI.Maptor.Styles.Button.Dialogs.Secondary" : "IRI.Maptor.Styles.Button.Dialogs.Primary";
+
+        if (TryFindResource(key) is Style style)
+            primaryButton.Style = style;
+    }
+
+
+    /// <summary>
     /// Close-only dialogs leave <see cref="PrimaryCommand"/> unset and the button simply
     /// closes the window it lives in. Done here rather than via IsCancel so it also works
     /// for windows opened with Show() instead of ShowDialog().

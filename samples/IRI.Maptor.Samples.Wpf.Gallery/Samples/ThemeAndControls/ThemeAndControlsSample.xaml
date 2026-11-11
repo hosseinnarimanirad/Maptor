@@ -118,10 +118,11 @@
                 <Border Style="{StaticResource IRI.Maptor.Styles.Border.Section}" Margin="0,8,0,0">
                     <StackPanel Margin="8,4">
                         <TextBlock Text="TextBlock.WindowTitle" Style="{StaticResource IRI.Maptor.Styles.TextBlock.WindowTitle}" />
-                        <!--TextBlock.HeaderTitle and TextBlock.PanelTitle are NOT shown here on
-                            purpose: they bind MahApps.Brushes.IdealForeground, which is white in
-                            both modes, so on a themed surface they are white-on-white in light mode.
-                            Their home is the accent band in Surfaces below.-->
+                        <!--TextBlock.HeaderTitle is NOT shown here on purpose: it binds
+                            MahApps.Brushes.IdealForeground, which is white in both modes, so on a
+                            themed surface it is white-on-white in light mode. Its home is an
+                            accent-filled GroupBox/Expander header. TextBlock.PanelTitle is shown on
+                            its band, Border.PanelHeader, in Surfaces below.-->
                         <TextBlock Text="TextBlock.Title" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Title}" />
                         <TextBlock Text="TextBlock.CardTitle" Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardTitle}" />
                         <TextBlock Text="TextBlock.Normal" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}" />
@@ -283,19 +284,14 @@
                 <TextBlock Text="Surfaces" Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}" />
                 <Border Style="{StaticResource IRI.Maptor.Styles.Border.Panel}" Margin="0,8,0,0">
                     <StackPanel>
-                        <!--The documented pairs: Border.PanelHeader is an ACCENT band, and its
-                            captions are TextBlock.PanelTitle (a panel's title) and
-                            TextBlock.HeaderTitle. Both bind IdealForeground.
-                            Watch these as you change accent: IdealForeground is white in both
-                            modes, so a light accent (Amber, Lime, Yellow) leaves white on near-white
-                            and the pair fails. That is the rule recorded in PROGRESS.md section 5:
-                            use the accent as a border with a themed surface behind text. This band
-                            is here so the failure is visible rather than theoretical.-->
+                        <!--Border.PanelHeader + TextBlock.PanelTitle. Since 2026-11-10 the band is a
+                            light tint of the accent (IRI.Maptor.Brushes.Accent.Tint, computed by
+                            ThemeHelper) with the theme's text colour on it, so it works for every
+                            accent, light ones (Amber, Lime, Yellow) included, which failed with the
+                            old full-accent band and white text. Buttons on it: Button.PanelGhost.
+                            TextBlock.HeaderTitle (white) does not belong on this band any more.-->
                         <Border Style="{StaticResource IRI.Maptor.Styles.Border.PanelHeader}">
                             <TextBlock Text="Border.PanelHeader + TextBlock.PanelTitle" Style="{StaticResource IRI.Maptor.Styles.TextBlock.PanelTitle}" />
-                        </Border>
-                        <Border Style="{StaticResource IRI.Maptor.Styles.Border.PanelHeader}" CornerRadius="0">
-                            <TextBlock Text="Border.PanelHeader + TextBlock.HeaderTitle" Style="{StaticResource IRI.Maptor.Styles.TextBlock.HeaderTitle}" />
                         </Border>
                         <StackPanel Margin="8">
                             <Expander Header="Expander.Section" IsExpanded="True"
