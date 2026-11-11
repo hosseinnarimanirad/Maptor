@@ -52,7 +52,9 @@
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
         <Setter Property="WindowTransitionsEnabled" Value="False"/>
-        <Setter Property="Padding" Value="10"/>
+        <!--no Padding: MahApps' window template does not apply it (checked 2026-11-11: content starts right under
+            the title bar), so the Padding="10" that stood here did nothing. The edge is the content's own
+            Thickness.DialogContent margin.-->
         <!--this property cannot be set in styles-->
         <!--<Setter Property="WindowStartupLocation" Value="CenterOwner"/>-->
 

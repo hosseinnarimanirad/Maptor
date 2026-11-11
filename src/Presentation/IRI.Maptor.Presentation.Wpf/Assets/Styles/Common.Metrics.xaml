@@ -5,8 +5,9 @@
     <!--Shared spacing scale for dialogs and forms. Use these instead of ad-hoc margins
         so every dialog keeps the same rhythm.-->
 
-    <!--padding around a dialog's content area-->
-    <Thickness x:Key="IRI.Maptor.Styles.Thickness.DialogContent">8</Thickness>
+    <!--padding around a dialog's content area. This IS the dialog's edge: MahApps' window template ignores the
+        window's own Padding. 6 = CanvasEdge since the compact review, Step 3 (2026-11-11; was 8).-->
+    <Thickness x:Key="IRI.Maptor.Styles.Thickness.DialogContent">6</Thickness>
 
     <!--gap between rows inside one section. Section separation itself comes from
         IRI.Maptor.Styles.TextBlock.SectionHeader's own top margin.-->
@@ -60,8 +61,8 @@
     <Thickness x:Key="IRI.Maptor.Styles.Thickness.FieldRowGap">0,0,0,6</Thickness>
 
     <!--padding around a view's content area. Same value as DialogContent, but named for
-        views so authors of non-dialog screens have a token to reach for.-->
-    <Thickness x:Key="IRI.Maptor.Styles.Thickness.ViewContent">8</Thickness>
+        views so authors of non-dialog screens have a token to reach for. (6 since 2026-11-11.)-->
+    <Thickness x:Key="IRI.Maptor.Styles.Thickness.ViewContent">6</Thickness>
 
     <!--gap above a new section within a scrolling column-->
     <Thickness x:Key="IRI.Maptor.Styles.Thickness.SectionGap">0,8,0,0</Thickness>

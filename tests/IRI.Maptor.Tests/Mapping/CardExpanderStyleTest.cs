@@ -147,6 +147,9 @@ public class CardExpanderStyleTest
             Assert.Equal(new GridLength(gap), (GridLength)styles["IRI.Maptor.Styles.GridLength.PanelGap"]);
             Assert.Equal(new Thickness(gap), (Thickness)styles["IRI.Maptor.Styles.Thickness.CanvasEdge"]);
             Assert.Equal(new Thickness(0, 0, 0, gap), (Thickness)styles["IRI.Maptor.Styles.Thickness.StackGap"]);
+            // Step 3: a dialog's or view's edge is the same as the main window's canvas edge
+            Assert.Equal(new Thickness(gap), (Thickness)styles["IRI.Maptor.Styles.Thickness.DialogContent"]);
+            Assert.Equal(new Thickness(gap), (Thickness)styles["IRI.Maptor.Styles.Thickness.ViewContent"]);
 
             var vertical = new GridSplitter { Style = (Style)styles["IRI.Maptor.Styles.GridSplitter.Panel.Vertical"] };
             var horizontal = new GridSplitter { Style = (Style)styles["IRI.Maptor.Styles.GridSplitter.Panel.Horizontal"] };
