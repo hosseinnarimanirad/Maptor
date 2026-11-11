@@ -75,7 +75,7 @@
 
         <DockPanel LastChildFill="True">
             <Button DockPanel.Dock="Right"
-                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                     Command="{Binding CopyCurrentPositionCommand}"
                     ToolTip="{Binding [dialog_mgrs_copyCurrentPosition], Source={StaticResource Localization}}"
                     AutomationProperties.Name="{Binding [dialog_mgrs_copyCurrentPosition], Source={StaticResource Localization}}">

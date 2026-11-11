@@ -358,26 +358,26 @@
                         <Border Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Toolbar}">
                             <DockPanel LastChildFill="True">
                                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                                             Command="{Binding ZoomToCommand}"
                                             ToolTip="{Binding [identify_zoomTo], Source={StaticResource Localization}}"
                                             AutomationProperties.Name="{Binding [identify_zoomTo], Source={StaticResource Localization}}">
                                         <iconPacks:PackIconMaterial Kind="MagnifyExpand" Style="{StaticResource toolbarIcon}"/>
                                     </Button>
                                     <!--centres the map on the feature at the current scale, like the feature table's pan-->
-                                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                                             Command="{Binding PanToCommand}"
                                             ToolTip="{Binding [featureTable_panToFeature], Source={StaticResource Localization}}"
                                             AutomationProperties.Name="{Binding [featureTable_panToFeature], Source={StaticResource Localization}}">
                                         <iconPacks:PackIconMaterial Kind="HandBackRight" Style="{StaticResource toolbarIcon}"/>
                                     </Button>
-                                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                                             Command="{Binding CopyAttributesCommand}"
                                             ToolTip="{Binding [identify_copyAttributes], Source={StaticResource Localization}}"
                                             AutomationProperties.Name="{Binding [identify_copyAttributes], Source={StaticResource Localization}}">
                                         <iconPacks:PackIconMaterial Kind="ContentCopy" Style="{StaticResource toolbarIcon}"/>
                                     </Button>
-                                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                                             Command="{Binding ShowInAttributeTableCommand}"
                                             Visibility="{Binding CanShowInAttributeTable, Converter={StaticResource boolToVisibilityConverter}}"
                                             ToolTip="{Binding [identify_showInTable], Source={StaticResource Localization}}"
@@ -398,7 +398,7 @@
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate DataType="{x:Type identify:IdentifyFeatureActionItem}">
                                                 <Grid Visibility="{Binding IsVisible, Converter={StaticResource boolToVisibilityConverter}}">
-                                                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                                                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                                                             Command="{Binding Command}"
                                                             ToolTip="{Binding ToolTip}"
                                                             ToolTipService.ShowOnDisabled="True"
@@ -544,20 +544,20 @@
                         <Border Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Toolbar}">
                             <DockPanel LastChildFill="True">
                                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                                             Command="{Binding ZoomToCommand}"
                                             ToolTip="{Binding [identify_zoomTo], Source={StaticResource Localization}}"
                                             AutomationProperties.Name="{Binding [identify_zoomTo], Source={StaticResource Localization}}">
                                         <iconPacks:PackIconMaterial Kind="MagnifyExpand" Style="{StaticResource toolbarIcon}"/>
                                     </Button>
                                     <!--centres the map on the layer's found features, scale unchanged-->
-                                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                                             Command="{Binding PanToCommand}"
                                             ToolTip="{Binding [featureTable_panToFeature], Source={StaticResource Localization}}"
                                             AutomationProperties.Name="{Binding [featureTable_panToFeature], Source={StaticResource Localization}}">
                                         <iconPacks:PackIconMaterial Kind="HandBackRight" Style="{StaticResource toolbarIcon}"/>
                                     </Button>
-                                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                                             Command="{Binding ShowInAttributeTableCommand}"
                                             Visibility="{Binding CanShowInAttributeTable, Converter={StaticResource boolToVisibilityConverter}}"
                                             ToolTip="{Binding [identify_showInTable], Source={StaticResource Localization}}"

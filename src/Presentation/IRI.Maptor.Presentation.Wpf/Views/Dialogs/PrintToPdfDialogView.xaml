@@ -87,13 +87,13 @@
                     <Button Grid.Column="2" ToolTip="{Binding [dialog_common_browse], Source={StaticResource Localization}}"
                             AutomationProperties.Name="{Binding [dialog_common_browse], Source={StaticResource Localization}}"
                             Command="{Binding BrowseLogoCommand}"
-                            Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
+                            Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}">
                         <iconPacks:PackIconPhosphorIcons Kind="FileMagnifyingGlassFill"/>
                     </Button>
                     <Button Grid.Column="3" ToolTip="{Binding [dialog_common_removeFile], Source={StaticResource Localization}}"
                             AutomationProperties.Name="{Binding [dialog_common_removeFile], Source={StaticResource Localization}}"
                             Command="{Binding RemoveLogoCommand}"
-                            Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
+                            Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}">
                         <iconPacks:PackIconMaterial Kind="FileRemoveOutline"/>
                     </Button>
                 </Grid>

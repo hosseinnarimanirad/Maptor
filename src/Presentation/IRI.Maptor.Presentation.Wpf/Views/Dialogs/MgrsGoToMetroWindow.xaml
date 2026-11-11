@@ -34,7 +34,7 @@
                                   PrimaryIconKind="MagnifyExpand"
                                   PrimaryCommand="{Binding ZoomToCommand}">
             <dialogs:DialogFooterView.LeadingContent>
-                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                         Command="{Binding CopyCommand}"
                         ToolTip="{Binding [dialog_mgrs_copy], Source={StaticResource Localization}}"
                         AutomationProperties.Name="{Binding [dialog_mgrs_copy], Source={StaticResource Localization}}">

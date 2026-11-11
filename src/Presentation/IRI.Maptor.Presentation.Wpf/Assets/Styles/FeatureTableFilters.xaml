@@ -105,17 +105,17 @@
                      mahApp:TextBoxHelper.ClearTextButton="True"
                      Visibility="{Binding IsSearchVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,2">
-                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                         Command="{Binding SelectAllCommand}"
                         ToolTip="{Binding [featureTable_filter_selectAllValues], Source={x:Static localization:LocalizationManager.Instance}}">
                     <iconPacks:PackIconMaterial Kind="SelectAll" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
                 </Button>
-                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                         Command="{Binding ClearAllCommand}"
                         ToolTip="{Binding [featureTable_filter_clearAllValues], Source={x:Static localization:LocalizationManager.Instance}}">
                     <iconPacks:PackIconMaterial Kind="SelectionRemove" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
                 </Button>
-                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                         Command="{Binding ClearCommand}"
                         ToolTip="{Binding [featureTable_filter_clear], Source={x:Static localization:LocalizationManager.Instance}}">
                     <iconPacks:PackIconMaterial Kind="FilterOff" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
@@ -172,7 +172,7 @@
             <mahApp:NumericUpDown Value="{Binding ValueTo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   Margin="2" FlowDirection="LeftToRight"
                                   Visibility="{Binding IsBetween, Converter={StaticResource boolToVisibilityConverter}}"/>
-            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Center"
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}" HorizontalAlignment="Center"
                     Command="{Binding ClearCommand}"
                     ToolTip="{Binding [featureTable_filter_clear], Source={x:Static localization:LocalizationManager.Instance}}">
                 <iconPacks:PackIconMaterial Kind="FilterOff" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
@@ -189,7 +189,7 @@
             <TextBlock Text="{Binding [featureTable_filter_to], Source={x:Static localization:LocalizationManager.Instance}}"
                        Margin="2,2,2,0"/>
             <DatePicker SelectedDate="{Binding ToDate, Mode=TwoWay}" Margin="2" FlowDirection="LeftToRight"/>
-            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Center"
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}" HorizontalAlignment="Center"
                     Command="{Binding ClearCommand}"
                     ToolTip="{Binding [featureTable_filter_clear], Source={x:Static localization:LocalizationManager.Instance}}">
                 <iconPacks:PackIconMaterial Kind="FilterOff" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>

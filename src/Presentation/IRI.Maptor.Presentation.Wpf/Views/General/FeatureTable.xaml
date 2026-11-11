@@ -21,7 +21,7 @@
             <DataTemplate DataType="{x:Type model:FeatureTableToggleCommand}">
                 <ToggleButton Focusable="False" ToolTip="{Binding ToolTip}"
                                 IsChecked="{Binding IsSelected, Mode=TwoWay}" IsEnabled="{Binding IsEnabled}"
-                                Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
+                                Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight.Flat}"
                                 Visibility="{Binding IsCommandVisible, Converter={StaticResource boolToVisibilityConverter}}">
                     <!--<ToggleButton.Style>
                         <Style TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
@@ -72,7 +72,7 @@
                 </ToggleButton>
             </DataTemplate>
             <DataTemplate DataType="{x:Type model:FeatureTableCommand}">
-                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}" 
                         Command="{Binding Command}" IsEnabled="{Binding IsEnabled}" 
                         CommandParameter="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor} }" 
                         ToolTip="{Binding ToolTip}"
@@ -199,7 +199,7 @@
                         </MultiBinding>
                     </TextBlock.Text>
                 </TextBlock>
-                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                         Command="{Binding FilterManager.ClearAllFiltersCommand}"
                         ToolTip="{Binding [featureTable_filter_clearAll], Source={StaticResource Localization}}"
                         Visibility="{Binding FilterManager.HasActiveFilter, Converter={StaticResource boolToVisibilityConverter}}">
@@ -207,7 +207,7 @@
                 </Button>
 
                 <!-- Live layers (server paging): the server's totals do not count unsaved edits; the toggle lists only those -->
-                <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
+                <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight.Flat}"
                               Margin="4,0,0,0"
                               IsChecked="{Binding ShowUnsavedChangesOnly, Mode=TwoWay}"
                               ToolTip="{Binding [featureTable_showUnsavedChanges], Source={StaticResource Localization}}"
@@ -223,12 +223,12 @@
             </StackPanel>
 
             <!--navigation (page counter, then page size) | layer commands (zoom, pan, export, ...) | edit | delete-->
-            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                    Command="{Binding GoToFirstPageCommand}"
                    ToolTip="{Binding [featureTable_goToFirstPage], Source={StaticResource Localization}}">
                 <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronDoublePrevious}"/>
             </Button>
-            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                    Command="{Binding GoToPreviousPageCommand}"
                    ToolTip="{Binding [geometryDetails_currentPoint_goToPreviousPage], Source={StaticResource Localization}}">
                 <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronPrevious}"/>
@@ -241,12 +241,12 @@
                     </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>
-            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                     Command="{Binding GoToNextPageCommand}"
                     ToolTip="{Binding [geometryDetails_currentPoint_goToNextPage], Source={StaticResource Localization}}">
                 <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronNext}"/>
             </Button>
-            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                     Command="{Binding GoToLastPageCommand}"
                     ToolTip="{Binding [featureTable_goToLastPage], Source={StaticResource Localization}}">
                 <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronDoubleNext}"/>
@@ -270,13 +270,13 @@
                        Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}"/>
 
             <Button Command="{Binding AddCommand}"
-                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                     ToolTip="{Binding [featureTable_addNew], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
                 <iconPacks:PackIconMaterial Kind="Plus" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
             </Button>
             <Button Command="{Binding EditCommand}"
-                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                     ToolTip="{Binding [featureTable_editGeometry], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}"
                     Padding="0">
@@ -284,19 +284,19 @@
                 <iconPacks:PackIconMaterial Kind="VectorSquareEdit" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
             </Button>
             <Button Command="{Binding UndoChangesCommand}"
-                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                     ToolTip="{Binding [featureTable_undo], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
                 <iconPacks:PackIconMaterial Kind="UndoVariant" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
             </Button>
             <Button Command="{Binding SaveChangesCommand}"
-                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                     ToolTip="{Binding [featureTable_saveChanges], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
                 <iconPacks:PackIconMaterial Kind="ContentSave" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
             </Button>
             <Button Command="{Binding ViewChangesCommand}"
-                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                     ToolTip="{Binding [featureChanges_viewChanges], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
                 <iconPacks:PackIconMaterial Kind="History" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
@@ -306,7 +306,7 @@
                        Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}"/>
 
             <Button Command="{Binding DeleteCommand}"
-                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleDanger}"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleDanger.Flat}"
                     ToolTip="{Binding [featureTable_delete], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
                 <iconPacks:PackIconMaterial Kind="TrashCanOutline" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>

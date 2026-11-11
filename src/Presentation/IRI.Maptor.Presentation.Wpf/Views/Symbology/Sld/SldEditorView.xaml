@@ -51,9 +51,9 @@
                 RasterTemplate="{StaticResource RasterSymbolizerTemplate}"/>
 
             <!--small round actions in a pane's bottom bar and in a card's header-->
-            <Style x:Key="paneButton" TargetType="Button" BasedOn="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"/>
+            <Style x:Key="paneButton" TargetType="Button" BasedOn="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"/>
 
-            <Style x:Key="cardButton" TargetType="Button" BasedOn="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
+            <Style x:Key="cardButton" TargetType="Button" BasedOn="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}">
                 <Setter Property="Width" Value="26"/>
                 <Setter Property="Height" Value="26"/>
             </Style>

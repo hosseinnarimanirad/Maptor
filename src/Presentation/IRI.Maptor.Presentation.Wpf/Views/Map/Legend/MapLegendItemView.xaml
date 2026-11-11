@@ -25,7 +25,7 @@
             <DataTemplate DataType="{x:Type model:LegendToggleCommand}">
                 <ToggleButton Focusable="False" ToolTip="{Binding ToolTip}"
                               IsChecked="{Binding IsSelected, Mode=TwoWay}" IsEnabled="{Binding IsEnabled}"
-                              Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
+                              Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight.Flat}"
                               Visibility="{Binding IsCommandVisible, Converter={StaticResource boolToVisibilityConverter}}">
                     <!--solid accent on purpose: ghost was tried twice on 2026-11-11 (on a white and on a tinted row)
                         and did not read as buttons-->
@@ -89,7 +89,7 @@
                 </ToggleButton>
             </DataTemplate>
             <DataTemplate DataType="{x:Type model:LegendCommand}">
-                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                         Margin="1" Focusable="False"  
                         Command="{Binding Command}"
                         IsEnabled="{Binding IsEnabled}" 
@@ -700,7 +700,7 @@
                         </TextBox>
 
                         <!--reload data-->
-                        <Button DockPanel.Dock="Left" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Width="24" Height="24" Focusable="True" Margin="0"
+                        <Button DockPanel.Dock="Left" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}" Width="24" Height="24" Focusable="True" Margin="0"
                                 Command="{Binding ReloadDataCommand}"
                                 ToolTip="{Binding [legendItem_reloadData], Source={StaticResource Localization}}"
                                 Visibility="Collapsed">
@@ -717,7 +717,7 @@
                         </Button>
 
                         <!--pending changes with hover popup-->
-                        <Button DockPanel.Dock="Left" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Width="24" Height="24" Focusable="True"
+                        <Button DockPanel.Dock="Left" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}" Width="24" Height="24" Focusable="True"
                                 Command="{Binding SaveChangesCommand}"
                                 ToolTip="{Binding [legendItem_pendingChanges_save], Source={StaticResource Localization}}"
                                 Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}">
@@ -726,7 +726,7 @@
                             </Viewbox>
                         </Button>
 
-                        <Button DockPanel.Dock="Left" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Width="24" Height="24" Focusable="True"  
+                        <Button DockPanel.Dock="Left" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}" Width="24" Height="24" Focusable="True"  
                                 Command="{Binding UndoAllChangesCommand}"
                                 ToolTip="{Binding [legendItem_pendingChanges_undo], Source={StaticResource Localization}}"
                                 Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}">
@@ -794,14 +794,14 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.ColumnSpan="3" Visibility="Collapsed">
-                                        <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Width="24" Height="24" Focusable="True"
+                                        <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}" Width="24" Height="24" Focusable="True"
                                         Command="{Binding SaveChangesCommand}"
                                         ToolTip="{Binding [legendItem_pendingChanges_save], Source={StaticResource Localization}}">
                                             <Viewbox Margin="4">
                                                 <iconPacks:PackIconMaterial Kind="ContentSave" Foreground="White" FlowDirection="LeftToRight"/>
                                             </Viewbox>
                                         </Button>
-                                        <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"   
+                                        <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"   
                                         Command="{Binding UndoAllChangesCommand}"
                                         ToolTip="{Binding [legendItem_pendingChanges_undo], Source={StaticResource Localization}}">
                                             <Viewbox Margin="4">
@@ -918,7 +918,7 @@
                                 <DockPanel>
                                     <!--header: layer name + export button-->
                                     <DockPanel DockPanel.Dock="Top">
-                                        <Button DockPanel.Dock="Right" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                                        <Button DockPanel.Dock="Right" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                                                 Width="24" Height="24" Focusable="False" Margin="8,0,0,0"
                                                 Command="{Binding ExportSymbologyLegendCommand}"
                                                 ToolTip="Export legend as PNG">

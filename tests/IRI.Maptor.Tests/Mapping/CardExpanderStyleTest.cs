@@ -188,6 +188,9 @@ public class CardExpanderStyleTest
     [Theory]
     [InlineData("IRI.Maptor.Styles.Button.CircleLight.Flat", false)]
     [InlineData("IRI.Maptor.Styles.ToggleButton.CircleLight.Flat", true)]
+    [InlineData("IRI.Maptor.Styles.Button.CircleDanger.Flat", false)]
+    [InlineData("IRI.Maptor.Styles.Button.CircleDark.Flat", false)]
+    [InlineData("IRI.Maptor.Styles.ToggleButton.CircleDark.Flat", true)]
     public void CircleLightFlat_HasNoShadow_AndPanelCloseIs30(string styleKey, bool toggle)
     {
         WpfTestHost.Run(() =>

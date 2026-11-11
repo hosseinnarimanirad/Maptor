@@ -152,7 +152,7 @@
                             <Button DockPanel.Dock="Right" Command="{Binding CopySelectedFormat}"
                                     ToolTip="{Binding [dialog_geometryDetails_copy], Source={StaticResource Localization}}"
                                     AutomationProperties.Name="{Binding [dialog_geometryDetails_copy], Source={StaticResource Localization}}"
-                                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
+                                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}">
                                 <iconPacks:PackIconMaterial Kind="ContentCopy"/>
                             </Button>
 

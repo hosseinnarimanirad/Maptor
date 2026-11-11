@@ -275,13 +275,13 @@
                     <Border Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Toolbar}" Padding="4,2">
                         <DockPanel>
                             <!--the data model as the file the import tool reads-->
-                            <Button DockPanel.Dock="Right" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                            <Button DockPanel.Dock="Right" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                                     Command="{Binding ExportImportModelCommand}"
                                     ToolTip="{Binding [serverLayerSettings_importModel_exportTip], Source={StaticResource Localization}}"
                                     AutomationProperties.Name="{Binding [serverLayerSettings_importModel_export], Source={StaticResource Localization}}">
                                 <iconPacks:PackIconMaterial Kind="DatabaseExportOutline" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
                             </Button>
-                            <Button DockPanel.Dock="Right" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                            <Button DockPanel.Dock="Right" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                                     Command="{Binding ReloadCommand}"
                                     ToolTip="{Binding [serverLayerSettings_reload], Source={StaticResource Localization}}"
                                     AutomationProperties.Name="{Binding [serverLayerSettings_reload], Source={StaticResource Localization}}">
@@ -353,23 +353,23 @@
                     <!--structure actions; the same ones are on the right-click menu-->
                     <Border Grid.Row="3" Style="{StaticResource IRI.Maptor.Styles.Border.Toolbar}" Padding="4,2">
                         <StackPanel Orientation="Horizontal">
-                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding NewGroupCommand}"
+                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}" Command="{Binding NewGroupCommand}"
                                     ToolTip="{Binding [serverLayerSettings_cmd_newGroup], Source={StaticResource Localization}}"
                                     AutomationProperties.Name="{Binding [serverLayerSettings_cmd_newGroup], Source={StaticResource Localization}}">
                                 <iconPacks:PackIconMaterial Kind="FolderPlusOutline" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
                             </Button>
                             <Separator Style="{StaticResource IRI.Maptor.Styles.Separator.Vertical}" Margin="4,6"/>
-                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding MoveUpCommand}"
+                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}" Command="{Binding MoveUpCommand}"
                                     ToolTip="{Binding [serverLayerSettings_cmd_moveUp], Source={StaticResource Localization}}"
                                     AutomationProperties.Name="{Binding [serverLayerSettings_cmd_moveUp], Source={StaticResource Localization}}">
                                 <iconPacks:PackIconMaterial Kind="ArrowUp" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
                             </Button>
-                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding MoveDownCommand}"
+                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}" Command="{Binding MoveDownCommand}"
                                     ToolTip="{Binding [serverLayerSettings_cmd_moveDown], Source={StaticResource Localization}}"
                                     AutomationProperties.Name="{Binding [serverLayerSettings_cmd_moveDown], Source={StaticResource Localization}}">
                                 <iconPacks:PackIconMaterial Kind="ArrowDown" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
                             </Button>
-                            <Button x:Name="moveToButton" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Click="OnMoveToButtonClick"
+                            <Button x:Name="moveToButton" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}" Click="OnMoveToButtonClick"
                                     IsEnabled="{Binding SelectedItem.IsLayer, FallbackValue=False}"
                                     ToolTip="{Binding [serverLayerSettings_cmd_moveTo], Source={StaticResource Localization}}"
                                     AutomationProperties.Name="{Binding [serverLayerSettings_cmd_moveTo], Source={StaticResource Localization}}">
@@ -380,7 +380,7 @@
                             </Button>
                             <Separator Style="{StaticResource IRI.Maptor.Styles.Separator.Vertical}" Margin="4,6"/>
                             <!--a refused delete says why in its tooltip-->
-                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding DeleteGroupCommand}"
+                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}" Command="{Binding DeleteGroupCommand}"
                                     ToolTipService.ShowOnDisabled="True"
                                     AutomationProperties.Name="{Binding [serverLayerSettings_cmd_deleteGroup], Source={StaticResource Localization}}">
                                 <Button.ToolTip>

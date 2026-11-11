@@ -42,14 +42,14 @@
                                   PrimaryCommand="{Binding ZoomToCommand}">
             <dialogs:DialogFooterView.LeadingContent>
                 <StackPanel Orientation="Horizontal">
-                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                             Command="{Binding CopyCommand}"
                             ToolTip="{Binding [dialog_goto_copy], Source={StaticResource Localization}}"
                             AutomationProperties.Name="{Binding [dialog_goto_copy], Source={StaticResource Localization}}">
                         <iconPacks:PackIconMaterial Kind="ContentCopy" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
                     </Button>
                     <!--MapPinPlusFill is the drawing items symbol (legend title and every "to drawings" command)-->
-                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}"
                             Command="{Binding AddToDrawingCommand}"
                             ToolTip="{Binding [dialog_goto_addToDrawing], Source={StaticResource Localization}}"
                             AutomationProperties.Name="{Binding [dialog_goto_addToDrawing], Source={StaticResource Localization}}">

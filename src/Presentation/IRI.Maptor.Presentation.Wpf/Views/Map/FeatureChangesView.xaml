@@ -108,22 +108,22 @@
             </GroupBox.Header>
             <StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding ZoomToCurrentGeometryCommand}"
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}" Command="{Binding ZoomToCurrentGeometryCommand}"
                             ToolTip="{Binding [featureChanges_zoomToCurrent], Source={StaticResource Localization}}"
                             AutomationProperties.Name="{Binding [featureChanges_zoomToCurrent], Source={StaticResource Localization}}" Margin="0,0,4,0">
                         <iconPacks:PackIconMaterial Kind="MagnifyExpand"/>
                     </Button>
-                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding ZoomToOldGeometryCommand}"
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}" Command="{Binding ZoomToOldGeometryCommand}"
                             ToolTip="{Binding [featureChanges_zoomToOld], Source={StaticResource Localization}}"
                             AutomationProperties.Name="{Binding [featureChanges_zoomToOld], Source={StaticResource Localization}}" Margin="0,0,4,0">
                         <iconPacks:PackIconMaterial Kind="History"/>
                     </Button>
-                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding ZoomToBothGeometriesCommand}"
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}" Command="{Binding ZoomToBothGeometriesCommand}"
                             ToolTip="{Binding [featureChanges_zoomToBoth], Source={StaticResource Localization}}"
                             AutomationProperties.Name="{Binding [featureChanges_zoomToBoth], Source={StaticResource Localization}}" Margin="0,0,4,0">
                         <iconPacks:PackIconMaterial Kind="ArrowExpandAll"/>
                     </Button>
-                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding CompareGeometriesCommand}"
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight.Flat}" Command="{Binding CompareGeometriesCommand}"
                             ToolTip="{Binding [featureChanges_compareOnMap], Source={StaticResource Localization}}"
                             AutomationProperties.Name="{Binding [featureChanges_compareOnMap], Source={StaticResource Localization}}">
                         <iconPacks:PackIconMaterial Kind="Compare"/>

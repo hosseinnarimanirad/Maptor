@@ -62,16 +62,16 @@
                 <Border Style="{StaticResource sectionCard}">
 
                     <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button Command="{Binding Map.ZoomInAtCenterCommand}" ToolTip="{Binding [cmd_general_zoomIn], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}">
+                        <Button Command="{Binding Map.ZoomInAtCenterCommand}" ToolTip="{Binding [cmd_general_zoomIn], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark.Flat}">
                             <iconPacks:PackIconMaterial Kind="MagnifyPlus" />
                         </Button>
-                        <Button Command="{Binding Map.ZoomOutAtCenterCommand}" ToolTip="{Binding [cmd_general_zoomOut], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}">
+                        <Button Command="{Binding Map.ZoomOutAtCenterCommand}" ToolTip="{Binding [cmd_general_zoomOut], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark.Flat}">
                             <iconPacks:PackIconMaterial Kind="MagnifyMinus" />
                         </Button>
-                        <Button Command="{Binding Map.PreviousExtentCommand}" ToolTip="{Binding [cmd_general_previousExtent], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" Padding="6" Margin="0,0,4,4">
+                        <Button Command="{Binding Map.PreviousExtentCommand}" ToolTip="{Binding [cmd_general_previousExtent], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark.Flat}" Padding="6" Margin="0,0,4,4">
                             <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ArrowPrevious.Plain}"/>
                         </Button>
-                        <Button Command="{Binding Map.NextExtentCommand}" ToolTip="{Binding [cmd_general_nextExtent], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" Padding="6" Margin="0,0,4,4">
+                        <Button Command="{Binding Map.NextExtentCommand}" ToolTip="{Binding [cmd_general_nextExtent], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark.Flat}" Padding="6" Margin="0,0,4,4">
                             <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ArrowNext.Plain}"/>
                         </Button>
                     </WrapPanel>
@@ -93,7 +93,7 @@
                                    Style="{StaticResource sectionLabel}"/>
                         <Button Grid.Column="1" Grid.Row="1"
                                 ToolTip="{Binding [mapExtent_new_addNew], Source={StaticResource Localization}}"
-                                Command="{Binding SaveBookmarkCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}">
+                                Command="{Binding SaveBookmarkCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark.Flat}">
                             <iconPacks:PackIconMaterial Kind="ContentSave"/>
                         </Button>
                         <TextBox Grid.Column="0" Grid.Row="1"  
@@ -268,7 +268,7 @@
                                 </ComboBox.GroupStyle>
                             </ComboBox>
                         </Border>
-                        <Button Grid.Row="2" Grid.Column="1" Command="{Binding ApplyScaleCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
+                        <Button Grid.Row="2" Grid.Column="1" Command="{Binding ApplyScaleCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark.Flat}"
                                 ToolTip="{Binding [cmd_general_zoomToExtent], Source={StaticResource Localization}}">
                             <iconPacks:PackIconMaterial Kind="MagnifyExpand"/>
                         </Button>
@@ -300,13 +300,13 @@
                                             <TextBlock Grid.Column="1" Text="{Binding Title}"
                                                        VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                                             <Button Grid.Column="2" ToolTip="Delete"
-                                                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
+                                                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark.Flat}"
                                                     Command="{Binding DataContext.DeleteBookmarkCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                     CommandParameter="{Binding}">
                                                 <iconPacks:PackIconMaterial Kind="DeleteOutline" Width="16" Height="16"/>
                                             </Button>
                                             <Button Grid.Column="3" 
-                                                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
+                                                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark.Flat}"
                                                     Command="{Binding DataContext.GoToBookmarkCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                     CommandParameter="{Binding}" >
                                                 <iconPacks:PackIconMaterial Kind="MagnifyExpand" Width="16" Height="16"/>

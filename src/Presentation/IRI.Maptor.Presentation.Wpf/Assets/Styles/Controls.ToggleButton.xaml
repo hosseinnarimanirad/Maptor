@@ -113,10 +113,20 @@
                             <Setter Property="BorderBrush" Value="DarkGray"/>
                             <Setter Property="Opacity" Value="0.9"/>
                         </Trigger>
+                        <!--last, so it also wins over the hover shadow: helpers:CircleButton.IsFlat (.Flat styles)-->
+                        <Trigger Property="helpers:CircleButton.IsFlat" Value="True">
+                            <Setter TargetName="ellipse" Property="Effect" Value="{x:Null}"/>
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <!--ToggleButton.CircleDark without the drop shadow (also on hover), for inside a panel or dialog (compact review, Step 4b)-->
+    <Style x:Key="IRI.Maptor.Styles.ToggleButton.CircleDark.Flat" TargetType="{x:Type ToggleButton}"
+           BasedOn="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleDark}">
+        <Setter Property="helpers:CircleButton.IsFlat" Value="True"/>
     </Style>
 
     <!--A ghost toggle for a panel header or toolbar (the attribute table card's menu, the legend's

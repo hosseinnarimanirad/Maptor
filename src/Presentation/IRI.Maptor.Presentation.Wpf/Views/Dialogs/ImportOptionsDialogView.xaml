@@ -123,7 +123,7 @@
                     </TextBlock.Style>
                 </TextBlock>
                 <ToggleButton Grid.Column="3" IsChecked="{Binding IsNorthHemisphere, Mode=TwoWay}"
-                              Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" FlowDirection="LeftToRight"
+                              Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight.Flat}" FlowDirection="LeftToRight"
                               ToolTip="{Binding [dialog_dxfOpen_hemisphereTooltip], Source={StaticResource Localization}}"
                               AutomationProperties.Name="{Binding [dialog_dxfOpen_hemisphereTooltip], Source={StaticResource Localization}}">
                     <iconPacks:PackIconPhosphorIcons Kind="CircleHalfFill" RenderTransformOrigin="0.5,0.5"
@@ -158,7 +158,7 @@
                 <iconPacks:PackIconPhosphorIcons DockPanel.Dock="Left" Kind="ListNumbers" Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}"/>
 
                 <ToggleButton DockPanel.Dock="Right" IsChecked="{Binding IsPrettyJson, Mode=TwoWay}"
-                              Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" FlowDirection="LeftToRight"
+                              Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight.Flat}" FlowDirection="LeftToRight"
                               ToolTip="{Binding [dialog_common_formatJson], Source={StaticResource Localization}}"
                               AutomationProperties.Name="{Binding [dialog_common_formatJson], Source={StaticResource Localization}}"
                               Visibility="{Binding ShowsPrettyJson, Converter={StaticResource boolToVisibilityConverter}}">
@@ -189,19 +189,19 @@
                 <iconPacks:PackIconPhosphorIcons Kind="ShapesLight" Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}"
                                                  ToolTip="{Binding [dialog_csvTsvOpen_geometryType], Source={StaticResource Localization}}"/>
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <RadioButton GroupName="ImportGeometry" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
+                    <RadioButton GroupName="ImportGeometry" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight.Flat}"
                                  IsChecked="{Binding SelectedGeometryMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorEnums:GeometryType.Polygon}}"
                                  ToolTip="{Binding [common_geometryType_polygon], Source={StaticResource Localization}}"
                                  AutomationProperties.Name="{Binding [common_geometryType_polygon], Source={StaticResource Localization}}">
                         <iconPacks:PackIconPhosphorIcons Kind="Polygon"/>
                     </RadioButton>
-                    <RadioButton GroupName="ImportGeometry" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
+                    <RadioButton GroupName="ImportGeometry" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight.Flat}"
                                  IsChecked="{Binding SelectedGeometryMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorEnums:GeometryType.LineString}}"
                                  ToolTip="{Binding [common_geometryType_polyline], Source={StaticResource Localization}}"
                                  AutomationProperties.Name="{Binding [common_geometryType_polyline], Source={StaticResource Localization}}">
                         <iconPacks:PackIconPhosphorIcons Kind="LineSegments"/>
                     </RadioButton>
-                    <RadioButton GroupName="ImportGeometry" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
+                    <RadioButton GroupName="ImportGeometry" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight.Flat}"
                                  IsChecked="{Binding SelectedGeometryMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorEnums:GeometryType.Point}}"
                                  ToolTip="{Binding [common_geometryType_point], Source={StaticResource Localization}}"
                                  AutomationProperties.Name="{Binding [common_geometryType_point], Source={StaticResource Localization}}">
