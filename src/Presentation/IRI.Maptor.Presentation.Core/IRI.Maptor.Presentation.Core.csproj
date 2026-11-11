@@ -4,7 +4,6 @@
     <PackageTags>GIS;spatial;map;tiles;localization;MVVM</PackageTags>
     <Description>UI-framework-independent core shared by the presentation stack: tile-service URL factories, layer and data models, helpers, and the localization resource store (English base plus 14 additional cultures, including right-to-left Persian and Arabic).</Description>
     <TargetFrameworks>net8.0</TargetFrameworks>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <ItemGroup>
