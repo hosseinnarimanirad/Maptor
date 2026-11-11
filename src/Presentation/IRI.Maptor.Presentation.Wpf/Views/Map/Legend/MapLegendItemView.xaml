@@ -10,8 +10,10 @@
              xmlns:enums="clr-namespace:IRI.Maptor.Core.Common.Enums;assembly=IRI.Maptor.Core.Common"
              xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
              FontFamily="{StaticResource iranSans}"
-             Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+             Background="Transparent"
              Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
+    <!--Transparent, not ThemeBackground (2026-11-11): the row behind it (MapLegendView's legend RadioButton)
+        paints the hover and selected backgrounds, and an opaque item hid them. The legend cards are white already.-->
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -25,6 +27,8 @@
                               IsChecked="{Binding IsSelected, Mode=TwoWay}" IsEnabled="{Binding IsEnabled}"
                               Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                               Visibility="{Binding IsCommandVisible, Converter={StaticResource boolToVisibilityConverter}}">
+                    <!--solid accent on purpose: ghost was tried twice on 2026-11-11 (on a white and on a tinted row)
+                        and did not read as buttons-->
                     <!--<ToggleButton.Style>
                         <Style TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
                             <Setter Property="Foreground" Value="White"/>

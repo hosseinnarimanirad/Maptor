@@ -3271,4 +3271,7 @@
   <data name="identify_geometry_unitAuto" xml:space="preserve">
     <value>Automático</value>
   </data>
+  <data name="legend_panel_showHide" xml:space="preserve">
+    <value>Mostrar u ocultar la leyenda</value>
+  </data>
 </root>

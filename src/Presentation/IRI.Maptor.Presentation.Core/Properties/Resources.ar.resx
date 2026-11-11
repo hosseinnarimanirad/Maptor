@@ -3271,4 +3271,7 @@
   <data name="identify_geometry_unitAuto" xml:space="preserve">
     <value>تلقائي</value>
   </data>
+  <data name="legend_panel_showHide" xml:space="preserve">
+    <value>إظهار وسيلة الإيضاح أو إخفاؤها</value>
+  </data>
 </root>

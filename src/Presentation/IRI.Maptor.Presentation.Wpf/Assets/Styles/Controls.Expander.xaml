@@ -146,8 +146,9 @@
         <Setter Property="Padding" Value="10,0,8,0"/>
         <Setter Property="Margin" Value="0"/>
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
-        <!--3, not Small (4): the band sits inside the card's 1 px border, whose inner curve is 3-->
-        <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="3"/>
+        <!--5, not Control (6): the band sits inside the card's 1 px border, whose inner curve is 5
+            (cards 6 px since 2026-11-11, user: "corners can be a bit smoother"; were 4 / 3)-->
+        <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="5"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
@@ -230,7 +231,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}">
+                            CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -262,7 +263,7 @@
                             <Setter TargetName="divider" Property="Visibility" Value="Visible"/>
                             <Setter TargetName="body" Property="Visibility" Value="Visible"/>
                             <!--the hover band follows the card's top corners only-->
-                            <Setter TargetName="headerToggle" Property="mahApp:ControlsHelper.CornerRadius" Value="3,3,0,0"/>
+                            <Setter TargetName="headerToggle" Property="mahApp:ControlsHelper.CornerRadius" Value="5,5,0,0"/>
                         </Trigger>
                         <!--collapsed, a card is just its header: it must not keep the height of the
                             space it was given (the last card of a DockPanel would stay a tall empty box)-->

@@ -21,7 +21,11 @@ public class AccentTintTest
         Assert.Equal(accent, AccentTint.Blend(white, accent, 1));
 
         // 10 %: 255 + (96 - 255) * 0.1 = 239.1 → 239; 255 + (169 - 255) * 0.1 = 246.4 → 246; 231.8 → 232
-        Assert.Equal(Color.FromRgb(239, 246, 232), AccentTint.Blend(white, accent, AccentTint.LightAmount));
+        Assert.Equal(Color.FromRgb(239, 246, 232), AccentTint.Blend(white, accent, 0.1));
+
+        // the header band stays a tint: lighter than the accent on every channel
+        var band = AccentTint.Blend(white, accent, AccentTint.LightAmount);
+        Assert.True(band.R > accent.R && band.G > accent.G && band.B > accent.B);
 
         // out-of-range amounts are clamped, never overflow a channel
         Assert.Equal(accent, AccentTint.Blend(white, accent, 1.5));

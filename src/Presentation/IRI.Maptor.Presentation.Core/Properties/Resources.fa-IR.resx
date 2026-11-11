@@ -4242,4 +4242,7 @@
   <data name="identify_geometry_unitAuto" xml:space="preserve">
     <value>خودکار</value>
   </data>
+  <data name="legend_panel_showHide" xml:space="preserve">
+    <value>نمایش یا پنهان کردن لژاندر</value>
+  </data>
 </root>

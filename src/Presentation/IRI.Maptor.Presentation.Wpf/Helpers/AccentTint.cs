@@ -16,7 +16,7 @@ namespace IRI.Maptor.Presentation.Wpf.Helpers;
 /// </remarks>
 public static class AccentTint
 {
-    /// <summary>Header band: the accent at a tenth (light) or a sixth (dark) over the theme background.</summary>
+    /// <summary>Header band: the accent at about a sixth (light) or a fifth (dark) over the theme background.</summary>
     public const string Key = "IRI.Maptor.Brushes.Accent.Tint";
 
     /// <summary>The header band under the mouse.</summary>
@@ -25,10 +25,11 @@ public static class AccentTint
     /// <summary>The rule under a tinted header band.</summary>
     public const string BorderKey = "IRI.Maptor.Brushes.Accent.Tint.Border";
 
-    // how much accent each brush takes; the dark theme needs more for the same visible step
-    public const double LightAmount = 0.10, LightHoverAmount = 0.17, LightBorderAmount = 0.30;
+    // how much accent each brush takes; the dark theme needs more for the same visible step.
+    // 2026-11-11: raised from 10/17/30 % (light) and 16/24/40 % (dark), which the user found too pale.
+    public const double LightAmount = 0.18, LightHoverAmount = 0.26, LightBorderAmount = 0.40;
 
-    public const double DarkAmount = 0.16, DarkHoverAmount = 0.24, DarkBorderAmount = 0.40;
+    public const double DarkAmount = 0.22, DarkHoverAmount = 0.30, DarkBorderAmount = 0.48;
 
     /// <summary><paramref name="amount"/> (0 to 1) of <paramref name="accent"/> over <paramref name="background"/>, opaque.</summary>
     public static Color Blend(Color background, Color accent, double amount)

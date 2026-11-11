@@ -65,15 +65,34 @@
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
+                        <!--2026-11-11: the selected layer (with its option strip, solid accent buttons) sits on the
+                            accent tint, so the row and its strip read as one block; hover on another row is a
+                            neutral grey. Group layers show no edge bar and no selected tint (they have no options).-->
                         <Style.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="IsChecked" Value="False"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" Value="{DynamicResource IRI.Maptor.Brushes.Surface.Hover}" />
+                                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                            </MultiTrigger>
                             <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource IRI.Maptor.Brushes.Accent.Tint}" />
                                 <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
                                 <Setter Property="Cursor" Value="Arrow"/>
                             </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}" />
-                                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                            </Trigger>
+                            <DataTrigger Binding="{Binding IsGroupLayer}" Value="True">
+                                <Setter Property="BorderBrush" Value="Transparent"/>
+                            </DataTrigger>
+                            <!--a selected group keeps its plain background (hover still shows)-->
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsGroupLayer}" Value="True"/>
+                                    <Condition Binding="{Binding IsChecked, RelativeSource={RelativeSource Self}}" Value="True"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" Value="Transparent"/>
+                            </MultiDataTrigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Foreground" Value="LightGray"/>
                             </Trigger>

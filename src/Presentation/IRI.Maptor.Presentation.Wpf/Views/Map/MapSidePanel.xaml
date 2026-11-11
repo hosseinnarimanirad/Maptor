@@ -37,12 +37,12 @@
         <Border Background="{DynamicResource IRI.Maptor.Brushes.Surface.Subtle}"
                 BorderBrush="{DynamicResource IRI.Maptor.Brushes.Surface.Border}"
                 BorderThickness="{StaticResource IRI.Maptor.Styles.Thickness.Border}"
-                CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}"
+                CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}"
                 SnapsToDevicePixels="True">
             <DockPanel>
                 <!--header row: icon, title, close, on the same accent-tinted band as the card headers,
-                    compact like them (32 px, 13 px title; radius 3: the inner curve of the 1 px border)-->
-                <Border DockPanel.Dock="Top" Background="{DynamicResource IRI.Maptor.Brushes.Accent.Tint}" CornerRadius="3,3,0,0">
+                    compact like them (32 px, 13 px title; radius 5: the inner curve of the 6 px card's 1 px border)-->
+                <Border DockPanel.Dock="Top" Background="{DynamicResource IRI.Maptor.Brushes.Accent.Tint}" CornerRadius="5,5,0,0">
                 <DockPanel MinHeight="{StaticResource IRI.Maptor.Styles.Size.Control.Default}"
                            Margin="10,0,4,0" LastChildFill="True">
                     <Button DockPanel.Dock="Right" Margin="8,0,0,0"

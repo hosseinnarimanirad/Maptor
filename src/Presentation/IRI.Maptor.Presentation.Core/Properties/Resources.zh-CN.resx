@@ -3271,4 +3271,7 @@
   <data name="identify_geometry_unitAuto" xml:space="preserve">
     <value>自动</value>
   </data>
+  <data name="legend_panel_showHide" xml:space="preserve">
+    <value>显示或隐藏图例</value>
+  </data>
 </root>
