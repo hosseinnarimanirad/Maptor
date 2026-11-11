@@ -68,7 +68,7 @@
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
-        <!--4,3,8,3 (compact review, Step 6 TRIAL, 2026-11-11; was 4,5,8,5)-->
+        <!--4,3,8,3 (compact review, Step 6, 2026-11-11, kept by the user; was 4,5,8,5)-->
         <Setter Property="Padding" Value="4,3,8,3"/>
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         <Setter Property="Template">
