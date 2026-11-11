@@ -15,11 +15,12 @@
     <!--gap above the action-button row, see IRI.Maptor.Styles.Border.DialogFooter-->
     <Thickness x:Key="IRI.Maptor.Styles.Thickness.DialogFooter">0,8,0,0</Thickness>
 
-    <!--Shared corner rounding. Three steps, each larger than the one it sits inside of:
-        Small (4) for chips and pop-up menus, Control (6) for anything the user clicks or types
-        into, Surface (8) for the card or panel that holds those controls. A rounder outside and
-        a tighter inside is what makes nested corners read as deliberate. Pills and circular
-        buttons round to half their height and are not on this scale. (Scale pass, 2026-10-25.)-->
+    <!--Shared corner rounding: Small (4) for chips and pop-up menus, Control (6) for anything the user
+        clicks or types into, Surface (6) for the card or panel that holds those controls. Pills and
+        circular buttons round to half their height and are not on this scale. (Scale pass, 2026-10-25.)
+        Compact review, Step 2 (2026-11-11): Surface 8 → 6, so every card and panel has the same corner
+        as the main window's cards (Expander.Card, Border.Panel, MapSidePanel). A card and its controls now
+        share one corner, as in most CAD/GIS tools; the signed-off Security field group keeps its 8.-->
 
     <!--menus, filter pop-ups, small chips-->
     <CornerRadius x:Key="IRI.Maptor.Styles.CornerRadius.Small">4</CornerRadius>
@@ -28,11 +29,11 @@
     <CornerRadius x:Key="IRI.Maptor.Styles.CornerRadius.Control">6</CornerRadius>
 
     <!--cards, panels, section expanders-->
-    <CornerRadius x:Key="IRI.Maptor.Styles.CornerRadius.Surface">8</CornerRadius>
+    <CornerRadius x:Key="IRI.Maptor.Styles.CornerRadius.Surface">6</CornerRadius>
 
     <!--a title band across the top of a Surface: same radius on top, square below, so the band
         follows the panel's corner exactly. Keep its value in step with Surface.-->
-    <CornerRadius x:Key="IRI.Maptor.Styles.CornerRadius.SurfaceTop">8,8,0,0</CornerRadius>
+    <CornerRadius x:Key="IRI.Maptor.Styles.CornerRadius.SurfaceTop">6,6,0,0</CornerRadius>
 
     <!--the tab strip's rounded track. Must stay equal to Control + TabTrackPadding, or the
         track's curve and the selected pill's curve will not be concentric.-->

@@ -14,7 +14,9 @@
         clickable header and a chevron that turns. The stock MahApps expander paints a heavy
         accent header bar, which reads as a banner rather than as a section of a dialog.-->
     <Style x:Key="IRI.Maptor.Styles.Expander.Section" TargetType="{x:Type Expander}">
-        <Setter Property="Margin" Value="0,0,0,8"/>
+        <!--the shared stack gap and 10,8 padding, like Border.Section (compact review, Step 2, 2026-11-11; was 8
+            and 12,10)-->
+        <Setter Property="Margin" Value="{StaticResource IRI.Maptor.Styles.Thickness.StackGap}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Expander}">
@@ -92,7 +94,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Padding" Value="12,10"/>
+        <Setter Property="Padding" Value="10,8"/>
     </Style>
 
     <!--=====================================================================================

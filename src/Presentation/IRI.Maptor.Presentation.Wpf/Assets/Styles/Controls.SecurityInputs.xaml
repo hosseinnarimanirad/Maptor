@@ -202,7 +202,9 @@
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
         <Setter Property="Padding" Value="0"/>
         <Setter Property="Margin" Value="4"/>
-        <Setter Property="CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"/>
+        <!--8, not CornerRadius.Surface: the Security screens are signed off and kept as they were when Surface
+            went from 8 to 6 (compact review, Step 2, 2026-11-11)-->
+        <Setter Property="CornerRadius" Value="8"/>
         <!--MinHeight, not Height: a fixed height clips the field when a validation message
             or a taller adornment appears-->
         <Setter Property="MinHeight" Value="39"/>

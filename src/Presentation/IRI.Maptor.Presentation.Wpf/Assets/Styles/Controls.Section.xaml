@@ -29,8 +29,9 @@
         <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}"/>
-        <Setter Property="Padding" Value="12,9"/>
-        <Setter Property="Margin" Value="0,0,0,8"/>
+        <!--10,8 and the shared stack gap (compact review, Step 2, 2026-11-11; was 12,9 and 8)-->
+        <Setter Property="Padding" Value="10,8"/>
+        <Setter Property="Margin" Value="{StaticResource IRI.Maptor.Styles.Thickness.StackGap}"/>
     </Style>
 
     <!--1px rule between two groups of content. Several views fake this with a

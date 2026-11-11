@@ -14,7 +14,9 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray9}"/>
         <Setter Property="Padding" Value="4,0"/>
-        <Setter Property="Margin" Value="4"/>
+        <!--3 all round: 6 px between two cards, stacked or side by side, like the shared panel gap
+            (compact review, Step 2, 2026-11-11; was 4, i.e. 8 between cards)-->
+        <Setter Property="Margin" Value="3"/>
         <Setter Property="CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Surface}"/>
         <!--MinHeight, not Height: cards that hold more than one row (option groups,
             page setup) must be allowed to grow instead of clipping their content.-->

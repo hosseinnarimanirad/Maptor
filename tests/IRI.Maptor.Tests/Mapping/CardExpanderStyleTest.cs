@@ -155,6 +155,29 @@ public class CardExpanderStyleTest
         });
     }
 
+    /// <summary>
+    /// Compact review, Step 2 (2026-11-11): every card and panel has one corner (Surface = Control = 6), and the
+    /// stacked section styles leave the shared stack gap after them.
+    /// </summary>
+    [Fact]
+    public void CardsShareOneCorner_AndSectionsTheStackGap()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var styles = LoadStyles();
+
+            var control = (CornerRadius)styles["IRI.Maptor.Styles.CornerRadius.Control"];
+            Assert.Equal(new CornerRadius(6), control);
+            Assert.Equal(control, (CornerRadius)styles["IRI.Maptor.Styles.CornerRadius.Surface"]);
+            Assert.Equal(new CornerRadius(6, 6, 0, 0), (CornerRadius)styles["IRI.Maptor.Styles.CornerRadius.SurfaceTop"]);
+
+            var stackGap = (Thickness)styles["IRI.Maptor.Styles.Thickness.StackGap"];
+            Assert.Equal(stackGap, new Border { Style = (Style)styles["IRI.Maptor.Styles.Border.Section"] }.Margin);
+            Assert.Equal(stackGap, new Expander { Style = (Style)styles["IRI.Maptor.Styles.Expander.Section"] }.Margin);
+            Assert.Equal(control, new Border { Style = (Style)styles["IRI.Maptor.Styles.Border.Card"] }.CornerRadius);
+        });
+    }
+
     private static ResourceDictionary LoadStyles()
     {
         var cache = typeof(IRI.Maptor.Presentation.Wpf.Helpers.SharedResourceDictionary)
