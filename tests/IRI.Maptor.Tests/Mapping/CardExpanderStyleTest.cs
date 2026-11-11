@@ -132,6 +132,29 @@ public class CardExpanderStyleTest
         });
     }
 
+    /// <summary>
+    /// The layout gap tokens (compact review, Step 1, 2026-11-11) agree with each other, and the panel splitters
+    /// fill exactly that gap, so a splitter never makes the gap between two cards wider than a plain gap.
+    /// </summary>
+    [Fact]
+    public void LayoutGapTokens_AgreeWithThePanelSplitters()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var styles = LoadStyles();
+
+            var gap = (double)styles["IRI.Maptor.Styles.Size.PanelGap"];
+            Assert.Equal(new GridLength(gap), (GridLength)styles["IRI.Maptor.Styles.GridLength.PanelGap"]);
+            Assert.Equal(new Thickness(gap), (Thickness)styles["IRI.Maptor.Styles.Thickness.CanvasEdge"]);
+            Assert.Equal(new Thickness(0, 0, 0, gap), (Thickness)styles["IRI.Maptor.Styles.Thickness.StackGap"]);
+
+            var vertical = new GridSplitter { Style = (Style)styles["IRI.Maptor.Styles.GridSplitter.Panel.Vertical"] };
+            var horizontal = new GridSplitter { Style = (Style)styles["IRI.Maptor.Styles.GridSplitter.Panel.Horizontal"] };
+            Assert.Equal(gap, vertical.Width);
+            Assert.Equal(gap, horizontal.Height);
+        });
+    }
+
     private static ResourceDictionary LoadStyles()
     {
         var cache = typeof(IRI.Maptor.Presentation.Wpf.Helpers.SharedResourceDictionary)

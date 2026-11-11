@@ -91,7 +91,8 @@
         it. Rule and handle turn accent on hover and while dragging. Live resize (no preview), so
         the panels follow the mouse. Double-click to reset: Helpers/GridSplitterReset. (2026-11-10)-->
     <Style x:Key="IRI.Maptor.Styles.GridSplitter.Panel.Vertical" TargetType="GridSplitter">
-        <Setter Property="Width" Value="8"/>
+        <!--the panel gap (6; 8 until 2026-11-11): the splitter fills the gap between two cards-->
+        <Setter Property="Width" Value="{StaticResource IRI.Maptor.Styles.Size.PanelGap}"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="VerticalAlignment" Value="Stretch"/>
         <Setter Property="ResizeDirection" Value="Columns"/>
@@ -126,7 +127,7 @@
     </Style>
 
     <Style x:Key="IRI.Maptor.Styles.GridSplitter.Panel.Horizontal" TargetType="GridSplitter">
-        <Setter Property="Height" Value="8"/>
+        <Setter Property="Height" Value="{StaticResource IRI.Maptor.Styles.Size.PanelGap}"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="VerticalAlignment" Value="Stretch"/>
         <Setter Property="ResizeDirection" Value="Rows"/>

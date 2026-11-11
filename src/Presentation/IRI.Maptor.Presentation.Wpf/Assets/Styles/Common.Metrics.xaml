@@ -65,6 +65,16 @@
     <!--gap above a new section within a scrolling column-->
     <Thickness x:Key="IRI.Maptor.Styles.Thickness.SectionGap">0,8,0,0</Thickness>
 
+    <!--Layout gaps of a window built from cards on a grey canvas (compact style, 2026-11-11): one value, 6 px,
+        for the window edge around the cards, the gap between two cards or panels (also the width of the
+        GridSplitter.Panel.* that sits in such a gap) and the gap after a card or section in a vertical stack.
+        Before these, each window typed its own 6, 8, 10 or 4+4.-->
+    <Thickness x:Key="IRI.Maptor.Styles.Thickness.CanvasEdge">6</Thickness>
+    <sys:Double x:Key="IRI.Maptor.Styles.Size.PanelGap">6</sys:Double>
+    <!--the same gap for a ColumnDefinition/RowDefinition; keep the two in step-->
+    <GridLength x:Key="IRI.Maptor.Styles.GridLength.PanelGap">6</GridLength>
+    <Thickness x:Key="IRI.Maptor.Styles.Thickness.StackGap">0,0,0,6</Thickness>
+
     <!--Type scale.
 
         Until 2026-08-31 there was no such thing: every font size in the system was a bare number
