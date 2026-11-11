@@ -48,6 +48,8 @@ public class MapSidePanelTest
     {
         WpfTestHost.Run(() =>
         {
+            WpfTestHost.EnsureMahAppsResources();
+
             var content = new Border();
             var panel = new MapSidePanel { IsOpen = false, PanelContent = content };
 
@@ -61,6 +63,19 @@ public class MapSidePanelTest
             panel.PanelContent = other;
             Assert.Null(LogicalTreeHelper.GetParent(content));
             Assert.Same(panel, LogicalTreeHelper.GetParent(other));
+        });
+    }
+
+    /// <summary>Every tool panel opens at one width (2026-11-11; they used to carry their flyout widths, 350-900).</summary>
+    [Fact]
+    public void Panel_DefaultWidth_IsTheSharedOne()
+    {
+        WpfTestHost.Run(() =>
+        {
+            WpfTestHost.EnsureMahAppsResources();
+
+            Assert.Equal(480, MapSidePanel.DefaultPreferredWidth);
+            Assert.Equal(MapSidePanel.DefaultPreferredWidth, new MapSidePanel().PreferredWidth);
         });
     }
 

@@ -21,8 +21,8 @@ namespace IRI.Maptor.Presentation.Wpf.Controls;
 /// </para>
 /// <para>
 /// The width starts at <see cref="PreferredWidth"/>; the user resizes it with the edge that faces
-/// the map, and the panel keeps that width while the application runs (closing and reopening
-/// does not reset it; double-clicking the edge does). It is kept between <see cref="FrameworkElement.MinWidth"/> and
+/// the map, and every panel keeps that width while the application runs (the dragged width is shared by all
+/// panels; closing and reopening does not reset it; double-clicking an edge does). It is kept between <see cref="FrameworkElement.MinWidth"/> and
 /// <see cref="MaxWidthRatio"/> of the host's width, so the map keeps a usable share.
 /// </para>
 /// </summary>
@@ -107,8 +107,15 @@ public partial class MapSidePanel : NotifiableUserControl
         }
     }
 
+    /// <summary>
+    /// The default width of every tool panel: 480 since 2026-11-11, one width for all of them. They used to carry their
+    /// old flyout widths (350 to 900), so each panel opened at a different, sometimes very large, width. Set it per
+    /// panel only for a real reason; the user can still drag a panel wider.
+    /// </summary>
+    public const double DefaultPreferredWidth = 480;
+
     public static readonly DependencyProperty PreferredWidthProperty = DependencyProperty.Register(
-        nameof(PreferredWidth), typeof(double), typeof(MapSidePanel), new PropertyMetadata(400.0, (d, e) => ((MapSidePanel)d).ApplyWidth()));
+        nameof(PreferredWidth), typeof(double), typeof(MapSidePanel), new PropertyMetadata(DefaultPreferredWidth, (d, e) => ((MapSidePanel)d).ApplyWidth()));
 
     /// <summary>The width the panel opens at until the user resizes it.</summary>
     public double PreferredWidth
@@ -131,8 +138,10 @@ public partial class MapSidePanel : NotifiableUserControl
         set => SetValue(MaxWidthRatioProperty, value);
     }
 
-    // the width the user chose by dragging; NaN until then, which means PreferredWidth
-    private double _userWidth = double.NaN;
+    // the width the user chose by dragging; NaN until then, which means PreferredWidth. Shared by every panel
+    // (2026-11-11): the tool panels open at one width, and dragging one sets it for all of them while the
+    // application runs; double-clicking an edge clears it.
+    private static double _userWidth = double.NaN;
 
     private FrameworkElement? _host;
 
