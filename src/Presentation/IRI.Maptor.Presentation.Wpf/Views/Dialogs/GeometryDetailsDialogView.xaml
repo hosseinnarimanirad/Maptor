@@ -29,21 +29,21 @@
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
                 <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="CornerRadius" Value="6"/>
+                <Setter Property="CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}"/>
                 <Setter Property="Padding" Value="10,7"/>
                 <Setter Property="Margin" Value="0,0,8,0"/>
             </Style>
 
             <Style x:Key="GeometryStatLabel" TargetType="TextBlock"
                    BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}">
-                <Setter Property="FontSize" Value="11"/>
+                <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Caption}"/>
                 <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray3}"/>
                 <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             </Style>
 
             <Style x:Key="GeometryStatValue" TargetType="TextBlock"
                    BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}">
-                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Input}"/>
                 <Setter Property="FontWeight" Value="SemiBold"/>
                 <Setter Property="Margin" Value="0,2,0,0"/>
                 <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
@@ -169,7 +169,7 @@
 
                         <!-- the representation itself: read-only but selectable, so it can be
                              copied by hand as well as with the button -->
-                        <Border CornerRadius="4" BorderThickness="1"
+                        <Border CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}" BorderThickness="1"
                                 BorderBrush="{DynamicResource MahApps.Brushes.Gray8}"
                                 Background="{DynamicResource MahApps.Brushes.Gray9}"
                                 MaxHeight="170">

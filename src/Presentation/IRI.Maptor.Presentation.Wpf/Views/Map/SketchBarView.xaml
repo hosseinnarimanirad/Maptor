@@ -392,7 +392,7 @@
                                         Text="{Binding [srs_utmZone], Source={StaticResource Localization}}"/>
                             <TextBox DockPanel.Dock="Left" BorderThickness="1" FlowDirection="LeftToRight" MinWidth="30" Margin="2" VerticalAlignment="Center"
                                         Text="{Binding SketchBar.CurrentEditingZone, Mode=TwoWay}" MaxWidth="40"
-                                        mahApp:ControlsHelper.CornerRadius="4"
+                                        mahApp:ControlsHelper.CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}"
                                         Style="{StaticResource IRI.Maptor.Styles.TextBox.Small.En}"
                                         Visibility="{Binding SketchBar.IsUTMEditingMode, Converter={StaticResource boolToVisibilityConverter}}">
                             </TextBox>
@@ -411,13 +411,13 @@
                                 <Style x:Key="headerTitle" TargetType="TextBlock" BasedOn="{StaticResource MahApps.Styles.TextBlock}">
                                     <Setter Property="Margin" Value="2"/>
                                     <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
-                                    <Setter Property="FontSize" Value="13"/>
+                                    <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Body}"/>
                                     <Setter Property="VerticalAlignment" Value="Center"/>
                                 </Style>
                                 <Style x:Key="headerBorder" TargetType="Border">
                                     <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
                                     <Setter Property="Padding" Value="6,0"/>
-                                    <Setter Property="CornerRadius" Value="4"/>
+                                    <Setter Property="CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}"/>
                                 </Style>
                             </StackPanel.Resources>
                             <!--general group-->

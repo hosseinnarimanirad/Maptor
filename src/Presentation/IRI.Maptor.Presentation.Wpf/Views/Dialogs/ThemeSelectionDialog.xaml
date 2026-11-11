@@ -52,7 +52,7 @@
                                 <Border x:Name="tile" Grid.Row="0" CornerRadius="7" Padding="2"
                                         BorderThickness="2" BorderBrush="Transparent"
                                         Background="{DynamicResource MahApps.Brushes.Gray10}">
-                                    <Border CornerRadius="4" ClipToBounds="True"
+                                    <Border CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}" ClipToBounds="True"
                                             Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
                                         <Grid>
                                             <Grid.RowDefinitions>
@@ -166,7 +166,7 @@
 
         <!-- a quiet surface behind the grid, so the tiles read as a set rather than as
              loose boxes floating on the window background -->
-        <Border Grid.Row="1" CornerRadius="6"
+        <Border Grid.Row="1" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}"
                 Background="{DynamicResource MahApps.Brushes.Gray10}">
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
                           Padding="12,12,6,2">

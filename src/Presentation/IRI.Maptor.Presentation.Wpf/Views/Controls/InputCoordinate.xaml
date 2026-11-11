@@ -4,7 +4,7 @@
              xmlns:helpers="clr-namespace:IRI.Maptor.Presentation.Wpf.Helpers"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"  FontSize="13"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"  FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Body}"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" FlowDirection="RightToLeft">
     <UserControl.Resources>
         <ResourceDictionary>

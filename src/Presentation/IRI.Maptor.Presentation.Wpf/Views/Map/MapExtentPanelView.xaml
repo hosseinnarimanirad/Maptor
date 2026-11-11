@@ -182,12 +182,12 @@
                                     <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
                                     <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
                                     <Setter Property="BorderThickness" Value="1"/>
-                                    <Setter Property="CornerRadius" Value="4"/>
+                                    <Setter Property="CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}"/>
                                     <Setter Property="Padding" Value="1"/>
                                     <Setter Property="Margin" Value="0"/>
                                 </Style>
                                 <Style x:Key="labelText" TargetType="TextBlock">
-                                    <Setter Property="FontSize" Value="11"/>
+                                    <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Caption}"/>
                                     <Setter Property="FontWeight" Value="Normal"/>
                                     <Setter Property="Margin" Value="4,0"/>
                                     <Setter Property="FlowDirection" Value="LeftToRight"/>
@@ -250,7 +250,7 @@
                                              IsOn="{Binding UseGroundScaleForStandardScales}"
                                              OnContent="{Binding [mapExtent_gotoScale_useGroundScaleForStandardScales], Source={StaticResource Localization}}"
                                              OffContent="{Binding [mapExtent_gotoScale_useWebMercatorScaleForStandardScales], Source={StaticResource Localization}}"/>
-                        <Border Grid.Row="2" Grid.Column="0" CornerRadius="4" Background="{DynamicResource MahApps.Brushes.ControlBackground}">
+                        <Border Grid.Row="2" Grid.Column="0" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}" Background="{DynamicResource MahApps.Brushes.ControlBackground}">
                             <ComboBox Grid.Row="1" Grid.Column="0"
                                         ItemsSource="{Binding ScaleItemsView}"
                                         SelectedItem="{Binding SelectedScaleItem, Mode=TwoWay}"

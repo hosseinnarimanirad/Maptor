@@ -87,7 +87,7 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="RadioButton">
-                            <Border x:Name="segment" Background="Transparent" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <Border x:Name="segment" Background="Transparent" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}" Padding="{TemplateBinding Padding}">
                                 <TextBlock Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}"
                                            FontSize="{StaticResource IRI.Maptor.Styles.Size.Text.Small}"
                                            Style="{StaticResource IRI.Maptor.Styles.TextBlock}"/>
@@ -118,7 +118,7 @@
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
                 <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="CornerRadius" Value="6"/>
+                <Setter Property="CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}"/>
                 <Setter Property="Padding" Value="2"/>
                 <Setter Property="HorizontalAlignment" Value="Left"/>
             </Style>
@@ -414,7 +414,7 @@
                     <Grid>
                         <DockPanel Visibility="{Binding IsTableVisible, Converter={StaticResource boolToVisibilityConverter}}">
                         <!--column headers on a shaded band-->
-                        <Border DockPanel.Dock="Top" Background="{DynamicResource MahApps.Brushes.Gray10}" CornerRadius="4" Padding="0,6">
+                        <Border DockPanel.Dock="Top" Background="{DynamicResource MahApps.Brushes.Gray10}" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}" Padding="0,6">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>

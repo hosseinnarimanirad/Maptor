@@ -674,7 +674,7 @@
                          KeyDown="layerTitle_KeyDown">
                             <TextBox.Resources>
                                 <Style TargetType="{x:Type Border}">
-                                    <Setter Property="CornerRadius" Value="4"/>
+                                    <Setter Property="CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}"/>
                                     <Setter Property="BorderThickness" Value="0"/>
                                     <Setter Property="Margin" Value="1"/>
                                     <Setter Property="Padding" Value="0"/>

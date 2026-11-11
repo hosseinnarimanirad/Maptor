@@ -14,7 +14,7 @@
                 ShowCloseButton="False" MinWidth="400"
                 Title="{Binding [dialog_common_confirmTitle], Source={StaticResource Localization}}"
                 WindowStartupLocation="CenterOwner">
-    <Grid Margin="8" >
+    <Grid Margin="{StaticResource IRI.Maptor.Styles.Thickness.DialogContent}">
         <Grid.Resources>
             <ResourceDictionary>
                 <ResourceDictionary.MergedDictionaries>

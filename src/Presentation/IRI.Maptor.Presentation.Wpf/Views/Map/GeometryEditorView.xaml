@@ -217,7 +217,7 @@
             <Grid >
                 <StackPanel Margin="0">
                     <!-- Current Point Editor -->
-                    <Border Background="{DynamicResource MahApps.Brushes.Accent4}" Padding="0,4" Margin="2" CornerRadius="4">
+                    <Border Background="{DynamicResource MahApps.Brushes.Accent4}" Padding="0,4" Margin="2" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding [geometryDetails_currentPoint_x], Source={StaticResource Localization}}"
                                    VerticalAlignment="Center" Margin="4,0,0,0" Width="20"/>
@@ -289,7 +289,7 @@
                             BorderBrush="{DynamicResource MahApps.Brushes.Gray8}"
                             BorderThickness="1"
                             Padding="8"
-                            CornerRadius="4">
+                            CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}">
                         <Border.Effect>
                             <StaticResource ResourceKey="IRI.Maptor.Effects.Elevation2"/>
                         </Border.Effect>

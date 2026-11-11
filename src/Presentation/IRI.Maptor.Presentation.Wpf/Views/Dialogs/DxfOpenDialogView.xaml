@@ -93,7 +93,7 @@
                 <iconPacks:PackIconPhosphorIcons Kind="MapTrifoldFill" Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}"/>
                 <mahApp:NumericUpDown Grid.Column="1"
                                     Minimum="1" Maximum="60"
-                                    mahApp:ControlsHelper.CornerRadius="4"
+                                    mahApp:ControlsHelper.CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}"
                                     Value="{Binding UtmZone, Mode=TwoWay}"
                                     Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Normal}"/>
 

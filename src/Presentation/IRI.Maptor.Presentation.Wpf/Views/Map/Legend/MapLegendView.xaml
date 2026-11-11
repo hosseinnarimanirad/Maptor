@@ -155,7 +155,7 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
-                            <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="6,5" Margin="0,1">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}" Padding="6,5" Margin="0,1">
                                 <DockPanel>
                                     <iconPacks:PackIconMaterial DockPanel.Dock="Left" VerticalAlignment="Top" Margin="0,2,0,0"
                                                                 Width="18" Height="18"
@@ -211,7 +211,7 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ToggleButton">
-                            <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="6,3" Margin="0,1">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}" Padding="6,3" Margin="0,1">
                                 <DockPanel>
                                     <iconPacks:PackIconMaterial x:Name="check" DockPanel.Dock="Left" Kind="CheckboxBlankOutline"
                                                                 Width="16" Height="16" Margin="0" VerticalAlignment="Center"

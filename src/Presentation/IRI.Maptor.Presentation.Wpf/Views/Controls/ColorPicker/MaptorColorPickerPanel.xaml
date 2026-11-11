@@ -21,7 +21,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
-                        <Border x:Name="face" CornerRadius="6" Margin="2" Padding="4,4" Background="Transparent">
+                        <Border x:Name="face" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}" Margin="2" Padding="4,4" Background="Transparent">
                             <Grid>
                                 <!--reserves the semibold width so a tab doesn't grow when selected-->
                                 <TextBlock Text="{TemplateBinding Content}" FontWeight="SemiBold" Visibility="Hidden"/>
@@ -85,7 +85,7 @@
                         <Grid Background="Transparent" ToolTip="{Binding Hex}">
                             <Border x:Name="ring" Width="30" Height="30" CornerRadius="8" BorderThickness="2"
                                     BorderBrush="{DynamicResource MahApps.Brushes.Accent}" Visibility="Collapsed"/>
-                            <Border Width="24" Height="24" CornerRadius="6" Background="{Binding Brush}"
+                            <Border Width="24" Height="24" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}" Background="{Binding Brush}"
                                     BorderBrush="{StaticResource IRI.Maptor.Brushes.Swatch.Edge}" BorderThickness="1"/>
                         </Grid>
                         <ControlTemplate.Triggers>
@@ -112,7 +112,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
-                        <Border x:Name="frame" CornerRadius="6" Background="{TemplateBinding Background}"
+                        <Border x:Name="frame" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}" Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
                             <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}"
                                           VerticalAlignment="Center" Focusable="False"/>
@@ -182,7 +182,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
-                        <Border x:Name="face" CornerRadius="6" BorderThickness="1"
+                        <Border x:Name="face" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}" BorderThickness="1"
                                 Background="{DynamicResource MahApps.Brushes.Gray10}"
                                 BorderBrush="{DynamicResource MahApps.Brushes.TextBox.Border}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -265,7 +265,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Border HorizontalAlignment="Right" CornerRadius="6" Background="{DynamicResource MahApps.Brushes.Gray10}" Padding="1"
+                <Border HorizontalAlignment="Right" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}" Background="{DynamicResource MahApps.Brushes.Gray10}" Padding="1"
                         FlowDirection="LeftToRight">
                     <StackPanel Orientation="Horizontal">
                         <RadioButton x:Name="modeRgb" Style="{StaticResource segment}" Content="RGB"
@@ -345,8 +345,8 @@
                 <iconPacks:PackIconMaterial Kind="Eyedropper" Width="14" Height="14"/>
             </ToggleButton>
             <Grid Width="28" Height="28">
-                <Border CornerRadius="6" Background="{StaticResource IRI.Maptor.Brushes.Checkerboard}"/>
-                <Border x:Name="preview" CornerRadius="6" BorderBrush="{StaticResource IRI.Maptor.Brushes.Swatch.Edge}" BorderThickness="1"/>
+                <Border CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}" Background="{StaticResource IRI.Maptor.Brushes.Checkerboard}"/>
+                <Border x:Name="preview" CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Control}" BorderBrush="{StaticResource IRI.Maptor.Brushes.Swatch.Edge}" BorderThickness="1"/>
             </Grid>
             <Grid Grid.Column="1" Margin="8,0">
                 <TextBox x:Name="hexBox" Style="{StaticResource valueBox}" Padding="13,0,4,0" MaxLength="9"

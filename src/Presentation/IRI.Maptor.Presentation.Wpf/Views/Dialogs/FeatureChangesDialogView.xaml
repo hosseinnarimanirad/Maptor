@@ -18,7 +18,7 @@
     </mahApp:MetroWindow.Resources>
 
 
-    <Grid Margin="4">
+    <Grid Margin="{StaticResource IRI.Maptor.Styles.Thickness.DialogContent}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
