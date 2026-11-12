@@ -13,6 +13,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </maptor:NotifiableUserControl.Resources>
@@ -48,6 +49,11 @@
                     <Button DockPanel.Dock="Right" Margin="8,0,0,0"
                             Style="{StaticResource IRI.Maptor.Styles.Button.PanelClose}"
                             Click="CloseButton_Click"/>
+                    <!--the tool's guide page (graduation cap), next to close; only when GuideSource is set-->
+                    <maptor:GuideButton DockPanel.Dock="Right" Margin="4,0,0,0"
+                                        Source="{Binding GuideSource, ElementName=root}"
+                                        Title="{Binding Title, ElementName=root}"
+                                        Visibility="{Binding GuideSource, ElementName=root, Converter={StaticResource stringNotNullOrEmptyToVisibilityConverter}}"/>
                     <!--shown only when IconKind is set (code-behind)-->
                     <iconPacks:PackIconMaterial x:Name="headerIcon" DockPanel.Dock="Left" Visibility="Collapsed"
                                                 Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CardHeader}"/>

@@ -1,0 +1,29 @@
+<mahApp:MetroWindow x:Class="IRI.Maptor.Presentation.Wpf.Controls.GuideWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
+
+    Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Localized}"
+    Width="780" Height="720" MinWidth="460" MinHeight="360"
+    SizeToContent="Manual" ResizeMode="CanResizeWithGrip"
+    ShowInTaskbar="False" ShowMinButton="False" ShowMaxRestoreButton="True"
+    GlowBrush="{DynamicResource MahApps.Brushes.Highlight}"
+    WindowStartupLocation="CenterOwner">
+
+    <!--Modeless reader for a guide page (a FlowDocument). Not MetroWindow.Dialog: that style pins MaxWidth 550 and
+        SizeToContent, and a guide is read beside the tool it explains. See GuideWindow.xaml.cs.-->
+
+    <mahApp:MetroWindow.Resources>
+        <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+    </mahApp:MetroWindow.Resources>
+
+    <!--no toolbar: text selection, copy and Ctrl + mouse wheel zoom still work; the built-in find/zoom bar does not
+        follow the dark theme-->
+    <FlowDocumentScrollViewer x:Name="viewer"
+                              IsToolBarVisible="False"
+                              HorizontalScrollBarVisibility="Disabled"
+                              VerticalScrollBarVisibility="Auto"
+                              Focusable="True"
+                              Background="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
+</mahApp:MetroWindow>

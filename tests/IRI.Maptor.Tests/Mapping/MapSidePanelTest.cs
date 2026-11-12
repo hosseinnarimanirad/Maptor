@@ -216,6 +216,58 @@ public class MapSidePanelTest
         });
     }
 
+    [Fact]
+    public void Panel_ShowsGuideCapOnlyWhenGuideSourceIsSet()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var panel = BuildPanel(out var host);
+
+            var cap = FindChild<GuideButton>(panel);
+            Assert.NotNull(cap);
+            Assert.Equal(Visibility.Collapsed, cap!.Visibility);
+
+            panel.GuideSource = "/SomeApp;component/Guides/Tool";
+            Layout(host, 1200, 700);
+
+            Assert.Equal(Visibility.Visible, cap.Visibility);
+            Assert.Equal("/SomeApp;component/Guides/Tool", cap.Source);
+            Assert.Equal("Buffer zone", cap.Title);
+        });
+    }
+
+    [Fact]
+    public void GuidePages_AreLookedUpLikeResxSatellites()
+    {
+        Assert.Equal(
+            new[] { "/A;component/G.fa-IR.xaml", "/A;component/G.fa.xaml", "/A;component/G.xaml" },
+            GuideWindow.GetCandidatePaths("/A;component/G", new System.Globalization.CultureInfo("fa-IR")));
+
+        Assert.Equal(
+            new[] { "/A;component/G.fr.xaml", "/A;component/G.xaml" },
+            GuideWindow.GetCandidatePaths("/A;component/G", new System.Globalization.CultureInfo("fr")));
+
+        Assert.Equal(
+            new[] { "/A;component/G.xaml" },
+            GuideWindow.GetCandidatePaths("/A;component/G", System.Globalization.CultureInfo.InvariantCulture));
+    }
+
+    private static T? FindChild<T>(DependencyObject root) where T : DependencyObject
+    {
+        for (int i = 0; i < System.Windows.Media.VisualTreeHelper.GetChildrenCount(root); i++)
+        {
+            var child = System.Windows.Media.VisualTreeHelper.GetChild(root, i);
+
+            if (child is T match)
+                return match;
+
+            if (FindChild<T>(child) is T inner)
+                return inner;
+        }
+
+        return null;
+    }
+
     private static MapSidePanel BuildPanel(out Grid host)
     {
         var styles = LoadStyles();

@@ -62,6 +62,19 @@ public partial class MapSidePanel : NotifiableUserControl
         set => SetValue(IconKindProperty, value);
     }
 
+    public static readonly DependencyProperty GuideSourceProperty = DependencyProperty.Register(
+        nameof(GuideSource), typeof(string), typeof(MapSidePanel), new PropertyMetadata(null));
+
+    /// <summary>
+    /// The tool's guide page (base path, see <see cref="GuideWindow"/>). When set, a graduation-cap button next to
+    /// close opens it, titled with <see cref="Title"/>. Set it only for tools that need a guide.
+    /// </summary>
+    public string? GuideSource
+    {
+        get => (string?)GetValue(GuideSourceProperty);
+        set => SetValue(GuideSourceProperty, value);
+    }
+
     public static readonly DependencyProperty PanelContentProperty = DependencyProperty.Register(
         nameof(PanelContent), typeof(object), typeof(MapSidePanel), new PropertyMetadata(null, OnPanelContentChanged));
 
