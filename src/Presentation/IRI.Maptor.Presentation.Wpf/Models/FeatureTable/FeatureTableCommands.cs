@@ -100,6 +100,9 @@ public static class FeatureTableCommands
 
     #endregion
 
+    /// <summary>Export commands (Excel, to drawings) are refused for a layer whose data may not leave the application.</summary>
+    private static bool IsExportAllowed(object? param) => (param as SelectedLayer)?.AssociatedLayer?.IsExportAllowed != false;
+
     #region Export Excel
 
     public static FeatureTableCommand CreateExportToExcelCommand(MapViewModelBase map)
@@ -187,7 +190,7 @@ public static class FeatureTableCommands
 
             ExcelHelper.WriteDictionary(rows, fileName, "Sheet1", null, headers);
 
-        });
+        }, param => IsExportAllowed(param));
 
         return result;
     }
@@ -225,7 +228,7 @@ public static class FeatureTableCommands
                 map.AddDrawingItem(feature.TheGeometry);
             }
 
-        });
+        }, param => IsExportAllowed(param));
 
         return result;
     }

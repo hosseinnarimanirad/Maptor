@@ -288,6 +288,13 @@ public abstract class BaseLayer : Notifier, ILayer
 
     public bool IsSearchable { get; set; } = false;
 
+    /// <summary>
+    /// Whether the user may take this layer's data out of the application: export to a file, to Excel, or into the
+    /// drawings (which can then be saved). True by default; a host that controls export per layer (by permission)
+    /// sets it when it builds the layer. Display, identify and selection are not affected.
+    /// </summary>
+    public bool IsExportAllowed { get; set; } = true;
+
     private bool _isInScaleRange;
     public bool IsInScaleRange
     {

@@ -57,6 +57,9 @@ public class LayerSettings_VectorExportViewModel : ViewModelBase
     private readonly MapViewModelBase viewModel;
     private readonly VectorLayer layer;
     private bool _isProjectionEnabled;
+    /// <summary>False when the host forbids exporting this layer's data; the view can say why the export is off.</summary>
+    public bool IsExportAllowed => layer?.IsExportAllowed != false;
+
     public bool IsProjectionEnabled
     {
         get { return _isProjectionEnabled; }
@@ -230,6 +233,10 @@ public class LayerSettings_VectorExportViewModel : ViewModelBase
 
     private bool CanExport()
     {
+        // the host may forbid taking this layer's data out (BaseLayer.IsExportAllowed, e.g. by permission)
+        if (!IsExportAllowed)
+            return false;
+
         if (IsProjectionEnabled)
             return true;
 
