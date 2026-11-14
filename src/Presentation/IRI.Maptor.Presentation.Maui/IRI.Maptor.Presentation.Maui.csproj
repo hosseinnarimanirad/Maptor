@@ -28,6 +28,7 @@
 		<ProjectReference Include="..\IRI.Maptor.Presentation.Core\IRI.Maptor.Presentation.Core.csproj" />
 		<ProjectReference Include="..\..\Infrastructure\IRI.Maptor.Infrastructure.Sqlite\IRI.Maptor.Infrastructure.Sqlite.csproj" />
 		<ProjectReference Include="..\..\Core\IRI.Maptor.Core.Common\IRI.Maptor.Core.Common.csproj" />
+		<ProjectReference Include="..\..\Core\IRI.Maptor.Core.Ogc\IRI.Maptor.Core.Ogc.csproj" />
 		<ProjectReference Include="..\..\Core\IRI.Maptor.Core.Spatial\IRI.Maptor.Core.Spatial.csproj" />
 		<ProjectReference Include="..\..\Core\IRI.Maptor.Core.SpatialReferenceSystem\IRI.Maptor.Core.SpatialReferenceSystem.csproj" />
 	</ItemGroup>
