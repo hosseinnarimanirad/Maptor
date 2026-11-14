@@ -156,6 +156,20 @@ public class MapViewer : ContentView
         ((MapViewer)bindable).RefreshDrawable();
     }
 
+    public static readonly BindableProperty TileProxyUrlProperty = BindableProperty.Create(
+        nameof(TileProxyUrl), typeof(string), typeof(MapViewer), null, propertyChanged: OnBaseMapChanged);
+
+    /// <summary>
+    /// Base address of a tile proxy application (e.g. an API with an <c>api/tile</c> endpoint). When set,
+    /// every basemap tile is requested through it (<see cref="BaseMapUrlResolver.GetProxyUrlFunc"/>) instead
+    /// of from the provider; null or empty fetches from the provider directly.
+    /// </summary>
+    public string? TileProxyUrl
+    {
+        get => (string?)GetValue(TileProxyUrlProperty);
+        set => SetValue(TileProxyUrlProperty, value);
+    }
+
     public static readonly BindableProperty MarkerLatitudeProperty = BindableProperty.Create(
         nameof(MarkerLatitude), typeof(double?), typeof(MapViewer), null, propertyChanged: OnMarkerChanged);
 
@@ -457,7 +471,12 @@ public class MapViewer : ContentView
         _drawable.CenterX = _centerX;
         _drawable.CenterY = _centerY;
         _drawable.Resolution = _resolution;
-        _drawable.UrlFunc = BaseMapUrlResolver.GetUrlFunc(BaseMap);
+        var proxy = TileProxyUrl;
+        bool viaProxy = !string.IsNullOrWhiteSpace(proxy);
+
+        _drawable.UrlFunc = viaProxy ? BaseMapUrlResolver.GetProxyUrlFunc(BaseMap, proxy) : BaseMapUrlResolver.GetUrlFunc(BaseMap);
+
+        // The proxy serves the provider's own tiles, so both share one cache entry per basemap.
         _drawable.LayerKey = BaseMap.ToString();
     }
 
