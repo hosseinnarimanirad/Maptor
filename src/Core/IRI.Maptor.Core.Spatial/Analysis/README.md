@@ -177,6 +177,34 @@ var components = network.GetConnectedComponents();  // disconnected islands
 var graph      = network.ToAdjacencyList();         // → Sta.Graph: Dijkstra, BFS, …
 ```
 
+## Points on lines
+
+`PointLineTopologyBuilder<T>` builds the topology between a point layer and a line layer whose points stand on the lines — towers on power-line routes, valves on pipes, kilometre posts on a road — and reports what is wrong with the data.
+
+- **Membership** is a yes/no test: a point belongs to *every* line within `Tolerance` of it. A point near no line is an orphan (reported, never handed to the nearest line); a point on two lines — a junction, a shared tower — belongs to both.
+- **Order** is geometric: each line's points are sorted by part, then by their measure (distance along the part). Optional sequence numbers never decide the order; they choose the direction (so that they rise) and are checked against it.
+- Geodetic WGS84 data is measured in metres (local plane for offsets, Vincenty along the line); any other SRS in its own units.
+
+```csharp
+using IRI.Maptor.Core.Spatial.Analysis.PointsOnLines;
+
+var topology = new PointLineTopologyBuilder<Point>(new PointLineTopologyOptions { Tolerance = 0.5 })
+                    .Build(lines, points, sequenceNumbers);   // sequences optional
+
+var line     = topology.Lines[lineIndex];                     // ordered LineStation<T>s: measure, offset, part
+var position = line.IndexOf(pointIndex);                      // neighbours are position ± 1
+var ofPoint  = topology.GetLineIndices(pointIndex);           // none, one, or several lines
+var problems = topology.GetIssuesOfLine(lineIndex);           // the line's issues and its points'
+```
+
+| Severity | Issues |
+|---|---|
+| Error | `OrphanPoint`, `CoincidentPoints`, `InvalidLine`, `InvalidPoint` |
+| Warning | `MissingSequence`, `DuplicateSequence`, `SequenceOutOfOrder` (off the longest rising run, so one wrong number is reported once), `SequenceGap`, `DirectionUndecided`, `OpenLineEnd` (a part end with no point), `LineWithoutPoints` |
+| Info | `SharedPoint` |
+
+Lines and points keep their input indices throughout; every issue carries the indices it is about and, where it makes sense, a `Location` to show it on a map.
+
 ## Statistics & shape characteristics
 
 `AreaStatistics` summarizes the area distribution of a set of `Geometry<Point>` polygons (mean, standard deviation, histogram, CSV export). The `CharacteristicsMeasure` enum names McMaster's displacement measures (PCC, PDD, PCLL, …) computed by the simplification metrics above.
