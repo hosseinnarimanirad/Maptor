@@ -129,6 +129,28 @@ public class PointLineTopologyTest
     }
 
     [Fact]
+    public void SharedPoint_DoesNotVoteOnTheDirection()
+    {
+        // Line B starts at the junction point, which carries line A's number (3); B's own points
+        // are 1 and 2. With the junction voting, 3 1 2 would tie and leave B undecided.
+        var topology = Build(
+            new[] { Line("LINESTRING(0 0, 200 0)"), Line("LINESTRING(200 0, 400 0)") },
+            new Point?[] { new Point(0, 0), new Point(100, 0), new Point(200, 0), new Point(300, 0), new Point(400, 0) },
+            Seq(1, 2, 3, 1, 2));
+
+        var b = topology.Lines[1];
+
+        Assert.True(b.IsDirectionDecided);
+        Assert.False(b.IsReversed);
+        Assert.Equal(new[] { 2, 3, 4 }, b.Stations.Select(s => s.PointIndex));
+        Assert.Empty(IssuesOf(topology, PointLineIssueCode.DirectionUndecided));
+
+        // Nor is its foreign number reported as out of order or as a gap on either line.
+        Assert.Empty(IssuesOf(topology, PointLineIssueCode.SequenceOutOfOrder));
+        Assert.Empty(IssuesOf(topology, PointLineIssueCode.SequenceGap));
+    }
+
+    [Fact]
     public void OrientBySequenceOff_KeepsTheDrawnDirection()
     {
         var topology = Build(

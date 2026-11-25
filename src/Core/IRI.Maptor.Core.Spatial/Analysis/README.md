@@ -182,7 +182,7 @@ var graph      = network.ToAdjacencyList();         // → Sta.Graph: Dijkstra, 
 `PointLineTopologyBuilder<T>` builds the topology between a point layer and a line layer whose points stand on the lines — towers on power-line routes, valves on pipes, kilometre posts on a road — and reports what is wrong with the data.
 
 - **Membership** is a yes/no test: a point belongs to *every* line within `Tolerance` of it. A point near no line is an orphan (reported, never handed to the nearest line); a point on two lines — a junction, a shared tower — belongs to both.
-- **Order** is geometric: each line's points are sorted by part, then by their measure (distance along the part). Optional sequence numbers never decide the order; they choose the direction (so that they rise) and are checked against it.
+- **Order** is geometric: each line's points are sorted by part, then by their measure (distance along the part). Optional sequence numbers never decide the order; they choose the direction (so that they rise) and are checked against it. A point shared by several lines (a junction) often carries another line's number, so it neither votes on a line's direction nor takes part in its number checks.
 - Geodetic WGS84 data is measured in metres (local plane for offsets, Vincenty along the line); any other SRS in its own units.
 
 ```csharp

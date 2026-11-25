@@ -124,7 +124,7 @@ public sealed class PointLineTopologyBuilder<T> where T : IPoint, new()
         var result = new List<PointLineTopologyLine<T>>(preparedLines.Count);
 
         foreach (var line in preparedLines)
-            result.Add(OrderAndCheck(line, stationsOfLines[line.Index], sequences is not null, tolerance, issues));
+            result.Add(OrderAndCheck(line, stationsOfLines[line.Index], sequences is not null, tolerance, linesOfPoints, issues));
 
         return new PointLineTopology<T>(result, linesOfPoints, issues, tolerance, isGeodetic);
     }
@@ -224,6 +224,7 @@ public sealed class PointLineTopologyBuilder<T> where T : IPoint, new()
         List<LineStation<T>> stations,
         bool hasSequences,
         double tolerance,
+        IReadOnlyList<int>[] linesOfPoints,
         List<PointLineIssue<T>> issues)
     {
         var asDrawn = stations.OrderBy(s => s.PartIndex).ThenBy(s => s.Measure).ThenBy(s => s.PointIndex).ToList();
@@ -233,15 +234,23 @@ public sealed class PointLineTopologyBuilder<T> where T : IPoint, new()
 
         var numbered = asDrawn.Where(s => s.Sequence.HasValue).ToList();
 
-        if (hasSequences && _options.OrientBySequence && numbered.Count >= 2)
+        // A point shared with another line (a junction) is often numbered in that line's sequence,
+        // so it does not vote on this line's direction — on a short line its one number could tie
+        // the vote. It is still checked like any other point.
+        var voters = numbered.Where(s => linesOfPoints[s.PointIndex].Count == 1).ToList();
+
+        if (voters.Count < 2)
+            voters = numbered;
+
+        if (hasSequences && _options.OrientBySequence && voters.Count >= 2)
         {
             int rising = 0, falling = 0;
 
-            for (int i = 1; i < numbered.Count; i++)
+            for (int i = 1; i < voters.Count; i++)
             {
-                if (numbered[i].Sequence > numbered[i - 1].Sequence)
+                if (voters[i].Sequence > voters[i - 1].Sequence)
                     rising++;
-                else if (numbered[i].Sequence < numbered[i - 1].Sequence)
+                else if (voters[i].Sequence < voters[i - 1].Sequence)
                     falling++;
             }
 
@@ -281,7 +290,7 @@ public sealed class PointLineTopologyBuilder<T> where T : IPoint, new()
         }
 
         if (hasSequences)
-            CheckSequences(line.Index, ordered, isDirectionDecided, issues);
+            CheckSequences(line.Index, ordered, isDirectionDecided, linesOfPoints, issues);
 
         // Every part should start and end at a point.
         foreach (var part in line.Parts)
@@ -298,12 +307,19 @@ public sealed class PointLineTopologyBuilder<T> where T : IPoint, new()
         return result;
     }
 
-    private static void CheckSequences(int lineIndex, List<LineStation<T>> ordered, bool isDirectionDecided, List<PointLineIssue<T>> issues)
+    private static void CheckSequences(
+        int lineIndex,
+        List<LineStation<T>> ordered,
+        bool isDirectionDecided,
+        IReadOnlyList<int>[] linesOfPoints,
+        List<PointLineIssue<T>> issues)
     {
         foreach (var station in ordered.Where(s => !s.Sequence.HasValue))
             issues.Add(new PointLineIssue<T>(PointLineIssueCode.MissingSequence, lineIndex: lineIndex, pointIndex: station.PointIndex, location: station.Location));
 
-        var numbered = ordered.Where(s => s.Sequence.HasValue).ToList();
+        // A shared point (a junction) may carry the other line's number; checking it here would
+        // report a false repeat or out-of-order number at every junction.
+        var numbered = ordered.Where(s => s.Sequence.HasValue && linesOfPoints[s.PointIndex].Count == 1).ToList();
 
         foreach (var group in numbered.GroupBy(s => s.Sequence!.Value).Where(g => g.Count() > 1))
         {
