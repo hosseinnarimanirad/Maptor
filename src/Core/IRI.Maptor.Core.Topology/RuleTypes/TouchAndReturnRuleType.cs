@@ -50,23 +50,15 @@ public sealed class TouchAndReturnRuleType : TopologyRuleTypeBase
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var ordered = pair.OrderBy(c => c.PartIndex).ThenBy(c => c.Measure).ToList();
+            var ofPair = pair.ToList();
 
             var ordinal = 0;
 
-            for (int i = 0; i + 1 < ordered.Count; i++)
+            // The pairing is shared with the analyses that list crossings (TouchAndReturnPairs).
+            foreach (var (firstIndex, secondIndex, along) in TouchAndReturnPairs.Find(ofPair.Select(c => (c.PartIndex, c.Measure, c.OtherPartIndex, c.OtherMeasure)).ToList(), distance))
             {
-                var first = ordered[i];
-                var second = ordered[i + 1];
-
-                if (first.PartIndex != second.PartIndex || first.OtherPartIndex != second.OtherPartIndex)
-                    continue;
-
-                var along = second.Measure - first.Measure;
-                var alongOther = Math.Abs(second.OtherMeasure - first.OtherMeasure);
-
-                if (along > distance || alongOther > distance)
-                    continue;
+                var first = ofPair[firstIndex];
+                var second = ofPair[secondIndex];
 
                 var lineFeature = own.Features[pair.Key.LineIndex];
                 var otherFeature = (other ?? own).Features[pair.Key.OtherLineIndex];
@@ -80,8 +72,6 @@ public sealed class TouchAndReturnRuleType : TopologyRuleTypeBase
                 var middle = Geometry<Point>.Create((first.Location.X + second.Location.X) / 2, (first.Location.Y + second.Location.Y) / 2, own.Lines[pair.Key.LineIndex].Srid);
 
                 yield return context.Finding(TouchAndReturn, features, middle, along, ValueUnit.Metres, $"pair {ordinal++}");
-
-                i++;
             }
         }
     }

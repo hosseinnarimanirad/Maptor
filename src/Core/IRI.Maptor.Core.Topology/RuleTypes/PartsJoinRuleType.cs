@@ -11,9 +11,10 @@ namespace IRI.Maptor.Core.Topology.RuleTypes;
 /// R21, "parts of a line must join": a multi-part line of layer A is expected to be one path, its parts meeting
 /// end to end within <c>distance</c> (0.5 m). Kinds:
 /// <list type="bullet">
-/// <item><c>gap</c>: two parts whose nearest ends are farther apart than the distance but within <c>maxGap</c>
-/// (50 m); one finding per gap that would join the line up.</item>
-/// <item><c>detachedPart</c>: a part (or group of joined parts) farther than <c>maxGap</c> from all the others.</item>
+/// <item><c>gap</c>: two parts whose nearest ends are farther apart than the distance (and within <c>maxGap</c>
+/// when the rule sets one); one finding per gap that would join the line up.</item>
+/// <item><c>detachedPart</c>: only when the rule sets <c>maxGap</c>: a part (or group of joined parts) farther than
+/// it from all the others. There is no limit by default (D71).</item>
 /// <item><c>branch</c>: three or more part ends meet at one place, so the line is not a single path.</item>
 /// <item><c>outOfOrder</c>: the parts form one path, but not in the order they are stored.</item>
 /// <item><c>reversedPart</c>: along that path, a part is drawn against the others.</item>
@@ -293,5 +294,6 @@ public sealed class PartsJoinRuleType : TopologyRuleTypeBase
 
     private static double Distance(TopologyRule rule) => rule.Parameters.GetNumber(PointLineBuild.DistanceParameter, PointLineBuild.DefaultDistance);
 
-    private static double MaxGap(TopologyRule rule) => rule.Parameters.GetNumber(MaxGapParameter, 50);
+    /// <summary>No limit unless the rule sets one (D71): without it every gap is a <c>gap</c> and no part is detached.</summary>
+    private static double MaxGap(TopologyRule rule) => rule.Parameters.GetNumber(MaxGapParameter, double.PositiveInfinity);
 }

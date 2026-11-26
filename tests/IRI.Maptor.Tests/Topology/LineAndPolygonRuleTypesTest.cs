@@ -142,12 +142,25 @@ public class LineAndPolygonRuleTypesTest
     }
 
     [Fact]
-    public async Task Parts_FarApart_AreDetached()
+    public async Task Parts_FarApart_AreDetached_WhenTheRuleSetsAMaximumGap()
     {
-        var issues = await PartsAsync("MULTILINESTRING((0 0, 10 0), (200 0, 210 0))");
+        var rule = new TopologyRule("parts", PartsJoinRuleType.TypeId, "Route",
+            parameters: new RuleParameters(new System.Collections.Generic.Dictionary<string, object> { [PartsJoinRuleType.MaxGapParameter] = 50 }));
+
+        var issues = await CheckAsync(rule, ("Route", GeometryType.MultiLineString, new[] { F(1, "MULTILINESTRING((0 0, 10 0), (200 0, 210 0))") }));
 
         Assert.Equal(2, Count(issues, PartsJoinRuleType.DetachedPart));
         Assert.Equal(0, Count(issues, PartsJoinRuleType.Gap));
+    }
+
+    [Fact]
+    public async Task Parts_FarApart_AreOneGap_WithoutAMaximum()
+    {
+        // D71: no 50 m by default; every gap over the distance is a gap.
+        var gap = Assert.Single(await PartsAsync("MULTILINESTRING((0 0, 10 0), (200 0, 210 0))"));
+
+        Assert.Equal(PartsJoinRuleType.Gap, gap.Kind);
+        Assert.Equal(190, gap.Finding.Value!.Value, 6);
     }
 
     [Fact]
