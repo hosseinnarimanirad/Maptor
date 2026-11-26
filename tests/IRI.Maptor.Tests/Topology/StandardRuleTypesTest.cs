@@ -288,6 +288,6 @@ public class StandardRuleTypesTest
     {
         var ids = StandardRuleTypes.CreateCatalog().RuleTypes.Select(t => t.Id).OrderBy(i => i).ToArray();
 
-        Assert.Equal(new[] { "geometryValid", "lineCarriesPoints", "lineEndCovered", "pointOnLine", "pointOnOneLine", "sequenceAlongLine" }, ids);
+        Assert.Equal(new[] { "distinctPoints", "geometryValid", "lineCarriesPoints", "lineEndCovered", "pointOnLine", "pointOnOneLine", "sequenceAlongLine" }, ids);
     }
 }

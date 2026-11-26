@@ -9,6 +9,7 @@ public static class StandardRuleTypes
     public static IReadOnlyList<ITopologyRuleType> All() => new ITopologyRuleType[]
     {
         new GeometryValidRuleType(),
+        new DistinctPointsRuleType(),
         new PointOnLineRuleType(),
         new LineEndCoveredRuleType(),
         new LineCarriesPointsRuleType(),

@@ -77,6 +77,7 @@ or not about one of the chosen features, are then dropped.
 | Id | Layers | Finds | Kinds (default severity) | Parameters |
 |---|---|---|---|---|
 | `geometryValid` | A | What `GeometryValidator` reports | The `GeometryIssueKind` names: `WrongRingOrientation` information, the rest errors | — |
+| `distinctPoints` | A points | Points within `distance` of each other, one finding per group (single linkage, `PositionClusterer`) | `samePlace` warning, `close` warning, `chain` (more than twice the distance across) error | `distance` = the rule set's same-place distance |
 | `pointOnLine` | A points, B lines | A point farther than `distance` from every line | `nearLine` (a line within `nearDistance`; names it, with the distance), `farFromLines` — errors | `distance` 0.5, `nearDistance` 50 |
 | `lineEndCovered` | A lines, B points | A line end with no point on it; ends where two parts of one line meet are skipped | `start`, `end` — warnings | `distance` 0.5, `interiorPartEnds` 0 |
 | `lineCarriesPoints` | A lines, B points | A line with too few points on it | `tooFewPoints` — warning | `distance` 0.5, `minimumPoints` 2 |
@@ -89,5 +90,4 @@ two points reports only `tooFewPoints`, not its open ends.
 
 ## Status
 
-The engine, the model, the comparer and the rule types above are in place. Next: points that coincide, line
-ends that must connect, parts of a line that must join, duplicate lines, and polygon overlaps and gaps.
+The engine, the model, the comparer and the rule types above are in place. Next: line ends that must connect, parts of a line that must join, duplicate lines, and polygon overlaps and gaps.
