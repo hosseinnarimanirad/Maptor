@@ -99,6 +99,21 @@ public sealed class ValidationRunner
         }
 
         var shared = new Dictionary<string, object>(StringComparer.Ordinal);
+        var filtered = new Dictionary<(string Layer, string Filter), IReadOnlyList<Feature<Point>>>();
+
+        IReadOnlyList<Feature<Point>> FeaturesFor(string layer, FeatureFilter? filter)
+        {
+            if (filter is null)
+                return featuresOf[layer];
+
+            if (!filtered.TryGetValue((layer, filter.Name), out var features))
+            {
+                features = featuresOf[layer].Where(filter.Matches).ToList();
+                filtered[(layer, filter.Name)] = features;
+            }
+
+            return features;
+        }
         var collected = new List<(int RuleOrder, int KindOrder, string Line, TopologyIssue Issue)>();
         var seen = new HashSet<string>(StringComparer.Ordinal);
 
@@ -115,8 +130,8 @@ public sealed class ValidationRunner
                 ruleSet,
                 rule,
                 ruleType,
-                featuresOf[rule.LayerA],
-                rule.LayerB is null ? null : featuresOf[rule.LayerB],
+                FeaturesFor(rule.LayerA, rule.FilterA),
+                rule.LayerB is null ? null : FeaturesFor(rule.LayerB, rule.FilterB),
                 isGeodetic,
                 shared,
                 featuresOf);
@@ -242,8 +257,9 @@ public sealed class ValidationRunner
 
                 var a = rule.LayerA == layer ? ruleType.FieldsOf(rule, FeatureRole.A) : Enumerable.Empty<string>();
                 var b = rule.LayerB == layer ? ruleType.FieldsOf(rule, FeatureRole.B) : Enumerable.Empty<string>();
+                var filter = rule.FilterOf(layer)?.Fields ?? Enumerable.Empty<string>();
 
-                return a.Concat(b);
+                return a.Concat(b).Concat(filter);
             })
             .Distinct(StringComparer.Ordinal)
             .ToList();

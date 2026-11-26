@@ -55,7 +55,7 @@ internal sealed class PointLineBuild
 
         var sequenceField = SequenceFieldOf(context.RuleSet, pointLayer, lineLayer);
 
-        var key = string.Format(CultureInfo.InvariantCulture, "pointsOnLines|{0}|{1}|{2:R}|{3}", pointLayer, lineLayer, distance, sequenceField);
+        var key = string.Format(CultureInfo.InvariantCulture, "pointsOnLines|{0}:{1}|{2}:{3}|{4:R}|{5}", pointLayer, context.SelectionOf(pointLayer), lineLayer, context.SelectionOf(lineLayer), distance, sequenceField);
 
         return context.GetShared(key, () =>
         {

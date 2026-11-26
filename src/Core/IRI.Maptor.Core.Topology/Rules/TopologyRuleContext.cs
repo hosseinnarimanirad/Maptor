@@ -91,6 +91,12 @@ public sealed class TopologyRuleContext
          : entityName == Rule.LayerB ? FeaturesB
          : _layers.TryGetValue(entityName, out var features) ? features : NoFeatures;
 
+    /// <summary>
+    /// The name of the filter this rule applies to <paramref name="entityName"/>, or "all"; part of the key of any
+    /// work shared between rules, since two rules with different filters see different features.
+    /// </summary>
+    public string SelectionOf(string entityName) => Rule.FilterOf(entityName)?.Name ?? "all";
+
     /// <summary>A feature of an extra layer, as a finding refers to it.</summary>
     public FindingFeature FeatureOf(string entityName, Feature<Point> feature)
         => entityName == Rule.LayerA ? FeatureA(feature)

@@ -21,6 +21,7 @@ scope               ─┘         │
 |---|---|
 | `ITopologyRuleType` | One kind of check, written once (e.g. "point must be on line"). It only detects: features in, findings out. `TopologyRuleTypeBase` gives the usual defaults. |
 | `TopologyRule` | A rule type applied to a layer, or to a pair of layers, with its parameters (distances in metres), a severity per kind, and the kinds that are hidden because they are normally correct. |
+| `FeatureFilter` | Which features of a layer a rule checks (e.g. overhead routes only): a named predicate and the fields it reads. |
 | `TopologyRuleSet` | An app's rules and layers, with one "same place" distance for all of them (default 1 cm). |
 | `TopologyFinding` | One thing a rule found: rule, kind, features (by layer and id), location, value. |
 | `TopologyIssue` | A finding with its identity and its effective severity. |

@@ -20,6 +20,8 @@ public sealed class TopologyRule
     /// <param name="hiddenKinds">Kinds that are not reported at all (kinds that are normally correct).</param>
     /// <param name="enabled">False to leave the rule out of checks.</param>
     /// <param name="messageKeyPrefix">Prefix of the app's resource keys for this rule's sentences, if any.</param>
+    /// <param name="filterA">Which features of layer A the rule checks; all when null.</param>
+    /// <param name="filterB">Which features of layer B the rule checks; all when null.</param>
     public TopologyRule(
         string id,
         string ruleTypeId,
@@ -29,7 +31,9 @@ public sealed class TopologyRule
         IReadOnlyDictionary<string, IssueSeverity>? severities = null,
         IEnumerable<string>? hiddenKinds = null,
         bool enabled = true,
-        string? messageKeyPrefix = null)
+        string? messageKeyPrefix = null,
+        FeatureFilter? filterA = null,
+        FeatureFilter? filterB = null)
     {
         if (string.IsNullOrWhiteSpace(id))
             throw new ArgumentException("A rule needs an id.", nameof(id));
@@ -49,6 +53,8 @@ public sealed class TopologyRule
         HiddenKinds = new HashSet<string>(hiddenKinds ?? Enumerable.Empty<string>(), StringComparer.Ordinal);
         Enabled = enabled;
         MessageKeyPrefix = messageKeyPrefix;
+        FilterA = filterA;
+        FilterB = filterB;
     }
 
     public string Id { get; }
@@ -68,6 +74,14 @@ public sealed class TopologyRule
     public bool Enabled { get; }
 
     public string? MessageKeyPrefix { get; }
+
+    public FeatureFilter? FilterA { get; }
+
+    public FeatureFilter? FilterB { get; }
+
+    /// <summary>The filter this rule applies to <paramref name="entityName"/>, if any.</summary>
+    public FeatureFilter? FilterOf(string entityName)
+        => entityName == LayerA ? FilterA : entityName == LayerB ? FilterB : null;
 
     public bool Involves(string entityName)
         => string.Equals(LayerA, entityName, StringComparison.Ordinal) || string.Equals(LayerB, entityName, StringComparison.Ordinal);
@@ -116,5 +130,7 @@ public sealed class TopologyRule
             severities ?? Severities,
             hiddenKinds ?? HiddenKinds,
             enabled ?? Enabled,
-            MessageKeyPrefix);
+            MessageKeyPrefix,
+            FilterA,
+            FilterB);
 }

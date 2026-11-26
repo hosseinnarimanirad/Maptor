@@ -48,7 +48,7 @@ internal static class GeometryPreparer
 
     private static PreparedLayer Prepare(TopologyRuleContext context, string entityName, bool polygons)
     {
-        var key = $"prepared|{(polygons ? "rings" : "lines")}|{entityName}|{context.IsGeodetic}";
+        var key = $"prepared|{(polygons ? "rings" : "lines")}|{entityName}:{context.SelectionOf(entityName)}|{context.IsGeodetic}";
 
         return context.GetShared(key, () =>
         {
