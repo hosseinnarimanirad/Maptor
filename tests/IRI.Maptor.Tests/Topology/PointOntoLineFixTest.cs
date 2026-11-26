@@ -55,7 +55,7 @@ public class PointOntoLineFixTest
             => (await new ValidationRunner(StandardRuleTypes.CreateCatalog()).RunAsync(RuleSet, TopologyCheckScope.WholeData, Sources)).Issues;
 
         public TopologyFixOffer Propose(TopologyIssue issue)
-            => new PointOntoLineFix().Propose(new TopologyFixContext(RuleSet, RuleSet.FindRule(issue.RuleId)!, issue.Finding, Features, isGeodetic: false));
+            => new PointOntoLineFix().Propose(new TopologyFixContext(RuleSet, RuleSet.FindRule(issue.RuleId)!, issue.Finding, Features, isGeodetic: false)).Single();
 
         public Task<TopologyFixVerdict> VerdictAsync(TopologyIssue issue, TopologyFixProposal proposal)
             => new TopologyFixChecker(StandardRuleTypes.CreateCatalog()).CheckAsync(RuleSet, issue, proposal, Sources);
@@ -80,7 +80,7 @@ public class PointOntoLineFixTest
         Assert.Equal(("Route", 10L), (edit.EntityName, edit.FeatureId));
         Assert.Equal(new[] { (0.0, 0.0), (100.0, 0.8), (200.0, 0.0) }, PointsOf(edit.After!));
         Assert.Equal(new[] { (0.0, 0.0), (100.0, 0.0), (200.0, 0.0) }, PointsOf(edit.Before));   // the data itself is not touched
-        Assert.Equal(0.8, (double)offer.Proposal.MessageArguments[0], 9);
+        Assert.Equal(0.8, (double)offer.Proposal.MessageArguments[1], 9);   // (point, distance, line)
 
         Assert.True((await c.VerdictAsync(issue, offer.Proposal)).IsAccepted);
     }

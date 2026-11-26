@@ -277,11 +277,11 @@ public sealed class LineEndsConnectRuleType : TopologyRuleTypeBase
         return grid.Query(point.X - dx, point.Y - dy, point.X + dx, point.Y + dy);
     }
 
-    private static double Distance(TopologyRule rule) => rule.Parameters.GetNumber(PointLineBuild.DistanceParameter, PointLineBuild.DefaultDistance);
+    internal static double Distance(TopologyRule rule) => rule.Parameters.GetNumber(PointLineBuild.DistanceParameter, PointLineBuild.DefaultDistance);
 
-    private static double SearchDistance(TopologyRule rule) => rule.Parameters.GetNumber(SearchDistanceParameter, 5);
+    internal static double SearchDistance(TopologyRule rule) => rule.Parameters.GetNumber(SearchDistanceParameter, 5);
 
-    private static double MaxOvershoot(TopologyRule rule) => rule.Parameters.GetNumber(MaxOvershootParameter, 5);
+    internal static double MaxOvershoot(TopologyRule rule) => rule.Parameters.GetNumber(MaxOvershootParameter, 5);
 
     /// <summary>One end of one part of one line.</summary>
     private sealed class LineEnd

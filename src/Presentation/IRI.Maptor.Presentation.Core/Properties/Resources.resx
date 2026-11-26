@@ -4851,4 +4851,28 @@
   <data name="topology_parameter_fixDistance" xml:space="preserve">
     <value>Fix distance (m)</value>
   </data>
+  <data name="topology_fix_choose" xml:space="preserve">
+    <value>Choose which one stays:</value>
+  </data>
+  <data name="topology_fix_snapLineEnds_snap" xml:space="preserve">
+    <value>The ends of {0} meet at one point (the longest move is {1}).</value>
+  </data>
+  <data name="topology_fix_trimOvershoot_trim" xml:space="preserve">
+    <value>{0} is cut back by {1} so that it ends on {2}.</value>
+  </data>
+  <data name="topology_fix_extendUndershoot_extendAlong" xml:space="preserve">
+    <value>{0} is extended {1} straight on, until it reaches {2}.</value>
+  </data>
+  <data name="topology_fix_extendUndershoot_joinNearest" xml:space="preserve">
+    <value>{0} gets a new {1} end segment to the nearest point of {2}.</value>
+  </data>
+  <data name="topology_fix_deleteDuplicatePoints_keep" xml:space="preserve">
+    <value>Keep {0}; delete {1}.</value>
+  </data>
+  <data name="topology_fix_deleteDuplicateLines_keep" xml:space="preserve">
+    <value>Keep {0}; delete {1}.</value>
+  </data>
+  <data name="topology_fix_reason_notFound" xml:space="preserve">
+    <value>No fix: the place to fix is no longer where the check found it. Check again.</value>
+  </data>
 </root>

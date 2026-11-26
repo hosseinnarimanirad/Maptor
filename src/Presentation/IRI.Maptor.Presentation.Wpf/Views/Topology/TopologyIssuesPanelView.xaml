@@ -136,6 +136,19 @@
                     <TextBlock Text="{Binding [topology_fix_title], Source={StaticResource Localization}}" Style="{StaticResource topologyLabel}"/>
                     <TextBlock Text="{Binding FixText}" TextWrapping="Wrap" Margin="0,2,0,0"
                                Visibility="{Binding HasFixText, Converter={StaticResource topologyVisible}}"/>
+                    <!--several choices (which duplicate stays): the selected one is previewed and applied-->
+                    <StackPanel Visibility="{Binding HasChoices, Converter={StaticResource topologyVisible}}">
+                        <TextBlock Text="{Binding [topology_fix_choose], Source={StaticResource Localization}}" Style="{StaticResource topologyNote}" Margin="0,2,0,0"/>
+                        <ListView ItemsSource="{Binding Choices}" SelectedItem="{Binding SelectedChoice}" Margin="0,2,0,0"
+                                 BorderThickness="0" Background="Transparent" MaxHeight="140"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackPanel>
                     <TextBlock Text="{Binding Note}" Style="{StaticResource topologyNote}" TextWrapping="Wrap" Margin="0,2,0,0"
                                Visibility="{Binding HasNote, Converter={StaticResource topologyVisible}}"/>
                     <StackPanel Orientation="Horizontal" Margin="0,6,0,0">

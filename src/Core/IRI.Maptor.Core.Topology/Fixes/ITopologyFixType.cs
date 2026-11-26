@@ -7,7 +7,8 @@ namespace IRI.Maptor.Core.Topology.Fixes;
 
 /// <summary>
 /// One kind of fix, for some kinds of one rule type (FR-5.1). Its only job is to compute the edits for one finding;
-/// it does not detect, check its own result, apply or save.
+/// it does not detect, check its own result, apply or save. Where the expert must choose (which duplicate to delete),
+/// it offers one proposal per choice.
 /// </summary>
 public interface ITopologyFixType
 {
@@ -20,7 +21,11 @@ public interface ITopologyFixType
     /// <summary>The kinds of that rule type it fixes.</summary>
     IReadOnlyCollection<string> Kinds { get; }
 
-    TopologyFixOffer Propose(TopologyFixContext context);
+    /// <summary>
+    /// One offer, or one per choice. Message arguments of a proposal are feature references
+    /// (<see cref="FindingFeature"/> or a list of them) and distances in metres (<see cref="double"/>).
+    /// </summary>
+    IReadOnlyList<TopologyFixOffer> Propose(TopologyFixContext context);
 }
 
 /// <summary>What a fix type gets: the finding, its rule and rule set (for parameters and layer ranks), and its features.</summary>
@@ -57,6 +62,13 @@ public sealed class TopologyFixContext
 
         return feature is not null && _features.TryGetValue((feature.EntityName, feature.FeatureId), out var found) ? found : null;
     }
+
+    /// <summary>Every feature of the finding that is still in the data, in the finding's order.</summary>
+    public IReadOnlyList<(FindingFeature Reference, Feature<Point> Feature)> Features
+        => Finding.Features
+            .Where(f => _features.ContainsKey((f.EntityName, f.FeatureId)))
+            .Select(f => (f, _features[(f.EntityName, f.FeatureId)]))
+            .ToList();
 
     /// <summary>The layer's rank in the rule set (FR-5.4): when two layers disagree, the lower rank moves.</summary>
     public int RankOf(string entityName) => RuleSet.FindLayer(entityName)?.Rank ?? 0;

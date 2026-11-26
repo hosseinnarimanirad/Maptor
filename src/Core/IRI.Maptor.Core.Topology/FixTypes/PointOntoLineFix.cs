@@ -11,12 +11,13 @@ namespace IRI.Maptor.Core.Topology.FixTypes;
 /// <summary>
 /// Fix for R10 "near a line": puts the point and its nearest line together. The lower-ranked layer moves (FR-5.4, D62):
 /// <list type="bullet">
-/// <item>The point ranks higher (e.g. surveyed towers, and routes drawn as the lines joining them): the line's nearest vertex moves
-/// onto the point when it is within the fix distance of it, otherwise a new vertex is put at the point on the nearest
-/// segment.</item>
+/// <item>The point ranks higher (e.g. surveyed towers, and routes drawn as the lines joining them): the line's nearest
+/// vertex moves onto the point when it is within the fix distance of it, otherwise a new vertex is put at the point
+/// on the nearest segment.</item>
 /// <item>The line ranks higher, or the ranks are equal: the point moves to the nearest place on the line.</item>
 /// </list>
-/// Nothing is offered when the move would be longer than the rule's fix distance (D63).
+/// Nothing is offered when the move would be longer than the rule's fix distance (D63). Message arguments: the point,
+/// the distance moved, the line.
 /// </summary>
 public sealed class PointOntoLineFix : ITopologyFixType
 {
@@ -34,15 +35,20 @@ public sealed class PointOntoLineFix : ITopologyFixType
 
     public IReadOnlyCollection<string> Kinds => FixedKinds;
 
-    public TopologyFixOffer Propose(TopologyFixContext context)
+    public IReadOnlyList<TopologyFixOffer> Propose(TopologyFixContext context)
     {
         if (context is null)
             throw new ArgumentNullException(nameof(context));
 
+        return new[] { ProposeOne(context) };
+    }
+
+    private TopologyFixOffer ProposeOne(TopologyFixContext context)
+    {
         var pointFeature = context.FeatureOf(FeatureRole.A);
         var lineFeature = context.FeatureOf(FeatureRole.B);
 
-        var point = FirstPoint(pointFeature?.TheGeometry);
+        var point = FixGeometry.FirstPoint(pointFeature?.TheGeometry);
         var lineGeometry = lineFeature?.TheGeometry;
 
         if (point is null || lineGeometry is null || lineGeometry.IsNullOrEmpty())
@@ -50,9 +56,9 @@ public sealed class PointOntoLineFix : ITopologyFixType
 
         var frame = LocalMetricFrame.At(point.X, point.Y, context.IsGeodetic);
 
-        var leaves = Leaves(lineGeometry);
-        var segment = NearestSegment(leaves, frame);
-        var vertex = NearestVertex(leaves, frame);
+        var leaves = FixGeometry.Leaves(lineGeometry);
+        var segment = FixGeometry.NearestSegment(leaves, frame);
+        var vertex = FixGeometry.NearestVertex(leaves, frame);
 
         if (segment is null || vertex is null)
             return TopologyFixOffer.NotOffered(Id, FixReasons.FeatureMissing);
@@ -62,13 +68,13 @@ public sealed class PointOntoLineFix : ITopologyFixType
         if (segment.Value.Distance > fixDistance)
             return TopologyFixOffer.NotOffered(Id, FixReasons.BeyondFixDistance, segment.Value.Distance, fixDistance);
 
-        var pointLayer = context.Rule.LayerA;
-        var lineLayer = context.Rule.LayerB!;
+        var pointRef = context.Finding.Features.First(f => f.Role == FeatureRole.A);
+        var lineRef = context.Finding.Features.First(f => f.Role == FeatureRole.B);
 
-        if (context.RankOf(pointLayer) > context.RankOf(lineLayer))
+        if (context.RankOf(context.Rule.LayerA) > context.RankOf(context.Rule.LayerB!))
         {
             var after = lineGeometry.Clone();
-            var afterLeaves = Leaves(after);
+            var afterLeaves = FixGeometry.Leaves(after);
 
             string variant;
             double moved;
@@ -97,114 +103,23 @@ public sealed class PointOntoLineFix : ITopologyFixType
 
             touched.Add(new Point(point.X, point.Y));
 
-            var edit = new FeatureEdit(lineLayer, lineFeature!.Id, lineGeometry, after);
+            var edit = new FeatureEdit(lineRef.EntityName, lineRef.FeatureId, lineGeometry, after);
 
-            return TopologyFixOffer.Offered(new TopologyFixProposal(Id, variant, context.Finding, new[] { edit }, Box(touched), new object[] { moved }));
+            return TopologyFixOffer.Offered(new TopologyFixProposal(Id, variant, context.Finding, new[] { edit }, FixGeometry.Box(touched), new object[] { pointRef, moved, lineRef }));
         }
         else
         {
-            var (x, y) = frame.FromMetres(segment.Value.East, segment.Value.North);
+            var target = FixGeometry.FromMetres(frame, segment.Value.East, segment.Value.North);
 
             var after = pointFeature!.TheGeometry.Clone();
-            var target = Leaves(after).First(l => l.Points!.Count > 0).Points!;
-            target[0] = new Point(x, y);
+            FixGeometry.Leaves(after).First(l => l.Points!.Count > 0).Points![0] = target;
 
-            var edit = new FeatureEdit(pointLayer, pointFeature.Id, pointFeature.TheGeometry, after);
+            var edit = new FeatureEdit(pointRef.EntityName, pointRef.FeatureId, pointFeature.TheGeometry, after);
 
-            var area = Box(new List<Point> { new(point.X, point.Y), new(x, y) });
+            var area = FixGeometry.Box(new[] { new Point(point.X, point.Y), target });
 
-            return TopologyFixOffer.Offered(new TopologyFixProposal(Id, MovePoint, context.Finding, new[] { edit }, area, new object[] { segment.Value.Distance }));
+            return TopologyFixOffer.Offered(new TopologyFixProposal(Id, MovePoint, context.Finding, new[] { edit }, area, new object[] { pointRef, segment.Value.Distance, lineRef }));
         }
-    }
-
-    /// <summary>The leaf geometries (lines, rings, points) in depth-first order; a clone has the same order.</summary>
-    private static List<Geometry<Point>> Leaves(Geometry<Point> geometry)
-    {
-        var leaves = new List<Geometry<Point>>();
-
-        void Visit(Geometry<Point> g)
-        {
-            if (g.Points is not null)
-                leaves.Add(g);
-            else if (g.Geometries is not null)
-                foreach (var child in g.Geometries)
-                    Visit(child);
-        }
-
-        Visit(geometry);
-
-        return leaves;
-    }
-
-    private static Point? FirstPoint(Geometry<Point>? geometry)
-    {
-        if (geometry is null || geometry.IsNullOrEmpty())
-            return null;
-
-        var first = Leaves(geometry).SelectMany(l => l.Points!).FirstOrDefault();
-
-        return first is null ? null : new Point(first.X, first.Y);
-    }
-
-    /// <summary>The nearest place on any segment, in metres from the point (the frame's origin).</summary>
-    private static (int Leaf, int Index, double East, double North, double Distance)? NearestSegment(List<Geometry<Point>> leaves, LocalMetricFrame frame)
-    {
-        (int, int, double, double, double)? best = null;
-        var bestDistance = double.PositiveInfinity;
-
-        for (int l = 0; l < leaves.Count; l++)
-        {
-            var points = leaves[l].Points!;
-
-            for (int i = 0; i + 1 < points.Count; i++)
-            {
-                var (ax, ay) = frame.ToMetres(points[i].X, points[i].Y);
-                var (bx, by) = frame.ToMetres(points[i + 1].X, points[i + 1].Y);
-
-                var dx = bx - ax;
-                var dy = by - ay;
-                var length2 = dx * dx + dy * dy;
-
-                var t = length2 == 0 ? 0 : Math.Max(0, Math.Min(1, (-ax * dx - ay * dy) / length2));
-
-                var qx = ax + t * dx;
-                var qy = ay + t * dy;
-                var distance = Math.Sqrt(qx * qx + qy * qy);
-
-                if (distance < bestDistance)
-                {
-                    bestDistance = distance;
-                    best = (l, i, qx, qy, distance);
-                }
-            }
-        }
-
-        return best;
-    }
-
-    private static (int Leaf, int Index, double Distance)? NearestVertex(List<Geometry<Point>> leaves, LocalMetricFrame frame)
-    {
-        (int, int, double)? best = null;
-        var bestDistance = double.PositiveInfinity;
-
-        for (int l = 0; l < leaves.Count; l++)
-        {
-            var points = leaves[l].Points!;
-
-            for (int i = 0; i < points.Count; i++)
-            {
-                var (east, north) = frame.ToMetres(points[i].X, points[i].Y);
-                var distance = Math.Sqrt(east * east + north * north);
-
-                if (distance < bestDistance)
-                {
-                    bestDistance = distance;
-                    best = (l, i, distance);
-                }
-            }
-        }
-
-        return best;
     }
 
     /// <summary>A vertex and its neighbours: the segments a moved vertex changes.</summary>
@@ -217,7 +132,4 @@ public sealed class PointOntoLineFix : ITopologyFixType
 
         return result;
     }
-
-    private static BoundingBox Box(List<Point> points)
-        => new(points.Min(p => p.X), points.Min(p => p.Y), points.Max(p => p.X), points.Max(p => p.Y));
 }

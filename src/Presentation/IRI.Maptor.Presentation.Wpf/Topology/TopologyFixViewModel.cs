@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,9 +12,30 @@ using IRI.Maptor.Presentation.Core;
 
 namespace IRI.Maptor.Presentation.Wpf.Topology;
 
+/// <summary>One choice of a fix (e.g. which duplicate stays): its sentence and whether it can be applied.</summary>
+public sealed class TopologyFixChoice
+{
+    public TopologyFixChoice(TopologyFixEvaluation evaluation, string text, string note)
+    {
+        Evaluation = evaluation;
+        Text = text;
+        Note = note;
+    }
+
+    public TopologyFixEvaluation Evaluation { get; }
+
+    public string Text { get; }
+
+    /// <summary>Why it cannot be applied; empty when it can.</summary>
+    public string Note { get; }
+
+    public bool CanApply => Evaluation.CanApply;
+}
+
 /// <summary>
-/// The fix box of the selected issue (doc 05 §7): what the fix would do, Preview on the map, then Apply or Cancel. A
-/// fix that is not offered or is refused shows why. Holds state and commands only.
+/// The fix box of the selected issue (doc 05 §7): what the fix would do, Preview on the map, then Apply or Cancel.
+/// Where the expert must choose, the choices are listed and the selected one is previewed and applied. A fix that is
+/// not offered or is refused shows why. Holds state and commands only.
 /// </summary>
 public sealed class TopologyFixViewModel : Notifier
 {
@@ -60,12 +83,37 @@ public sealed class TopologyFixViewModel : Notifier
         set { _isBusy = value; RaiseAll(); }
     }
 
+    /// <summary>The offered choices; listed when there is more than one.</summary>
+    public ObservableCollection<TopologyFixChoice> Choices { get; } = new();
+
+    public bool HasChoices => Choices.Count > 1;
+
+    private TopologyFixChoice? _selectedChoice;
+
+    public TopologyFixChoice? SelectedChoice
+    {
+        get => _selectedChoice;
+        set
+        {
+            if (ReferenceEquals(_selectedChoice, value) || value is null)
+                return;
+
+            _selectedChoice = value;
+            _evaluation = value.Evaluation;
+
+            if (_overlay.Preview is not null)
+                _ = CancelAsync();
+            else
+                RaiseAll();
+        }
+    }
+
     public bool IsPreviewing => _evaluation?.Offer.Proposal is { } proposal && ReferenceEquals(_overlay.Preview, proposal);
 
     public bool CanPreview => !IsPending && !IsEvaluating && !IsBusy && !IsPreviewing && _evaluation?.CanApply == true;
 
-    /// <summary>"A vertex of Route [77] moves 0.8 m onto Tower [1234]."</summary>
-    public string FixText => _evaluation?.Offer.Proposal is { } proposal ? ProposalText(proposal) : string.Empty;
+    /// <summary>"A vertex of Route [77] moves 0.8 m onto Tower [1234]." Shown when there is a single choice.</summary>
+    public string FixText => !HasChoices && _evaluation?.Offer.Proposal is { } proposal ? ProposalText(proposal) : string.Empty;
 
     public bool HasFixText => FixText.Length > 0;
 
@@ -100,6 +148,8 @@ public sealed class TopologyFixViewModel : Notifier
         _row = row;
         _evaluation = null;
         _failure = null;
+        _selectedChoice = null;
+        Choices.Clear();
 
         if (_overlay.Preview is not null)
             await _overlay.ShowPreviewAsync(null);
@@ -121,7 +171,11 @@ public sealed class TopologyFixViewModel : Notifier
             if (cancellation.IsCancellationRequested)
                 return;
 
-            _evaluation = evaluations.FirstOrDefault(e => e.CanApply) ?? evaluations.FirstOrDefault();
+            foreach (var evaluation in evaluations.Where(e => e.Offer.IsOffered))
+                Choices.Add(new TopologyFixChoice(evaluation, ProposalText(evaluation.Offer.Proposal!), ReasonText(evaluation)));
+
+            _selectedChoice = Choices.FirstOrDefault(c => c.CanApply) ?? Choices.FirstOrDefault();
+            _evaluation = _selectedChoice?.Evaluation ?? evaluations.FirstOrDefault();
         }
         catch (OperationCanceledException)
         {
@@ -181,31 +235,16 @@ public sealed class TopologyFixViewModel : Notifier
         }
     }
 
+    /// <summary>The variant's sentence; feature references become "Tower [12]", distances "0.8 m".</summary>
     private string ProposalText(TopologyFixProposal proposal)
-    {
-        var ruleSet = _session.Workspace.RuleSet;
-        var finding = proposal.Finding;
-
-        string FeatureOf(FeatureRole role)
-            => finding.Features.FirstOrDefault(f => f.Role == role) is { } f
-                ? TopologyMessages.FeatureText(TopologyMessages.LayerName(ruleSet, f.EntityName), $"[{f.FeatureId}]")
-                : string.Empty;
-
-        var distance = proposal.MessageArguments.Count > 0 && proposal.MessageArguments[0] is double d ? TopologyMessages.QuantityText(d, ValueUnit.Metres) : string.Empty;
-
-        return TopologyMessages.Format($"topology_fix_{proposal.FixTypeId}_{proposal.Variant}", FeatureOf(FeatureRole.A), distance, FeatureOf(FeatureRole.B));
-    }
+        => TopologyMessages.Format($"topology_fix_{proposal.FixTypeId}_{proposal.Variant}", proposal.MessageArguments.Select(ArgumentText).ToArray());
 
     private string ReasonText(TopologyFixEvaluation evaluation)
     {
         var ruleSet = _session.Workspace.RuleSet;
 
         if (!evaluation.Offer.IsOffered)
-        {
-            var arguments = evaluation.Offer.ReasonArguments.Select(a => a is double d ? (object)TopologyMessages.QuantityText(d, ValueUnit.Metres) : a).ToArray();
-
-            return TopologyMessages.Format($"topology_fix_reason_{evaluation.Offer.Reason}", arguments);
-        }
+            return TopologyMessages.Format($"topology_fix_reason_{evaluation.Offer.Reason}", evaluation.Offer.ReasonArguments.Select(ArgumentText).ToArray());
 
         if (evaluation.Verdict is { IsAccepted: false } verdict)
         {
@@ -225,9 +264,22 @@ public sealed class TopologyFixViewModel : Notifier
         return string.Empty;
     }
 
+    private object ArgumentText(object argument)
+    {
+        var ruleSet = _session.Workspace.RuleSet;
+
+        return argument switch
+        {
+            double metres => TopologyMessages.QuantityText(metres, ValueUnit.Metres),
+            FindingFeature feature => TopologyMessages.FeaturesText(new[] { feature }, ruleSet),
+            IEnumerable<FindingFeature> features => TopologyMessages.FeaturesText(features, ruleSet),
+            _ => argument,
+        };
+    }
+
     private void RaiseAll()
     {
-        foreach (var name in new[] { nameof(IsVisible), nameof(IsPending), nameof(IsEvaluating), nameof(IsPreviewing), nameof(CanPreview), nameof(FixText), nameof(HasFixText), nameof(Note), nameof(HasNote) })
+        foreach (var name in new[] { nameof(IsVisible), nameof(IsPending), nameof(IsEvaluating), nameof(IsPreviewing), nameof(CanPreview), nameof(HasChoices), nameof(SelectedChoice), nameof(FixText), nameof(HasFixText), nameof(Note), nameof(HasNote) })
             RaisePropertyChanged(name);
 
         CommandManager.InvalidateRequerySuggested();

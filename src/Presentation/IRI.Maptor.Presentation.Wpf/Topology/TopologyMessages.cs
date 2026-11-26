@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
@@ -79,19 +80,23 @@ public static class TopologyMessages
     };
 
     /// <summary>The features as <c>[id]</c> runs, e.g. <c>Tower [1234] · Route [77]</c>.</summary>
-    public static string FeaturesText(TopologyFinding finding, TopologyRuleSet ruleSet)
-        => string.Join(" · ", finding.Features
+    public static string FeaturesText(TopologyFinding finding, TopologyRuleSet ruleSet) => FeaturesText(finding.Features, ruleSet);
+
+    /// <summary>Features as <c>[id]</c> runs per layer, e.g. <c>Tower [3] [4]</c>.</summary>
+    public static string FeaturesText(IEnumerable<FindingFeature> features, TopologyRuleSet ruleSet)
+        => string.Join(" · ", features
             .GroupBy(f => f.EntityName)
             .Select(g => FeatureText(LayerName(ruleSet, g.Key), string.Join(" ", g.Select(f => $"[{f.FeatureId}]")))));
 
     /// <summary>
     /// A layer name and its ids. A Latin name inside right-to-left text is held together with left-to-right marks,
-    /// or the brackets around the ids land on the wrong side.
+    /// or the brackets around the ids land on the wrong side. WPF ignores embeddings (U+202A), and the marks fail when
+    /// a right-to-left sentence starts with the name, so Persian sentences never start with a feature placeholder.
     /// </summary>
     public static string FeatureText(string layerName, string ids)
         => layerName.Any(c => c >= '֐' && c <= 'ࣿ')
             ? $"{layerName} {ids}"
-            : $"‎{layerName} {ids}‎";
+            : "\u200E" + layerName + " " + ids + "\u200E";
 
     public static string LayerName(TopologyRuleSet ruleSet, string entityName)
         => Text(ruleSet.FindLayer(entityName)?.DisplayNameKey) ?? entityName;

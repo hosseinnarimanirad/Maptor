@@ -469,5 +469,45 @@ public class TopologyPanelsTest
         Assert.Same(geodetic, same);
     }
 
+    [Fact]
+    public void IssuesPanel_DuplicateTowers_ListsTheChoices_AndAppliesTheSelectedOne() => OnUiThread(async () =>
+    {
+        var towers = new MemoryDataSource(new[] { Tower(1, 51.0, 35.7), Tower(2, 51.0, 35.7) }, resetIds: false);
+        var layer = Layer("towers", towers);
+
+        var map = new TestMap();
+        var ruleSet = new TopologyRuleSet("t", 1, new[] { new TopologyLayer("Tower", GeometryType.Point) },
+            new[] { new TopologyRule("t.distinct", DistinctPointsRuleType.TypeId, "Tower") });
+        var workspace = new TopologyWorkspace(map, ruleSet, StandardRuleTypes.CreateCatalog(), e => e == "Tower" ? new[] { layer } : Array.Empty<VectorLayer>());
+        var overlay = new TopologyOverlay(map);
+        var panel = new TopologyIssuesPanelViewModel(workspace, overlay, new TopologyFixSession(workspace));
+
+        await workspace.CheckAsync(TopologyCheckScope.WholeData, null, CancellationToken.None);
+
+        panel.Selected = panel.View.Cast<TopologyIssueRow>().Single();
+
+        var fix = panel.Fix!;
+        for (int i = 0; i < 200 && fix.IsEvaluating; i++)
+            await Task.Delay(10);
+
+        Assert.True(fix.HasChoices);
+        Assert.Equal(2, fix.Choices.Count);
+        Assert.False(fix.HasFixText);   // the sentences are in the list
+        Assert.All(fix.Choices, c => Assert.DoesNotContain("{", c.Text));
+        Assert.Same(fix.Choices[0], fix.SelectedChoice);
+
+        // Keep tower 2: tower 1 is deleted.
+        fix.SelectedChoice = fix.Choices[1];
+        fix.PreviewCommand.Execute(null);
+        for (int i = 0; i < 100 && !fix.IsPreviewing; i++)
+            await Task.Delay(10);
+
+        fix.ApplyCommand.Execute(null);
+        for (int i = 0; i < 200 && !fix.IsPending; i++)
+            await Task.Delay(10);
+
+        Assert.Equal(1, towers.NumberOfDeletedFeatures);
+        Assert.Equal(new[] { 2 }, (await layer.GetFeaturesAsync()).Features.Select(t => t.Id).ToArray());
+    });
     #endregion
 }

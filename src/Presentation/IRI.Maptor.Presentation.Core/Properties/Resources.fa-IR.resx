@@ -4726,7 +4726,7 @@
     <value>اصلاح اعمال نشد: {0}</value>
   </data>
   <data name="topology_fix_pointOntoLine_movePoint" xml:space="preserve">
-    <value>{0} به اندازهٔ {1} روی {2} منتقل می‌شود.</value>
+    <value>انتقال {0} به اندازهٔ {1} روی {2}.</value>
   </data>
   <data name="topology_fix_pointOntoLine_moveLineVertex" xml:space="preserve">
     <value>یک رأس {2} به اندازهٔ {1} روی {0} منتقل می‌شود.</value>
@@ -4754,5 +4754,29 @@
   </data>
   <data name="topology_parameter_fixDistance" xml:space="preserve">
     <value>فاصلهٔ اصلاح (متر)</value>
+  </data>
+  <data name="topology_fix_choose" xml:space="preserve">
+    <value>انتخاب کنید کدام بماند:</value>
+  </data>
+  <data name="topology_fix_snapLineEnds_snap" xml:space="preserve">
+    <value>سرهای {0} در یک نقطه به هم می‌رسند (بیشترین جابه‌جایی {1}).</value>
+  </data>
+  <data name="topology_fix_trimOvershoot_trim" xml:space="preserve">
+    <value>کوتاه‌کردن {0} به اندازهٔ {1} تا روی {2} تمام شود.</value>
+  </data>
+  <data name="topology_fix_extendUndershoot_extendAlong" xml:space="preserve">
+    <value>ادامهٔ {0} به اندازهٔ {1} در امتداد خودش تا رسیدن به {2}.</value>
+  </data>
+  <data name="topology_fix_extendUndershoot_joinNearest" xml:space="preserve">
+    <value>افزودن یک قطعهٔ پایانی به طول {1} به {0} تا نزدیک‌ترین نقطهٔ {2}.</value>
+  </data>
+  <data name="topology_fix_deleteDuplicatePoints_keep" xml:space="preserve">
+    <value>نگه‌داشتن {0} و حذف {1}.</value>
+  </data>
+  <data name="topology_fix_deleteDuplicateLines_keep" xml:space="preserve">
+    <value>نگه‌داشتن {0} و حذف {1}.</value>
+  </data>
+  <data name="topology_fix_reason_notFound" xml:space="preserve">
+    <value>اصلاحی ندارد: محل اصلاح دیگر همان‌جا که کنترل یافته بود نیست. دوباره کنترل کنید.</value>
   </data>
 </root>

@@ -74,7 +74,7 @@ public sealed class TopologyFixSession
         return rule is not null && _workspace.Catalog.FixesFor(rule.RuleTypeId, issue.Kind).Count > 0;
     }
 
-    /// <summary>Every fix type's answer for the issue, with the session's rules on the data as it is now.</summary>
+    /// <summary>Every fix type's answers for the issue (one per choice), with the session's rules on the data as it is now.</summary>
     public async Task<IReadOnlyList<TopologyFixEvaluation>> EvaluateAsync(TopologyIssue issue, CancellationToken cancellationToken)
     {
         if (issue is null)
@@ -97,11 +97,11 @@ public sealed class TopologyFixSession
 
         var evaluations = new List<TopologyFixEvaluation>();
 
-        foreach (var fixType in fixTypes)
+        var offers = fixTypes.SelectMany(f => f.Propose(new TopologyFixContext(ruleSet, rule, issue.Finding, features, isGeodetic))).ToList();
+
+        foreach (var offer in offers)
         {
             cancellationToken.ThrowIfCancellationRequested();
-
-            var offer = fixType.Propose(new TopologyFixContext(ruleSet, rule, issue.Finding, features, isGeodetic));
 
             TopologyFixVerdict? verdict = null;
             (string, string?)? cannotApply = null;

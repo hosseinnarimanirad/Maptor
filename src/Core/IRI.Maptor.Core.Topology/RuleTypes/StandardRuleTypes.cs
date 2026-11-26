@@ -29,6 +29,11 @@ public static class StandardRuleTypes
     public static IReadOnlyList<ITopologyFixType> AllFixes() => new ITopologyFixType[]
     {
         new PointOntoLineFix(),
+        new SnapLineEndsFix(),
+        new TrimOvershootFix(),
+        new ExtendUndershootFix(),
+        new DeleteDuplicateFix(DeleteDuplicateFix.PointsTypeId, DistinctPointsRuleType.TypeId, DistinctPointsRuleType.SamePlace, DistinctPointsRuleType.Close),
+        new DeleteDuplicateFix(DeleteDuplicateFix.LinesTypeId, DistinctLinesRuleType.TypeId, DistinctLinesRuleType.WholeLine),
     };
 
     /// <summary>A catalog with every standard rule type and fix type registered.</summary>
