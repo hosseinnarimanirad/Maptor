@@ -37,6 +37,8 @@ public abstract class TopologyRuleTypeBase : ITopologyRuleType
     public IssueSeverity DefaultSeverityOf(string kind)
         => _defaults.TryGetValue(kind, out var severity) ? severity : IssueSeverity.Warning;
 
+    public virtual IReadOnlyCollection<string> ExtraLayersOf(TopologyRule rule) => NoFields;
+
     public virtual IReadOnlyCollection<string> FieldsOf(TopologyRule rule, FeatureRole role) => NoFields;
 
     public virtual double ReachOf(TopologyRule rule) => 0;

@@ -45,6 +45,9 @@ public static class RuleSetValidator
             if (rule.LayerB is not null && ruleSet.FindLayer(rule.LayerB) is null)
                 problems.Add($"Rule '{rule.Id}' compares with layer '{rule.LayerB}', which the rule set does not declare.");
 
+            foreach (var extra in ruleType.ExtraLayersOf(rule).Where(l => ruleSet.FindLayer(l) is null))
+                problems.Add($"Rule '{rule.Id}' reads layer '{extra}', which the rule set does not declare.");
+
             foreach (var kind in rule.Severities.Keys.Concat(rule.HiddenKinds).Distinct().Where(k => !ruleType.Kinds.Contains(k)))
                 problems.Add($"Rule '{rule.Id}' sets kind '{kind}', which rule type '{ruleType.Id}' does not report.");
 

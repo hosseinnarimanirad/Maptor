@@ -8,6 +8,9 @@ public enum FeatureRole
 
     /// <summary>The compared layer (<see cref="Rules.TopologyRule.LayerB"/>).</summary>
     B = 1,
+
+    /// <summary>A further layer the rule type reads (<see cref="Rules.ITopologyRuleType.ExtraLayersOf"/>).</summary>
+    Other = 2,
 }
 
 /// <summary>A feature a finding is about, referred to by its layer and id; the feature itself is never copied.</summary>

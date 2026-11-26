@@ -65,6 +65,9 @@ public readonly struct LocalMetricFrame
     /// <summary>Metres east and north of the origin.</summary>
     public (double East, double North) ToMetres<T>(T point) where T : IPoint => ToMetres(point.X, point.Y);
 
+    /// <summary>The coordinates of the place <paramref name="east"/> and <paramref name="north"/> metres from the origin.</summary>
+    public (double X, double Y) FromMetres(double east, double north) => (OriginX + east / MetresPerUnitX, OriginY + north / MetresPerUnitY);
+
     /// <summary>
     /// Half the width and height, in coordinate units, of a box around the origin that holds everything
     /// within <paramref name="metres"/> of it. Geodetic boxes are deliberately a little too large, so that

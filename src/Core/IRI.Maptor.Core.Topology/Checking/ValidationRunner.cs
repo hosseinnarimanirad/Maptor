@@ -66,7 +66,10 @@ public sealed class ValidationRunner
             .Where(r => scope.Kind != CheckScopeKind.Layer || r.Involves(scope.EntityName!))
             .ToList();
 
-        var layers = rules.SelectMany(r => r.LayerB is null ? new[] { r.LayerA } : new[] { r.LayerA, r.LayerB }).Distinct().ToList();
+        var layers = rules
+            .SelectMany(r => (r.LayerB is null ? new[] { r.LayerA } : new[] { r.LayerA, r.LayerB }).Concat(_catalog.Find(r.RuleTypeId)!.ExtraLayersOf(r)))
+            .Distinct()
+            .ToList();
 
         if (scope.Kind == CheckScopeKind.Features && !layers.Contains(scope.EntityName!))
             layers.Add(scope.EntityName!);
@@ -115,7 +118,8 @@ public sealed class ValidationRunner
                 featuresOf[rule.LayerA],
                 rule.LayerB is null ? null : featuresOf[rule.LayerB],
                 isGeodetic,
-                shared);
+                shared,
+                featuresOf);
 
             foreach (var finding in ruleType.Check(context, cancellationToken))
             {

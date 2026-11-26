@@ -20,6 +20,12 @@ public interface ITopologyRuleType
 
     IssueSeverity DefaultSeverityOf(string kind);
 
+    /// <summary>
+    /// Layers beyond A and B that a rule of this type reads, named in its parameters (e.g. the layers a line
+    /// may end at). They must be declared in the rule set.
+    /// </summary>
+    IReadOnlyCollection<string> ExtraLayersOf(TopologyRule rule);
+
     /// <summary>The attributes a rule of this type reads from the features of one side.</summary>
     IReadOnlyCollection<string> FieldsOf(TopologyRule rule, FeatureRole role);
 

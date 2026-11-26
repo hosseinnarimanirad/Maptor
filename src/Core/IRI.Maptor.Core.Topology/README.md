@@ -82,6 +82,12 @@ or not about one of the chosen features, are then dropped.
 | `lineEndCovered` | A lines, B points | A line end with no point on it; ends where two parts of one line meet are skipped | `start`, `end` — warnings | `distance` 0.5, `interiorPartEnds` 0 |
 | `lineCarriesPoints` | A lines, B points | A line with too few points on it | `tooFewPoints` — warning | `distance` 0.5, `minimumPoints` 2 |
 | `pointOnOneLine` | A points, B lines | A point on two or more lines (a junction) | `onSeveralLines` — information | `distance` 0.5 |
+| `lineEndsConnect` | A lines (+ `connectTo` lines, `endCoverLayers` points) | A line end that meets nothing | `unsnappedEnd` warning (another end within `distance`, one finding per group), `overshoot` warning (ends past a crossing), `undershoot` warning (stops short of a line), `freeEnd` information, `chain` error | `distance` 0.5, `searchDistance` 5, `maxOvershoot` 5, `connectTo`, `endCoverLayers` |
+| `partsJoin` | A lines | Parts of a multi-part line that do not make one path | `gap` warning, `detachedPart` error, `branch` warning, `outOfOrder` information, `reversedPart` information | `distance` 0.5, `maxGap` 50 |
+| `distinctLines` | A lines | Duplicate lines | `wholeLine` error (same vertices within `distance`, either direction), `sharedStretch` warning (only with `sharedStretch` 1) | `distance` = same place, `minimumLength` 10 |
+| `touchAndReturn` | A lines (or A against `otherLayer`) | Two crossings within `distance` of each other along both lines | `touchAndReturn` information | `distance` 0.5, `otherLayer` |
+| `polygonsNoOverlap` | A polygons | Polygons sharing area | `duplicate`, `inside`, `overlap` errors, `thinOverlap` warning (narrower than `sliverWidth`) | `minimumArea` 0.01 m², `minimumWidth` = same place, `sliverWidth` 0.5 |
+| `polygonsNoGap` | A polygons | Narrow empty space between neighbours, or space they enclose | `sliver` warning, `enclosedGap` information (only with `enclosedGaps` 1) | `distance` 0.5, `minimumLength` 1, `maximumGapArea` |
 | `sequenceAlongLine` | A points, B lines | Numbers that do not rise along the line | `missing` warning, `duplicate` error, `outOfOrder` error, `gap` information, `directionUndecided` warning | `sequenceField` (required), `distance` 0.5 |
 
 The last five read one shared `PointLineTopologyBuilder` pass per pair of layers and distance; when the rule
@@ -90,4 +96,11 @@ two points reports only `tooFewPoints`, not its open ends.
 
 ## Status
 
-The engine, the model, the comparer and the rule types above are in place. Next: line ends that must connect, parts of a line that must join, duplicate lines, and polygon overlaps and gaps.
+Rules other than `geometryValid` skip a feature whose geometry cannot be repaired (it is reported by
+`geometryValid`) and check a repairable one with its repaired geometry.
+
+Overlaps are measured with `PolygonOverlap` (Core.Spatial), not `Geometry.Intersection`, which does not handle
+boundaries that share edges or vertices. Enclosed gaps come from `EnclosedGaps`, which chains the free pieces of the
+polygons' boundaries into loops.
+
+The engine and all version 1 rule types are in place.

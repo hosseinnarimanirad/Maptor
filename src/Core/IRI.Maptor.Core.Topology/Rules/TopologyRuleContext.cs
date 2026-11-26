@@ -15,6 +15,8 @@ public sealed class TopologyRuleContext
 
     private readonly IDictionary<string, object> _shared;
 
+    private readonly IReadOnlyDictionary<string, IReadOnlyList<Feature<Point>>> _layers;
+
     /// <param name="ruleSet">The rule set the rule belongs to.</param>
     /// <param name="rule">The rule being checked.</param>
     /// <param name="ruleType">The rule's type.</param>
@@ -22,6 +24,7 @@ public sealed class TopologyRuleContext
     /// <param name="featuresB">The features of layer B; null when the rule has none.</param>
     /// <param name="isGeodetic">True for WGS84 longitude/latitude, false for an SRS in metres.</param>
     /// <param name="shared">Work shared between the rules of one check; a new dictionary when null.</param>
+    /// <param name="layers">The features of every loaded layer, for the extra layers a rule type reads.</param>
     public TopologyRuleContext(
         TopologyRuleSet ruleSet,
         TopologyRule rule,
@@ -29,7 +32,8 @@ public sealed class TopologyRuleContext
         IReadOnlyList<Feature<Point>> featuresA,
         IReadOnlyList<Feature<Point>>? featuresB,
         bool isGeodetic,
-        IDictionary<string, object>? shared = null)
+        IDictionary<string, object>? shared = null,
+        IReadOnlyDictionary<string, IReadOnlyList<Feature<Point>>>? layers = null)
     {
         RuleSet = ruleSet ?? throw new ArgumentNullException(nameof(ruleSet));
         Rule = rule ?? throw new ArgumentNullException(nameof(rule));
@@ -38,6 +42,7 @@ public sealed class TopologyRuleContext
         FeaturesB = featuresB ?? NoFeatures;
         IsGeodetic = isGeodetic;
         _shared = shared ?? new Dictionary<string, object>(StringComparer.Ordinal);
+        _layers = layers ?? new Dictionary<string, IReadOnlyList<Feature<Point>>>(StringComparer.Ordinal);
     }
 
     public TopologyRuleSet RuleSet { get; }
@@ -79,6 +84,18 @@ public sealed class TopologyRuleContext
     /// <summary>A feature of layer B, as a finding refers to it.</summary>
     public FindingFeature FeatureB(Feature<Point> feature)
         => new FindingFeature(Rule.LayerB ?? throw new InvalidOperationException($"Rule '{Rule.Id}' has no layer B."), feature.Id, FeatureRole.B);
+
+    /// <summary>The features of another loaded layer (an extra layer of the rule); empty when it was not loaded.</summary>
+    public IReadOnlyList<Feature<Point>> FeaturesOf(string entityName)
+        => entityName == Rule.LayerA ? FeaturesA
+         : entityName == Rule.LayerB ? FeaturesB
+         : _layers.TryGetValue(entityName, out var features) ? features : NoFeatures;
+
+    /// <summary>A feature of an extra layer, as a finding refers to it.</summary>
+    public FindingFeature FeatureOf(string entityName, Feature<Point> feature)
+        => entityName == Rule.LayerA ? FeatureA(feature)
+         : entityName == Rule.LayerB ? FeatureB(feature)
+         : new FindingFeature(entityName, feature.Id, FeatureRole.Other);
 
     /// <summary>A finding of this rule, with the rule type's default severity for <paramref name="kind"/>.</summary>
     public TopologyFinding Finding(

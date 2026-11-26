@@ -205,6 +205,23 @@ var problems = topology.GetIssuesOfLine(lineIndex);           // the line's issu
 
 Lines and points keep their input indices throughout; every issue carries the indices it is about and, where it makes sense, a `Location` to show it on a map.
 
+## Line and polygon relations in metres
+
+General tools behind the topology rules (`IRI.Maptor.Core.Topology`), usable on their own. Geodetic WGS84 data is
+measured in metres through `LocalMetricFrame`; any other SRS in its own units.
+
+| Type | Does |
+|---|---|
+| `MeasuredLine<T>` | A line, multi-line or polygon boundary with the distance along each part to every vertex; `PointAt`, `Extract` |
+| `LineCoverage`, `LineCoverageIndex<T>` | Which stretches of a line lie within a distance of other lines, optionally only where they run the same way |
+| `SegmentCrossings` | Every crossing of two sets of lines, with its measure along both |
+| `LineProximity<T>` | The nearest line to a point within a distance |
+| `PositionClusterer` | Positions within a distance of each other, single linkage, with a chain flag |
+| `PolygonMeasure` | Area and perimeter with holes (Karney's area for WGS84) |
+| `PolygonOverlap` | The overlap of two polygons (area, perimeter, centre), right where boundaries share edges or vertices |
+| `BoundaryPieces`, `PlanarPolygon` | A polygon's boundary cut where it meets others, each piece inside, outside or on the other boundary |
+| `EnclosedGaps` | Holes enclosed by two or more polygons taken together |
+
 ## Statistics & shape characteristics
 
 `AreaStatistics` summarizes the area distribution of a set of `Geometry<Point>` polygons (mean, standard deviation, histogram, CSV export). The `CharacteristicsMeasure` enum names McMaster's displacement measures (PCC, PDD, PCLL, …) computed by the simplification metrics above.

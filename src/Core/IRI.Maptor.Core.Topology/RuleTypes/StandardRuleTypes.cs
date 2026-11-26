@@ -15,6 +15,12 @@ public static class StandardRuleTypes
         new LineCarriesPointsRuleType(),
         new PointOnOneLineRuleType(),
         new SequenceAlongLineRuleType(),
+        new LineEndsConnectRuleType(),
+        new PartsJoinRuleType(),
+        new DistinctLinesRuleType(),
+        new TouchAndReturnRuleType(),
+        new PolygonsNoOverlapRuleType(),
+        new PolygonsNoGapRuleType(),
     };
 
     /// <summary>A catalog with every standard rule type registered.</summary>
