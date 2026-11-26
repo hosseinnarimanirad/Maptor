@@ -70,8 +70,24 @@ An **extent** or **feature** scope also loads the neighbours within the rules' r
 (`ITopologyRuleType.ReachOf`), so that a finding at the edge is right. Findings located outside the extent,
 or not about one of the chosen features, are then dropped.
 
+## Standard rule types
+
+`StandardRuleTypes.CreateCatalog()` registers them all. Distances are in metres.
+
+| Id | Layers | Finds | Kinds (default severity) | Parameters |
+|---|---|---|---|---|
+| `geometryValid` | A | What `GeometryValidator` reports | The `GeometryIssueKind` names: `WrongRingOrientation` information, the rest errors | — |
+| `pointOnLine` | A points, B lines | A point farther than `distance` from every line | `nearLine` (a line within `nearDistance`; names it, with the distance), `farFromLines` — errors | `distance` 0.5, `nearDistance` 50 |
+| `lineEndCovered` | A lines, B points | A line end with no point on it; ends where two parts of one line meet are skipped | `start`, `end` — warnings | `distance` 0.5, `interiorPartEnds` 0 |
+| `lineCarriesPoints` | A lines, B points | A line with too few points on it | `tooFewPoints` — warning | `distance` 0.5, `minimumPoints` 2 |
+| `pointOnOneLine` | A points, B lines | A point on two or more lines (a junction) | `onSeveralLines` — information | `distance` 0.5 |
+| `sequenceAlongLine` | A points, B lines | Numbers that do not rise along the line | `missing` warning, `duplicate` error, `outOfOrder` error, `gap` information, `directionUndecided` warning | `sequenceField` (required), `distance` 0.5 |
+
+The last five read one shared `PointLineTopologyBuilder` pass per pair of layers and distance; when the rule
+set has a `sequenceAlongLine` rule for the pair, its numbers are read in the same pass. A line with fewer than
+two points reports only `tooFewPoints`, not its open ends.
+
 ## Status
 
-The engine, the model and the comparer are in place. The rule types come next: the existing geometry
-validator and points-on-lines builder first, then line ends, duplicates, lines along lines, and polygon
-overlaps and gaps.
+The engine, the model, the comparer and the rule types above are in place. Next: points that coincide, line
+ends that must connect, parts of a line that must join, duplicate lines, and polygon overlaps and gaps.
