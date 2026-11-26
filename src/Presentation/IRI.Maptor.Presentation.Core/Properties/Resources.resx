@@ -4851,6 +4851,9 @@
   <data name="topology_fix_reason_cannotRemove" xml:space="preserve">
     <value>This fix deletes a feature, and features cannot be deleted here. Edit it by hand.</value>
   </data>
+  <data name="topology_guide_correct" xml:space="preserve">
+    <value>Correct data</value>
+  </data>
   <data name="topology_parameter_fixDistance" xml:space="preserve">
     <value>Fix distance (m)</value>
   </data>

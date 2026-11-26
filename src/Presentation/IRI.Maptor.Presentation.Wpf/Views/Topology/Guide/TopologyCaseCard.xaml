@@ -1,0 +1,43 @@
+<UserControl x:Class="IRI.Maptor.Presentation.Wpf.Controls.TopologyCaseCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls"
+             x:Name="root"
+             Margin="0,5">
+
+    <!--One case of a topology guide: its figure, a chip saying how it is reported (the overlay's colours), a title
+        and a short explanation. Used inside a guide's BlockUIContainer; the texts are given by the guide page, so
+        each app words its own cases. Narrow pages put the text under the figure.-->
+
+    <Border CornerRadius="10" Padding="10" BorderThickness="1"
+            Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+            BorderBrush="{DynamicResource MahApps.Brushes.Gray8}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <local:TopologyCaseFigure Case="{Binding Case, ElementName=root}" VerticalAlignment="Top"/>
+
+            <StackPanel Grid.Column="1" Margin="16,2,4,2" VerticalAlignment="Center">
+                <Border x:Name="chip" HorizontalAlignment="Left" CornerRadius="9" Padding="9,1,9,2" Margin="0,0,0,6">
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse x:Name="chipDot" Width="8" Height="8" VerticalAlignment="Center" Margin="0,1,6,0"/>
+                        <TextBlock x:Name="chipText" FontSize="{DynamicResource IRI.Maptor.Styles.Size.Text.Caption}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Text="{Binding Title, ElementName=root}" FontSize="{DynamicResource IRI.Maptor.Styles.Size.Text.BodyLarge}" FontWeight="SemiBold" TextWrapping="Wrap"
+                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+
+                <TextBlock Text="{Binding Text, ElementName=root}" Margin="0,5,0,0" FontSize="{DynamicResource IRI.Maptor.Styles.Size.Text.Body}" LineHeight="20" TextWrapping="Wrap"
+                           Foreground="{DynamicResource MahApps.Brushes.Gray2}"/>
+
+                <!--what the Issues panel offers for this case, when the guide says so-->
+                <TextBlock x:Name="fixLine" Margin="0,7,0,0" FontSize="{DynamicResource IRI.Maptor.Styles.Size.Text.Small}" TextWrapping="Wrap" Visibility="Collapsed"
+                           Foreground="{DynamicResource MahApps.Brushes.Gray3}"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>
