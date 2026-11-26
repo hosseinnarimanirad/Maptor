@@ -1,0 +1,110 @@
+<UserControl x:Class="IRI.Maptor.Presentation.Wpf.Controls.TopologyCheckPanelView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:helpers="clr-namespace:IRI.Maptor.Presentation.Wpf.Helpers"
+             Background="Transparent">
+    <!--Topology › Check (doc 05 §3). DataContext: TopologyCheckPanelViewModel.-->
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Views/Topology/TopologyStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Style="{StaticResource MahApps.Styles.ScrollViewer}">
+        <StackPanel>
+            <!--what to check-->
+            <Border Style="{StaticResource topologyCard}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.ColumnSpan="2" Text="{Binding [topology_check_whatTitle], Source={StaticResource Localization}}" Style="{StaticResource topologyLabel}"/>
+
+                    <TextBlock Grid.Row="1" Text="{Binding [topology_check_rulesLabel], Source={StaticResource Localization}}" Margin="0,0,8,6" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding RulesText}" TextWrapping="Wrap" Margin="0,0,0,6" VerticalAlignment="Center"/>
+
+                    <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding [topology_issues_settingsChanged], Source={StaticResource Localization}}"
+                               Style="{StaticResource topologyWarning}"
+                               Visibility="{Binding HasSessionChanges, Converter={StaticResource topologyVisible}}"/>
+
+                    <TextBlock Grid.Row="3" Text="{Binding [topology_check_dataLabel], Source={StaticResource Localization}}" Margin="0,0,8,6" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Row="3" Grid.Column="1" Margin="0,0,0,6"
+                              ItemsSource="{Binding ScopeOptions}" SelectedItem="{Binding SelectedScope}" DisplayMemberPath="Text"/>
+
+                    <TextBlock Grid.Row="4" Text="{Binding [topology_check_layerLabel], Source={StaticResource Localization}}" Margin="0,0,8,6" VerticalAlignment="Center"
+                               Visibility="{Binding NeedsLayer, Converter={StaticResource topologyVisible}}"/>
+                    <ComboBox Grid.Row="4" Grid.Column="1" Margin="0,0,0,6"
+                              ItemsSource="{Binding Layers}" SelectedItem="{Binding SelectedLayer}" DisplayMemberPath="Name"
+                              Visibility="{Binding NeedsLayer, Converter={StaticResource topologyVisible}}"/>
+                </Grid>
+            </Border>
+
+            <!--layers the rules need-->
+            <Border Style="{StaticResource topologyCard}">
+                <StackPanel>
+                    <DockPanel>
+                        <Button DockPanel.Dock="Right" Command="{Binding RefreshCommand}"
+                                ToolTip="{Binding [topology_check_refresh], Source={StaticResource Localization}}"
+                                Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark.Flat}">
+                            <iconPacks:PackIconMaterial xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks" Kind="Refresh"/>
+                        </Button>
+                        <TextBlock Text="{Binding [topology_check_layersTitle], Source={StaticResource Localization}}" Style="{StaticResource topologyLabel}" VerticalAlignment="Center"/>
+                    </DockPanel>
+                    <ItemsControl ItemsSource="{Binding Layers}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel Margin="0,1">
+                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Margin="0,0,8,0"/>
+                                    <TextBlock Text="{Binding StateText}" TextWrapping="Wrap">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsMissing}" Value="True">
+                                                        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsLive}" Value="True">
+                                                        <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Warning}"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!--run-->
+            <Border Style="{StaticResource topologyCard}">
+                <StackPanel>
+                    <TextBlock Text="{Binding Warning}" Style="{StaticResource topologyWarning}"
+                               Visibility="{Binding HasWarning, Converter={StaticResource topologyVisible}}"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,4,0,0">
+                        <Button Content="{Binding [topology_check_cancel], Source={StaticResource Localization}}"
+                                Command="{Binding CancelCommand}" Margin="0,0,8,0" MinWidth="80"
+                                Visibility="{Binding IsRunning, Converter={StaticResource topologyVisible}}"/>
+                        <Button Content="{Binding [topology_check_run], Source={StaticResource Localization}}"
+                                Command="{Binding CheckCommand}" MinWidth="100"
+                                Style="{StaticResource IRI.Maptor.Styles.Button.Primary}"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding Progress}" Style="{StaticResource topologyNote}"/>
+                    <TextBlock Text="{Binding Status}" Style="{StaticResource topologyNote}"
+                               Visibility="{Binding HasStatus, Converter={StaticResource topologyVisible}}"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

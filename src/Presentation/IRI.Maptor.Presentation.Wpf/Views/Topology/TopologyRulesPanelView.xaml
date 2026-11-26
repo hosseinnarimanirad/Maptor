@@ -1,0 +1,93 @@
+<UserControl x:Class="IRI.Maptor.Presentation.Wpf.Controls.TopologyRulesPanelView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:helpers="clr-namespace:IRI.Maptor.Presentation.Wpf.Helpers"
+             xmlns:topology="clr-namespace:IRI.Maptor.Presentation.Wpf.Topology"
+             Background="Transparent">
+    <!--Topology › Rules (doc 05 §6). DataContext: TopologyRulesPanelViewModel. Changes last this session only.-->
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Views/Topology/TopologyStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Style="{StaticResource MahApps.Styles.ScrollViewer}">
+        <StackPanel>
+            <Border Style="{StaticResource topologyCard}">
+                <StackPanel>
+                    <DockPanel>
+                        <Button DockPanel.Dock="Right" Content="{Binding [topology_rules_resetAll], Source={StaticResource Localization}}"
+                                Command="{Binding ResetAllCommand}" MinWidth="90"/>
+                        <TextBlock Text="{Binding Header}" Style="{StaticResource topologyLabel}" VerticalAlignment="Center"/>
+                    </DockPanel>
+                    <TextBlock Text="{Binding [topology_rules_sessionOnly], Source={StaticResource Localization}}" Style="{StaticResource topologyNote}"/>
+                    <TextBlock Text="{Binding Problems}" Style="{StaticResource topologyWarning}"
+                               Visibility="{Binding HasProblems, Converter={StaticResource topologyVisible}}"/>
+                </StackPanel>
+            </Border>
+
+            <ItemsControl ItemsSource="{Binding Rules}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource topologyCard}">
+                            <StackPanel>
+                                <DockPanel>
+                                    <TextBlock DockPanel.Dock="Right" Text="●" Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                               ToolTip="{Binding [topology_rules_changed], Source={StaticResource Localization}}"
+                                               Visibility="{Binding IsChanged, Converter={StaticResource topologyVisible}}"/>
+                                    <CheckBox IsChecked="{Binding IsEnabled}">
+                                        <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                                    </CheckBox>
+                                </DockPanel>
+                                <TextBlock Text="{Binding LayersText}" Style="{StaticResource topologyNote}"/>
+
+                                <ItemsControl ItemsSource="{Binding Parameters}" IsEnabled="{Binding IsEnabled}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="0,2">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition Width="80"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding Label}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                                <TextBox Grid.Column="1" Text="{Binding Text, UpdateSourceTrigger=LostFocus}" FlowDirection="LeftToRight">
+                                                    <TextBox.Style>
+                                                        <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsValid}" Value="False">
+                                                                    <Setter Property="BorderBrush" Value="{DynamicResource IRI.Maptor.Brushes.Invalid}"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBox.Style>
+                                                </TextBox>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <ItemsControl ItemsSource="{Binding Kinds}" IsEnabled="{Binding IsEnabled}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="0,2">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition Width="110"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding Text}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                                <ComboBox Grid.Column="1" ItemsSource="{x:Static topology:TopologyKindRow.Options}"
+                                                          SelectedItem="{Binding Setting}" DisplayMemberPath="Text"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

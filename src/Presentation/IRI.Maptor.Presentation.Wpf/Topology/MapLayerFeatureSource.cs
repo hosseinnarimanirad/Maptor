@@ -16,10 +16,11 @@ using IRI.Maptor.Presentation.Wpf.Layers;
 namespace IRI.Maptor.Presentation.Wpf.Topology;
 
 /// <summary>
-/// One map layer as a feature source for topology checks.
+/// One or more map layers holding one entity (e.g. towers split by region) as a feature source for topology checks.
 /// <list type="bullet">
 /// <item>Features are returned in <b>geodetic WGS84</b>: the map works in Web Mercator, whose units are not ground
-/// metres, and the checks refuse it. Copies are returned; the layer's own features are never changed.</item>
+/// metres, and the checks refuse it. Copies are returned; the layer's own features are never changed. A feature shown by
+/// two of the layers is returned once (by id).</item>
 /// <item>The layer is read on the thread that created this source (the UI thread), because map layers are not
 /// thread-safe; a check may ask from a worker thread.</item>
 /// <item><see cref="IsLive"/> tells whether the layer holds only what is in view (Live mode), so a panel can offer
@@ -28,14 +29,24 @@ namespace IRI.Maptor.Presentation.Wpf.Topology;
 /// </summary>
 public sealed class MapLayerFeatureSource : ITopologyFeatureSource
 {
-    private readonly VectorLayer _layer;
+    private readonly IReadOnlyList<VectorLayer> _layers;
     private readonly Dispatcher _dispatcher;
 
     /// <param name="layer">The map layer.</param>
     /// <param name="entityName">The layer's name as the rule set names it (its server entity name).</param>
     public MapLayerFeatureSource(VectorLayer layer, string entityName)
+        : this(new[] { layer ?? throw new ArgumentNullException(nameof(layer)) }, entityName)
     {
-        _layer = layer ?? throw new ArgumentNullException(nameof(layer));
+    }
+
+    /// <param name="layers">The map layers that hold the entity; at least one.</param>
+    /// <param name="entityName">The entity's name as the rule set names it.</param>
+    public MapLayerFeatureSource(IEnumerable<VectorLayer> layers, string entityName)
+    {
+        _layers = (layers ?? throw new ArgumentNullException(nameof(layers))).Where(l => l is not null).Distinct().ToList();
+
+        if (_layers.Count == 0)
+            throw new ArgumentException("Give at least one map layer.", nameof(layers));
 
         if (string.IsNullOrWhiteSpace(entityName))
             throw new ArgumentException("Name the layer as the rule set does.", nameof(entityName));
@@ -48,13 +59,18 @@ public sealed class MapLayerFeatureSource : ITopologyFeatureSource
 
     public int Srid => SridHelper.GeodeticWGS84;
 
-    /// <summary>The layer object; a different object means a different (reloaded) layer.</summary>
-    public object Identity => _layer;
+    /// <summary>The map layers; different objects mean different (reloaded) layers.</summary>
+    public IReadOnlyList<VectorLayer> Layers => _layers;
 
-    public string LayerName => _layer.LayerName;
+    /// <summary>The first layer object; a different object means a different (reloaded) layer.</summary>
+    public object Identity => _layers[0];
 
-    /// <summary>True when the layer holds only what is in view, so a whole-layer check would check the screen.</summary>
-    public bool IsLive => _layer.DataSource is IServerQueryableVectorDataSource { CanQueryServer: true };
+    public string LayerName => string.Join(", ", _layers.Select(l => l.LayerName));
+
+    /// <summary>True when a layer holds only what is in view, so a whole-layer check would check the screen.</summary>
+    public bool IsLive => _layers.Any(IsLiveLayer);
+
+    public static bool IsLiveLayer(VectorLayer layer) => layer.DataSource is IServerQueryableVectorDataSource { CanQueryServer: true };
 
     public async Task<IReadOnlyList<Feature<Point>>> GetFeaturesAsync(BoundingBox? box, IReadOnlyCollection<string> fields, CancellationToken cancellationToken)
     {
@@ -87,20 +103,26 @@ public sealed class MapLayerFeatureSource : ITopologyFeatureSource
     /// </summary>
     public IDisposable WatchChanges(Action onChanged)
     {
-        var dataSource = _layer.DataSource;
+        var dataSources = _layers.Select(l => l.DataSource).Where(d => d is not null).ToList();
 
-        if (dataSource is null || onChanged is null)
+        if (dataSources.Count == 0 || onChanged is null)
             return Subscription.None;
 
         EventHandler<bool> handler = (_, _) => onChanged();
 
-        dataSource.IsLoadedChanged += handler;
-        dataSource.HasPendingChangesChanged += handler;
+        foreach (var dataSource in dataSources)
+        {
+            dataSource!.IsLoadedChanged += handler;
+            dataSource.HasPendingChangesChanged += handler;
+        }
 
         return new Subscription(() =>
         {
-            dataSource.IsLoadedChanged -= handler;
-            dataSource.HasPendingChangesChanged -= handler;
+            foreach (var dataSource in dataSources)
+            {
+                dataSource!.IsLoadedChanged -= handler;
+                dataSource.HasPendingChangesChanged -= handler;
+            }
         });
     }
 
@@ -110,9 +132,21 @@ public sealed class MapLayerFeatureSource : ITopologyFeatureSource
     {
         async Task<IReadOnlyList<Feature<Point>>> Read()
         {
-            var set = await _layer.GetFeaturesAsync(webMercatorQuery);
+            var result = new List<Feature<Point>>();
+            var seen = new HashSet<int>();
 
-            return set?.Features?.ToList() ?? new List<Feature<Point>>();
+            foreach (var layer in _layers)
+            {
+                var set = await layer.GetFeaturesAsync(webMercatorQuery);
+
+                foreach (var feature in set?.Features ?? Enumerable.Empty<Feature<Point>>())
+                {
+                    if (_layers.Count == 1 || seen.Add(feature.Id))
+                        result.Add(feature);
+                }
+            }
+
+            return result;
         }
 
         if (_dispatcher.CheckAccess())

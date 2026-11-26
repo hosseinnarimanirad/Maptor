@@ -4245,4 +4245,457 @@
   <data name="legend_panel_showHide" xml:space="preserve">
     <value>نمایش یا پنهان کردن لژاندر</value>
   </data>
+  <data name="ribbon_topology_header" xml:space="preserve">
+    <value>توپولوژی</value>
+  </data>
+  <data name="ribbon_topology_groupCheck" xml:space="preserve">
+    <value>کنترل</value>
+  </data>
+  <data name="ribbon_topology_check" xml:space="preserve">
+    <value>کنترل</value>
+  </data>
+  <data name="ribbon_topology_checkTooltip" xml:space="preserve">
+    <value>کنترل داده‌ها با قواعد توپولوژی</value>
+  </data>
+  <data name="ribbon_topology_groupResults" xml:space="preserve">
+    <value>نتیجه</value>
+  </data>
+  <data name="ribbon_topology_issues" xml:space="preserve">
+    <value>ایرادها</value>
+  </data>
+  <data name="ribbon_topology_issuesTooltip" xml:space="preserve">
+    <value>ایرادهای آخرین کنترل</value>
+  </data>
+  <data name="ribbon_topology_showOnMap" xml:space="preserve">
+    <value>نمایش روی نقشه</value>
+  </data>
+  <data name="ribbon_topology_showOnMapTooltip" xml:space="preserve">
+    <value>رسم ایرادها روی نقشه، حتی هنگام ویرایش</value>
+  </data>
+  <data name="ribbon_topology_groupSettings" xml:space="preserve">
+    <value>تنظیمات</value>
+  </data>
+  <data name="ribbon_topology_rules" xml:space="preserve">
+    <value>قواعد</value>
+  </data>
+  <data name="ribbon_topology_rulesTooltip" xml:space="preserve">
+    <value>آنچه هر قاعده کنترل می‌کند؛ تغییر فاصله‌ها و نوع‌ها برای همین نشست</value>
+  </data>
+  <data name="ribbon_topology_groupOutput" xml:space="preserve">
+    <value>خروجی</value>
+  </data>
+  <data name="ribbon_topology_export" xml:space="preserve">
+    <value>خروجی اکسل</value>
+  </data>
+  <data name="ribbon_topology_exportTooltip" xml:space="preserve">
+    <value>فهرست پالایش‌شدهٔ ایرادها در اکسل</value>
+  </data>
+  <data name="ribbon_topology_groupHelp" xml:space="preserve">
+    <value>راهنما</value>
+  </data>
+  <data name="ribbon_topology_guide" xml:space="preserve">
+    <value>راهنما</value>
+  </data>
+  <data name="ribbon_topology_guideTooltip" xml:space="preserve">
+    <value>زبانهٔ توپولوژی چه کنترل می‌کند و چگونه به کار می‌رود</value>
+  </data>
+  <data name="topology_panel_checkTitle" xml:space="preserve">
+    <value>کنترل توپولوژی</value>
+  </data>
+  <data name="topology_panel_issuesTitle" xml:space="preserve">
+    <value>ایرادهای توپولوژی</value>
+  </data>
+  <data name="topology_panel_rulesTitle" xml:space="preserve">
+    <value>قواعد توپولوژی</value>
+  </data>
+  <data name="topology_guide_title" xml:space="preserve">
+    <value>توپولوژی</value>
+  </data>
+  <data name="topology_check_whatTitle" xml:space="preserve">
+    <value>چه چیزی کنترل شود</value>
+  </data>
+  <data name="topology_check_rulesLabel" xml:space="preserve">
+    <value>قواعد</value>
+  </data>
+  <data name="topology_check_rules" xml:space="preserve">
+    <value>{0} قاعدهٔ «{1}»</value>
+  </data>
+  <data name="topology_check_dataLabel" xml:space="preserve">
+    <value>داده</value>
+  </data>
+  <data name="topology_check_layerLabel" xml:space="preserve">
+    <value>لایه</value>
+  </data>
+  <data name="topology_check_scopeWholeData" xml:space="preserve">
+    <value>همهٔ داده‌ها</value>
+  </data>
+  <data name="topology_check_scopeLayer" xml:space="preserve">
+    <value>یک لایه</value>
+  </data>
+  <data name="topology_check_scopeExtent" xml:space="preserve">
+    <value>محدودهٔ نقشه</value>
+  </data>
+  <data name="topology_check_scopeFeatures" xml:space="preserve">
+    <value>عارضه‌های انتخاب‌شده</value>
+  </data>
+  <data name="topology_check_layersTitle" xml:space="preserve">
+    <value>لایه‌هایی که قواعد لازم دارند</value>
+  </data>
+  <data name="topology_check_refresh" xml:space="preserve">
+    <value>خواندن دوبارهٔ لایه‌ها</value>
+  </data>
+  <data name="topology_check_layerLoaded" xml:space="preserve">
+    <value>بارگذاری‌شده</value>
+  </data>
+  <data name="topology_check_layerLive" xml:space="preserve">
+    <value>زنده: فقط محدودهٔ نقشه یا انتخاب</value>
+  </data>
+  <data name="topology_check_layerNotLoaded" xml:space="preserve">
+    <value>بارگذاری‌نشده: قواعدش اجرا نمی‌شود</value>
+  </data>
+  <data name="topology_check_settingsInvalid" xml:space="preserve">
+    <value>یکی از تنظیمات پنل قواعد قابل استفاده نیست؛ آن را اصلاح یا همه را به پیش‌فرض برگردانید.</value>
+  </data>
+  <data name="topology_check_liveNeedsPartialScope" xml:space="preserve">
+    <value>لایهٔ زنده فقط آنچه را در دید است دارد: محدودهٔ نقشه یا انتخاب را کنترل کنید یا لایه را به حالت حافظه ببرید.</value>
+  </data>
+  <data name="topology_check_noSelection" xml:space="preserve">
+    <value>ابتدا عارضه‌هایی از این لایه را روی نقشه انتخاب کنید.</value>
+  </data>
+  <data name="topology_check_largeScope" xml:space="preserve">
+    <value>این کنترل {0} عارضه را می‌خواند و ممکن است طول بکشد؛ محدودهٔ نقشه سریع‌تر است.</value>
+  </data>
+  <data name="topology_check_someNotLoaded" xml:space="preserve">
+    <value>لایه‌های بارگذاری‌نشده و قواعدشان کنار گذاشته می‌شوند.</value>
+  </data>
+  <data name="topology_check_run" xml:space="preserve">
+    <value>کنترل</value>
+  </data>
+  <data name="topology_check_cancel" xml:space="preserve">
+    <value>لغو</value>
+  </data>
+  <data name="topology_check_progress" xml:space="preserve">
+    <value>در حال کنترل: {2} … قاعدهٔ {0} از {1}</value>
+  </data>
+  <data name="topology_check_done" xml:space="preserve">
+    <value>{0} ایراد در {1} عارضه</value>
+  </data>
+  <data name="topology_check_cancelled" xml:space="preserve">
+    <value>لغو شد: نتیجهٔ قبلی باقی است.</value>
+  </data>
+  <data name="topology_issues_noCheck" xml:space="preserve">
+    <value>ابتدا کنترل را اجرا کنید.</value>
+  </data>
+  <data name="topology_issues_header" xml:space="preserve">
+    <value>کنترل در {0}، {1}، {2} عارضه</value>
+  </data>
+  <data name="topology_issues_settingsChanged" xml:space="preserve">
+    <value>تنظیمات در این نشست تغییر کرده است</value>
+  </data>
+  <data name="topology_issues_skipped" xml:space="preserve">
+    <value>کنترل‌نشده (لایه بارگذاری نشده): {0}</value>
+  </data>
+  <data name="topology_issues_errors" xml:space="preserve">
+    <value>{0} خطا</value>
+  </data>
+  <data name="topology_issues_warnings" xml:space="preserve">
+    <value>{0} هشدار</value>
+  </data>
+  <data name="topology_issues_infos" xml:space="preserve">
+    <value>{0} تذکر</value>
+  </data>
+  <data name="topology_issues_allRules" xml:space="preserve">
+    <value>همهٔ قواعد</value>
+  </data>
+  <data name="topology_issues_changeAll" xml:space="preserve">
+    <value>همه</value>
+  </data>
+  <data name="topology_issues_changeNew" xml:space="preserve">
+    <value>جدید نسبت به کنترل قبلی</value>
+  </data>
+  <data name="topology_issues_changeStillThere" xml:space="preserve">
+    <value>هنوز باقی</value>
+  </data>
+  <data name="topology_issues_changeGone" xml:space="preserve">
+    <value>برطرف‌شده نسبت به کنترل قبلی</value>
+  </data>
+  <data name="topology_issues_changeTooltip" xml:space="preserve">
+    <value>مقایسه با کنترل قبلیِ همین داده</value>
+  </data>
+  <data name="topology_issues_searchTooltip" xml:space="preserve">
+    <value>جست‌وجوی شناسه‌ها و متن‌ها</value>
+  </data>
+  <data name="topology_issues_none" xml:space="preserve">
+    <value>در {0} عارضه ایرادی پیدا نشد</value>
+  </data>
+  <data name="topology_issues_overlayLimited" xml:space="preserve">
+    <value>بیش از {0} ایراد: نقشه فقط خطاها را نشان می‌دهد</value>
+  </data>
+  <data name="topology_issues_allowed" xml:space="preserve">
+    <value>مجاز {0} متر</value>
+  </data>
+  <data name="topology_issues_new" xml:space="preserve">
+    <value>جدید</value>
+  </data>
+  <data name="topology_issues_showInTable" xml:space="preserve">
+    <value>نمایش در جدول توصیفی</value>
+  </data>
+  <data name="topology_issues_export" xml:space="preserve">
+    <value>خروجی فهرست در اکسل</value>
+  </data>
+  <data name="topology_severity_error" xml:space="preserve">
+    <value>خطا</value>
+  </data>
+  <data name="topology_severity_warning" xml:space="preserve">
+    <value>هشدار</value>
+  </data>
+  <data name="topology_severity_info" xml:space="preserve">
+    <value>تذکر</value>
+  </data>
+  <data name="topology_unit_metres" xml:space="preserve">
+    <value>متر</value>
+  </data>
+  <data name="topology_unit_squareMetres" xml:space="preserve">
+    <value>مترمربع</value>
+  </data>
+  <data name="topology_rules_header" xml:space="preserve">
+    <value>قواعد «{0}» · نسخهٔ {1}</value>
+  </data>
+  <data name="topology_rules_resetAll" xml:space="preserve">
+    <value>بازگشت همه</value>
+  </data>
+  <data name="topology_rules_sessionOnly" xml:space="preserve">
+    <value>تغییرات این پنل تا بسته شدن برنامه می‌ماند و ذخیره نمی‌شود.</value>
+  </data>
+  <data name="topology_rules_changed" xml:space="preserve">
+    <value>در این نشست تغییر کرده</value>
+  </data>
+  <data name="topology_rules_hidden" xml:space="preserve">
+    <value>پنهان</value>
+  </data>
+  <data name="topology_parameter_distance" xml:space="preserve">
+    <value>فاصله (متر)</value>
+  </data>
+  <data name="topology_parameter_nearDistance" xml:space="preserve">
+    <value>فاصلهٔ نزدیک (متر)</value>
+  </data>
+  <data name="topology_parameter_searchDistance" xml:space="preserve">
+    <value>فاصلهٔ جست‌وجو (متر)</value>
+  </data>
+  <data name="topology_parameter_maxOvershoot" xml:space="preserve">
+    <value>بیشترین بیرون‌زدگی (متر)</value>
+  </data>
+  <data name="topology_parameter_maxGap" xml:space="preserve">
+    <value>بیشترین فاصلهٔ خالی (متر)</value>
+  </data>
+  <data name="topology_parameter_minimumPoints" xml:space="preserve">
+    <value>کمترین تعداد نقطه</value>
+  </data>
+  <data name="topology_parameter_minimumLength" xml:space="preserve">
+    <value>کمترین طول (متر)</value>
+  </data>
+  <data name="topology_parameter_minimumArea" xml:space="preserve">
+    <value>کمترین مساحت (مترمربع)</value>
+  </data>
+  <data name="topology_parameter_minimumWidth" xml:space="preserve">
+    <value>کمترین پهنا (متر)</value>
+  </data>
+  <data name="topology_parameter_sliverWidth" xml:space="preserve">
+    <value>پهنای شکاف باریک (متر)</value>
+  </data>
+  <data name="topology_parameter_interiorPartEnds" xml:space="preserve">
+    <value>کنترل سرهای محل اتصال بخش‌ها (۱ = بله)</value>
+  </data>
+  <data name="topology_parameter_sharedStretch" xml:space="preserve">
+    <value>گزارش بخش‌های مشترک (۱ = بله)</value>
+  </data>
+  <data name="topology_parameter_enclosedGaps" xml:space="preserve">
+    <value>گزارش فضاهای خالی محصور (۱ = بله)</value>
+  </data>
+  <data name="topology_parameter_maximumGapArea" xml:space="preserve">
+    <value>بیشترین مساحت فضای خالی (مترمربع)</value>
+  </data>
+  <data name="topology_export_rule" xml:space="preserve">
+    <value>قاعده</value>
+  </data>
+  <data name="topology_export_kind" xml:space="preserve">
+    <value>نوع</value>
+  </data>
+  <data name="topology_export_severity" xml:space="preserve">
+    <value>اهمیت</value>
+  </data>
+  <data name="topology_export_sentence" xml:space="preserve">
+    <value>ایراد</value>
+  </data>
+  <data name="topology_export_value" xml:space="preserve">
+    <value>مقدار</value>
+  </data>
+  <data name="topology_export_features" xml:space="preserve">
+    <value>عارضه‌ها</value>
+  </data>
+  <data name="topology_export_location" xml:space="preserve">
+    <value>موقعیت (طول، عرض جغرافیایی)</value>
+  </data>
+  <data name="topology_rule_geometryValid" xml:space="preserve">
+    <value>هندسه باید معتبر باشد</value>
+  </data>
+  <data name="topology_rule_distinctPoints" xml:space="preserve">
+    <value>نقاط نباید بر هم منطبق باشند</value>
+  </data>
+  <data name="topology_rule_pointOnLine" xml:space="preserve">
+    <value>نقطه باید روی خط باشد</value>
+  </data>
+  <data name="topology_rule_lineEndCovered" xml:space="preserve">
+    <value>سرهای خط باید نقطه داشته باشند</value>
+  </data>
+  <data name="topology_rule_lineCarriesPoints" xml:space="preserve">
+    <value>خط باید نقطه داشته باشد</value>
+  </data>
+  <data name="topology_rule_pointOnOneLine" xml:space="preserve">
+    <value>نقطه روی بیش از یک خط</value>
+  </data>
+  <data name="topology_rule_sequenceAlongLine" xml:space="preserve">
+    <value>شماره‌ها باید در طول خط افزایش یابند</value>
+  </data>
+  <data name="topology_rule_lineEndsConnect" xml:space="preserve">
+    <value>سرهای خط باید متصل باشند</value>
+  </data>
+  <data name="topology_rule_partsJoin" xml:space="preserve">
+    <value>بخش‌های یک خط باید به هم برسند</value>
+  </data>
+  <data name="topology_rule_distinctLines" xml:space="preserve">
+    <value>خطوط نباید تکراری باشند</value>
+  </data>
+  <data name="topology_rule_touchAndReturn" xml:space="preserve">
+    <value>خطوط نباید برخورد کنند و برگردند</value>
+  </data>
+  <data name="topology_rule_polygonsNoOverlap" xml:space="preserve">
+    <value>چندضلعی‌ها نباید هم‌پوشانی داشته باشند</value>
+  </data>
+  <data name="topology_rule_polygonsNoGap" xml:space="preserve">
+    <value>بین چندضلعی‌ها نباید شکاف باشد</value>
+  </data>
+  <data name="topology_kind_geometryValid_NoGeometry" xml:space="preserve">
+    <value>عارضه هندسه ندارد</value>
+  </data>
+  <data name="topology_kind_geometryValid_ClosedRing" xml:space="preserve">
+    <value>حلقه نقطهٔ اول را تکرار می‌کند</value>
+  </data>
+  <data name="topology_kind_geometryValid_RepeatedPoint" xml:space="preserve">
+    <value>یک نقطه دو بار پشت سر هم</value>
+  </data>
+  <data name="topology_kind_geometryValid_TooFewPoints" xml:space="preserve">
+    <value>نقطه‌ها کافی نیست</value>
+  </data>
+  <data name="topology_kind_geometryValid_ZeroAreaRing" xml:space="preserve">
+    <value>حلقه‌ای بدون مساحت</value>
+  </data>
+  <data name="topology_kind_geometryValid_InvalidCoordinate" xml:space="preserve">
+    <value>مختصاتی عدد نیست</value>
+  </data>
+  <data name="topology_kind_geometryValid_CoordinateOutOfRange" xml:space="preserve">
+    <value>طول یا عرض جغرافیایی خارج از بازه</value>
+  </data>
+  <data name="topology_kind_geometryValid_WrongRingOrientation" xml:space="preserve">
+    <value>حلقه با جهت نادرست (خودکار اصلاح می‌شود)</value>
+  </data>
+  <data name="topology_kind_distinctPoints_samePlace" xml:space="preserve">
+    <value>نقاط در یک مکان</value>
+  </data>
+  <data name="topology_kind_distinctPoints_close" xml:space="preserve">
+    <value>نقاط به فاصلهٔ {0}</value>
+  </data>
+  <data name="topology_kind_distinctPoints_chain" xml:space="preserve">
+    <value>نقاط زنجیره‌وار، به پهنای {0}</value>
+  </data>
+  <data name="topology_kind_pointOnLine_nearLine" xml:space="preserve">
+    <value>نقطه به فاصلهٔ {0} از نزدیک‌ترین خط</value>
+  </data>
+  <data name="topology_kind_pointOnLine_farFromLines" xml:space="preserve">
+    <value>نقطه دور از همهٔ خطوط</value>
+  </data>
+  <data name="topology_kind_lineEndCovered_start" xml:space="preserve">
+    <value>در ابتدای خط نقطه‌ای نیست</value>
+  </data>
+  <data name="topology_kind_lineEndCovered_end" xml:space="preserve">
+    <value>در انتهای خط نقطه‌ای نیست</value>
+  </data>
+  <data name="topology_kind_lineCarriesPoints_tooFewPoints" xml:space="preserve">
+    <value>فقط {0} نقطه روی خط</value>
+  </data>
+  <data name="topology_kind_pointOnOneLine_onSeveralLines" xml:space="preserve">
+    <value>نقطه روی {0} خط</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_missing" xml:space="preserve">
+    <value>نقطه بدون شماره</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_duplicate" xml:space="preserve">
+    <value>شمارهٔ {0} دو بار</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_outOfOrder" xml:space="preserve">
+    <value>شمارهٔ {0} خارج از ترتیب</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_gap" xml:space="preserve">
+    <value>{0} شماره جا افتاده</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_directionUndecided" xml:space="preserve">
+    <value>شماره‌ها در هیچ جهتی افزایش نمی‌یابند</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_unsnappedEnd" xml:space="preserve">
+    <value>سرهای خط به فاصلهٔ {0}، متصل نشده</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_overshoot" xml:space="preserve">
+    <value>خط {0} پس از تقاطع ادامه یافته</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_undershoot" xml:space="preserve">
+    <value>خط {0} مانده به خط دیگر تمام شده</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_freeEnd" xml:space="preserve">
+    <value>سر خط به جایی متصل نیست</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_chain" xml:space="preserve">
+    <value>سرهای خط زنجیره‌وار، به پهنای {0}</value>
+  </data>
+  <data name="topology_kind_partsJoin_gap" xml:space="preserve">
+    <value>فاصلهٔ خالی {0} بین بخش‌ها</value>
+  </data>
+  <data name="topology_kind_partsJoin_detachedPart" xml:space="preserve">
+    <value>بخشی به فاصلهٔ {0} از بقیه</value>
+  </data>
+  <data name="topology_kind_partsJoin_branch" xml:space="preserve">
+    <value>{0} سر بخش در یک نقطه</value>
+  </data>
+  <data name="topology_kind_partsJoin_outOfOrder" xml:space="preserve">
+    <value>بخش‌ها به ترتیب ذخیره نشده‌اند</value>
+  </data>
+  <data name="topology_kind_partsJoin_reversedPart" xml:space="preserve">
+    <value>بخشی خلاف جهت بقیه رسم شده</value>
+  </data>
+  <data name="topology_kind_distinctLines_wholeLine" xml:space="preserve">
+    <value>خط تکراری</value>
+  </data>
+  <data name="topology_kind_distinctLines_sharedStretch" xml:space="preserve">
+    <value>خطوط در {0} مشترک‌اند</value>
+  </data>
+  <data name="topology_kind_touchAndReturn_touchAndReturn" xml:space="preserve">
+    <value>خطوط در فاصلهٔ {0} دو بار یکدیگر را قطع می‌کنند</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_duplicate" xml:space="preserve">
+    <value>چندضلعی تکراری</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_inside" xml:space="preserve">
+    <value>چندضلعی درون دیگری، {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_overlap" xml:space="preserve">
+    <value>هم‌پوشانی چندضلعی‌ها {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_thinOverlap" xml:space="preserve">
+    <value>هم‌پوشانی باریک {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoGap_sliver" xml:space="preserve">
+    <value>شکاف باریک به طول {0} بین همسایه‌ها</value>
+  </data>
+  <data name="topology_kind_polygonsNoGap_enclosedGap" xml:space="preserve">
+    <value>فضای خالی {0} محصور میان چندضلعی‌ها</value>
+  </data>
 </root>

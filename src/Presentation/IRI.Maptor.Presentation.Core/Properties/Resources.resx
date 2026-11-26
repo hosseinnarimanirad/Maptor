@@ -4341,4 +4341,457 @@
   <data name="legend_panel_showHide" xml:space="preserve">
     <value>Show or hide the legend</value>
   </data>
+  <data name="ribbon_topology_header" xml:space="preserve">
+    <value>Topology</value>
+  </data>
+  <data name="ribbon_topology_groupCheck" xml:space="preserve">
+    <value>Check</value>
+  </data>
+  <data name="ribbon_topology_check" xml:space="preserve">
+    <value>Check</value>
+  </data>
+  <data name="ribbon_topology_checkTooltip" xml:space="preserve">
+    <value>Check the data against the topology rules</value>
+  </data>
+  <data name="ribbon_topology_groupResults" xml:space="preserve">
+    <value>Results</value>
+  </data>
+  <data name="ribbon_topology_issues" xml:space="preserve">
+    <value>Issues</value>
+  </data>
+  <data name="ribbon_topology_issuesTooltip" xml:space="preserve">
+    <value>The issues of the last check</value>
+  </data>
+  <data name="ribbon_topology_showOnMap" xml:space="preserve">
+    <value>Show on map</value>
+  </data>
+  <data name="ribbon_topology_showOnMapTooltip" xml:space="preserve">
+    <value>Draw the issues on the map, also while editing</value>
+  </data>
+  <data name="ribbon_topology_groupSettings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="ribbon_topology_rules" xml:space="preserve">
+    <value>Rules</value>
+  </data>
+  <data name="ribbon_topology_rulesTooltip" xml:space="preserve">
+    <value>What each rule checks; change distances and kinds for this session</value>
+  </data>
+  <data name="ribbon_topology_groupOutput" xml:space="preserve">
+    <value>Output</value>
+  </data>
+  <data name="ribbon_topology_export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="ribbon_topology_exportTooltip" xml:space="preserve">
+    <value>The filtered issue list to Excel</value>
+  </data>
+  <data name="ribbon_topology_groupHelp" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="ribbon_topology_guide" xml:space="preserve">
+    <value>Guide</value>
+  </data>
+  <data name="ribbon_topology_guideTooltip" xml:space="preserve">
+    <value>What the Topology tab checks and how to use it</value>
+  </data>
+  <data name="topology_panel_checkTitle" xml:space="preserve">
+    <value>Topology check</value>
+  </data>
+  <data name="topology_panel_issuesTitle" xml:space="preserve">
+    <value>Topology issues</value>
+  </data>
+  <data name="topology_panel_rulesTitle" xml:space="preserve">
+    <value>Topology rules</value>
+  </data>
+  <data name="topology_guide_title" xml:space="preserve">
+    <value>Topology</value>
+  </data>
+  <data name="topology_check_whatTitle" xml:space="preserve">
+    <value>What to check</value>
+  </data>
+  <data name="topology_check_rulesLabel" xml:space="preserve">
+    <value>Rules</value>
+  </data>
+  <data name="topology_check_rules" xml:space="preserve">
+    <value>{0} rules of «{1}»</value>
+  </data>
+  <data name="topology_check_dataLabel" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="topology_check_layerLabel" xml:space="preserve">
+    <value>Layer</value>
+  </data>
+  <data name="topology_check_scopeWholeData" xml:space="preserve">
+    <value>Whole data</value>
+  </data>
+  <data name="topology_check_scopeLayer" xml:space="preserve">
+    <value>One layer</value>
+  </data>
+  <data name="topology_check_scopeExtent" xml:space="preserve">
+    <value>Map extent</value>
+  </data>
+  <data name="topology_check_scopeFeatures" xml:space="preserve">
+    <value>Selected features</value>
+  </data>
+  <data name="topology_check_layersTitle" xml:space="preserve">
+    <value>Layers the rules need</value>
+  </data>
+  <data name="topology_check_refresh" xml:space="preserve">
+    <value>Read the layers again</value>
+  </data>
+  <data name="topology_check_layerLoaded" xml:space="preserve">
+    <value>loaded</value>
+  </data>
+  <data name="topology_check_layerLive" xml:space="preserve">
+    <value>Live: map extent or selection only</value>
+  </data>
+  <data name="topology_check_layerNotLoaded" xml:space="preserve">
+    <value>not loaded: its rules are skipped</value>
+  </data>
+  <data name="topology_check_settingsInvalid" xml:space="preserve">
+    <value>A setting in the Rules panel cannot be used; correct it or reset all.</value>
+  </data>
+  <data name="topology_check_liveNeedsPartialScope" xml:space="preserve">
+    <value>A Live layer holds only what is in view: check the map extent or a selection, or switch the layer to Cache.</value>
+  </data>
+  <data name="topology_check_noSelection" xml:space="preserve">
+    <value>Select features of this layer on the map first.</value>
+  </data>
+  <data name="topology_check_largeScope" xml:space="preserve">
+    <value>This check reads {0} features and may take a while; the map extent is quicker.</value>
+  </data>
+  <data name="topology_check_someNotLoaded" xml:space="preserve">
+    <value>Layers that are not loaded are skipped, with their rules.</value>
+  </data>
+  <data name="topology_check_run" xml:space="preserve">
+    <value>Check</value>
+  </data>
+  <data name="topology_check_cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="topology_check_progress" xml:space="preserve">
+    <value>Checking: {2} … {0} of {1} rules</value>
+  </data>
+  <data name="topology_check_done" xml:space="preserve">
+    <value>{0} issues in {1} features</value>
+  </data>
+  <data name="topology_check_cancelled" xml:space="preserve">
+    <value>Cancelled: the previous results are kept.</value>
+  </data>
+  <data name="topology_issues_noCheck" xml:space="preserve">
+    <value>Run a check first.</value>
+  </data>
+  <data name="topology_issues_header" xml:space="preserve">
+    <value>Checked {0} · {1} · {2} features</value>
+  </data>
+  <data name="topology_issues_settingsChanged" xml:space="preserve">
+    <value>Settings changed for this session</value>
+  </data>
+  <data name="topology_issues_skipped" xml:space="preserve">
+    <value>Not checked (layer not loaded): {0}</value>
+  </data>
+  <data name="topology_issues_errors" xml:space="preserve">
+    <value>{0} errors</value>
+  </data>
+  <data name="topology_issues_warnings" xml:space="preserve">
+    <value>{0} warnings</value>
+  </data>
+  <data name="topology_issues_infos" xml:space="preserve">
+    <value>{0} notices</value>
+  </data>
+  <data name="topology_issues_allRules" xml:space="preserve">
+    <value>All rules</value>
+  </data>
+  <data name="topology_issues_changeAll" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="topology_issues_changeNew" xml:space="preserve">
+    <value>New since the last check</value>
+  </data>
+  <data name="topology_issues_changeStillThere" xml:space="preserve">
+    <value>Still there</value>
+  </data>
+  <data name="topology_issues_changeGone" xml:space="preserve">
+    <value>Gone since the last check</value>
+  </data>
+  <data name="topology_issues_changeTooltip" xml:space="preserve">
+    <value>Compares with the previous check of the same data</value>
+  </data>
+  <data name="topology_issues_searchTooltip" xml:space="preserve">
+    <value>Search ids and sentences</value>
+  </data>
+  <data name="topology_issues_none" xml:space="preserve">
+    <value>No problems found in {0} features</value>
+  </data>
+  <data name="topology_issues_overlayLimited" xml:space="preserve">
+    <value>More than {0} issues: the map shows errors only</value>
+  </data>
+  <data name="topology_issues_allowed" xml:space="preserve">
+    <value>allowed {0} m</value>
+  </data>
+  <data name="topology_issues_new" xml:space="preserve">
+    <value>new</value>
+  </data>
+  <data name="topology_issues_showInTable" xml:space="preserve">
+    <value>Show in attribute table</value>
+  </data>
+  <data name="topology_issues_export" xml:space="preserve">
+    <value>Export the list to Excel</value>
+  </data>
+  <data name="topology_severity_error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="topology_severity_warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="topology_severity_info" xml:space="preserve">
+    <value>Notice</value>
+  </data>
+  <data name="topology_unit_metres" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="topology_unit_squareMetres" xml:space="preserve">
+    <value>m²</value>
+  </data>
+  <data name="topology_rules_header" xml:space="preserve">
+    <value>{0} rules · version {1}</value>
+  </data>
+  <data name="topology_rules_resetAll" xml:space="preserve">
+    <value>Reset all</value>
+  </data>
+  <data name="topology_rules_sessionOnly" xml:space="preserve">
+    <value>Changes here last until the application closes; nothing is stored.</value>
+  </data>
+  <data name="topology_rules_changed" xml:space="preserve">
+    <value>Changed in this session</value>
+  </data>
+  <data name="topology_rules_hidden" xml:space="preserve">
+    <value>Hidden</value>
+  </data>
+  <data name="topology_parameter_distance" xml:space="preserve">
+    <value>Distance (m)</value>
+  </data>
+  <data name="topology_parameter_nearDistance" xml:space="preserve">
+    <value>Near distance (m)</value>
+  </data>
+  <data name="topology_parameter_searchDistance" xml:space="preserve">
+    <value>Search distance (m)</value>
+  </data>
+  <data name="topology_parameter_maxOvershoot" xml:space="preserve">
+    <value>Largest overshoot (m)</value>
+  </data>
+  <data name="topology_parameter_maxGap" xml:space="preserve">
+    <value>Largest gap (m)</value>
+  </data>
+  <data name="topology_parameter_minimumPoints" xml:space="preserve">
+    <value>Fewest points</value>
+  </data>
+  <data name="topology_parameter_minimumLength" xml:space="preserve">
+    <value>Shortest length (m)</value>
+  </data>
+  <data name="topology_parameter_minimumArea" xml:space="preserve">
+    <value>Smallest area (m²)</value>
+  </data>
+  <data name="topology_parameter_minimumWidth" xml:space="preserve">
+    <value>Smallest width (m)</value>
+  </data>
+  <data name="topology_parameter_sliverWidth" xml:space="preserve">
+    <value>Sliver width (m)</value>
+  </data>
+  <data name="topology_parameter_interiorPartEnds" xml:space="preserve">
+    <value>Check ends where parts meet (1 = yes)</value>
+  </data>
+  <data name="topology_parameter_sharedStretch" xml:space="preserve">
+    <value>Report shared stretches (1 = yes)</value>
+  </data>
+  <data name="topology_parameter_enclosedGaps" xml:space="preserve">
+    <value>Report enclosed gaps (1 = yes)</value>
+  </data>
+  <data name="topology_parameter_maximumGapArea" xml:space="preserve">
+    <value>Largest gap area (m²)</value>
+  </data>
+  <data name="topology_export_rule" xml:space="preserve">
+    <value>Rule</value>
+  </data>
+  <data name="topology_export_kind" xml:space="preserve">
+    <value>Kind</value>
+  </data>
+  <data name="topology_export_severity" xml:space="preserve">
+    <value>Severity</value>
+  </data>
+  <data name="topology_export_sentence" xml:space="preserve">
+    <value>Issue</value>
+  </data>
+  <data name="topology_export_value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="topology_export_features" xml:space="preserve">
+    <value>Features</value>
+  </data>
+  <data name="topology_export_location" xml:space="preserve">
+    <value>Location (longitude, latitude)</value>
+  </data>
+  <data name="topology_rule_geometryValid" xml:space="preserve">
+    <value>Geometry must be valid</value>
+  </data>
+  <data name="topology_rule_distinctPoints" xml:space="preserve">
+    <value>Points must not coincide</value>
+  </data>
+  <data name="topology_rule_pointOnLine" xml:space="preserve">
+    <value>Point must be on line</value>
+  </data>
+  <data name="topology_rule_lineEndCovered" xml:space="preserve">
+    <value>Line ends must have points</value>
+  </data>
+  <data name="topology_rule_lineCarriesPoints" xml:space="preserve">
+    <value>Line must carry points</value>
+  </data>
+  <data name="topology_rule_pointOnOneLine" xml:space="preserve">
+    <value>Point on more than one line</value>
+  </data>
+  <data name="topology_rule_sequenceAlongLine" xml:space="preserve">
+    <value>Numbers must rise along the line</value>
+  </data>
+  <data name="topology_rule_lineEndsConnect" xml:space="preserve">
+    <value>Line ends must connect</value>
+  </data>
+  <data name="topology_rule_partsJoin" xml:space="preserve">
+    <value>Parts of a line must join</value>
+  </data>
+  <data name="topology_rule_distinctLines" xml:space="preserve">
+    <value>Lines must not duplicate</value>
+  </data>
+  <data name="topology_rule_touchAndReturn" xml:space="preserve">
+    <value>Lines must not touch and return</value>
+  </data>
+  <data name="topology_rule_polygonsNoOverlap" xml:space="preserve">
+    <value>Polygons must not overlap</value>
+  </data>
+  <data name="topology_rule_polygonsNoGap" xml:space="preserve">
+    <value>Polygons must not leave gaps</value>
+  </data>
+  <data name="topology_kind_geometryValid_NoGeometry" xml:space="preserve">
+    <value>The feature has no geometry</value>
+  </data>
+  <data name="topology_kind_geometryValid_ClosedRing" xml:space="preserve">
+    <value>A ring repeats its first point</value>
+  </data>
+  <data name="topology_kind_geometryValid_RepeatedPoint" xml:space="preserve">
+    <value>The same point twice in a row</value>
+  </data>
+  <data name="topology_kind_geometryValid_TooFewPoints" xml:space="preserve">
+    <value>Too few points</value>
+  </data>
+  <data name="topology_kind_geometryValid_ZeroAreaRing" xml:space="preserve">
+    <value>A ring with no area</value>
+  </data>
+  <data name="topology_kind_geometryValid_InvalidCoordinate" xml:space="preserve">
+    <value>A coordinate is not a number</value>
+  </data>
+  <data name="topology_kind_geometryValid_CoordinateOutOfRange" xml:space="preserve">
+    <value>A longitude or latitude out of range</value>
+  </data>
+  <data name="topology_kind_geometryValid_WrongRingOrientation" xml:space="preserve">
+    <value>A ring wound the wrong way (fixed automatically)</value>
+  </data>
+  <data name="topology_kind_distinctPoints_samePlace" xml:space="preserve">
+    <value>Points at the same place</value>
+  </data>
+  <data name="topology_kind_distinctPoints_close" xml:space="preserve">
+    <value>Points {0} apart</value>
+  </data>
+  <data name="topology_kind_distinctPoints_chain" xml:space="preserve">
+    <value>Points linked through each other, {0} across</value>
+  </data>
+  <data name="topology_kind_pointOnLine_nearLine" xml:space="preserve">
+    <value>Point {0} from the nearest line</value>
+  </data>
+  <data name="topology_kind_pointOnLine_farFromLines" xml:space="preserve">
+    <value>Point far from every line</value>
+  </data>
+  <data name="topology_kind_lineEndCovered_start" xml:space="preserve">
+    <value>No point at the line's start</value>
+  </data>
+  <data name="topology_kind_lineEndCovered_end" xml:space="preserve">
+    <value>No point at the line's end</value>
+  </data>
+  <data name="topology_kind_lineCarriesPoints_tooFewPoints" xml:space="preserve">
+    <value>Only {0} points on the line</value>
+  </data>
+  <data name="topology_kind_pointOnOneLine_onSeveralLines" xml:space="preserve">
+    <value>Point on {0} lines</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_missing" xml:space="preserve">
+    <value>Point without a number</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_duplicate" xml:space="preserve">
+    <value>Number {0} used twice</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_outOfOrder" xml:space="preserve">
+    <value>Number {0} out of order</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_gap" xml:space="preserve">
+    <value>{0} numbers missing</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_directionUndecided" xml:space="preserve">
+    <value>The numbers rise in neither direction</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_unsnappedEnd" xml:space="preserve">
+    <value>Line ends {0} apart, not joined</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_overshoot" xml:space="preserve">
+    <value>Line ends {0} past a crossing</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_undershoot" xml:space="preserve">
+    <value>Line ends {0} short of another line</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_freeEnd" xml:space="preserve">
+    <value>Line end connected to nothing</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_chain" xml:space="preserve">
+    <value>Line ends linked through each other, {0} across</value>
+  </data>
+  <data name="topology_kind_partsJoin_gap" xml:space="preserve">
+    <value>Gap of {0} between parts</value>
+  </data>
+  <data name="topology_kind_partsJoin_detachedPart" xml:space="preserve">
+    <value>A part {0} away from the others</value>
+  </data>
+  <data name="topology_kind_partsJoin_branch" xml:space="preserve">
+    <value>{0} part ends meet at one place</value>
+  </data>
+  <data name="topology_kind_partsJoin_outOfOrder" xml:space="preserve">
+    <value>Parts stored out of order</value>
+  </data>
+  <data name="topology_kind_partsJoin_reversedPart" xml:space="preserve">
+    <value>A part drawn against the others</value>
+  </data>
+  <data name="topology_kind_distinctLines_wholeLine" xml:space="preserve">
+    <value>Duplicate line</value>
+  </data>
+  <data name="topology_kind_distinctLines_sharedStretch" xml:space="preserve">
+    <value>Lines share {0}</value>
+  </data>
+  <data name="topology_kind_touchAndReturn_touchAndReturn" xml:space="preserve">
+    <value>Lines cross twice within {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_duplicate" xml:space="preserve">
+    <value>Duplicate polygon</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_inside" xml:space="preserve">
+    <value>A polygon inside another, {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_overlap" xml:space="preserve">
+    <value>Polygons overlap by {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_thinOverlap" xml:space="preserve">
+    <value>Thin overlap of {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoGap_sliver" xml:space="preserve">
+    <value>Sliver {0} long between neighbours</value>
+  </data>
+  <data name="topology_kind_polygonsNoGap_enclosedGap" xml:space="preserve">
+    <value>Empty space of {0} enclosed by polygons</value>
+  </data>
 </root>
