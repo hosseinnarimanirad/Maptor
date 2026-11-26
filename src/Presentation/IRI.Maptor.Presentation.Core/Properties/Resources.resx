@@ -4848,6 +4848,9 @@
   <data name="topology_fix_reason_notEditable" xml:space="preserve">
     <value>Layer {0} cannot be edited here.</value>
   </data>
+  <data name="topology_fix_reason_cannotRemove" xml:space="preserve">
+    <value>This fix deletes a feature, and features cannot be deleted here. Edit it by hand.</value>
+  </data>
   <data name="topology_parameter_fixDistance" xml:space="preserve">
     <value>Fix distance (m)</value>
   </data>

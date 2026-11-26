@@ -14,6 +14,7 @@ using IRI.Maptor.Core.Spatial.Primitives;
 using IRI.Maptor.Core.SpatialReferenceSystem;
 using IRI.Maptor.Core.Topology.Checking;
 using IRI.Maptor.Core.Topology.Findings;
+using IRI.Maptor.Core.Topology.Fixes;
 using IRI.Maptor.Core.Topology.FixTypes;
 using IRI.Maptor.Core.Topology.Rules;
 using IRI.Maptor.Core.Topology.RuleTypes;
@@ -376,6 +377,48 @@ public class TopologyPanelsTest
 
         Assert.Empty((await f.CheckAsync()).Issues);
         Assert.Equal(0, fixes.PendingCount);
+    });
+
+    /// <summary>An app that keeps its features itself: it gets the edits, the map layers do not.</summary>
+    private sealed class RecordingTarget : ITopologyFixTarget
+    {
+        public string? Refuse { get; set; }
+
+        public List<TopologyFixProposal> Applied { get; } = new();
+
+        public Task<(string Reason, string? LayerName)?> CannotApplyAsync(TopologyFixProposal proposal)
+            => Task.FromResult<(string, string?)?>(Refuse is null ? null : (Refuse, null));
+
+        public Task ApplyAsync(TopologyFixProposal proposal, string sessionTitle)
+        {
+            Applied.Add(proposal);
+            return Task.CompletedTask;
+        }
+    }
+
+    [Fact]
+    public void FixSession_WithItsOwnTarget_HandsItTheFix_AndLeavesTheLayersAlone() => OnUiThread(async () =>
+    {
+        // a read-only map: the target, not the map's edit permission, decides
+        var f = new Fixture(new ReadOnlyMap());
+        var target = new RecordingTarget();
+        var fixes = new TopologyFixSession(f.Workspace, target);
+
+        var issue = Assert.Single((await f.CheckAsync()).Issues);
+        var evaluation = Assert.Single(await fixes.EvaluateAsync(issue, CancellationToken.None));
+
+        Assert.True(evaluation.CanApply);
+
+        await fixes.ApplyAsync(evaluation);
+
+        Assert.Same(evaluation.Offer.Proposal, Assert.Single(target.Applied));
+        Assert.Equal(0, f.Towers.NumberOfUpdatedFeatures);
+        Assert.True(fixes.IsPending(issue));
+
+        target.Refuse = FixApplyReasons.CannotRemove;
+        var refused = Assert.Single(await fixes.EvaluateAsync(issue, CancellationToken.None));
+        Assert.False(refused.CanApply);
+        Assert.Equal(FixApplyReasons.CannotRemove, refused.CannotApply!.Value.Reason);
     });
 
     [Fact]

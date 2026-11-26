@@ -21,6 +21,9 @@ public static class FixApplyReasons
 
     /// <summary>A layer of the fix cannot be edited (argument: its name).</summary>
     public const string NotEditable = "notEditable";
+
+    /// <summary>The fix removes a feature and the target keeps every feature (a custom <see cref="ITopologyFixTarget"/>).</summary>
+    public const string CannotRemove = "cannotRemove";
 }
 
 /// <summary>
@@ -28,7 +31,7 @@ public static class FixApplyReasons
 /// the layer's <see cref="IEditableVectorDataSource"/>, so undo and Save work as for any edit. On a versioned layer it
 /// names the next review session after the rule. It saves nothing.
 /// </summary>
-public sealed class TopologyFixApplier
+public sealed class TopologyFixApplier : ITopologyFixTarget
 {
     private readonly TopologyWorkspace _workspace;
 

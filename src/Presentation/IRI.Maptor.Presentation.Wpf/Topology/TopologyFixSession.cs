@@ -48,16 +48,18 @@ public sealed class TopologyFixEvaluation
 public sealed class TopologyFixSession
 {
     private readonly TopologyWorkspace _workspace;
-    private readonly TopologyFixApplier _applier;
+    private readonly ITopologyFixTarget _applier;
     private readonly TopologyFixChecker _checker;
 
     private readonly HashSet<string> _pending = new(StringComparer.Ordinal);
     private TopologyCheckResult? _pendingFor;
 
-    public TopologyFixSession(TopologyWorkspace workspace)
+    /// <param name="workspace">The tab's workspace.</param>
+    /// <param name="target">Where fixes go; by default the map layers' pending edits (<see cref="TopologyFixApplier"/>).</param>
+    public TopologyFixSession(TopologyWorkspace workspace, ITopologyFixTarget? target = null)
     {
         _workspace = workspace ?? throw new ArgumentNullException(nameof(workspace));
-        _applier = new TopologyFixApplier(workspace);
+        _applier = target ?? new TopologyFixApplier(workspace);
         _checker = new TopologyFixChecker(workspace.Catalog);
     }
 
@@ -118,7 +120,7 @@ public sealed class TopologyFixSession
         return evaluations;
     }
 
-    /// <summary>Applies the fix as pending edits; the issue is "fix pending" until the next check.</summary>
+    /// <summary>Applies the fix through the target (by default as pending edits); the issue is "fix pending" until the next check.</summary>
     public async Task ApplyAsync(TopologyFixEvaluation evaluation)
     {
         if (evaluation is null)

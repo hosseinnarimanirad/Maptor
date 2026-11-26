@@ -4752,6 +4752,9 @@
   <data name="topology_fix_reason_notEditable" xml:space="preserve">
     <value>لایهٔ {0} در اینجا قابل ویرایش نیست.</value>
   </data>
+  <data name="topology_fix_reason_cannotRemove" xml:space="preserve">
+    <value>این اصلاح عارضه‌ای را حذف می‌کند و در اینجا حذف عارضه ممکن نیست. آن را دستی ویرایش کنید.</value>
+  </data>
   <data name="topology_parameter_fixDistance" xml:space="preserve">
     <value>فاصلهٔ اصلاح (متر)</value>
   </data>
