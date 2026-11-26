@@ -72,6 +72,7 @@
     <ProjectReference Include="..\..\Core\IRI.Maptor.Core.ShapefileFormat\IRI.Maptor.Core.ShapefileFormat.csproj" />
     <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Spatial\IRI.Maptor.Core.Spatial.csproj" />
     <ProjectReference Include="..\..\Core\IRI.Maptor.Core.SpatialReferenceSystem\IRI.Maptor.Core.SpatialReferenceSystem.csproj" />
+    <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Topology\IRI.Maptor.Core.Topology.csproj" />
     <ProjectReference Include="..\..\Core\IRI.Maptor.Core.Versioning\IRI.Maptor.Core.Versioning.csproj" />
     <ProjectReference Include="..\IRI.Maptor.Presentation.Core\IRI.Maptor.Presentation.Core.csproj" />
   </ItemGroup>
