@@ -43,6 +43,7 @@
     <ProjectReference Include="..\..\src\Infrastructure\IRI.Maptor.Infrastructure.SqlServerSpatialExtension\IRI.Maptor.Infrastructure.SqlServerSpatialExtension.csproj" />
     <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.Astronomy\IRI.Maptor.Core.Astronomy.csproj" />
     <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.Satellite\IRI.Maptor.Core.Satellite.csproj" />
+    <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.Topology\IRI.Maptor.Core.Topology.csproj" />
     <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.Common\IRI.Maptor.Core.Common.csproj" />
     <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.FileGdb\IRI.Maptor.Core.FileGdb.csproj" />
     <ProjectReference Include="..\..\src\Core\IRI.Maptor.Core.Graph\IRI.Maptor.Core.Graph.csproj" />
