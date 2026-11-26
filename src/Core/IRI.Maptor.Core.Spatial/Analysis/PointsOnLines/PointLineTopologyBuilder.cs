@@ -1,5 +1,7 @@
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Core.Common.Abstractions;
+using IRI.Maptor.Core.Spatial.AdvancedStructures;
+using IRI.Maptor.Core.Spatial.Helpers;
 using IRI.Maptor.Core.Spatial.Primitives;
 using IRI.Maptor.Core.SpatialReferenceSystem;
 
@@ -24,8 +26,6 @@ namespace IRI.Maptor.Core.Spatial.Analysis.PointsOnLines;
 /// </summary>
 public sealed class PointLineTopologyBuilder<T> where T : IPoint, new()
 {
-    private const double MetresPerDegree = 111_320;
-
     private readonly PointLineTopologyOptions _options;
 
     public PointLineTopologyBuilder(PointLineTopologyOptions? options = null)
@@ -61,14 +61,21 @@ public sealed class PointLineTopologyBuilder<T> where T : IPoint, new()
 
         var preparedLines = PrepareLines(lines, isGeodetic, issues);
 
-        var grid = new SegmentGrid(_options.GridCellSize ?? (isGeodetic ? 0.01 : 1000));
+        // A prefilter over segment boxes; the distance test below decides.
+        var grid = new BoxGrid<SegmentRef>(_options.GridCellSize ?? (isGeodetic ? 0.01 : 1000));
 
         foreach (var line in preparedLines)
         {
             foreach (var part in line.Parts)
             {
                 for (int s = 0; s < part.Vertices.Count - 1; s++)
-                    grid.Add(new SegmentRef(line.Index, part.Index, s), part.Vertices[s], part.Vertices[s + 1]);
+                {
+                    var start = part.Vertices[s];
+                    var end = part.Vertices[s + 1];
+
+                    grid.Add(new SegmentRef(line.Index, part.Index, s),
+                        Math.Min(start.X, end.X), Math.Min(start.Y, end.Y), Math.Max(start.X, end.X), Math.Max(start.Y, end.Y));
+                }
             }
         }
 
@@ -91,7 +98,7 @@ public sealed class PointLineTopologyBuilder<T> where T : IPoint, new()
 
             var best = new Dictionary<int, LineStation<T>>();
 
-            var (dx, dy) = SearchHalfSize(point, tolerance, isGeodetic);
+            var (dx, dy) = LocalMetricFrame.At(point, isGeodetic).SearchHalfSize(tolerance);
 
             foreach (var segment in grid.Query(point.X - dx, point.Y - dy, point.X + dx, point.Y + dy))
             {
@@ -416,48 +423,16 @@ public sealed class PointLineTopologyBuilder<T> where T : IPoint, new()
         return IsFinite(length) ? length : 0;
     }
 
-    /// <summary>Half the size of the search box around a point, in coordinate units.</summary>
-    private static (double Dx, double Dy) SearchHalfSize(T point, double tolerance, bool isGeodetic)
-    {
-        if (!isGeodetic)
-            return (tolerance, tolerance);
-
-        // A little extra so rounding in the conversion never loses a line right at the tolerance.
-        var metres = tolerance * 1.01 + 0.001;
-
-        var cos = Math.Max(Math.Cos(point.Y * Math.PI / 180.0), 0.01);
-
-        return (metres / (MetresPerDegree * cos), metres / MetresPerDegree);
-    }
-
     /// <summary>
-    /// Distance from the point to the segment and where its foot falls on it (0 = start, 1 = end).
-    /// Geodetic data is flattened onto a local plane centred on the point, with the WGS84
-    /// metres-per-degree series at its latitude: well under a millimetre off at these distances.
+    /// Distance from the point to the segment and where its foot falls on it (0 = start, 1 = end),
+    /// measured in a <see cref="LocalMetricFrame"/> centred on the point.
     /// </summary>
     private static (double Distance, double T) DistanceToSegment(T point, T start, T end, bool isGeodetic)
     {
-        double sx, sy, ex, ey;
+        var frame = LocalMetricFrame.At(point, isGeodetic);
 
-        if (isGeodetic)
-        {
-            var latitude = point.Y * Math.PI / 180.0;
-
-            var perDegreeY = 111132.92 - 559.82 * Math.Cos(2 * latitude) + 1.175 * Math.Cos(4 * latitude) - 0.0023 * Math.Cos(6 * latitude);
-            var perDegreeX = 111412.84 * Math.Cos(latitude) - 93.5 * Math.Cos(3 * latitude) + 0.118 * Math.Cos(5 * latitude);
-
-            sx = (start.X - point.X) * perDegreeX;
-            sy = (start.Y - point.Y) * perDegreeY;
-            ex = (end.X - point.X) * perDegreeX;
-            ey = (end.Y - point.Y) * perDegreeY;
-        }
-        else
-        {
-            sx = start.X - point.X;
-            sy = start.Y - point.Y;
-            ex = end.X - point.X;
-            ey = end.Y - point.Y;
-        }
+        var (sx, sy) = frame.ToMetres(start);
+        var (ex, ey) = frame.ToMetres(end);
 
         var dx = ex - sx;
         var dy = ey - sy;
@@ -474,7 +449,7 @@ public sealed class PointLineTopologyBuilder<T> where T : IPoint, new()
 
     #endregion
 
-    #region Segment grid
+    #region Segment reference
 
     private readonly struct SegmentRef : IEquatable<SegmentRef>
     {
@@ -497,63 +472,6 @@ public sealed class PointLineTopologyBuilder<T> where T : IPoint, new()
         public override bool Equals(object? obj) => obj is SegmentRef other && Equals(other);
 
         public override int GetHashCode() => HashCode.Combine(Line, PartPosition, Segment);
-    }
-
-    /// <summary>A uniform grid over segment bounding boxes: a cheap prefilter, never the test itself.</summary>
-    private sealed class SegmentGrid
-    {
-        private readonly double _cellSize;
-        private readonly Dictionary<(long, long), List<SegmentRef>> _cells = new();
-
-        public SegmentGrid(double cellSize)
-        {
-            _cellSize = cellSize > 0 ? cellSize : 1;
-        }
-
-        public void Add(SegmentRef segment, T start, T end)
-        {
-            var (minX, minY) = Cell(Math.Min(start.X, end.X), Math.Min(start.Y, end.Y));
-            var (maxX, maxY) = Cell(Math.Max(start.X, end.X), Math.Max(start.Y, end.Y));
-
-            for (long x = minX; x <= maxX; x++)
-            {
-                for (long y = minY; y <= maxY; y++)
-                {
-                    if (!_cells.TryGetValue((x, y), out var bucket))
-                    {
-                        bucket = new List<SegmentRef>();
-                        _cells[(x, y)] = bucket;
-                    }
-
-                    bucket.Add(segment);
-                }
-            }
-        }
-
-        public IEnumerable<SegmentRef> Query(double minX, double minY, double maxX, double maxY)
-        {
-            var (fromX, fromY) = Cell(minX, minY);
-            var (toX, toY) = Cell(maxX, maxY);
-
-            var seen = new HashSet<SegmentRef>();
-
-            for (long x = fromX; x <= toX; x++)
-            {
-                for (long y = fromY; y <= toY; y++)
-                {
-                    if (!_cells.TryGetValue((x, y), out var bucket))
-                        continue;
-
-                    foreach (var segment in bucket)
-                    {
-                        if (seen.Add(segment))
-                            yield return segment;
-                    }
-                }
-            }
-        }
-
-        private (long, long) Cell(double x, double y) => ((long)Math.Floor(x / _cellSize), (long)Math.Floor(y / _cellSize));
     }
 
     #endregion
