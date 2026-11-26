@@ -47,11 +47,12 @@ public static class TopologyMessages
 
     /// <summary>The measured value with its unit, in the current language's digits; empty when there is none.</summary>
     public static string ValueText(TopologyFinding finding)
-    {
-        if (finding.Value is not double value)
-            return string.Empty;
+        => finding.Value is double value ? QuantityText(value, finding.ValueUnit) : string.Empty;
 
-        var number = finding.ValueUnit switch
+    /// <summary>A number with its unit, in the current language's digits, e.g. "0.8 m".</summary>
+    public static string QuantityText(double value, ValueUnit valueUnit)
+    {
+        var number = valueUnit switch
         {
             ValueUnit.Count => Math.Round(value).ToString("0", CultureInfo.InvariantCulture),
             _ => value.ToString(Math.Abs(value) >= 100 ? "0" : Math.Abs(value) >= 1 ? "0.0#" : "0.###", CultureInfo.InvariantCulture),
@@ -59,7 +60,7 @@ public static class TopologyMessages
 
         var localized = LocalizationManager.GetLocalizedNumberString(number);
 
-        var unit = finding.ValueUnit switch
+        var unit = valueUnit switch
         {
             ValueUnit.Metres => Text("topology_unit_metres") ?? "m",
             ValueUnit.SquareMetres => Text("topology_unit_squareMetres") ?? "m²",

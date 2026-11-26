@@ -12,6 +12,7 @@ using IRI.Maptor.Core.Spatial.Analysis;
 using IRI.Maptor.Core.Spatial.Primitives;
 using IRI.Maptor.Core.SpatialReferenceSystem;
 using IRI.Maptor.Core.Topology.Findings;
+using IRI.Maptor.Core.Topology.Fixes;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Presentation.Wpf.Cartography.Symbologies;
 using IRI.Maptor.Presentation.Wpf.ViewModels;
@@ -34,10 +35,16 @@ public sealed class TopologyOverlay
 
     private static readonly string[] LayerNames = { Prefix + "info", Prefix + "warning", Prefix + "error", Prefix + "selected" };
 
+    private static readonly string[] PreviewLayerNames = { Prefix + "previewBefore", Prefix + "previewAfter" };
+
     public static readonly SolidColorBrush ErrorBrush = Frozen(Color.FromRgb(0xCC, 0x79, 0xA7));
     public static readonly SolidColorBrush WarningBrush = Frozen(Color.FromRgb(0xE6, 0x9F, 0x00));
     public static readonly SolidColorBrush InfoBrush = Frozen(Color.FromRgb(0x00, 0x72, 0xB2));
     public static readonly SolidColorBrush SelectedBrush = Frozen(Color.FromRgb(0xD5, 0x00, 0x00));
+
+    /// <summary>A fix preview (doc 05 §7): the geometry as it is, dashed grey, and as it would be, bluish green.</summary>
+    public static readonly SolidColorBrush PreviewBeforeBrush = Frozen(Color.FromRgb(0x80, 0x80, 0x80));
+    public static readonly SolidColorBrush PreviewAfterBrush = Frozen(Color.FromRgb(0x00, 0x9E, 0x73));
 
     private readonly MapViewModelBase _map;
 
@@ -45,6 +52,7 @@ public sealed class TopologyOverlay
     private TopologyIssue? _selected;
     private int _version;
     private bool _isShown;
+    private TopologyFixProposal? _preview;
 
     public TopologyOverlay(MapViewModelBase map)
     {
@@ -80,6 +88,22 @@ public sealed class TopologyOverlay
 
         return RedrawAsync();
     }
+
+    /// <summary>The fix being previewed; null when none.</summary>
+    public TopologyFixProposal? Preview => _preview;
+
+    /// <summary>Draws a fix's before and after, whether or not the issues are shown; null removes it.</summary>
+    public Task ShowPreviewAsync(TopologyFixProposal? proposal)
+    {
+        _preview = proposal;
+
+        return RedrawPreviewAsync();
+    }
+
+    /// <summary>What a fix preview draws: the old geometries, then the new ones (removed features have none). Pure, for tests.</summary>
+    public static (IReadOnlyList<Geometry<Point>> Before, IReadOnlyList<Geometry<Point>> After) PreviewPlan(TopologyFixProposal proposal)
+        => (proposal.Edits.Select(e => ToMap(e.Before)).ToList(),
+            proposal.Edits.Where(e => e.After is not null).Select(e => ToMap(e.After!)).ToList());
 
     public void Clear()
     {
@@ -136,13 +160,51 @@ public sealed class TopologyOverlay
         }
     }
 
+    private async Task RedrawPreviewAsync()
+    {
+        foreach (var name in PreviewLayerNames)
+            _map.ClearLayer(name);
+
+        if (_preview is null || _map.RequestHighlightGeometries is null)
+            return;
+
+        var proposal = _preview;
+        var (before, after) = PreviewPlan(proposal);
+
+        if (before.Count > 0)
+            await _map.HighlightGeometriesAsync(PreviewLayerNames[0], before.ToList(), PreviewStyle(PreviewBeforeBrush, dashed: true));
+
+        if (after.Count > 0 && ReferenceEquals(proposal, _preview))
+            await _map.HighlightGeometriesAsync(PreviewLayerNames[1], after.ToList(), PreviewStyle(PreviewAfterBrush, dashed: false));
+    }
+
     private void OnSelectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (!IsShown)
+        if (!IsShown && _preview is null)
             return;
 
         // The map clears its highlight layers on a selection change; draw again once it has.
-        Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => _ = RedrawAsync()));
+        Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+        {
+            if (IsShown)
+                _ = RedrawAsync();
+
+            if (_preview is not null)
+                _ = RedrawPreviewAsync();
+        }));
+    }
+
+    private static VisualParameters PreviewStyle(SolidColorBrush stroke, bool dashed)
+    {
+        var style = new VisualParameters(null, stroke, dashed ? 2 : 3, 1)
+        {
+            PointSymbol = new SimplePointSymbolizer { SymbolWidth = 18, SymbolHeight = 18 },
+        };
+
+        if (dashed)
+            style.DashStyle = DashStyles.Dash;
+
+        return style;
     }
 
     private static IReadOnlyList<Geometry<Point>> Geometries(IEnumerable<TopologyIssue> issues)

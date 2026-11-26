@@ -14,6 +14,7 @@ using IRI.Maptor.Core.Spatial.Primitives;
 using IRI.Maptor.Core.SpatialReferenceSystem;
 using IRI.Maptor.Core.Topology.Checking;
 using IRI.Maptor.Core.Topology.Findings;
+using IRI.Maptor.Core.Topology.FixTypes;
 using IRI.Maptor.Core.Topology.Rules;
 using IRI.Maptor.Core.Topology.RuleTypes;
 using IRI.Maptor.Presentation.Wpf.Controls;
@@ -34,6 +35,12 @@ public class TopologyPanelsTest
 {
     private sealed class TestMap : MapViewModelBase
     {
+    }
+
+    /// <summary>A map whose user may not edit geometries (D34).</summary>
+    private sealed class ReadOnlyMap : MapViewModelBase
+    {
+        public override bool CanEditGeometry => false;
     }
 
     private const double MetreOfLatitude = 1 / 110_950.0;
@@ -63,7 +70,7 @@ public class TopologyPanelsTest
 
     private sealed class Fixture
     {
-        public Fixture()
+        public Fixture(MapViewModelBase? map = null)
         {
             Towers = new MemoryDataSource(new[]
             {
@@ -76,7 +83,7 @@ public class TopologyPanelsTest
 
             var layers = new Dictionary<string, VectorLayer> { ["Tower"] = Layer("towers", Towers), ["Route"] = Layer("routes", Routes) };
 
-            Map = new TestMap();
+            Map = map ?? new TestMap();
             Workspace = new TopologyWorkspace(Map, Rules(), StandardRuleTypes.CreateCatalog(),
                 entity => layers.TryGetValue(entity, out var layer) ? new[] { layer } : Array.Empty<VectorLayer>());
             Overlay = new TopologyOverlay(Map);
@@ -86,7 +93,7 @@ public class TopologyPanelsTest
 
         public MemoryDataSource Routes { get; }
 
-        public TestMap Map { get; }
+        public MapViewModelBase Map { get; }
 
         public TopologyWorkspace Workspace { get; }
 
@@ -337,4 +344,130 @@ public class TopologyPanelsTest
         lock (cache)
             cache.Clear();
     });
+
+    #region Fixes (step 5.1)
+
+    [Fact]
+    public void FixSession_AppliesTheFix_AsPendingEdits_AndTheNextCheckFindsNothing() => OnUiThread(async () =>
+    {
+        var f = new Fixture();
+        var fixes = new TopologyFixSession(f.Workspace);
+
+        var issue = Assert.Single((await f.CheckAsync()).Issues);
+        Assert.True(fixes.HasFixFor(issue));
+
+        var evaluation = Assert.Single(await fixes.EvaluateAsync(issue, CancellationToken.None));
+
+        // Equal ranks in this rule set: the tower moves onto the route.
+        Assert.True(evaluation.CanApply);
+        Assert.Equal(PointOntoLineFix.MovePoint, evaluation.Offer.Proposal!.Variant);
+
+        await fixes.ApplyAsync(evaluation);
+
+        Assert.Equal(1, f.Towers.NumberOfUpdatedFeatures);
+        Assert.Equal(0, f.Routes.NumberOfUpdatedFeatures);
+        Assert.True(fixes.IsPending(issue));
+        Assert.Equal(1, fixes.PendingCount);
+
+        // The tower is still in Web Mercator, now on the route.
+        var tower = (await f.Workspace.MapFeaturesAsync("Tower", new long[] { 3 })).Single().Feature;
+        Assert.Equal(SridHelper.WebMercator, tower.TheGeometry.Srid);
+        Assert.Equal(WebMercator(51.0005, 35.7).Y, tower.TheGeometry.Points![0].Y, 3);
+
+        Assert.Empty((await f.CheckAsync()).Issues);
+        Assert.Equal(0, fixes.PendingCount);
+    });
+
+    [Fact]
+    public void FixSession_WithoutEditPermission_OffersButCannotApply() => OnUiThread(async () =>
+    {
+        var f = new Fixture(new ReadOnlyMap());
+        var fixes = new TopologyFixSession(f.Workspace);
+
+        var issue = Assert.Single((await f.CheckAsync()).Issues);
+        var evaluation = Assert.Single(await fixes.EvaluateAsync(issue, CancellationToken.None));
+
+        Assert.True(evaluation.Offer.IsOffered);
+        Assert.False(evaluation.CanApply);
+        Assert.Equal(FixApplyReasons.NoPermission, evaluation.CannotApply!.Value.Reason);
+        await Assert.ThrowsAsync<InvalidOperationException>(() => fixes.ApplyAsync(evaluation));
+    });
+
+    [Fact]
+    public void IssuesPanel_PreviewThenApply_MarksTheRowPending() => OnUiThread(async () =>
+    {
+        var f = new Fixture();
+        var fixes = new TopologyFixSession(f.Workspace);
+        var panel = new TopologyIssuesPanelViewModel(f.Workspace, f.Overlay, fixes);
+
+        await f.CheckAsync();
+
+        var row = panel.View.Cast<TopologyIssueRow>().Single();
+        panel.Selected = row;
+
+        var fix = panel.Fix!;
+
+        for (int i = 0; i < 200 && fix.IsEvaluating; i++)
+            await Task.Delay(10);
+
+        Assert.True(fix.IsVisible);
+        Assert.True(fix.CanPreview, fix.Note);
+        Assert.Contains("[3]", fix.FixText);
+        Assert.DoesNotContain("{", fix.FixText);
+        Assert.False(fix.ApplyCommand.CanExecute(null));
+
+        fix.PreviewCommand.Execute(null);
+        for (int i = 0; i < 100 && !fix.IsPreviewing; i++)
+            await Task.Delay(10);
+
+        Assert.True(fix.IsPreviewing);
+        Assert.NotNull(f.Overlay.Preview);
+
+        fix.ApplyCommand.Execute(null);
+        for (int i = 0; i < 200 && !row.IsFixPending; i++)
+            await Task.Delay(10);
+
+        Assert.True(row.IsFixPending);
+        Assert.True(panel.HasPendingFixes);
+        Assert.DoesNotContain("{", panel.PendingFixText);
+        Assert.Null(f.Overlay.Preview);
+        Assert.True(fix.IsPending);
+        Assert.False(fix.CanPreview);
+    });
+
+    [Fact]
+    public void Overlay_PreviewPlan_DrawsBeforeAndAfter_OnTheMap()
+    {
+        var before = Geometry<Point>.Create(51.0005, 35.70001, SridHelper.GeodeticWGS84);
+        var after = Geometry<Point>.Create(51.0005, 35.7, SridHelper.GeodeticWGS84);
+        var finding = new TopologyFinding("r", PointOnLineRuleType.NearLine, IssueSeverity.Error, new[] { new FindingFeature("Tower", 3, FeatureRole.A) }, before);
+
+        var proposal = new IRI.Maptor.Core.Topology.Fixes.TopologyFixProposal("t", "v", finding,
+            new[] { new IRI.Maptor.Core.Topology.Fixes.FeatureEdit("Tower", 3, before, after), new IRI.Maptor.Core.Topology.Fixes.FeatureEdit("Tower", 4, before, null) },
+            new BoundingBox(51, 35.6, 51.1, 35.8));
+
+        var (drawnBefore, drawnAfter) = TopologyOverlay.PreviewPlan(proposal);
+
+        Assert.Equal(2, drawnBefore.Count);
+        Assert.Single(drawnAfter);   // a removed feature has no "after"
+        Assert.All(drawnBefore.Concat(drawnAfter), g => Assert.Equal(SridHelper.WebMercator, g.Srid));
+    }
+
+    [Fact]
+    public void FixApplier_ToLayer_KeepsTheLayersSrid()
+    {
+        var geodetic = Geometry<Point>.Create(51, 35.7, SridHelper.GeodeticWGS84);
+
+        var mercator = TopologyFixApplier.ToLayer(geodetic, SridHelper.WebMercator);
+        var zero = TopologyFixApplier.ToLayer(geodetic, 0);
+        var same = TopologyFixApplier.ToLayer(geodetic, SridHelper.GeodeticWGS84);
+
+        Assert.Equal(SridHelper.WebMercator, mercator.Srid);
+        Assert.Equal(WebMercator(51, 35.7).X, mercator.Points![0].X, 3);
+        Assert.Equal(0, zero.Srid);
+        Assert.Equal(mercator.Points[0].Y, zero.Points![0].Y, 6);
+        Assert.Same(geodetic, same);
+    }
+
+    #endregion
 }

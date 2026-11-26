@@ -53,7 +53,7 @@ public sealed class TopologyFilterOption<T>
 }
 
 /// <summary>One row of the issue list.</summary>
-public sealed class TopologyIssueRow
+public sealed class TopologyIssueRow : Notifier
 {
     public TopologyIssueRow(TopologyIssue issue, TopologyRule? rule, int ruleOrder, TopologyRuleSet ruleSet, CheckChange change)
     {
@@ -98,6 +98,15 @@ public sealed class TopologyIssueRow
 
     /// <summary>Orders the groups: worst severity first, then rule order.</summary>
     public string GroupSort { get; set; } = string.Empty;
+
+    private bool _isFixPending;
+
+    /// <summary>A fix was applied since the check (pending edits, not saved or checked yet).</summary>
+    public bool IsFixPending
+    {
+        get => _isFixPending;
+        set { if (_isFixPending != value) { _isFixPending = value; RaisePropertyChanged(); } }
+    }
 }
 
 /// <summary>A feature of the selected issue, with "show in attribute table".</summary>
@@ -122,13 +131,24 @@ public sealed class TopologyIssuesPanelViewModel : Notifier
 {
     private readonly TopologyWorkspace _workspace;
     private readonly TopologyOverlay _overlay;
+    private readonly TopologyFixSession? _fixes;
 
     private readonly List<TopologyIssueRow> _rows = new();
 
-    public TopologyIssuesPanelViewModel(TopologyWorkspace workspace, TopologyOverlay overlay)
+    /// <param name="workspace">The tab's session.</param>
+    /// <param name="overlay">The issues on the map.</param>
+    /// <param name="fixes">The fixes; null for a panel without them.</param>
+    public TopologyIssuesPanelViewModel(TopologyWorkspace workspace, TopologyOverlay overlay, TopologyFixSession? fixes = null)
     {
         _workspace = workspace ?? throw new ArgumentNullException(nameof(workspace));
         _overlay = overlay ?? throw new ArgumentNullException(nameof(overlay));
+        _fixes = fixes;
+
+        if (fixes is not null)
+        {
+            Fix = new TopologyFixViewModel(fixes, overlay);
+            fixes.Applied += (_, _) => UpdatePending();
+        }
 
         Rows = new ObservableCollection<TopologyIssueRow>();
         View = CollectionViewSource.GetDefaultView(Rows);
@@ -232,6 +252,14 @@ public sealed class TopologyIssuesPanelViewModel : Notifier
 
     public string LimitNote => _overlay.IsLimited ? TopologyMessages.Format("topology_issues_overlayLimited", TopologyOverlay.Limit) : string.Empty;
 
+    /// <summary>The selected issue's fix box; null when the panel has no fixes.</summary>
+    public TopologyFixViewModel? Fix { get; }
+
+    public bool HasPendingFixes => _fixes?.PendingCount > 0;
+
+    /// <summary>"2 fixes applied. Save the layers to keep them, then check again."</summary>
+    public string PendingFixText => HasPendingFixes ? TopologyMessages.Format("topology_fix_pendingFooter", _fixes!.PendingCount) : string.Empty;
+
     #region Selected issue
 
     private TopologyIssueRow? _selected;
@@ -251,6 +279,7 @@ public sealed class TopologyIssuesPanelViewModel : Notifier
             BuildSelectedFeatures();
             ZoomToSelected();
             _ = DrawAsync();
+            _ = Fix?.SetIssueAsync(value);
         }
     }
 
@@ -343,11 +372,22 @@ public sealed class TopologyIssuesPanelViewModel : Notifier
 
         Selected = null;
 
+        UpdatePending();
+
         foreach (var name in new[] { nameof(Header), nameof(SettingsChanged), nameof(SkippedText), nameof(HasSkipped), nameof(ErrorCount), nameof(WarningCount), nameof(InfoCount),
                      nameof(ErrorChip), nameof(WarningChip), nameof(InfoChip), nameof(SelectedRule), nameof(SelectedChange), nameof(HasComparison), nameof(IsEmpty), nameof(EmptyText) })
             RaisePropertyChanged(name);
 
         Refilter();
+    }
+
+    private void UpdatePending()
+    {
+        foreach (var row in _rows)
+            row.IsFixPending = _fixes?.IsPending(row.Issue) == true;
+
+        RaisePropertyChanged(nameof(HasPendingFixes));
+        RaisePropertyChanged(nameof(PendingFixText));
     }
 
     private bool Passes(TopologyIssueRow row)

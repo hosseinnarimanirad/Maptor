@@ -4698,4 +4698,61 @@
   <data name="topology_kind_polygonsNoGap_enclosedGap" xml:space="preserve">
     <value>فضای خالی {0} محصور میان چندضلعی‌ها</value>
   </data>
+  <data name="topology_fix_title" xml:space="preserve">
+    <value>اصلاح</value>
+  </data>
+  <data name="topology_fix_preview" xml:space="preserve">
+    <value>پیش‌نمایش</value>
+  </data>
+  <data name="topology_fix_apply" xml:space="preserve">
+    <value>اعمال</value>
+  </data>
+  <data name="topology_fix_cancel" xml:space="preserve">
+    <value>انصراف</value>
+  </data>
+  <data name="topology_fix_evaluating" xml:space="preserve">
+    <value>در حال بررسی اصلاح…</value>
+  </data>
+  <data name="topology_fix_pending" xml:space="preserve">
+    <value>اصلاح در انتظار</value>
+  </data>
+  <data name="topology_fix_pendingNote" xml:space="preserve">
+    <value>اصلاح اعمال شده است. لایه را ذخیره و سپس دوباره کنترل کنید.</value>
+  </data>
+  <data name="topology_fix_pendingFooter" xml:space="preserve">
+    <value>{0} اصلاح اعمال شد. برای ماندگاری، لایه‌ها را ذخیره و سپس دوباره کنترل کنید.</value>
+  </data>
+  <data name="topology_fix_failed" xml:space="preserve">
+    <value>اصلاح اعمال نشد: {0}</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_movePoint" xml:space="preserve">
+    <value>{0} به اندازهٔ {1} روی {2} منتقل می‌شود.</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_moveLineVertex" xml:space="preserve">
+    <value>یک رأس {2} به اندازهٔ {1} روی {0} منتقل می‌شود.</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_insertLineVertex" xml:space="preserve">
+    <value>یک رأس جدید روی {0} به {2} افزوده می‌شود؛ {1} دورتر از مسیر فعلی آن.</value>
+  </data>
+  <data name="topology_fix_reason_featureMissing" xml:space="preserve">
+    <value>اصلاحی ندارد: یکی از عارضه‌های این ایراد دیگر روی نقشه نیست.</value>
+  </data>
+  <data name="topology_fix_reason_beyondFixDistance" xml:space="preserve">
+    <value>اصلاحی ندارد: جابه‌جایی {0} است که از فاصلهٔ اصلاح ({1}) بیشتر است. آن را دستی ویرایش کنید.</value>
+  </data>
+  <data name="topology_fix_reason_doesNotResolve" xml:space="preserve">
+    <value>رد شد: پس از اصلاح، این ایراد همچنان باقی می‌ماند.</value>
+  </data>
+  <data name="topology_fix_reason_createsIssue" xml:space="preserve">
+    <value>رد شد: این اصلاح باعث «{0}» ({1}) می‌شود.</value>
+  </data>
+  <data name="topology_fix_reason_noPermission" xml:space="preserve">
+    <value>مجوز ویرایش هندسه را ندارید.</value>
+  </data>
+  <data name="topology_fix_reason_notEditable" xml:space="preserve">
+    <value>لایهٔ {0} در اینجا قابل ویرایش نیست.</value>
+  </data>
+  <data name="topology_parameter_fixDistance" xml:space="preserve">
+    <value>فاصلهٔ اصلاح (متر)</value>
+  </data>
 </root>

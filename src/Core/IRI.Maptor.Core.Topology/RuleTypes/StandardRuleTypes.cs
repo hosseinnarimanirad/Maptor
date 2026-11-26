@@ -1,8 +1,10 @@
+using IRI.Maptor.Core.Topology.Fixes;
+using IRI.Maptor.Core.Topology.FixTypes;
 using IRI.Maptor.Core.Topology.Rules;
 
 namespace IRI.Maptor.Core.Topology.RuleTypes;
 
-/// <summary>The rule types that come with the library.</summary>
+/// <summary>The rule types and fix types that come with the library.</summary>
 public static class StandardRuleTypes
 {
     /// <summary>A new instance of every standard rule type.</summary>
@@ -23,6 +25,20 @@ public static class StandardRuleTypes
         new PolygonsNoGapRuleType(),
     };
 
-    /// <summary>A catalog with every standard rule type registered.</summary>
-    public static TopologyRuleCatalog CreateCatalog() => new TopologyRuleCatalog(All());
+    /// <summary>A new instance of every standard fix type.</summary>
+    public static IReadOnlyList<ITopologyFixType> AllFixes() => new ITopologyFixType[]
+    {
+        new PointOntoLineFix(),
+    };
+
+    /// <summary>A catalog with every standard rule type and fix type registered.</summary>
+    public static TopologyRuleCatalog CreateCatalog()
+    {
+        var catalog = new TopologyRuleCatalog(All());
+
+        foreach (var fix in AllFixes())
+            catalog.RegisterFix(fix);
+
+        return catalog;
+    }
 }

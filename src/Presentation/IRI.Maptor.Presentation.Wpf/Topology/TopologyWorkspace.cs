@@ -177,18 +177,9 @@ public sealed class TopologyWorkspace : Notifier
 
         var ruleSet = RuleSet;
 
-        var skipped = ruleSet.Rules.Where(r => r.Enabled && LayersOf(r).Any(l => StateOf(l) == TopologyLayerState.NotLoaded)).ToList();
+        var runnable = Runnable(ruleSet, out var skipped);
 
-        var runnable = skipped.Aggregate(ruleSet, (set, rule) => set.WithRule(rule.WithEnabled(false)));
-
-        var sources = runnable.Rules
-            .Where(r => r.Enabled)
-            .SelectMany(LayersOf)
-            .Concat(scope.EntityName is null ? Enumerable.Empty<string>() : new[] { scope.EntityName })
-            .Distinct()
-            .Where(l => StateOf(l) != TopologyLayerState.NotLoaded)
-            .Select(l => (ITopologyFeatureSource)new MapLayerFeatureSource(MapLayersOf(l), l))
-            .ToList();
+        var sources = SourcesFor(runnable, scope.EntityName);
 
         var runner = new ValidationRunner(Catalog);
 
@@ -223,6 +214,27 @@ public sealed class TopologyWorkspace : Notifier
 
         return found;
     }
+
+    /// <summary>The rule set with the rules whose layers are not loaded switched off.</summary>
+    internal TopologyRuleSet Runnable(TopologyRuleSet ruleSet, out IReadOnlyList<TopologyRule> skipped)
+    {
+        var notRunnable = ruleSet.Rules.Where(r => r.Enabled && LayersOf(r).Any(l => StateOf(l) == TopologyLayerState.NotLoaded)).ToList();
+
+        skipped = notRunnable;
+
+        return notRunnable.Aggregate(ruleSet, (set, rule) => set.WithRule(rule.WithEnabled(false)));
+    }
+
+    /// <summary>One source over the map layers of each loaded layer the enabled rules read (plus a scope's layer).</summary>
+    internal IReadOnlyList<ITopologyFeatureSource> SourcesFor(TopologyRuleSet runnable, string? scopeLayer = null)
+        => runnable.Rules
+            .Where(r => r.Enabled)
+            .SelectMany(LayersOf)
+            .Concat(scopeLayer is null ? Enumerable.Empty<string>() : new[] { scopeLayer })
+            .Distinct()
+            .Where(l => StateOf(l) != TopologyLayerState.NotLoaded)
+            .Select(l => (ITopologyFeatureSource)new MapLayerFeatureSource(MapLayersOf(l), l))
+            .ToList();
 
     private IEnumerable<string> LayersOf(TopologyRule rule)
     {

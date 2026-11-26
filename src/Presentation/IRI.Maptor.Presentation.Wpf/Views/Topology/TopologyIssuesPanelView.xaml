@@ -85,6 +85,9 @@
                         <TextBlock DockPanel.Dock="Right" Text="{Binding [topology_issues_new], Source={StaticResource Localization}}"
                                    Foreground="{DynamicResource MahApps.Brushes.Accent}" Margin="6,0,0,0"
                                    Visibility="{Binding IsNew, Converter={StaticResource topologyVisible}}"/>
+                        <TextBlock DockPanel.Dock="Right" Text="{Binding [topology_fix_pending], Source={StaticResource Localization}}"
+                                   Foreground="{DynamicResource MahApps.Brushes.Accent}" Margin="6,0,0,0"
+                                   Visibility="{Binding IsFixPending, Converter={StaticResource topologyVisible}}"/>
                         <StackPanel>
                             <TextBlock Text="{Binding Sentence}" TextWrapping="Wrap">
                                 <TextBlock.Style>
@@ -125,6 +128,25 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+
+                <!--the fix (doc 05 §7): Preview draws it on the map; Apply makes pending edits; nothing is saved here-->
+                <StackPanel DataContext="{Binding Fix}" Margin="0,8,0,0"
+                            Visibility="{Binding IsVisible, Converter={StaticResource topologyVisible}, FallbackValue=Collapsed}">
+                    <Separator Margin="0,0,0,6"/>
+                    <TextBlock Text="{Binding [topology_fix_title], Source={StaticResource Localization}}" Style="{StaticResource topologyLabel}"/>
+                    <TextBlock Text="{Binding FixText}" TextWrapping="Wrap" Margin="0,2,0,0"
+                               Visibility="{Binding HasFixText, Converter={StaticResource topologyVisible}}"/>
+                    <TextBlock Text="{Binding Note}" Style="{StaticResource topologyNote}" TextWrapping="Wrap" Margin="0,2,0,0"
+                               Visibility="{Binding HasNote, Converter={StaticResource topologyVisible}}"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                        <Button Content="{Binding [topology_fix_preview], Source={StaticResource Localization}}"
+                                Command="{Binding PreviewCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.Secondary.Small}"/>
+                        <Button Content="{Binding [topology_fix_apply], Source={StaticResource Localization}}" Margin="6,0,0,0"
+                                Command="{Binding ApplyCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.Primary.Small}"/>
+                        <Button Content="{Binding [topology_fix_cancel], Source={StaticResource Localization}}" Margin="6,0,0,0"
+                                Command="{Binding CancelCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.Secondary.Small}"/>
+                    </StackPanel>
+                </StackPanel>
             </StackPanel>
         </Border>
 
@@ -135,7 +157,11 @@
                     Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark.Flat}">
                 <iconPacks:PackIconMaterial Kind="MicrosoftExcel"/>
             </Button>
-            <TextBlock Text="{Binding LimitNote}" Style="{StaticResource topologyNote}" VerticalAlignment="Center"/>
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="{Binding PendingFixText}" Style="{StaticResource topologyWarning}" TextWrapping="Wrap"
+                           Visibility="{Binding HasPendingFixes, Converter={StaticResource topologyVisible}}"/>
+                <TextBlock Text="{Binding LimitNote}" Style="{StaticResource topologyNote}"/>
+            </StackPanel>
         </DockPanel>
     </Grid>
 </UserControl>

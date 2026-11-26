@@ -4794,4 +4794,61 @@
   <data name="topology_kind_polygonsNoGap_enclosedGap" xml:space="preserve">
     <value>Empty space of {0} enclosed by polygons</value>
   </data>
+  <data name="topology_fix_title" xml:space="preserve">
+    <value>Fix</value>
+  </data>
+  <data name="topology_fix_preview" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="topology_fix_apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="topology_fix_cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="topology_fix_evaluating" xml:space="preserve">
+    <value>Checking the fix…</value>
+  </data>
+  <data name="topology_fix_pending" xml:space="preserve">
+    <value>fix pending</value>
+  </data>
+  <data name="topology_fix_pendingNote" xml:space="preserve">
+    <value>A fix was applied. Save the layer, then check again.</value>
+  </data>
+  <data name="topology_fix_pendingFooter" xml:space="preserve">
+    <value>{0} fixes applied. Save the layers to keep them, then check again.</value>
+  </data>
+  <data name="topology_fix_failed" xml:space="preserve">
+    <value>The fix could not be applied: {0}</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_movePoint" xml:space="preserve">
+    <value>{0} moves {1} onto {2}.</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_moveLineVertex" xml:space="preserve">
+    <value>A vertex of {2} moves {1} onto {0}.</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_insertLineVertex" xml:space="preserve">
+    <value>{2} gets a new vertex at {0}, {1} from where it runs now.</value>
+  </data>
+  <data name="topology_fix_reason_featureMissing" xml:space="preserve">
+    <value>No fix: a feature of this issue is no longer on the map.</value>
+  </data>
+  <data name="topology_fix_reason_beyondFixDistance" xml:space="preserve">
+    <value>No fix: the move would be {0}, more than the fix distance ({1}). Edit it by hand.</value>
+  </data>
+  <data name="topology_fix_reason_doesNotResolve" xml:space="preserve">
+    <value>Refused: the issue would still be there after the fix.</value>
+  </data>
+  <data name="topology_fix_reason_createsIssue" xml:space="preserve">
+    <value>Refused: the fix would cause “{0}” ({1}).</value>
+  </data>
+  <data name="topology_fix_reason_noPermission" xml:space="preserve">
+    <value>You may not edit geometries.</value>
+  </data>
+  <data name="topology_fix_reason_notEditable" xml:space="preserve">
+    <value>Layer {0} cannot be edited here.</value>
+  </data>
+  <data name="topology_parameter_fixDistance" xml:space="preserve">
+    <value>Fix distance (m)</value>
+  </data>
 </root>
