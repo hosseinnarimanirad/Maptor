@@ -55,6 +55,9 @@ public static class FixReasons
     /// <summary>The place to fix (the crossing, the end, the other line) is not where the check found it; check again.</summary>
     public const string NotFound = "notFound";
 
+    /// <summary>Nothing of the feature would be left (argument: the feature).</summary>
+    public const string NothingLeft = "nothingLeft";
+
     /// <summary>The fix would move something farther than the rule's fix distance (arguments: distance, fix distance).</summary>
     public const string BeyondFixDistance = "beyondFixDistance";
 

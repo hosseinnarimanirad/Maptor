@@ -5,8 +5,9 @@ be on lines, line ends that should meet, duplicates, polygons that overlap or le
 its rules once (which layers, which distances, which kinds of finding matter); the library does the checking.
 
 The engine stores nothing and draws nothing. It reads features through `ITopologyFeatureSource`, runs the
-rules, and returns a sorted list of issues with counts and timings. Showing, fixing and saving are the
-caller's business.
+rules, and returns a sorted list of issues with counts and timings. For many kinds of issue it can also propose a
+fix (the edits, computed without writing) and check it before anyone applies it. Showing, applying and saving are
+the caller's business.
 
 ```
 rule set (in code)  ─┐
@@ -94,6 +95,25 @@ or not about one of the chosen features, are then dropped.
 The last five read one shared `PointLineTopologyBuilder` pass per pair of layers and distance; when the rule
 set has a `sequenceAlongLine` rule for the pair, its numbers are read in the same pass. A line with fewer than
 two points reports only `tooFewPoints`, not its open ends.
+
+## Fixes
+
+A fix type (`ITopologyFixType`, namespace `.FixTypes`) computes the edits for one finding as a
+`TopologyFixProposal`: `FeatureEdit`s (new geometry, or removal; attributes are never changed), the area it changes
+and the values for its sentence. Where a person must choose, it offers one proposal per choice. When two layers
+disagree, the lower-ranked one moves (`TopologyLayer.Rank`). `TopologyFixChecker` runs the rules on the fix's area
+as the data is and as it would be, and refuses the fix when the issue stays or a new issue at least as severe
+appears. The catalogue knows which fix suits which kind (`TopologyRuleCatalog.FixesFor`).
+
+| Fix type | For | Does |
+|---|---|---|
+| `pointOntoLine` | `pointOnLine` near line | Moves the point onto the line, or the line's vertex onto the point, by rank; up to `fixDistance` |
+| `snapLineEnds` | `lineEndsConnect` unsnapped end | The ends meet at the highest-ranked end, or at the first |
+| `trimOvershoot` | `lineEndsConnect` overshoot | Cuts the line back to the crossing |
+| `extendUndershoot` | `lineEndsConnect` undershoot | Straight on to the other line, else to its nearest point |
+| `deleteDuplicatePoints`, `deleteDuplicateLines`, `deleteDuplicatePolygons` | `distinctPoints`, `distinctLines` whole line, `polygonsNoOverlap` duplicate | Keep one (a choice per feature), delete the others |
+| `cutOverlap` | `polygonsNoOverlap` overlap, thin overlap, inside | Cuts the shared area out of one polygon (a choice per polygon) |
+| `giveGap` | `polygonsNoGap` sliver, enclosed gap | Adds the empty space to one neighbour (a choice per polygon) |
 
 ## Status
 

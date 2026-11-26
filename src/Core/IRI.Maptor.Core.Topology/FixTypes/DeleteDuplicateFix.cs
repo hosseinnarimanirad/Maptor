@@ -4,7 +4,7 @@ using IRI.Maptor.Core.Topology.Fixes;
 namespace IRI.Maptor.Core.Topology.FixTypes;
 
 /// <summary>
-/// Fix for duplicates (R01 points, R22 whole lines): keep one feature of the group and delete the others. The expert
+/// Fix for duplicates (R01 points, R22 whole lines, R40 duplicate polygons): keep one feature of the group and delete the others. The expert
 /// chooses which one stays, so there is one offer per feature (doc 05 §7.3). Attributes are not merged. Message
 /// arguments: the feature kept, the features deleted.
 /// </summary>
@@ -12,6 +12,7 @@ public sealed class DeleteDuplicateFix : ITopologyFixType
 {
     public const string PointsTypeId = "deleteDuplicatePoints";
     public const string LinesTypeId = "deleteDuplicateLines";
+    public const string PolygonsTypeId = "deleteDuplicatePolygons";
 
     public const string Keep = "keep";
 

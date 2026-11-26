@@ -71,7 +71,7 @@ public static class EnclosedGaps
                 }
             }
 
-            foreach (var loop in Loops(free, tolerance))
+            foreach (var loop in PieceLoops.Chain(free, f => f.Piece, tolerance))
             {
                 var contributors = loop.Select(l => l.Polygon).Distinct().OrderBy(i => i).ToList();
 
@@ -146,61 +146,5 @@ public static class EnclosedGaps
         }
 
         return valid.GroupBy(Find).Select(g => g.OrderBy(i => i).ToList());
-    }
-
-    /// <summary>Chains pieces end to start into closed loops; pieces that close no loop are dropped.</summary>
-    private static IEnumerable<List<(RingPiece Piece, int Polygon)>> Loops(List<(RingPiece Piece, int Polygon)> pieces, double tolerance)
-    {
-        var used = new bool[pieces.Count];
-
-        double Gap((double X, double Y) p, (double X, double Y) q) => Math.Sqrt((p.X - q.X) * (p.X - q.X) + (p.Y - q.Y) * (p.Y - q.Y));
-
-        for (int first = 0; first < pieces.Count; first++)
-        {
-            if (used[first])
-                continue;
-
-            var loop = new List<int> { first };
-            used[first] = true;
-
-            var closed = false;
-
-            while (true)
-            {
-                var end = pieces[loop[loop.Count - 1]].Piece.End;
-
-                if (loop.Count > 2 && Gap(end, pieces[first].Piece.Start) <= tolerance)
-                {
-                    closed = true;
-                    break;
-                }
-
-                var next = -1;
-                var best = double.MaxValue;
-
-                for (int k = 0; k < pieces.Count; k++)
-                {
-                    if (used[k])
-                        continue;
-
-                    var gap = Gap(end, pieces[k].Piece.Start);
-
-                    if (gap <= tolerance && gap < best)
-                    {
-                        best = gap;
-                        next = k;
-                    }
-                }
-
-                if (next < 0)
-                    break;
-
-                used[next] = true;
-                loop.Add(next);
-            }
-
-            if (closed)
-                yield return loop.Select(k => pieces[k]).ToList();
-        }
     }
 }

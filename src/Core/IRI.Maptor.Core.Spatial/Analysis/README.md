@@ -221,6 +221,7 @@ measured in metres through `LocalMetricFrame`; any other SRS in its own units.
 | `PolygonOverlap` | The overlap of two polygons (area, perimeter, centre), right where boundaries share edges or vertices |
 | `BoundaryPieces`, `PlanarPolygon` | A polygon's boundary cut where it meets others, each piece inside, outside or on the other boundary |
 | `EnclosedGaps` | Holes enclosed by two or more polygons taken together |
+| `PolygonBoolean` | Difference and union of two polygons from their boundary pieces, right where boundaries share edges or vertices; house rings (never closed, outer counterclockwise) |
 
 ## Statistics & shape characteristics
 

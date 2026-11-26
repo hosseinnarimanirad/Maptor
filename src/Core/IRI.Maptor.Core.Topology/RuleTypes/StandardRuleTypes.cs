@@ -34,6 +34,9 @@ public static class StandardRuleTypes
         new ExtendUndershootFix(),
         new DeleteDuplicateFix(DeleteDuplicateFix.PointsTypeId, DistinctPointsRuleType.TypeId, DistinctPointsRuleType.SamePlace, DistinctPointsRuleType.Close),
         new DeleteDuplicateFix(DeleteDuplicateFix.LinesTypeId, DistinctLinesRuleType.TypeId, DistinctLinesRuleType.WholeLine),
+        new CutOverlapFix(),
+        new DeleteDuplicateFix(DeleteDuplicateFix.PolygonsTypeId, PolygonsNoOverlapRuleType.TypeId, PolygonsNoOverlapRuleType.Duplicate),
+        new GiveGapFix(),
     };
 
     /// <summary>A catalog with every standard rule type and fix type registered.</summary>

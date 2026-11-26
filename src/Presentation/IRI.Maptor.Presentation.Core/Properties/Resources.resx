@@ -4875,4 +4875,19 @@
   <data name="topology_fix_reason_notFound" xml:space="preserve">
     <value>No fix: the place to fix is no longer where the check found it. Check again.</value>
   </data>
+  <data name="topology_fix_cutOverlap_cutFrom" xml:space="preserve">
+    <value>Cut the shared area out of {0}; {1} stays as it is.</value>
+  </data>
+  <data name="topology_fix_deleteDuplicatePolygons_keep" xml:space="preserve">
+    <value>Keep {0}; delete {1}.</value>
+  </data>
+  <data name="topology_fix_giveGap_takeGap" xml:space="preserve">
+    <value>Add the empty space to {0}.</value>
+  </data>
+  <data name="topology_fix_giveGap_takeSliver" xml:space="preserve">
+    <value>Widen {0} to meet {1}, filling the sliver.</value>
+  </data>
+  <data name="topology_fix_reason_nothingLeft" xml:space="preserve">
+    <value>No fix: nothing of {0} would be left.</value>
+  </data>
 </root>

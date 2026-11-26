@@ -4779,4 +4779,19 @@
   <data name="topology_fix_reason_notFound" xml:space="preserve">
     <value>اصلاحی ندارد: محل اصلاح دیگر همان‌جا که کنترل یافته بود نیست. دوباره کنترل کنید.</value>
   </data>
+  <data name="topology_fix_cutOverlap_cutFrom" xml:space="preserve">
+    <value>برداشتن ناحیهٔ مشترک از {0}؛ {1} بدون تغییر می‌ماند.</value>
+  </data>
+  <data name="topology_fix_deleteDuplicatePolygons_keep" xml:space="preserve">
+    <value>نگه‌داشتن {0} و حذف {1}.</value>
+  </data>
+  <data name="topology_fix_giveGap_takeGap" xml:space="preserve">
+    <value>افزودن فضای خالی به {0}.</value>
+  </data>
+  <data name="topology_fix_giveGap_takeSliver" xml:space="preserve">
+    <value>گسترش {0} تا رسیدن به {1} و پر شدن باریکه.</value>
+  </data>
+  <data name="topology_fix_reason_nothingLeft" xml:space="preserve">
+    <value>اصلاحی ندارد: چیزی از {0} باقی نمی‌ماند.</value>
+  </data>
 </root>
