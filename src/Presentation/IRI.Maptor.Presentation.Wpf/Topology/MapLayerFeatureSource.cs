@@ -27,7 +27,7 @@ namespace IRI.Maptor.Presentation.Wpf.Topology;
 /// only partial scopes; <see cref="WatchChanges"/> tells when results may be out of date.</item>
 /// </list>
 /// </summary>
-public sealed class MapLayerFeatureSource : ITopologyFeatureSource
+public sealed class MapLayerFeatureSource : ILayerFeatureSource
 {
     private readonly IReadOnlyList<VectorLayer> _layers;
     private readonly Dispatcher _dispatcher;
