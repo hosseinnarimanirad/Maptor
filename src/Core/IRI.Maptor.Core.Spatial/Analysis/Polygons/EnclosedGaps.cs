@@ -85,7 +85,8 @@ public static class EnclosedGaps
                 if (signed >= 0)
                     continue;
 
-                var points = ring.Reverse().Select(p => frame.FromMetres(p.X, p.Y)).Select(c => new T { X = c.X, Y = c.Y }).ToList();
+                // Enumerable.Reverse by name: on an array, C# 14 binds .Reverse() to the in-place Span method (void).
+                var points = Enumerable.Reverse(ring).Select(p => frame.FromMetres(p.X, p.Y)).Select(c => new T { X = c.X, Y = c.Y }).ToList();
 
                 var outline = Geometry<T>.CreatePolygon(points, polygons[group[0]]!.Srid);
 
