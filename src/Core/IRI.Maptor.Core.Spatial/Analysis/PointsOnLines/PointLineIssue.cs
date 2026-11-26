@@ -2,18 +2,6 @@ using IRI.Maptor.Core.Common.Abstractions;
 
 namespace IRI.Maptor.Core.Spatial.Analysis.PointsOnLines;
 
-public enum PointLineIssueSeverity
-{
-    /// <summary>Worth knowing; the data may well be right (e.g. a point shared by two lines).</summary>
-    Info = 0,
-
-    /// <summary>Probably a data problem; the topology is still usable.</summary>
-    Warning = 1,
-
-    /// <summary>The data is wrong; whatever depends on it is unreliable.</summary>
-    Error = 2,
-}
-
 public enum PointLineIssueCode
 {
     /// <summary>A point within the tolerance of no line. <see cref="PointLineIssue{T}.PointIndex"/>.</summary>
@@ -97,7 +85,7 @@ public sealed class PointLineIssue<T> where T : IPoint, new()
 
     public PointLineIssueCode Code { get; }
 
-    public PointLineIssueSeverity Severity { get; }
+    public IssueSeverity Severity { get; }
 
     public int? LineIndex { get; }
 
@@ -112,14 +100,14 @@ public sealed class PointLineIssue<T> where T : IPoint, new()
     /// <summary>Where to show the issue: the point, or the vertex of an open line end.</summary>
     public T? Location { get; }
 
-    public static PointLineIssueSeverity SeverityOf(PointLineIssueCode code) => code switch
+    public static IssueSeverity SeverityOf(PointLineIssueCode code) => code switch
     {
-        PointLineIssueCode.OrphanPoint => PointLineIssueSeverity.Error,
-        PointLineIssueCode.CoincidentPoints => PointLineIssueSeverity.Error,
-        PointLineIssueCode.InvalidLine => PointLineIssueSeverity.Error,
-        PointLineIssueCode.InvalidPoint => PointLineIssueSeverity.Error,
-        PointLineIssueCode.SharedPoint => PointLineIssueSeverity.Info,
-        _ => PointLineIssueSeverity.Warning,
+        PointLineIssueCode.OrphanPoint => IssueSeverity.Error,
+        PointLineIssueCode.CoincidentPoints => IssueSeverity.Error,
+        PointLineIssueCode.InvalidLine => IssueSeverity.Error,
+        PointLineIssueCode.InvalidPoint => IssueSeverity.Error,
+        PointLineIssueCode.SharedPoint => IssueSeverity.Info,
+        _ => IssueSeverity.Warning,
     };
 
     public override string ToString()

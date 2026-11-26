@@ -55,7 +55,7 @@ public class PointLineTopologyTest
 
         var orphan = Assert.Single(IssuesOf(topology, PointLineIssueCode.OrphanPoint));
         Assert.Equal(0, orphan.PointIndex);
-        Assert.Equal(PointLineIssueSeverity.Error, orphan.Severity);
+        Assert.Equal(IssueSeverity.Error, orphan.Severity);
     }
 
     [Fact]
@@ -71,7 +71,7 @@ public class PointLineTopologyTest
         Assert.True(topology.Lines[1].Contains(0));
 
         var shared = Assert.Single(IssuesOf(topology, PointLineIssueCode.SharedPoint));
-        Assert.Equal(PointLineIssueSeverity.Info, shared.Severity);
+        Assert.Equal(IssueSeverity.Info, shared.Severity);
         Assert.Equal(2, shared.Value);
     }
 
@@ -213,7 +213,7 @@ public class PointLineTopologyTest
         Assert.Equal(2, gap.PointIndex);
         Assert.Equal(1, gap.OtherPointIndex);
         Assert.Equal(2, gap.Value);
-        Assert.Equal(PointLineIssueSeverity.Warning, gap.Severity);
+        Assert.Equal(IssueSeverity.Warning, gap.Severity);
     }
 
     [Fact]
@@ -270,7 +270,7 @@ public class PointLineTopologyTest
             new Point?[] { new Point(0, 0), new Point(50, 0), new Point(50.001, 0.2), new Point(100, 0) });
 
         var coincident = Assert.Single(IssuesOf(topology, PointLineIssueCode.CoincidentPoints));
-        Assert.Equal(PointLineIssueSeverity.Error, coincident.Severity);
+        Assert.Equal(IssueSeverity.Error, coincident.Severity);
         Assert.Equal(new[] { 1, 2 }, new[] { coincident.OtherPointIndex!.Value, coincident.PointIndex!.Value }.OrderBy(i => i));
     }
 

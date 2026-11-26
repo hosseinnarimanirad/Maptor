@@ -197,7 +197,7 @@ var ofPoint  = topology.GetLineIndices(pointIndex);           // none, one, or s
 var problems = topology.GetIssuesOfLine(lineIndex);           // the line's issues and its points'
 ```
 
-| Severity | Issues |
+| Severity (`IssueSeverity`, in `IRI.Maptor.Core.Spatial.Analysis`) | Issues |
 |---|---|
 | Error | `OrphanPoint`, `CoincidentPoints`, `InvalidLine`, `InvalidPoint` |
 | Warning | `MissingSequence`, `DuplicateSequence`, `SequenceOutOfOrder` (off the longest rising run, so one wrong number is reported once), `SequenceGap`, `DirectionUndecided`, `OpenLineEnd` (a part end with no point), `LineWithoutPoints` |
