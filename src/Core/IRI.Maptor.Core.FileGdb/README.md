@@ -35,12 +35,19 @@ foreach (var feature in parcels.ReadFeatures(new FileGdbReadOptions { OnRowError
 
 - `FileGeodatabase.Open(folder)` lists datasets (feature classes and standalone tables), feature
   datasets, domains and relationship classes. Definitions that cannot be read are reported in
-  `Warnings` instead of failing the whole geodatabase.
+  `Warnings` instead of failing the whole geodatabase. `FileGeodatabase.IsGeodatabaseFolder(path)` tells a
+  geodatabase folder (`*.gdb` with its system catalog) without opening it.
+- To show a feature class on a map, use `FileGdbDataSource` in `IRI.Maptor.Core.Persistence`.
 - `FileGdbDataset`:
   - Catalog data: alias, feature dataset, subtypes and relationship classes.
   - Physical schema, read on first use: `Fields`, `RowCount`, `GeometryType`, `HasZ`/`HasM`, `Extent`.
   - `Srid`/`SpatialReference`. The SRID comes from `LatestWKID`, else `WKID`, else the WKT, else 0. For example, Esri's 102100 becomes 3857.
   - `Storage` says whether the table is readable. Compressed and missing tables are listed, but reading them throws.
+  - `GetSrs()` gives the coordinate system as a Maptor `SrsBase`: from the WKT, else the SRID, else WGS84 when the
+    extent is within longitude/latitude bounds; it throws when none of these applies, rather than guess a projection.
+  - `IsCodedField`, `GetCodedDomains`, `IsSubtypeField`: whether a field's values can be shown as names (its own
+    coded-value domain, one a subtype sets, or the subtype field). `GetValueType` is the field's .NET type, `string`
+    for a coded field.
 - `FileGdbField` combines the stored field (type, length, nullability, default) with the alias and domain from the dataset's definition.
 - `ReadFeatures` streams the rows one at a time in OBJECTID order:
   - With `OnRowError` set, a corrupt row or geometry is reported and skipped; without it, the read throws.

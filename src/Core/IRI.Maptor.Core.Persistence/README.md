@@ -17,6 +17,8 @@ dotnet add package IRI.Maptor.Core.Persistence
 - Base implementations: `BaseDataSource`, `VectorDataSource`, `RasterDataSource`
 - Generated overlays: map grids (`MapGridDataSource`, `MgrsGridDataSource`) the day/night terminator with civil, nautical and astronomical twilight bands (`DayNightDataSource`), and satellites (`SatellitesDataSource`): every satellite's position and, for the selected one, its past and future ground track, the area that sees it and its imaging swath. `HitTest` finds the satellite under a click, in screen pixels; `LabelMode` names all satellites, only the selected one, or (Auto) all up to 50. `Region` draws the area (or point) passes are found for, and `HighlightedPass` draws the track flown during one pass in bold. For the time-based ones, set `Time` and redraw
 - In-memory vector sources built on `MemoryDataSource`, with file-backed variants for GeoJSON, shapefile, GPX, KML/KMZ, DXF, TopoJSON, ESRI JSON, and plain text/JSON lists
+- `FileGdbDataSource`: one feature class of an ESRI File Geodatabase (`*.gdb` folder), read-only. Lazy like the shapefile source (schema and extent first, features on `LoadAsync`, projected to Web Mercator); coded values and subtypes as their names; a fallback SRID for a feature class whose coordinate system cannot be read. `CreateAll` makes one per feature class and gives the reason for each that cannot be shown
+- `ImportFormatDetector`: the format of a file (by extension, JSON by content), a folder (`DetectFromFolder`: a file geodatabase), pasted text, or a drop (`ChooseDroppedPath`: the first item, a shapefile's companion files left out)
 - Raster sources: image pyramids (plain and zipped) and online/offline Google-style tile sources
 - Scale-dependent data sources that switch content by map scale (`MemoryScaleDependentDataSource`)
 - `ConnectedFeatureSet` model and the `DataSourceType` enum of supported backends
@@ -34,6 +36,19 @@ var source = await GeoJsonDataSource.CreateFromFileAsync(
 var featureSet = await source.GetAsFeatureSetAsync();
 ```
 
+Show a feature class of a file geodatabase (the folder, then the feature class name):
+
+```csharp
+using IRI.Maptor.Core.Persistence.DataSources;
+
+// fallbackSrid is used only when the geodatabase gives no usable coordinate system
+var roads = new FileGdbDataSource(@"C:\data\City.gdb", "Roads", fallbackSrid: 32639);
+
+await roads.LoadAsync();
+
+var features = await roads.GetAsFeatureSetAsync();   // Web Mercator; roads.SkippedRowCount rows had no shape
+```
+
 Query any vector source through the shared abstraction:
 
 ```csharp
@@ -49,7 +64,7 @@ async Task PrintCountAsync(IVectorDataSource source, BoundingBox extent)
 ## Dependencies
 
 - `IRI.Maptor.Core.Common`, `IRI.Maptor.Core.Spatial`, `IRI.Maptor.Core.SpatialReferenceSystem`
-- `IRI.Maptor.Core.Ogc`, `IRI.Maptor.Core.ShapefileFormat` (file-backed data sources)
+- `IRI.Maptor.Core.Ogc`, `IRI.Maptor.Core.ShapefileFormat` (file-backed data sources), `IRI.Maptor.Core.FileGdb` (`FileGdbDataSource`)
 - `IRI.Maptor.Core.Astronomy` (the Sun's position for `DayNightDataSource`) and `IRI.Maptor.Core.Satellite` (SGP4, tracks, footprints and swaths for `SatellitesDataSource`)
 
 ---

@@ -14,7 +14,7 @@ Maptor is an open-source .NET library suite for spatial operations, geospatial d
 - **Spatial reference systems** — predefined ellipsoids, datum transformations, UTM/Mercator/Web Mercator/Lambert projections, geodetic distance calculations (ellipsoidal and spherical)
 - **Geometry and algorithms** — OGC geometry model (points, lines, polygons and multi-variants), Delaunay triangulation, Voronoi diagrams, convex hull, simplification, KdTree/RTree spatial indexes, graph algorithms, machine learning for spatial data
 - **Data I/O** — Shapefile, GeoJSON, Esri JSON, KML/KMZ, GPX, WKT/WKB, TopoJSON, DXF, SVG, EPS, PDF export, GeoParquet, PMTiles, Mapbox vector tiles, MBTiles, GeoPackage, Cesium terrain (read), GeoTIFF metadata, world files, and OGC services (WMS, WFS, GML, SLD)
-- **Database integration** — SQL Server Spatial, PostgreSQL/PostGIS, SQLite, ESRI Personal Geodatabase, EF Core spatial mapping without NetTopologySuite
+- **Database integration** — SQL Server Spatial, PostgreSQL/PostGIS, SQLite, ESRI Personal Geodatabase, ESRI File Geodatabase (read-only, no GDAL), EF Core spatial mapping without NetTopologySuite
 - **WPF visualization** — interactive `MapViewer` control with layers, symbology, tile basemaps, markers, and a localization system covering 15 cultures with right-to-left support
 
 ## Repository layout
