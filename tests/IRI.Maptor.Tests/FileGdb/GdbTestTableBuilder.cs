@@ -177,6 +177,58 @@ internal sealed class GdbTestTableBuilder
         w.Write((byte)value);
     }
 
+    /// <summary>
+    /// A one-part polyline shape (<c>x1, y1, x2, y2, ...</c>), length-prefixed as a record stores it, on this builder's
+    /// grid (origin -400, scale 1e9): shape type, point and part counts, a bounding box the reader skips, then each
+    /// coordinate as a signed delta from the previous one.
+    /// </summary>
+    public static void WritePolyline(BinaryWriter w, params double[] xy)
+    {
+        var shape = Record(s =>
+        {
+            WriteVarUInt(s, 3);                          // polyline
+            WriteVarUInt(s, (ulong)(xy.Length / 2));     // points
+            WriteVarUInt(s, 1);                          // parts
+
+            for (int i = 0; i < 4; i++)
+                WriteVarUInt(s, 0);                      // bounding box
+
+            long previousX = 0, previousY = 0;
+
+            for (int i = 0; i + 1 < xy.Length; i += 2)
+            {
+                long x = (long)Math.Round((xy[i] + 400) * 1e9);
+                long y = (long)Math.Round((xy[i + 1] + 400) * 1e9);
+
+                WriteVarInt(s, x - previousX);
+                WriteVarInt(s, y - previousY);
+
+                previousX = x;
+                previousY = y;
+            }
+        });
+
+        WriteVarUInt(w, (ulong)shape.Length);
+        w.Write(shape);
+    }
+
+    /// <summary>A signed varint: the sign in bit 6 of the first byte, 6 value bits there, then 7 per byte.</summary>
+    private static void WriteVarInt(BinaryWriter w, long value)
+    {
+        ulong magnitude = (ulong)Math.Abs(value);
+        byte first = (byte)((magnitude & 0x3F) | (value < 0 ? 0x40u : 0));
+        magnitude >>= 6;
+
+        if (magnitude == 0)
+        {
+            w.Write(first);
+            return;
+        }
+
+        w.Write((byte)(first | 0x80));
+        WriteVarUInt(w, magnitude);
+    }
+
     public static byte[] Record(Action<BinaryWriter> write)
     {
         using var ms = new MemoryStream();
