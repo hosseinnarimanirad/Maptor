@@ -7511,6 +7511,150 @@ namespace IRI.Maptor.Presentation.Core.Properties {
                 return ResourceManager.GetString("msg_fileGdb_nothingAdded", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add layers from a file geodatabase.
+        /// </summary>
+        public static string dialog_fileGdbPicker_title {
+            get {
+                return ResourceManager.GetString("dialog_fileGdbPicker_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select all.
+        /// </summary>
+        public static string dialog_fileGdbPicker_selectAll {
+            get {
+                return ResourceManager.GetString("dialog_fileGdbPicker_selectAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geodatabase root.
+        /// </summary>
+        public static string dialog_fileGdbPicker_rootGroup {
+            get {
+                return ResourceManager.GetString("dialog_fileGdbPicker_rootGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0:N0} rows.
+        /// </summary>
+        public static string dialog_fileGdbPicker_rowCount {
+            get {
+                return ResourceManager.GetString("dialog_fileGdbPicker_rowCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coordinate system unknown: set it below.
+        /// </summary>
+        public static string dialog_fileGdbPicker_needsSrs {
+            get {
+                return ResourceManager.GetString("dialog_fileGdbPicker_needsSrs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coordinate system for the ticked layers the geodatabase gives none for:.
+        /// </summary>
+        public static string dialog_fileGdbPicker_srsHint {
+            get {
+                return ResourceManager.GetString("dialog_fileGdbPicker_srsHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tick at least one layer..
+        /// </summary>
+        public static string dialog_fileGdbPicker_validationNone {
+            get {
+                return ResourceManager.GetString("dialog_fileGdbPicker_validationNone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} of {1} selected.
+        /// </summary>
+        public static string dialog_fileGdbPicker_selectedCount {
+            get {
+                return ResourceManager.GetString("dialog_fileGdbPicker_selectedCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add.
+        /// </summary>
+        public static string dialog_fileGdbPicker_add {
+            get {
+                return ResourceManager.GetString("dialog_fileGdbPicker_add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Multipoint.
+        /// </summary>
+        public static string dialog_fileGdbPicker_multipoint {
+            get {
+                return ResourceManager.GetString("dialog_fileGdbPicker_multipoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Table without shapes.
+        /// </summary>
+        public static string dialog_fileGdbPicker_reasonTable {
+            get {
+                return ResourceManager.GetString("dialog_fileGdbPicker_reasonTable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Compressed: uncompress it in ArcGIS first.
+        /// </summary>
+        public static string dialog_fileGdbPicker_reasonCompressed {
+            get {
+                return ResourceManager.GetString("dialog_fileGdbPicker_reasonCompressed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Its table file is missing.
+        /// </summary>
+        public static string dialog_fileGdbPicker_reasonMissing {
+            get {
+                return ResourceManager.GetString("dialog_fileGdbPicker_reasonMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 3D multipatch: not supported.
+        /// </summary>
+        public static string dialog_fileGdbPicker_reasonMultipatch {
+            get {
+                return ResourceManager.GetString("dialog_fileGdbPicker_reasonMultipatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to More than {0:N0} rows: too large to load.
+        /// </summary>
+        public static string dialog_fileGdbPicker_reasonTooLarge {
+            get {
+                return ResourceManager.GetString("dialog_fileGdbPicker_reasonTooLarge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot be read.
+        /// </summary>
+        public static string dialog_fileGdbPicker_reasonUnreadable {
+            get {
+                return ResourceManager.GetString("dialog_fileGdbPicker_reasonUnreadable", resourceCulture);
+            }
+        }
 
         /// <summary>
         ///   Looks up a localized string similar to Vector.

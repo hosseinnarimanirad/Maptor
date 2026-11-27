@@ -1,0 +1,92 @@
+<UserControl x:Class="IRI.Maptor.Presentation.Wpf.Controls.Dialogs.SrsChoiceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:helpers="clr-namespace:IRI.Maptor.Presentation.Wpf.Helpers"
+             xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core">
+
+    <!--The coordinate-system choice of SrsChoiceViewModel (DataContext): the CRS card and, for UTM, the zone card.
+        The same two cards as ImportOptionsDialogView.-->
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Controls.All.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <StackPanel>
+        <Border Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <iconPacks:PackIconPhosphorIcons Kind="Globe" Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}"/>
+                <ComboBox Grid.Column="1"
+                          ItemsSource="{Binding AvailableSrsOptions}"
+                          DisplayMemberPath="DisplayName"
+                          Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}"
+                          SelectedItem="{Binding SelectedSrsOption, Mode=TwoWay}"/>
+            </Grid>
+        </Border>
+
+        <Border Style="{StaticResource IRI.Maptor.Styles.Border.Card}"
+                Visibility="{Binding IsUtmSelected, Converter={StaticResource boolToVisibilityConverter}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <iconPacks:PackIconPhosphorIcons Kind="MapTrifoldFill" Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}"/>
+                <mahApp:NumericUpDown Grid.Column="1" Minimum="1" Maximum="60"
+                                      mahApp:ControlsHelper.CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}"
+                                      Value="{Binding UtmZone, Mode=TwoWay}"
+                                      Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Normal}"/>
+                <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="8,2,4,0">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Text" Value="{Binding [srs_northernHemisphere], Source={StaticResource Localization}}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsNorthHemisphere}" Value="False">
+                                    <Setter Property="Text" Value="{Binding [srs_southernHemisphere], Source={StaticResource Localization}}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <ToggleButton Grid.Column="3" IsChecked="{Binding IsNorthHemisphere, Mode=TwoWay}"
+                              Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight.Flat}" FlowDirection="LeftToRight"
+                              ToolTip="{Binding [dialog_dxfOpen_hemisphereTooltip], Source={StaticResource Localization}}"
+                              AutomationProperties.Name="{Binding [dialog_dxfOpen_hemisphereTooltip], Source={StaticResource Localization}}">
+                    <iconPacks:PackIconPhosphorIcons Kind="CircleHalfFill" RenderTransformOrigin="0.5,0.5"
+                                                     Margin="0" Width="24" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <iconPacks:PackIconPhosphorIcons.Style>
+                            <Style TargetType="iconPacks:PackIconPhosphorIcons" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.FieldAdornment}">
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsNorthHemisphere}" Value="False">
+                                        <Setter Property="RenderTransform">
+                                            <Setter.Value>
+                                                <RotateTransform Angle="90"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </iconPacks:PackIconPhosphorIcons.Style>
+                    </iconPacks:PackIconPhosphorIcons>
+                </ToggleButton>
+            </Grid>
+        </Border>
+    </StackPanel>
+</UserControl>

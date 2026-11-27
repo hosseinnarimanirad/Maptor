@@ -109,20 +109,21 @@ public class FileGdbDataSource : VectorDataSource
     public override string ToString() => $"{nameof(FileGdbDataSource)}";
 
     /// <summary>
-    /// A data source for every feature class of <paramref name="geodatabase"/>, in catalog order. Standalone tables
-    /// are left out; a feature class that cannot be shown (compressed, multipatch, unknown coordinate system, ...)
-    /// is in <c>Skipped</c> with the reason, and does not stop the others.
+    /// A data source for each feature class of <paramref name="datasets"/>, in their order. Standalone tables are left
+    /// out; a feature class that cannot be shown (compressed, multipatch, unknown coordinate system without
+    /// <paramref name="fallbackSrid"/>, ...) is in <c>Skipped</c> with the reason, and does not stop the others.
+    /// <paramref name="fallbackSrid"/> is used only by the feature classes whose coordinate system is unknown.
     /// </summary>
-    public static (List<FileGdbDataSource> Created, List<(string Name, string Reason)> Skipped) CreateAll(FileGeodatabase geodatabase)
+    public static (List<FileGdbDataSource> Created, List<(string Name, string Reason)> Skipped) CreateAll(IEnumerable<FileGdbDataset> datasets, int? fallbackSrid = null)
     {
         var created = new List<FileGdbDataSource>();
         var skipped = new List<(string Name, string Reason)>();
 
-        foreach (var dataset in geodatabase.Datasets.Where(d => d.Kind == GdbDatasetKind.FeatureClass))
+        foreach (var dataset in datasets.Where(d => d.Kind == GdbDatasetKind.FeatureClass))
         {
             try
             {
-                created.Add(new FileGdbDataSource(dataset));
+                created.Add(new FileGdbDataSource(dataset, fallbackSrid));
             }
             catch (Exception ex)
             {
@@ -141,6 +142,24 @@ public class FileGdbDataSource : VectorDataSource
 
         return geodatabase.GetDataset(datasetName)
             ?? throw new InvalidOperationException($"The geodatabase has no feature class named {datasetName}.");
+    }
+
+    /// <summary>
+    /// Whether the dataset gives a coordinate system Maptor can use (<see cref="FileGdbDataset.GetSrs"/>); when not,
+    /// a data source needs a fallback SRID.
+    /// </summary>
+    public static bool HasKnownSrs(FileGdbDataset dataset)
+    {
+        try
+        {
+            dataset.GetSrs();
+
+            return true;
+        }
+        catch (InvalidOperationException)
+        {
+            return false;
+        }
     }
 
     private static (SrsBase Srs, int? AssumedSrid) ResolveSrs(FileGdbDataset dataset, int? fallbackSrid)

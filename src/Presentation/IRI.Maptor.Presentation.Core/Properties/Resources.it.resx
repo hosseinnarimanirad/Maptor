@@ -3289,4 +3289,52 @@
   <data name="msg_fileGdb_nothingAdded" xml:space="preserve">
     <value>Non è stato possibile aggiungere alcun livello di questo geodatabase.</value>
   </data>
+  <data name="dialog_fileGdbPicker_title" xml:space="preserve">
+    <value>Aggiungi livelli da un file geodatabase</value>
+  </data>
+  <data name="dialog_fileGdbPicker_selectAll" xml:space="preserve">
+    <value>Seleziona tutto</value>
+  </data>
+  <data name="dialog_fileGdbPicker_rootGroup" xml:space="preserve">
+    <value>Radice del geodatabase</value>
+  </data>
+  <data name="dialog_fileGdbPicker_rowCount" xml:space="preserve">
+    <value>{0:N0} righe</value>
+  </data>
+  <data name="dialog_fileGdbPicker_needsSrs" xml:space="preserve">
+    <value>Sistema di coordinate sconosciuto: sceglilo qui sotto</value>
+  </data>
+  <data name="dialog_fileGdbPicker_srsHint" xml:space="preserve">
+    <value>Sistema di coordinate dei livelli selezionati per cui il geodatabase non ne indica nessuno:</value>
+  </data>
+  <data name="dialog_fileGdbPicker_validationNone" xml:space="preserve">
+    <value>Seleziona almeno un livello.</value>
+  </data>
+  <data name="dialog_fileGdbPicker_selectedCount" xml:space="preserve">
+    <value>{0} di {1} selezionati</value>
+  </data>
+  <data name="dialog_fileGdbPicker_add" xml:space="preserve">
+    <value>Aggiungi</value>
+  </data>
+  <data name="dialog_fileGdbPicker_multipoint" xml:space="preserve">
+    <value>Multipunto</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonTable" xml:space="preserve">
+    <value>Tabella senza geometrie</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonCompressed" xml:space="preserve">
+    <value>Compresso: decomprimilo prima in ArcGIS</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonMissing" xml:space="preserve">
+    <value>Manca il file della tabella</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonMultipatch" xml:space="preserve">
+    <value>Multipatch 3D: non supportato</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonTooLarge" xml:space="preserve">
+    <value>Più di {0:N0} righe: troppo grande da caricare</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonUnreadable" xml:space="preserve">
+    <value>Impossibile leggerlo</value>
+  </data>
 </root>

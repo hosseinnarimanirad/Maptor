@@ -52,6 +52,12 @@ public sealed class AddDataFromFileTest : IDisposable
         /// <summary>What the folder dialog returns.</summary>
         public string? FolderResult { get; set; }
 
+        /// <summary>The file geodatabase pickers shown.</summary>
+        public List<FileGdbDatasetPickerViewModel> Pickers { get; } = new();
+
+        /// <summary>What the user does in the picker; by default, Add with what it ticked at first.</summary>
+        public Action<FileGdbDatasetPickerViewModel> PickerAction { get; set; } = picker => picker.AddCommand.Execute(null);
+
         public ImportOptionsDialogResult? OptionsResult { get; set; }
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
@@ -73,6 +79,12 @@ public sealed class AddDataFromFileTest : IDisposable
 
                 case nameof(IDialogService.ShowOpenFolderDialogAsync):
                     return Task.FromResult(FolderResult);
+
+                case nameof(IDialogService.ShowFileGdbDatasetPickerAsync):
+                    var picker = (FileGdbDatasetPickerViewModel)args![0]!;
+                    Pickers.Add(picker);
+                    PickerAction(picker);
+                    return Task.FromResult(picker.DialogResult == true ? picker.Result : null);
             }
 
             var type = targetMethod?.ReturnType;

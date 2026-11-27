@@ -3289,4 +3289,52 @@
   <data name="msg_fileGdb_nothingAdded" xml:space="preserve">
     <value>Не удалось добавить ни одного слоя из этой базы геоданных.</value>
   </data>
+  <data name="dialog_fileGdbPicker_title" xml:space="preserve">
+    <value>Добавить слои из файловой базы геоданных</value>
+  </data>
+  <data name="dialog_fileGdbPicker_selectAll" xml:space="preserve">
+    <value>Выбрать все</value>
+  </data>
+  <data name="dialog_fileGdbPicker_rootGroup" xml:space="preserve">
+    <value>Корень базы геоданных</value>
+  </data>
+  <data name="dialog_fileGdbPicker_rowCount" xml:space="preserve">
+    <value>{0:N0} строк</value>
+  </data>
+  <data name="dialog_fileGdbPicker_needsSrs" xml:space="preserve">
+    <value>Система координат неизвестна: выберите её ниже</value>
+  </data>
+  <data name="dialog_fileGdbPicker_srsHint" xml:space="preserve">
+    <value>Система координат для отмеченных слоёв, для которых база геоданных её не задаёт:</value>
+  </data>
+  <data name="dialog_fileGdbPicker_validationNone" xml:space="preserve">
+    <value>Отметьте хотя бы один слой.</value>
+  </data>
+  <data name="dialog_fileGdbPicker_selectedCount" xml:space="preserve">
+    <value>Выбрано {0} из {1}</value>
+  </data>
+  <data name="dialog_fileGdbPicker_add" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
+  <data name="dialog_fileGdbPicker_multipoint" xml:space="preserve">
+    <value>Мультиточка</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonTable" xml:space="preserve">
+    <value>Таблица без геометрии</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonCompressed" xml:space="preserve">
+    <value>Сжат: сначала распакуйте его в ArcGIS</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonMissing" xml:space="preserve">
+    <value>Отсутствует файл таблицы</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonMultipatch" xml:space="preserve">
+    <value>3D-мультипатч: не поддерживается</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonTooLarge" xml:space="preserve">
+    <value>Более {0:N0} строк: слишком большой для загрузки</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonUnreadable" xml:space="preserve">
+    <value>Не удаётся прочитать</value>
+  </data>
 </root>

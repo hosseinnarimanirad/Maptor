@@ -312,7 +312,7 @@ public sealed class FileGdbDataSourceTest : IDisposable
     [Fact]
     public void CreateAll_TakesEveryFeatureClass_AndSaysWhyOthersAreLeftOut()
     {
-        var (created, skipped) = FileGdbDataSource.CreateAll(FileGeodatabase.Open(_folder));
+        var (created, skipped) = FileGdbDataSource.CreateAll(FileGeodatabase.Open(_folder).Datasets);
 
         // catalog order; Owners is a standalone table: not listed at all
         Assert.Equal(new[] { "Parcels", "Wells" }, created.Select(d => d.DatasetName));
@@ -326,6 +326,22 @@ public sealed class FileGdbDataSourceTest : IDisposable
         Assert.Equal("Wells", created[1].Title);                 // no alias: the name
         Assert.Null(created[1].FeatureDatasetName);
         Assert.All(created, d => Assert.False(d.IsLoaded));
+    }
+
+    [Fact]
+    public void CreateAll_FallbackSrid_OnlyForTheUnknownOnes()
+    {
+        var gdb = FileGeodatabase.Open(_folder);
+
+        Assert.True(FileGdbDataSource.HasKnownSrs(gdb.GetDataset("Parcels")!));
+        Assert.True(FileGdbDataSource.HasKnownSrs(gdb.GetDataset("Wells")!));
+        Assert.False(FileGdbDataSource.HasKnownSrs(gdb.GetDataset("Plots")!));
+
+        var (created, skipped) = FileGdbDataSource.CreateAll(new[] { gdb.GetDataset("Parcels")!, gdb.GetDataset("Plots")! }, fallbackSrid: 32639);
+
+        Assert.Empty(skipped);
+        Assert.Equal(new int?[] { null, 32639 }, created.Select(d => d.AssumedSrid));
+        Assert.Equal(new[] { 4326, 32639 }, created.Select(d => d.OriginalSrid));
     }
 
     [Fact]

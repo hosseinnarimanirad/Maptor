@@ -957,6 +957,18 @@ public class DefaultDialogService : IDialogService
             vm => ((ImportOptionsDialogViewModel)vm).RequestClose = () => dialog.Close());
     }
 
+    public Task<(System.Collections.Generic.IReadOnlyList<IRI.Maptor.Core.FileGdb.FileGdbDataset> Datasets, int? FallbackSrid)?> ShowFileGdbDatasetPickerAsync(FileGdbDatasetPickerViewModel viewModel, object? ownerWindow = null)
+    {
+        var dialog = new FileGdbDatasetPickerDialogView();
+
+        return ShowCustomDialogAsync(
+            ownerWindow,
+            dialog,
+            viewModel,
+            vm => ((FileGdbDatasetPickerViewModel)vm).DialogResult == true ? ((FileGdbDatasetPickerViewModel)vm).Result : null,
+            vm => ((FileGdbDatasetPickerViewModel)vm).RequestClose = () => dialog.Close());
+    }
+
     #endregion
 
 

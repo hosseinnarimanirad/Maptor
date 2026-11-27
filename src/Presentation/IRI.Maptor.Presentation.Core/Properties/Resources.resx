@@ -4911,4 +4911,52 @@
   <data name="msg_fileGdb_nothingAdded" xml:space="preserve">
     <value>No layer of this geodatabase could be added.</value>
   </data>
+  <data name="dialog_fileGdbPicker_title" xml:space="preserve">
+    <value>Add layers from a file geodatabase</value>
+  </data>
+  <data name="dialog_fileGdbPicker_selectAll" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+  <data name="dialog_fileGdbPicker_rootGroup" xml:space="preserve">
+    <value>Geodatabase root</value>
+  </data>
+  <data name="dialog_fileGdbPicker_rowCount" xml:space="preserve">
+    <value>{0:N0} rows</value>
+  </data>
+  <data name="dialog_fileGdbPicker_needsSrs" xml:space="preserve">
+    <value>Coordinate system unknown: set it below</value>
+  </data>
+  <data name="dialog_fileGdbPicker_srsHint" xml:space="preserve">
+    <value>Coordinate system for the ticked layers the geodatabase gives none for:</value>
+  </data>
+  <data name="dialog_fileGdbPicker_validationNone" xml:space="preserve">
+    <value>Tick at least one layer.</value>
+  </data>
+  <data name="dialog_fileGdbPicker_selectedCount" xml:space="preserve">
+    <value>{0} of {1} selected</value>
+  </data>
+  <data name="dialog_fileGdbPicker_add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="dialog_fileGdbPicker_multipoint" xml:space="preserve">
+    <value>Multipoint</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonTable" xml:space="preserve">
+    <value>Table without shapes</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonCompressed" xml:space="preserve">
+    <value>Compressed: uncompress it in ArcGIS first</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonMissing" xml:space="preserve">
+    <value>Its table file is missing</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonMultipatch" xml:space="preserve">
+    <value>3D multipatch: not supported</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonTooLarge" xml:space="preserve">
+    <value>More than {0:N0} rows: too large to load</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonUnreadable" xml:space="preserve">
+    <value>Cannot be read</value>
+  </data>
 </root>

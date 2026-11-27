@@ -50,8 +50,10 @@ foreach (var dataset in gdb.Datasets)          // topology, attachment and raste
 2. **Multipatch.** Needs a 3D/TIN representation Maptor does not have.
 3. **Spatial index (`.spx`).** `FileGdbReadOptions.BoundingBox` reads every row and tests envelopes.
    Reading the `.spx` grid index would make small-window queries on big layers fast.
-4. **`FileGdbDataSource` for the map stack.** A `VectorDataSource` over `FileGdbDataset`,
-   so a `.gdb` layer can be shown directly like a shapefile, plus wiring in `DataSourceType`.
+4. ~~**`FileGdbDataSource` for the map stack.**~~ Built 2026-11-27: `Core.Persistence` `FileGdbDataSource`
+   (read-only, lazy, the whole layer in memory), `DataSourceKind.FileGdb`, the map's "File geodatabase" command with
+   a dataset picker, and drop onto the map. Still open from it: layers over the picker's row limit (200 000 by default)
+   are blocked until the `.spx` index (item 3) allows reading only the visible area.
 5. **Attribute indexes (`.atx`).** Not used; every lookup is a scan.
 6. **Compressed (CDF/SDC) tables.** Undocumented compression; users must uncompress in ArcGIS.
 7. **Relationship joins.** Relationship classes are metadata only; rows are not joined.

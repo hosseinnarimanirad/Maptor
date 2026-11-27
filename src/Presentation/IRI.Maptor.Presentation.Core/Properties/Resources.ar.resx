@@ -3289,4 +3289,52 @@
   <data name="msg_fileGdb_nothingAdded" xml:space="preserve">
     <value>تعذّرت إضافة أي طبقة من قاعدة البيانات الجغرافية هذه.</value>
   </data>
+  <data name="dialog_fileGdbPicker_title" xml:space="preserve">
+    <value>إضافة طبقات من قاعدة بيانات جغرافية ملفية</value>
+  </data>
+  <data name="dialog_fileGdbPicker_selectAll" xml:space="preserve">
+    <value>تحديد الكل</value>
+  </data>
+  <data name="dialog_fileGdbPicker_rootGroup" xml:space="preserve">
+    <value>جذر قاعدة البيانات الجغرافية</value>
+  </data>
+  <data name="dialog_fileGdbPicker_rowCount" xml:space="preserve">
+    <value>{0:N0} صف</value>
+  </data>
+  <data name="dialog_fileGdbPicker_needsSrs" xml:space="preserve">
+    <value>نظام الإحداثيات غير معروف: حدّده أدناه</value>
+  </data>
+  <data name="dialog_fileGdbPicker_srsHint" xml:space="preserve">
+    <value>نظام الإحداثيات للطبقات المحددة التي لا تحدد قاعدة البيانات الجغرافية نظامها:</value>
+  </data>
+  <data name="dialog_fileGdbPicker_validationNone" xml:space="preserve">
+    <value>حدّد طبقة واحدة على الأقل.</value>
+  </data>
+  <data name="dialog_fileGdbPicker_selectedCount" xml:space="preserve">
+    <value>{0} من {1} محدد</value>
+  </data>
+  <data name="dialog_fileGdbPicker_add" xml:space="preserve">
+    <value>إضافة</value>
+  </data>
+  <data name="dialog_fileGdbPicker_multipoint" xml:space="preserve">
+    <value>نقاط متعددة</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonTable" xml:space="preserve">
+    <value>جدول بلا أشكال هندسية</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonCompressed" xml:space="preserve">
+    <value>مضغوطة: فُكّ ضغطها في ArcGIS أولاً</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonMissing" xml:space="preserve">
+    <value>ملف الجدول مفقود</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonMultipatch" xml:space="preserve">
+    <value>مضلع متعدد ثلاثي الأبعاد (Multipatch): غير مدعوم</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonTooLarge" xml:space="preserve">
+    <value>أكثر من {0:N0} صف: أكبر من أن تُحمَّل</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonUnreadable" xml:space="preserve">
+    <value>تتعذّر قراءتها</value>
+  </data>
 </root>

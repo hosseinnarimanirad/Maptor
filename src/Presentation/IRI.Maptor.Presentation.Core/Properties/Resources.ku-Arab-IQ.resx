@@ -3289,4 +3289,52 @@
   <data name="msg_fileGdb_nothingAdded" xml:space="preserve">
     <value>هیچ چینێکی ئەم جیۆداتابەیسە زیاد نەکرا.</value>
   </data>
+  <data name="dialog_fileGdbPicker_title" xml:space="preserve">
+    <value>زیادکردنی چین لە جیۆداتابەیسی فایل</value>
+  </data>
+  <data name="dialog_fileGdbPicker_selectAll" xml:space="preserve">
+    <value>هەڵبژاردنی هەموو</value>
+  </data>
+  <data name="dialog_fileGdbPicker_rootGroup" xml:space="preserve">
+    <value>ڕەگی جیۆداتابەیس</value>
+  </data>
+  <data name="dialog_fileGdbPicker_rowCount" xml:space="preserve">
+    <value>{0:N0} ڕیز</value>
+  </data>
+  <data name="dialog_fileGdbPicker_needsSrs" xml:space="preserve">
+    <value>سیستەمی کۆئۆردینات نەزانراوە: لە خوارەوە دیاری بکە</value>
+  </data>
+  <data name="dialog_fileGdbPicker_srsHint" xml:space="preserve">
+    <value>سیستەمی کۆئۆردیناتی ئەو چینە هەڵبژێردراوانەی جیۆداتابەیس سیستەمیان بۆ دیاری ناکات:</value>
+  </data>
+  <data name="dialog_fileGdbPicker_validationNone" xml:space="preserve">
+    <value>لانیکەم یەک چین هەڵبژێرە.</value>
+  </data>
+  <data name="dialog_fileGdbPicker_selectedCount" xml:space="preserve">
+    <value>{0} لە {1} هەڵبژێردراوە</value>
+  </data>
+  <data name="dialog_fileGdbPicker_add" xml:space="preserve">
+    <value>زیادکردن</value>
+  </data>
+  <data name="dialog_fileGdbPicker_multipoint" xml:space="preserve">
+    <value>فرەخاڵ</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonTable" xml:space="preserve">
+    <value>خشتە بێ شێوەی ئەندازەیی</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonCompressed" xml:space="preserve">
+    <value>پەستێنراوە: سەرەتا لە ArcGIS بیکەرەوە</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonMissing" xml:space="preserve">
+    <value>فایلی خشتەکەی بوونی نییە</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonMultipatch" xml:space="preserve">
+    <value>مەڵتی‌پاچی سێ‌ڕەهەندی: پشتگیری ناکرێت</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonTooLarge" xml:space="preserve">
+    <value>زیاتر لە {0:N0} ڕیز: بۆ بارکردن زۆر گەورەیە</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonUnreadable" xml:space="preserve">
+    <value>ناخوێندرێتەوە</value>
+  </data>
 </root>

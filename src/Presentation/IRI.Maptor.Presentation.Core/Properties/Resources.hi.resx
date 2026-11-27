@@ -3289,4 +3289,52 @@
   <data name="msg_fileGdb_nothingAdded" xml:space="preserve">
     <value>इस जियोडेटाबेस की कोई भी परत नहीं जोड़ी जा सकी।</value>
   </data>
+  <data name="dialog_fileGdbPicker_title" xml:space="preserve">
+    <value>फ़ाइल जियोडेटाबेस से परतें जोड़ें</value>
+  </data>
+  <data name="dialog_fileGdbPicker_selectAll" xml:space="preserve">
+    <value>सभी चुनें</value>
+  </data>
+  <data name="dialog_fileGdbPicker_rootGroup" xml:space="preserve">
+    <value>जियोडेटाबेस का मूल</value>
+  </data>
+  <data name="dialog_fileGdbPicker_rowCount" xml:space="preserve">
+    <value>{0:N0} पंक्तियाँ</value>
+  </data>
+  <data name="dialog_fileGdbPicker_needsSrs" xml:space="preserve">
+    <value>निर्देशांक प्रणाली अज्ञात: नीचे चुनें</value>
+  </data>
+  <data name="dialog_fileGdbPicker_srsHint" xml:space="preserve">
+    <value>चुनी गई उन परतों की निर्देशांक प्रणाली जिनके लिए जियोडेटाबेस कोई प्रणाली नहीं देता:</value>
+  </data>
+  <data name="dialog_fileGdbPicker_validationNone" xml:space="preserve">
+    <value>कम से कम एक परत चुनें।</value>
+  </data>
+  <data name="dialog_fileGdbPicker_selectedCount" xml:space="preserve">
+    <value>{1} में से {0} चुनी गईं</value>
+  </data>
+  <data name="dialog_fileGdbPicker_add" xml:space="preserve">
+    <value>जोड़ें</value>
+  </data>
+  <data name="dialog_fileGdbPicker_multipoint" xml:space="preserve">
+    <value>बहु-बिंदु</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonTable" xml:space="preserve">
+    <value>ज्यामिति रहित तालिका</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonCompressed" xml:space="preserve">
+    <value>संपीड़ित: पहले ArcGIS में इसे असंपीड़ित करें</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonMissing" xml:space="preserve">
+    <value>इसकी तालिका फ़ाइल मौजूद नहीं है</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonMultipatch" xml:space="preserve">
+    <value>3D मल्टीपैच: समर्थित नहीं</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonTooLarge" xml:space="preserve">
+    <value>{0:N0} से अधिक पंक्तियाँ: लोड करने के लिए बहुत बड़ी</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonUnreadable" xml:space="preserve">
+    <value>पढ़ी नहीं जा सकती</value>
+  </data>
 </root>

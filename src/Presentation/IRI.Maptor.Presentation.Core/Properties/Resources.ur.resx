@@ -3289,4 +3289,52 @@
   <data name="msg_fileGdb_nothingAdded" xml:space="preserve">
     <value>اس جیو ڈیٹا بیس کی کوئی پرت شامل نہیں کی جا سکی۔</value>
   </data>
+  <data name="dialog_fileGdbPicker_title" xml:space="preserve">
+    <value>فائل جیو ڈیٹا بیس سے پرتیں شامل کریں</value>
+  </data>
+  <data name="dialog_fileGdbPicker_selectAll" xml:space="preserve">
+    <value>سب منتخب کریں</value>
+  </data>
+  <data name="dialog_fileGdbPicker_rootGroup" xml:space="preserve">
+    <value>جیو ڈیٹا بیس کی جڑ</value>
+  </data>
+  <data name="dialog_fileGdbPicker_rowCount" xml:space="preserve">
+    <value>{0:N0} قطاریں</value>
+  </data>
+  <data name="dialog_fileGdbPicker_needsSrs" xml:space="preserve">
+    <value>کوآرڈینیٹ سسٹم نامعلوم: نیچے منتخب کریں</value>
+  </data>
+  <data name="dialog_fileGdbPicker_srsHint" xml:space="preserve">
+    <value>ان منتخب پرتوں کا کوآرڈینیٹ سسٹم جن کے لیے جیو ڈیٹا بیس کوئی سسٹم نہیں دیتا:</value>
+  </data>
+  <data name="dialog_fileGdbPicker_validationNone" xml:space="preserve">
+    <value>کم از کم ایک پرت منتخب کریں۔</value>
+  </data>
+  <data name="dialog_fileGdbPicker_selectedCount" xml:space="preserve">
+    <value>{1} میں سے {0} منتخب</value>
+  </data>
+  <data name="dialog_fileGdbPicker_add" xml:space="preserve">
+    <value>شامل کریں</value>
+  </data>
+  <data name="dialog_fileGdbPicker_multipoint" xml:space="preserve">
+    <value>کثیر نقطہ</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonTable" xml:space="preserve">
+    <value>جیومیٹری کے بغیر جدول</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonCompressed" xml:space="preserve">
+    <value>کمپریس شدہ: پہلے ArcGIS میں اسے ڈی کمپریس کریں</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonMissing" xml:space="preserve">
+    <value>اس کی جدول فائل موجود نہیں</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonMultipatch" xml:space="preserve">
+    <value>تھری ڈی ملٹی پیچ: معاونت نہیں</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonTooLarge" xml:space="preserve">
+    <value>{0:N0} سے زیادہ قطاریں: لوڈ کرنے کے لیے بہت بڑی</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonUnreadable" xml:space="preserve">
+    <value>پڑھی نہیں جا سکتی</value>
+  </data>
 </root>

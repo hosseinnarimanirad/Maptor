@@ -43,6 +43,7 @@ using IRI.Maptor.Presentation.Wpf.Events;
 using IRI.Maptor.Presentation.Wpf.Models;
 using IRI.Maptor.Presentation.Wpf.Helpers;
 using IRI.Maptor.Presentation.Wpf.Models.Legend;
+using IRI.Maptor.Presentation.Wpf.Models.FileGdb;
 using IRI.Maptor.Presentation.Wpf.Models.Print;
 using IRI.Maptor.Presentation.Wpf.ViewModels.Map;
 using IRI.Maptor.Presentation.Wpf.Controls.MapMarkers;
@@ -7287,10 +7288,17 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
     /// <summary>
-    /// Adds every feature class of the geodatabase in <paramref name="folder"/> as one group named after it, with a
-    /// sub-group per feature dataset. Each layer loads its features once added, as a shapefile layer does. The feature
-    /// classes that cannot be shown are listed in a message; a folder that is not a geodatabase gets the
-    /// unsupported-format message.
+    /// The most rows a file geodatabase layer may have to be offered, or null for no limit: the reader loads a whole
+    /// layer into memory. 200 000; <c>MapSettings.AllowLargeDataLoading</c> lifts it, as it lifts the shapefile limit.
+    /// Apps override this to change it.
+    /// </summary>
+    protected virtual long? GetFileGeodatabaseRowLimit() => MapSettings?.AllowLargeDataLoading == true ? null : 200_000;
+
+    /// <summary>
+    /// Shows the geodatabase in <paramref name="folder"/> in the picker, then adds the ticked feature classes as one group
+    /// named after it, with a sub-group per feature dataset. Each layer loads its features once added, as a shapefile
+    /// layer does. A folder that is not a geodatabase gets the unsupported-format message, one without any dataset a
+    /// message, and feature classes that fail when they are added are listed in a message.
     /// </summary>
     public async Task AddFileGeodatabase(string folder, object owner)
     {
@@ -7301,6 +7309,42 @@ public abstract class MapViewModelBase : ViewModelBase
             return;
         }
 
+        List<FileGdbDatasetPickerItem> items;
+
+        try
+        {
+            IsBusy = true;
+
+            var rowLimit = GetFileGeodatabaseRowLimit();
+
+            // reads the catalog and the header of every table
+            items = await Task.Run(() => FileGeodatabase.Open(folder).Datasets.Select(d => FileGdbDatasetPickerItem.Create(d, rowLimit)).ToList());
+        }
+        catch (Exception ex)
+        {
+            await ShowExceptionMessageAsync(ex);
+
+            return;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+
+        if (items.Count == 0)
+        {
+            await DialogService.ShowMessageAsync(GetFileGeodatabaseSkippedMessage(0, new List<(string Name, string Reason)>()), null, owner);
+
+            return;
+        }
+
+        var picker = new Dialogs.FileGdbDatasetPickerViewModel(Path.GetFileName(Path.TrimEndingDirectorySeparator(folder)), items);
+
+        var choice = await DialogService.ShowFileGdbDatasetPickerAsync(picker, owner);
+
+        if (choice is not { } chosen || chosen.Datasets.Count == 0)
+            return;
+
         List<FileGdbDataSource> created;
         List<(string Name, string Reason)> skipped;
 
@@ -7308,8 +7352,8 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             IsBusy = true;
 
-            // reads the catalog and the schema of every feature class
-            (created, skipped) = await Task.Run(() => FileGdbDataSource.CreateAll(FileGeodatabase.Open(folder)));
+            // reads the schema of each ticked feature class
+            (created, skipped) = await Task.Run(() => FileGdbDataSource.CreateAll(chosen.Datasets, chosen.FallbackSrid));
 
             if (created.Count > 0)
                 AddLayer(CreateFileGeodatabaseGroup(folder, created));

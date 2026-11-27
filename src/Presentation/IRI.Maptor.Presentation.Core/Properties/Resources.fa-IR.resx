@@ -4815,4 +4815,52 @@
   <data name="msg_fileGdb_nothingAdded" xml:space="preserve">
     <value>هیچ لایه‌ای از این ژئودیتابیس افزوده نشد.</value>
   </data>
+  <data name="dialog_fileGdbPicker_title" xml:space="preserve">
+    <value>افزودن لایه از ژئودیتابیس فایلی</value>
+  </data>
+  <data name="dialog_fileGdbPicker_selectAll" xml:space="preserve">
+    <value>انتخاب همه</value>
+  </data>
+  <data name="dialog_fileGdbPicker_rootGroup" xml:space="preserve">
+    <value>ریشهٔ ژئودیتابیس</value>
+  </data>
+  <data name="dialog_fileGdbPicker_rowCount" xml:space="preserve">
+    <value>{0:N0} ردیف</value>
+  </data>
+  <data name="dialog_fileGdbPicker_needsSrs" xml:space="preserve">
+    <value>سیستم مختصات نامعلوم؛ در پایین تعیین کنید</value>
+  </data>
+  <data name="dialog_fileGdbPicker_srsHint" xml:space="preserve">
+    <value>سیستم مختصات لایه‌های انتخاب‌شده‌ای که ژئودیتابیس برایشان مشخص نکرده است:</value>
+  </data>
+  <data name="dialog_fileGdbPicker_validationNone" xml:space="preserve">
+    <value>دست‌کم یک لایه را انتخاب کنید.</value>
+  </data>
+  <data name="dialog_fileGdbPicker_selectedCount" xml:space="preserve">
+    <value>{0} از {1} انتخاب شده</value>
+  </data>
+  <data name="dialog_fileGdbPicker_add" xml:space="preserve">
+    <value>افزودن</value>
+  </data>
+  <data name="dialog_fileGdbPicker_multipoint" xml:space="preserve">
+    <value>چندنقطه‌ای</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonTable" xml:space="preserve">
+    <value>جدول بدون شکل هندسی</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonCompressed" xml:space="preserve">
+    <value>فشرده است؛ ابتدا در ArcGIS از حالت فشرده خارج کنید</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonMissing" xml:space="preserve">
+    <value>فایل جدول آن موجود نیست</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonMultipatch" xml:space="preserve">
+    <value>مولتی‌پچ سه‌بعدی؛ پشتیبانی نمی‌شود</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonTooLarge" xml:space="preserve">
+    <value>بیش از {0:N0} ردیف؛ برای بارگذاری بیش از حد بزرگ است</value>
+  </data>
+  <data name="dialog_fileGdbPicker_reasonUnreadable" xml:space="preserve">
+    <value>قابل خواندن نیست</value>
+  </data>
 </root>

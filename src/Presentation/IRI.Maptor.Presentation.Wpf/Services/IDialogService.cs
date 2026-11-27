@@ -151,4 +151,10 @@ public interface IDialogService
     /// <returns>The options, or null when the user cancels.</returns>
     Task<ImportOptionsDialogResult?> ShowImportOptionsDialogAsync(DataSourceKind? kind, string? filePath, object? ownerWindow = null);
 
+    /// <summary>
+    /// The file geodatabase picker for <paramref name="viewModel"/>'s datasets.
+    /// </summary>
+    /// <returns>The ticked datasets and the SRID for those without a coordinate system, or null when the user cancels.</returns>
+    Task<(System.Collections.Generic.IReadOnlyList<IRI.Maptor.Core.FileGdb.FileGdbDataset> Datasets, int? FallbackSrid)?> ShowFileGdbDatasetPickerAsync(FileGdbDatasetPickerViewModel viewModel, object? ownerWindow = null);
+
 }

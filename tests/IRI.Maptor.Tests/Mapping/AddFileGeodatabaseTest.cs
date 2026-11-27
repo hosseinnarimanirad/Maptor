@@ -58,12 +58,22 @@ public sealed class AddFileGeodatabaseTest : IDisposable
             Assert.Empty(dialogs.Errors);
             Assert.False(map.IsBusy);
 
+            // the picker lists every dataset; the user accepted what it ticked at first
+            var picker = Assert.Single(dialogs.Pickers);
+            Assert.Equal("Test.gdb", picker.GeodatabaseName);
+            Assert.Equal(6, picker.Items.Count);
+            Assert.Equal(new[] { "Wells", "Plots", "Parcels" }, picker.Items.Where(i => i.IsSelected).Select(i => i.Name));
+
             var group = Assert.IsType<GroupLayer>(Assert.Single(map.Layers));
             Assert.Equal("Test", group.LayerName);
             Assert.True(group.IsSearchable);
 
-            // Wells is at the root; Parcels (alias "Land parcels") is in the Cadastre feature dataset
-            Assert.Equal(new[] { "Cadastre", "Wells" }, group.SubLayers.Select(l => l.LayerName).OrderBy(n => n));
+            // Wells and Plots are at the root; Parcels (alias "Land parcels") is in the Cadastre feature dataset
+            Assert.Equal(new[] { "Cadastre", "Plots", "Wells" }, group.SubLayers.Select(l => l.LayerName).OrderBy(n => n));
+
+            // Plots gives no coordinate system: it takes the picker's choice, WGS84 by default
+            var plots = Assert.IsType<FileGdbDataSource>(((VectorLayer)group.SubLayers.Single(l => l.LayerName == "Plots")).DataSource);
+            Assert.Equal(4326, plots.AssumedSrid);
 
             var cadastre = Assert.IsType<GroupLayer>(group.SubLayers.Single(l => l.LayerName == "Cadastre"));
             var parcels = Assert.IsType<VectorLayer>(Assert.Single(cadastre.SubLayers));
@@ -74,14 +84,67 @@ public sealed class AddFileGeodatabaseTest : IDisposable
             var location = Assert.IsType<FileLocation>(source.Location);
             Assert.Equal("Parcels", location.TableName);       // the analyses read the dataset name from here
 
-            Assert.Equal(2, PasteDataTest.Leaves(map).Count);
+            Assert.Equal(3, PasteDataTest.Leaves(map).Count);
 
-            // the feature classes that cannot be shown, each with its reason
-            var message = Assert.Single(dialogs.Messages);
-            Assert.Contains("Archive", message);
-            Assert.Contains("Patches", message);
-            Assert.Contains("Plots", message);
-            Assert.DoesNotContain("Owners", message);           // a standalone table: not a candidate at all
+            // everything ticked could be added: no message
+            Assert.Empty(dialogs.Messages);
+        });
+    }
+
+    [Fact]
+    public void OnlyTheTickedDatasetsAreAdded()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var (map, dialogs) = NewMap(folderResult: _gdb);
+
+            dialogs.PickerAction = picker =>
+            {
+                picker.AreAllSelected = false;
+                picker.Items.Single(i => i.Name == "Wells").IsSelected = true;
+                picker.AddCommand.Execute(null);
+            };
+
+            PasteDataTest.Pump(() => map.AddFileGeodatabase((object)null!));
+
+            var group = Assert.IsType<GroupLayer>(Assert.Single(map.Layers));
+            Assert.Equal("Wells", Assert.Single(group.SubLayers).LayerName);   // no empty feature-dataset group either
+        });
+    }
+
+    [Fact]
+    public void CancellingThePickerAddsNothing()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var (map, dialogs) = NewMap(folderResult: _gdb);
+
+            dialogs.PickerAction = picker => picker.CancelCommand.Execute(null);
+
+            PasteDataTest.Pump(() => map.AddFileGeodatabase((object)null!));
+
+            Assert.Single(dialogs.Pickers);
+            Assert.Empty(map.Layers);
+            Assert.Empty(dialogs.Messages);
+            Assert.False(map.IsBusy);
+        });
+    }
+
+    [Fact]
+    public void LayersOverTheRowLimitAreBlocked()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var (map, dialogs) = NewMap(folderResult: _gdb);
+            map.FileGdbRowLimit = 1;   // Wells and Plots have 1 row, Parcels 5
+
+            PasteDataTest.Pump(() => map.AddFileGeodatabase((object)null!));
+
+            var picker = Assert.Single(dialogs.Pickers);
+            var parcels = picker.Items.Single(i => i.Name == "Parcels");
+            Assert.False(parcels.IsAvailable);
+            Assert.False(parcels.IsSelected);
+            Assert.Equal(new[] { "Plots", "Wells" }, PasteDataTest.Leaves(map).Select(l => l.LayerName).OrderBy(n => n));
         });
     }
 
@@ -176,9 +239,34 @@ public sealed class AddFileGeodatabaseTest : IDisposable
 
             PasteDataTest.Pump(() => map.AddFileGeodatabase(gdb, null!));
 
+            // the picker shows why nothing can be added; Add stays disabled
+            var picker = Assert.Single(dialogs.Pickers);
+            Assert.Equal(0, picker.AvailableCount);
+            Assert.False(picker.AddCommand.CanExecute(null));
             Assert.Empty(map.Layers);
-            Assert.Single(dialogs.Messages);
+            Assert.Empty(dialogs.Messages);
             Assert.False(map.IsBusy);
+        });
+    }
+
+    [Fact]
+    public void GeodatabaseWithoutDatasets_SaysSo()
+    {
+        var gdb = Path.Combine(_root, "Empty.gdb");
+        Directory.CreateDirectory(gdb);
+        GdbTestGeodatabase.WriteSystemCatalog(gdb, (1, "GDB_SystemCatalog"), (4, "GDB_Items"));
+        GdbTestGeodatabase.WriteItems(gdb);
+
+        WpfTestHost.Run(() =>
+        {
+            var (map, dialogs) = NewMap();
+
+            PasteDataTest.Pump(() => map.AddFileGeodatabase(gdb, null!));
+
+            Assert.Empty(dialogs.Pickers);
+            Assert.Empty(dialogs.Errors);
+            Assert.Single(dialogs.Messages);
+            Assert.Empty(map.Layers);
         });
     }
 }

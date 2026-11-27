@@ -60,6 +60,11 @@ public sealed class PasteDataTest : IDisposable
 
             RequestRefresh = _ => { };
         }
+
+        /// <summary>Overrides the file geodatabase row limit when set.</summary>
+        public long? FileGdbRowLimit { get; set; }
+
+        protected override long? GetFileGeodatabaseRowLimit() => FileGdbRowLimit ?? base.GetFileGeodatabaseRowLimit();
     }
 
     private const string PointAndPolygonKml = """
