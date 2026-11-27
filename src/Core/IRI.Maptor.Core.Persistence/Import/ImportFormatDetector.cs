@@ -101,6 +101,29 @@ public static class ImportFormatDetector
         => FileGeodatabase.IsGeodatabaseFolder(folderPath) ? DataSourceKind.FileGdb : null;
 
     /// <summary>
+    /// The one item of a drop that is added: the first, after leaving out a shapefile's companion files (any file in
+    /// the folder of a dropped <c>.shp</c> whose name starts with the shapefile's name and a dot: <c>roads.dbf</c>,
+    /// <c>roads.shp.xml</c>, ...), so dropping a shapefile with its parts adds the shapefile. Null for an empty drop.
+    /// Nothing is read.
+    /// </summary>
+    public static string? ChooseDroppedPath(IReadOnlyList<string>? paths)
+    {
+        if (paths is null || paths.Count == 0)
+            return null;
+
+        var shapefiles = paths.Where(p => string.Equals(Path.GetExtension(p), ".shp", StringComparison.OrdinalIgnoreCase))
+                              .Select(p => (Folder: Path.GetDirectoryName(p) ?? string.Empty, Prefix: Path.GetFileNameWithoutExtension(p) + "."))
+                              .ToList();
+
+        bool IsCompanion(string path)
+            => !string.Equals(Path.GetExtension(path), ".shp", StringComparison.OrdinalIgnoreCase)
+               && shapefiles.Any(s => string.Equals(Path.GetDirectoryName(path) ?? string.Empty, s.Folder, StringComparison.OrdinalIgnoreCase)
+                                      && Path.GetFileName(path).StartsWith(s.Prefix, StringComparison.OrdinalIgnoreCase));
+
+        return paths.FirstOrDefault(p => !string.IsNullOrWhiteSpace(p) && !IsCompanion(p));
+    }
+
+    /// <summary>
     /// The format of pasted text: JSON by its content, KML for XML with a <c>kml</c> element, otherwise TSV when a
     /// line has a tab and CSV for any other text (the CSV reader also takes two numbers separated by spaces). Null
     /// for empty text, other XML and JSON that matches no supported kind.

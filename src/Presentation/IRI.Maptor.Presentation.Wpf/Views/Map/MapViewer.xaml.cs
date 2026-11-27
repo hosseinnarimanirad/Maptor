@@ -441,6 +441,53 @@ public partial class MapViewer : NotifiableUserControl
         }
     }
 
+    #region Drop files
+
+    /// <summary>The item of a drag that would be added (see ImportFormatDetector.ChooseDroppedPath), or null.</summary>
+    private string? GetDroppedPath(DragEventArgs e)
+    {
+        if (_presenter is null || _presenter.IsBusy || !e.Data.GetDataPresent(DataFormats.FileDrop))
+            return null;
+
+        return IRI.Maptor.Core.Persistence.Import.ImportFormatDetector.ChooseDroppedPath(e.Data.GetData(DataFormats.FileDrop) as string[]);
+    }
+
+    private void MapViewer_DragOverForFiles(object sender, DragEventArgs e)
+    {
+        // other drags (e.g. a legend row being moved, if one is hosted inside the map) are left to their own handlers
+        if (e.Handled || !e.Data.GetDataPresent(DataFormats.FileDrop))
+            return;
+
+        // the copy cursor for anything that can be tried; the format is checked on drop, which gives the messages
+        e.Effects = GetDroppedPath(e) is null ? DragDropEffects.None : DragDropEffects.Copy;
+        e.Handled = true;
+    }
+
+    private async void MapViewer_DropFiles(object sender, DragEventArgs e)
+    {
+        if (e.Handled)
+            return;
+
+        var path = GetDroppedPath(e);
+
+        if (path is null)
+            return;
+
+        e.Handled = true;
+
+        try
+        {
+            await _presenter.AddDataFromPath(path, Window.GetWindow(this));
+        }
+        catch (Exception ex)
+        {
+            // async void: an exception here would end the app
+            Debug.WriteLine($"MapViewer drop: {ex}");
+        }
+    }
+
+    #endregion
+
     public MapViewer()
     {
         InitializeComponent();
@@ -460,6 +507,12 @@ public partial class MapViewer : NotifiableUserControl
         };
 
         this.RegisterRightClickOptions();
+
+        // files and folders dropped from Explorer are added as "Add data" / "File geodatabase" add them
+        this.AllowDrop = true;
+        this.DragEnter += MapViewer_DragOverForFiles;
+        this.DragOver += MapViewer_DragOverForFiles;
+        this.Drop += MapViewer_DropFiles;
 
         this.mapView.PreviewMouseDown -= MapView_PreviewMouseDownForTextMarkerFocus;
         this.mapView.PreviewMouseDown += MapView_PreviewMouseDownForTextMarkerFocus;

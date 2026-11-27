@@ -230,6 +230,31 @@ public sealed class ImportFormatDetectorTest : IDisposable
         Assert.Null(ImportFormatDetector.DetectFromFolder(""));
     }
 
+    [Theory]
+    // a shapefile with its parts, in any order: the shapefile
+    [InlineData(new[] { @"C:\d\roads.dbf", @"C:\d\roads.shp", @"C:\d\roads.shx", @"C:\d\roads.prj" }, @"C:\d\roads.shp")]
+    [InlineData(new[] { @"C:\d\ROADS.CPG", @"C:\d\roads.shp.xml", @"C:\d\Roads.shp" }, @"C:\d\Roads.shp")]
+    // several items: the first that is not a part
+    [InlineData(new[] { @"C:\d\places.kml", @"C:\d\roads.shp" }, @"C:\d\places.kml")]
+    [InlineData(new[] { @"C:\d\roads.dbf", @"C:\d\Data.gdb", @"C:\d\roads.shp" }, @"C:\d\Data.gdb")]
+    // a .dbf alone, or the parts of another shapefile, or from another folder: not parts of a dropped shapefile
+    [InlineData(new[] { @"C:\d\roads.dbf" }, @"C:\d\roads.dbf")]
+    [InlineData(new[] { @"C:\d\rivers.dbf", @"C:\d\roads.shp" }, @"C:\d\rivers.dbf")]
+    [InlineData(new[] { @"C:\e\roads.dbf", @"C:\d\roads.shp" }, @"C:\e\roads.dbf")]
+    // "roads2.dbf" does not start with "roads."
+    [InlineData(new[] { @"C:\d\roads2.dbf", @"C:\d\roads.shp" }, @"C:\d\roads2.dbf")]
+    public void ChooseDroppedPath_TakesTheFirst_LeavingOutShapefileParts(string[] dropped, string expected)
+    {
+        Assert.Equal(expected, ImportFormatDetector.ChooseDroppedPath(dropped));
+    }
+
+    [Fact]
+    public void ChooseDroppedPath_EmptyDrop()
+    {
+        Assert.Null(ImportFormatDetector.ChooseDroppedPath(null));
+        Assert.Null(ImportFormatDetector.ChooseDroppedPath(Array.Empty<string>()));
+    }
+
     [Fact]
     public void FileGeodatabase_IsNotAFileKind()
     {

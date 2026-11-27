@@ -120,6 +120,45 @@ public sealed class AddFileGeodatabaseTest : IDisposable
     }
 
     [Fact]
+    public void DroppedFolder_IsAddedAsAGeodatabase()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var (map, dialogs) = NewMap();
+
+            PasteDataTest.Pump(() => map.AddDataFromPath(_gdb, null!));
+
+            Assert.Empty(dialogs.Errors);
+            Assert.Equal("Test", Assert.IsType<GroupLayer>(Assert.Single(map.Layers)).LayerName);
+        });
+    }
+
+    [Fact]
+    public void DroppedFile_GoesThroughAddData()
+    {
+        var file = Path.Combine(_root, "table.xlsx");
+        File.WriteAllText(file, "x");
+
+        var plain = Path.Combine(_root, "Plain");
+        Directory.CreateDirectory(plain);
+
+        WpfTestHost.Run(() =>
+        {
+            var (map, dialogs) = NewMap();
+
+            // the same messages as the two commands give
+            PasteDataTest.Pump(() => map.AddDataFromPath(file, null!));
+            PasteDataTest.Pump(() => map.AddDataFromPath(plain, null!));
+            PasteDataTest.Pump(() => map.AddDataFromPath(Path.Combine(_root, "gone.kml"), null!));
+
+            Assert.Empty(map.Layers);
+            Assert.Equal(new[] { typeof(MaptorUnsupportedFileFormatException), typeof(MaptorUnsupportedFileFormatException), typeof(MaptorFileNotFoundException) },
+                         dialogs.Errors);
+            Assert.False(map.IsBusy);
+        });
+    }
+
+    [Fact]
     public void GeodatabaseWithNothingToShow_SaysSo()
     {
         // only the standalone table and the compressed feature class

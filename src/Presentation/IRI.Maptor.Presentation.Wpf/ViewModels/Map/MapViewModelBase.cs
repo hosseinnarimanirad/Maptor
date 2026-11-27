@@ -7265,6 +7265,13 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
     /// <summary>
+    /// A file or folder dropped on the map: a folder goes to <see cref="AddFileGeodatabase(string, object)"/>, a file to
+    /// <see cref="AddDataFromFile(string, object)"/>, so a drop behaves exactly as the two commands do.
+    /// </summary>
+    public Task AddDataFromPath(string path, object owner)
+        => Directory.Exists(path) ? AddFileGeodatabase(path, owner) : AddDataFromFile(path, owner);
+
+    /// <summary>
     /// "File geodatabase": an Esri file geodatabase, which is a folder (<c>name.gdb</c>), so it is picked with a
     /// folder dialog rather than with "Add data".
     /// </summary>
