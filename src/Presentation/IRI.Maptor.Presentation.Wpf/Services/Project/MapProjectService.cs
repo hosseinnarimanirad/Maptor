@@ -115,6 +115,7 @@ public class MapProjectService
                 entry.LayerStates.Add(new LayerStateEntry
                 {
                     LayerName = candidate.LayerName,
+                    TableName = (candidate.DataSource?.Location as FileLocation)?.TableName,
                     TocOrder = candidate.TocOrder,
                     IsVisible = candidate.IsVisible,
                     Opacity = candidate.Opacity,
@@ -122,6 +123,11 @@ public class MapProjectService
                     ActiveStyleName = (candidate as SymbolizableLayer)?.ActiveStyleName,
                 });
             }
+
+            // the picker's one CRS for the feature classes without one: any of the group's layers may carry it,
+            // not only the first (whose options were built above)
+            if (entry.Kind == DataSourceKind.FileGdb && entry.Options is null)
+                entry.Options = BuildFileGdbOptions(candidates);
 
             // group layers carry the order of the import as a whole (and, for a DXF/KML
             // parent, its own visibility); GetAllLayers above deliberately drops them
@@ -205,6 +211,14 @@ public class MapProjectService
         _ when dataSource.DataSourceKind is DataSourceKind.Worldfile or DataSourceKind.GeoTiff => new ImportOptions { SourceSrid = dataSource.Srid },
         _ => null,
     };
+
+    /// <summary>The SRID the user chose for the group's feature classes without a coordinate system; null when none needed one.</summary>
+    private static ImportOptions? BuildFileGdbOptions(IEnumerable<ILayer> layers)
+    {
+        var assumedSrid = layers.Select(l => l.DataSource).OfType<FileGdbDataSource>().Select(d => d.AssumedSrid).FirstOrDefault(s => s is not null);
+
+        return assumedSrid is null ? null : new ImportOptions { SourceSrid = assumedSrid };
+    }
 
     private static string? GetSldXml(ILayer layer)
     {
@@ -355,7 +369,8 @@ public class MapProjectService
 
         if (entry.Location is FileLocation fileLocation)
         {
-            path = ResolvePath(fileLocation.Path, entry.RelativePath, projectDir);
+            // a file geodatabase is a folder; every other import is a file
+            path = ResolvePath(fileLocation.Path, entry.RelativePath, projectDir, isFolder: entry.Kind == DataSourceKind.FileGdb);
 
             if (path is null)
             {
@@ -427,6 +442,9 @@ public class MapProjectService
                 await _map.AddGeoPackage(path!);
                 break;
 
+            case DataSourceKind.FileGdb:
+                return await ReplayFileGeodatabaseAsync(entry, path!, result);
+
             case DataSourceKind.Csv:
             case DataSourceKind.Tsv:
                 await _map.AddDelimitedTextFile(
@@ -456,7 +474,7 @@ public class MapProjectService
         return true;
     }
 
-    private static string? ResolvePath(string savedPath, string? relativePath, string projectDir)
+    private static string? ResolvePath(string savedPath, string? relativePath, string projectDir, bool isFolder)
     {
         // relative to the project file first, so a project moved together
         // with its data folder keeps working
@@ -464,15 +482,44 @@ public class MapProjectService
         {
             var candidate = Path.GetFullPath(Path.Combine(projectDir, relativePath));
 
-            if (File.Exists(candidate))
+            if (Exists(candidate, isFolder))
                 return candidate;
         }
 
-        if (!string.IsNullOrWhiteSpace(savedPath) && File.Exists(savedPath))
+        if (!string.IsNullOrWhiteSpace(savedPath) && Exists(savedPath, isFolder))
             return savedPath;
 
         return null;
     }
+
+    /// <summary>
+    /// The feature classes the project had, by table name, with the CRS chosen for those without one. A feature class
+    /// that is gone or fails is listed in <paramref name="result"/>; the others are still added.
+    /// </summary>
+    private async Task<bool> ReplayFileGeodatabaseAsync(ImportedLayerEntry entry, string folder, MapProjectLoadResult result)
+    {
+        var datasetNames = entry.LayerStates.Select(s => s.TableName)
+                                            .Where(n => !string.IsNullOrWhiteSpace(n))
+                                            .Select(n => n!)
+                                            .Distinct(StringComparer.OrdinalIgnoreCase)
+                                            .ToList();
+
+        if (datasetNames.Count == 0)
+        {
+            result.SkippedLayers.Add(Describe(entry));
+
+            return false;
+        }
+
+        var skipped = await _map.AddFileGeodatabaseDatasets(folder, datasetNames, entry.Options?.SourceSrid);
+
+        foreach (var (name, reason) in skipped)
+            result.SkippedLayers.Add($"{Describe(entry)} ({name}: {reason})");
+
+        return skipped.Count < datasetNames.Count;
+    }
+
+    private static bool Exists(string path, bool isFolder) => isFolder ? Directory.Exists(path) : File.Exists(path);
 
     private IEnumerable<ILayer> CurrentLayerTree() => _map.Layers.SelectMany(FlattenIncludingGroups);
 

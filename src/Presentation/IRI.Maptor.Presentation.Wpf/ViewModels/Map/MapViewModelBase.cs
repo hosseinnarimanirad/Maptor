@@ -7345,18 +7345,12 @@ public abstract class MapViewModelBase : ViewModelBase
         if (choice is not { } chosen || chosen.Datasets.Count == 0)
             return;
 
-        List<FileGdbDataSource> created;
+        int added;
         List<(string Name, string Reason)> skipped;
 
         try
         {
-            IsBusy = true;
-
-            // reads the schema of each ticked feature class
-            (created, skipped) = await Task.Run(() => FileGdbDataSource.CreateAll(chosen.Datasets, chosen.FallbackSrid));
-
-            if (created.Count > 0)
-                AddLayer(CreateFileGeodatabaseGroup(folder, created));
+            (added, skipped) = await AddFileGeodatabaseLayersAsync(folder, chosen.Datasets, chosen.FallbackSrid);
         }
         catch (Exception ex)
         {
@@ -7364,13 +7358,48 @@ public abstract class MapViewModelBase : ViewModelBase
 
             return;
         }
+
+        if (added == 0 || skipped.Count > 0)
+            await DialogService.ShowMessageAsync(GetFileGeodatabaseSkippedMessage(added, skipped), null, owner);
+    }
+
+    /// <summary>
+    /// Adds the named feature classes of the geodatabase in <paramref name="folder"/> without the picker, as a project
+    /// file reopens them: one group, as <see cref="AddFileGeodatabase(string, object)"/> makes it.
+    /// <paramref name="fallbackSrid"/> is the CRS chosen for the ones without one. Returns the names that could not be
+    /// added (no longer in the geodatabase, or failing) with the reason; nothing is shown.
+    /// </summary>
+    public async Task<List<(string Name, string Reason)>> AddFileGeodatabaseDatasets(string folder, IReadOnlyCollection<string> datasetNames, int? fallbackSrid)
+    {
+        var geodatabase = await Task.Run(() => FileGeodatabase.Open(folder));
+
+        var datasets = datasetNames.Select(name => (Name: name, Dataset: geodatabase.GetDataset(name))).ToList();
+
+        var (_, skipped) = await AddFileGeodatabaseLayersAsync(folder, datasets.Where(d => d.Dataset is not null).Select(d => d.Dataset!).ToList(), fallbackSrid);
+
+        skipped.InsertRange(0, datasets.Where(d => d.Dataset is null).Select(d => (d.Name, "not in the geodatabase")));
+
+        return skipped;
+    }
+
+    /// <summary>The group of <paramref name="datasets"/> (each schema read on a worker thread): how many layers were added, and the ones that failed.</summary>
+    private async Task<(int Added, List<(string Name, string Reason)> Skipped)> AddFileGeodatabaseLayersAsync(string folder, IReadOnlyList<FileGdbDataset> datasets, int? fallbackSrid)
+    {
+        try
+        {
+            IsBusy = true;
+
+            var (created, skipped) = await Task.Run(() => FileGdbDataSource.CreateAll(datasets, fallbackSrid));
+
+            if (created.Count > 0)
+                AddLayer(CreateFileGeodatabaseGroup(folder, created));
+
+            return (created.Count, skipped);
+        }
         finally
         {
             IsBusy = false;
         }
-
-        if (created.Count == 0 || skipped.Count > 0)
-            await DialogService.ShowMessageAsync(GetFileGeodatabaseSkippedMessage(created.Count, skipped), null, owner);
     }
 
     private GroupLayer CreateFileGeodatabaseGroup(string folder, List<FileGdbDataSource> dataSources)

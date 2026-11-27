@@ -9,6 +9,12 @@ public class LayerStateEntry
     public string LayerName { get; set; } = string.Empty;
 
     /// <summary>
+    /// The table the layer shows inside its file (a file geodatabase feature class, a GeoPackage table), from
+    /// its <c>FileLocation.TableName</c>; null for single-table formats. A file geodatabase is replayed from these.
+    /// </summary>
+    public string? TableName { get; set; }
+
+    /// <summary>
     /// Position among siblings in the table of contents; higher is nearer the top.
     /// Restored verbatim on load. Zero in project files written before ordering was
     /// persisted, which the loader detects and ignores.

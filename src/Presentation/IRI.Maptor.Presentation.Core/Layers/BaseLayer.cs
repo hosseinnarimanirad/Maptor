@@ -468,7 +468,12 @@ public abstract class BaseLayer : Notifier, ILayer
                 return;
 
             if (_allChildrenVisible is null)
+            {
+                // a group that became "some visible" changes its parent too (true/false reach it through SetIsVisible)
+                Parent?.UpdateAllChildrenVisible();
+
                 return;
+            }
 
             SetIsVisible(_allChildrenVisible == true);
         }
@@ -478,13 +483,24 @@ public abstract class BaseLayer : Notifier, ILayer
     {
         if (SubLayers.IsNullOrEmpty())
             return null;
-        else if (SubLayers.All(s => s.IsVisible == true))
+
+        var states = SubLayers.Select(GetVisibilityAsChild).ToList();
+
+        if (states.All(s => s == true))
             return true;
-        else if (SubLayers.All(s => s.IsVisible == false))
+        else if (states.All(s => s == false))
             return false;
         else
             return null;
     }
+
+    /// <summary>
+    /// How a sub-layer counts for its group: a sub-group by what its own children are (all, none or some visible),
+    /// since a group's <see cref="IsVisible"/> is not kept in step with its children; any other layer by
+    /// <see cref="IsVisible"/>.
+    /// </summary>
+    private static bool? GetVisibilityAsChild(ILayer layer)
+        => layer.IsGroupLayer && !layer.SubLayers.IsNullOrEmpty() ? layer.AllChildrenVisible : layer.IsVisible;
 
     public void UpdateAllChildrenVisible() => AllChildrenVisible = GetAllChildVisible();
 

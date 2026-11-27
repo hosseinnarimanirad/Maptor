@@ -6,6 +6,9 @@ using IRI.Maptor.Core.Common.Enums;
 using IRI.Maptor.Core.Common.Exceptions;
 using IRI.Maptor.Core.Persistence.DataSources;
 using IRI.Maptor.Core.Persistence.Model;
+using IRI.Maptor.Core.SpatialReferenceSystem;
+using IRI.Maptor.Presentation.Core.Models.Project;
+using IRI.Maptor.Presentation.Wpf.Services.Project;
 using IRI.Maptor.Presentation.Wpf.Layers;
 using IRI.Maptor.Presentation.Wpf.Services;
 using IRI.Maptor.Tests.Common;
@@ -248,6 +251,165 @@ public sealed class AddFileGeodatabaseTest : IDisposable
             Assert.False(map.IsBusy);
         });
     }
+
+    #region Project file
+
+    /// <summary>Adds Parcels and Plots (Plots with UTM 39N as its CRS) and hides Plots.</summary>
+    private void AddParcelsAndPlots(PasteDataTest.TestMap map, AddDataFromFileTest.DialogRecorder dialogs)
+    {
+        dialogs.FolderResult = _gdb;
+        dialogs.PickerAction = picker =>
+        {
+            picker.AreAllSelected = false;
+            picker.Items.Single(i => i.Name == "Parcels").IsSelected = true;
+            picker.Items.Single(i => i.Name == "Plots").IsSelected = true;
+            picker.SrsChoice.SelectedSrsOption = picker.SrsChoice.AvailableSrsOptions.Single(o => o.IsUtm);
+            picker.SrsChoice.UtmZone = 39;
+            picker.AddCommand.Execute(null);
+        };
+
+        PasteDataTest.Pump(() => map.AddFileGeodatabase((object)null!));
+
+        PasteDataTest.Leaves(map).Single(l => l.LayerName == "Plots").IsVisible = false;
+    }
+
+    private static MapProjectLoadResult Reopen(PasteDataTest.TestMap map, MapProject project, string projectFile)
+    {
+        MapProjectLoadResult result = null!;
+
+        PasteDataTest.Pump(async () => result = await new MapProjectService(map).ApplyAsync(project, projectFile));
+
+        return result;
+    }
+
+    [Fact]
+    public void Project_SavesTheFeatureClassesAndCrs_AndReopensThem()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var projectFile = Path.Combine(_root, "p.mtproj");
+
+            var (map, dialogs) = NewMap();
+            AddParcelsAndPlots(map, dialogs);
+
+            // through the file, as the app saves and opens it
+            MapProjectFile.Save(projectFile, new MapProjectService(map).BuildProject(projectFile));
+            var project = MapProjectFile.Load(projectFile)!;
+
+            var entry = Assert.Single(project.ImportedLayers);
+            Assert.Equal(DataSourceKind.FileGdb, entry.Kind);
+            Assert.Equal(_gdb, Assert.IsType<FileLocation>(entry.Location).Path);
+            Assert.Equal("Test.gdb", entry.RelativePath);
+            Assert.Equal(new[] { "Parcels", "Plots" }, entry.LayerStates.Select(s => s.TableName).OrderBy(n => n));
+            Assert.Equal(SridHelper.GetUtmSrid(39), entry.Options!.SourceSrid);
+
+            var (reopened, reopenedDialogs) = NewMap();
+            var result = Reopen(reopened, project, projectFile);
+
+            Assert.Empty(result.SkippedLayers);
+            Assert.Empty(reopenedDialogs.Pickers);                      // no picker on reopen
+            Assert.Empty(reopenedDialogs.Messages);
+
+            var group = Assert.IsType<GroupLayer>(Assert.Single(reopened.Layers));
+            Assert.Equal("Test", group.LayerName);
+            Assert.Equal("Cadastre", Assert.IsType<GroupLayer>(group.SubLayers.Single(l => l.IsGroupLayer)).LayerName);
+
+            var leaves = PasteDataTest.Leaves(reopened);
+            Assert.Equal(new[] { "Land parcels", "Plots" }, leaves.Select(l => l.LayerName).OrderBy(n => n));
+
+            var plots = leaves.Single(l => l.LayerName == "Plots");
+            Assert.False(plots.IsVisible);
+            Assert.Equal(SridHelper.GetUtmSrid(39), Assert.IsType<FileGdbDataSource>(plots.DataSource).AssumedSrid);
+            Assert.True(leaves.Single(l => l.LayerName == "Land parcels").IsVisible);
+        });
+    }
+
+    [Fact]
+    public void Project_MovedWithItsGeodatabase_StillOpens()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var projectFile = Path.Combine(_root, "p.mtproj");
+
+            var (map, dialogs) = NewMap();
+            AddParcelsAndPlots(map, dialogs);
+
+            var project = new MapProjectService(map).BuildProject(projectFile);
+
+            // the project folder moves: the saved absolute path is gone, the relative one is found
+            var moved = _root + "-moved";
+            Directory.Move(_root, moved);
+
+            try
+            {
+                var (reopened, _) = NewMap();
+                var result = Reopen(reopened, project, Path.Combine(moved, "p.mtproj"));
+
+                Assert.Empty(result.SkippedLayers);
+                Assert.Equal(2, PasteDataTest.Leaves(reopened).Count);
+                Assert.Equal(Path.Combine(moved, "Test.gdb"),
+                             ((FileGdbDataSource)PasteDataTest.Leaves(reopened)[0].DataSource!).GeodatabasePath);
+            }
+            finally
+            {
+                Directory.Move(moved, _root);
+            }
+        });
+    }
+
+    [Fact]
+    public void Project_GeodatabaseGone_IsListedAsSkipped()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var projectFile = Path.Combine(Path.GetTempPath(), "maptor-gdb-elsewhere-" + Guid.NewGuid().ToString("N"), "p.mtproj");
+
+            var (map, dialogs) = NewMap();
+            AddParcelsAndPlots(map, dialogs);
+
+            var project = new MapProjectService(map).BuildProject(projectFile);
+            Directory.Move(_gdb, _gdb + ".away");
+
+            try
+            {
+                var (reopened, _) = NewMap();
+                var result = Reopen(reopened, project, projectFile);
+
+                Assert.Contains("Test.gdb", Assert.Single(result.SkippedLayers));
+                Assert.Empty(reopened.Layers);
+            }
+            finally
+            {
+                Directory.Move(_gdb + ".away", _gdb);
+            }
+        });
+    }
+
+    [Fact]
+    public void Project_FeatureClassGone_TheOthersStillOpen()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var projectFile = Path.Combine(_root, "p.mtproj");
+
+            var (map, dialogs) = NewMap();
+            AddParcelsAndPlots(map, dialogs);
+
+            var project = new MapProjectService(map).BuildProject(projectFile);
+
+            // Plots' table (a0000000e) is deleted after the project was saved
+            foreach (var file in Directory.GetFiles(_gdb, "a0000000e.*"))
+                File.Delete(file);
+
+            var (reopened, _) = NewMap();
+            var result = Reopen(reopened, project, projectFile);
+
+            Assert.Contains("Plots", Assert.Single(result.SkippedLayers));
+            Assert.Equal("Land parcels", Assert.Single(PasteDataTest.Leaves(reopened)).LayerName);
+        });
+    }
+
+    #endregion
 
     [Fact]
     public void GeodatabaseWithoutDatasets_SaysSo()
