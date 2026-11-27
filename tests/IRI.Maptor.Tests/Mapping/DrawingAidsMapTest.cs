@@ -251,7 +251,261 @@ public class DrawingAidsMapTest
 
     #endregion
 
+    #region Typed values
+
+    private static SegmentConstraint Typed(double? length = null, double? angle = null, bool bearing = false)
+        => new() { Length = length, Angle = angle, AngleIsBearing = bearing };
+
+    [Fact]
+    public void TypedLength_IsMeasuredTowardsThePointer_OnTheGround()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var (aids, _) = Aids(new VectorLayer[0]);
+
+            // far from every guide
+            var result = aids.Resolve(new Point(400, 340), Previous, Last, lockToSteps: false, Typed(length: 25));
+
+            Assert.True(result.IsTyped);
+            Assert.False(result.IsDirectionFixed);
+            Assert.Null(result.Snap);
+            Assert.Null(result.Guide);
+
+            Assert.Equal(25, WebMercatorGround.Length(Last, result.Point), 3);
+            Assert.Equal(WebMercatorGround.Bearing(Last, new Point(400, 340)), WebMercatorGround.Bearing(Last, result.Point), 6);
+        });
+    }
+
+    [Fact]
+    public void TypedLength_OnAGuide_GoesAlongTheGuide()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var (aids, _) = Aids(new VectorLayer[0]);
+
+            // near the extension: the length is laid along it (extend the line by a typed distance)
+            var result = aids.Resolve(new Point(300, 103), Previous, Last, lockToSteps: false, Typed(length: 40));
+
+            Assert.True(result.IsTyped);
+            Assert.True(result.IsDirectionFixed);
+            Assert.Equal(100, result.Point.Y, 9);
+            Assert.True(result.Point.X > Last.X);
+            Assert.Equal(40, WebMercatorGround.Length(Last, result.Point), 3);
+        });
+    }
+
+    [Fact]
+    public void TypedLength_NearAStoredPoint_GoesTowardsIt()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var (aids, _) = Aids(new[] { Layer("points", PointAt(300, 200)) });
+
+            var result = aids.Resolve(new Point(298, 203), Previous, Last, lockToSteps: false, Typed(length: 30));
+
+            Assert.True(result.IsTyped);
+            Assert.Null(result.Snap);
+            Assert.Equal(WebMercatorGround.Bearing(Last, new Point(300, 200)), WebMercatorGround.Bearing(Last, result.Point), 6);
+            Assert.Equal(30, WebMercatorGround.Length(Last, result.Point), 3);
+        });
+    }
+
+    [Fact]
+    public void TypedAngle_FixesTheDirection_AndThePointerGivesTheLength()
+    {
+        WpfTestHost.Run(() =>
+        {
+            // a point feature under the pointer: a typed angle is not pulled off its direction
+            var (aids, _) = Aids(new[] { Layer("points", PointAt(300, 160)) });
+
+            // 90° to the right of east is south
+            var result = aids.Resolve(new Point(260, 40), Previous, Last, lockToSteps: true, Typed(angle: 90));
+
+            Assert.True(result.IsTyped);
+            Assert.True(result.IsDirectionFixed);
+            Assert.Equal(200, result.Point.X, 9);
+            Assert.Equal(40, result.Point.Y, 9);
+
+            // a bearing counts from north, whatever the previous segment
+            var north = aids.Resolve(new Point(260, 300), Previous, Last, lockToSteps: false, Typed(angle: 0, bearing: true));
+            Assert.Equal(200, north.Point.X, 9);
+            Assert.Equal(300, north.Point.Y, 9);
+        });
+    }
+
+    [Fact]
+    public void TypedLengthAndAngle_GiveThePoint_WhereverThePointerIs_AlsoWithSnappingOff()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var (aids, choice) = Aids(new VectorLayer[0]);
+
+            var typed = Typed(length: 50, angle: -90);
+
+            var here = aids.Resolve(new Point(700, 20), Previous, Last, lockToSteps: false, typed);
+            var there = aids.Resolve(new Point(10, 900), Previous, Last, lockToSteps: false, typed);
+
+            Assert.Equal(here.Point.X, there.Point.X, 9);
+            Assert.Equal(here.Point.Y, there.Point.Y, 9);
+
+            // 90° to the left of east is north
+            Assert.Equal(200, here.Point.X, 6);
+            Assert.True(here.Point.Y > Last.Y);
+            Assert.Equal(50, WebMercatorGround.Length(Last, here.Point), 3);
+
+            // typed values are not snapping
+            choice.IsEnabled = false;
+
+            var off = aids.Resolve(new Point(700, 20), Previous, Last, lockToSteps: false, typed);
+            Assert.True(off.IsTyped);
+            Assert.Equal(here.Point.Y, off.Point.Y, 9);
+        });
+    }
+
+    [Fact]
+    public void TypedValues_WithoutAStartPoint_OrEmpty_ChangeNothing()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var (aids, _) = Aids(new VectorLayer[0]);
+
+            var noStart = aids.Resolve(new Point(300, 103), previous: null, last: null, lockToSteps: false, Typed(length: 25));
+            Assert.False(noStart.IsTyped);
+            Assert.Equal((300.0, 103.0), (noStart.Point.X, noStart.Point.Y));
+
+            var empty = aids.Resolve(new Point(300, 103), Previous, Last, lockToSteps: false, new SegmentConstraint());
+            Assert.False(empty.IsTyped);
+            Assert.Equal(GuideKind.Extension, empty.Guide!.Guide.Kind);
+        });
+    }
+
+    [Fact]
+    public void SegmentInput_TurnsTypedCharactersIntoValues()
+    {
+        var input = new SegmentInput();
+
+        Assert.False(input.IsActive);
+        Assert.False(input.Type('5'));
+
+        input.Begin(SegmentField.Length);
+        Assert.True(input.IsActive);
+        Assert.Null(input.Constraint.Length);
+
+        Assert.True(input.Type('2'));
+        Assert.True(input.Type('۵'));           // a Persian digit
+        Assert.True(input.Type('.'));
+        Assert.False(input.Type('.'));
+        Assert.False(input.Type('-'));           // a length has no sign
+        Assert.False(input.Type('x'));
+        Assert.True(input.Type('5'));
+
+        Assert.Equal("25.5", input.TextOf(SegmentField.Length));
+        Assert.Equal(25.5, input.Constraint.Length);
+
+        Assert.True(input.Backspace());
+        Assert.True(input.Backspace());
+        Assert.Equal(25, input.Constraint.Length);
+
+        // Tab: on to the turn angle, the length stays
+        input.Next(turnAvailable: true);
+        Assert.Equal(SegmentField.Angle, input.Editing);
+
+        Assert.True(input.Type('-'));
+        Assert.Null(input.Constraint.Angle);
+        Assert.True(input.Type('3'));
+        Assert.True(input.Type('0'));
+
+        Assert.Equal(-30, input.Constraint.Angle);
+        Assert.False(input.Constraint.AngleIsBearing);
+        Assert.Equal(25, input.Constraint.Length);
+        Assert.Equal(string.Empty, input.TextOf(SegmentField.Bearing));
+
+        // and back, with what was typed kept
+        input.Next(turnAvailable: true);
+        Assert.Equal(SegmentField.Length, input.Editing);
+        Assert.Equal("25", input.TextOf(SegmentField.Length));
+
+        // a bearing replaces the turn angle: they are two ways to give one direction
+        input.Begin(SegmentField.Bearing);
+        Assert.Null(input.Constraint.Angle);
+        Assert.False(input.Type('-'));
+        Assert.True(input.Type('9'));
+        Assert.True(input.Type('0'));
+        Assert.True(input.Constraint.AngleIsBearing);
+        Assert.Equal(90, input.Constraint.Angle);
+        Assert.Equal(string.Empty, input.TextOf(SegmentField.Angle));
+
+        // starting a field again drops its text only
+        input.Begin(SegmentField.Length);
+        Assert.Null(input.Constraint.Length);
+        Assert.Equal(90, input.Constraint.Angle);
+
+        input.Clear();
+        Assert.False(input.IsActive);
+        Assert.Null(input.Editing);
+        Assert.False(input.Constraint.AngleIsBearing);
+    }
+
+    [Fact]
+    public void SegmentInput_OnTheFirstSegment_TabGoesToTheBearing_AndZeroLengthIsNoLength()
+    {
+        var input = new SegmentInput();
+
+        input.Begin(SegmentField.Length);
+        input.Type('0');
+        Assert.Null(input.Constraint.Length);
+
+        input.Next(turnAvailable: false);
+        Assert.Equal(SegmentField.Bearing, input.Editing);
+        Assert.True(input.Constraint.AngleIsBearing);
+
+        Assert.False(input.Backspace() && input.Constraint.IsActive);
+    }
+
+    #endregion
+
     #region Drawing
+
+    [Fact]
+    public void CursorBox_ShowsTheValues_TheHeading_AndTheFieldBeingTyped()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var canvas = new System.Windows.Controls.Canvas { Width = 400, Height = 300 };
+            canvas.Measure(new System.Windows.Size(400, 300));
+            canvas.Arrange(new System.Windows.Rect(0, 0, 400, 300));
+
+            var box = new CursorBox(canvas);
+
+            Assert.False(box.IsShown);
+
+            box.Show(new System.Windows.Point(100, 100), "Extension", new CursorBoxValue("25.00 m"), new CursorBoxValue("0.0°"), new CursorBoxValue("90.0°"));
+
+            Assert.True(box.IsShown);
+            Assert.Equal("Extension", box.VisibleHeader);
+            Assert.Equal("25.00 m", box.VisibleLength);
+            Assert.Equal("0.0°", box.VisibleAngle);
+            Assert.Equal("90.0°", box.VisibleBearing);
+            Assert.True(box.Location.X > 100 && box.Location.Y > 100);
+
+            // the first segment of a part: no heading, no turn angle; the length being typed carries a caret
+            box.Show(new System.Windows.Point(100, 100), null, new CursorBoxValue("12", CursorBoxState.Editing), null, new CursorBoxValue("45.0°"));
+
+            Assert.Null(box.VisibleHeader);
+            Assert.Null(box.VisibleAngle);
+            Assert.StartsWith("12", box.VisibleLength);
+            Assert.NotEqual("12", box.VisibleLength);
+
+            // near the lower right corner it flips to the other side of the point
+            box.Show(new System.Windows.Point(395, 295), null, new CursorBoxValue("25.00 m"), null, null);
+
+            Assert.True(box.Location.X < 395 && box.Location.Y < 295);
+            Assert.Null(box.VisibleBearing);
+
+            box.Hide();
+            Assert.False(box.IsShown);
+        });
+    }
 
     [Fact]
     public void GuideOverlay_DrawsTheLineAndTheMark_AndHides()

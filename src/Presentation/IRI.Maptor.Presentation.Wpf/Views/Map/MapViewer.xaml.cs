@@ -522,6 +522,10 @@ public partial class MapViewer : NotifiableUserControl
         this.Loaded += (s, e) => { if (Window.GetWindow(this) is Window w) { w.KeyDown -= HostWindow_KeyDownForSketchBar; w.KeyDown += HostWindow_KeyDownForSketchBar; } };
         this.Unloaded += (s, e) => { if (Window.GetWindow(this) is Window w) w.KeyDown -= HostWindow_KeyDownForSketchBar; };
 
+        // typing a length or an angle while drawing: on the way down, so a focused button does not take Enter first
+        this.Loaded += (s, e) => { if (Window.GetWindow(this) is Window w) { w.PreviewKeyDown -= HostWindow_PreviewKeyDownForSegmentInput; w.PreviewKeyDown += HostWindow_PreviewKeyDownForSegmentInput; } };
+        this.Unloaded += (s, e) => { if (Window.GetWindow(this) is Window w) w.PreviewKeyDown -= HostWindow_PreviewKeyDownForSegmentInput; };
+
         _layerManager.RequestRefreshVisibility = RefreshLayerVisibility;
 
         this.extentManager.OnTilesAdded -= ExtentManager_OnTilesAdded;
@@ -591,6 +595,10 @@ public partial class MapViewer : NotifiableUserControl
     private MapDrawingAids? _aids;
     private GuideOverlay? _guideOverlay;
 
+    // the box beside the point being placed (length, angle, bearing) and the values typed into it
+    private CursorBox? _cursorBox;
+    private readonly SegmentInput _segmentInput = new();
+
     #endregion
 
     public async Task Register(MapViewModelBase presenter,
@@ -605,6 +613,8 @@ public partial class MapViewer : NotifiableUserControl
         _guideOverlay = new GuideOverlay(mapOverlay);
 
         _snapMarker = new SnapMarker(mapOverlay);
+
+        _cursorBox = new CursorBox(mapOverlay);
 
         _snapper = new MapSnapper(
             presenter.SketchBar.Snapping,
@@ -3439,6 +3449,10 @@ public partial class MapViewer : NotifiableUserControl
         private readonly Action<sb.Point>? _onAnyMove;
         private bool _wasPanning;
 
+        // the last map point the pointer was seen at, for acting again without a mouse move (a key changed what
+        // the point should be, or Enter places it)
+        private sb.Point? _lastMapPoint;
+
         // True once this gesture instance has observed the left-button MouseDown of
         // the current press. A MouseUp is only treated as a click/pan-end when its
         // matching press was seen by THIS gesture (prevents an orphan MouseUp — e.g.
@@ -3471,9 +3485,39 @@ public partial class MapViewer : NotifiableUserControl
 
         private bool Stale => IsActive != null && !IsActive();
 
+        /// <summary>Runs the move callbacks again for where the pointer is. False when it cannot (superseded, panning).</summary>
+        public bool RaiseHover()
+        {
+            if (Stale || _wasPanning || Mouse.LeftButton == MouseButtonState.Pressed)
+                return false;
+
+            var mapPt = CurrentMapPoint();
+
+            _onAnyMove?.Invoke(mapPt);
+            _onHover?.Invoke(mapPt);
+
+            return true;
+        }
+
+        /// <summary>Acts as a click where the pointer is. False when it cannot (superseded, panning).</summary>
+        public bool RaiseClick()
+        {
+            if (Stale || _wasPanning || Mouse.LeftButton == MouseButtonState.Pressed)
+                return false;
+
+            _onClick(CurrentMapPoint());
+
+            return true;
+        }
+
+        // where the pointer last was over the map; before its first move, where it is now
+        private sb.Point CurrentMapPoint()
+            => _lastMapPoint ?? _v.ScreenToMap(Mouse.GetPosition(_v.mapView)).AsPoint();
+
         public void Begin()
         {
             End();
+            _lastMapPoint = null;
             _wasPanning = false;
             _leftButtonDownObserved = false;
             _v.mapView.MouseDown += OnMouseDown;
@@ -3511,6 +3555,8 @@ public partial class MapViewer : NotifiableUserControl
 
             var loc = e.GetPosition(_v.mapView);
             var mapPt = _v.ScreenToMap(loc).AsPoint();
+
+            _lastMapPoint = mapPt;
 
             _onAnyMove?.Invoke(mapPt);
 
@@ -4856,10 +4902,18 @@ public partial class MapViewer : NotifiableUserControl
         // waiting for the first point of a drawing or of a new part there is no segment to guide
         var withGuides = onMove is not null;
 
+        _isPlacingVertex = withGuides;
+
         // every point of a draw phase goes through snapping; panning (left button down) never snaps
         var gesture = new ClickOrPanGesture(
             this,
-            onClick: pt => onConfirmedClick(SnapForDrawing(pt, withGuides)),
+            onClick: pt =>
+            {
+                onConfirmedClick(SnapForDrawing(pt, withGuides));
+
+                // typed values are for one segment
+                _segmentInput.Clear();
+            },
             onHover: onMove is null ? null : pt => onMove(SnapForDrawing(pt, withGuides)),
             onAfterPan: onAfterPan is null ? null : pt => onAfterPan(SnapForDrawing(pt, withGuides)),
             onAnyMove: mapPt =>
@@ -4880,8 +4934,15 @@ public partial class MapViewer : NotifiableUserControl
         _drawPhaseGesture?.End();
         _drawPhaseGesture = null;
 
+        _isPlacingVertex = false;
+        _segmentInput.Clear();
+
         HideDrawingAids();
     }
+
+    // true while the draw phase places a vertex of the sketch (not while it waits for the first point of a drawing
+    // or of a new part): guides, the cursor box and typed values apply
+    private bool _isPlacingVertex;
 
     /// <summary>
     /// The point to use for <paramref name="mapPoint"/> while drawing or dragging a vertex: snapped, or on a guide,
@@ -4896,36 +4957,204 @@ public partial class MapViewer : NotifiableUserControl
 
         var (previous, last) = withGuides ? SketchEnds() : (null, null);
 
-        var result = _aids.Resolve(mapPoint, previous, last, lockToSteps: (Keyboard.Modifiers & ModifierKeys.Shift) != 0);
+        var result = _aids.Resolve(mapPoint, previous, last, lockToSteps: (Keyboard.Modifiers & ModifierKeys.Shift) != 0,
+                                   typed: last is null ? null : _segmentInput.Constraint);
 
         var localization = IRI.Maptor.Presentation.Core.Localization.LocalizationManager.Instance;
         var direction = localization.IsRightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
 
         var screen = MapToScreen(result.Point.AsWpfPoint());
 
-        if (result.Guide is { } guide)
+        // with a segment being drawn the cursor box is at the point: what the point is on goes into its heading,
+        // not beside the marker
+        var hasBox = last is not null && _cursorBox is not null;
+
+        string? label = null;
+
+        if (result.IsTyped)
+        {
+            _snapMarker?.Hide();
+
+            if (result.IsDirectionFixed && last is not null)
+                ShowDirection(last, result.Point);
+            else
+                _guideOverlay?.Hide();
+        }
+        else if (result.Guide is { } guide)
         {
             // a crossing with an edge is shown with the intersection marker; a plain point on the guide with the
             // guide's own diamond and the label alone
             var isCrossing = guide.Hit == GuideHit.Crossing;
 
+            // an angle step's label is its angle, which the cursor box shows anyway
+            label = hasBox && guide.Guide.Kind == GuideKind.AngleStep && !isCrossing ? null : GuideLabel(guide, previous, last);
+
             ShowGuide(guide.Guide, result.Point, showMark: !isCrossing);
 
-            _snapMarker?.Show(screen, isCrossing ? SnapKind.Intersection : null, GuideLabel(guide, previous, last), direction);
+            _snapMarker?.Show(screen, isCrossing ? SnapKind.Intersection : null, hasBox ? null : label, direction);
         }
         else if (result.Snap is { } snap)
         {
+            label = SnapLabel(snap);
+
             _guideOverlay?.Hide();
 
-            _snapMarker?.Show(screen, snap.Kind, SnapLabel(snap), direction);
+            _snapMarker?.Show(screen, snap.Kind, hasBox ? null : label, direction);
         }
         else
         {
-            HideDrawingAids();
+            _snapMarker?.Hide();
+            _guideOverlay?.Hide();
         }
+
+        if (hasBox)
+            ShowCursorBox(screen, label, direction, previous, last!, result.Point);
+        else
+            _cursorBox?.Hide();
 
         return result.Point;
     }
+
+    /// <summary>
+    /// The cursor box for the segment <paramref name="last"/>→<paramref name="point"/>: its ground length, its turn
+    /// from the previous segment (none for the first segment of a part) and its bearing; a value being typed, or
+    /// typed and in force, shows as typed.
+    /// </summary>
+    private void ShowCursorBox(Point screen, string? header, FlowDirection headerDirection, sb.Point? previous, sb.Point last, sb.Point point)
+    {
+        var hasLength = point.X != last.X || point.Y != last.Y;
+
+        var turnAvailable = previous is not null && (previous.X != last.X || previous.Y != last.Y);
+
+        CursorBoxValue? Value(SegmentField field, string unit, Func<string> live, bool isAvailable)
+        {
+            var text = _segmentInput.TextOf(field);
+
+            if (_segmentInput.Editing == field)
+                return new CursorBoxValue(text, CursorBoxState.Editing);
+
+            if (text.Length > 0)
+                return new CursorBoxValue(text + unit, CursorBoxState.Fixed);
+
+            return isAvailable ? new CursorBoxValue(live()) : null;
+        }
+
+        static string Degrees(double value) => string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.0}°", value);
+
+        var length = Value(SegmentField.Length, " m", () => IRI.Maptor.Core.Common.Helpers.UnitHelper.GetLengthLabel(WebMercatorGround.Length(last, point)), isAvailable: true)!.Value;
+
+        var angle = Value(SegmentField.Angle, "°", () => Degrees(WebMercatorGround.TurnAngle(previous!, last, point)), turnAvailable && hasLength);
+
+        var bearing = Value(SegmentField.Bearing, "°", () => Degrees(WebMercatorGround.Bearing(last, point)), hasLength);
+
+        _cursorBox?.Show(screen, header, length, angle, bearing, headerDirection);
+    }
+
+    /// <summary>Draws the direction a typed value holds: a dashed ray from <paramref name="last"/> through <paramref name="point"/>.</summary>
+    private void ShowDirection(sb.Point last, sb.Point point)
+    {
+        var dx = point.X - last.X;
+        var dy = point.Y - last.Y;
+
+        var norm = Math.Sqrt(dx * dx + dy * dy);
+
+        if (norm <= 0)
+        {
+            _guideOverlay?.Hide();
+            return;
+        }
+
+        var reach = 3 * Math.Max(CurrentExtent.Width, CurrentExtent.Height);
+
+        var far = new Point(last.X + reach * dx / norm, last.Y + reach * dy / norm);
+
+        _guideOverlay?.Show(MapToScreen(last.AsWpfPoint()), MapToScreen(far), MapToScreen(point.AsWpfPoint()), showMark: true);
+    }
+
+    // Typing a length or an angle for the segment being drawn (while a vertex is being placed):
+    //  - L starts the length (ground metres), A the turn from the previous segment (degrees, right is positive),
+    //    B the bearing from north; then digits, a decimal point, a leading minus for A, Backspace.
+    //  - Tab moves between the length and the direction, keeping both.
+    //  - Enter places the point; a click does too. Either way the typed values end with that segment.
+    //  - Esc drops what is typed (the next Esc is the usual Cancel).
+    // Keys are read by position (Key), so the digits and letters work whatever the keyboard language is.
+    // Not while typing in a text box, and not with Ctrl or Alt (shortcuts stay shortcuts).
+    private void HostWindow_PreviewKeyDownForSegmentInput(object sender, KeyEventArgs e)
+    {
+        if (e.Handled || !_isPlacingVertex || _drawPhaseGesture is null || _presenter is null ||
+            Keyboard.FocusedElement is System.Windows.Controls.Primitives.TextBoxBase ||
+            (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Windows)) != 0)
+            return;
+
+        var (previous, last) = SketchEnds();
+
+        if (last is null)
+            return;
+
+        var turnAvailable = previous is not null && (previous.X != last.X || previous.Y != last.Y);
+
+        var isEditing = _segmentInput.Editing is not null;
+
+        switch (e.Key)
+        {
+            case Key.L:
+                _segmentInput.Begin(SegmentField.Length);
+                break;
+
+            case Key.A:
+                _segmentInput.Begin(turnAvailable ? SegmentField.Angle : SegmentField.Bearing);
+                break;
+
+            case Key.B:
+                _segmentInput.Begin(SegmentField.Bearing);
+                break;
+
+            case Key.Escape when _segmentInput.IsActive:
+                _segmentInput.Clear();
+                break;
+
+            case Key.Tab when isEditing:
+                _segmentInput.Next(turnAvailable);
+                break;
+
+            case Key.Back when isEditing:
+                _segmentInput.Backspace();
+                break;
+
+            case Key.Enter when _segmentInput.Constraint.IsActive:
+                e.Handled = true;
+
+                // the click callback places the point the typed values give and drops them
+                if (_drawPhaseGesture.RaiseClick())
+                    _drawPhaseGesture?.RaiseHover();
+
+                return;
+
+            case Key.Enter when isEditing:
+                // nothing valid typed yet: Enter has nothing to place, and must not reach a focused button
+                break;
+
+            default:
+                if (!isEditing || SegmentInputCharacter(e.Key) is not { } character)
+                    return;
+
+                _segmentInput.Type(character);
+                break;
+        }
+
+        e.Handled = true;
+
+        _drawPhaseGesture?.RaiseHover();
+    }
+
+    private static char? SegmentInputCharacter(Key key) => key switch
+    {
+        >= Key.D0 and <= Key.D9 => (char)('0' + (key - Key.D0)),
+        >= Key.NumPad0 and <= Key.NumPad9 => (char)('0' + (key - Key.NumPad0)),
+        Key.OemPeriod or Key.Decimal => '.',
+        Key.OemMinus or Key.Subtract => '-',
+        _ => null,
+    };
 
     /// <summary>What the pointer snapped to, for the label beside the marker: the kind and the layer, e.g. "Vertex — Towers".</summary>
     private string SnapLabel(SnapResult<sb.Point> snap)
@@ -4962,6 +5191,7 @@ public partial class MapViewer : NotifiableUserControl
     {
         _snapMarker?.Hide();
         _guideOverlay?.Hide();
+        _cursorBox?.Hide();
     }
 
     /// <summary>The placed vertex the segment being drawn starts from, and the one before it (null when there is none).</summary>
