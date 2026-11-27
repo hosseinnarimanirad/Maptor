@@ -1224,6 +1224,13 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
     public SpecialPointLayer GetPrimaryVerticesLabels() => _primaryVerticesLabelLayer;
 
+    /// <summary>
+    /// The placed vertices of the part being drawn, in order (Web Mercator). The vertex that follows the mouse is not
+    /// among them: it exists only in the screen path until it is clicked.
+    /// </summary>
+    public IReadOnlyList<Point> GetCurrentPartPoints()
+        => _webMercatorGeometry?.GetLastPart() is { } points ? points : Array.Empty<Point>();
+
     public Geometry GetLastGeometry()
     {
         if (_webMercatorGeometry.Type == GeometryType.MultiPolygon)

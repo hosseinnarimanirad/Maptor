@@ -587,6 +587,10 @@ public partial class MapViewer : NotifiableUserControl
     private MapSnapper? _snapper;
     private SnapMarker? _snapMarker;
 
+    // drawing aids on top of snapping: guides from the segment just drawn and the Shift angle steps
+    private MapDrawingAids? _aids;
+    private GuideOverlay? _guideOverlay;
+
     #endregion
 
     public async Task Register(MapViewModelBase presenter,
@@ -596,6 +600,9 @@ public partial class MapViewer : NotifiableUserControl
             return;
 
         _presenter = presenter;
+
+        // the guide line first, so the snap marker and its label draw above it
+        _guideOverlay = new GuideOverlay(mapOverlay);
 
         _snapMarker = new SnapMarker(mapOverlay);
 
@@ -618,6 +625,8 @@ public partial class MapViewer : NotifiableUserControl
                 : SnapOptions.Default,
             // the user's drawings, as one group; text labels are not snap targets
             () => presenter.DrawingItems.Where(d => !d.IsTextLayer && d.Visibility == Visibility.Visible && d.Geometry is not null));
+
+        _aids = new MapDrawingAids(_snapper);
 
         _layerManager.RequestUpdateLayerTocOrder = presenter.UpdateLayerCanMoveUpDown;
 
@@ -947,7 +956,13 @@ public partial class MapViewer : NotifiableUserControl
         => _presenter?.FireZoomChanged(this.MapScale);
 
     private void MapViewer_OnExtentChanged(object sender, bool e)
-        => _presenter?.FireMapExtentChanged(this.CurrentExtent, e);
+    {
+        // the snap marker and the guide are drawn in screen coordinates: after a pan or zoom they are in the wrong
+        // place until the next mouse move redraws them
+        HideDrawingAids();
+
+        _presenter?.FireMapExtentChanged(this.CurrentExtent, e);
+    }
 
     private void MapViewer_MouseUp(object sender, MouseButtonEventArgs e)
         => _presenter?.FireMapMouseUp(this.CurrentPoint);
@@ -2504,7 +2519,7 @@ public partial class MapViewer : NotifiableUserControl
 
         _vertexDragOffset = null;
 
-        _snapMarker?.Hide();
+        HideDrawingAids();
     }
 
     private void MapView_LostMouseCaptureForMoveableItem(object sender, MouseEventArgs e)
@@ -4837,15 +4852,19 @@ public partial class MapViewer : NotifiableUserControl
     {
         EndDrawPhase();
 
+        // a phase that places a vertex has a move callback (the rubber band); only there do guides apply: while
+        // waiting for the first point of a drawing or of a new part there is no segment to guide
+        var withGuides = onMove is not null;
+
         // every point of a draw phase goes through snapping; panning (left button down) never snaps
         var gesture = new ClickOrPanGesture(
             this,
-            onClick: pt => onConfirmedClick(SnapForDrawing(pt)),
-            onHover: onMove is null ? null : pt => onMove(SnapForDrawing(pt)),
-            onAfterPan: onAfterPan is null ? null : pt => onAfterPan(SnapForDrawing(pt)),
+            onClick: pt => onConfirmedClick(SnapForDrawing(pt, withGuides)),
+            onHover: onMove is null ? null : pt => onMove(SnapForDrawing(pt, withGuides)),
+            onAfterPan: onAfterPan is null ? null : pt => onAfterPan(SnapForDrawing(pt, withGuides)),
             onAnyMove: mapPt =>
             {
-                var point = Mouse.LeftButton == MouseButtonState.Pressed ? HideSnapMarker(mapPt) : SnapForDrawing(mapPt);
+                var point = Mouse.LeftButton == MouseButtonState.Pressed ? HideSnapMarker(mapPt) : SnapForDrawing(mapPt, withGuides);
 
                 if (_presenter.SketchBar.Options.IsLinkedToMouseMove)
                     CurrentEditingPoint = point.AsWpfPoint();
@@ -4861,26 +4880,51 @@ public partial class MapViewer : NotifiableUserControl
         _drawPhaseGesture?.End();
         _drawPhaseGesture = null;
 
-        _snapMarker?.Hide();
+        HideDrawingAids();
     }
 
-    /// <summary>The point to use for <paramref name="mapPoint"/> while drawing (snapped when it can be), with the marker shown or hidden to match.</summary>
-    private sb.Point SnapForDrawing(sb.Point mapPoint)
+    /// <summary>
+    /// The point to use for <paramref name="mapPoint"/> while drawing or dragging a vertex: snapped, or on a guide,
+    /// when it can be, with the marker, the guide and the label shown or hidden to match.
+    /// </summary>
+    /// <param name="mapPoint">The map point under the pointer.</param>
+    /// <param name="withGuides">True while a vertex of the sketch is being placed: guides from the segment just drawn apply.</param>
+    private sb.Point SnapForDrawing(sb.Point mapPoint, bool withGuides = false)
     {
-        var snap = mapPoint.IsNaN() ? null : _snapper?.Snap(mapPoint);
-
-        if (snap is null)
+        if (mapPoint.IsNaN() || _aids is null)
             return HideSnapMarker(mapPoint);
 
+        var (previous, last) = withGuides ? SketchEnds() : (null, null);
+
+        var result = _aids.Resolve(mapPoint, previous, last, lockToSteps: (Keyboard.Modifiers & ModifierKeys.Shift) != 0);
+
         var localization = IRI.Maptor.Presentation.Core.Localization.LocalizationManager.Instance;
+        var direction = localization.IsRightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
 
-        _snapMarker?.Show(
-            MapToScreen(snap.Location.AsWpfPoint()),
-            snap.Kind,
-            SnapLabel(snap),
-            localization.IsRightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight);
+        var screen = MapToScreen(result.Point.AsWpfPoint());
 
-        return new sb.Point(snap.Location.X, snap.Location.Y);
+        if (result.Guide is { } guide)
+        {
+            // a crossing with an edge is shown with the intersection marker; a plain point on the guide with the
+            // guide's own diamond and the label alone
+            var isCrossing = guide.Hit == GuideHit.Crossing;
+
+            ShowGuide(guide.Guide, result.Point, showMark: !isCrossing);
+
+            _snapMarker?.Show(screen, isCrossing ? SnapKind.Intersection : null, GuideLabel(guide, previous, last), direction);
+        }
+        else if (result.Snap is { } snap)
+        {
+            _guideOverlay?.Hide();
+
+            _snapMarker?.Show(screen, snap.Kind, SnapLabel(snap), direction);
+        }
+        else
+        {
+            HideDrawingAids();
+        }
+
+        return result.Point;
     }
 
     /// <summary>What the pointer snapped to, for the label beside the marker: the kind and the layer, e.g. "Vertex — Towers".</summary>
@@ -4909,9 +4953,76 @@ public partial class MapViewer : NotifiableUserControl
 
     private sb.Point HideSnapMarker(sb.Point mapPoint)
     {
-        _snapMarker?.Hide();
+        HideDrawingAids();
 
         return mapPoint;
+    }
+
+    private void HideDrawingAids()
+    {
+        _snapMarker?.Hide();
+        _guideOverlay?.Hide();
+    }
+
+    /// <summary>The placed vertex the segment being drawn starts from, and the one before it (null when there is none).</summary>
+    private (sb.Point? Previous, sb.Point? Last) SketchEnds()
+    {
+        var points = drawingLayer?.GetLayer().GetCurrentPartPoints();
+
+        if (points is null || points.Count == 0)
+            return (null, null);
+
+        return (points.Count > 1 ? points[points.Count - 2] : null, points[points.Count - 1]);
+    }
+
+    /// <summary>Draws the guide the point is on, across the map, with the diamond where the point sits unless a snap marker shows it.</summary>
+    private void ShowGuide(GuideLine<sb.Point> guide, sb.Point point, bool showMark)
+    {
+        // far beyond the view in both directions; the overlay clips it
+        var reach = 3 * Math.Max(CurrentExtent.Width, CurrentExtent.Height);
+
+        var from = guide.IsRay ? guide.Origin : guide.At(-reach);
+
+        _guideOverlay?.Show(MapToScreen(from.AsWpfPoint()), MapToScreen(guide.At(reach).AsWpfPoint()), MapToScreen(point.AsWpfPoint()), showMark);
+    }
+
+    /// <summary>The label for a point on a guide: the guide's name (an angle for a step), and for a crossing the crossed layer too.</summary>
+    private string GuideLabel(GuideResult<sb.Point> result, sb.Point? previous, sb.Point? last)
+    {
+        var localization = IRI.Maptor.Presentation.Core.Localization.LocalizationManager.Instance;
+
+        string name;
+
+        if (result.Guide.Kind == GuideKind.AngleStep && last is not null)
+        {
+            // the turn from the previous segment; for the first segment of a part, the bearing from north
+            var angle = previous is null
+                ? WebMercatorGround.Bearing(last, result.Location)
+                : WebMercatorGround.TurnAngle(previous, last, result.Location);
+
+            name = $"{Math.Round(angle):0}°";
+        }
+        else
+        {
+            name = localization[result.Guide.Kind switch
+            {
+                GuideKind.Perpendicular => "sketchBar_guide_perpendicular",
+                GuideKind.Parallel => "sketchBar_guide_parallel",
+                _ => "sketchBar_guide_extension",
+            }];
+        }
+
+        if (result.Hit != GuideHit.Crossing)
+            return name;
+
+        var source = _snapper?.SourceOf(result.GeometryIndex) switch
+        {
+            DrawingItemLayer => localization["ui_header_drawingLegend"],
+            { } layer => layer.LayerName,
+            null => null,
+        };
+
+        return string.IsNullOrEmpty(source) ? name : $"{name} — {source}";
     }
 
     // *********************** Rectangle Drawing Events *********************** 

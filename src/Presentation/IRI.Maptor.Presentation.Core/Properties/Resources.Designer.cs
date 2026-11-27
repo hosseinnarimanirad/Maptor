@@ -8674,6 +8674,33 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Extension.
+        /// </summary>
+        public static string sketchBar_guide_extension {
+            get {
+                return ResourceManager.GetString("sketchBar_guide_extension", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Parallel.
+        /// </summary>
+        public static string sketchBar_guide_parallel {
+            get {
+                return ResourceManager.GetString("sketchBar_guide_parallel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Perpendicular.
+        /// </summary>
+        public static string sketchBar_guide_perpendicular {
+            get {
+                return ResourceManager.GetString("sketchBar_guide_perpendicular", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Edge.
         /// </summary>
         public static string sketchBar_snapping_kind_edge {

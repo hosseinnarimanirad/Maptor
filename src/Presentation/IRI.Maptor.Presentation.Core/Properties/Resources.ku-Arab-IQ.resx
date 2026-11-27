@@ -4864,4 +4864,13 @@
   <data name="sketchBar_snapping_kind_edge" xml:space="preserve">
     <value>لێوار</value>
   </data>
+  <data name="sketchBar_guide_extension" xml:space="preserve">
+    <value>درێژکراوە</value>
+  </data>
+  <data name="sketchBar_guide_perpendicular" xml:space="preserve">
+    <value>ستوون</value>
+  </data>
+  <data name="sketchBar_guide_parallel" xml:space="preserve">
+    <value>تەریب</value>
+  </data>
 </root>

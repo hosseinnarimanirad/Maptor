@@ -73,10 +73,10 @@ public sealed class SnapMarker
     }
 
     /// <param name="screenPoint">The snap target on the overlay.</param>
-    /// <param name="kind">Picks the shape.</param>
+    /// <param name="kind">Picks the shape; null shows the label alone (a point on a guide has its own mark).</param>
     /// <param name="label">Shown beside the marker; none when null or empty.</param>
     /// <param name="labelDirection">The reading direction of <paramref name="label"/>.</param>
-    public void Show(Point screenPoint, SnapKind kind, string? label = null, FlowDirection labelDirection = FlowDirection.LeftToRight)
+    public void Show(Point screenPoint, SnapKind? kind, string? label = null, FlowDirection labelDirection = FlowDirection.LeftToRight)
     {
         foreach (var pair in _shapes)
         {
@@ -84,7 +84,7 @@ public sealed class SnapMarker
                 pair.Value.Visibility = Visibility.Collapsed;
         }
 
-        if (_shapes.TryGetValue(kind, out var shown))
+        if (kind is { } shape && _shapes.TryGetValue(shape, out var shown))
         {
             Canvas.SetLeft(shown, screenPoint.X - Size / 2);
             Canvas.SetTop(shown, screenPoint.Y - Size / 2);

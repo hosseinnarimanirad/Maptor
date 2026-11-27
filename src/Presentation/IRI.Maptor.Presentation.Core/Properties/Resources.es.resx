@@ -4864,4 +4864,13 @@
   <data name="sketchBar_snapping_kind_edge" xml:space="preserve">
     <value>Segmento</value>
   </data>
+  <data name="sketchBar_guide_extension" xml:space="preserve">
+    <value>Prolongación</value>
+  </data>
+  <data name="sketchBar_guide_perpendicular" xml:space="preserve">
+    <value>Perpendicular</value>
+  </data>
+  <data name="sketchBar_guide_parallel" xml:space="preserve">
+    <value>Paralela</value>
+  </data>
 </root>

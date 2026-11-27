@@ -101,10 +101,28 @@ public sealed class MapSnapper
         Forget();
     }
 
+    /// <summary>True while nothing is snapped: snapping is off, or Ctrl is held. Guides are suspended with it.</summary>
+    public bool IsSuspended => !_choice.IsEnabled || (Keyboard.Modifiers & ModifierKeys.Control) != 0;
+
+    /// <summary>
+    /// What <paramref name="guides"/> offer for <paramref name="mapPoint"/> within the snap distance: the same
+    /// distance, candidates and left-out geometries as <see cref="Snap"/>, so a guide's crossing with an edge is a
+    /// crossing with an edge that could be snapped to. Null while suspended or when no guide is in range.
+    /// </summary>
+    public GuideResult<Point>? Guide(IReadOnlyList<GuideLine<Point>> guides, Point mapPoint)
+    {
+        if (IsSuspended || guides.Count == 0)
+            return null;
+
+        var index = CurrentIndex();
+
+        return GuideEngine.Find(guides, mapPoint, _screenToMapDistance(_tolerancePixels()), index, index is null ? null : Accept(index));
+    }
+
     /// <summary>The snap for <paramref name="mapPoint"/>, or null to use the point as it is.</summary>
     public SnapResult<Point>? Snap(Point mapPoint)
     {
-        if (!_choice.IsEnabled || (Keyboard.Modifiers & ModifierKeys.Control) != 0)
+        if (IsSuspended)
             return null;
 
         var options = _options();
@@ -113,14 +131,7 @@ public sealed class MapSnapper
         if (_lastRaw is { } last && last.X == mapPoint.X && last.Y == mapPoint.Y && settings == _lastSettings)
             return _lastResult;
 
-        var extent = _currentExtent();
-
-        // visibility and scale range change with zoom; Update does nothing when the list is unchanged
-        _choice.Update(_snappableLayers());
-
-        _cache.EnsureFor(extent, _choice.CheckedLayers, _choice.IsDrawingsChecked ? _drawings().ToList() : null);
-
-        var index = _cache.Index;
+        var index = CurrentIndex();
 
         var result = index is null ? null : SnapEngine.Snap(index, mapPoint, _screenToMapDistance(settings.Item1), options, Accept(index));
 
@@ -135,11 +146,25 @@ public sealed class MapSnapper
     /// The layer the snapped geometry belongs to (for a drawing, its <see cref="DrawingItemLayer"/>), or null when
     /// <paramref name="snap"/> is not from the current index.
     /// </summary>
-    public VectorLayer? SourceOf(SnapResult<Point> snap)
+    public VectorLayer? SourceOf(SnapResult<Point> snap) => snap is null ? null : SourceOf(snap.GeometryIndex);
+
+    /// <summary>The layer of the geometry at <paramref name="geometryIndex"/> in the current index (a guide's crossing carries one), or null.</summary>
+    public VectorLayer? SourceOf(int geometryIndex)
     {
         var sources = _cache.Sources;
 
-        return snap is not null && snap.GeometryIndex >= 0 && snap.GeometryIndex < sources.Count ? sources[snap.GeometryIndex] : null;
+        return geometryIndex >= 0 && geometryIndex < sources.Count ? sources[geometryIndex] : null;
+    }
+
+    /// <summary>The index for the map as it is now, or null while it is being built (a rebuild is started when needed).</summary>
+    private SnapIndex<Point>? CurrentIndex()
+    {
+        // visibility and scale range change with zoom; Update does nothing when the list is unchanged
+        _choice.Update(_snappableLayers());
+
+        _cache.EnsureFor(_currentExtent(), _choice.CheckedLayers, _choice.IsDrawingsChecked ? _drawings().ToList() : null);
+
+        return _cache.Index;
     }
 
     private Func<int, bool>? Accept(SnapIndex<Point> index)
