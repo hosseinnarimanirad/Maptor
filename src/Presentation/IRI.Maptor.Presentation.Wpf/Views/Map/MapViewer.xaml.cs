@@ -599,6 +599,9 @@ public partial class MapViewer : NotifiableUserControl
     private CursorBox? _cursorBox;
     private readonly SegmentInput _segmentInput = new();
 
+    // the existing edge guides are drawn from while drawing (picked by resting on it, or from the right-click options)
+    private readonly ReferenceEdgePicker _referenceEdge = new();
+
     #endregion
 
     public async Task Register(MapViewModelBase presenter,
@@ -615,6 +618,9 @@ public partial class MapViewer : NotifiableUserControl
         _snapMarker = new SnapMarker(mapOverlay);
 
         _cursorBox = new CursorBox(mapOverlay);
+
+        // a new or dropped reference shows at once, without waiting for a mouse move
+        _referenceEdge.Changed += () => _drawPhaseGesture?.RaiseHover();
 
         _snapper = new MapSnapper(
             presenter.SketchBar.Snapping,
@@ -3096,7 +3102,7 @@ public partial class MapViewer : NotifiableUserControl
 
         if (this.Status == MapStatus.Drawing && this.MapAction != MapAction.DrawRectangle)
         {
-            view = GetRightClickOptionsForDraw();
+            view = GetRightClickOptionsForDraw(ScreenToMap(screenLocation).AsPoint());
 
             var context = (ILocatable)view.DataContext;
 
@@ -4877,6 +4883,9 @@ public partial class MapViewer : NotifiableUserControl
             // a new session reads the layers again, so features saved since the last drawing can be snapped to
             _snapper?.BeginSession();
 
+            // a reference edge is for one drawing
+            _referenceEdge.Clear();
+
             // Waiting for user's first click
             BeginDrawPhase(onConfirmedClick: AddFirstPointForNewDrawing);
         }
@@ -4957,8 +4966,27 @@ public partial class MapViewer : NotifiableUserControl
 
         var (previous, last) = withGuides ? SketchEnds() : (null, null);
 
+        // only a draw phase has a reference edge: dragging a vertex of an edited geometry does not
+        var isDrawPhase = _drawPhaseGesture is not null;
+
+        var reference = isDrawPhase ? _referenceEdge.Reference : null;
+
         var result = _aids.Resolve(mapPoint, previous, last, lockToSteps: (Keyboard.Modifiers & ModifierKeys.Shift) != 0,
-                                   typed: last is null ? null : _segmentInput.Constraint);
+                                   typed: last is null ? null : _segmentInput.Constraint,
+                                   reference: reference);
+
+        // resting on an edge (the pointer snapped onto it, not onto one of its vertices) makes it the reference
+        if (isDrawPhase)
+        {
+            var isOnEdge = !result.IsTyped && result.Snap is { Kind: SnapKind.Edge or SnapKind.Midpoint };
+
+            _referenceEdge.Hover(isOnEdge ? _snapper?.EdgeAt(mapPoint) : null, MapToScreen(mapPoint.AsWpfPoint()));
+        }
+
+        if (reference is not null)
+            _guideOverlay?.ShowReference(MapToScreen(reference.Start.AsWpfPoint()), MapToScreen(reference.End.AsWpfPoint()));
+        else
+            _guideOverlay?.HideReference();
 
         var localization = IRI.Maptor.Presentation.Core.Localization.LocalizationManager.Instance;
         var direction = localization.IsRightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
@@ -5081,9 +5109,20 @@ public partial class MapViewer : NotifiableUserControl
     // Not while typing in a text box, and not with Ctrl or Alt (shortcuts stay shortcuts).
     private void HostWindow_PreviewKeyDownForSegmentInput(object sender, KeyEventArgs e)
     {
-        if (e.Handled || !_isPlacingVertex || _drawPhaseGesture is null || _presenter is null ||
+        if (e.Handled || _drawPhaseGesture is null || _presenter is null ||
             Keyboard.FocusedElement is System.Windows.Controls.Primitives.TextBoxBase ||
             (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Windows)) != 0)
+            return;
+
+        // Esc, in order: what is typed, then the reference edge, then the usual Cancel
+        if (e.Key == Key.Escape && !_segmentInput.IsActive && _referenceEdge.Clear())
+        {
+            e.Handled = true;
+
+            return;
+        }
+
+        if (!_isPlacingVertex)
             return;
 
         var (previous, last) = SketchEnds();
@@ -5191,7 +5230,11 @@ public partial class MapViewer : NotifiableUserControl
     {
         _snapMarker?.Hide();
         _guideOverlay?.Hide();
+        _guideOverlay?.HideReference();
         _cursorBox?.Hide();
+
+        // nothing under the pointer counts while the aids are hidden (a pan, the end of a phase)
+        _referenceEdge.Hover(null);
     }
 
     /// <summary>The placed vertex the segment being drawn starts from, and the one before it (null when there is none).</summary>
@@ -5531,7 +5574,8 @@ public partial class MapViewer : NotifiableUserControl
     }
 
 
-    private FrameworkElement GetRightClickOptionsForDraw()
+    /// <param name="mapPoint">Where the right click was: on an edge that can be snapped to, the options offer guides from it.</param>
+    private FrameworkElement GetRightClickOptionsForDraw(sb.Point mapPoint)
     {
         //IRI.Maptor.Presentation.Core.Properties.Resources.mapPanel_currentPoint_copyCoordinate
         //leftToolTip: IRI.Maptor.Presentation.Core.Properties.Resources.mapPanel_edit_cancel,
@@ -5567,11 +5611,52 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.CanExecuteMiddleCommandAction = i => _presenter.CanFinishDrawingPart;
 
-        var view = new MapThreeOptions(true);
+        // On an edge that can be snapped to: a fourth option, guides from that edge (its extension, the
+        // perpendicular and the parallel to it). On the reference edge itself, or anywhere else while there is one:
+        // remove it.
+        var edge = _snapper?.EdgeAt(mapPoint);
+        var current = _referenceEdge.Reference;
 
-        view.DataContext = presenter;
+        if (edge is null && current is null)
+        {
+            var view = new MapThreeOptions(true);
 
-        return view;
+            view.DataContext = presenter;
+
+            return view;
+        }
+
+        var isNew = edge is not null && !edge.SameAs(current);
+
+        // the four-option layout has no middle slot: finish-part moves to the upper left
+        presenter.UpperLeftToolTip = presenter.MiddleToolTip;
+        presenter.UpperLeftSymbol = presenter.MiddleSymbol;
+        presenter.UpperLeftCommandAction = presenter.MiddleCommandAction;
+        presenter.CanExecuteUpperLeftCommandAction = presenter.CanExecuteMiddleCommandAction;
+
+        presenter.UpperRightToolTip = isNew
+            ? IRI.Maptor.Presentation.Core.Properties.Resources.map_draw_guidesFromEdge
+            : IRI.Maptor.Presentation.Core.Properties.Resources.map_draw_removeGuideEdge;
+
+        presenter.UpperRightSymbol = MapOptionsIcon.FromMaterial(isNew
+            ? MahApps.Metro.IconPacks.PackIconMaterialKind.AngleRight
+            : MahApps.Metro.IconPacks.PackIconMaterialKind.VectorPolylineRemove);
+
+        presenter.UpperRightCommandAction = i =>
+        {
+            if (isNew)
+                _referenceEdge.Set(edge!);
+            else
+                _referenceEdge.Clear();
+
+            this.RemoveRightClickOptions();
+        };
+
+        var fourOptions = new MapFourOptions();
+
+        fourOptions.DataContext = presenter;
+
+        return fourOptions;
     }
 
 

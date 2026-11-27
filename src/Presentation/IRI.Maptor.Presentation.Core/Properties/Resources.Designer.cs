@@ -6145,6 +6145,24 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Guides from this line.
+        /// </summary>
+        public static string map_draw_guidesFromEdge {
+            get {
+                return ResourceManager.GetString("map_draw_guidesFromEdge", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Remove the guide line.
+        /// </summary>
+        public static string map_draw_removeGuideEdge {
+            get {
+                return ResourceManager.GetString("map_draw_removeGuideEdge", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Finish Drawing Part.
         /// </summary>
         public static string map_draw_finishDrawingPart {

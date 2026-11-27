@@ -6,7 +6,8 @@ using System.Windows.Shapes;
 namespace IRI.Maptor.Presentation.Wpf.Snapping;
 
 /// <summary>
-/// Draws the guide the point is on: a dashed line across the map and a small diamond where the point sits on it.
+/// Draws the guide the point is on: a dashed line across the map and a small diamond where the point sits on it;
+/// and, apart from that, a highlight over the existing edge that guides are drawn from.
 /// It lives on the overlay canvas above the map, takes no mouse input and draws in screen coordinates. It does not
 /// decide which guide is active or where the point goes.
 /// </summary>
@@ -21,6 +22,8 @@ public sealed class GuideOverlay
     private readonly Line _halo;
     private readonly Line _line;
     private readonly Polygon _mark;
+    private readonly Line _referenceHalo;
+    private readonly Line _reference;
 
     public GuideOverlay(Canvas overlay)
     {
@@ -42,7 +45,13 @@ public sealed class GuideOverlay
         _mark.SetResourceReference(Shape.FillProperty, LightBrush);
         _mark.SetResourceReference(Shape.StrokeProperty, StrongBrush);
 
-        foreach (var element in new FrameworkElement[] { _halo, _line, _mark })
+        _referenceHalo = new Line { StrokeThickness = 7, Opacity = .7, StrokeStartLineCap = PenLineCap.Round, StrokeEndLineCap = PenLineCap.Round };
+        _referenceHalo.SetResourceReference(Shape.StrokeProperty, LightBrush);
+
+        _reference = new Line { StrokeThickness = 3, StrokeStartLineCap = PenLineCap.Round, StrokeEndLineCap = PenLineCap.Round };
+        _reference.SetResourceReference(Shape.StrokeProperty, StrongBrush);
+
+        foreach (var element in new FrameworkElement[] { _referenceHalo, _reference, _halo, _line, _mark })
         {
             element.IsHitTestVisible = false;
             element.Visibility = Visibility.Collapsed;
@@ -82,6 +91,29 @@ public sealed class GuideOverlay
         _line.Visibility = Visibility.Collapsed;
         _mark.Visibility = Visibility.Collapsed;
     }
+
+    /// <summary>Highlights the existing edge guides are drawn from; it stays until <see cref="HideReference"/>.</summary>
+    public void ShowReference(Point from, Point to)
+    {
+        foreach (var line in new[] { _referenceHalo, _reference })
+        {
+            line.X1 = from.X;
+            line.Y1 = from.Y;
+            line.X2 = to.X;
+            line.Y2 = to.Y;
+
+            line.Visibility = Visibility.Visible;
+        }
+    }
+
+    public void HideReference()
+    {
+        _referenceHalo.Visibility = Visibility.Collapsed;
+        _reference.Visibility = Visibility.Collapsed;
+    }
+
+    /// <summary>True while the reference edge is highlighted; for tests.</summary>
+    public bool IsReferenceShown => _reference.Visibility == Visibility.Visible;
 
     /// <summary>True while a guide is drawn; for tests.</summary>
     public bool IsShown => _line.Visibility == Visibility.Visible;

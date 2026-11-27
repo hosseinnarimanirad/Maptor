@@ -5028,4 +5028,10 @@
   <data name="sketchBar_guide_parallel" xml:space="preserve">
     <value>Parallel</value>
   </data>
+  <data name="map_draw_guidesFromEdge" xml:space="preserve">
+    <value>Guides from this line</value>
+  </data>
+  <data name="map_draw_removeGuideEdge" xml:space="preserve">
+    <value>Remove the guide line</value>
+  </data>
 </root>

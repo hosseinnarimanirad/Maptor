@@ -4873,4 +4873,10 @@
   <data name="sketchBar_guide_parallel" xml:space="preserve">
     <value>Paralel</value>
   </data>
+  <data name="map_draw_guidesFromEdge" xml:space="preserve">
+    <value>Bu xətdən bələdçilər</value>
+  </data>
+  <data name="map_draw_removeGuideEdge" xml:space="preserve">
+    <value>Bələdçi xəttini sil</value>
+  </data>
 </root>

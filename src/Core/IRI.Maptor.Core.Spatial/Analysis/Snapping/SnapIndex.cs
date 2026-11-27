@@ -198,6 +198,29 @@ public sealed class SnapIndex<T> where T : IPoint, new()
     }
 
     /// <summary>
+    /// The segment nearest to <paramref name="point"/> within <paramref name="tolerance"/>, with its two ends and the
+    /// position of its geometry in the index's list, of a geometry that <paramref name="accept"/> allows (all when
+    /// null); or null. <see cref="NearestEdge"/> gives the place on the segment, this gives the segment itself.
+    /// </summary>
+    public (T Start, T End, int GeometryIndex)? NearestEdgeSegment(T point, double tolerance, Func<int, bool>? accept = null)
+    {
+        (T Start, T End, int GeometryIndex)? best = null;
+
+        var bestDistance = double.PositiveInfinity;
+
+        foreach (var segment in _edges.SegmentsNear(point, tolerance, AcceptLine(accept)))
+        {
+            if (segment.Distance >= bestDistance)
+                continue;
+
+            bestDistance = segment.Distance;
+            best = (segment.A, segment.B, _lineGeometry[segment.Line]);
+        }
+
+        return best;
+    }
+
+    /// <summary>
     /// The edges within <paramref name="tolerance"/> of <paramref name="point"/>, each with the position of its
     /// geometry in the index's list; for <see cref="GuideEngine"/>, which looks for where a guide meets them.
     /// </summary>

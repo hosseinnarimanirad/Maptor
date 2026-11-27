@@ -119,6 +119,23 @@ public sealed class MapSnapper
         return GuideEngine.Find(guides, mapPoint, _screenToMapDistance(_tolerancePixels()), index, index is null ? null : Accept(index));
     }
 
+    /// <summary>
+    /// The edge of a snappable geometry under <paramref name="mapPoint"/> (within the snap distance), with its
+    /// layer; null when there is none or while suspended. For picking an edge to draw guides from.
+    /// </summary>
+    public ReferenceEdge? EdgeAt(Point mapPoint)
+    {
+        if (IsSuspended)
+            return null;
+
+        var index = CurrentIndex();
+
+        if (index?.NearestEdgeSegment(mapPoint, _screenToMapDistance(_tolerancePixels()), Accept(index)) is not { } edge)
+            return null;
+
+        return new ReferenceEdge(edge.Start, edge.End, SourceOf(edge.GeometryIndex));
+    }
+
     /// <summary>The snap for <paramref name="mapPoint"/>, or null to use the point as it is.</summary>
     public SnapResult<Point>? Snap(Point mapPoint)
     {

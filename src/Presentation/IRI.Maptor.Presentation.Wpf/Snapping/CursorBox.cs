@@ -34,6 +34,10 @@ public sealed class CursorBox
     private const string AccentBrush = "MahApps.Brushes.Highlight";
     private const string TextBrush = "IRI.Maptor.Brushes.OnMap.Text";
 
+    // the key letters and the numbers are Latin in every language: a fixed Latin font, not the UI font (which
+    // would draw the digits in the language's own shapes)
+    private static readonly FontFamily LatinFont = new("Segoe UI");
+
     private readonly Canvas _overlay;
     private readonly Border _box;
     private readonly TextBlock _header;
@@ -140,11 +144,10 @@ public sealed class CursorBox
 
         public Row(string key, double fontSize)
         {
-            _key = new TextBlock { Text = key, FontSize = fontSize - 1.5, Opacity = .65, Width = 13, VerticalAlignment = VerticalAlignment.Center };
+            _key = new TextBlock { Text = key, FontSize = fontSize - 1.5, Opacity = .65, Width = 13, VerticalAlignment = VerticalAlignment.Center, FontFamily = LatinFont };
             _key.SetResourceReference(TextBlock.ForegroundProperty, TextBrush);
 
-            _value = new TextBlock { FontSize = fontSize };
-            _value.SetResourceReference(TextBlock.FontFamilyProperty, "iranSans");
+            _value = new TextBlock { FontSize = fontSize, FontFamily = LatinFont };
 
             _valueFrame = new Border { Child = _value, Padding = new Thickness(2, 0, 2, 0), CornerRadius = new CornerRadius(2), BorderThickness = new Thickness(1) };
 

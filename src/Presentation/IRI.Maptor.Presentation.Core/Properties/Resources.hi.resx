@@ -4873,4 +4873,10 @@
   <data name="sketchBar_guide_parallel" xml:space="preserve">
     <value>समानांतर</value>
   </data>
+  <data name="map_draw_guidesFromEdge" xml:space="preserve">
+    <value>इस रेखा से गाइड</value>
+  </data>
+  <data name="map_draw_removeGuideEdge" xml:space="preserve">
+    <value>गाइड रेखा हटाएँ</value>
+  </data>
 </root>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using IRI.Maptor.Core.Common.Primitives;
 using IRI.Maptor.Core.Spatial.Analysis;
@@ -39,7 +40,9 @@ public sealed class DrawingAidResult
 /// <summary>
 /// Decides the point for a pointer position while a segment is being drawn, from snapping and guides together.
 /// The order: a stored point (line end, vertex) first; then a guide (its crossing with an edge before the plain
-/// guide); then the other snap kinds (intersection, midpoint, edge); else the pointer as it is. With the direction
+/// guide); then the other snap kinds (intersection, midpoint, edge); else the pointer as it is. The guides come from
+/// the segment just drawn and from an existing edge picked as the reference; for the reference's perpendicular the
+/// point where it stands on that edge comes before a crossing. With the direction
 /// locked to the angle steps, the point lies on the nearest step, at its crossing with an edge when one is in range.
 /// <para>
 /// Typed values come before all of that. A typed angle fixes the direction, and the point is the pointer brought
@@ -73,29 +76,33 @@ public sealed class MapDrawingAids
     /// <param name="last">The placed vertex the segment starts from, or null when no vertex is placed yet.</param>
     /// <param name="lockToSteps">True to lock the direction to the angle steps (Shift held).</param>
     /// <param name="typed">The length and/or angle typed for the segment, or null.</param>
-    public DrawingAidResult Resolve(Point pointer, Point? previous, Point? last, bool lockToSteps, SegmentConstraint? typed = null)
+    /// <param name="reference">
+    /// An existing edge to draw guides from, or null: its extension beyond each end, and, once a vertex is placed,
+    /// the perpendicular and the parallel to it through that vertex.
+    /// </param>
+    public DrawingAidResult Resolve(Point pointer, Point? previous, Point? last, bool lockToSteps, SegmentConstraint? typed = null, ReferenceEdge? reference = null)
     {
         if (last is null || typed is not { IsActive: true })
-            return Untyped(pointer, previous, last, lockToSteps);
+            return Untyped(pointer, previous, last, lockToSteps, reference);
 
         if (typed.HasAngle)
             return new DrawingAidResult(typed.Resolve(previous, last, pointer), null, null, isTyped: true, isDirectionFixed: true);
 
         // only the length: along the direction snapping and guides give
-        var free = Untyped(pointer, previous, last, lockToSteps);
+        var free = Untyped(pointer, previous, last, lockToSteps, reference);
 
         return new DrawingAidResult(typed.Resolve(previous, last, free.Point), null, null, isTyped: true,
                                     isDirectionFixed: free.Guide is { } onGuide && PassesThrough(onGuide.Guide, last));
     }
 
-    private DrawingAidResult Untyped(Point pointer, Point? previous, Point? last, bool lockToSteps)
+    private DrawingAidResult Untyped(Point pointer, Point? previous, Point? last, bool lockToSteps, ReferenceEdge? reference)
     {
         if (_snapper.IsSuspended)
             return new DrawingAidResult(pointer, null, null);
 
-        var guidesOn = last is not null && _guidesEnabled();
+        var guidesOn = _guidesEnabled();
 
-        if (guidesOn && lockToSteps)
+        if (guidesOn && last is not null && lockToSteps)
         {
             var steps = GuideBuilder.AngleSteps(previous, last!, AngleStepDegrees);
 
@@ -115,9 +122,17 @@ public sealed class MapDrawingAids
         if (snap is { Kind: SnapKind.End or SnapKind.Vertex })
             return new DrawingAidResult(Copy(snap.Location), snap, null);
 
-        if (guidesOn && previous is not null)
+        if (guidesOn)
         {
-            if (_snapper.Guide(GuideBuilder.FromPreviousSegment(previous, last!), pointer) is { } guide)
+            var guides = new List<GuideLine<Point>>();
+
+            if (previous is not null && last is not null)
+                guides.AddRange(GuideBuilder.FromPreviousSegment(previous, last));
+
+            if (reference is not null)
+                guides.AddRange(GuideBuilder.FromReferenceSegment(reference.Start, reference.End, last));
+
+            if (guides.Count > 0 && _snapper.Guide(guides, pointer) is { } guide)
                 return new DrawingAidResult(guide.Location, null, guide);
         }
 

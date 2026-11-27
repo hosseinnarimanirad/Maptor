@@ -39,6 +39,13 @@ public class DrawingAidsMapTest
     /// <summary>Aids over the given layers, one pixel being one map unit (tolerance 10), with the index already built.</summary>
     private static (MapDrawingAids Aids, SnapLayerChoice Choice) Aids(VectorLayer[] layers, System.Func<bool>? guidesEnabled = null)
     {
+        var (snapper, choice) = Snapper(layers);
+
+        return (new MapDrawingAids(snapper, guidesEnabled), choice);
+    }
+
+    private static (MapSnapper Snapper, SnapLayerChoice Choice) Snapper(VectorLayer[] layers)
+    {
         var choice = new SnapLayerChoice();
         var snapper = new MapSnapper(choice, () => View, pixels => pixels, () => layers);
 
@@ -52,7 +59,7 @@ public class DrawingAidsMapTest
             Assert.True(SpinWait.SpinUntil(() => snapper.SourceOf(0) is not null, 5000), "the snap index was not built");
         }
 
-        return (new MapDrawingAids(snapper, guidesEnabled), choice);
+        return (snapper, choice);
     }
 
     #region Which point wins
@@ -246,6 +253,144 @@ public class DrawingAidsMapTest
             var suspended = aids.Resolve(new Point(300, 103), Previous, Last, lockToSteps: true);
             Assert.Null(suspended.Guide);
             Assert.Equal((300.0, 103.0), (suspended.Point.X, suspended.Point.Y));
+        });
+    }
+
+    #endregion
+
+    #region The reference edge
+
+    // an existing line standing at x = 400, and a sketch that is neither along nor across it
+    private static readonly ReferenceEdge Standing = new(new Point(400, 0), new Point(400, 400));
+    private static readonly Point SlantedPrevious = new(100, 50);
+
+    [Fact]
+    public void ReferenceEdge_BeforeAnyVertex_OffersItsExtension()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var (aids, _) = Aids(new VectorLayer[0]);
+
+            // beyond the upper end, a little to the side
+            var result = aids.Resolve(new Point(403, 600), previous: null, last: null, lockToSteps: false, reference: Standing);
+
+            Assert.Equal(GuideKind.Extension, result.Guide!.Guide.Kind);
+            Assert.True(result.Guide.Guide.HasReference);
+            Assert.Equal((400.0, 600.0), (result.Point.X, result.Point.Y));
+
+            // beside the edge itself there is no extension
+            var beside = aids.Resolve(new Point(403, 200), previous: null, last: null, lockToSteps: false, reference: Standing);
+            Assert.Null(beside.Guide);
+        });
+    }
+
+    [Fact]
+    public void ReferenceEdge_Perpendicular_LandsOnItsFoot_AndParallelGoesThroughTheLastVertex()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var (aids, _) = Aids(new[] { Layer("lines", Line((400, 0), (400, 400))) });
+
+            // near where the perpendicular from (200 100) stands on the edge
+            var foot = aids.Resolve(new Point(397, 103), SlantedPrevious, Last, lockToSteps: false, reference: Standing);
+
+            Assert.Equal(GuideHit.PerpendicularFoot, foot.Guide!.Hit);
+            Assert.Equal(GuideKind.Perpendicular, foot.Guide.Guide.Kind);
+            Assert.Equal(400, foot.Point.X, 9);
+            Assert.Equal(100, foot.Point.Y, 9);
+
+            // along the perpendicular, away from the edge
+            var across = aids.Resolve(new Point(300, 97), SlantedPrevious, Last, lockToSteps: false, reference: Standing);
+            Assert.Equal(GuideKind.Perpendicular, across.Guide!.Guide.Kind);
+            Assert.Equal(GuideHit.OnGuide, across.Guide.Hit);
+            Assert.Equal((300.0, 100.0), (across.Point.X, across.Point.Y));
+
+            // straight up from the last vertex: parallel to the edge
+            var parallel = aids.Resolve(new Point(203, 300), SlantedPrevious, Last, lockToSteps: false, reference: Standing);
+            Assert.Equal(GuideKind.Parallel, parallel.Guide!.Guide.Kind);
+            Assert.Equal((200.0, 300.0), (parallel.Point.X, parallel.Point.Y));
+
+            // a typed length goes along it
+            var typed = aids.Resolve(new Point(203, 300), SlantedPrevious, Last, lockToSteps: false, Typed(length: 30), Standing);
+            Assert.True(typed.IsDirectionFixed);
+            Assert.Equal(200, typed.Point.X, 9);
+            Assert.Equal(30, WebMercatorGround.Length(Last, typed.Point), 3);
+
+            // without the reference none of this
+            var none = aids.Resolve(new Point(203, 300), SlantedPrevious, Last, lockToSteps: false);
+            Assert.Null(none.Guide);
+        });
+    }
+
+    [Fact]
+    public void Snapper_EdgeAt_GivesTheSegmentUnderThePoint_AndItsLayer()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var (snapper, choice) = Snapper(new[] { Layer("lines", Line((400, 0), (400, 400), (700, 400))) });
+
+            var edge = snapper.EdgeAt(new Point(403, 200));
+
+            Assert.True(edge!.SameAs(Standing));
+            Assert.Equal("lines", edge.Source!.LayerName);
+
+            Assert.True(snapper.EdgeAt(new Point(550, 396))!.SameAs(new ReferenceEdge(new Point(700, 400), new Point(400, 400))));
+
+            Assert.Null(snapper.EdgeAt(new Point(450, 200)));
+
+            choice.IsEnabled = false;
+            Assert.Null(snapper.EdgeAt(new Point(403, 200)));
+        });
+    }
+
+    [Fact]
+    public void ReferenceEdgePicker_PicksTheEdgeThePointerRestsOn()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var picker = new ReferenceEdgePicker();
+            var changes = 0;
+            picker.Changed += () => changes++;
+
+            var other = new ReferenceEdge(new Point(0, 0), new Point(50, 50));
+
+            // nothing rested on: the wait ending changes nothing
+            picker.PauseElapsed();
+            Assert.Null(picker.Reference);
+
+            picker.Hover(Standing, new System.Windows.Point(10, 10));
+            Assert.Null(picker.Reference);
+
+            // moving off the edge drops the wait
+            picker.Hover(null);
+            picker.PauseElapsed();
+            Assert.Null(picker.Reference);
+
+            picker.Hover(Standing, new System.Windows.Point(10, 10));
+            picker.Hover(Standing, new System.Windows.Point(11, 10));
+            picker.PauseElapsed();
+
+            Assert.Same(Standing, picker.Reference);
+            Assert.Equal(1, changes);
+
+            // resting on the reference again is nothing new
+            picker.Hover(new ReferenceEdge(Standing.End, Standing.Start), new System.Windows.Point(10, 10));
+            picker.PauseElapsed();
+            Assert.Same(Standing, picker.Reference);
+            Assert.Equal(1, changes);
+
+            // another edge replaces it
+            picker.Hover(other, new System.Windows.Point(40, 40));
+            picker.PauseElapsed();
+            Assert.Same(other, picker.Reference);
+
+            picker.Set(Standing);
+            Assert.Same(Standing, picker.Reference);
+
+            Assert.True(picker.Clear());
+            Assert.Null(picker.Reference);
+            Assert.False(picker.Clear());
+            Assert.Equal(4, changes);
         });
     }
 
@@ -531,6 +676,15 @@ public class DrawingAidsMapTest
             overlay.Hide();
             Assert.False(overlay.IsShown);
             Assert.False(overlay.IsMarkShown);
+
+            // the reference edge is apart from the guide: hiding the guide leaves it
+            overlay.ShowReference(new System.Windows.Point(50, 50), new System.Windows.Point(50, 200));
+            overlay.Show(new System.Windows.Point(10, 20), new System.Windows.Point(900, 20), new System.Windows.Point(120, 20), showMark: true);
+            overlay.Hide();
+            Assert.True(overlay.IsReferenceShown);
+
+            overlay.HideReference();
+            Assert.False(overlay.IsReferenceShown);
         });
     }
 

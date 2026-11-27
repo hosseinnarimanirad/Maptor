@@ -4932,4 +4932,10 @@
   <data name="sketchBar_guide_parallel" xml:space="preserve">
     <value>موازی</value>
   </data>
+  <data name="map_draw_guidesFromEdge" xml:space="preserve">
+    <value>راهنما از این خط</value>
+  </data>
+  <data name="map_draw_removeGuideEdge" xml:space="preserve">
+    <value>حذف خط راهنما</value>
+  </data>
 </root>
