@@ -82,9 +82,9 @@ public sealed class SnapIndex<T> where T : IPoint, new()
     /// <summary>
     /// The nearest vertex within <paramref name="tolerance"/> of a geometry that <paramref name="accept"/> allows
     /// (all when null), or null. Its kind is <see cref="SnapKind.End"/> for a line end, else
-    /// <see cref="SnapKind.Vertex"/>. Of vertices at the same distance the first indexed wins.
+    /// <see cref="SnapKind.Vertex"/>. Of vertices at the same distance the first indexed wins. With
+    /// <paramref name="endsOnly"/> only line ends are looked at.
     /// </summary>
-    /// <param name="endsOnly">True to look at line ends only.</param>
     public SnapResult<T>? NearestVertex(T point, double tolerance, Func<int, bool>? accept = null, bool endsOnly = false)
     {
         SnapResult<T>? best = null;
@@ -195,6 +195,16 @@ public sealed class SnapIndex<T> where T : IPoint, new()
         }
 
         return best;
+    }
+
+    /// <summary>
+    /// The edges within <paramref name="tolerance"/> of <paramref name="point"/>, each with the position of its
+    /// geometry in the index's list; for <see cref="GuideEngine"/>, which looks for where a guide meets them.
+    /// </summary>
+    internal IEnumerable<(T A, T B, int GeometryIndex)> EdgesNear(T point, double tolerance, Func<int, bool>? accept = null)
+    {
+        foreach (var segment in _edges.SegmentsNear(point, tolerance, AcceptLine(accept)))
+            yield return (segment.A, segment.B, _lineGeometry[segment.Line]);
     }
 
     private Func<int, bool>? AcceptLine(Func<int, bool>? accept) => accept is null ? null : line => accept(_lineGeometry[line]);

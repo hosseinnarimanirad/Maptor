@@ -246,6 +246,27 @@ var snap = SnapEngine.Snap(index, mousePoint, tolerance);     // per mouse move
 var point = snap?.Location ?? mousePoint;
 ```
 
+### Drawing aids: guides and typed lengths
+
+Direction and length help for the segment being drawn, on top of snapping. Coordinates are Web Mercator;
+`WebMercatorGround` is the one type that knows the projection.
+
+| Type | Does |
+|---|---|
+| `WebMercatorGround` | Ground length and bearing of a Web Mercator segment, the turn angle between two segments, and `PointAt(start, dx, dy, metres)`: the point along a map direction at a ground distance. Web Mercator keeps angles but stretches lengths (a map unit is `cos(latitude)` metres); a length here is the ellipsoidal distance between the two ends, so an edge made with `PointAt` measures the asked length to the millimetre |
+| `GuideLine<T>`, `GuideKind` | A direction to draw along: a line or a ray, and what it follows (`Extension`, `Perpendicular`, `Parallel`, `AngleStep`) |
+| `GuideBuilder` | Makes guides: `FromPreviousSegment` (extension and perpendicular of the segment just drawn), `FromReferenceSegment` (extension beyond both ends of an existing segment; perpendicular and parallel through the point being drawn from), `AngleSteps` (rays every so many degrees from the previous segment, or from north) |
+| `GuideEngine` | `Find(guides, point, tolerance, index, accept)`: the first of these within the tolerance: the perpendicular's foot on its reference segment, a guide's crossing with an edge of the `SnapIndex`, the nearest point on a guide. A ray offers nothing behind its origin. `Nearest(guides, point)` puts the point on the nearest guide whatever the distance, for a locked direction |
+| `GuideResult<T>`, `GuideHit` | The point, the guide, which of the three it is, the distance, and for a crossing the crossed geometry |
+| `SegmentConstraint` | A fixed length (ground metres) and/or angle (a turn from the previous segment, or a bearing) and `Resolve(previous, last, pointer, direction)`: the point they allow |
+
+```csharp
+var guides = GuideBuilder.FromPreviousSegment(previous, last);       // when a vertex is placed
+var onGuide = GuideEngine.Find(guides, mousePoint, tolerance, index); // per mouse move
+var point = new SegmentConstraint { Length = 25 }                     // a typed 25 m
+    .Resolve(previous, last, mousePoint, onGuide is null ? null : (onGuide.Guide.DirectionX, onGuide.Guide.DirectionY));
+```
+
 ## Statistics & shape characteristics
 
 `AreaStatistics` summarizes the area distribution of a set of `Geometry<Point>` polygons (mean, standard deviation, histogram, CSV export). The `CharacteristicsMeasure` enum names McMaster's displacement measures (PCC, PDD, PCLL, …) computed by the simplification metrics above.
