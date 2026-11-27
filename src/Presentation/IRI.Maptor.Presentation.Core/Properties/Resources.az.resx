@@ -3337,4 +3337,1471 @@
   <data name="dialog_fileGdbPicker_reasonUnreadable" xml:space="preserve">
     <value>Oxunmur</value>
   </data>
+  <data name="versioning_review_title" xml:space="preserve">
+    <value>Versiyaların nəzərdən keçirilməsi</value>
+  </data>
+  <data name="versioning_review_refresh" xml:space="preserve">
+    <value>Yenilə</value>
+  </data>
+  <data name="versioning_review_lastRefresh" xml:space="preserve">
+    <value>Son yenilənmə</value>
+  </data>
+  <data name="versioning_review_competitions" xml:space="preserve">
+    <value>Rəqabətlər</value>
+  </data>
+  <data name="versioning_review_singles" xml:space="preserve">
+    <value>Tək təkliflər</value>
+  </data>
+  <data name="versioning_review_acceptSelected" xml:space="preserve">
+    <value>Seçilmişləri qəbul et</value>
+  </data>
+  <data name="versioning_review_groupSelected" xml:space="preserve">
+    <value>Rəqabət kimi qruplaşdır</value>
+  </data>
+  <data name="versioning_review_compare" xml:space="preserve">
+    <value>Nəzərdən keçir</value>
+  </data>
+  <data name="versioning_review_colFeature" xml:space="preserve">
+    <value>Obyekt</value>
+  </data>
+  <data name="versioning_review_colLayer" xml:space="preserve">
+    <value>Lay</value>
+  </data>
+  <data name="versioning_review_colCount" xml:space="preserve">
+    <value>Təkliflər</value>
+  </data>
+  <data name="versioning_review_colAuthors" xml:space="preserve">
+    <value>Redaktorlar</value>
+  </data>
+  <data name="versioning_review_colAge" xml:space="preserve">
+    <value>Yaş</value>
+  </data>
+  <data name="versioning_review_colSuggestions" xml:space="preserve">
+    <value>Üst-üstə düşmələr</value>
+  </data>
+  <data name="versioning_review_badgeStale" xml:space="preserve">
+    <value>Köhnəlmiş</value>
+  </data>
+  <data name="versioning_review_badgeOrphaned" xml:space="preserve">
+    <value>Hədəfsiz</value>
+  </data>
+  <data name="versioning_review_badgeQueued" xml:space="preserve">
+    <value>Növbədə</value>
+  </data>
+  <data name="versioning_review_badgeDelete" xml:space="preserve">
+    <value>Silinmə</value>
+  </data>
+  <data name="versioning_review_empty" xml:space="preserve">
+    <value>Gözləyən təklif yoxdur — versiyalı laylarda göndərilmiş dəyişikliklər burada görünür.</value>
+  </data>
+  <data name="versioning_compare_back" xml:space="preserve">
+    <value>Növbəyə qayıt</value>
+  </data>
+  <data name="versioning_compare_live" xml:space="preserve">
+    <value>Canlı</value>
+  </data>
+  <data name="versioning_compare_field" xml:space="preserve">
+    <value>Sahə</value>
+  </data>
+  <data name="versioning_compare_selectWinner" xml:space="preserve">
+    <value>Qalib seç</value>
+  </data>
+  <data name="versioning_compare_closeNoWinner" xml:space="preserve">
+    <value>Hamısını rədd et (qalibsiz)</value>
+  </data>
+  <data name="versioning_compare_reason" xml:space="preserve">
+    <value>Rədd səbəbi</value>
+  </data>
+  <data name="versioning_compare_staleOverride" xml:space="preserve">
+    <value>Bilirəm ki, canlı obyekt bu təklifdən sonra dəyişib (qeydə alınmış istisna)</value>
+  </data>
+  <data name="versioning_compare_showOnMap" xml:space="preserve">
+    <value>Xəritədə göstər</value>
+  </data>
+  <data name="versioning_compare_deleteProposal" xml:space="preserve">
+    <value>SİLİNMƏ TƏKLİFİ</value>
+  </data>
+  <data name="versioning_compare_orphanBanner" xml:space="preserve">
+    <value>Hədəf obyekt artıq canlı verilənlərdə yoxdur; yalnız hamısını rədd etmək mümkündür.</value>
+  </data>
+  <data name="versioning_compare_queuedBanner" xml:space="preserve">
+    <value>Bu rəqabət təsdiq gözləyən başqa bir rəqabətin arxasında növbədədir.</value>
+  </data>
+  <data name="versioning_approval_title" xml:space="preserve">
+    <value>Təsdiq növbəsi</value>
+  </data>
+  <data name="versioning_approval_commitSelected" xml:space="preserve">
+    <value>Seçilmişləri təsdiqlə</value>
+  </data>
+  <data name="versioning_approval_return" xml:space="preserve">
+    <value>Geri qaytar</value>
+  </data>
+  <data name="versioning_approval_returnReason" xml:space="preserve">
+    <value>Geri qaytarma səbəbi</value>
+  </data>
+  <data name="versioning_approval_returnReasonRequired" xml:space="preserve">
+    <value>Geri qaytarmanın səbəbi izah edilməlidir.</value>
+  </data>
+  <data name="versioning_approval_staleNeedsOverride" xml:space="preserve">
+    <value>Seçilmiş elementlər arasında köhnəlmiş təkliflər var; onları təsdiqləmək üçün istisnanı işarələyin.</value>
+  </data>
+  <data name="versioning_approval_colWinner" xml:space="preserve">
+    <value>Qalib</value>
+  </data>
+  <data name="versioning_approval_colReviewer" xml:space="preserve">
+    <value>Nəzərdən keçirən</value>
+  </data>
+  <data name="versioning_approval_colType" xml:space="preserve">
+    <value>Dəyişiklik</value>
+  </data>
+  <data name="versioning_approval_colResolved" xml:space="preserve">
+    <value>Həll edilib</value>
+  </data>
+  <data name="versioning_myPending_title" xml:space="preserve">
+    <value>Gözləyən təkliflərim</value>
+  </data>
+  <data name="versioning_myPending_colSession" xml:space="preserve">
+    <value>Sessiya</value>
+  </data>
+  <data name="versioning_myPending_colStatus" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="versioning_myPending_colSubmitted" xml:space="preserve">
+    <value>Göndərilib</value>
+  </data>
+  <data name="versioning_status_pendingReview" xml:space="preserve">
+    <value>Nəzərdən keçirilməni gözləyir</value>
+  </data>
+  <data name="versioning_status_inCompetition" xml:space="preserve">
+    <value>Rəqabətdə ({0})</value>
+  </data>
+  <data name="versioning_status_underReview" xml:space="preserve">
+    <value>Nəzərdən keçirilir</value>
+  </data>
+  <data name="versioning_status_committed" xml:space="preserve">
+    <value>Təsdiqlənib</value>
+  </data>
+  <data name="versioning_status_rejected" xml:space="preserve">
+    <value>Rədd edilib</value>
+  </data>
+  <data name="versioning_status_withdrawn" xml:space="preserve">
+    <value>Geri götürülüb</value>
+  </data>
+  <data name="versioning_submit_title" xml:space="preserve">
+    <value>Sessiya göndərildi</value>
+  </data>
+  <data name="versioning_submit_summary" xml:space="preserve">
+    <value>{0} təklif gözləyən kimi göndərildi. Xəritə təsdiqlənmiş vəziyyəti göstərməyə davam edir; gedişatı "Gözləyən təkliflərim" bölməsində izləyin.</value>
+  </data>
+  <data name="versioning_submit_competitions" xml:space="preserve">
+    <value>{0} rəqabətə daxil oldu.</value>
+  </data>
+  <data name="versioning_submit_superseded" xml:space="preserve">
+    <value>{0} əvvəlki təklifinizi əvəz etdi.</value>
+  </data>
+  <data name="versioning_submit_overlaps" xml:space="preserve">
+    <value>{0} mövcud obyektlərlə üst-üstə düşür (məlumat üçün).</value>
+  </data>
+  <data name="versioning_timeline_featureId" xml:space="preserve">
+    <value>Obyekt id-si</value>
+  </data>
+  <data name="versioning_timeline_load" xml:space="preserve">
+    <value>Tarixçəni göstər</value>
+  </data>
+  <data name="versioning_timeline_liveNow" xml:space="preserve">
+    <value>Cari vəziyyət</value>
+  </data>
+  <data name="versioning_timeline_deleted" xml:space="preserve">
+    <value>Bu obyekt silinib</value>
+  </data>
+  <data name="versioning_timeline_colUntil" xml:space="preserve">
+    <value>Etibarlıdır</value>
+  </data>
+  <data name="versioning_timeline_colReplacedBy" xml:space="preserve">
+    <value>Əvəz edən</value>
+  </data>
+  <data name="versioning_timeline_colApprover" xml:space="preserve">
+    <value>Təsdiqləyən</value>
+  </data>
+  <data name="versioning_timeline_colBatch" xml:space="preserve">
+    <value>Təsdiq paketi</value>
+  </data>
+  <data name="versioning_timeline_attributes" xml:space="preserve">
+    <value>Dəyərlər</value>
+  </data>
+  <data name="versioning_timeline_empty" xml:space="preserve">
+    <value>Bu obyekt üçün tarixçə qeydə alınmayıb</value>
+  </data>
+  <data name="versioning_timeline_featureIdInvalid" xml:space="preserve">
+    <value>Lay seçin və etibarlı obyekt id-si daxil edin</value>
+  </data>
+  <data name="versioning_inbox_markAllRead" xml:space="preserve">
+    <value>Hamısını oxunmuş kimi işarələ</value>
+  </data>
+  <data name="versioning_inbox_colWhen" xml:space="preserve">
+    <value>Nə vaxt</value>
+  </data>
+  <data name="versioning_inbox_colEvent" xml:space="preserve">
+    <value>Hadisə</value>
+  </data>
+  <data name="versioning_inbox_colDetails" xml:space="preserve">
+    <value>Təfərrüatlar</value>
+  </data>
+  <data name="versioning_inbox_unread" xml:space="preserve">
+    <value>{0} oxunmamış</value>
+  </data>
+  <data name="versioning_inbox_items" xml:space="preserve">
+    <value>{0} element</value>
+  </data>
+  <data name="versioning_inbox_features" xml:space="preserve">
+    <value>Obyektlər: {0}</value>
+  </data>
+  <data name="versioning_inbox_reason" xml:space="preserve">
+    <value>Səbəb: {0}</value>
+  </data>
+  <data name="versioning_inbox_typeCompetitionJoined" xml:space="preserve">
+    <value>Təklifiniz rəqabətə daxil oldu</value>
+  </data>
+  <data name="versioning_inbox_typeCommitted" xml:space="preserve">
+    <value>Təklifləriniz təsdiqləndi</value>
+  </data>
+  <data name="versioning_inbox_typeRejected" xml:space="preserve">
+    <value>Təklifləriniz rədd edildi</value>
+  </data>
+  <data name="versioning_inbox_typeClosedNoWinner" xml:space="preserve">
+    <value>Rəqabət qalibsiz bağlandı</value>
+  </data>
+  <data name="versioning_inbox_typeReturned" xml:space="preserve">
+    <value>Qərarınız təsdiqləyən tərəfindən geri qaytarıldı</value>
+  </data>
+  <data name="versioning_inbox_typeOrphaned" xml:space="preserve">
+    <value>Hədəf obyekt artıq mövcud deyil</value>
+  </data>
+  <data name="message_error_versionedLayerWriteRejected" xml:space="preserve">
+    <value>Bu lay versiyalaşdırma altındadır; redaktələr birbaşa saxlanılmamalı, nəzərdən keçirilmək üçün təklif kimi göndərilməlidir.</value>
+  </data>
+  <data name="message_error_versioningInvalidSubmission" xml:space="preserve">
+    <value>Göndərilmiş sessiya etibarsızdır; layı yenidən yükləyin və yenidən cəhd edin.</value>
+  </data>
+  <data name="message_error_versioningInvalidProposal" xml:space="preserve">
+    <value>Təklif edilən dəyişikliklərdən biri etibarsızdır; layı yenidən yükləyin və yenidən cəhd edin.</value>
+  </data>
+  <data name="message_error_versioningUnknownVersionedLayer" xml:space="preserve">
+    <value>Bu lay versiyalaşdırma üçün qeydiyyatdan keçməyib.</value>
+  </data>
+  <data name="message_error_versioningVersioningNotEnabled" xml:space="preserve">
+    <value>Bu lay üçün versiyalaşdırma aktiv deyil; adi yolla saxlayın.</value>
+  </data>
+  <data name="message_error_versioningProposalUnderApproval" xml:space="preserve">
+    <value>Bu obyekt üçün əvvəlki təklifiniz son təsdiqi gözləyir; yenidən göndərməzdən əvvəl onun təsdiqlənməsini və ya geri qaytarılmasını gözləyin.</value>
+  </data>
+  <data name="message_error_versioningConcurrentSubmission" xml:space="preserve">
+    <value>Başqa bir göndəriş eyni anda eyni obyektə toxundu; yeniləyin və yenidən cəhd edin.</value>
+  </data>
+  <data name="message_error_versioningCompetitionAlreadyResolved" xml:space="preserve">
+    <value>Rəqabət başqa bir nəzərdən keçirən tərəfindən dəyişdirilib və ya həll edilib; yeniləyin və yenidən cəhd edin.</value>
+  </data>
+  <data name="message_error_versioningConcurrentModification" xml:space="preserve">
+    <value>Eyni vaxtda nəsə dəyişdi; yeniləyin və yenidən cəhd edin.</value>
+  </data>
+  <data name="message_error_versioningConcurrentLiveChange" xml:space="preserve">
+    <value>Təsdiq zamanı rəqabət və ya canlı obyekt dəyişdi; heç nə təsdiqlənmədi — yeniləyin və yenidən cəhd edin.</value>
+  </data>
+  <data name="message_error_versioningStaleBaseRequiresOverride" xml:space="preserve">
+    <value>Canlı obyekt bu təklif yazıldıqdan sonra dəyişib; qəbul etmək üçün açıq köhnəlmə istisnası tələb olunur.</value>
+  </data>
+  <data name="message_error_versioningOrphanedTarget" xml:space="preserve">
+    <value>Hədəf obyekt artıq mövcud deyil; bunun əvəzinə rəqabəti geri qaytarın. Heç nə təsdiqlənmədi.</value>
+  </data>
+  <data name="message_error_versioningOrphanedTargetRejectOnly" xml:space="preserve">
+    <value>Hədəf obyekt artıq canlı verilənlərdə yoxdur; yalnız qalibsiz bağlamaq mümkündür.</value>
+  </data>
+  <data name="message_error_versioningRejectionReasonRequired" xml:space="preserve">
+    <value>Rədd səbəbi tələb olunur.</value>
+  </data>
+  <data name="message_error_versioningReturnReasonRequired" xml:space="preserve">
+    <value>Geri qaytarmanın səbəbi göstərilməlidir.</value>
+  </data>
+  <data name="message_error_versioningUnknownCompetition" xml:space="preserve">
+    <value>Rəqabət tapılmadı; ola bilsin ki, həll edilib və ya silinib — yeniləyin.</value>
+  </data>
+  <data name="message_error_versioningUnknownProposal" xml:space="preserve">
+    <value>Təklif bu rəqabətdə tapılmadı; yeniləyin.</value>
+  </data>
+  <data name="message_error_versioningUnknownSuggestion" xml:space="preserve">
+    <value>Üst-üstə düşmə təklifi tapılmadı; yeniləyin.</value>
+  </data>
+  <data name="message_error_versioningInvalidGrouping" xml:space="preserve">
+    <value>Bu təkliflər qruplaşdırıla bilməz; yalnız bir laydan olan gözləyən yaratma təklifləri qruplaşdırıla bilər.</value>
+  </data>
+  <data name="message_error_versioningCompetitionBlockedByPredecessor" xml:space="preserve">
+    <value>Bu rəqabət həll edilməmiş əvvəlki rəqabətin arxasında növbədədir; əvvəlcə onu həll edin.</value>
+  </data>
+  <data name="message_error_versioningEmptyCompetition" xml:space="preserve">
+    <value>Rəqabətdə aktiv təklif yoxdur.</value>
+  </data>
+  <data name="message_error_versioningNotASingleton" xml:space="preserve">
+    <value>Bu rəqabətdə bir neçə təklif var; müqayisə görünüşündən istifadə edin.</value>
+  </data>
+  <data name="message_error_versioningInvalidCommit" xml:space="preserve">
+    <value>Təsdiq paketi boşdur və ya etibarsızdır.</value>
+  </data>
+  <data name="message_error_versioningCompetitionNotResolved" xml:space="preserve">
+    <value>Rəqabət həll edilmiş vəziyyətdə deyil; növbəni yeniləyin.</value>
+  </data>
+  <data name="message_error_versioningSchemaMismatch" xml:space="preserve">
+    <value>Təklif artıq layın sxeminə uyğun gəlmir; təsdiqlənə bilməz.</value>
+  </data>
+  <data name="versioning_map_pendingStatus" xml:space="preserve">
+    <value>Gözləyən təkliflər</value>
+  </data>
+  <data name="versioning_map_history" xml:space="preserve">
+    <value>Obyektin tarixçəsi</value>
+  </data>
+  <data name="versioning_map_myPendingOverlay" xml:space="preserve">
+    <value>Gözləyənlərim xəritədə</value>
+  </data>
+  <data name="versioning_map_selectFeature" xml:space="preserve">
+    <value>Əvvəlcə obyekt seçin</value>
+  </data>
+  <data name="versioning_map_noPending" xml:space="preserve">
+    <value>Bu obyekt üçün gözləyən təklif yoxdur</value>
+  </data>
+  <data name="versioning_map_pendingSummary" xml:space="preserve">
+    <value>{0} gözləyən təklif</value>
+  </data>
+  <data name="versioning_map_pendingAuthors" xml:space="preserve">
+    <value>Redaktorlar: {0}</value>
+  </data>
+  <data name="versioning_map_pendingHasOwn" xml:space="preserve">
+    <value>Öz təklifiniz də daxildir</value>
+  </data>
+  <data name="versioning_map_overlayEmpty" xml:space="preserve">
+    <value>Bu lay üçün gözləyən təklifiniz yoxdur</value>
+  </data>
+  <data name="versioning_map_overlayName" xml:space="preserve">
+    <value>Gözləyənlərim — {0}</value>
+  </data>
+  <data name="versioning_changeType_create" xml:space="preserve">
+    <value>Yaratma</value>
+  </data>
+  <data name="versioning_changeType_update" xml:space="preserve">
+    <value>Yeniləmə</value>
+  </data>
+  <data name="versioning_changeType_delete" xml:space="preserve">
+    <value>Silinmə</value>
+  </data>
+  <data name="versioning_myPending_empty" xml:space="preserve">
+    <value>Gözləyən təklifiniz yoxdur.</value>
+  </data>
+  <data name="versioning_approval_empty" xml:space="preserve">
+    <value>Təsdiq gözləyən heç nə yoxdur.</value>
+  </data>
+  <data name="versioning_inbox_empty" xml:space="preserve">
+    <value>Bildirişiniz yoxdur.</value>
+  </data>
+  <data name="versioning_compare_empty" xml:space="preserve">
+    <value>Təkliflərini müqayisə etmək üçün nəzərdən keçirmə növbəsindən rəqabət seçin.</value>
+  </data>
+  <data name="versioning_submit_confirm" xml:space="preserve">
+    <value>{1} layında {0} dəyişiklik birbaşa saxlanılmayacaq, nəzərdən keçirilmək üçün göndəriləcək. Təsdiqləyən onları təsdiqləyənə qədər xəritə təsdiqlənmiş vəziyyəti göstərir. İndi göndərilsin?</value>
+  </data>
+  <data name="versioning_layer_badgeTooltip" xml:space="preserve">
+    <value>Versiyalı lay — Saxla redaktələrinizi birbaşa yazmır, nəzərdən keçirilmək üçün göndərir.</value>
+  </data>
+  <data name="versioning_review_ageDays" xml:space="preserve">
+    <value>{0} gün</value>
+  </data>
+  <data name="versioning_review_ageHours" xml:space="preserve">
+    <value>{0} saat</value>
+  </data>
+  <data name="versioning_review_ageMinutes" xml:space="preserve">
+    <value>{0} dəq</value>
+  </data>
+  <data name="dialog_goto_quickEntry" xml:space="preserve">
+    <value>Sürətli daxiletmə</value>
+  </data>
+  <data name="dialog_goto_quickEntryWatermark" xml:space="preserve">
+    <value>Koordinatları yapışdırın — 35.6892, 51.3890 · 35°41′21″N 51°23′20″E · 39N 534123 3950123 · xəritə linki</value>
+  </data>
+  <data name="dialog_goto_quickEntryRecognized" xml:space="preserve">
+    <value>Tanındı:</value>
+  </data>
+  <data name="dialog_goto_quickEntryNotRecognized" xml:space="preserve">
+    <value>Koordinat kimi tanınmadı</value>
+  </data>
+  <data name="dialog_goto_tabGeodetic" xml:space="preserve">
+    <value>Geodezik</value>
+  </data>
+  <data name="dialog_goto_tabUtm" xml:space="preserve">
+    <value>UTM</value>
+  </data>
+  <data name="dialog_goto_tabProjected" xml:space="preserve">
+    <value>Proyeksiyalı</value>
+  </data>
+  <data name="dialog_goto_format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="dialog_goto_datum" xml:space="preserve">
+    <value>Datum (ellipsoid)</value>
+  </data>
+  <data name="dialog_goto_latitude" xml:space="preserve">
+    <value>Enlik</value>
+  </data>
+  <data name="dialog_goto_longitude" xml:space="preserve">
+    <value>Uzunluq</value>
+  </data>
+  <data name="dialog_goto_hemisphere" xml:space="preserve">
+    <value>Yarımkürə</value>
+  </data>
+  <data name="dialog_goto_decimalHint" xml:space="preserve">
+    <value>Mənfi dəyərlər cənub və qərbdir. 35 41 21.1 N kimi DMS yazılışı da burada qəbul edilir.</value>
+  </data>
+  <data name="dialog_goto_easting" xml:space="preserve">
+    <value>Şərq koordinatı</value>
+  </data>
+  <data name="dialog_goto_northing" xml:space="preserve">
+    <value>Şimal koordinatı</value>
+  </data>
+  <data name="dialog_goto_projection" xml:space="preserve">
+    <value>Proyeksiya</value>
+  </data>
+  <data name="dialog_goto_projectionCustom" xml:space="preserve">
+    <value>xüsusi</value>
+  </data>
+  <data name="dialog_goto_paramCentralMeridian" xml:space="preserve">
+    <value>Mərkəzi meridian</value>
+  </data>
+  <data name="dialog_goto_paramLatitudeOfOrigin" xml:space="preserve">
+    <value>Başlanğıc enliyi</value>
+  </data>
+  <data name="dialog_goto_paramScaleFactor" xml:space="preserve">
+    <value>Miqyas əmsalı</value>
+  </data>
+  <data name="dialog_goto_paramFalseEasting" xml:space="preserve">
+    <value>Yalançı şərq sürüşməsi</value>
+  </data>
+  <data name="dialog_goto_paramFalseNorthing" xml:space="preserve">
+    <value>Yalançı şimal sürüşməsi</value>
+  </data>
+  <data name="dialog_goto_paramStandardParallel1" xml:space="preserve">
+    <value>Standart paralel 1</value>
+  </data>
+  <data name="dialog_goto_paramStandardParallel2" xml:space="preserve">
+    <value>Standart paralel 2</value>
+  </data>
+  <data name="dialog_goto_x" xml:space="preserve">
+    <value>X (şərq)</value>
+  </data>
+  <data name="dialog_goto_y" xml:space="preserve">
+    <value>Y (şimal)</value>
+  </data>
+  <data name="dialog_goto_position" xml:space="preserve">
+    <value>Mövqe</value>
+  </data>
+  <data name="dialog_goto_positionSubtitle" xml:space="preserve">
+    <value>WGS 84 · enlik, uzunluq</value>
+  </data>
+  <data name="dialog_goto_copy" xml:space="preserve">
+    <value>Koordinatları kopyala</value>
+  </data>
+  <data name="dialog_goto_statusReady" xml:space="preserve">
+    <value>Hazır</value>
+  </data>
+  <data name="dialog_goto_statusInvalid" xml:space="preserve">
+    <value>Daxil edilənləri yoxlayın</value>
+  </data>
+  <data name="dialog_goto_errorLatitudeRange" xml:space="preserve">
+    <value>Enlik −90° ilə 90° arasında olmalıdır</value>
+  </data>
+  <data name="dialog_goto_errorLongitudeRange" xml:space="preserve">
+    <value>Uzunluq −180° ilə 180° arasında olmalıdır</value>
+  </data>
+  <data name="dialog_goto_errorDmsComponents" xml:space="preserve">
+    <value>Dəqiqə və saniyə 0 ilə 60 arasında olmalıdır</value>
+  </data>
+  <data name="dialog_goto_errorNumber" xml:space="preserve">
+    <value>{0} üçün rəqəmsal dəyər daxil edin</value>
+  </data>
+  <data name="dialog_goto_errorNorthingRange" xml:space="preserve">
+    <value>Şimal koordinatı 0 ilə 10,000,000 m arasında olmalıdır</value>
+  </data>
+  <data name="dialog_goto_warningEastingRange" xml:space="preserve">
+    <value>Şərq koordinatı UTM zonasının adi aralığından kənardadır (100,000 – 900,000 m)</value>
+  </data>
+  <data name="dialog_goto_errorProjection" xml:space="preserve">
+    <value>Bu dəyərlər Yer üzərində heç bir yerə uyğun gəlmir</value>
+  </data>
+  <data name="srs_lccTitle" xml:space="preserve">
+    <value>Lambert konformal konus proyeksiyası</value>
+  </data>
+  <data name="dialog_goto_coordinateSystem" xml:space="preserve">
+    <value>Koordinat sistemi</value>
+  </data>
+  <data name="layerSettings_statistics_field" xml:space="preserve">
+    <value>Sahə</value>
+  </data>
+  <data name="layerSettings_statistics_compute" xml:space="preserve">
+    <value>Hesabla</value>
+  </data>
+  <data name="layerSettings_statistics_liveNotSupported" xml:space="preserve">
+    <value>Bu lay Canlı rejimdədir: obyektləri serverdə qalır, ona görə də statistikası hələ mövcud deyil. Görmək üçün layı Keş rejiminə keçirin.</value>
+  </data>
+  <data name="layerSettings_statistics_emptyState" xml:space="preserve">
+    <value>Sahə seçin və Hesabla düyməsini basın</value>
+  </data>
+  <data name="layerSettings_statistics_failed" xml:space="preserve">
+    <value>Statistikanın hesablanması alınmadı:</value>
+  </data>
+  <data name="layerSettings_statistics_summary" xml:space="preserve">
+    <value>Təfərrüatlar</value>
+  </data>
+  <data name="layerSettings_statistics_topValues" xml:space="preserve">
+    <value>Ən çox rast gəlinən dəyərlər</value>
+  </data>
+  <data name="layerSettings_statistics_value" xml:space="preserve">
+    <value>Dəyər</value>
+  </data>
+  <data name="layerSettings_statistics_count" xml:space="preserve">
+    <value>Say</value>
+  </data>
+  <data name="layerSettings_statistics_featureCount" xml:space="preserve">
+    <value>Obyektlər</value>
+  </data>
+  <data name="layerSettings_statistics_emptyCount" xml:space="preserve">
+    <value>Boş dəyərlər</value>
+  </data>
+  <data name="layerSettings_statistics_distinctCount" xml:space="preserve">
+    <value>Fərqli dəyərlər</value>
+  </data>
+  <data name="layerSettings_statistics_min" xml:space="preserve">
+    <value>Minimum</value>
+  </data>
+  <data name="layerSettings_statistics_max" xml:space="preserve">
+    <value>Maksimum</value>
+  </data>
+  <data name="layerSettings_statistics_sum" xml:space="preserve">
+    <value>Cəm</value>
+  </data>
+  <data name="layerSettings_statistics_mean" xml:space="preserve">
+    <value>Orta</value>
+  </data>
+  <data name="layerSettings_statistics_median" xml:space="preserve">
+    <value>Median</value>
+  </data>
+  <data name="layerSettings_statistics_standardDeviation" xml:space="preserve">
+    <value>Standart sapma</value>
+  </data>
+  <data name="layerSettings_statistics_minDate" xml:space="preserve">
+    <value>Ən erkən</value>
+  </data>
+  <data name="layerSettings_statistics_maxDate" xml:space="preserve">
+    <value>Ən son</value>
+  </data>
+  <data name="layerSettings_statistics_emptyValue" xml:space="preserve">
+    <value>(boş)</value>
+  </data>
+  <data name="layerSettings_statistics_modeField" xml:space="preserve">
+    <value>Sahə statistikası</value>
+  </data>
+  <data name="layerSettings_statistics_modeGroupBy" xml:space="preserve">
+    <value>Sahəyə görə qruplaşdır</value>
+  </data>
+  <data name="layerSettings_statistics_groupByField" xml:space="preserve">
+    <value>Qruplaşdır</value>
+  </data>
+  <data name="layerSettings_statistics_sumField" xml:space="preserve">
+    <value>Cəmlənən sahə</value>
+  </data>
+  <data name="layerSettings_statistics_none" xml:space="preserve">
+    <value>(heç biri)</value>
+  </data>
+  <data name="layerSettings_statistics_groupCount" xml:space="preserve">
+    <value>Qruplar</value>
+  </data>
+  <data name="layerSettings_statistics_totalLength" xml:space="preserve">
+    <value>Ümumi uzunluq</value>
+  </data>
+  <data name="layerSettings_statistics_totalArea" xml:space="preserve">
+    <value>Ümumi sahə</value>
+  </data>
+  <data name="layerSettings_statistics_sumOf" xml:space="preserve">
+    <value>{0} cəmi</value>
+  </data>
+  <data name="layerSettings_statistics_groups" xml:space="preserve">
+    <value>Qruplar</value>
+  </data>
+  <data name="layerSettings_statistics_groupsTruncated" xml:space="preserve">
+    <value>{1} qrupdan ilk {0} göstərilir.</value>
+  </data>
+  <data name="layerSettings_statistics_invalidNote" xml:space="preserve">
+    <value>{0} dəyər sahənin tipi kimi oxuna bilmədi və nəzərə alınmadı.</value>
+  </data>
+  <data name="layerSettings_statistics_total" xml:space="preserve">
+    <value>Cəmi</value>
+  </data>
+  <data name="layerSettings_statistics_topOfDistinct" xml:space="preserve">
+    <value>{1} dəyərdən {0}</value>
+  </data>
+  <data name="layerSettings_statistics_sortedByCount" xml:space="preserve">
+    <value>Saya görə sıralanıb</value>
+  </data>
+  <data name="layerSettings_statistics_modeGeometry" xml:space="preserve">
+    <value>Həndəsə</value>
+  </data>
+  <data name="layerSettings_statistics_emptyGeometryCount" xml:space="preserve">
+    <value>Boş həndəsələr</value>
+  </data>
+  <data name="layerSettings_statistics_distribution" xml:space="preserve">
+    <value>Paylanma</value>
+  </data>
+  <data name="layerSettings_statistics_lengthPerFeature" xml:space="preserve">
+    <value>Obyekt üzrə uzunluq ({0})</value>
+  </data>
+  <data name="layerSettings_statistics_areaPerFeature" xml:space="preserve">
+    <value>Obyekt üzrə sahə ({0})</value>
+  </data>
+  <data name="layerSettings_statistics_binCount" xml:space="preserve">
+    <value>{0} interval</value>
+  </data>
+  <data name="layerSettings_statistics_noMeasureNote" xml:space="preserve">
+    <value>Uzunluq və sahə yalnız xətt və poliqon laylarına aiddir.</value>
+  </data>
+  <data name="layerSettings_statistics_unmeasuredNote" xml:space="preserve">
+    <value>{0} həndəsə ölçülə bilmədi və nəzərə alınmadı.</value>
+  </data>
+  <data name="layerSettings_statistics_viewHistogram" xml:space="preserve">
+    <value>Diaqram</value>
+  </data>
+  <data name="layerSettings_statistics_viewTable" xml:space="preserve">
+    <value>Ən çox dəyərlər</value>
+  </data>
+  <data name="layerSettings_statistics_geometryHint" xml:space="preserve">
+    <value>Hər obyektin WGS84 ellipsoidində geodezik uzunluğu (xətt layları) və ya sahəsi (poliqon layları).</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainCount" xml:space="preserve">
+    <value>Domendən kənar</value>
+  </data>
+  <data name="layerSettings_statistics_domainUsage" xml:space="preserve">
+    <value>{1} domen dəyərindən {0} istifadə olunub</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainNote" xml:space="preserve">
+    <value>{0} obyektin dəyəri sahənin domenindən kənardadır.</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainTooltip" xml:space="preserve">
+    <value>Sahənin domen dəyəri deyil</value>
+  </data>
+  <data name="sldGenerator_title" xml:space="preserve">
+    <value>Sahə dəyərlərindən qaydalar yarat</value>
+  </data>
+  <data name="sldGenerator_field" xml:space="preserve">
+    <value>Sahə</value>
+  </data>
+  <data name="sldGenerator_geometry" xml:space="preserve">
+    <value>Həndəsə</value>
+  </data>
+  <data name="sldGenerator_geometryPoint" xml:space="preserve">
+    <value>Nöqtə</value>
+  </data>
+  <data name="sldGenerator_geometryLine" xml:space="preserve">
+    <value>Xətt</value>
+  </data>
+  <data name="sldGenerator_geometryPolygon" xml:space="preserve">
+    <value>Poliqon</value>
+  </data>
+  <data name="sldGenerator_values" xml:space="preserve">
+    <value>Dəyərlər</value>
+  </data>
+  <data name="sldGenerator_valuesData" xml:space="preserve">
+    <value>Laydakı dəyərlər</value>
+  </data>
+  <data name="sldGenerator_valuesDomain" xml:space="preserve">
+    <value>Bütün domen dəyərləri</value>
+  </data>
+  <data name="sldGenerator_colors" xml:space="preserve">
+    <value>Rənglər</value>
+  </data>
+  <data name="sldGenerator_colorsPalette" xml:space="preserve">
+    <value>Daxili palitra</value>
+  </data>
+  <data name="sldGenerator_colorsDomain" xml:space="preserve">
+    <value>Domen rəngləri</value>
+  </data>
+  <data name="sldGenerator_includeOther" xml:space="preserve">
+    <value>Digər dəyərlər üçün qayda əlavə et</value>
+  </data>
+  <data name="sldGenerator_replaceExisting" xml:space="preserve">
+    <value>Cari qaydaları əvəz et</value>
+  </data>
+  <data name="sldGenerator_preview" xml:space="preserve">
+    <value>Önizləmə</value>
+  </data>
+  <data name="sldGenerator_noField" xml:space="preserve">
+    <value>Kateqoriyalara bölmək üçün sahə yoxdur</value>
+  </data>
+  <data name="sldGenerator_noValues" xml:space="preserve">
+    <value>Sahədə dəyər yoxdur</value>
+  </data>
+  <data name="sldGenerator_ruleCount" xml:space="preserve">
+    <value>{0} qayda</value>
+  </data>
+  <data name="sldGenerator_previewCut" xml:space="preserve">
+    <value>(ilk {0} göstərilir)</value>
+  </data>
+  <data name="sldGenerator_failed" xml:space="preserve">
+    <value>Dəyərlərin oxunması alınmadı:</value>
+  </data>
+  <data name="sldGenerator_generate" xml:space="preserve">
+    <value>Yarat</value>
+  </data>
+  <data name="sldGenerator_otherValues" xml:space="preserve">
+    <value>Digər dəyərlər</value>
+  </data>
+  <data name="layerSettings_general_summary" xml:space="preserve">
+    <value>Lay xülasəsi</value>
+  </data>
+  <data name="layerSettings_general_loadMode" xml:space="preserve">
+    <value>Yükləmə rejimi:</value>
+  </data>
+  <data name="layerSettings_general_loadModeCache" xml:space="preserve">
+    <value>Hamısını birdən yüklə (Keş)</value>
+  </data>
+  <data name="layerSettings_general_loadModeLive" xml:space="preserve">
+    <value>Xəritə görünüşünə görə yüklə (Canlı)</value>
+  </data>
+  <data name="layerSettings_general_featureCount" xml:space="preserve">
+    <value>Obyektlər:</value>
+  </data>
+  <data name="layerSettings_general_featureCountLive" xml:space="preserve">
+    <value>Canlı rejimdə mövcud deyil (yalnız görünən ərazi yüklənir)</value>
+  </data>
+  <data name="layerSettings_general_fieldCount" xml:space="preserve">
+    <value>Sahələr:</value>
+  </data>
+  <data name="layerSettings_general_geometryType" xml:space="preserve">
+    <value>Həndəsə növü:</value>
+  </data>
+  <data name="layerSettings_general_srs" xml:space="preserve">
+    <value>Məkan istinad sistemi:</value>
+  </data>
+  <data name="layerSettings_general_originalSrs" xml:space="preserve">
+    <value>Mənbə məkan istinad sistemi:</value>
+  </data>
+  <data name="layerSettings_general_extentWgs84" xml:space="preserve">
+    <value>Ərazi (WGS84):</value>
+  </data>
+  <data name="layerSettings_general_extentUtm" xml:space="preserve">
+    <value>Ərazi (UTM {0}):</value>
+  </data>
+  <data name="layerSettings_general_unknown" xml:space="preserve">
+    <value>Naməlum</value>
+  </data>
+  <data name="layerStyles_ruleCount" xml:space="preserve">
+    <value>{0} qayda</value>
+  </data>
+  <data name="layerStyles_untitled" xml:space="preserve">
+    <value>Adsız üslub</value>
+  </data>
+  <data name="layerStyles_newTitle" xml:space="preserve">
+    <value>Üslub {0}</value>
+  </data>
+  <data name="layerStyles_copyTitle" xml:space="preserve">
+    <value>{0} (surət)</value>
+  </data>
+  <data name="layerStyles_addFirst" xml:space="preserve">
+    <value>Üslub əlavə et</value>
+  </data>
+  <data name="layerStyles_adminBanner" xml:space="preserve">
+    <value>İstifadəçilər standart üslubla başlayır və Simvologiya tabında və ya xəritə şərhindən digərlərinə keçə bilərlər.</value>
+  </data>
+  <data name="layerStyles_add" xml:space="preserve">
+    <value>Əlavə et</value>
+  </data>
+  <data name="layerStyles_copy" xml:space="preserve">
+    <value>Surətini çıxar</value>
+  </data>
+  <data name="layerStyles_edit" xml:space="preserve">
+    <value>Redaktə et</value>
+  </data>
+  <data name="layerStyles_setDefault" xml:space="preserve">
+    <value>Standart et</value>
+  </data>
+  <data name="layerStyles_moveUp" xml:space="preserve">
+    <value>Yuxarı</value>
+  </data>
+  <data name="layerStyles_moveDown" xml:space="preserve">
+    <value>Aşağı</value>
+  </data>
+  <data name="layerStyles_delete" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="layerStyles_defaultBadge" xml:space="preserve">
+    <value>Standart</value>
+  </data>
+  <data name="layerStyles_titleWatermark" xml:space="preserve">
+    <value>Üslubun başlığı</value>
+  </data>
+  <data name="layerStyles_legend_pick" xml:space="preserve">
+    <value>Üslub</value>
+  </data>
+  <data name="layerStyles_tab_notAvailable" xml:space="preserve">
+    <value>Bu layın təyin ediləcək simvologiyası yoxdur.</value>
+  </data>
+  <data name="layerStyles_tab_styles" xml:space="preserve">
+    <value>Üslublar</value>
+  </data>
+  <data name="layerStyles_tab_singleStyle" xml:space="preserve">
+    <value>Bu layın bir üslubu var. Administrator server lay parametrlərində daha çox əlavə edə bilər.</value>
+  </data>
+  <data name="layerStyles_tab_legend" xml:space="preserve">
+    <value>Şərh</value>
+  </data>
+  <data name="layerStyles_tab_exportLegend" xml:space="preserve">
+    <value>Şərhi PNG kimi ixrac et</value>
+  </data>
+  <data name="layerStyles_tab_quickEdit" xml:space="preserve">
+    <value>Sürətli redaktə</value>
+  </data>
+  <data name="layerStyles_tab_myChanges" xml:space="preserve">
+    <value>Dəyişikliklərim</value>
+  </data>
+  <data name="layerStyles_tab_noChanges" xml:space="preserve">
+    <value>Yoxdur: lay serverin təyin etdiyi kimi çəkilir.</value>
+  </data>
+  <data name="layerStyles_tab_hasChanges" xml:space="preserve">
+    <value>Bu layın simvologiyasını dəyişmisiniz. Dəyişiklik layihənizdə saxlanılır; Admin üslublarını bərpa et serverin üslublarını geri qaytarır.</value>
+  </data>
+  <data name="serverLayerSettings_error_styleTitleRequired" xml:space="preserve">
+    <value>Layın bir neçə üslubu olduqda hər birinin başlığı olmalıdır.</value>
+  </data>
+  <data name="serverLayerSettings_error_duplicateStyleTitle" xml:space="preserve">
+    <value>İki üslubun başlığı eynidir.</value>
+  </data>
+  <data name="layerStyles_wholeLayer" xml:space="preserve">
+    <value>Bütün lay</value>
+  </data>
+  <data name="layerStyles_wholeLayerHint" xml:space="preserve">
+    <value>Miqyas aralığı və şəffaflıq simvologiyasından asılı olmayaraq laya aid edilir.</value>
+  </data>
+  <data name="layerStyles_modeSimple" xml:space="preserve">
+    <value>Sadə</value>
+  </data>
+  <data name="layerStyles_modeStyles" xml:space="preserve">
+    <value>Üslublar (SLD)</value>
+  </data>
+  <data name="layerStyles_simpleHint" xml:space="preserve">
+    <value>Aşağıdakı rənglərdən bir sadə üslub. Atributa görə qaydalar və istifadəçilərin seçə biləcəyi bir neçə simvologiya üçün Üslublar rejiminə keçin.</value>
+  </data>
+  <data name="layerStyles_previewOf" xml:space="preserve">
+    <value>Şərh: {0}</value>
+  </data>
+  <data name="layerStyles_switchToSimpleConfirm" xml:space="preserve">
+    <value>Bu layın {0} üslubu silinsin? Əvəzində sadə rənglər istifadə olunacaq.</value>
+  </data>
+  <data name="layerStyles_labelsNote" xml:space="preserve">
+    <value>Bu lay SLD üslubları ilə çəkilir: bu etiket hansı üslub aktivdirsə, onun üzərində çəkilir.</value>
+  </data>
+  <data name="layerStyles_tab_changedStyles" xml:space="preserve">
+    <value>Bu üslubları bu kompüterdə dəyişmisiniz: {0}. Dəyişikliklər layihənizdə saxlanılır; Admin üslublarını bərpa et serverin üslublarını geri qaytarır.</value>
+  </data>
+  <data name="layerStyles_tab_simpleHint" xml:space="preserve">
+    <value>Bu lay sadə rənglərlə çəkilir; onları dəyişmək üçün Sürətli redaktədən istifadə edin.</value>
+  </data>
+  <data name="layerStyles_tab_editInSld" xml:space="preserve">
+    <value>Üslubu SLD redaktorunda redaktə et</value>
+  </data>
+  <data name="layerStyles_tab_restore" xml:space="preserve">
+    <value>Admin üslublarını bərpa et</value>
+  </data>
+  <data name="layerStyles_tab_restoreTip" xml:space="preserve">
+    <value>Bu layın bütün üslublarına etdiyiniz dəyişiklikləri geri alın və onu serverin təyin etdiyi kimi çəkin.</value>
+  </data>
+  <data name="layerStyles_tab_changedMark" xml:space="preserve">
+    <value>Sizin tərəfinizdən dəyişdirilib</value>
+  </data>
+  <data name="dialog_symbology_restoreAdmin" xml:space="preserve">
+    <value>Admin üslubunu bərpa et</value>
+  </data>
+  <data name="dialog_symbology_userChanged" xml:space="preserve">
+    <value>Bu layın rənglərini bu kompüterdə dəyişmisiniz.</value>
+  </data>
+  <data name="dialog_symbology_editInSld" xml:space="preserve">
+    <value>SLD redaktorunda redaktə et</value>
+  </data>
+  <data name="dialog_symbology_advancedHint" xml:space="preserve">
+    <value>SLD redaktoru atributa görə qaydalar, etiketlər və s. əlavə edir. Orada saxladıqdan sonra bu lay SLD redaktorunda açılır; Admin üslubunu bərpa et sürətli rəngləri geri qaytarır.</value>
+  </data>
+  <data name="layerSettings_statistics_liveOnServer" xml:space="preserve">
+    <value>Bu lay Canlı rejimdədir: statistikası server tərəfindən bütün obyektləri üzrə hesablanır. Saxlamadığınız redaktələr daxil edilmir.</value>
+  </data>
+  <data name="layerSettings_general_featureCountServer" xml:space="preserve">
+    <value>Serverdə bütün obyektlər üzrə sayılıb (saxlamadığınız redaktələr daxil edilmir)</value>
+  </data>
+  <data name="serverLayerSettings_importModel_export" xml:space="preserve">
+    <value>İdxal modelini ixrac et…</value>
+  </data>
+  <data name="serverLayerSettings_importModel_exportTip" xml:space="preserve">
+    <value>İdxal modelini ixrac et: hər aktiv layın verilənlər modelini (cədvəllər, sütunlar, tiplər, domenlər) idxal alətinin oxuduğu fayl kimi saxla</value>
+  </data>
+  <data name="serverLayerSettings_importModel_saved" xml:space="preserve">
+    <value>{0} layın idxal modeli {1} yerində saxlanıldı.</value>
+  </data>
+  <data name="serverLayerSettings_importModel_failed" xml:space="preserve">
+    <value>İdxal modeli saxlanıla bilmədi.</value>
+  </data>
+  <data name="ribbon_topology_header" xml:space="preserve">
+    <value>Topologiya</value>
+  </data>
+  <data name="ribbon_topology_groupCheck" xml:space="preserve">
+    <value>Yoxlama</value>
+  </data>
+  <data name="ribbon_topology_check" xml:space="preserve">
+    <value>Yoxla</value>
+  </data>
+  <data name="ribbon_topology_checkTooltip" xml:space="preserve">
+    <value>Verilənləri topologiya qaydalarına görə yoxla</value>
+  </data>
+  <data name="ribbon_topology_groupResults" xml:space="preserve">
+    <value>Nəticələr</value>
+  </data>
+  <data name="ribbon_topology_issues" xml:space="preserve">
+    <value>Problemlər</value>
+  </data>
+  <data name="ribbon_topology_issuesTooltip" xml:space="preserve">
+    <value>Son yoxlamanın problemləri</value>
+  </data>
+  <data name="ribbon_topology_showOnMap" xml:space="preserve">
+    <value>Xəritədə göstər</value>
+  </data>
+  <data name="ribbon_topology_showOnMapTooltip" xml:space="preserve">
+    <value>Problemləri xəritədə, redaktə zamanı da, çək</value>
+  </data>
+  <data name="ribbon_topology_groupSettings" xml:space="preserve">
+    <value>Parametrlər</value>
+  </data>
+  <data name="ribbon_topology_rules" xml:space="preserve">
+    <value>Qaydalar</value>
+  </data>
+  <data name="ribbon_topology_rulesTooltip" xml:space="preserve">
+    <value>Hər qaydanın nəyi yoxladığı; bu sessiya üçün məsafələri və növləri dəyiş</value>
+  </data>
+  <data name="ribbon_topology_groupOutput" xml:space="preserve">
+    <value>Çıxış</value>
+  </data>
+  <data name="ribbon_topology_export" xml:space="preserve">
+    <value>İxrac et</value>
+  </data>
+  <data name="ribbon_topology_exportTooltip" xml:space="preserve">
+    <value>Süzülmüş problem siyahısını Excel-ə</value>
+  </data>
+  <data name="ribbon_topology_groupHelp" xml:space="preserve">
+    <value>Kömək</value>
+  </data>
+  <data name="ribbon_topology_guide" xml:space="preserve">
+    <value>Bələdçi</value>
+  </data>
+  <data name="ribbon_topology_guideTooltip" xml:space="preserve">
+    <value>Topologiya tabının nəyi yoxladığı və ondan necə istifadə etmək</value>
+  </data>
+  <data name="topology_panel_checkTitle" xml:space="preserve">
+    <value>Topologiya yoxlaması</value>
+  </data>
+  <data name="topology_panel_issuesTitle" xml:space="preserve">
+    <value>Topologiya problemləri</value>
+  </data>
+  <data name="topology_panel_rulesTitle" xml:space="preserve">
+    <value>Topologiya qaydaları</value>
+  </data>
+  <data name="topology_guide_title" xml:space="preserve">
+    <value>Topologiya</value>
+  </data>
+  <data name="topology_check_whatTitle" xml:space="preserve">
+    <value>Nəyi yoxlamalı</value>
+  </data>
+  <data name="topology_check_rulesLabel" xml:space="preserve">
+    <value>Qaydalar</value>
+  </data>
+  <data name="topology_check_rules" xml:space="preserve">
+    <value>«{1}» üzrə {0} qayda</value>
+  </data>
+  <data name="topology_check_dataLabel" xml:space="preserve">
+    <value>Verilənlər</value>
+  </data>
+  <data name="topology_check_layerLabel" xml:space="preserve">
+    <value>Lay</value>
+  </data>
+  <data name="topology_check_scopeWholeData" xml:space="preserve">
+    <value>Bütün verilənlər</value>
+  </data>
+  <data name="topology_check_scopeLayer" xml:space="preserve">
+    <value>Bir lay</value>
+  </data>
+  <data name="topology_check_scopeExtent" xml:space="preserve">
+    <value>Xəritə ərazisi</value>
+  </data>
+  <data name="topology_check_scopeFeatures" xml:space="preserve">
+    <value>Seçilmiş obyektlər</value>
+  </data>
+  <data name="topology_check_layersTitle" xml:space="preserve">
+    <value>Qaydaların tələb etdiyi laylar</value>
+  </data>
+  <data name="topology_check_refresh" xml:space="preserve">
+    <value>Layları yenidən oxu</value>
+  </data>
+  <data name="topology_check_layerLoaded" xml:space="preserve">
+    <value>yüklənib</value>
+  </data>
+  <data name="topology_check_layerLive" xml:space="preserve">
+    <value>Canlı: yalnız xəritə ərazisi və ya seçim</value>
+  </data>
+  <data name="topology_check_layerNotLoaded" xml:space="preserve">
+    <value>yüklənməyib: onun qaydaları ötürülür</value>
+  </data>
+  <data name="topology_check_settingsInvalid" xml:space="preserve">
+    <value>Qaydalar panelindəki bir parametr istifadə oluna bilməz; onu düzəldin və ya hamısını sıfırlayın.</value>
+  </data>
+  <data name="topology_check_liveNeedsPartialScope" xml:space="preserve">
+    <value>Canlı lay yalnız görünən hissəni saxlayır: xəritə ərazisini və ya seçimi yoxlayın, ya da layı Keş rejiminə keçirin.</value>
+  </data>
+  <data name="topology_check_noSelection" xml:space="preserve">
+    <value>Əvvəlcə xəritədə bu layın obyektlərini seçin.</value>
+  </data>
+  <data name="topology_check_largeScope" xml:space="preserve">
+    <value>Bu yoxlama {0} obyekt oxuyur və vaxt apara bilər; xəritə ərazisi daha sürətlidir.</value>
+  </data>
+  <data name="topology_check_someNotLoaded" xml:space="preserve">
+    <value>Yüklənməmiş laylar qaydaları ilə birlikdə ötürülür.</value>
+  </data>
+  <data name="topology_check_run" xml:space="preserve">
+    <value>Yoxla</value>
+  </data>
+  <data name="topology_check_cancel" xml:space="preserve">
+    <value>Ləğv et</value>
+  </data>
+  <data name="topology_check_progress" xml:space="preserve">
+    <value>Yoxlanılır: {2} … {1} qaydadan {0}</value>
+  </data>
+  <data name="topology_check_done" xml:space="preserve">
+    <value>{1} obyektdə {0} problem</value>
+  </data>
+  <data name="topology_check_cancelled" xml:space="preserve">
+    <value>Ləğv edildi: əvvəlki nəticələr saxlanılır.</value>
+  </data>
+  <data name="topology_issues_noCheck" xml:space="preserve">
+    <value>Əvvəlcə yoxlama aparın.</value>
+  </data>
+  <data name="topology_issues_header" xml:space="preserve">
+    <value>Yoxlanılıb {0} · {1} · {2} obyekt</value>
+  </data>
+  <data name="topology_issues_settingsChanged" xml:space="preserve">
+    <value>Bu sessiya üçün parametrlər dəyişdirilib</value>
+  </data>
+  <data name="topology_issues_skipped" xml:space="preserve">
+    <value>Yoxlanılmayıb (lay yüklənməyib): {0}</value>
+  </data>
+  <data name="topology_issues_errors" xml:space="preserve">
+    <value>{0} xəta</value>
+  </data>
+  <data name="topology_issues_warnings" xml:space="preserve">
+    <value>{0} xəbərdarlıq</value>
+  </data>
+  <data name="topology_issues_infos" xml:space="preserve">
+    <value>{0} bildiriş</value>
+  </data>
+  <data name="topology_issues_allRules" xml:space="preserve">
+    <value>Bütün qaydalar</value>
+  </data>
+  <data name="topology_issues_changeAll" xml:space="preserve">
+    <value>Hamısı</value>
+  </data>
+  <data name="topology_issues_changeNew" xml:space="preserve">
+    <value>Son yoxlamadan bəri yeni</value>
+  </data>
+  <data name="topology_issues_changeStillThere" xml:space="preserve">
+    <value>Hələ də var</value>
+  </data>
+  <data name="topology_issues_changeGone" xml:space="preserve">
+    <value>Son yoxlamadan bəri aradan qalxıb</value>
+  </data>
+  <data name="topology_issues_changeTooltip" xml:space="preserve">
+    <value>Eyni verilənlərin əvvəlki yoxlaması ilə müqayisə edir</value>
+  </data>
+  <data name="topology_issues_searchTooltip" xml:space="preserve">
+    <value>Id-lərdə və cümlələrdə axtar</value>
+  </data>
+  <data name="topology_issues_none" xml:space="preserve">
+    <value>{0} obyektdə problem tapılmadı</value>
+  </data>
+  <data name="topology_issues_overlayLimited" xml:space="preserve">
+    <value>{0}-dən çox problem: xəritə yalnız xətaları göstərir</value>
+  </data>
+  <data name="topology_issues_allowed" xml:space="preserve">
+    <value>icazə verilən {0} m</value>
+  </data>
+  <data name="topology_issues_new" xml:space="preserve">
+    <value>yeni</value>
+  </data>
+  <data name="topology_issues_showInTable" xml:space="preserve">
+    <value>Atribut cədvəlində göstər</value>
+  </data>
+  <data name="topology_issues_export" xml:space="preserve">
+    <value>Siyahını Excel-ə ixrac et</value>
+  </data>
+  <data name="topology_severity_error" xml:space="preserve">
+    <value>Xəta</value>
+  </data>
+  <data name="topology_severity_warning" xml:space="preserve">
+    <value>Xəbərdarlıq</value>
+  </data>
+  <data name="topology_severity_info" xml:space="preserve">
+    <value>Bildiriş</value>
+  </data>
+  <data name="topology_unit_metres" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="topology_unit_squareMetres" xml:space="preserve">
+    <value>m²</value>
+  </data>
+  <data name="topology_rules_header" xml:space="preserve">
+    <value>{0} qayda · versiya {1}</value>
+  </data>
+  <data name="topology_rules_resetAll" xml:space="preserve">
+    <value>Hamısını sıfırla</value>
+  </data>
+  <data name="topology_rules_sessionOnly" xml:space="preserve">
+    <value>Buradakı dəyişikliklər proqram bağlanana qədər qüvvədədir; heç nə saxlanılmır.</value>
+  </data>
+  <data name="topology_rules_changed" xml:space="preserve">
+    <value>Bu sessiyada dəyişdirilib</value>
+  </data>
+  <data name="topology_rules_hidden" xml:space="preserve">
+    <value>Gizli</value>
+  </data>
+  <data name="topology_parameter_distance" xml:space="preserve">
+    <value>Məsafə (m)</value>
+  </data>
+  <data name="topology_parameter_nearDistance" xml:space="preserve">
+    <value>Yaxınlıq məsafəsi (m)</value>
+  </data>
+  <data name="topology_parameter_searchDistance" xml:space="preserve">
+    <value>Axtarış məsafəsi (m)</value>
+  </data>
+  <data name="topology_parameter_maxOvershoot" xml:space="preserve">
+    <value>Ən böyük aşma (m)</value>
+  </data>
+  <data name="topology_parameter_maxGap" xml:space="preserve">
+    <value>Ən böyük boşluq (m)</value>
+  </data>
+  <data name="topology_parameter_minimumPoints" xml:space="preserve">
+    <value>Ən az nöqtə sayı</value>
+  </data>
+  <data name="topology_parameter_minimumLength" xml:space="preserve">
+    <value>Ən qısa uzunluq (m)</value>
+  </data>
+  <data name="topology_parameter_minimumArea" xml:space="preserve">
+    <value>Ən kiçik sahə (m²)</value>
+  </data>
+  <data name="topology_parameter_minimumWidth" xml:space="preserve">
+    <value>Ən kiçik en (m)</value>
+  </data>
+  <data name="topology_parameter_sliverWidth" xml:space="preserve">
+    <value>Nazik zolağın eni (m)</value>
+  </data>
+  <data name="topology_parameter_interiorPartEnds" xml:space="preserve">
+    <value>Hissələrin birləşdiyi ucları yoxla (1 = bəli)</value>
+  </data>
+  <data name="topology_parameter_sharedStretch" xml:space="preserve">
+    <value>Ortaq hissələri bildir (1 = bəli)</value>
+  </data>
+  <data name="topology_parameter_enclosedGaps" xml:space="preserve">
+    <value>Qapalı boşluqları bildir (1 = bəli)</value>
+  </data>
+  <data name="topology_parameter_maximumGapArea" xml:space="preserve">
+    <value>Ən böyük boşluq sahəsi (m²)</value>
+  </data>
+  <data name="topology_export_rule" xml:space="preserve">
+    <value>Qayda</value>
+  </data>
+  <data name="topology_export_kind" xml:space="preserve">
+    <value>Növ</value>
+  </data>
+  <data name="topology_export_severity" xml:space="preserve">
+    <value>Ciddilik</value>
+  </data>
+  <data name="topology_export_sentence" xml:space="preserve">
+    <value>Problem</value>
+  </data>
+  <data name="topology_export_value" xml:space="preserve">
+    <value>Dəyər</value>
+  </data>
+  <data name="topology_export_features" xml:space="preserve">
+    <value>Obyektlər</value>
+  </data>
+  <data name="topology_export_location" xml:space="preserve">
+    <value>Yer (uzunluq, enlik)</value>
+  </data>
+  <data name="topology_rule_geometryValid" xml:space="preserve">
+    <value>Həndəsə etibarlı olmalıdır</value>
+  </data>
+  <data name="topology_rule_distinctPoints" xml:space="preserve">
+    <value>Nöqtələr üst-üstə düşməməlidir</value>
+  </data>
+  <data name="topology_rule_pointOnLine" xml:space="preserve">
+    <value>Nöqtə xəttin üzərində olmalıdır</value>
+  </data>
+  <data name="topology_rule_lineEndCovered" xml:space="preserve">
+    <value>Xəttin uclarında nöqtə olmalıdır</value>
+  </data>
+  <data name="topology_rule_lineCarriesPoints" xml:space="preserve">
+    <value>Xəttin üzərində nöqtələr olmalıdır</value>
+  </data>
+  <data name="topology_rule_pointOnOneLine" xml:space="preserve">
+    <value>Nöqtə birdən çox xəttin üzərindədir</value>
+  </data>
+  <data name="topology_rule_sequenceAlongLine" xml:space="preserve">
+    <value>Nömrələr xətt boyunca artmalıdır</value>
+  </data>
+  <data name="topology_rule_lineEndsConnect" xml:space="preserve">
+    <value>Xəttin ucları birləşməlidir</value>
+  </data>
+  <data name="topology_rule_partsJoin" xml:space="preserve">
+    <value>Xəttin hissələri birləşməlidir</value>
+  </data>
+  <data name="topology_rule_distinctLines" xml:space="preserve">
+    <value>Xətlər təkrarlanmamalıdır</value>
+  </data>
+  <data name="topology_rule_touchAndReturn" xml:space="preserve">
+    <value>Xətlər toxunub geri qayıtmamalıdır</value>
+  </data>
+  <data name="topology_rule_polygonsNoOverlap" xml:space="preserve">
+    <value>Poliqonlar üst-üstə düşməməlidir</value>
+  </data>
+  <data name="topology_rule_polygonsNoGap" xml:space="preserve">
+    <value>Poliqonlar arasında boşluq qalmamalıdır</value>
+  </data>
+  <data name="topology_kind_geometryValid_NoGeometry" xml:space="preserve">
+    <value>Obyektin həndəsəsi yoxdur</value>
+  </data>
+  <data name="topology_kind_geometryValid_ClosedRing" xml:space="preserve">
+    <value>Halqa ilk nöqtəsini təkrarlayır</value>
+  </data>
+  <data name="topology_kind_geometryValid_RepeatedPoint" xml:space="preserve">
+    <value>Eyni nöqtə ardıcıl iki dəfə</value>
+  </data>
+  <data name="topology_kind_geometryValid_TooFewPoints" xml:space="preserve">
+    <value>Nöqtələr çox azdır</value>
+  </data>
+  <data name="topology_kind_geometryValid_ZeroAreaRing" xml:space="preserve">
+    <value>Sahəsi olmayan halqa</value>
+  </data>
+  <data name="topology_kind_geometryValid_InvalidCoordinate" xml:space="preserve">
+    <value>Koordinat rəqəm deyil</value>
+  </data>
+  <data name="topology_kind_geometryValid_CoordinateOutOfRange" xml:space="preserve">
+    <value>Uzunluq və ya enlik aralıqdan kənardadır</value>
+  </data>
+  <data name="topology_kind_geometryValid_WrongRingOrientation" xml:space="preserve">
+    <value>Halqa əks istiqamətdə dolanıb (avtomatik düzəldilib)</value>
+  </data>
+  <data name="topology_kind_distinctPoints_samePlace" xml:space="preserve">
+    <value>Eyni yerdə olan nöqtələr</value>
+  </data>
+  <data name="topology_kind_distinctPoints_close" xml:space="preserve">
+    <value>Bir-birindən {0} aralı nöqtələr</value>
+  </data>
+  <data name="topology_kind_distinctPoints_chain" xml:space="preserve">
+    <value>Bir-biri vasitəsilə əlaqəli nöqtələr, ümumi ölçü {0}</value>
+  </data>
+  <data name="topology_kind_pointOnLine_nearLine" xml:space="preserve">
+    <value>Nöqtə ən yaxın xətdən {0} aralıdır</value>
+  </data>
+  <data name="topology_kind_pointOnLine_farFromLines" xml:space="preserve">
+    <value>Nöqtə bütün xətlərdən uzaqdır</value>
+  </data>
+  <data name="topology_kind_lineEndCovered_start" xml:space="preserve">
+    <value>Xəttin başlanğıcında nöqtə yoxdur</value>
+  </data>
+  <data name="topology_kind_lineEndCovered_end" xml:space="preserve">
+    <value>Xəttin sonunda nöqtə yoxdur</value>
+  </data>
+  <data name="topology_kind_lineCarriesPoints_tooFewPoints" xml:space="preserve">
+    <value>Xəttin üzərində yalnız {0} nöqtə</value>
+  </data>
+  <data name="topology_kind_pointOnOneLine_onSeveralLines" xml:space="preserve">
+    <value>Nöqtə {0} xəttin üzərində</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_missing" xml:space="preserve">
+    <value>Nömrəsiz nöqtə</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_duplicate" xml:space="preserve">
+    <value>{0} nömrəsi iki dəfə istifadə olunub</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_outOfOrder" xml:space="preserve">
+    <value>{0} nömrəsi ardıcıllığı pozur</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_gap" xml:space="preserve">
+    <value>{0} nömrə çatışmır</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_directionUndecided" xml:space="preserve">
+    <value>Nömrələr heç bir istiqamətdə artmır</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_unsnappedEnd" xml:space="preserve">
+    <value>Xətt ucları {0} aralıdır, birləşməyib</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_overshoot" xml:space="preserve">
+    <value>Xətt kəsişmədən {0} o tərəfə keçir</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_undershoot" xml:space="preserve">
+    <value>Xətt digər xəttə {0} çatmır</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_freeEnd" xml:space="preserve">
+    <value>Heç nəyə birləşməyən xətt ucu</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_chain" xml:space="preserve">
+    <value>Bir-biri vasitəsilə əlaqəli xətt ucları, ümumi ölçü {0}</value>
+  </data>
+  <data name="topology_kind_partsJoin_gap" xml:space="preserve">
+    <value>Hissələr arasında {0} boşluq</value>
+  </data>
+  <data name="topology_kind_partsJoin_detachedPart" xml:space="preserve">
+    <value>Digərlərindən {0} aralı hissə</value>
+  </data>
+  <data name="topology_kind_partsJoin_branch" xml:space="preserve">
+    <value>{0} hissə ucu bir yerdə birləşir</value>
+  </data>
+  <data name="topology_kind_partsJoin_outOfOrder" xml:space="preserve">
+    <value>Hissələr ardıcıllıqla saxlanılmayıb</value>
+  </data>
+  <data name="topology_kind_partsJoin_reversedPart" xml:space="preserve">
+    <value>Digərlərinin əksinə çəkilmiş hissə</value>
+  </data>
+  <data name="topology_kind_distinctLines_wholeLine" xml:space="preserve">
+    <value>Təkrarlanan xətt</value>
+  </data>
+  <data name="topology_kind_distinctLines_sharedStretch" xml:space="preserve">
+    <value>Xətlərin ortaq hissəsi {0}</value>
+  </data>
+  <data name="topology_kind_touchAndReturn_touchAndReturn" xml:space="preserve">
+    <value>Xətlər {0} daxilində iki dəfə kəsişir</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_duplicate" xml:space="preserve">
+    <value>Təkrarlanan poliqon</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_inside" xml:space="preserve">
+    <value>Başqasının içində olan poliqon, {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_overlap" xml:space="preserve">
+    <value>Poliqonlar {0} üst-üstə düşür</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_thinOverlap" xml:space="preserve">
+    <value>{0} nazik üst-üstə düşmə</value>
+  </data>
+  <data name="topology_kind_polygonsNoGap_sliver" xml:space="preserve">
+    <value>Qonşular arasında {0} uzunluqda nazik zolaq</value>
+  </data>
+  <data name="topology_kind_polygonsNoGap_enclosedGap" xml:space="preserve">
+    <value>Poliqonların əhatə etdiyi {0} boş sahə</value>
+  </data>
+  <data name="topology_fix_title" xml:space="preserve">
+    <value>Düzəliş</value>
+  </data>
+  <data name="topology_fix_preview" xml:space="preserve">
+    <value>Önizləmə</value>
+  </data>
+  <data name="topology_fix_apply" xml:space="preserve">
+    <value>Tətbiq et</value>
+  </data>
+  <data name="topology_fix_cancel" xml:space="preserve">
+    <value>Ləğv et</value>
+  </data>
+  <data name="topology_fix_evaluating" xml:space="preserve">
+    <value>Düzəliş yoxlanılır…</value>
+  </data>
+  <data name="topology_fix_pending" xml:space="preserve">
+    <value>düzəliş gözləyir</value>
+  </data>
+  <data name="topology_fix_pendingNote" xml:space="preserve">
+    <value>Düzəliş tətbiq edildi. Layı saxlayın, sonra yenidən yoxlayın.</value>
+  </data>
+  <data name="topology_fix_pendingFooter" xml:space="preserve">
+    <value>{0} düzəliş tətbiq edildi. Saxlamaq üçün layları saxlayın, sonra yenidən yoxlayın.</value>
+  </data>
+  <data name="topology_fix_failed" xml:space="preserve">
+    <value>Düzəliş tətbiq edilə bilmədi: {0}</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_movePoint" xml:space="preserve">
+    <value>{0} {1} sürüşərək {2} üzərinə keçir.</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_moveLineVertex" xml:space="preserve">
+    <value>{2} xəttinin bir təpəsi {1} sürüşərək {0} üzərinə keçir.</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_insertLineVertex" xml:space="preserve">
+    <value>{2} xəttinə {0} yerində, indiki keçdiyi yerdən {1} aralı yeni təpə əlavə olunur.</value>
+  </data>
+  <data name="topology_fix_reason_featureMissing" xml:space="preserve">
+    <value>Düzəliş yoxdur: bu problemin bir obyekti artıq xəritədə deyil.</value>
+  </data>
+  <data name="topology_fix_reason_beyondFixDistance" xml:space="preserve">
+    <value>Düzəliş yoxdur: sürüşmə {0} olardı, bu düzəliş məsafəsindən ({1}) çoxdur. Onu əl ilə redaktə edin.</value>
+  </data>
+  <data name="topology_fix_reason_doesNotResolve" xml:space="preserve">
+    <value>Rədd edildi: düzəlişdən sonra problem yenə də qalardı.</value>
+  </data>
+  <data name="topology_fix_reason_createsIssue" xml:space="preserve">
+    <value>Rədd edildi: düzəliş “{0}” ({1}) yaradardı.</value>
+  </data>
+  <data name="topology_fix_reason_noPermission" xml:space="preserve">
+    <value>Həndəsələri redaktə etməyə icazəniz yoxdur.</value>
+  </data>
+  <data name="topology_fix_reason_notEditable" xml:space="preserve">
+    <value>{0} layı burada redaktə edilə bilməz.</value>
+  </data>
+  <data name="topology_fix_reason_cannotRemove" xml:space="preserve">
+    <value>Bu düzəliş obyekti silir, burada isə obyektlər silinə bilməz. Onu əl ilə redaktə edin.</value>
+  </data>
+  <data name="topology_guide_correct" xml:space="preserve">
+    <value>Verilənləri düzəlt</value>
+  </data>
+  <data name="topology_parameter_fixDistance" xml:space="preserve">
+    <value>Düzəliş məsafəsi (m)</value>
+  </data>
+  <data name="topology_fix_choose" xml:space="preserve">
+    <value>Hansının qalacağını seçin:</value>
+  </data>
+  <data name="topology_fix_snapLineEnds_snap" xml:space="preserve">
+    <value>{0} xəttinin ucları bir nöqtədə birləşir (ən böyük sürüşmə {1}).</value>
+  </data>
+  <data name="topology_fix_trimOvershoot_trim" xml:space="preserve">
+    <value>{0} {1} qısaldılır ki, {2} üzərində bitsin.</value>
+  </data>
+  <data name="topology_fix_extendUndershoot_extendAlong" xml:space="preserve">
+    <value>{0} düz istiqamətdə {1} uzadılır, {2} xəttinə çatana qədər.</value>
+  </data>
+  <data name="topology_fix_extendUndershoot_joinNearest" xml:space="preserve">
+    <value>{0} xəttinə {2} xəttinin ən yaxın nöqtəsinə qədər {1} uzunluğunda yeni uc seqmenti əlavə olunur.</value>
+  </data>
+  <data name="topology_fix_deleteDuplicatePoints_keep" xml:space="preserve">
+    <value>{0} saxlanılsın; {1} silinsin.</value>
+  </data>
+  <data name="topology_fix_deleteDuplicateLines_keep" xml:space="preserve">
+    <value>{0} saxlanılsın; {1} silinsin.</value>
+  </data>
+  <data name="topology_fix_reason_notFound" xml:space="preserve">
+    <value>Düzəliş yoxdur: düzəldiləcək yer artıq yoxlamanın tapdığı yerdə deyil. Yenidən yoxlayın.</value>
+  </data>
+  <data name="topology_fix_cutOverlap_cutFrom" xml:space="preserve">
+    <value>Ortaq sahəni {0} obyektindən kəs; {1} olduğu kimi qalır.</value>
+  </data>
+  <data name="topology_fix_deleteDuplicatePolygons_keep" xml:space="preserve">
+    <value>{0} saxlanılsın; {1} silinsin.</value>
+  </data>
+  <data name="topology_fix_giveGap_takeGap" xml:space="preserve">
+    <value>Boş sahəni {0} obyektinə əlavə et.</value>
+  </data>
+  <data name="topology_fix_giveGap_takeSliver" xml:space="preserve">
+    <value>Nazik zolağı dolduraraq {0} obyektini {1} obyektinə çatana qədər genişləndir.</value>
+  </data>
+  <data name="topology_fix_reason_nothingLeft" xml:space="preserve">
+    <value>Düzəliş yoxdur: {0} obyektindən heç nə qalmazdı.</value>
+  </data>
 </root>

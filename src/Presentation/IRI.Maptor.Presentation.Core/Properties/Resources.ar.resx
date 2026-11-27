@@ -3337,4 +3337,1471 @@
   <data name="dialog_fileGdbPicker_reasonUnreadable" xml:space="preserve">
     <value>تتعذّر قراءتها</value>
   </data>
+  <data name="versioning_review_title" xml:space="preserve">
+    <value>مراجعة الإصدارات</value>
+  </data>
+  <data name="versioning_review_refresh" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="versioning_review_lastRefresh" xml:space="preserve">
+    <value>آخر تحديث</value>
+  </data>
+  <data name="versioning_review_competitions" xml:space="preserve">
+    <value>المنافسات</value>
+  </data>
+  <data name="versioning_review_singles" xml:space="preserve">
+    <value>المقترحات المنفردة</value>
+  </data>
+  <data name="versioning_review_acceptSelected" xml:space="preserve">
+    <value>قبول المحدد</value>
+  </data>
+  <data name="versioning_review_groupSelected" xml:space="preserve">
+    <value>التجميع كمنافسة</value>
+  </data>
+  <data name="versioning_review_compare" xml:space="preserve">
+    <value>مراجعة</value>
+  </data>
+  <data name="versioning_review_colFeature" xml:space="preserve">
+    <value>المعلم</value>
+  </data>
+  <data name="versioning_review_colLayer" xml:space="preserve">
+    <value>الطبقة</value>
+  </data>
+  <data name="versioning_review_colCount" xml:space="preserve">
+    <value>المقترحات</value>
+  </data>
+  <data name="versioning_review_colAuthors" xml:space="preserve">
+    <value>المحررون</value>
+  </data>
+  <data name="versioning_review_colAge" xml:space="preserve">
+    <value>العمر</value>
+  </data>
+  <data name="versioning_review_colSuggestions" xml:space="preserve">
+    <value>التداخلات</value>
+  </data>
+  <data name="versioning_review_badgeStale" xml:space="preserve">
+    <value>قديم</value>
+  </data>
+  <data name="versioning_review_badgeOrphaned" xml:space="preserve">
+    <value>يتيم</value>
+  </data>
+  <data name="versioning_review_badgeQueued" xml:space="preserve">
+    <value>في الانتظار</value>
+  </data>
+  <data name="versioning_review_badgeDelete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="versioning_review_empty" xml:space="preserve">
+    <value>لا توجد مقترحات معلقة — تظهر هنا التغييرات المرسلة على الطبقات ذات الإصدارات.</value>
+  </data>
+  <data name="versioning_compare_back" xml:space="preserve">
+    <value>العودة إلى قائمة الانتظار</value>
+  </data>
+  <data name="versioning_compare_live" xml:space="preserve">
+    <value>الحالي</value>
+  </data>
+  <data name="versioning_compare_field" xml:space="preserve">
+    <value>الحقل</value>
+  </data>
+  <data name="versioning_compare_selectWinner" xml:space="preserve">
+    <value>اختيار كفائز</value>
+  </data>
+  <data name="versioning_compare_closeNoWinner" xml:space="preserve">
+    <value>رفض الكل (بلا فائز)</value>
+  </data>
+  <data name="versioning_compare_reason" xml:space="preserve">
+    <value>سبب الرفض</value>
+  </data>
+  <data name="versioning_compare_staleOverride" xml:space="preserve">
+    <value>أعلم أن المعلم الحالي قد تغيّر منذ هذا المقترح (تجاوز مسجَّل)</value>
+  </data>
+  <data name="versioning_compare_showOnMap" xml:space="preserve">
+    <value>عرض على الخريطة</value>
+  </data>
+  <data name="versioning_compare_deleteProposal" xml:space="preserve">
+    <value>مقترح حذف</value>
+  </data>
+  <data name="versioning_compare_orphanBanner" xml:space="preserve">
+    <value>لم يعد المعلم المستهدف موجودًا في البيانات الحالية؛ لا يمكن سوى رفض الكل.</value>
+  </data>
+  <data name="versioning_compare_queuedBanner" xml:space="preserve">
+    <value>هذه المنافسة في الانتظار خلف منافسة أخرى تنتظر الموافقة.</value>
+  </data>
+  <data name="versioning_approval_title" xml:space="preserve">
+    <value>قائمة انتظار الموافقة</value>
+  </data>
+  <data name="versioning_approval_commitSelected" xml:space="preserve">
+    <value>اعتماد المحدد</value>
+  </data>
+  <data name="versioning_approval_return" xml:space="preserve">
+    <value>إرجاع</value>
+  </data>
+  <data name="versioning_approval_returnReason" xml:space="preserve">
+    <value>سبب الإرجاع</value>
+  </data>
+  <data name="versioning_approval_returnReasonRequired" xml:space="preserve">
+    <value>يجب أن يوضّح الإرجاع السبب.</value>
+  </data>
+  <data name="versioning_approval_staleNeedsOverride" xml:space="preserve">
+    <value>تتضمن العناصر المحددة مقترحات قديمة؛ حدّد خيار التجاوز لاعتمادها.</value>
+  </data>
+  <data name="versioning_approval_colWinner" xml:space="preserve">
+    <value>الفائز</value>
+  </data>
+  <data name="versioning_approval_colReviewer" xml:space="preserve">
+    <value>المراجع</value>
+  </data>
+  <data name="versioning_approval_colType" xml:space="preserve">
+    <value>التغيير</value>
+  </data>
+  <data name="versioning_approval_colResolved" xml:space="preserve">
+    <value>تاريخ الحسم</value>
+  </data>
+  <data name="versioning_myPending_title" xml:space="preserve">
+    <value>مقترحاتي المعلقة</value>
+  </data>
+  <data name="versioning_myPending_colSession" xml:space="preserve">
+    <value>الجلسة</value>
+  </data>
+  <data name="versioning_myPending_colStatus" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="versioning_myPending_colSubmitted" xml:space="preserve">
+    <value>تاريخ الإرسال</value>
+  </data>
+  <data name="versioning_status_pendingReview" xml:space="preserve">
+    <value>بانتظار المراجعة</value>
+  </data>
+  <data name="versioning_status_inCompetition" xml:space="preserve">
+    <value>في منافسة ({0})</value>
+  </data>
+  <data name="versioning_status_underReview" xml:space="preserve">
+    <value>قيد المراجعة</value>
+  </data>
+  <data name="versioning_status_committed" xml:space="preserve">
+    <value>معتمد</value>
+  </data>
+  <data name="versioning_status_rejected" xml:space="preserve">
+    <value>مرفوض</value>
+  </data>
+  <data name="versioning_status_withdrawn" xml:space="preserve">
+    <value>مسحوب</value>
+  </data>
+  <data name="versioning_submit_title" xml:space="preserve">
+    <value>تم إرسال الجلسة</value>
+  </data>
+  <data name="versioning_submit_summary" xml:space="preserve">
+    <value>تم إرسال {0} مقترح بحالة معلقة. تستمر الخريطة في عرض الحالة المعتمدة؛ تابع التقدم في «مقترحاتي المعلقة».</value>
+  </data>
+  <data name="versioning_submit_competitions" xml:space="preserve">
+    <value>دخل {0} في منافسة.</value>
+  </data>
+  <data name="versioning_submit_superseded" xml:space="preserve">
+    <value>حلّ {0} محل مقترحك السابق.</value>
+  </data>
+  <data name="versioning_submit_overlaps" xml:space="preserve">
+    <value>{0} يتداخل مع معالم موجودة (للعلم).</value>
+  </data>
+  <data name="versioning_timeline_featureId" xml:space="preserve">
+    <value>معرّف المعلم</value>
+  </data>
+  <data name="versioning_timeline_load" xml:space="preserve">
+    <value>عرض السجل</value>
+  </data>
+  <data name="versioning_timeline_liveNow" xml:space="preserve">
+    <value>الحالة الراهنة</value>
+  </data>
+  <data name="versioning_timeline_deleted" xml:space="preserve">
+    <value>تم حذف هذا المعلم</value>
+  </data>
+  <data name="versioning_timeline_colUntil" xml:space="preserve">
+    <value>صالح حتى</value>
+  </data>
+  <data name="versioning_timeline_colReplacedBy" xml:space="preserve">
+    <value>استُبدل بـ</value>
+  </data>
+  <data name="versioning_timeline_colApprover" xml:space="preserve">
+    <value>المعتمِد</value>
+  </data>
+  <data name="versioning_timeline_colBatch" xml:space="preserve">
+    <value>دفعة الاعتماد</value>
+  </data>
+  <data name="versioning_timeline_attributes" xml:space="preserve">
+    <value>القيم</value>
+  </data>
+  <data name="versioning_timeline_empty" xml:space="preserve">
+    <value>لا يوجد سجل مسجَّل لهذا المعلم</value>
+  </data>
+  <data name="versioning_timeline_featureIdInvalid" xml:space="preserve">
+    <value>اختر طبقة وأدخل معرّف معلم صالحًا</value>
+  </data>
+  <data name="versioning_inbox_markAllRead" xml:space="preserve">
+    <value>تعليم الكل كمقروء</value>
+  </data>
+  <data name="versioning_inbox_colWhen" xml:space="preserve">
+    <value>الوقت</value>
+  </data>
+  <data name="versioning_inbox_colEvent" xml:space="preserve">
+    <value>الحدث</value>
+  </data>
+  <data name="versioning_inbox_colDetails" xml:space="preserve">
+    <value>التفاصيل</value>
+  </data>
+  <data name="versioning_inbox_unread" xml:space="preserve">
+    <value>{0} غير مقروء</value>
+  </data>
+  <data name="versioning_inbox_items" xml:space="preserve">
+    <value>{0} عنصر</value>
+  </data>
+  <data name="versioning_inbox_features" xml:space="preserve">
+    <value>المعالم: {0}</value>
+  </data>
+  <data name="versioning_inbox_reason" xml:space="preserve">
+    <value>السبب: {0}</value>
+  </data>
+  <data name="versioning_inbox_typeCompetitionJoined" xml:space="preserve">
+    <value>دخل مقترحك في منافسة</value>
+  </data>
+  <data name="versioning_inbox_typeCommitted" xml:space="preserve">
+    <value>تم اعتماد مقترحاتك</value>
+  </data>
+  <data name="versioning_inbox_typeRejected" xml:space="preserve">
+    <value>تم رفض مقترحاتك</value>
+  </data>
+  <data name="versioning_inbox_typeClosedNoWinner" xml:space="preserve">
+    <value>أُغلقت المنافسة بلا فائز</value>
+  </data>
+  <data name="versioning_inbox_typeReturned" xml:space="preserve">
+    <value>أرجع المعتمِد قرارك</value>
+  </data>
+  <data name="versioning_inbox_typeOrphaned" xml:space="preserve">
+    <value>لم يعد المعلم المستهدف موجودًا</value>
+  </data>
+  <data name="message_error_versionedLayerWriteRejected" xml:space="preserve">
+    <value>هذه الطبقة خاضعة لإدارة الإصدارات؛ يجب إرسال التعديلات كمقترحات للمراجعة، لا حفظها مباشرة.</value>
+  </data>
+  <data name="message_error_versioningInvalidSubmission" xml:space="preserve">
+    <value>الجلسة المرسلة غير صالحة؛ أعد تحميل الطبقة وحاول مرة أخرى.</value>
+  </data>
+  <data name="message_error_versioningInvalidProposal" xml:space="preserve">
+    <value>أحد التغييرات المقترحة غير صالح؛ أعد تحميل الطبقة وحاول مرة أخرى.</value>
+  </data>
+  <data name="message_error_versioningUnknownVersionedLayer" xml:space="preserve">
+    <value>هذه الطبقة غير مسجّلة لإدارة الإصدارات.</value>
+  </data>
+  <data name="message_error_versioningVersioningNotEnabled" xml:space="preserve">
+    <value>إدارة الإصدارات غير مفعّلة لهذه الطبقة؛ احفظ بالطريقة العادية.</value>
+  </data>
+  <data name="message_error_versioningProposalUnderApproval" xml:space="preserve">
+    <value>مقترحك السابق لهذا المعلم بانتظار الموافقة النهائية؛ انتظر اعتماده أو إرجاعه قبل إعادة الإرسال.</value>
+  </data>
+  <data name="message_error_versioningConcurrentSubmission" xml:space="preserve">
+    <value>عدّل إرسال آخر المعلم نفسه في اللحظة نفسها؛ حدّث وأعد المحاولة.</value>
+  </data>
+  <data name="message_error_versioningCompetitionAlreadyResolved" xml:space="preserve">
+    <value>غيّر مراجع آخر المنافسة أو حسمها؛ حدّث وأعد المحاولة.</value>
+  </data>
+  <data name="message_error_versioningConcurrentModification" xml:space="preserve">
+    <value>تغيّر شيء ما في الوقت نفسه؛ حدّث وأعد المحاولة.</value>
+  </data>
+  <data name="message_error_versioningConcurrentLiveChange" xml:space="preserve">
+    <value>تغيّرت منافسة أو معلم حالي أثناء الاعتماد؛ لم يُعتمد أي شيء — حدّث وأعد المحاولة.</value>
+  </data>
+  <data name="message_error_versioningStaleBaseRequiresOverride" xml:space="preserve">
+    <value>تغيّر المعلم الحالي بعد إنشاء هذا المقترح؛ يتطلب القبول تجاوزًا صريحًا للتقادم.</value>
+  </data>
+  <data name="message_error_versioningOrphanedTarget" xml:space="preserve">
+    <value>لم يعد المعلم المستهدف موجودًا؛ أرجع المنافسة بدلًا من ذلك. لم يُعتمد أي شيء.</value>
+  </data>
+  <data name="message_error_versioningOrphanedTargetRejectOnly" xml:space="preserve">
+    <value>لم يعد المعلم المستهدف موجودًا في البيانات الحالية؛ لا يُسمح إلا بالإغلاق بلا فائز.</value>
+  </data>
+  <data name="message_error_versioningRejectionReasonRequired" xml:space="preserve">
+    <value>سبب الرفض مطلوب.</value>
+  </data>
+  <data name="message_error_versioningReturnReasonRequired" xml:space="preserve">
+    <value>يجب أن يذكر الإرجاع سببًا.</value>
+  </data>
+  <data name="message_error_versioningUnknownCompetition" xml:space="preserve">
+    <value>لم يُعثر على المنافسة؛ ربما حُسمت أو أُزيلت — حدّث.</value>
+  </data>
+  <data name="message_error_versioningUnknownProposal" xml:space="preserve">
+    <value>لم يُعثر على المقترح في هذه المنافسة؛ حدّث.</value>
+  </data>
+  <data name="message_error_versioningUnknownSuggestion" xml:space="preserve">
+    <value>لم يُعثر على اقتراح التداخل؛ حدّث.</value>
+  </data>
+  <data name="message_error_versioningInvalidGrouping" xml:space="preserve">
+    <value>لا يمكن تجميع هذه المقترحات؛ لا يمكن تجميع إلا مقترحات الإنشاء المعلقة من طبقة واحدة.</value>
+  </data>
+  <data name="message_error_versioningCompetitionBlockedByPredecessor" xml:space="preserve">
+    <value>هذه المنافسة في الانتظار خلف منافسة سابقة لم تُحسم؛ احسم تلك أولًا.</value>
+  </data>
+  <data name="message_error_versioningEmptyCompetition" xml:space="preserve">
+    <value>لا تحتوي المنافسة على مقترحات نشطة.</value>
+  </data>
+  <data name="message_error_versioningNotASingleton" xml:space="preserve">
+    <value>تحتوي هذه المنافسة على عدة مقترحات؛ استخدم عرض المقارنة.</value>
+  </data>
+  <data name="message_error_versioningInvalidCommit" xml:space="preserve">
+    <value>دفعة الاعتماد فارغة أو غير صالحة.</value>
+  </data>
+  <data name="message_error_versioningCompetitionNotResolved" xml:space="preserve">
+    <value>المنافسة ليست في حالة الحسم؛ حدّث قائمة الانتظار.</value>
+  </data>
+  <data name="message_error_versioningSchemaMismatch" xml:space="preserve">
+    <value>لم يعد المقترح مطابقًا لمخطط الطبقة؛ لا يمكن اعتماده.</value>
+  </data>
+  <data name="versioning_map_pendingStatus" xml:space="preserve">
+    <value>المقترحات المعلقة</value>
+  </data>
+  <data name="versioning_map_history" xml:space="preserve">
+    <value>سجل المعلم</value>
+  </data>
+  <data name="versioning_map_myPendingOverlay" xml:space="preserve">
+    <value>مقترحاتي المعلقة على الخريطة</value>
+  </data>
+  <data name="versioning_map_selectFeature" xml:space="preserve">
+    <value>اختر معلمًا أولًا</value>
+  </data>
+  <data name="versioning_map_noPending" xml:space="preserve">
+    <value>لا توجد مقترحات معلقة لهذا المعلم</value>
+  </data>
+  <data name="versioning_map_pendingSummary" xml:space="preserve">
+    <value>{0} مقترح معلق</value>
+  </data>
+  <data name="versioning_map_pendingAuthors" xml:space="preserve">
+    <value>المحررون: {0}</value>
+  </data>
+  <data name="versioning_map_pendingHasOwn" xml:space="preserve">
+    <value>يتضمن مقترحك</value>
+  </data>
+  <data name="versioning_map_overlayEmpty" xml:space="preserve">
+    <value>ليست لديك مقترحات معلقة لهذه الطبقة</value>
+  </data>
+  <data name="versioning_map_overlayName" xml:space="preserve">
+    <value>مقترحاتي المعلقة — {0}</value>
+  </data>
+  <data name="versioning_changeType_create" xml:space="preserve">
+    <value>إنشاء</value>
+  </data>
+  <data name="versioning_changeType_update" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="versioning_changeType_delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="versioning_myPending_empty" xml:space="preserve">
+    <value>ليست لديك مقترحات معلقة.</value>
+  </data>
+  <data name="versioning_approval_empty" xml:space="preserve">
+    <value>لا شيء بانتظار الموافقة.</value>
+  </data>
+  <data name="versioning_inbox_empty" xml:space="preserve">
+    <value>ليست لديك إشعارات.</value>
+  </data>
+  <data name="versioning_compare_empty" xml:space="preserve">
+    <value>اختر منافسة من قائمة المراجعة لمقارنة مقترحاتها.</value>
+  </data>
+  <data name="versioning_submit_confirm" xml:space="preserve">
+    <value>سيتم إرسال {0} تغيير على الطبقة {1} للمراجعة، لا حفظها مباشرة. تستمر الخريطة في عرض الحالة المعتمدة حتى يعتمدها المعتمِد. هل تريد الإرسال الآن؟</value>
+  </data>
+  <data name="versioning_layer_badgeTooltip" xml:space="preserve">
+    <value>طبقة ذات إصدارات — يرسل الحفظ تعديلاتك للمراجعة بدلًا من كتابتها مباشرة.</value>
+  </data>
+  <data name="versioning_review_ageDays" xml:space="preserve">
+    <value>{0} يوم</value>
+  </data>
+  <data name="versioning_review_ageHours" xml:space="preserve">
+    <value>{0} ساعة</value>
+  </data>
+  <data name="versioning_review_ageMinutes" xml:space="preserve">
+    <value>{0} دقيقة</value>
+  </data>
+  <data name="dialog_goto_quickEntry" xml:space="preserve">
+    <value>إدخال سريع</value>
+  </data>
+  <data name="dialog_goto_quickEntryWatermark" xml:space="preserve">
+    <value>الصق الإحداثيات — 35.6892, 51.3890 · 35°41′21″N 51°23′20″E · 39N 534123 3950123 · رابط خريطة</value>
+  </data>
+  <data name="dialog_goto_quickEntryRecognized" xml:space="preserve">
+    <value>تم التعرّف:</value>
+  </data>
+  <data name="dialog_goto_quickEntryNotRecognized" xml:space="preserve">
+    <value>لم يُتعرّف عليه كإحداثي</value>
+  </data>
+  <data name="dialog_goto_tabGeodetic" xml:space="preserve">
+    <value>جيوديسي</value>
+  </data>
+  <data name="dialog_goto_tabUtm" xml:space="preserve">
+    <value>UTM</value>
+  </data>
+  <data name="dialog_goto_tabProjected" xml:space="preserve">
+    <value>مُسقَط</value>
+  </data>
+  <data name="dialog_goto_format" xml:space="preserve">
+    <value>التنسيق</value>
+  </data>
+  <data name="dialog_goto_datum" xml:space="preserve">
+    <value>المرجع الجيوديسي (الإهليلج)</value>
+  </data>
+  <data name="dialog_goto_latitude" xml:space="preserve">
+    <value>خط العرض</value>
+  </data>
+  <data name="dialog_goto_longitude" xml:space="preserve">
+    <value>خط الطول</value>
+  </data>
+  <data name="dialog_goto_hemisphere" xml:space="preserve">
+    <value>نصف الكرة</value>
+  </data>
+  <data name="dialog_goto_decimalHint" xml:space="preserve">
+    <value>القيم السالبة تعني الجنوب والغرب. تُقبل هنا أيضًا قراءة DMS مثل 35 41 21.1 N.</value>
+  </data>
+  <data name="dialog_goto_easting" xml:space="preserve">
+    <value>الإحداثي الشرقي</value>
+  </data>
+  <data name="dialog_goto_northing" xml:space="preserve">
+    <value>الإحداثي الشمالي</value>
+  </data>
+  <data name="dialog_goto_projection" xml:space="preserve">
+    <value>الإسقاط</value>
+  </data>
+  <data name="dialog_goto_projectionCustom" xml:space="preserve">
+    <value>مخصص</value>
+  </data>
+  <data name="dialog_goto_paramCentralMeridian" xml:space="preserve">
+    <value>خط الزوال المركزي</value>
+  </data>
+  <data name="dialog_goto_paramLatitudeOfOrigin" xml:space="preserve">
+    <value>خط عرض الأصل</value>
+  </data>
+  <data name="dialog_goto_paramScaleFactor" xml:space="preserve">
+    <value>معامل المقياس</value>
+  </data>
+  <data name="dialog_goto_paramFalseEasting" xml:space="preserve">
+    <value>الإزاحة الشرقية الزائفة</value>
+  </data>
+  <data name="dialog_goto_paramFalseNorthing" xml:space="preserve">
+    <value>الإزاحة الشمالية الزائفة</value>
+  </data>
+  <data name="dialog_goto_paramStandardParallel1" xml:space="preserve">
+    <value>خط العرض القياسي 1</value>
+  </data>
+  <data name="dialog_goto_paramStandardParallel2" xml:space="preserve">
+    <value>خط العرض القياسي 2</value>
+  </data>
+  <data name="dialog_goto_x" xml:space="preserve">
+    <value>X (الشرقي)</value>
+  </data>
+  <data name="dialog_goto_y" xml:space="preserve">
+    <value>Y (الشمالي)</value>
+  </data>
+  <data name="dialog_goto_position" xml:space="preserve">
+    <value>الموقع</value>
+  </data>
+  <data name="dialog_goto_positionSubtitle" xml:space="preserve">
+    <value>WGS 84 · خط العرض، خط الطول</value>
+  </data>
+  <data name="dialog_goto_copy" xml:space="preserve">
+    <value>نسخ الإحداثيات</value>
+  </data>
+  <data name="dialog_goto_statusReady" xml:space="preserve">
+    <value>جاهز</value>
+  </data>
+  <data name="dialog_goto_statusInvalid" xml:space="preserve">
+    <value>تحقق من الإدخال</value>
+  </data>
+  <data name="dialog_goto_errorLatitudeRange" xml:space="preserve">
+    <value>يجب أن يكون خط العرض بين −90° و90°</value>
+  </data>
+  <data name="dialog_goto_errorLongitudeRange" xml:space="preserve">
+    <value>يجب أن يكون خط الطول بين −180° و180°</value>
+  </data>
+  <data name="dialog_goto_errorDmsComponents" xml:space="preserve">
+    <value>يجب أن تكون الدقائق والثواني بين 0 و60</value>
+  </data>
+  <data name="dialog_goto_errorNumber" xml:space="preserve">
+    <value>أدخل قيمة رقمية لـ {0}</value>
+  </data>
+  <data name="dialog_goto_errorNorthingRange" xml:space="preserve">
+    <value>يجب أن يكون الإحداثي الشمالي بين 0 و10,000,000 m</value>
+  </data>
+  <data name="dialog_goto_warningEastingRange" xml:space="preserve">
+    <value>الإحداثي الشرقي خارج النطاق المعتاد لمنطقة UTM (100,000 – 900,000 m)</value>
+  </data>
+  <data name="dialog_goto_errorProjection" xml:space="preserve">
+    <value>لا تقابل هذه القيم موقعًا على الأرض</value>
+  </data>
+  <data name="srs_lccTitle" xml:space="preserve">
+    <value>لامبرت المخروطي المطابق</value>
+  </data>
+  <data name="dialog_goto_coordinateSystem" xml:space="preserve">
+    <value>نظام الإحداثيات</value>
+  </data>
+  <data name="layerSettings_statistics_field" xml:space="preserve">
+    <value>الحقل</value>
+  </data>
+  <data name="layerSettings_statistics_compute" xml:space="preserve">
+    <value>حساب</value>
+  </data>
+  <data name="layerSettings_statistics_liveNotSupported" xml:space="preserve">
+    <value>هذه الطبقة في الوضع المباشر (Live): تبقى معالمها على الخادم، لذا إحصائياتها غير متاحة بعد. حوّل الطبقة إلى وضع التخزين المؤقت (Cache) لرؤيتها.</value>
+  </data>
+  <data name="layerSettings_statistics_emptyState" xml:space="preserve">
+    <value>اختر حقلًا واضغط «حساب»</value>
+  </data>
+  <data name="layerSettings_statistics_failed" xml:space="preserve">
+    <value>فشل حساب الإحصائيات:</value>
+  </data>
+  <data name="layerSettings_statistics_summary" xml:space="preserve">
+    <value>التفاصيل</value>
+  </data>
+  <data name="layerSettings_statistics_topValues" xml:space="preserve">
+    <value>القيم الأكثر تكرارًا</value>
+  </data>
+  <data name="layerSettings_statistics_value" xml:space="preserve">
+    <value>القيمة</value>
+  </data>
+  <data name="layerSettings_statistics_count" xml:space="preserve">
+    <value>العدد</value>
+  </data>
+  <data name="layerSettings_statistics_featureCount" xml:space="preserve">
+    <value>المعالم</value>
+  </data>
+  <data name="layerSettings_statistics_emptyCount" xml:space="preserve">
+    <value>القيم الفارغة</value>
+  </data>
+  <data name="layerSettings_statistics_distinctCount" xml:space="preserve">
+    <value>القيم المميزة</value>
+  </data>
+  <data name="layerSettings_statistics_min" xml:space="preserve">
+    <value>الحد الأدنى</value>
+  </data>
+  <data name="layerSettings_statistics_max" xml:space="preserve">
+    <value>الحد الأقصى</value>
+  </data>
+  <data name="layerSettings_statistics_sum" xml:space="preserve">
+    <value>المجموع</value>
+  </data>
+  <data name="layerSettings_statistics_mean" xml:space="preserve">
+    <value>المتوسط</value>
+  </data>
+  <data name="layerSettings_statistics_median" xml:space="preserve">
+    <value>الوسيط</value>
+  </data>
+  <data name="layerSettings_statistics_standardDeviation" xml:space="preserve">
+    <value>الانحراف المعياري</value>
+  </data>
+  <data name="layerSettings_statistics_minDate" xml:space="preserve">
+    <value>الأقدم</value>
+  </data>
+  <data name="layerSettings_statistics_maxDate" xml:space="preserve">
+    <value>الأحدث</value>
+  </data>
+  <data name="layerSettings_statistics_emptyValue" xml:space="preserve">
+    <value>(فارغ)</value>
+  </data>
+  <data name="layerSettings_statistics_modeField" xml:space="preserve">
+    <value>إحصائيات الحقل</value>
+  </data>
+  <data name="layerSettings_statistics_modeGroupBy" xml:space="preserve">
+    <value>التجميع حسب حقل</value>
+  </data>
+  <data name="layerSettings_statistics_groupByField" xml:space="preserve">
+    <value>التجميع حسب</value>
+  </data>
+  <data name="layerSettings_statistics_sumField" xml:space="preserve">
+    <value>مجموع</value>
+  </data>
+  <data name="layerSettings_statistics_none" xml:space="preserve">
+    <value>(لا شيء)</value>
+  </data>
+  <data name="layerSettings_statistics_groupCount" xml:space="preserve">
+    <value>المجموعات</value>
+  </data>
+  <data name="layerSettings_statistics_totalLength" xml:space="preserve">
+    <value>الطول الإجمالي</value>
+  </data>
+  <data name="layerSettings_statistics_totalArea" xml:space="preserve">
+    <value>المساحة الإجمالية</value>
+  </data>
+  <data name="layerSettings_statistics_sumOf" xml:space="preserve">
+    <value>مجموع {0}</value>
+  </data>
+  <data name="layerSettings_statistics_groups" xml:space="preserve">
+    <value>المجموعات</value>
+  </data>
+  <data name="layerSettings_statistics_groupsTruncated" xml:space="preserve">
+    <value>عرض أول {0} من {1} مجموعة.</value>
+  </data>
+  <data name="layerSettings_statistics_invalidNote" xml:space="preserve">
+    <value>تعذّرت قراءة {0} قيمة بنوع الحقل، فاستُبعدت.</value>
+  </data>
+  <data name="layerSettings_statistics_total" xml:space="preserve">
+    <value>الإجمالي</value>
+  </data>
+  <data name="layerSettings_statistics_topOfDistinct" xml:space="preserve">
+    <value>{0} من {1} قيمة</value>
+  </data>
+  <data name="layerSettings_statistics_sortedByCount" xml:space="preserve">
+    <value>مرتبة حسب العدد</value>
+  </data>
+  <data name="layerSettings_statistics_modeGeometry" xml:space="preserve">
+    <value>الهندسة</value>
+  </data>
+  <data name="layerSettings_statistics_emptyGeometryCount" xml:space="preserve">
+    <value>الهندسات الفارغة</value>
+  </data>
+  <data name="layerSettings_statistics_distribution" xml:space="preserve">
+    <value>التوزيع</value>
+  </data>
+  <data name="layerSettings_statistics_lengthPerFeature" xml:space="preserve">
+    <value>الطول لكل معلم ({0})</value>
+  </data>
+  <data name="layerSettings_statistics_areaPerFeature" xml:space="preserve">
+    <value>المساحة لكل معلم ({0})</value>
+  </data>
+  <data name="layerSettings_statistics_binCount" xml:space="preserve">
+    <value>{0} فئة</value>
+  </data>
+  <data name="layerSettings_statistics_noMeasureNote" xml:space="preserve">
+    <value>ينطبق الطول والمساحة على الطبقات الخطية والمضلعة فقط.</value>
+  </data>
+  <data name="layerSettings_statistics_unmeasuredNote" xml:space="preserve">
+    <value>تعذّر قياس {0} هندسة، فاستُبعدت.</value>
+  </data>
+  <data name="layerSettings_statistics_viewHistogram" xml:space="preserve">
+    <value>مخطط</value>
+  </data>
+  <data name="layerSettings_statistics_viewTable" xml:space="preserve">
+    <value>أعلى القيم</value>
+  </data>
+  <data name="layerSettings_statistics_geometryHint" xml:space="preserve">
+    <value>الطول الجيوديسي (للطبقات الخطية) أو المساحة (للطبقات المضلعة) لكل معلم، على إهليلج WGS84.</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainCount" xml:space="preserve">
+    <value>خارج النطاق المسموح</value>
+  </data>
+  <data name="layerSettings_statistics_domainUsage" xml:space="preserve">
+    <value>مُستخدَم {0} من {1} من قيم النطاق</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainNote" xml:space="preserve">
+    <value>{0} معلم لها قيمة خارج نطاق قيم الحقل.</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainTooltip" xml:space="preserve">
+    <value>ليست من قيم نطاق الحقل</value>
+  </data>
+  <data name="sldGenerator_title" xml:space="preserve">
+    <value>إنشاء قواعد من قيم الحقل</value>
+  </data>
+  <data name="sldGenerator_field" xml:space="preserve">
+    <value>الحقل</value>
+  </data>
+  <data name="sldGenerator_geometry" xml:space="preserve">
+    <value>الهندسة</value>
+  </data>
+  <data name="sldGenerator_geometryPoint" xml:space="preserve">
+    <value>نقطة</value>
+  </data>
+  <data name="sldGenerator_geometryLine" xml:space="preserve">
+    <value>خط</value>
+  </data>
+  <data name="sldGenerator_geometryPolygon" xml:space="preserve">
+    <value>مضلع</value>
+  </data>
+  <data name="sldGenerator_values" xml:space="preserve">
+    <value>القيم</value>
+  </data>
+  <data name="sldGenerator_valuesData" xml:space="preserve">
+    <value>القيم الموجودة في الطبقة</value>
+  </data>
+  <data name="sldGenerator_valuesDomain" xml:space="preserve">
+    <value>كل قيم النطاق</value>
+  </data>
+  <data name="sldGenerator_colors" xml:space="preserve">
+    <value>الألوان</value>
+  </data>
+  <data name="sldGenerator_colorsPalette" xml:space="preserve">
+    <value>لوحة الألوان المضمّنة</value>
+  </data>
+  <data name="sldGenerator_colorsDomain" xml:space="preserve">
+    <value>ألوان النطاق</value>
+  </data>
+  <data name="sldGenerator_includeOther" xml:space="preserve">
+    <value>إضافة قاعدة للقيم الأخرى</value>
+  </data>
+  <data name="sldGenerator_replaceExisting" xml:space="preserve">
+    <value>استبدال القواعد الحالية</value>
+  </data>
+  <data name="sldGenerator_preview" xml:space="preserve">
+    <value>معاينة</value>
+  </data>
+  <data name="sldGenerator_noField" xml:space="preserve">
+    <value>لا يوجد حقل للتصنيف حسبه</value>
+  </data>
+  <data name="sldGenerator_noValues" xml:space="preserve">
+    <value>لا يحتوي الحقل على قيم</value>
+  </data>
+  <data name="sldGenerator_ruleCount" xml:space="preserve">
+    <value>{0} قاعدة</value>
+  </data>
+  <data name="sldGenerator_previewCut" xml:space="preserve">
+    <value>(يُعرض أول {0})</value>
+  </data>
+  <data name="sldGenerator_failed" xml:space="preserve">
+    <value>فشلت قراءة القيم:</value>
+  </data>
+  <data name="sldGenerator_generate" xml:space="preserve">
+    <value>إنشاء</value>
+  </data>
+  <data name="sldGenerator_otherValues" xml:space="preserve">
+    <value>القيم الأخرى</value>
+  </data>
+  <data name="layerSettings_general_summary" xml:space="preserve">
+    <value>ملخص الطبقة</value>
+  </data>
+  <data name="layerSettings_general_loadMode" xml:space="preserve">
+    <value>وضع التحميل:</value>
+  </data>
+  <data name="layerSettings_general_loadModeCache" xml:space="preserve">
+    <value>تحميل الكل دفعة واحدة (Cache)</value>
+  </data>
+  <data name="layerSettings_general_loadModeLive" xml:space="preserve">
+    <value>التحميل حسب عرض الخريطة (Live)</value>
+  </data>
+  <data name="layerSettings_general_featureCount" xml:space="preserve">
+    <value>المعالم:</value>
+  </data>
+  <data name="layerSettings_general_featureCountLive" xml:space="preserve">
+    <value>غير متاح في الوضع المباشر (تُحمَّل المنطقة المرئية فقط)</value>
+  </data>
+  <data name="layerSettings_general_fieldCount" xml:space="preserve">
+    <value>الحقول:</value>
+  </data>
+  <data name="layerSettings_general_geometryType" xml:space="preserve">
+    <value>نوع الهندسة:</value>
+  </data>
+  <data name="layerSettings_general_srs" xml:space="preserve">
+    <value>المرجع المكاني:</value>
+  </data>
+  <data name="layerSettings_general_originalSrs" xml:space="preserve">
+    <value>المرجع المكاني للمصدر:</value>
+  </data>
+  <data name="layerSettings_general_extentWgs84" xml:space="preserve">
+    <value>النطاق (WGS84):</value>
+  </data>
+  <data name="layerSettings_general_extentUtm" xml:space="preserve">
+    <value>النطاق (UTM {0}):</value>
+  </data>
+  <data name="layerSettings_general_unknown" xml:space="preserve">
+    <value>غير معروف</value>
+  </data>
+  <data name="layerStyles_ruleCount" xml:space="preserve">
+    <value>{0} قاعدة</value>
+  </data>
+  <data name="layerStyles_untitled" xml:space="preserve">
+    <value>نمط بلا عنوان</value>
+  </data>
+  <data name="layerStyles_newTitle" xml:space="preserve">
+    <value>النمط {0}</value>
+  </data>
+  <data name="layerStyles_copyTitle" xml:space="preserve">
+    <value>{0} (نسخة)</value>
+  </data>
+  <data name="layerStyles_addFirst" xml:space="preserve">
+    <value>إضافة نمط</value>
+  </data>
+  <data name="layerStyles_adminBanner" xml:space="preserve">
+    <value>يبدأ المستخدمون بالنمط الافتراضي ويمكنهم التبديل إلى الأنماط الأخرى من تبويب الرموز أو من مفتاح الخريطة.</value>
+  </data>
+  <data name="layerStyles_add" xml:space="preserve">
+    <value>إضافة</value>
+  </data>
+  <data name="layerStyles_copy" xml:space="preserve">
+    <value>نسخ</value>
+  </data>
+  <data name="layerStyles_edit" xml:space="preserve">
+    <value>تحرير</value>
+  </data>
+  <data name="layerStyles_setDefault" xml:space="preserve">
+    <value>تعيين كافتراضي</value>
+  </data>
+  <data name="layerStyles_moveUp" xml:space="preserve">
+    <value>تحريك لأعلى</value>
+  </data>
+  <data name="layerStyles_moveDown" xml:space="preserve">
+    <value>تحريك لأسفل</value>
+  </data>
+  <data name="layerStyles_delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="layerStyles_defaultBadge" xml:space="preserve">
+    <value>افتراضي</value>
+  </data>
+  <data name="layerStyles_titleWatermark" xml:space="preserve">
+    <value>عنوان النمط</value>
+  </data>
+  <data name="layerStyles_legend_pick" xml:space="preserve">
+    <value>النمط</value>
+  </data>
+  <data name="layerStyles_tab_notAvailable" xml:space="preserve">
+    <value>لا توجد رموز قابلة للضبط لهذه الطبقة.</value>
+  </data>
+  <data name="layerStyles_tab_styles" xml:space="preserve">
+    <value>الأنماط</value>
+  </data>
+  <data name="layerStyles_tab_singleStyle" xml:space="preserve">
+    <value>لهذه الطبقة نمط واحد. يمكن للمسؤول إضافة المزيد في إعدادات طبقات الخادم.</value>
+  </data>
+  <data name="layerStyles_tab_legend" xml:space="preserve">
+    <value>مفتاح الخريطة</value>
+  </data>
+  <data name="layerStyles_tab_exportLegend" xml:space="preserve">
+    <value>تصدير مفتاح الخريطة بصيغة PNG</value>
+  </data>
+  <data name="layerStyles_tab_quickEdit" xml:space="preserve">
+    <value>تحرير سريع</value>
+  </data>
+  <data name="layerStyles_tab_myChanges" xml:space="preserve">
+    <value>تغييراتي</value>
+  </data>
+  <data name="layerStyles_tab_noChanges" xml:space="preserve">
+    <value>لا شيء: تُرسم الطبقة كما يحددها الخادم.</value>
+  </data>
+  <data name="layerStyles_tab_hasChanges" xml:space="preserve">
+    <value>لقد غيّرت رموز هذه الطبقة. يُحفظ التغيير في مشروعك؛ يعيد «استعادة أنماط المسؤول» أنماط الخادم.</value>
+  </data>
+  <data name="serverLayerSettings_error_styleTitleRequired" xml:space="preserve">
+    <value>عندما يكون للطبقة عدة أنماط، يحتاج كل نمط إلى عنوان.</value>
+  </data>
+  <data name="serverLayerSettings_error_duplicateStyleTitle" xml:space="preserve">
+    <value>يوجد نمطان بالعنوان نفسه.</value>
+  </data>
+  <data name="layerStyles_wholeLayer" xml:space="preserve">
+    <value>الطبقة كاملة</value>
+  </data>
+  <data name="layerStyles_wholeLayerHint" xml:space="preserve">
+    <value>ينطبق نطاق التكبير والعتامة على الطبقة أيًّا كانت رموزها.</value>
+  </data>
+  <data name="layerStyles_modeSimple" xml:space="preserve">
+    <value>بسيط</value>
+  </data>
+  <data name="layerStyles_modeStyles" xml:space="preserve">
+    <value>الأنماط (SLD)</value>
+  </data>
+  <data name="layerStyles_simpleHint" xml:space="preserve">
+    <value>نمط بسيط واحد من الألوان أدناه. بدّل إلى «الأنماط» للحصول على قواعد حسب السمات وعدة ترميزات يختار منها المستخدمون.</value>
+  </data>
+  <data name="layerStyles_previewOf" xml:space="preserve">
+    <value>مفتاح الخريطة: {0}</value>
+  </data>
+  <data name="layerStyles_switchToSimpleConfirm" xml:space="preserve">
+    <value>هل تريد إزالة {0} نمط من هذه الطبقة؟ ستُستخدم الألوان البسيطة بدلًا منها.</value>
+  </data>
+  <data name="layerStyles_labelsNote" xml:space="preserve">
+    <value>تُرسم هذه الطبقة بأنماط SLD: تُرسم هذه التسمية فوق أي نمط نشط.</value>
+  </data>
+  <data name="layerStyles_tab_changedStyles" xml:space="preserve">
+    <value>لقد غيّرت هذه الأنماط على هذا الحاسوب: {0}. تُحفظ التغييرات في مشروعك؛ يعيد «استعادة أنماط المسؤول» أنماط الخادم.</value>
+  </data>
+  <data name="layerStyles_tab_simpleHint" xml:space="preserve">
+    <value>تُرسم هذه الطبقة بألوان بسيطة؛ استخدم «تحرير سريع» لتغييرها.</value>
+  </data>
+  <data name="layerStyles_tab_editInSld" xml:space="preserve">
+    <value>تحرير النمط في محرر SLD</value>
+  </data>
+  <data name="layerStyles_tab_restore" xml:space="preserve">
+    <value>استعادة أنماط المسؤول</value>
+  </data>
+  <data name="layerStyles_tab_restoreTip" xml:space="preserve">
+    <value>تراجع عن تغييراتك على كل أنماط هذه الطبقة وارسمها كما يحددها الخادم.</value>
+  </data>
+  <data name="layerStyles_tab_changedMark" xml:space="preserve">
+    <value>غيّرته أنت</value>
+  </data>
+  <data name="dialog_symbology_restoreAdmin" xml:space="preserve">
+    <value>استعادة نمط المسؤول</value>
+  </data>
+  <data name="dialog_symbology_userChanged" xml:space="preserve">
+    <value>لقد غيّرت ألوان هذه الطبقة على هذا الحاسوب.</value>
+  </data>
+  <data name="dialog_symbology_editInSld" xml:space="preserve">
+    <value>تحرير في محرر SLD</value>
+  </data>
+  <data name="dialog_symbology_advancedHint" xml:space="preserve">
+    <value>يضيف محرر SLD قواعد حسب السمات والتسميات وغيرها. بعد الحفظ هناك، تُفتح هذه الطبقة في محرر SLD؛ يعيد «استعادة نمط المسؤول» الألوان السريعة.</value>
+  </data>
+  <data name="layerSettings_statistics_liveOnServer" xml:space="preserve">
+    <value>هذه الطبقة في الوضع المباشر (Live): يحسب الخادم إحصائياتها على كل معالمها. لا تُحتسب التعديلات التي لم تحفظها.</value>
+  </data>
+  <data name="layerSettings_general_featureCountServer" xml:space="preserve">
+    <value>محسوب على الخادم لكل المعالم (لا تُحتسب التعديلات التي لم تحفظها)</value>
+  </data>
+  <data name="serverLayerSettings_importModel_export" xml:space="preserve">
+    <value>تصدير نموذج الاستيراد…</value>
+  </data>
+  <data name="serverLayerSettings_importModel_exportTip" xml:space="preserve">
+    <value>تصدير نموذج الاستيراد: حفظ نموذج بيانات كل طبقة نشطة (الجداول، الأعمدة، الأنواع، النطاقات) كملف تقرؤه أداة الاستيراد</value>
+  </data>
+  <data name="serverLayerSettings_importModel_saved" xml:space="preserve">
+    <value>تم حفظ نموذج الاستيراد لـ {0} طبقة في {1}.</value>
+  </data>
+  <data name="serverLayerSettings_importModel_failed" xml:space="preserve">
+    <value>تعذّر حفظ نموذج الاستيراد.</value>
+  </data>
+  <data name="ribbon_topology_header" xml:space="preserve">
+    <value>الطوبولوجيا</value>
+  </data>
+  <data name="ribbon_topology_groupCheck" xml:space="preserve">
+    <value>الفحص</value>
+  </data>
+  <data name="ribbon_topology_check" xml:space="preserve">
+    <value>فحص</value>
+  </data>
+  <data name="ribbon_topology_checkTooltip" xml:space="preserve">
+    <value>فحص البيانات وفق قواعد الطوبولوجيا</value>
+  </data>
+  <data name="ribbon_topology_groupResults" xml:space="preserve">
+    <value>النتائج</value>
+  </data>
+  <data name="ribbon_topology_issues" xml:space="preserve">
+    <value>المشكلات</value>
+  </data>
+  <data name="ribbon_topology_issuesTooltip" xml:space="preserve">
+    <value>مشكلات آخر فحص</value>
+  </data>
+  <data name="ribbon_topology_showOnMap" xml:space="preserve">
+    <value>عرض على الخريطة</value>
+  </data>
+  <data name="ribbon_topology_showOnMapTooltip" xml:space="preserve">
+    <value>رسم المشكلات على الخريطة، حتى أثناء التحرير</value>
+  </data>
+  <data name="ribbon_topology_groupSettings" xml:space="preserve">
+    <value>الإعدادات</value>
+  </data>
+  <data name="ribbon_topology_rules" xml:space="preserve">
+    <value>القواعد</value>
+  </data>
+  <data name="ribbon_topology_rulesTooltip" xml:space="preserve">
+    <value>ما تفحصه كل قاعدة؛ غيّر المسافات والأنواع لهذه الجلسة</value>
+  </data>
+  <data name="ribbon_topology_groupOutput" xml:space="preserve">
+    <value>المخرجات</value>
+  </data>
+  <data name="ribbon_topology_export" xml:space="preserve">
+    <value>تصدير</value>
+  </data>
+  <data name="ribbon_topology_exportTooltip" xml:space="preserve">
+    <value>قائمة المشكلات المصفّاة إلى Excel</value>
+  </data>
+  <data name="ribbon_topology_groupHelp" xml:space="preserve">
+    <value>المساعدة</value>
+  </data>
+  <data name="ribbon_topology_guide" xml:space="preserve">
+    <value>الدليل</value>
+  </data>
+  <data name="ribbon_topology_guideTooltip" xml:space="preserve">
+    <value>ما يفحصه تبويب الطوبولوجيا وكيفية استخدامه</value>
+  </data>
+  <data name="topology_panel_checkTitle" xml:space="preserve">
+    <value>فحص الطوبولوجيا</value>
+  </data>
+  <data name="topology_panel_issuesTitle" xml:space="preserve">
+    <value>مشكلات الطوبولوجيا</value>
+  </data>
+  <data name="topology_panel_rulesTitle" xml:space="preserve">
+    <value>قواعد الطوبولوجيا</value>
+  </data>
+  <data name="topology_guide_title" xml:space="preserve">
+    <value>الطوبولوجيا</value>
+  </data>
+  <data name="topology_check_whatTitle" xml:space="preserve">
+    <value>ما الذي يُفحص</value>
+  </data>
+  <data name="topology_check_rulesLabel" xml:space="preserve">
+    <value>القواعد</value>
+  </data>
+  <data name="topology_check_rules" xml:space="preserve">
+    <value>{0} قاعدة من «{1}»</value>
+  </data>
+  <data name="topology_check_dataLabel" xml:space="preserve">
+    <value>البيانات</value>
+  </data>
+  <data name="topology_check_layerLabel" xml:space="preserve">
+    <value>الطبقة</value>
+  </data>
+  <data name="topology_check_scopeWholeData" xml:space="preserve">
+    <value>كل البيانات</value>
+  </data>
+  <data name="topology_check_scopeLayer" xml:space="preserve">
+    <value>طبقة واحدة</value>
+  </data>
+  <data name="topology_check_scopeExtent" xml:space="preserve">
+    <value>نطاق الخريطة</value>
+  </data>
+  <data name="topology_check_scopeFeatures" xml:space="preserve">
+    <value>المعالم المحددة</value>
+  </data>
+  <data name="topology_check_layersTitle" xml:space="preserve">
+    <value>الطبقات التي تحتاجها القواعد</value>
+  </data>
+  <data name="topology_check_refresh" xml:space="preserve">
+    <value>قراءة الطبقات مجددًا</value>
+  </data>
+  <data name="topology_check_layerLoaded" xml:space="preserve">
+    <value>محمّلة</value>
+  </data>
+  <data name="topology_check_layerLive" xml:space="preserve">
+    <value>مباشر: نطاق الخريطة أو التحديد فقط</value>
+  </data>
+  <data name="topology_check_layerNotLoaded" xml:space="preserve">
+    <value>غير محمّلة: تُتخطى قواعدها</value>
+  </data>
+  <data name="topology_check_settingsInvalid" xml:space="preserve">
+    <value>أحد الإعدادات في لوحة القواعد غير قابل للاستخدام؛ صحّحه أو أعد تعيين الكل.</value>
+  </data>
+  <data name="topology_check_liveNeedsPartialScope" xml:space="preserve">
+    <value>لا تحتوي الطبقة المباشرة إلا على ما يظهر في العرض: افحص نطاق الخريطة أو تحديدًا، أو حوّل الطبقة إلى Cache.</value>
+  </data>
+  <data name="topology_check_noSelection" xml:space="preserve">
+    <value>حدّد معالم من هذه الطبقة على الخريطة أولًا.</value>
+  </data>
+  <data name="topology_check_largeScope" xml:space="preserve">
+    <value>يقرأ هذا الفحص {0} معلم وقد يستغرق بعض الوقت؛ فحص نطاق الخريطة أسرع.</value>
+  </data>
+  <data name="topology_check_someNotLoaded" xml:space="preserve">
+    <value>تُتخطى الطبقات غير المحمّلة مع قواعدها.</value>
+  </data>
+  <data name="topology_check_run" xml:space="preserve">
+    <value>فحص</value>
+  </data>
+  <data name="topology_check_cancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="topology_check_progress" xml:space="preserve">
+    <value>جارٍ الفحص: {2} … {0} من {1} قاعدة</value>
+  </data>
+  <data name="topology_check_done" xml:space="preserve">
+    <value>{0} مشكلة في {1} معلم</value>
+  </data>
+  <data name="topology_check_cancelled" xml:space="preserve">
+    <value>أُلغي: تم الإبقاء على النتائج السابقة.</value>
+  </data>
+  <data name="topology_issues_noCheck" xml:space="preserve">
+    <value>شغّل فحصًا أولًا.</value>
+  </data>
+  <data name="topology_issues_header" xml:space="preserve">
+    <value>تم فحص {0} · {1} · {2} معلم</value>
+  </data>
+  <data name="topology_issues_settingsChanged" xml:space="preserve">
+    <value>تم تغيير الإعدادات لهذه الجلسة</value>
+  </data>
+  <data name="topology_issues_skipped" xml:space="preserve">
+    <value>لم يُفحص (الطبقة غير محمّلة): {0}</value>
+  </data>
+  <data name="topology_issues_errors" xml:space="preserve">
+    <value>{0} خطأ</value>
+  </data>
+  <data name="topology_issues_warnings" xml:space="preserve">
+    <value>{0} تحذير</value>
+  </data>
+  <data name="topology_issues_infos" xml:space="preserve">
+    <value>{0} ملاحظة</value>
+  </data>
+  <data name="topology_issues_allRules" xml:space="preserve">
+    <value>كل القواعد</value>
+  </data>
+  <data name="topology_issues_changeAll" xml:space="preserve">
+    <value>الكل</value>
+  </data>
+  <data name="topology_issues_changeNew" xml:space="preserve">
+    <value>الجديدة منذ آخر فحص</value>
+  </data>
+  <data name="topology_issues_changeStillThere" xml:space="preserve">
+    <value>لا تزال قائمة</value>
+  </data>
+  <data name="topology_issues_changeGone" xml:space="preserve">
+    <value>زالت منذ آخر فحص</value>
+  </data>
+  <data name="topology_issues_changeTooltip" xml:space="preserve">
+    <value>مقارنة مع الفحص السابق للبيانات نفسها</value>
+  </data>
+  <data name="topology_issues_searchTooltip" xml:space="preserve">
+    <value>البحث في المعرّفات والجمل</value>
+  </data>
+  <data name="topology_issues_none" xml:space="preserve">
+    <value>لم يُعثر على مشكلات في {0} معلم</value>
+  </data>
+  <data name="topology_issues_overlayLimited" xml:space="preserve">
+    <value>أكثر من {0} مشكلة: تعرض الخريطة الأخطاء فقط</value>
+  </data>
+  <data name="topology_issues_allowed" xml:space="preserve">
+    <value>المسموح {0} m</value>
+  </data>
+  <data name="topology_issues_new" xml:space="preserve">
+    <value>جديد</value>
+  </data>
+  <data name="topology_issues_showInTable" xml:space="preserve">
+    <value>عرض في جدول السمات</value>
+  </data>
+  <data name="topology_issues_export" xml:space="preserve">
+    <value>تصدير القائمة إلى Excel</value>
+  </data>
+  <data name="topology_severity_error" xml:space="preserve">
+    <value>خطأ</value>
+  </data>
+  <data name="topology_severity_warning" xml:space="preserve">
+    <value>تحذير</value>
+  </data>
+  <data name="topology_severity_info" xml:space="preserve">
+    <value>ملاحظة</value>
+  </data>
+  <data name="topology_unit_metres" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="topology_unit_squareMetres" xml:space="preserve">
+    <value>m²</value>
+  </data>
+  <data name="topology_rules_header" xml:space="preserve">
+    <value>{0} قاعدة · الإصدار {1}</value>
+  </data>
+  <data name="topology_rules_resetAll" xml:space="preserve">
+    <value>إعادة تعيين الكل</value>
+  </data>
+  <data name="topology_rules_sessionOnly" xml:space="preserve">
+    <value>تبقى التغييرات هنا حتى إغلاق التطبيق؛ لا يُخزَّن شيء.</value>
+  </data>
+  <data name="topology_rules_changed" xml:space="preserve">
+    <value>تم التغيير في هذه الجلسة</value>
+  </data>
+  <data name="topology_rules_hidden" xml:space="preserve">
+    <value>مخفية</value>
+  </data>
+  <data name="topology_parameter_distance" xml:space="preserve">
+    <value>المسافة (m)</value>
+  </data>
+  <data name="topology_parameter_nearDistance" xml:space="preserve">
+    <value>مسافة القرب (m)</value>
+  </data>
+  <data name="topology_parameter_searchDistance" xml:space="preserve">
+    <value>مسافة البحث (m)</value>
+  </data>
+  <data name="topology_parameter_maxOvershoot" xml:space="preserve">
+    <value>أكبر تجاوز (m)</value>
+  </data>
+  <data name="topology_parameter_maxGap" xml:space="preserve">
+    <value>أكبر فجوة (m)</value>
+  </data>
+  <data name="topology_parameter_minimumPoints" xml:space="preserve">
+    <value>أقل عدد من النقاط</value>
+  </data>
+  <data name="topology_parameter_minimumLength" xml:space="preserve">
+    <value>أقصر طول (m)</value>
+  </data>
+  <data name="topology_parameter_minimumArea" xml:space="preserve">
+    <value>أصغر مساحة (m²)</value>
+  </data>
+  <data name="topology_parameter_minimumWidth" xml:space="preserve">
+    <value>أصغر عرض (m)</value>
+  </data>
+  <data name="topology_parameter_sliverWidth" xml:space="preserve">
+    <value>عرض الشريحة الرفيعة (m)</value>
+  </data>
+  <data name="topology_parameter_interiorPartEnds" xml:space="preserve">
+    <value>فحص النهايات عند التقاء الأجزاء (1 = نعم)</value>
+  </data>
+  <data name="topology_parameter_sharedStretch" xml:space="preserve">
+    <value>الإبلاغ عن المقاطع المشتركة (1 = نعم)</value>
+  </data>
+  <data name="topology_parameter_enclosedGaps" xml:space="preserve">
+    <value>الإبلاغ عن الفجوات المحصورة (1 = نعم)</value>
+  </data>
+  <data name="topology_parameter_maximumGapArea" xml:space="preserve">
+    <value>أكبر مساحة فجوة (m²)</value>
+  </data>
+  <data name="topology_export_rule" xml:space="preserve">
+    <value>القاعدة</value>
+  </data>
+  <data name="topology_export_kind" xml:space="preserve">
+    <value>النوع</value>
+  </data>
+  <data name="topology_export_severity" xml:space="preserve">
+    <value>الخطورة</value>
+  </data>
+  <data name="topology_export_sentence" xml:space="preserve">
+    <value>المشكلة</value>
+  </data>
+  <data name="topology_export_value" xml:space="preserve">
+    <value>القيمة</value>
+  </data>
+  <data name="topology_export_features" xml:space="preserve">
+    <value>المعالم</value>
+  </data>
+  <data name="topology_export_location" xml:space="preserve">
+    <value>الموقع (خط الطول، خط العرض)</value>
+  </data>
+  <data name="topology_rule_geometryValid" xml:space="preserve">
+    <value>يجب أن تكون الهندسة صالحة</value>
+  </data>
+  <data name="topology_rule_distinctPoints" xml:space="preserve">
+    <value>يجب ألا تتطابق النقاط</value>
+  </data>
+  <data name="topology_rule_pointOnLine" xml:space="preserve">
+    <value>يجب أن تقع النقطة على خط</value>
+  </data>
+  <data name="topology_rule_lineEndCovered" xml:space="preserve">
+    <value>يجب أن تكون عند نهايات الخط نقاط</value>
+  </data>
+  <data name="topology_rule_lineCarriesPoints" xml:space="preserve">
+    <value>يجب أن يحمل الخط نقاطًا</value>
+  </data>
+  <data name="topology_rule_pointOnOneLine" xml:space="preserve">
+    <value>نقطة على أكثر من خط</value>
+  </data>
+  <data name="topology_rule_sequenceAlongLine" xml:space="preserve">
+    <value>يجب أن تتزايد الأرقام على طول الخط</value>
+  </data>
+  <data name="topology_rule_lineEndsConnect" xml:space="preserve">
+    <value>يجب أن تتصل نهايات الخطوط</value>
+  </data>
+  <data name="topology_rule_partsJoin" xml:space="preserve">
+    <value>يجب أن تتصل أجزاء الخط</value>
+  </data>
+  <data name="topology_rule_distinctLines" xml:space="preserve">
+    <value>يجب ألا تتكرر الخطوط</value>
+  </data>
+  <data name="topology_rule_touchAndReturn" xml:space="preserve">
+    <value>يجب ألا تتلامس الخطوط ثم تعود</value>
+  </data>
+  <data name="topology_rule_polygonsNoOverlap" xml:space="preserve">
+    <value>يجب ألا تتداخل المضلعات</value>
+  </data>
+  <data name="topology_rule_polygonsNoGap" xml:space="preserve">
+    <value>يجب ألا تترك المضلعات فجوات</value>
+  </data>
+  <data name="topology_kind_geometryValid_NoGeometry" xml:space="preserve">
+    <value>ليس للمعلم هندسة</value>
+  </data>
+  <data name="topology_kind_geometryValid_ClosedRing" xml:space="preserve">
+    <value>حلقة تكرر نقطتها الأولى</value>
+  </data>
+  <data name="topology_kind_geometryValid_RepeatedPoint" xml:space="preserve">
+    <value>النقطة نفسها مرتين متتاليتين</value>
+  </data>
+  <data name="topology_kind_geometryValid_TooFewPoints" xml:space="preserve">
+    <value>عدد النقاط غير كافٍ</value>
+  </data>
+  <data name="topology_kind_geometryValid_ZeroAreaRing" xml:space="preserve">
+    <value>حلقة بلا مساحة</value>
+  </data>
+  <data name="topology_kind_geometryValid_InvalidCoordinate" xml:space="preserve">
+    <value>إحداثي ليس رقمًا</value>
+  </data>
+  <data name="topology_kind_geometryValid_CoordinateOutOfRange" xml:space="preserve">
+    <value>خط طول أو خط عرض خارج النطاق</value>
+  </data>
+  <data name="topology_kind_geometryValid_WrongRingOrientation" xml:space="preserve">
+    <value>حلقة باتجاه خاطئ (تُصحَّح تلقائيًا)</value>
+  </data>
+  <data name="topology_kind_distinctPoints_samePlace" xml:space="preserve">
+    <value>نقاط في الموقع نفسه</value>
+  </data>
+  <data name="topology_kind_distinctPoints_close" xml:space="preserve">
+    <value>نقاط تفصل بينها {0}</value>
+  </data>
+  <data name="topology_kind_distinctPoints_chain" xml:space="preserve">
+    <value>نقاط مترابطة عبر بعضها، بامتداد {0}</value>
+  </data>
+  <data name="topology_kind_pointOnLine_nearLine" xml:space="preserve">
+    <value>نقطة على بُعد {0} من أقرب خط</value>
+  </data>
+  <data name="topology_kind_pointOnLine_farFromLines" xml:space="preserve">
+    <value>نقطة بعيدة عن كل الخطوط</value>
+  </data>
+  <data name="topology_kind_lineEndCovered_start" xml:space="preserve">
+    <value>لا توجد نقطة عند بداية الخط</value>
+  </data>
+  <data name="topology_kind_lineEndCovered_end" xml:space="preserve">
+    <value>لا توجد نقطة عند نهاية الخط</value>
+  </data>
+  <data name="topology_kind_lineCarriesPoints_tooFewPoints" xml:space="preserve">
+    <value>{0} نقطة فقط على الخط</value>
+  </data>
+  <data name="topology_kind_pointOnOneLine_onSeveralLines" xml:space="preserve">
+    <value>نقطة على {0} خط</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_missing" xml:space="preserve">
+    <value>نقطة بلا رقم</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_duplicate" xml:space="preserve">
+    <value>الرقم {0} مستخدم مرتين</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_outOfOrder" xml:space="preserve">
+    <value>الرقم {0} خارج الترتيب</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_gap" xml:space="preserve">
+    <value>{0} أرقام مفقودة</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_directionUndecided" xml:space="preserve">
+    <value>لا تتزايد الأرقام في أي من الاتجاهين</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_unsnappedEnd" xml:space="preserve">
+    <value>نهايتا خطين تفصل بينهما {0}، غير متصلتين</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_overshoot" xml:space="preserve">
+    <value>نهاية خط تتجاوز تقاطعًا بمقدار {0}</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_undershoot" xml:space="preserve">
+    <value>نهاية خط تقصر عن خط آخر بمقدار {0}</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_freeEnd" xml:space="preserve">
+    <value>نهاية خط غير متصلة بشيء</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_chain" xml:space="preserve">
+    <value>نهايات خطوط مترابطة عبر بعضها، بامتداد {0}</value>
+  </data>
+  <data name="topology_kind_partsJoin_gap" xml:space="preserve">
+    <value>فجوة بمقدار {0} بين الأجزاء</value>
+  </data>
+  <data name="topology_kind_partsJoin_detachedPart" xml:space="preserve">
+    <value>جزء يبعد {0} عن الأجزاء الأخرى</value>
+  </data>
+  <data name="topology_kind_partsJoin_branch" xml:space="preserve">
+    <value>{0} نهايات أجزاء تلتقي في موقع واحد</value>
+  </data>
+  <data name="topology_kind_partsJoin_outOfOrder" xml:space="preserve">
+    <value>أجزاء مخزنة خارج الترتيب</value>
+  </data>
+  <data name="topology_kind_partsJoin_reversedPart" xml:space="preserve">
+    <value>جزء مرسوم بعكس اتجاه الأجزاء الأخرى</value>
+  </data>
+  <data name="topology_kind_distinctLines_wholeLine" xml:space="preserve">
+    <value>خط مكرر</value>
+  </data>
+  <data name="topology_kind_distinctLines_sharedStretch" xml:space="preserve">
+    <value>خطوط تشترك في {0}</value>
+  </data>
+  <data name="topology_kind_touchAndReturn_touchAndReturn" xml:space="preserve">
+    <value>خطوط تتقاطع مرتين خلال {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_duplicate" xml:space="preserve">
+    <value>مضلع مكرر</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_inside" xml:space="preserve">
+    <value>مضلع داخل آخر، {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_overlap" xml:space="preserve">
+    <value>مضلعات تتداخل بمقدار {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_thinOverlap" xml:space="preserve">
+    <value>تداخل رفيع بمقدار {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoGap_sliver" xml:space="preserve">
+    <value>شريحة رفيعة بطول {0} بين المضلعات المتجاورة</value>
+  </data>
+  <data name="topology_kind_polygonsNoGap_enclosedGap" xml:space="preserve">
+    <value>فراغ بمساحة {0} محصور بين المضلعات</value>
+  </data>
+  <data name="topology_fix_title" xml:space="preserve">
+    <value>إصلاح</value>
+  </data>
+  <data name="topology_fix_preview" xml:space="preserve">
+    <value>معاينة</value>
+  </data>
+  <data name="topology_fix_apply" xml:space="preserve">
+    <value>تطبيق</value>
+  </data>
+  <data name="topology_fix_cancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="topology_fix_evaluating" xml:space="preserve">
+    <value>جارٍ فحص الإصلاح…</value>
+  </data>
+  <data name="topology_fix_pending" xml:space="preserve">
+    <value>إصلاح معلق</value>
+  </data>
+  <data name="topology_fix_pendingNote" xml:space="preserve">
+    <value>تم تطبيق إصلاح. احفظ الطبقة ثم افحص مجددًا.</value>
+  </data>
+  <data name="topology_fix_pendingFooter" xml:space="preserve">
+    <value>تم تطبيق {0} إصلاح. احفظ الطبقات للإبقاء عليها، ثم افحص مجددًا.</value>
+  </data>
+  <data name="topology_fix_failed" xml:space="preserve">
+    <value>تعذّر تطبيق الإصلاح: {0}</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_movePoint" xml:space="preserve">
+    <value>يتحرك {0} بمقدار {1} إلى {2}.</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_moveLineVertex" xml:space="preserve">
+    <value>يتحرك رأس من {2} بمقدار {1} إلى {0}.</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_insertLineVertex" xml:space="preserve">
+    <value>يحصل {2} على رأس جديد عند {0}، على بُعد {1} من مساره الحالي.</value>
+  </data>
+  <data name="topology_fix_reason_featureMissing" xml:space="preserve">
+    <value>لا إصلاح: أحد معالم هذه المشكلة لم يعد على الخريطة.</value>
+  </data>
+  <data name="topology_fix_reason_beyondFixDistance" xml:space="preserve">
+    <value>لا إصلاح: سيكون التحريك {0}، أي أكثر من مسافة الإصلاح ({1}). عدّله يدويًا.</value>
+  </data>
+  <data name="topology_fix_reason_doesNotResolve" xml:space="preserve">
+    <value>مرفوض: ستبقى المشكلة قائمة بعد الإصلاح.</value>
+  </data>
+  <data name="topology_fix_reason_createsIssue" xml:space="preserve">
+    <value>مرفوض: سيتسبب الإصلاح في «{0}» ({1}).</value>
+  </data>
+  <data name="topology_fix_reason_noPermission" xml:space="preserve">
+    <value>لا يُسمح لك بتحرير الهندسات.</value>
+  </data>
+  <data name="topology_fix_reason_notEditable" xml:space="preserve">
+    <value>لا يمكن تحرير الطبقة {0} هنا.</value>
+  </data>
+  <data name="topology_fix_reason_cannotRemove" xml:space="preserve">
+    <value>يحذف هذا الإصلاح معلمًا، ولا يمكن حذف المعالم هنا. عدّله يدويًا.</value>
+  </data>
+  <data name="topology_guide_correct" xml:space="preserve">
+    <value>البيانات الصحيحة</value>
+  </data>
+  <data name="topology_parameter_fixDistance" xml:space="preserve">
+    <value>مسافة الإصلاح (m)</value>
+  </data>
+  <data name="topology_fix_choose" xml:space="preserve">
+    <value>اختر ما يبقى:</value>
+  </data>
+  <data name="topology_fix_snapLineEnds_snap" xml:space="preserve">
+    <value>تلتقي نهايات {0} في نقطة واحدة (أطول تحريك {1}).</value>
+  </data>
+  <data name="topology_fix_trimOvershoot_trim" xml:space="preserve">
+    <value>يُقص {0} بمقدار {1} لينتهي على {2}.</value>
+  </data>
+  <data name="topology_fix_extendUndershoot_extendAlong" xml:space="preserve">
+    <value>يُمدَّد {0} بمقدار {1} على استقامته حتى يصل إلى {2}.</value>
+  </data>
+  <data name="topology_fix_extendUndershoot_joinNearest" xml:space="preserve">
+    <value>يحصل {0} على مقطع نهاية جديد طوله {1} إلى أقرب نقطة من {2}.</value>
+  </data>
+  <data name="topology_fix_deleteDuplicatePoints_keep" xml:space="preserve">
+    <value>الإبقاء على {0}؛ حذف {1}.</value>
+  </data>
+  <data name="topology_fix_deleteDuplicateLines_keep" xml:space="preserve">
+    <value>الإبقاء على {0}؛ حذف {1}.</value>
+  </data>
+  <data name="topology_fix_reason_notFound" xml:space="preserve">
+    <value>لا إصلاح: لم يعد موضع الإصلاح حيث وجده الفحص. افحص مجددًا.</value>
+  </data>
+  <data name="topology_fix_cutOverlap_cutFrom" xml:space="preserve">
+    <value>اقتطاع المساحة المشتركة من {0}؛ يبقى {1} كما هو.</value>
+  </data>
+  <data name="topology_fix_deleteDuplicatePolygons_keep" xml:space="preserve">
+    <value>الإبقاء على {0}؛ حذف {1}.</value>
+  </data>
+  <data name="topology_fix_giveGap_takeGap" xml:space="preserve">
+    <value>إضافة الفراغ إلى {0}.</value>
+  </data>
+  <data name="topology_fix_giveGap_takeSliver" xml:space="preserve">
+    <value>توسيع {0} ليلتقي بـ {1}، مع ملء الشريحة الرفيعة.</value>
+  </data>
+  <data name="topology_fix_reason_nothingLeft" xml:space="preserve">
+    <value>لا إصلاح: لن يتبقى شيء من {0}.</value>
+  </data>
 </root>

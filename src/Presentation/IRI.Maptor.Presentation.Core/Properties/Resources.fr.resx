@@ -3337,4 +3337,1471 @@
   <data name="dialog_fileGdbPicker_reasonUnreadable" xml:space="preserve">
     <value>Illisible</value>
   </data>
+  <data name="versioning_review_title" xml:space="preserve">
+    <value>Revue des versions</value>
+  </data>
+  <data name="versioning_review_refresh" xml:space="preserve">
+    <value>Actualiser</value>
+  </data>
+  <data name="versioning_review_lastRefresh" xml:space="preserve">
+    <value>Dernière actualisation</value>
+  </data>
+  <data name="versioning_review_competitions" xml:space="preserve">
+    <value>Concurrences</value>
+  </data>
+  <data name="versioning_review_singles" xml:space="preserve">
+    <value>Propositions uniques</value>
+  </data>
+  <data name="versioning_review_acceptSelected" xml:space="preserve">
+    <value>Accepter la sélection</value>
+  </data>
+  <data name="versioning_review_groupSelected" xml:space="preserve">
+    <value>Grouper en concurrence</value>
+  </data>
+  <data name="versioning_review_compare" xml:space="preserve">
+    <value>Examiner</value>
+  </data>
+  <data name="versioning_review_colFeature" xml:space="preserve">
+    <value>Entité</value>
+  </data>
+  <data name="versioning_review_colLayer" xml:space="preserve">
+    <value>Couche</value>
+  </data>
+  <data name="versioning_review_colCount" xml:space="preserve">
+    <value>Propositions</value>
+  </data>
+  <data name="versioning_review_colAuthors" xml:space="preserve">
+    <value>Éditeurs</value>
+  </data>
+  <data name="versioning_review_colAge" xml:space="preserve">
+    <value>Âge</value>
+  </data>
+  <data name="versioning_review_colSuggestions" xml:space="preserve">
+    <value>Chevauchements</value>
+  </data>
+  <data name="versioning_review_badgeStale" xml:space="preserve">
+    <value>Obsolète</value>
+  </data>
+  <data name="versioning_review_badgeOrphaned" xml:space="preserve">
+    <value>Orpheline</value>
+  </data>
+  <data name="versioning_review_badgeQueued" xml:space="preserve">
+    <value>En attente</value>
+  </data>
+  <data name="versioning_review_badgeDelete" xml:space="preserve">
+    <value>Suppression</value>
+  </data>
+  <data name="versioning_review_empty" xml:space="preserve">
+    <value>Aucune proposition en attente — les modifications soumises sur les couches versionnées apparaissent ici.</value>
+  </data>
+  <data name="versioning_compare_back" xml:space="preserve">
+    <value>Retour à la file</value>
+  </data>
+  <data name="versioning_compare_live" xml:space="preserve">
+    <value>Actuel</value>
+  </data>
+  <data name="versioning_compare_field" xml:space="preserve">
+    <value>Champ</value>
+  </data>
+  <data name="versioning_compare_selectWinner" xml:space="preserve">
+    <value>Choisir comme gagnante</value>
+  </data>
+  <data name="versioning_compare_closeNoWinner" xml:space="preserve">
+    <value>Tout rejeter (sans gagnante)</value>
+  </data>
+  <data name="versioning_compare_reason" xml:space="preserve">
+    <value>Motif du rejet</value>
+  </data>
+  <data name="versioning_compare_staleOverride" xml:space="preserve">
+    <value>Je sais que l'entité actuelle a changé depuis cette proposition (dérogation enregistrée)</value>
+  </data>
+  <data name="versioning_compare_showOnMap" xml:space="preserve">
+    <value>Afficher sur la carte</value>
+  </data>
+  <data name="versioning_compare_deleteProposal" xml:space="preserve">
+    <value>PROPOSITION DE SUPPRESSION</value>
+  </data>
+  <data name="versioning_compare_orphanBanner" xml:space="preserve">
+    <value>L'entité cible n'existe plus dans l'état actuel ; seul le rejet de toutes les propositions est possible.</value>
+  </data>
+  <data name="versioning_compare_queuedBanner" xml:space="preserve">
+    <value>Cette concurrence attend derrière une autre en attente d'approbation.</value>
+  </data>
+  <data name="versioning_approval_title" xml:space="preserve">
+    <value>File d'approbation</value>
+  </data>
+  <data name="versioning_approval_commitSelected" xml:space="preserve">
+    <value>Valider la sélection</value>
+  </data>
+  <data name="versioning_approval_return" xml:space="preserve">
+    <value>Renvoyer</value>
+  </data>
+  <data name="versioning_approval_returnReason" xml:space="preserve">
+    <value>Motif du renvoi</value>
+  </data>
+  <data name="versioning_approval_returnReasonRequired" xml:space="preserve">
+    <value>Un renvoi doit être motivé.</value>
+  </data>
+  <data name="versioning_approval_staleNeedsOverride" xml:space="preserve">
+    <value>La sélection contient des propositions obsolètes ; cochez la dérogation pour les valider.</value>
+  </data>
+  <data name="versioning_approval_colWinner" xml:space="preserve">
+    <value>Gagnante</value>
+  </data>
+  <data name="versioning_approval_colReviewer" xml:space="preserve">
+    <value>Réviseur</value>
+  </data>
+  <data name="versioning_approval_colType" xml:space="preserve">
+    <value>Modification</value>
+  </data>
+  <data name="versioning_approval_colResolved" xml:space="preserve">
+    <value>Résolue</value>
+  </data>
+  <data name="versioning_myPending_title" xml:space="preserve">
+    <value>Mes propositions en attente</value>
+  </data>
+  <data name="versioning_myPending_colSession" xml:space="preserve">
+    <value>Session</value>
+  </data>
+  <data name="versioning_myPending_colStatus" xml:space="preserve">
+    <value>Statut</value>
+  </data>
+  <data name="versioning_myPending_colSubmitted" xml:space="preserve">
+    <value>Soumise</value>
+  </data>
+  <data name="versioning_status_pendingReview" xml:space="preserve">
+    <value>En attente de revue</value>
+  </data>
+  <data name="versioning_status_inCompetition" xml:space="preserve">
+    <value>En concurrence ({0})</value>
+  </data>
+  <data name="versioning_status_underReview" xml:space="preserve">
+    <value>En cours de revue</value>
+  </data>
+  <data name="versioning_status_committed" xml:space="preserve">
+    <value>Validée</value>
+  </data>
+  <data name="versioning_status_rejected" xml:space="preserve">
+    <value>Rejetée</value>
+  </data>
+  <data name="versioning_status_withdrawn" xml:space="preserve">
+    <value>Retirée</value>
+  </data>
+  <data name="versioning_submit_title" xml:space="preserve">
+    <value>Session soumise</value>
+  </data>
+  <data name="versioning_submit_summary" xml:space="preserve">
+    <value>{0} proposition(s) soumise(s) en attente. La carte continue d'afficher l'état validé ; suivez l'avancement dans « Mes propositions en attente ».</value>
+  </data>
+  <data name="versioning_submit_competitions" xml:space="preserve">
+    <value>{0} sont entrées en concurrence.</value>
+  </data>
+  <data name="versioning_submit_superseded" xml:space="preserve">
+    <value>{0} ont remplacé votre proposition précédente.</value>
+  </data>
+  <data name="versioning_submit_overlaps" xml:space="preserve">
+    <value>{0} chevauchent des entités existantes (à titre indicatif).</value>
+  </data>
+  <data name="versioning_timeline_featureId" xml:space="preserve">
+    <value>Identifiant de l'entité</value>
+  </data>
+  <data name="versioning_timeline_load" xml:space="preserve">
+    <value>Afficher l'historique</value>
+  </data>
+  <data name="versioning_timeline_liveNow" xml:space="preserve">
+    <value>État actuel</value>
+  </data>
+  <data name="versioning_timeline_deleted" xml:space="preserve">
+    <value>Cette entité a été supprimée</value>
+  </data>
+  <data name="versioning_timeline_colUntil" xml:space="preserve">
+    <value>Valide jusqu'au</value>
+  </data>
+  <data name="versioning_timeline_colReplacedBy" xml:space="preserve">
+    <value>Remplacée par</value>
+  </data>
+  <data name="versioning_timeline_colApprover" xml:space="preserve">
+    <value>Approbateur</value>
+  </data>
+  <data name="versioning_timeline_colBatch" xml:space="preserve">
+    <value>Lot de validation</value>
+  </data>
+  <data name="versioning_timeline_attributes" xml:space="preserve">
+    <value>Valeurs</value>
+  </data>
+  <data name="versioning_timeline_empty" xml:space="preserve">
+    <value>Aucun historique enregistré pour cette entité</value>
+  </data>
+  <data name="versioning_timeline_featureIdInvalid" xml:space="preserve">
+    <value>Sélectionnez une couche et saisissez un identifiant d'entité valide</value>
+  </data>
+  <data name="versioning_inbox_markAllRead" xml:space="preserve">
+    <value>Tout marquer comme lu</value>
+  </data>
+  <data name="versioning_inbox_colWhen" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="versioning_inbox_colEvent" xml:space="preserve">
+    <value>Événement</value>
+  </data>
+  <data name="versioning_inbox_colDetails" xml:space="preserve">
+    <value>Détails</value>
+  </data>
+  <data name="versioning_inbox_unread" xml:space="preserve">
+    <value>{0} non lue(s)</value>
+  </data>
+  <data name="versioning_inbox_items" xml:space="preserve">
+    <value>{0} élément(s)</value>
+  </data>
+  <data name="versioning_inbox_features" xml:space="preserve">
+    <value>Entités : {0}</value>
+  </data>
+  <data name="versioning_inbox_reason" xml:space="preserve">
+    <value>Motif : {0}</value>
+  </data>
+  <data name="versioning_inbox_typeCompetitionJoined" xml:space="preserve">
+    <value>Votre proposition est entrée en concurrence</value>
+  </data>
+  <data name="versioning_inbox_typeCommitted" xml:space="preserve">
+    <value>Vos propositions ont été validées</value>
+  </data>
+  <data name="versioning_inbox_typeRejected" xml:space="preserve">
+    <value>Vos propositions ont été rejetées</value>
+  </data>
+  <data name="versioning_inbox_typeClosedNoWinner" xml:space="preserve">
+    <value>Concurrence close sans gagnante</value>
+  </data>
+  <data name="versioning_inbox_typeReturned" xml:space="preserve">
+    <value>Votre décision a été renvoyée par l'approbateur</value>
+  </data>
+  <data name="versioning_inbox_typeOrphaned" xml:space="preserve">
+    <value>L'entité cible n'existe plus</value>
+  </data>
+  <data name="message_error_versionedLayerWriteRejected" xml:space="preserve">
+    <value>Cette couche est versionnée ; les modifications doivent être soumises comme propositions pour revue, et non enregistrées directement.</value>
+  </data>
+  <data name="message_error_versioningInvalidSubmission" xml:space="preserve">
+    <value>La session soumise n'est pas valide ; rechargez la couche et réessayez.</value>
+  </data>
+  <data name="message_error_versioningInvalidProposal" xml:space="preserve">
+    <value>L'une des modifications proposées n'est pas valide ; rechargez la couche et réessayez.</value>
+  </data>
+  <data name="message_error_versioningUnknownVersionedLayer" xml:space="preserve">
+    <value>Cette couche n'est pas enregistrée pour le versionnement.</value>
+  </data>
+  <data name="message_error_versioningVersioningNotEnabled" xml:space="preserve">
+    <value>Le versionnement n'est pas activé pour cette couche ; enregistrez par la voie normale.</value>
+  </data>
+  <data name="message_error_versioningProposalUnderApproval" xml:space="preserve">
+    <value>Votre proposition précédente pour cette entité attend l'approbation finale ; attendez sa validation ou son renvoi avant de soumettre à nouveau.</value>
+  </data>
+  <data name="message_error_versioningConcurrentSubmission" xml:space="preserve">
+    <value>Une autre soumission a touché la même entité au même moment ; actualisez et réessayez.</value>
+  </data>
+  <data name="message_error_versioningCompetitionAlreadyResolved" xml:space="preserve">
+    <value>La concurrence a été modifiée ou résolue par un autre réviseur ; actualisez et réessayez.</value>
+  </data>
+  <data name="message_error_versioningConcurrentModification" xml:space="preserve">
+    <value>Une modification simultanée a eu lieu ; actualisez et réessayez.</value>
+  </data>
+  <data name="message_error_versioningConcurrentLiveChange" xml:space="preserve">
+    <value>Une concurrence ou une entité actuelle a changé pendant la validation ; rien n'a été validé — actualisez et réessayez.</value>
+  </data>
+  <data name="message_error_versioningStaleBaseRequiresOverride" xml:space="preserve">
+    <value>L'entité actuelle a changé après la rédaction de cette proposition ; l'accepter exige une dérogation explicite pour obsolescence.</value>
+  </data>
+  <data name="message_error_versioningOrphanedTarget" xml:space="preserve">
+    <value>L'entité cible n'existe plus ; renvoyez plutôt la concurrence. Rien n'a été validé.</value>
+  </data>
+  <data name="message_error_versioningOrphanedTargetRejectOnly" xml:space="preserve">
+    <value>L'entité cible n'existe plus dans l'état actuel ; seule la clôture sans gagnante est permise.</value>
+  </data>
+  <data name="message_error_versioningRejectionReasonRequired" xml:space="preserve">
+    <value>Un motif de rejet est obligatoire.</value>
+  </data>
+  <data name="message_error_versioningReturnReasonRequired" xml:space="preserve">
+    <value>Un renvoi doit indiquer un motif.</value>
+  </data>
+  <data name="message_error_versioningUnknownCompetition" xml:space="preserve">
+    <value>La concurrence est introuvable ; elle a peut-être été résolue ou supprimée — actualisez.</value>
+  </data>
+  <data name="message_error_versioningUnknownProposal" xml:space="preserve">
+    <value>La proposition est introuvable dans cette concurrence ; actualisez.</value>
+  </data>
+  <data name="message_error_versioningUnknownSuggestion" xml:space="preserve">
+    <value>La suggestion de chevauchement est introuvable ; actualisez.</value>
+  </data>
+  <data name="message_error_versioningInvalidGrouping" xml:space="preserve">
+    <value>Ces propositions ne peuvent pas être groupées ; seules des créations en attente d'une même couche peuvent l'être.</value>
+  </data>
+  <data name="message_error_versioningCompetitionBlockedByPredecessor" xml:space="preserve">
+    <value>Cette concurrence attend derrière une concurrence précédente non résolue ; résolvez d'abord celle-ci.</value>
+  </data>
+  <data name="message_error_versioningEmptyCompetition" xml:space="preserve">
+    <value>La concurrence n'a aucune proposition active.</value>
+  </data>
+  <data name="message_error_versioningNotASingleton" xml:space="preserve">
+    <value>Cette concurrence compte plusieurs propositions ; utilisez la vue de comparaison.</value>
+  </data>
+  <data name="message_error_versioningInvalidCommit" xml:space="preserve">
+    <value>Le lot de validation est vide ou non valide.</value>
+  </data>
+  <data name="message_error_versioningCompetitionNotResolved" xml:space="preserve">
+    <value>La concurrence n'est pas à l'état résolu ; actualisez la file.</value>
+  </data>
+  <data name="message_error_versioningSchemaMismatch" xml:space="preserve">
+    <value>La proposition ne correspond plus au schéma de la couche ; elle ne peut pas être validée.</value>
+  </data>
+  <data name="versioning_map_pendingStatus" xml:space="preserve">
+    <value>Propositions en attente</value>
+  </data>
+  <data name="versioning_map_history" xml:space="preserve">
+    <value>Historique de l'entité</value>
+  </data>
+  <data name="versioning_map_myPendingOverlay" xml:space="preserve">
+    <value>Mes propositions sur la carte</value>
+  </data>
+  <data name="versioning_map_selectFeature" xml:space="preserve">
+    <value>Sélectionnez d'abord une entité</value>
+  </data>
+  <data name="versioning_map_noPending" xml:space="preserve">
+    <value>Aucune proposition en attente pour cette entité</value>
+  </data>
+  <data name="versioning_map_pendingSummary" xml:space="preserve">
+    <value>{0} proposition(s) en attente</value>
+  </data>
+  <data name="versioning_map_pendingAuthors" xml:space="preserve">
+    <value>Éditeurs : {0}</value>
+  </data>
+  <data name="versioning_map_pendingHasOwn" xml:space="preserve">
+    <value>Comprend votre propre proposition</value>
+  </data>
+  <data name="versioning_map_overlayEmpty" xml:space="preserve">
+    <value>Vous n'avez aucune proposition en attente pour cette couche</value>
+  </data>
+  <data name="versioning_map_overlayName" xml:space="preserve">
+    <value>Mes propositions — {0}</value>
+  </data>
+  <data name="versioning_changeType_create" xml:space="preserve">
+    <value>Création</value>
+  </data>
+  <data name="versioning_changeType_update" xml:space="preserve">
+    <value>Mise à jour</value>
+  </data>
+  <data name="versioning_changeType_delete" xml:space="preserve">
+    <value>Suppression</value>
+  </data>
+  <data name="versioning_myPending_empty" xml:space="preserve">
+    <value>Vous n'avez aucune proposition en attente.</value>
+  </data>
+  <data name="versioning_approval_empty" xml:space="preserve">
+    <value>Rien n'attend d'approbation.</value>
+  </data>
+  <data name="versioning_inbox_empty" xml:space="preserve">
+    <value>Vous n'avez aucune notification.</value>
+  </data>
+  <data name="versioning_compare_empty" xml:space="preserve">
+    <value>Sélectionnez une concurrence dans la file de revue pour comparer ses propositions.</value>
+  </data>
+  <data name="versioning_submit_confirm" xml:space="preserve">
+    <value>{0} modification(s) de la couche {1} seront soumises pour revue, et non enregistrées directement. La carte continue d'afficher l'état approuvé jusqu'à leur validation par un approbateur. Soumettre maintenant ?</value>
+  </data>
+  <data name="versioning_layer_badgeTooltip" xml:space="preserve">
+    <value>Couche versionnée — Enregistrer soumet vos modifications pour revue au lieu de les écrire directement.</value>
+  </data>
+  <data name="versioning_review_ageDays" xml:space="preserve">
+    <value>{0} j</value>
+  </data>
+  <data name="versioning_review_ageHours" xml:space="preserve">
+    <value>{0} h</value>
+  </data>
+  <data name="versioning_review_ageMinutes" xml:space="preserve">
+    <value>{0} min</value>
+  </data>
+  <data name="dialog_goto_quickEntry" xml:space="preserve">
+    <value>Saisie rapide</value>
+  </data>
+  <data name="dialog_goto_quickEntryWatermark" xml:space="preserve">
+    <value>Collez des coordonnées — 35.6892, 51.3890 · 35°41′21″N 51°23′20″E · 39N 534123 3950123 · lien de carte</value>
+  </data>
+  <data name="dialog_goto_quickEntryRecognized" xml:space="preserve">
+    <value>Reconnu :</value>
+  </data>
+  <data name="dialog_goto_quickEntryNotRecognized" xml:space="preserve">
+    <value>Non reconnu comme coordonnée</value>
+  </data>
+  <data name="dialog_goto_tabGeodetic" xml:space="preserve">
+    <value>Géodésiques</value>
+  </data>
+  <data name="dialog_goto_tabUtm" xml:space="preserve">
+    <value>UTM</value>
+  </data>
+  <data name="dialog_goto_tabProjected" xml:space="preserve">
+    <value>Projetées</value>
+  </data>
+  <data name="dialog_goto_format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="dialog_goto_datum" xml:space="preserve">
+    <value>Datum (ellipsoïde)</value>
+  </data>
+  <data name="dialog_goto_latitude" xml:space="preserve">
+    <value>Latitude</value>
+  </data>
+  <data name="dialog_goto_longitude" xml:space="preserve">
+    <value>Longitude</value>
+  </data>
+  <data name="dialog_goto_hemisphere" xml:space="preserve">
+    <value>Hémisphère</value>
+  </data>
+  <data name="dialog_goto_decimalHint" xml:space="preserve">
+    <value>Les valeurs négatives sont au sud et à l'ouest. Une saisie DMS telle que 35 41 21.1 N est aussi acceptée ici.</value>
+  </data>
+  <data name="dialog_goto_easting" xml:space="preserve">
+    <value>Abscisse (Est)</value>
+  </data>
+  <data name="dialog_goto_northing" xml:space="preserve">
+    <value>Ordonnée (Nord)</value>
+  </data>
+  <data name="dialog_goto_projection" xml:space="preserve">
+    <value>Projection</value>
+  </data>
+  <data name="dialog_goto_projectionCustom" xml:space="preserve">
+    <value>personnalisée</value>
+  </data>
+  <data name="dialog_goto_paramCentralMeridian" xml:space="preserve">
+    <value>Méridien central</value>
+  </data>
+  <data name="dialog_goto_paramLatitudeOfOrigin" xml:space="preserve">
+    <value>Latitude d'origine</value>
+  </data>
+  <data name="dialog_goto_paramScaleFactor" xml:space="preserve">
+    <value>Facteur d'échelle</value>
+  </data>
+  <data name="dialog_goto_paramFalseEasting" xml:space="preserve">
+    <value>Fausse abscisse (Est)</value>
+  </data>
+  <data name="dialog_goto_paramFalseNorthing" xml:space="preserve">
+    <value>Fausse ordonnée (Nord)</value>
+  </data>
+  <data name="dialog_goto_paramStandardParallel1" xml:space="preserve">
+    <value>Parallèle standard 1</value>
+  </data>
+  <data name="dialog_goto_paramStandardParallel2" xml:space="preserve">
+    <value>Parallèle standard 2</value>
+  </data>
+  <data name="dialog_goto_x" xml:space="preserve">
+    <value>X (Est)</value>
+  </data>
+  <data name="dialog_goto_y" xml:space="preserve">
+    <value>Y (Nord)</value>
+  </data>
+  <data name="dialog_goto_position" xml:space="preserve">
+    <value>Position</value>
+  </data>
+  <data name="dialog_goto_positionSubtitle" xml:space="preserve">
+    <value>WGS 84 · latitude, longitude</value>
+  </data>
+  <data name="dialog_goto_copy" xml:space="preserve">
+    <value>Copier les coordonnées</value>
+  </data>
+  <data name="dialog_goto_statusReady" xml:space="preserve">
+    <value>Prêt</value>
+  </data>
+  <data name="dialog_goto_statusInvalid" xml:space="preserve">
+    <value>Vérifiez la saisie</value>
+  </data>
+  <data name="dialog_goto_errorLatitudeRange" xml:space="preserve">
+    <value>La latitude doit être comprise entre −90° et 90°</value>
+  </data>
+  <data name="dialog_goto_errorLongitudeRange" xml:space="preserve">
+    <value>La longitude doit être comprise entre −180° et 180°</value>
+  </data>
+  <data name="dialog_goto_errorDmsComponents" xml:space="preserve">
+    <value>Les minutes et les secondes doivent être comprises entre 0 et 60</value>
+  </data>
+  <data name="dialog_goto_errorNumber" xml:space="preserve">
+    <value>Saisissez une valeur numérique pour {0}</value>
+  </data>
+  <data name="dialog_goto_errorNorthingRange" xml:space="preserve">
+    <value>L'ordonnée (Nord) doit être comprise entre 0 et 10 000 000 m</value>
+  </data>
+  <data name="dialog_goto_warningEastingRange" xml:space="preserve">
+    <value>L'abscisse (Est) est hors de la plage habituelle d'un fuseau UTM (100 000 – 900 000 m)</value>
+  </data>
+  <data name="dialog_goto_errorProjection" xml:space="preserve">
+    <value>Ces valeurs ne correspondent à aucun lieu sur la Terre</value>
+  </data>
+  <data name="srs_lccTitle" xml:space="preserve">
+    <value>Lambert conique conforme</value>
+  </data>
+  <data name="dialog_goto_coordinateSystem" xml:space="preserve">
+    <value>Système de coordonnées</value>
+  </data>
+  <data name="layerSettings_statistics_field" xml:space="preserve">
+    <value>Champ</value>
+  </data>
+  <data name="layerSettings_statistics_compute" xml:space="preserve">
+    <value>Calculer</value>
+  </data>
+  <data name="layerSettings_statistics_liveNotSupported" xml:space="preserve">
+    <value>Cette couche est en mode Live : ses entités restent sur le serveur, ses statistiques ne sont donc pas encore disponibles. Passez la couche en mode Cache pour les voir.</value>
+  </data>
+  <data name="layerSettings_statistics_emptyState" xml:space="preserve">
+    <value>Choisissez un champ et cliquez sur Calculer</value>
+  </data>
+  <data name="layerSettings_statistics_failed" xml:space="preserve">
+    <value>Le calcul des statistiques a échoué :</value>
+  </data>
+  <data name="layerSettings_statistics_summary" xml:space="preserve">
+    <value>Détails</value>
+  </data>
+  <data name="layerSettings_statistics_topValues" xml:space="preserve">
+    <value>Valeurs les plus fréquentes</value>
+  </data>
+  <data name="layerSettings_statistics_value" xml:space="preserve">
+    <value>Valeur</value>
+  </data>
+  <data name="layerSettings_statistics_count" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="layerSettings_statistics_featureCount" xml:space="preserve">
+    <value>Entités</value>
+  </data>
+  <data name="layerSettings_statistics_emptyCount" xml:space="preserve">
+    <value>Valeurs vides</value>
+  </data>
+  <data name="layerSettings_statistics_distinctCount" xml:space="preserve">
+    <value>Valeurs distinctes</value>
+  </data>
+  <data name="layerSettings_statistics_min" xml:space="preserve">
+    <value>Minimum</value>
+  </data>
+  <data name="layerSettings_statistics_max" xml:space="preserve">
+    <value>Maximum</value>
+  </data>
+  <data name="layerSettings_statistics_sum" xml:space="preserve">
+    <value>Somme</value>
+  </data>
+  <data name="layerSettings_statistics_mean" xml:space="preserve">
+    <value>Moyenne</value>
+  </data>
+  <data name="layerSettings_statistics_median" xml:space="preserve">
+    <value>Médiane</value>
+  </data>
+  <data name="layerSettings_statistics_standardDeviation" xml:space="preserve">
+    <value>Écart type</value>
+  </data>
+  <data name="layerSettings_statistics_minDate" xml:space="preserve">
+    <value>La plus ancienne</value>
+  </data>
+  <data name="layerSettings_statistics_maxDate" xml:space="preserve">
+    <value>La plus récente</value>
+  </data>
+  <data name="layerSettings_statistics_emptyValue" xml:space="preserve">
+    <value>(vide)</value>
+  </data>
+  <data name="layerSettings_statistics_modeField" xml:space="preserve">
+    <value>Statistiques du champ</value>
+  </data>
+  <data name="layerSettings_statistics_modeGroupBy" xml:space="preserve">
+    <value>Grouper par champ</value>
+  </data>
+  <data name="layerSettings_statistics_groupByField" xml:space="preserve">
+    <value>Grouper par</value>
+  </data>
+  <data name="layerSettings_statistics_sumField" xml:space="preserve">
+    <value>Total de</value>
+  </data>
+  <data name="layerSettings_statistics_none" xml:space="preserve">
+    <value>(aucun)</value>
+  </data>
+  <data name="layerSettings_statistics_groupCount" xml:space="preserve">
+    <value>Groupes</value>
+  </data>
+  <data name="layerSettings_statistics_totalLength" xml:space="preserve">
+    <value>Longueur totale</value>
+  </data>
+  <data name="layerSettings_statistics_totalArea" xml:space="preserve">
+    <value>Surface totale</value>
+  </data>
+  <data name="layerSettings_statistics_sumOf" xml:space="preserve">
+    <value>Total de {0}</value>
+  </data>
+  <data name="layerSettings_statistics_groups" xml:space="preserve">
+    <value>Groupes</value>
+  </data>
+  <data name="layerSettings_statistics_groupsTruncated" xml:space="preserve">
+    <value>Affichage des {0} premiers groupes sur {1}.</value>
+  </data>
+  <data name="layerSettings_statistics_invalidNote" xml:space="preserve">
+    <value>{0} valeurs n'ont pas pu être lues selon le type du champ et sont exclues.</value>
+  </data>
+  <data name="layerSettings_statistics_total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="layerSettings_statistics_topOfDistinct" xml:space="preserve">
+    <value>{0} valeurs sur {1}</value>
+  </data>
+  <data name="layerSettings_statistics_sortedByCount" xml:space="preserve">
+    <value>Triées par nombre</value>
+  </data>
+  <data name="layerSettings_statistics_modeGeometry" xml:space="preserve">
+    <value>Géométrie</value>
+  </data>
+  <data name="layerSettings_statistics_emptyGeometryCount" xml:space="preserve">
+    <value>Géométries vides</value>
+  </data>
+  <data name="layerSettings_statistics_distribution" xml:space="preserve">
+    <value>Distribution</value>
+  </data>
+  <data name="layerSettings_statistics_lengthPerFeature" xml:space="preserve">
+    <value>Longueur par entité ({0})</value>
+  </data>
+  <data name="layerSettings_statistics_areaPerFeature" xml:space="preserve">
+    <value>Surface par entité ({0})</value>
+  </data>
+  <data name="layerSettings_statistics_binCount" xml:space="preserve">
+    <value>{0} classes</value>
+  </data>
+  <data name="layerSettings_statistics_noMeasureNote" xml:space="preserve">
+    <value>La longueur et la surface ne s'appliquent qu'aux couches de lignes et de polygones.</value>
+  </data>
+  <data name="layerSettings_statistics_unmeasuredNote" xml:space="preserve">
+    <value>{0} géométries n'ont pas pu être mesurées et sont exclues.</value>
+  </data>
+  <data name="layerSettings_statistics_viewHistogram" xml:space="preserve">
+    <value>Graphique</value>
+  </data>
+  <data name="layerSettings_statistics_viewTable" xml:space="preserve">
+    <value>Valeurs principales</value>
+  </data>
+  <data name="layerSettings_statistics_geometryHint" xml:space="preserve">
+    <value>Longueur géodésique (couches de lignes) ou surface (couches de polygones) de chaque entité, sur l'ellipsoïde WGS84.</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainCount" xml:space="preserve">
+    <value>Hors du domaine</value>
+  </data>
+  <data name="layerSettings_statistics_domainUsage" xml:space="preserve">
+    <value>{0} valeurs du domaine sur {1} utilisées</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainNote" xml:space="preserve">
+    <value>{0} entités ont une valeur hors du domaine du champ.</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainTooltip" xml:space="preserve">
+    <value>N'est pas une valeur du domaine du champ</value>
+  </data>
+  <data name="sldGenerator_title" xml:space="preserve">
+    <value>Générer des règles à partir des valeurs d'un champ</value>
+  </data>
+  <data name="sldGenerator_field" xml:space="preserve">
+    <value>Champ</value>
+  </data>
+  <data name="sldGenerator_geometry" xml:space="preserve">
+    <value>Géométrie</value>
+  </data>
+  <data name="sldGenerator_geometryPoint" xml:space="preserve">
+    <value>Point</value>
+  </data>
+  <data name="sldGenerator_geometryLine" xml:space="preserve">
+    <value>Ligne</value>
+  </data>
+  <data name="sldGenerator_geometryPolygon" xml:space="preserve">
+    <value>Polygone</value>
+  </data>
+  <data name="sldGenerator_values" xml:space="preserve">
+    <value>Valeurs</value>
+  </data>
+  <data name="sldGenerator_valuesData" xml:space="preserve">
+    <value>Valeurs présentes dans la couche</value>
+  </data>
+  <data name="sldGenerator_valuesDomain" xml:space="preserve">
+    <value>Toutes les valeurs du domaine</value>
+  </data>
+  <data name="sldGenerator_colors" xml:space="preserve">
+    <value>Couleurs</value>
+  </data>
+  <data name="sldGenerator_colorsPalette" xml:space="preserve">
+    <value>Palette intégrée</value>
+  </data>
+  <data name="sldGenerator_colorsDomain" xml:space="preserve">
+    <value>Couleurs du domaine</value>
+  </data>
+  <data name="sldGenerator_includeOther" xml:space="preserve">
+    <value>Ajouter une règle pour les autres valeurs</value>
+  </data>
+  <data name="sldGenerator_replaceExisting" xml:space="preserve">
+    <value>Remplacer les règles actuelles</value>
+  </data>
+  <data name="sldGenerator_preview" xml:space="preserve">
+    <value>Aperçu</value>
+  </data>
+  <data name="sldGenerator_noField" xml:space="preserve">
+    <value>Aucun champ pour la catégorisation</value>
+  </data>
+  <data name="sldGenerator_noValues" xml:space="preserve">
+    <value>Le champ n'a aucune valeur</value>
+  </data>
+  <data name="sldGenerator_ruleCount" xml:space="preserve">
+    <value>{0} règles</value>
+  </data>
+  <data name="sldGenerator_previewCut" xml:space="preserve">
+    <value>(les {0} premières sont affichées)</value>
+  </data>
+  <data name="sldGenerator_failed" xml:space="preserve">
+    <value>La lecture des valeurs a échoué :</value>
+  </data>
+  <data name="sldGenerator_generate" xml:space="preserve">
+    <value>Générer</value>
+  </data>
+  <data name="sldGenerator_otherValues" xml:space="preserve">
+    <value>Autres valeurs</value>
+  </data>
+  <data name="layerSettings_general_summary" xml:space="preserve">
+    <value>Résumé de la couche</value>
+  </data>
+  <data name="layerSettings_general_loadMode" xml:space="preserve">
+    <value>Mode de chargement :</value>
+  </data>
+  <data name="layerSettings_general_loadModeCache" xml:space="preserve">
+    <value>Tout charger en une fois (Cache)</value>
+  </data>
+  <data name="layerSettings_general_loadModeLive" xml:space="preserve">
+    <value>Charger selon la vue de la carte (Live)</value>
+  </data>
+  <data name="layerSettings_general_featureCount" xml:space="preserve">
+    <value>Entités :</value>
+  </data>
+  <data name="layerSettings_general_featureCountLive" xml:space="preserve">
+    <value>Non disponible en mode Live (seule la zone visible est chargée)</value>
+  </data>
+  <data name="layerSettings_general_fieldCount" xml:space="preserve">
+    <value>Champs :</value>
+  </data>
+  <data name="layerSettings_general_geometryType" xml:space="preserve">
+    <value>Type de géométrie :</value>
+  </data>
+  <data name="layerSettings_general_srs" xml:space="preserve">
+    <value>Référence spatiale :</value>
+  </data>
+  <data name="layerSettings_general_originalSrs" xml:space="preserve">
+    <value>Référence spatiale source :</value>
+  </data>
+  <data name="layerSettings_general_extentWgs84" xml:space="preserve">
+    <value>Étendue (WGS84) :</value>
+  </data>
+  <data name="layerSettings_general_extentUtm" xml:space="preserve">
+    <value>Étendue (UTM {0}) :</value>
+  </data>
+  <data name="layerSettings_general_unknown" xml:space="preserve">
+    <value>Inconnu</value>
+  </data>
+  <data name="layerStyles_ruleCount" xml:space="preserve">
+    <value>{0} règles</value>
+  </data>
+  <data name="layerStyles_untitled" xml:space="preserve">
+    <value>Style sans titre</value>
+  </data>
+  <data name="layerStyles_newTitle" xml:space="preserve">
+    <value>Style {0}</value>
+  </data>
+  <data name="layerStyles_copyTitle" xml:space="preserve">
+    <value>{0} (copie)</value>
+  </data>
+  <data name="layerStyles_addFirst" xml:space="preserve">
+    <value>Ajouter un style</value>
+  </data>
+  <data name="layerStyles_adminBanner" xml:space="preserve">
+    <value>Les utilisateurs démarrent sur le style par défaut et peuvent passer aux autres dans l'onglet Symbologie ou depuis la légende de la carte.</value>
+  </data>
+  <data name="layerStyles_add" xml:space="preserve">
+    <value>Ajouter</value>
+  </data>
+  <data name="layerStyles_copy" xml:space="preserve">
+    <value>Copier</value>
+  </data>
+  <data name="layerStyles_edit" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="layerStyles_setDefault" xml:space="preserve">
+    <value>Définir par défaut</value>
+  </data>
+  <data name="layerStyles_moveUp" xml:space="preserve">
+    <value>Monter</value>
+  </data>
+  <data name="layerStyles_moveDown" xml:space="preserve">
+    <value>Descendre</value>
+  </data>
+  <data name="layerStyles_delete" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="layerStyles_defaultBadge" xml:space="preserve">
+    <value>Par défaut</value>
+  </data>
+  <data name="layerStyles_titleWatermark" xml:space="preserve">
+    <value>Titre du style</value>
+  </data>
+  <data name="layerStyles_legend_pick" xml:space="preserve">
+    <value>Style</value>
+  </data>
+  <data name="layerStyles_tab_notAvailable" xml:space="preserve">
+    <value>Cette couche n'a pas de symbologie à définir.</value>
+  </data>
+  <data name="layerStyles_tab_styles" xml:space="preserve">
+    <value>Styles</value>
+  </data>
+  <data name="layerStyles_tab_singleStyle" xml:space="preserve">
+    <value>Cette couche a un seul style. L'administrateur peut en ajouter d'autres dans les paramètres de couche du serveur.</value>
+  </data>
+  <data name="layerStyles_tab_legend" xml:space="preserve">
+    <value>Légende</value>
+  </data>
+  <data name="layerStyles_tab_exportLegend" xml:space="preserve">
+    <value>Exporter la légende en PNG</value>
+  </data>
+  <data name="layerStyles_tab_quickEdit" xml:space="preserve">
+    <value>Modification rapide</value>
+  </data>
+  <data name="layerStyles_tab_myChanges" xml:space="preserve">
+    <value>Mes modifications</value>
+  </data>
+  <data name="layerStyles_tab_noChanges" xml:space="preserve">
+    <value>Aucune : la couche est dessinée telle que le serveur la définit.</value>
+  </data>
+  <data name="layerStyles_tab_hasChanges" xml:space="preserve">
+    <value>Vous avez modifié la symbologie de cette couche. La modification est conservée dans votre projet ; Rétablir les styles de l'administrateur ramène les styles du serveur.</value>
+  </data>
+  <data name="serverLayerSettings_error_styleTitleRequired" xml:space="preserve">
+    <value>Quand une couche a plusieurs styles, chacun doit avoir un titre.</value>
+  </data>
+  <data name="serverLayerSettings_error_duplicateStyleTitle" xml:space="preserve">
+    <value>Deux styles ont le même titre.</value>
+  </data>
+  <data name="layerStyles_wholeLayer" xml:space="preserve">
+    <value>Couche entière</value>
+  </data>
+  <data name="layerStyles_wholeLayerHint" xml:space="preserve">
+    <value>La plage de zoom et l'opacité s'appliquent à la couche quelle que soit sa symbologie.</value>
+  </data>
+  <data name="layerStyles_modeSimple" xml:space="preserve">
+    <value>Simple</value>
+  </data>
+  <data name="layerStyles_modeStyles" xml:space="preserve">
+    <value>Styles (SLD)</value>
+  </data>
+  <data name="layerStyles_simpleHint" xml:space="preserve">
+    <value>Un style simple à partir des couleurs ci-dessous. Passez à Styles pour des règles par attribut et pour plusieurs symbologies au choix des utilisateurs.</value>
+  </data>
+  <data name="layerStyles_previewOf" xml:space="preserve">
+    <value>Légende : {0}</value>
+  </data>
+  <data name="layerStyles_switchToSimpleConfirm" xml:space="preserve">
+    <value>Supprimer le(s) {0} style(s) de cette couche ? Les couleurs simples seront utilisées à la place.</value>
+  </data>
+  <data name="layerStyles_labelsNote" xml:space="preserve">
+    <value>Cette couche est dessinée avec des styles SLD : cette étiquette est dessinée par-dessus le style actif, quel qu'il soit.</value>
+  </data>
+  <data name="layerStyles_tab_changedStyles" xml:space="preserve">
+    <value>Vous avez modifié ces styles sur cet ordinateur : {0}. Les modifications sont conservées dans votre projet ; Rétablir les styles de l'administrateur ramène les styles du serveur.</value>
+  </data>
+  <data name="layerStyles_tab_simpleHint" xml:space="preserve">
+    <value>Cette couche est dessinée avec des couleurs simples ; utilisez Modification rapide pour les changer.</value>
+  </data>
+  <data name="layerStyles_tab_editInSld" xml:space="preserve">
+    <value>Modifier le style dans l'éditeur SLD</value>
+  </data>
+  <data name="layerStyles_tab_restore" xml:space="preserve">
+    <value>Rétablir les styles de l'administrateur</value>
+  </data>
+  <data name="layerStyles_tab_restoreTip" xml:space="preserve">
+    <value>Annuler vos modifications de tous les styles de cette couche et la dessiner telle que le serveur la définit.</value>
+  </data>
+  <data name="layerStyles_tab_changedMark" xml:space="preserve">
+    <value>Modifié par vous</value>
+  </data>
+  <data name="dialog_symbology_restoreAdmin" xml:space="preserve">
+    <value>Rétablir le style de l'administrateur</value>
+  </data>
+  <data name="dialog_symbology_userChanged" xml:space="preserve">
+    <value>Vous avez modifié les couleurs de cette couche sur cet ordinateur.</value>
+  </data>
+  <data name="dialog_symbology_editInSld" xml:space="preserve">
+    <value>Modifier dans l'éditeur SLD</value>
+  </data>
+  <data name="dialog_symbology_advancedHint" xml:space="preserve">
+    <value>L'éditeur SLD ajoute des règles par attribut, des étiquettes et plus encore. Une fois enregistrée là-bas, cette couche s'ouvre dans l'éditeur SLD ; Rétablir le style de l'administrateur ramène les couleurs rapides.</value>
+  </data>
+  <data name="layerSettings_statistics_liveOnServer" xml:space="preserve">
+    <value>Cette couche est en mode Live : ses statistiques sont calculées par le serveur sur toutes ses entités. Les modifications non enregistrées ne sont pas incluses.</value>
+  </data>
+  <data name="layerSettings_general_featureCountServer" xml:space="preserve">
+    <value>Compté sur le serveur, sur toutes les entités (les modifications non enregistrées ne sont pas incluses)</value>
+  </data>
+  <data name="serverLayerSettings_importModel_export" xml:space="preserve">
+    <value>Exporter le modèle d'import…</value>
+  </data>
+  <data name="serverLayerSettings_importModel_exportTip" xml:space="preserve">
+    <value>Exporter le modèle d'import : enregistrer le modèle de données de chaque couche active (tables, colonnes, types, domaines) dans le fichier que lit l'outil d'import</value>
+  </data>
+  <data name="serverLayerSettings_importModel_saved" xml:space="preserve">
+    <value>Modèle d'import de {0} couches enregistré dans {1}.</value>
+  </data>
+  <data name="serverLayerSettings_importModel_failed" xml:space="preserve">
+    <value>Le modèle d'import n'a pas pu être enregistré.</value>
+  </data>
+  <data name="ribbon_topology_header" xml:space="preserve">
+    <value>Topologie</value>
+  </data>
+  <data name="ribbon_topology_groupCheck" xml:space="preserve">
+    <value>Vérification</value>
+  </data>
+  <data name="ribbon_topology_check" xml:space="preserve">
+    <value>Vérifier</value>
+  </data>
+  <data name="ribbon_topology_checkTooltip" xml:space="preserve">
+    <value>Vérifier les données par rapport aux règles de topologie</value>
+  </data>
+  <data name="ribbon_topology_groupResults" xml:space="preserve">
+    <value>Résultats</value>
+  </data>
+  <data name="ribbon_topology_issues" xml:space="preserve">
+    <value>Problèmes</value>
+  </data>
+  <data name="ribbon_topology_issuesTooltip" xml:space="preserve">
+    <value>Les problèmes de la dernière vérification</value>
+  </data>
+  <data name="ribbon_topology_showOnMap" xml:space="preserve">
+    <value>Afficher sur la carte</value>
+  </data>
+  <data name="ribbon_topology_showOnMapTooltip" xml:space="preserve">
+    <value>Dessiner les problèmes sur la carte, y compris pendant la modification</value>
+  </data>
+  <data name="ribbon_topology_groupSettings" xml:space="preserve">
+    <value>Paramètres</value>
+  </data>
+  <data name="ribbon_topology_rules" xml:space="preserve">
+    <value>Règles</value>
+  </data>
+  <data name="ribbon_topology_rulesTooltip" xml:space="preserve">
+    <value>Ce que vérifie chaque règle ; modifier les distances et les types pour cette session</value>
+  </data>
+  <data name="ribbon_topology_groupOutput" xml:space="preserve">
+    <value>Sortie</value>
+  </data>
+  <data name="ribbon_topology_export" xml:space="preserve">
+    <value>Exporter</value>
+  </data>
+  <data name="ribbon_topology_exportTooltip" xml:space="preserve">
+    <value>La liste filtrée des problèmes vers Excel</value>
+  </data>
+  <data name="ribbon_topology_groupHelp" xml:space="preserve">
+    <value>Aide</value>
+  </data>
+  <data name="ribbon_topology_guide" xml:space="preserve">
+    <value>Guide</value>
+  </data>
+  <data name="ribbon_topology_guideTooltip" xml:space="preserve">
+    <value>Ce que vérifie l'onglet Topologie et comment l'utiliser</value>
+  </data>
+  <data name="topology_panel_checkTitle" xml:space="preserve">
+    <value>Vérification de topologie</value>
+  </data>
+  <data name="topology_panel_issuesTitle" xml:space="preserve">
+    <value>Problèmes de topologie</value>
+  </data>
+  <data name="topology_panel_rulesTitle" xml:space="preserve">
+    <value>Règles de topologie</value>
+  </data>
+  <data name="topology_guide_title" xml:space="preserve">
+    <value>Topologie</value>
+  </data>
+  <data name="topology_check_whatTitle" xml:space="preserve">
+    <value>Que vérifier</value>
+  </data>
+  <data name="topology_check_rulesLabel" xml:space="preserve">
+    <value>Règles</value>
+  </data>
+  <data name="topology_check_rules" xml:space="preserve">
+    <value>{0} règles de «{1}»</value>
+  </data>
+  <data name="topology_check_dataLabel" xml:space="preserve">
+    <value>Données</value>
+  </data>
+  <data name="topology_check_layerLabel" xml:space="preserve">
+    <value>Couche</value>
+  </data>
+  <data name="topology_check_scopeWholeData" xml:space="preserve">
+    <value>Toutes les données</value>
+  </data>
+  <data name="topology_check_scopeLayer" xml:space="preserve">
+    <value>Une couche</value>
+  </data>
+  <data name="topology_check_scopeExtent" xml:space="preserve">
+    <value>Étendue de la carte</value>
+  </data>
+  <data name="topology_check_scopeFeatures" xml:space="preserve">
+    <value>Entités sélectionnées</value>
+  </data>
+  <data name="topology_check_layersTitle" xml:space="preserve">
+    <value>Couches requises par les règles</value>
+  </data>
+  <data name="topology_check_refresh" xml:space="preserve">
+    <value>Relire les couches</value>
+  </data>
+  <data name="topology_check_layerLoaded" xml:space="preserve">
+    <value>chargée</value>
+  </data>
+  <data name="topology_check_layerLive" xml:space="preserve">
+    <value>Live : étendue de la carte ou sélection uniquement</value>
+  </data>
+  <data name="topology_check_layerNotLoaded" xml:space="preserve">
+    <value>non chargée : ses règles sont ignorées</value>
+  </data>
+  <data name="topology_check_settingsInvalid" xml:space="preserve">
+    <value>Un paramètre du panneau Règles est inutilisable ; corrigez-le ou réinitialisez tout.</value>
+  </data>
+  <data name="topology_check_liveNeedsPartialScope" xml:space="preserve">
+    <value>Une couche Live ne contient que ce qui est visible : vérifiez l'étendue de la carte ou une sélection, ou passez la couche en mode Cache.</value>
+  </data>
+  <data name="topology_check_noSelection" xml:space="preserve">
+    <value>Sélectionnez d'abord des entités de cette couche sur la carte.</value>
+  </data>
+  <data name="topology_check_largeScope" xml:space="preserve">
+    <value>Cette vérification lit {0} entités et peut prendre du temps ; l'étendue de la carte est plus rapide.</value>
+  </data>
+  <data name="topology_check_someNotLoaded" xml:space="preserve">
+    <value>Les couches non chargées sont ignorées, avec leurs règles.</value>
+  </data>
+  <data name="topology_check_run" xml:space="preserve">
+    <value>Vérifier</value>
+  </data>
+  <data name="topology_check_cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="topology_check_progress" xml:space="preserve">
+    <value>Vérification : {2} … {0} règles sur {1}</value>
+  </data>
+  <data name="topology_check_done" xml:space="preserve">
+    <value>{0} problèmes dans {1} entités</value>
+  </data>
+  <data name="topology_check_cancelled" xml:space="preserve">
+    <value>Annulé : les résultats précédents sont conservés.</value>
+  </data>
+  <data name="topology_issues_noCheck" xml:space="preserve">
+    <value>Lancez d'abord une vérification.</value>
+  </data>
+  <data name="topology_issues_header" xml:space="preserve">
+    <value>Vérifié {0} · {1} · {2} entités</value>
+  </data>
+  <data name="topology_issues_settingsChanged" xml:space="preserve">
+    <value>Paramètres modifiés pour cette session</value>
+  </data>
+  <data name="topology_issues_skipped" xml:space="preserve">
+    <value>Non vérifié (couche non chargée) : {0}</value>
+  </data>
+  <data name="topology_issues_errors" xml:space="preserve">
+    <value>{0} erreurs</value>
+  </data>
+  <data name="topology_issues_warnings" xml:space="preserve">
+    <value>{0} avertissements</value>
+  </data>
+  <data name="topology_issues_infos" xml:space="preserve">
+    <value>{0} remarques</value>
+  </data>
+  <data name="topology_issues_allRules" xml:space="preserve">
+    <value>Toutes les règles</value>
+  </data>
+  <data name="topology_issues_changeAll" xml:space="preserve">
+    <value>Tous</value>
+  </data>
+  <data name="topology_issues_changeNew" xml:space="preserve">
+    <value>Nouveaux depuis la dernière vérification</value>
+  </data>
+  <data name="topology_issues_changeStillThere" xml:space="preserve">
+    <value>Toujours présents</value>
+  </data>
+  <data name="topology_issues_changeGone" xml:space="preserve">
+    <value>Disparus depuis la dernière vérification</value>
+  </data>
+  <data name="topology_issues_changeTooltip" xml:space="preserve">
+    <value>Compare avec la vérification précédente des mêmes données</value>
+  </data>
+  <data name="topology_issues_searchTooltip" xml:space="preserve">
+    <value>Rechercher dans les identifiants et les phrases</value>
+  </data>
+  <data name="topology_issues_none" xml:space="preserve">
+    <value>Aucun problème trouvé dans {0} entités</value>
+  </data>
+  <data name="topology_issues_overlayLimited" xml:space="preserve">
+    <value>Plus de {0} problèmes : la carte n'affiche que les erreurs</value>
+  </data>
+  <data name="topology_issues_allowed" xml:space="preserve">
+    <value>toléré {0} m</value>
+  </data>
+  <data name="topology_issues_new" xml:space="preserve">
+    <value>nouveau</value>
+  </data>
+  <data name="topology_issues_showInTable" xml:space="preserve">
+    <value>Afficher dans la table attributaire</value>
+  </data>
+  <data name="topology_issues_export" xml:space="preserve">
+    <value>Exporter la liste vers Excel</value>
+  </data>
+  <data name="topology_severity_error" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="topology_severity_warning" xml:space="preserve">
+    <value>Avertissement</value>
+  </data>
+  <data name="topology_severity_info" xml:space="preserve">
+    <value>Remarque</value>
+  </data>
+  <data name="topology_unit_metres" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="topology_unit_squareMetres" xml:space="preserve">
+    <value>m²</value>
+  </data>
+  <data name="topology_rules_header" xml:space="preserve">
+    <value>{0} règles · version {1}</value>
+  </data>
+  <data name="topology_rules_resetAll" xml:space="preserve">
+    <value>Tout réinitialiser</value>
+  </data>
+  <data name="topology_rules_sessionOnly" xml:space="preserve">
+    <value>Les modifications faites ici durent jusqu'à la fermeture de l'application ; rien n'est enregistré.</value>
+  </data>
+  <data name="topology_rules_changed" xml:space="preserve">
+    <value>Modifié dans cette session</value>
+  </data>
+  <data name="topology_rules_hidden" xml:space="preserve">
+    <value>Masquée</value>
+  </data>
+  <data name="topology_parameter_distance" xml:space="preserve">
+    <value>Distance (m)</value>
+  </data>
+  <data name="topology_parameter_nearDistance" xml:space="preserve">
+    <value>Distance de proximité (m)</value>
+  </data>
+  <data name="topology_parameter_searchDistance" xml:space="preserve">
+    <value>Distance de recherche (m)</value>
+  </data>
+  <data name="topology_parameter_maxOvershoot" xml:space="preserve">
+    <value>Dépassement maximal (m)</value>
+  </data>
+  <data name="topology_parameter_maxGap" xml:space="preserve">
+    <value>Écart maximal (m)</value>
+  </data>
+  <data name="topology_parameter_minimumPoints" xml:space="preserve">
+    <value>Nombre minimal de points</value>
+  </data>
+  <data name="topology_parameter_minimumLength" xml:space="preserve">
+    <value>Longueur minimale (m)</value>
+  </data>
+  <data name="topology_parameter_minimumArea" xml:space="preserve">
+    <value>Surface minimale (m²)</value>
+  </data>
+  <data name="topology_parameter_minimumWidth" xml:space="preserve">
+    <value>Largeur minimale (m)</value>
+  </data>
+  <data name="topology_parameter_sliverWidth" xml:space="preserve">
+    <value>Largeur d'interstice (m)</value>
+  </data>
+  <data name="topology_parameter_interiorPartEnds" xml:space="preserve">
+    <value>Vérifier les extrémités où les parties se rejoignent (1 = oui)</value>
+  </data>
+  <data name="topology_parameter_sharedStretch" xml:space="preserve">
+    <value>Signaler les tronçons partagés (1 = oui)</value>
+  </data>
+  <data name="topology_parameter_enclosedGaps" xml:space="preserve">
+    <value>Signaler les vides enclavés (1 = oui)</value>
+  </data>
+  <data name="topology_parameter_maximumGapArea" xml:space="preserve">
+    <value>Surface de vide maximale (m²)</value>
+  </data>
+  <data name="topology_export_rule" xml:space="preserve">
+    <value>Règle</value>
+  </data>
+  <data name="topology_export_kind" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="topology_export_severity" xml:space="preserve">
+    <value>Gravité</value>
+  </data>
+  <data name="topology_export_sentence" xml:space="preserve">
+    <value>Problème</value>
+  </data>
+  <data name="topology_export_value" xml:space="preserve">
+    <value>Valeur</value>
+  </data>
+  <data name="topology_export_features" xml:space="preserve">
+    <value>Entités</value>
+  </data>
+  <data name="topology_export_location" xml:space="preserve">
+    <value>Position (longitude, latitude)</value>
+  </data>
+  <data name="topology_rule_geometryValid" xml:space="preserve">
+    <value>La géométrie doit être valide</value>
+  </data>
+  <data name="topology_rule_distinctPoints" xml:space="preserve">
+    <value>Les points ne doivent pas coïncider</value>
+  </data>
+  <data name="topology_rule_pointOnLine" xml:space="preserve">
+    <value>Le point doit être sur une ligne</value>
+  </data>
+  <data name="topology_rule_lineEndCovered" xml:space="preserve">
+    <value>Les extrémités de ligne doivent porter des points</value>
+  </data>
+  <data name="topology_rule_lineCarriesPoints" xml:space="preserve">
+    <value>La ligne doit porter des points</value>
+  </data>
+  <data name="topology_rule_pointOnOneLine" xml:space="preserve">
+    <value>Point sur plusieurs lignes</value>
+  </data>
+  <data name="topology_rule_sequenceAlongLine" xml:space="preserve">
+    <value>Les numéros doivent croître le long de la ligne</value>
+  </data>
+  <data name="topology_rule_lineEndsConnect" xml:space="preserve">
+    <value>Les extrémités de ligne doivent être connectées</value>
+  </data>
+  <data name="topology_rule_partsJoin" xml:space="preserve">
+    <value>Les parties d'une ligne doivent se rejoindre</value>
+  </data>
+  <data name="topology_rule_distinctLines" xml:space="preserve">
+    <value>Les lignes ne doivent pas être en double</value>
+  </data>
+  <data name="topology_rule_touchAndReturn" xml:space="preserve">
+    <value>Les lignes ne doivent pas se toucher et revenir</value>
+  </data>
+  <data name="topology_rule_polygonsNoOverlap" xml:space="preserve">
+    <value>Les polygones ne doivent pas se chevaucher</value>
+  </data>
+  <data name="topology_rule_polygonsNoGap" xml:space="preserve">
+    <value>Les polygones ne doivent pas laisser de vides</value>
+  </data>
+  <data name="topology_kind_geometryValid_NoGeometry" xml:space="preserve">
+    <value>L'entité n'a pas de géométrie</value>
+  </data>
+  <data name="topology_kind_geometryValid_ClosedRing" xml:space="preserve">
+    <value>Un anneau répète son premier point</value>
+  </data>
+  <data name="topology_kind_geometryValid_RepeatedPoint" xml:space="preserve">
+    <value>Le même point deux fois de suite</value>
+  </data>
+  <data name="topology_kind_geometryValid_TooFewPoints" xml:space="preserve">
+    <value>Trop peu de points</value>
+  </data>
+  <data name="topology_kind_geometryValid_ZeroAreaRing" xml:space="preserve">
+    <value>Un anneau de surface nulle</value>
+  </data>
+  <data name="topology_kind_geometryValid_InvalidCoordinate" xml:space="preserve">
+    <value>Une coordonnée n'est pas un nombre</value>
+  </data>
+  <data name="topology_kind_geometryValid_CoordinateOutOfRange" xml:space="preserve">
+    <value>Une longitude ou une latitude hors limites</value>
+  </data>
+  <data name="topology_kind_geometryValid_WrongRingOrientation" xml:space="preserve">
+    <value>Un anneau orienté dans le mauvais sens (corrigé automatiquement)</value>
+  </data>
+  <data name="topology_kind_distinctPoints_samePlace" xml:space="preserve">
+    <value>Points au même endroit</value>
+  </data>
+  <data name="topology_kind_distinctPoints_close" xml:space="preserve">
+    <value>Points distants de {0}</value>
+  </data>
+  <data name="topology_kind_distinctPoints_chain" xml:space="preserve">
+    <value>Points liés de proche en proche, sur {0}</value>
+  </data>
+  <data name="topology_kind_pointOnLine_nearLine" xml:space="preserve">
+    <value>Point à {0} de la ligne la plus proche</value>
+  </data>
+  <data name="topology_kind_pointOnLine_farFromLines" xml:space="preserve">
+    <value>Point éloigné de toutes les lignes</value>
+  </data>
+  <data name="topology_kind_lineEndCovered_start" xml:space="preserve">
+    <value>Aucun point au début de la ligne</value>
+  </data>
+  <data name="topology_kind_lineEndCovered_end" xml:space="preserve">
+    <value>Aucun point à la fin de la ligne</value>
+  </data>
+  <data name="topology_kind_lineCarriesPoints_tooFewPoints" xml:space="preserve">
+    <value>Seulement {0} points sur la ligne</value>
+  </data>
+  <data name="topology_kind_pointOnOneLine_onSeveralLines" xml:space="preserve">
+    <value>Point sur {0} lignes</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_missing" xml:space="preserve">
+    <value>Point sans numéro</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_duplicate" xml:space="preserve">
+    <value>Numéro {0} utilisé deux fois</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_outOfOrder" xml:space="preserve">
+    <value>Numéro {0} hors séquence</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_gap" xml:space="preserve">
+    <value>{0} numéros manquants</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_directionUndecided" xml:space="preserve">
+    <value>Les numéros ne croissent dans aucun sens</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_unsnappedEnd" xml:space="preserve">
+    <value>Extrémités de ligne à {0} l'une de l'autre, non jointes</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_overshoot" xml:space="preserve">
+    <value>Extrémité de ligne {0} au-delà d'un croisement</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_undershoot" xml:space="preserve">
+    <value>Extrémité de ligne à {0} d'une autre ligne</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_freeEnd" xml:space="preserve">
+    <value>Extrémité de ligne reliée à rien</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_chain" xml:space="preserve">
+    <value>Extrémités de ligne liées de proche en proche, sur {0}</value>
+  </data>
+  <data name="topology_kind_partsJoin_gap" xml:space="preserve">
+    <value>Écart de {0} entre les parties</value>
+  </data>
+  <data name="topology_kind_partsJoin_detachedPart" xml:space="preserve">
+    <value>Une partie à {0} des autres</value>
+  </data>
+  <data name="topology_kind_partsJoin_branch" xml:space="preserve">
+    <value>{0} extrémités de parties se rejoignent au même endroit</value>
+  </data>
+  <data name="topology_kind_partsJoin_outOfOrder" xml:space="preserve">
+    <value>Parties enregistrées dans le désordre</value>
+  </data>
+  <data name="topology_kind_partsJoin_reversedPart" xml:space="preserve">
+    <value>Une partie dessinée à contresens des autres</value>
+  </data>
+  <data name="topology_kind_distinctLines_wholeLine" xml:space="preserve">
+    <value>Ligne en double</value>
+  </data>
+  <data name="topology_kind_distinctLines_sharedStretch" xml:space="preserve">
+    <value>Lignes partageant {0}</value>
+  </data>
+  <data name="topology_kind_touchAndReturn_touchAndReturn" xml:space="preserve">
+    <value>Lignes se croisant deux fois sur {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_duplicate" xml:space="preserve">
+    <value>Polygone en double</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_inside" xml:space="preserve">
+    <value>Un polygone dans un autre, {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_overlap" xml:space="preserve">
+    <value>Polygones se chevauchant sur {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_thinOverlap" xml:space="preserve">
+    <value>Chevauchement mince de {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoGap_sliver" xml:space="preserve">
+    <value>Interstice de {0} de long entre voisins</value>
+  </data>
+  <data name="topology_kind_polygonsNoGap_enclosedGap" xml:space="preserve">
+    <value>Vide de {0} enclavé par des polygones</value>
+  </data>
+  <data name="topology_fix_title" xml:space="preserve">
+    <value>Correction</value>
+  </data>
+  <data name="topology_fix_preview" xml:space="preserve">
+    <value>Aperçu</value>
+  </data>
+  <data name="topology_fix_apply" xml:space="preserve">
+    <value>Appliquer</value>
+  </data>
+  <data name="topology_fix_cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="topology_fix_evaluating" xml:space="preserve">
+    <value>Vérification de la correction…</value>
+  </data>
+  <data name="topology_fix_pending" xml:space="preserve">
+    <value>correction en attente</value>
+  </data>
+  <data name="topology_fix_pendingNote" xml:space="preserve">
+    <value>Une correction a été appliquée. Enregistrez la couche, puis vérifiez à nouveau.</value>
+  </data>
+  <data name="topology_fix_pendingFooter" xml:space="preserve">
+    <value>{0} corrections appliquées. Enregistrez les couches pour les conserver, puis vérifiez à nouveau.</value>
+  </data>
+  <data name="topology_fix_failed" xml:space="preserve">
+    <value>La correction n'a pas pu être appliquée : {0}</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_movePoint" xml:space="preserve">
+    <value>{0} est déplacé de {1} sur {2}.</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_moveLineVertex" xml:space="preserve">
+    <value>Un sommet de {2} est déplacé de {1} sur {0}.</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_insertLineVertex" xml:space="preserve">
+    <value>{2} reçoit un nouveau sommet en {0}, à {1} de son tracé actuel.</value>
+  </data>
+  <data name="topology_fix_reason_featureMissing" xml:space="preserve">
+    <value>Pas de correction : une entité de ce problème n'est plus sur la carte.</value>
+  </data>
+  <data name="topology_fix_reason_beyondFixDistance" xml:space="preserve">
+    <value>Pas de correction : le déplacement serait de {0}, plus que la distance de correction ({1}). Modifiez-la à la main.</value>
+  </data>
+  <data name="topology_fix_reason_doesNotResolve" xml:space="preserve">
+    <value>Refusée : le problème serait toujours présent après la correction.</value>
+  </data>
+  <data name="topology_fix_reason_createsIssue" xml:space="preserve">
+    <value>Refusée : la correction provoquerait « {0} » ({1}).</value>
+  </data>
+  <data name="topology_fix_reason_noPermission" xml:space="preserve">
+    <value>Vous n'êtes pas autorisé à modifier les géométries.</value>
+  </data>
+  <data name="topology_fix_reason_notEditable" xml:space="preserve">
+    <value>La couche {0} ne peut pas être modifiée ici.</value>
+  </data>
+  <data name="topology_fix_reason_cannotRemove" xml:space="preserve">
+    <value>Cette correction supprime une entité, et les entités ne peuvent pas être supprimées ici. Modifiez-la à la main.</value>
+  </data>
+  <data name="topology_guide_correct" xml:space="preserve">
+    <value>Données correctes</value>
+  </data>
+  <data name="topology_parameter_fixDistance" xml:space="preserve">
+    <value>Distance de correction (m)</value>
+  </data>
+  <data name="topology_fix_choose" xml:space="preserve">
+    <value>Choisissez celle qui reste :</value>
+  </data>
+  <data name="topology_fix_snapLineEnds_snap" xml:space="preserve">
+    <value>Les extrémités de {0} se rejoignent en un point (le plus grand déplacement est de {1}).</value>
+  </data>
+  <data name="topology_fix_trimOvershoot_trim" xml:space="preserve">
+    <value>{0} est raccourcie de {1} pour se terminer sur {2}.</value>
+  </data>
+  <data name="topology_fix_extendUndershoot_extendAlong" xml:space="preserve">
+    <value>{0} est prolongée de {1} en ligne droite jusqu'à atteindre {2}.</value>
+  </data>
+  <data name="topology_fix_extendUndershoot_joinNearest" xml:space="preserve">
+    <value>{0} reçoit un nouveau segment terminal de {1} vers le point le plus proche de {2}.</value>
+  </data>
+  <data name="topology_fix_deleteDuplicatePoints_keep" xml:space="preserve">
+    <value>Conserver {0} ; supprimer {1}.</value>
+  </data>
+  <data name="topology_fix_deleteDuplicateLines_keep" xml:space="preserve">
+    <value>Conserver {0} ; supprimer {1}.</value>
+  </data>
+  <data name="topology_fix_reason_notFound" xml:space="preserve">
+    <value>Pas de correction : l'endroit à corriger n'est plus là où la vérification l'a trouvé. Vérifiez à nouveau.</value>
+  </data>
+  <data name="topology_fix_cutOverlap_cutFrom" xml:space="preserve">
+    <value>Retirer la surface commune de {0} ; {1} reste inchangée.</value>
+  </data>
+  <data name="topology_fix_deleteDuplicatePolygons_keep" xml:space="preserve">
+    <value>Conserver {0} ; supprimer {1}.</value>
+  </data>
+  <data name="topology_fix_giveGap_takeGap" xml:space="preserve">
+    <value>Ajouter le vide à {0}.</value>
+  </data>
+  <data name="topology_fix_giveGap_takeSliver" xml:space="preserve">
+    <value>Élargir {0} jusqu'à {1}, en comblant l'interstice.</value>
+  </data>
+  <data name="topology_fix_reason_nothingLeft" xml:space="preserve">
+    <value>Pas de correction : il ne resterait rien de {0}.</value>
+  </data>
 </root>

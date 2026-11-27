@@ -3337,4 +3337,1471 @@
   <data name="dialog_fileGdbPicker_reasonUnreadable" xml:space="preserve">
     <value>Հնարավոր չէ կարդալ</value>
   </data>
+  <data name="versioning_review_title" xml:space="preserve">
+    <value>Տարբերակների վերանայում</value>
+  </data>
+  <data name="versioning_review_refresh" xml:space="preserve">
+    <value>Թարմացնել</value>
+  </data>
+  <data name="versioning_review_lastRefresh" xml:space="preserve">
+    <value>Վերջին թարմացումը</value>
+  </data>
+  <data name="versioning_review_competitions" xml:space="preserve">
+    <value>Մրցակցություններ</value>
+  </data>
+  <data name="versioning_review_singles" xml:space="preserve">
+    <value>Միայնակ առաջարկներ</value>
+  </data>
+  <data name="versioning_review_acceptSelected" xml:space="preserve">
+    <value>Ընդունել ընտրվածները</value>
+  </data>
+  <data name="versioning_review_groupSelected" xml:space="preserve">
+    <value>Խմբավորել որպես մրցակցություն</value>
+  </data>
+  <data name="versioning_review_compare" xml:space="preserve">
+    <value>Վերանայել</value>
+  </data>
+  <data name="versioning_review_colFeature" xml:space="preserve">
+    <value>Օբյեկտ</value>
+  </data>
+  <data name="versioning_review_colLayer" xml:space="preserve">
+    <value>Շերտ</value>
+  </data>
+  <data name="versioning_review_colCount" xml:space="preserve">
+    <value>Առաջարկներ</value>
+  </data>
+  <data name="versioning_review_colAuthors" xml:space="preserve">
+    <value>Խմբագրողներ</value>
+  </data>
+  <data name="versioning_review_colAge" xml:space="preserve">
+    <value>Տարիք</value>
+  </data>
+  <data name="versioning_review_colSuggestions" xml:space="preserve">
+    <value>Համընկնումներ</value>
+  </data>
+  <data name="versioning_review_badgeStale" xml:space="preserve">
+    <value>Հնացած</value>
+  </data>
+  <data name="versioning_review_badgeOrphaned" xml:space="preserve">
+    <value>Առանց թիրախի</value>
+  </data>
+  <data name="versioning_review_badgeQueued" xml:space="preserve">
+    <value>Հերթում</value>
+  </data>
+  <data name="versioning_review_badgeDelete" xml:space="preserve">
+    <value>Ջնջում</value>
+  </data>
+  <data name="versioning_review_empty" xml:space="preserve">
+    <value>Սպասող առաջարկներ չկան. տարբերակավորվող շերտերում ուղարկված փոփոխությունները հայտնվում են այստեղ։</value>
+  </data>
+  <data name="versioning_compare_back" xml:space="preserve">
+    <value>Վերադառնալ հերթին</value>
+  </data>
+  <data name="versioning_compare_live" xml:space="preserve">
+    <value>Գործող</value>
+  </data>
+  <data name="versioning_compare_field" xml:space="preserve">
+    <value>Դաշտ</value>
+  </data>
+  <data name="versioning_compare_selectWinner" xml:space="preserve">
+    <value>Ընտրել որպես հաղթող</value>
+  </data>
+  <data name="versioning_compare_closeNoWinner" xml:space="preserve">
+    <value>Մերժել բոլորը (առանց հաղթողի)</value>
+  </data>
+  <data name="versioning_compare_reason" xml:space="preserve">
+    <value>Մերժման պատճառը</value>
+  </data>
+  <data name="versioning_compare_staleOverride" xml:space="preserve">
+    <value>Գիտեմ, որ գործող օբյեկտը փոխվել է այս առաջարկից հետո (շրջանցումը գրանցվում է)</value>
+  </data>
+  <data name="versioning_compare_showOnMap" xml:space="preserve">
+    <value>Ցույց տալ քարտեզում</value>
+  </data>
+  <data name="versioning_compare_deleteProposal" xml:space="preserve">
+    <value>ՋՆՋՄԱՆ ԱՌԱՋԱՐԿ</value>
+  </data>
+  <data name="versioning_compare_orphanBanner" xml:space="preserve">
+    <value>Թիրախային օբյեկտն այլևս գոյություն չունի գործող տվյալներում. հնարավոր է միայն մերժել բոլորը։</value>
+  </data>
+  <data name="versioning_compare_queuedBanner" xml:space="preserve">
+    <value>Այս մրցակցությունը հերթում է՝ հաստատման սպասող մեկ այլ մրցակցությունից հետո։</value>
+  </data>
+  <data name="versioning_approval_title" xml:space="preserve">
+    <value>Հաստատման հերթ</value>
+  </data>
+  <data name="versioning_approval_commitSelected" xml:space="preserve">
+    <value>Ամրագրել ընտրվածները</value>
+  </data>
+  <data name="versioning_approval_return" xml:space="preserve">
+    <value>Վերադարձնել</value>
+  </data>
+  <data name="versioning_approval_returnReason" xml:space="preserve">
+    <value>Վերադարձի պատճառը</value>
+  </data>
+  <data name="versioning_approval_returnReasonRequired" xml:space="preserve">
+    <value>Վերադարձը պետք է բացատրի պատճառը։</value>
+  </data>
+  <data name="versioning_approval_staleNeedsOverride" xml:space="preserve">
+    <value>Ընտրվածների մեջ կան հնացած առաջարկներ. դրանք ամրագրելու համար նշեք շրջանցումը։</value>
+  </data>
+  <data name="versioning_approval_colWinner" xml:space="preserve">
+    <value>Հաղթող</value>
+  </data>
+  <data name="versioning_approval_colReviewer" xml:space="preserve">
+    <value>Վերանայող</value>
+  </data>
+  <data name="versioning_approval_colType" xml:space="preserve">
+    <value>Փոփոխություն</value>
+  </data>
+  <data name="versioning_approval_colResolved" xml:space="preserve">
+    <value>Լուծված</value>
+  </data>
+  <data name="versioning_myPending_title" xml:space="preserve">
+    <value>Իմ սպասող առաջարկները</value>
+  </data>
+  <data name="versioning_myPending_colSession" xml:space="preserve">
+    <value>Սեսիա</value>
+  </data>
+  <data name="versioning_myPending_colStatus" xml:space="preserve">
+    <value>Կարգավիճակ</value>
+  </data>
+  <data name="versioning_myPending_colSubmitted" xml:space="preserve">
+    <value>Ուղարկված</value>
+  </data>
+  <data name="versioning_status_pendingReview" xml:space="preserve">
+    <value>Սպասում է վերանայման</value>
+  </data>
+  <data name="versioning_status_inCompetition" xml:space="preserve">
+    <value>Մրցակցության մեջ ({0})</value>
+  </data>
+  <data name="versioning_status_underReview" xml:space="preserve">
+    <value>Վերանայվում է</value>
+  </data>
+  <data name="versioning_status_committed" xml:space="preserve">
+    <value>Ամրագրված</value>
+  </data>
+  <data name="versioning_status_rejected" xml:space="preserve">
+    <value>Մերժված</value>
+  </data>
+  <data name="versioning_status_withdrawn" xml:space="preserve">
+    <value>Հետ կանչված</value>
+  </data>
+  <data name="versioning_submit_title" xml:space="preserve">
+    <value>Սեսիան ուղարկվեց</value>
+  </data>
+  <data name="versioning_submit_summary" xml:space="preserve">
+    <value>{0} առաջարկ ուղարկվեց որպես սպասող։ Քարտեզը շարունակում է ցույց տալ ամրագրված վիճակը. ընթացքին հետևեք «Իմ սպասող առաջարկները» բաժնում։</value>
+  </data>
+  <data name="versioning_submit_competitions" xml:space="preserve">
+    <value>{0}-ը մտավ մրցակցության մեջ։</value>
+  </data>
+  <data name="versioning_submit_superseded" xml:space="preserve">
+    <value>{0}-ը փոխարինեց ձեր նախորդ առաջարկը։</value>
+  </data>
+  <data name="versioning_submit_overlaps" xml:space="preserve">
+    <value>{0}-ը համընկնում է առկա օբյեկտների հետ (խորհրդատվական)։</value>
+  </data>
+  <data name="versioning_timeline_featureId" xml:space="preserve">
+    <value>Օբյեկտի id</value>
+  </data>
+  <data name="versioning_timeline_load" xml:space="preserve">
+    <value>Ցույց տալ պատմությունը</value>
+  </data>
+  <data name="versioning_timeline_liveNow" xml:space="preserve">
+    <value>Ընթացիկ վիճակ</value>
+  </data>
+  <data name="versioning_timeline_deleted" xml:space="preserve">
+    <value>Այս օբյեկտը ջնջվել է</value>
+  </data>
+  <data name="versioning_timeline_colUntil" xml:space="preserve">
+    <value>Վավեր է մինչև</value>
+  </data>
+  <data name="versioning_timeline_colReplacedBy" xml:space="preserve">
+    <value>Փոխարինվել է</value>
+  </data>
+  <data name="versioning_timeline_colApprover" xml:space="preserve">
+    <value>Հաստատող</value>
+  </data>
+  <data name="versioning_timeline_colBatch" xml:space="preserve">
+    <value>Ամրագրման փաթեթ</value>
+  </data>
+  <data name="versioning_timeline_attributes" xml:space="preserve">
+    <value>Արժեքներ</value>
+  </data>
+  <data name="versioning_timeline_empty" xml:space="preserve">
+    <value>Այս օբյեկտի համար պատմություն գրանցված չէ</value>
+  </data>
+  <data name="versioning_timeline_featureIdInvalid" xml:space="preserve">
+    <value>Ընտրեք շերտ և մուտքագրեք օբյեկտի վավեր id</value>
+  </data>
+  <data name="versioning_inbox_markAllRead" xml:space="preserve">
+    <value>Նշել բոլորը որպես կարդացված</value>
+  </data>
+  <data name="versioning_inbox_colWhen" xml:space="preserve">
+    <value>Երբ</value>
+  </data>
+  <data name="versioning_inbox_colEvent" xml:space="preserve">
+    <value>Իրադարձություն</value>
+  </data>
+  <data name="versioning_inbox_colDetails" xml:space="preserve">
+    <value>Մանրամասներ</value>
+  </data>
+  <data name="versioning_inbox_unread" xml:space="preserve">
+    <value>{0} չկարդացված</value>
+  </data>
+  <data name="versioning_inbox_items" xml:space="preserve">
+    <value>{0} տարր</value>
+  </data>
+  <data name="versioning_inbox_features" xml:space="preserve">
+    <value>Օբյեկտներ՝ {0}</value>
+  </data>
+  <data name="versioning_inbox_reason" xml:space="preserve">
+    <value>Պատճառ՝ {0}</value>
+  </data>
+  <data name="versioning_inbox_typeCompetitionJoined" xml:space="preserve">
+    <value>Ձեր առաջարկը մտավ մրցակցության մեջ</value>
+  </data>
+  <data name="versioning_inbox_typeCommitted" xml:space="preserve">
+    <value>Ձեր առաջարկներն ամրագրվեցին</value>
+  </data>
+  <data name="versioning_inbox_typeRejected" xml:space="preserve">
+    <value>Ձեր առաջարկները մերժվեցին</value>
+  </data>
+  <data name="versioning_inbox_typeClosedNoWinner" xml:space="preserve">
+    <value>Մրցակցությունը փակվեց առանց հաղթողի</value>
+  </data>
+  <data name="versioning_inbox_typeReturned" xml:space="preserve">
+    <value>Հաստատողը վերադարձրեց ձեր որոշումը</value>
+  </data>
+  <data name="versioning_inbox_typeOrphaned" xml:space="preserve">
+    <value>Թիրախային օբյեկտն այլևս գոյություն չունի</value>
+  </data>
+  <data name="message_error_versionedLayerWriteRejected" xml:space="preserve">
+    <value>Այս շերտը տարբերակավորվում է. խմբագրումները պետք է ուղարկվեն որպես վերանայման առաջարկներ, ոչ թե պահպանվեն ուղղակիորեն։</value>
+  </data>
+  <data name="message_error_versioningInvalidSubmission" xml:space="preserve">
+    <value>Ուղարկված սեսիան անվավեր է. վերաբեռնեք շերտը և նորից փորձեք։</value>
+  </data>
+  <data name="message_error_versioningInvalidProposal" xml:space="preserve">
+    <value>Առաջարկված փոփոխություններից մեկն անվավեր է. վերաբեռնեք շերտը և նորից փորձեք։</value>
+  </data>
+  <data name="message_error_versioningUnknownVersionedLayer" xml:space="preserve">
+    <value>Այս շերտը գրանցված չէ տարբերակավորման համար։</value>
+  </data>
+  <data name="message_error_versioningVersioningNotEnabled" xml:space="preserve">
+    <value>Այս շերտի համար տարբերակավորումը միացված չէ. պահպանեք սովորական եղանակով։</value>
+  </data>
+  <data name="message_error_versioningProposalUnderApproval" xml:space="preserve">
+    <value>Այս օբյեկտի համար ձեր նախորդ առաջարկը սպասում է վերջնական հաստատման. սպասեք դրա ամրագրմանը կամ վերադարձին՝ նախքան նորից ուղարկելը։</value>
+  </data>
+  <data name="message_error_versioningConcurrentSubmission" xml:space="preserve">
+    <value>Մեկ այլ ուղարկում նույն պահին փոխեց նույն օբյեկտը. թարմացրեք և նորից փորձեք։</value>
+  </data>
+  <data name="message_error_versioningCompetitionAlreadyResolved" xml:space="preserve">
+    <value>Մրցակցությունը փոխվել կամ լուծվել է մեկ այլ վերանայողի կողմից. թարմացրեք և նորից փորձեք։</value>
+  </data>
+  <data name="message_error_versioningConcurrentModification" xml:space="preserve">
+    <value>Ինչ-որ բան միաժամանակ փոխվեց. թարմացրեք և նորից փորձեք։</value>
+  </data>
+  <data name="message_error_versioningConcurrentLiveChange" xml:space="preserve">
+    <value>Ամրագրման ընթացքում փոխվեց մրցակցություն կամ գործող օբյեկտ. ոչինչ չամրագրվեց. թարմացրեք և նորից փորձեք։</value>
+  </data>
+  <data name="message_error_versioningStaleBaseRequiresOverride" xml:space="preserve">
+    <value>Գործող օբյեկտը փոխվել է այս առաջարկը կազմելուց հետո. ընդունելու համար անհրաժեշտ է հնացածության բացահայտ շրջանցում։</value>
+  </data>
+  <data name="message_error_versioningOrphanedTarget" xml:space="preserve">
+    <value>Թիրախային օբյեկտն այլևս գոյություն չունի. փոխարենը վերադարձրեք մրցակցությունը։ Ոչինչ չամրագրվեց։</value>
+  </data>
+  <data name="message_error_versioningOrphanedTargetRejectOnly" xml:space="preserve">
+    <value>Թիրախային օբյեկտն այլևս գոյություն չունի գործող տվյալներում. թույլատրվում է միայն փակել առանց հաղթողի։</value>
+  </data>
+  <data name="message_error_versioningRejectionReasonRequired" xml:space="preserve">
+    <value>Մերժման պատճառը պարտադիր է։</value>
+  </data>
+  <data name="message_error_versioningReturnReasonRequired" xml:space="preserve">
+    <value>Վերադարձը պետք է նշի պատճառը։</value>
+  </data>
+  <data name="message_error_versioningUnknownCompetition" xml:space="preserve">
+    <value>Մրցակցությունը չի գտնվել. հնարավոր է՝ այն լուծվել կամ հեռացվել է. թարմացրեք։</value>
+  </data>
+  <data name="message_error_versioningUnknownProposal" xml:space="preserve">
+    <value>Առաջարկը չի գտնվել այս մրցակցության մեջ. թարմացրեք։</value>
+  </data>
+  <data name="message_error_versioningUnknownSuggestion" xml:space="preserve">
+    <value>Համընկնման առաջարկը չի գտնվել. թարմացրեք։</value>
+  </data>
+  <data name="message_error_versioningInvalidGrouping" xml:space="preserve">
+    <value>Այս առաջարկները հնարավոր չէ խմբավորել. խմբավորել կարելի է միայն մեկ շերտի սպասող ստեղծումները։</value>
+  </data>
+  <data name="message_error_versioningCompetitionBlockedByPredecessor" xml:space="preserve">
+    <value>Այս մրցակցությունը հերթում է չլուծված նախորդից հետո. նախ լուծեք այն։</value>
+  </data>
+  <data name="message_error_versioningEmptyCompetition" xml:space="preserve">
+    <value>Մրցակցությունն ակտիվ առաջարկներ չունի։</value>
+  </data>
+  <data name="message_error_versioningNotASingleton" xml:space="preserve">
+    <value>Այս մրցակցությունն ունի մի քանի առաջարկ. օգտագործեք համեմատման տեսքը։</value>
+  </data>
+  <data name="message_error_versioningInvalidCommit" xml:space="preserve">
+    <value>Ամրագրման փաթեթը դատարկ է կամ անվավեր։</value>
+  </data>
+  <data name="message_error_versioningCompetitionNotResolved" xml:space="preserve">
+    <value>Մրցակցությունը լուծված վիճակում չէ. թարմացրեք հերթը։</value>
+  </data>
+  <data name="message_error_versioningSchemaMismatch" xml:space="preserve">
+    <value>Առաջարկն այլևս չի համապատասխանում շերտի սխեմային. այն հնարավոր չէ ամրագրել։</value>
+  </data>
+  <data name="versioning_map_pendingStatus" xml:space="preserve">
+    <value>Սպասող առաջարկներ</value>
+  </data>
+  <data name="versioning_map_history" xml:space="preserve">
+    <value>Օբյեկտի պատմություն</value>
+  </data>
+  <data name="versioning_map_myPendingOverlay" xml:space="preserve">
+    <value>Իմ սպասողները քարտեզում</value>
+  </data>
+  <data name="versioning_map_selectFeature" xml:space="preserve">
+    <value>Նախ ընտրեք օբյեկտ</value>
+  </data>
+  <data name="versioning_map_noPending" xml:space="preserve">
+    <value>Այս օբյեկտի համար սպասող առաջարկներ չկան</value>
+  </data>
+  <data name="versioning_map_pendingSummary" xml:space="preserve">
+    <value>{0} սպասող առաջարկ</value>
+  </data>
+  <data name="versioning_map_pendingAuthors" xml:space="preserve">
+    <value>Խմբագրողներ՝ {0}</value>
+  </data>
+  <data name="versioning_map_pendingHasOwn" xml:space="preserve">
+    <value>Ներառում է ձեր սեփական առաջարկը</value>
+  </data>
+  <data name="versioning_map_overlayEmpty" xml:space="preserve">
+    <value>Այս շերտի համար սպասող առաջարկներ չունեք</value>
+  </data>
+  <data name="versioning_map_overlayName" xml:space="preserve">
+    <value>Իմ սպասողները — {0}</value>
+  </data>
+  <data name="versioning_changeType_create" xml:space="preserve">
+    <value>Ստեղծում</value>
+  </data>
+  <data name="versioning_changeType_update" xml:space="preserve">
+    <value>Թարմացում</value>
+  </data>
+  <data name="versioning_changeType_delete" xml:space="preserve">
+    <value>Ջնջում</value>
+  </data>
+  <data name="versioning_myPending_empty" xml:space="preserve">
+    <value>Սպասող առաջարկներ չունեք։</value>
+  </data>
+  <data name="versioning_approval_empty" xml:space="preserve">
+    <value>Հաստատման սպասող ոչինչ չկա։</value>
+  </data>
+  <data name="versioning_inbox_empty" xml:space="preserve">
+    <value>Ծանուցումներ չունեք։</value>
+  </data>
+  <data name="versioning_compare_empty" xml:space="preserve">
+    <value>Ընտրեք մրցակցություն վերանայման հերթից՝ դրա առաջարկները համեմատելու համար։</value>
+  </data>
+  <data name="versioning_submit_confirm" xml:space="preserve">
+    <value>{1} շերտի {0} փոփոխություն կուղարկվի վերանայման, ոչ թե կպահպանվի ուղղակիորեն։ Քարտեզը կշարունակի ցույց տալ հաստատված վիճակը, մինչև հաստատողը դրանք ամրագրի։ Ուղարկե՞լ հիմա։</value>
+  </data>
+  <data name="versioning_layer_badgeTooltip" xml:space="preserve">
+    <value>Տարբերակավորվող շերտ. Պահպանելը ձեր խմբագրումներն ուղարկում է վերանայման՝ դրանք ուղղակիորեն գրելու փոխարեն։</value>
+  </data>
+  <data name="versioning_review_ageDays" xml:space="preserve">
+    <value>{0} օր</value>
+  </data>
+  <data name="versioning_review_ageHours" xml:space="preserve">
+    <value>{0} ժ</value>
+  </data>
+  <data name="versioning_review_ageMinutes" xml:space="preserve">
+    <value>{0} ր</value>
+  </data>
+  <data name="dialog_goto_quickEntry" xml:space="preserve">
+    <value>Արագ մուտքագրում</value>
+  </data>
+  <data name="dialog_goto_quickEntryWatermark" xml:space="preserve">
+    <value>Տեղադրեք կոորդինատներ — 35.6892, 51.3890 · 35°41′21″N 51°23′20″E · 39N 534123 3950123 · քարտեզի հղում</value>
+  </data>
+  <data name="dialog_goto_quickEntryRecognized" xml:space="preserve">
+    <value>Ճանաչված է:</value>
+  </data>
+  <data name="dialog_goto_quickEntryNotRecognized" xml:space="preserve">
+    <value>Չի ճանաչվել որպես կոորդինատ</value>
+  </data>
+  <data name="dialog_goto_tabGeodetic" xml:space="preserve">
+    <value>Գեոդեզիական</value>
+  </data>
+  <data name="dialog_goto_tabUtm" xml:space="preserve">
+    <value>UTM</value>
+  </data>
+  <data name="dialog_goto_tabProjected" xml:space="preserve">
+    <value>Պրոյեկցված</value>
+  </data>
+  <data name="dialog_goto_format" xml:space="preserve">
+    <value>Ձևաչափ</value>
+  </data>
+  <data name="dialog_goto_datum" xml:space="preserve">
+    <value>Դատում (էլիպսոիդ)</value>
+  </data>
+  <data name="dialog_goto_latitude" xml:space="preserve">
+    <value>Լայնություն</value>
+  </data>
+  <data name="dialog_goto_longitude" xml:space="preserve">
+    <value>Երկայնություն</value>
+  </data>
+  <data name="dialog_goto_hemisphere" xml:space="preserve">
+    <value>Կիսագունդ</value>
+  </data>
+  <data name="dialog_goto_decimalHint" xml:space="preserve">
+    <value>Բացասական արժեքները հարավ և արևմուտք են։ Այստեղ ընդունվում է նաև DMS գրառում, օրինակ՝ 35 41 21.1 N։</value>
+  </data>
+  <data name="dialog_goto_easting" xml:space="preserve">
+    <value>Արևելյան կոորդինատ</value>
+  </data>
+  <data name="dialog_goto_northing" xml:space="preserve">
+    <value>Հյուսիսային կոորդինատ</value>
+  </data>
+  <data name="dialog_goto_projection" xml:space="preserve">
+    <value>Պրոյեկցիա</value>
+  </data>
+  <data name="dialog_goto_projectionCustom" xml:space="preserve">
+    <value>հատուկ</value>
+  </data>
+  <data name="dialog_goto_paramCentralMeridian" xml:space="preserve">
+    <value>Կենտրոնական միջօրեական</value>
+  </data>
+  <data name="dialog_goto_paramLatitudeOfOrigin" xml:space="preserve">
+    <value>Սկզբնակետի լայնություն</value>
+  </data>
+  <data name="dialog_goto_paramScaleFactor" xml:space="preserve">
+    <value>Մասշտաբի գործակից</value>
+  </data>
+  <data name="dialog_goto_paramFalseEasting" xml:space="preserve">
+    <value>Կեղծ արևելյան շեղում</value>
+  </data>
+  <data name="dialog_goto_paramFalseNorthing" xml:space="preserve">
+    <value>Կեղծ հյուսիսային շեղում</value>
+  </data>
+  <data name="dialog_goto_paramStandardParallel1" xml:space="preserve">
+    <value>Ստանդարտ զուգահեռական 1</value>
+  </data>
+  <data name="dialog_goto_paramStandardParallel2" xml:space="preserve">
+    <value>Ստանդարտ զուգահեռական 2</value>
+  </data>
+  <data name="dialog_goto_x" xml:space="preserve">
+    <value>X (արևելյան)</value>
+  </data>
+  <data name="dialog_goto_y" xml:space="preserve">
+    <value>Y (հյուսիսային)</value>
+  </data>
+  <data name="dialog_goto_position" xml:space="preserve">
+    <value>Դիրք</value>
+  </data>
+  <data name="dialog_goto_positionSubtitle" xml:space="preserve">
+    <value>WGS 84 · լայնություն, երկայնություն</value>
+  </data>
+  <data name="dialog_goto_copy" xml:space="preserve">
+    <value>Պատճենել կոորդինատները</value>
+  </data>
+  <data name="dialog_goto_statusReady" xml:space="preserve">
+    <value>Պատրաստ է</value>
+  </data>
+  <data name="dialog_goto_statusInvalid" xml:space="preserve">
+    <value>Ստուգեք մուտքագրումը</value>
+  </data>
+  <data name="dialog_goto_errorLatitudeRange" xml:space="preserve">
+    <value>Լայնությունը պետք է լինի −90°-ի և 90°-ի միջև</value>
+  </data>
+  <data name="dialog_goto_errorLongitudeRange" xml:space="preserve">
+    <value>Երկայնությունը պետք է լինի −180°-ի և 180°-ի միջև</value>
+  </data>
+  <data name="dialog_goto_errorDmsComponents" xml:space="preserve">
+    <value>Րոպեները և վայրկյանները պետք է լինեն 0-ի և 60-ի միջև</value>
+  </data>
+  <data name="dialog_goto_errorNumber" xml:space="preserve">
+    <value>Մուտքագրեք թվային արժեք {0}-ի համար</value>
+  </data>
+  <data name="dialog_goto_errorNorthingRange" xml:space="preserve">
+    <value>Հյուսիսային կոորդինատը պետք է լինի 0-ի և 10,000,000 m-ի միջև</value>
+  </data>
+  <data name="dialog_goto_warningEastingRange" xml:space="preserve">
+    <value>Արևելյան կոորդինատը UTM գոտու սովորական միջակայքից դուրս է (100,000 – 900,000 m)</value>
+  </data>
+  <data name="dialog_goto_errorProjection" xml:space="preserve">
+    <value>Այս արժեքները չեն համապատասխանում Երկրի վրա որևէ վայրի</value>
+  </data>
+  <data name="srs_lccTitle" xml:space="preserve">
+    <value>Լամբերտի կոնֆորմ կոնական</value>
+  </data>
+  <data name="dialog_goto_coordinateSystem" xml:space="preserve">
+    <value>Կոորդինատային համակարգ</value>
+  </data>
+  <data name="layerSettings_statistics_field" xml:space="preserve">
+    <value>Դաշտ</value>
+  </data>
+  <data name="layerSettings_statistics_compute" xml:space="preserve">
+    <value>Հաշվել</value>
+  </data>
+  <data name="layerSettings_statistics_liveNotSupported" xml:space="preserve">
+    <value>Այս շերտը Live ռեժիմում է. դրա օբյեկտները մնում են սերվերում, ուստի վիճակագրությունը դեռ հասանելի չէ։ Տեսնելու համար շերտը փոխարկեք Cache ռեժիմի։</value>
+  </data>
+  <data name="layerSettings_statistics_emptyState" xml:space="preserve">
+    <value>Ընտրեք դաշտ և սեղմեք «Հաշվել»</value>
+  </data>
+  <data name="layerSettings_statistics_failed" xml:space="preserve">
+    <value>Վիճակագրության հաշվարկը ձախողվեց:</value>
+  </data>
+  <data name="layerSettings_statistics_summary" xml:space="preserve">
+    <value>Մանրամասներ</value>
+  </data>
+  <data name="layerSettings_statistics_topValues" xml:space="preserve">
+    <value>Ամենահաճախ արժեքները</value>
+  </data>
+  <data name="layerSettings_statistics_value" xml:space="preserve">
+    <value>Արժեք</value>
+  </data>
+  <data name="layerSettings_statistics_count" xml:space="preserve">
+    <value>Քանակ</value>
+  </data>
+  <data name="layerSettings_statistics_featureCount" xml:space="preserve">
+    <value>Օբյեկտներ</value>
+  </data>
+  <data name="layerSettings_statistics_emptyCount" xml:space="preserve">
+    <value>Դատարկ արժեքներ</value>
+  </data>
+  <data name="layerSettings_statistics_distinctCount" xml:space="preserve">
+    <value>Տարբեր արժեքներ</value>
+  </data>
+  <data name="layerSettings_statistics_min" xml:space="preserve">
+    <value>Նվազագույն</value>
+  </data>
+  <data name="layerSettings_statistics_max" xml:space="preserve">
+    <value>Առավելագույն</value>
+  </data>
+  <data name="layerSettings_statistics_sum" xml:space="preserve">
+    <value>Գումար</value>
+  </data>
+  <data name="layerSettings_statistics_mean" xml:space="preserve">
+    <value>Միջին</value>
+  </data>
+  <data name="layerSettings_statistics_median" xml:space="preserve">
+    <value>Մեդիան</value>
+  </data>
+  <data name="layerSettings_statistics_standardDeviation" xml:space="preserve">
+    <value>Ստանդարտ շեղում</value>
+  </data>
+  <data name="layerSettings_statistics_minDate" xml:space="preserve">
+    <value>Ամենավաղ</value>
+  </data>
+  <data name="layerSettings_statistics_maxDate" xml:space="preserve">
+    <value>Ամենաուշ</value>
+  </data>
+  <data name="layerSettings_statistics_emptyValue" xml:space="preserve">
+    <value>(դատարկ)</value>
+  </data>
+  <data name="layerSettings_statistics_modeField" xml:space="preserve">
+    <value>Դաշտի վիճակագրություն</value>
+  </data>
+  <data name="layerSettings_statistics_modeGroupBy" xml:space="preserve">
+    <value>Խմբավորել ըստ դաշտի</value>
+  </data>
+  <data name="layerSettings_statistics_groupByField" xml:space="preserve">
+    <value>Խմբավորել ըստ</value>
+  </data>
+  <data name="layerSettings_statistics_sumField" xml:space="preserve">
+    <value>Ընդհանուրը՝</value>
+  </data>
+  <data name="layerSettings_statistics_none" xml:space="preserve">
+    <value>(ոչ մեկը)</value>
+  </data>
+  <data name="layerSettings_statistics_groupCount" xml:space="preserve">
+    <value>Խմբեր</value>
+  </data>
+  <data name="layerSettings_statistics_totalLength" xml:space="preserve">
+    <value>Ընդհանուր երկարություն</value>
+  </data>
+  <data name="layerSettings_statistics_totalArea" xml:space="preserve">
+    <value>Ընդհանուր մակերես</value>
+  </data>
+  <data name="layerSettings_statistics_sumOf" xml:space="preserve">
+    <value>{0}-ի ընդհանուրը</value>
+  </data>
+  <data name="layerSettings_statistics_groups" xml:space="preserve">
+    <value>Խմբեր</value>
+  </data>
+  <data name="layerSettings_statistics_groupsTruncated" xml:space="preserve">
+    <value>Ցուցադրվում են {1} խմբից առաջին {0}-ը։</value>
+  </data>
+  <data name="layerSettings_statistics_invalidNote" xml:space="preserve">
+    <value>{0} արժեք հնարավոր չեղավ կարդալ դաշտի տիպով, և դրանք բաց են թողնված։</value>
+  </data>
+  <data name="layerSettings_statistics_total" xml:space="preserve">
+    <value>Ընդհանուր</value>
+  </data>
+  <data name="layerSettings_statistics_topOfDistinct" xml:space="preserve">
+    <value>{1} արժեքից {0}-ը</value>
+  </data>
+  <data name="layerSettings_statistics_sortedByCount" xml:space="preserve">
+    <value>Դասավորված ըստ քանակի</value>
+  </data>
+  <data name="layerSettings_statistics_modeGeometry" xml:space="preserve">
+    <value>Երկրաչափություն</value>
+  </data>
+  <data name="layerSettings_statistics_emptyGeometryCount" xml:space="preserve">
+    <value>Դատարկ երկրաչափություններ</value>
+  </data>
+  <data name="layerSettings_statistics_distribution" xml:space="preserve">
+    <value>Բաշխում</value>
+  </data>
+  <data name="layerSettings_statistics_lengthPerFeature" xml:space="preserve">
+    <value>Երկարությունն ըստ օբյեկտի ({0})</value>
+  </data>
+  <data name="layerSettings_statistics_areaPerFeature" xml:space="preserve">
+    <value>Մակերեսն ըստ օբյեկտի ({0})</value>
+  </data>
+  <data name="layerSettings_statistics_binCount" xml:space="preserve">
+    <value>{0} միջակայք</value>
+  </data>
+  <data name="layerSettings_statistics_noMeasureNote" xml:space="preserve">
+    <value>Երկարությունը և մակերեսը կիրառելի են միայն գծային և բազմանկյուն շերտերի համար։</value>
+  </data>
+  <data name="layerSettings_statistics_unmeasuredNote" xml:space="preserve">
+    <value>{0} երկրաչափություն հնարավոր չեղավ չափել, և դրանք բաց են թողնված։</value>
+  </data>
+  <data name="layerSettings_statistics_viewHistogram" xml:space="preserve">
+    <value>Գծապատկեր</value>
+  </data>
+  <data name="layerSettings_statistics_viewTable" xml:space="preserve">
+    <value>Գլխավոր արժեքներ</value>
+  </data>
+  <data name="layerSettings_statistics_geometryHint" xml:space="preserve">
+    <value>Յուրաքանչյուր օբյեկտի գեոդեզիական երկարությունը (գծային շերտեր) կամ մակերեսը (բազմանկյուն շերտեր)՝ WGS84 էլիպսոիդի վրա։</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainCount" xml:space="preserve">
+    <value>Տիրույթից դուրս</value>
+  </data>
+  <data name="layerSettings_statistics_domainUsage" xml:space="preserve">
+    <value>Օգտագործված է տիրույթի {1} արժեքից {0}-ը</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainNote" xml:space="preserve">
+    <value>{0} օբյեկտ ունի դաշտի տիրույթից դուրս արժեք։</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainTooltip" xml:space="preserve">
+    <value>Դաշտի տիրույթի արժեք չէ</value>
+  </data>
+  <data name="sldGenerator_title" xml:space="preserve">
+    <value>Ստեղծել կանոններ դաշտի արժեքներից</value>
+  </data>
+  <data name="sldGenerator_field" xml:space="preserve">
+    <value>Դաշտ</value>
+  </data>
+  <data name="sldGenerator_geometry" xml:space="preserve">
+    <value>Երկրաչափություն</value>
+  </data>
+  <data name="sldGenerator_geometryPoint" xml:space="preserve">
+    <value>Կետ</value>
+  </data>
+  <data name="sldGenerator_geometryLine" xml:space="preserve">
+    <value>Գիծ</value>
+  </data>
+  <data name="sldGenerator_geometryPolygon" xml:space="preserve">
+    <value>Բազմանկյուն</value>
+  </data>
+  <data name="sldGenerator_values" xml:space="preserve">
+    <value>Արժեքներ</value>
+  </data>
+  <data name="sldGenerator_valuesData" xml:space="preserve">
+    <value>Շերտում առկա արժեքները</value>
+  </data>
+  <data name="sldGenerator_valuesDomain" xml:space="preserve">
+    <value>Տիրույթի բոլոր արժեքները</value>
+  </data>
+  <data name="sldGenerator_colors" xml:space="preserve">
+    <value>Գույներ</value>
+  </data>
+  <data name="sldGenerator_colorsPalette" xml:space="preserve">
+    <value>Ներկառուցված ներկապնակ</value>
+  </data>
+  <data name="sldGenerator_colorsDomain" xml:space="preserve">
+    <value>Տիրույթի գույներ</value>
+  </data>
+  <data name="sldGenerator_includeOther" xml:space="preserve">
+    <value>Ավելացնել կանոն այլ արժեքների համար</value>
+  </data>
+  <data name="sldGenerator_replaceExisting" xml:space="preserve">
+    <value>Փոխարինել ընթացիկ կանոնները</value>
+  </data>
+  <data name="sldGenerator_preview" xml:space="preserve">
+    <value>Նախադիտում</value>
+  </data>
+  <data name="sldGenerator_noField" xml:space="preserve">
+    <value>Դասակարգման համար դաշտ չկա</value>
+  </data>
+  <data name="sldGenerator_noValues" xml:space="preserve">
+    <value>Դաշտն արժեքներ չունի</value>
+  </data>
+  <data name="sldGenerator_ruleCount" xml:space="preserve">
+    <value>{0} կանոն</value>
+  </data>
+  <data name="sldGenerator_previewCut" xml:space="preserve">
+    <value>(ցուցադրված են առաջին {0}-ը)</value>
+  </data>
+  <data name="sldGenerator_failed" xml:space="preserve">
+    <value>Արժեքների ընթերցումը ձախողվեց:</value>
+  </data>
+  <data name="sldGenerator_generate" xml:space="preserve">
+    <value>Ստեղծել</value>
+  </data>
+  <data name="sldGenerator_otherValues" xml:space="preserve">
+    <value>Այլ արժեքներ</value>
+  </data>
+  <data name="layerSettings_general_summary" xml:space="preserve">
+    <value>Շերտի ամփոփում</value>
+  </data>
+  <data name="layerSettings_general_loadMode" xml:space="preserve">
+    <value>Բեռնման ռեժիմ:</value>
+  </data>
+  <data name="layerSettings_general_loadModeCache" xml:space="preserve">
+    <value>Բեռնել ամբողջը միանգամից (Cache)</value>
+  </data>
+  <data name="layerSettings_general_loadModeLive" xml:space="preserve">
+    <value>Բեռնել ըստ քարտեզի տեսքի (Live)</value>
+  </data>
+  <data name="layerSettings_general_featureCount" xml:space="preserve">
+    <value>Օբյեկտներ:</value>
+  </data>
+  <data name="layerSettings_general_featureCountLive" xml:space="preserve">
+    <value>Հասանելի չէ Live ռեժիմում (բեռնվում է միայն տեսանելի տարածքը)</value>
+  </data>
+  <data name="layerSettings_general_fieldCount" xml:space="preserve">
+    <value>Դաշտեր:</value>
+  </data>
+  <data name="layerSettings_general_geometryType" xml:space="preserve">
+    <value>Երկրաչափության տիպ:</value>
+  </data>
+  <data name="layerSettings_general_srs" xml:space="preserve">
+    <value>Տարածական հենքային համակարգ:</value>
+  </data>
+  <data name="layerSettings_general_originalSrs" xml:space="preserve">
+    <value>Աղբյուրի տարածական հենքային համակարգ:</value>
+  </data>
+  <data name="layerSettings_general_extentWgs84" xml:space="preserve">
+    <value>Ընդգրկույթ (WGS84):</value>
+  </data>
+  <data name="layerSettings_general_extentUtm" xml:space="preserve">
+    <value>Ընդգրկույթ (UTM {0}):</value>
+  </data>
+  <data name="layerSettings_general_unknown" xml:space="preserve">
+    <value>Անհայտ</value>
+  </data>
+  <data name="layerStyles_ruleCount" xml:space="preserve">
+    <value>{0} կանոն</value>
+  </data>
+  <data name="layerStyles_untitled" xml:space="preserve">
+    <value>Անանուն ոճ</value>
+  </data>
+  <data name="layerStyles_newTitle" xml:space="preserve">
+    <value>Ոճ {0}</value>
+  </data>
+  <data name="layerStyles_copyTitle" xml:space="preserve">
+    <value>{0} (պատճեն)</value>
+  </data>
+  <data name="layerStyles_addFirst" xml:space="preserve">
+    <value>Ավելացնել ոճ</value>
+  </data>
+  <data name="layerStyles_adminBanner" xml:space="preserve">
+    <value>Օգտատերերը սկսում են լռելյայն ոճից և կարող են անցնել մյուսներին «Սիմվոլիկա» ներդիրում կամ քարտեզի լեգենդից։</value>
+  </data>
+  <data name="layerStyles_add" xml:space="preserve">
+    <value>Ավելացնել</value>
+  </data>
+  <data name="layerStyles_copy" xml:space="preserve">
+    <value>Պատճենել</value>
+  </data>
+  <data name="layerStyles_edit" xml:space="preserve">
+    <value>Խմբագրել</value>
+  </data>
+  <data name="layerStyles_setDefault" xml:space="preserve">
+    <value>Դարձնել լռելյայն</value>
+  </data>
+  <data name="layerStyles_moveUp" xml:space="preserve">
+    <value>Տեղափոխել վեր</value>
+  </data>
+  <data name="layerStyles_moveDown" xml:space="preserve">
+    <value>Տեղափոխել ներքև</value>
+  </data>
+  <data name="layerStyles_delete" xml:space="preserve">
+    <value>Ջնջել</value>
+  </data>
+  <data name="layerStyles_defaultBadge" xml:space="preserve">
+    <value>Լռելյայն</value>
+  </data>
+  <data name="layerStyles_titleWatermark" xml:space="preserve">
+    <value>Ոճի անվանում</value>
+  </data>
+  <data name="layerStyles_legend_pick" xml:space="preserve">
+    <value>Ոճ</value>
+  </data>
+  <data name="layerStyles_tab_notAvailable" xml:space="preserve">
+    <value>Այս շերտը սահմանելու սիմվոլիկա չունի։</value>
+  </data>
+  <data name="layerStyles_tab_styles" xml:space="preserve">
+    <value>Ոճեր</value>
+  </data>
+  <data name="layerStyles_tab_singleStyle" xml:space="preserve">
+    <value>Այս շերտն ունի մեկ ոճ։ Ադմինիստրատորը կարող է ավելացնել նորերը սերվերի շերտի կարգավորումներում։</value>
+  </data>
+  <data name="layerStyles_tab_legend" xml:space="preserve">
+    <value>Լեգենդ</value>
+  </data>
+  <data name="layerStyles_tab_exportLegend" xml:space="preserve">
+    <value>Արտահանել լեգենդը որպես PNG</value>
+  </data>
+  <data name="layerStyles_tab_quickEdit" xml:space="preserve">
+    <value>Արագ խմբագրում</value>
+  </data>
+  <data name="layerStyles_tab_myChanges" xml:space="preserve">
+    <value>Իմ փոփոխությունները</value>
+  </data>
+  <data name="layerStyles_tab_noChanges" xml:space="preserve">
+    <value>Չկան. շերտը գծվում է այնպես, ինչպես սահմանում է սերվերը։</value>
+  </data>
+  <data name="layerStyles_tab_hasChanges" xml:space="preserve">
+    <value>Դուք փոխել եք այս շերտի սիմվոլիկան։ Փոփոխությունը պահվում է ձեր նախագծում. «Վերականգնել ադմինի ոճերը» կոճակը վերադարձնում է սերվերի ոճերը։</value>
+  </data>
+  <data name="serverLayerSettings_error_styleTitleRequired" xml:space="preserve">
+    <value>Երբ շերտն ունի մի քանի ոճ, յուրաքանչյուրին անվանում է պետք։</value>
+  </data>
+  <data name="serverLayerSettings_error_duplicateStyleTitle" xml:space="preserve">
+    <value>Երկու ոճ ունեն նույն անվանումը։</value>
+  </data>
+  <data name="layerStyles_wholeLayer" xml:space="preserve">
+    <value>Ամբողջ շերտը</value>
+  </data>
+  <data name="layerStyles_wholeLayerHint" xml:space="preserve">
+    <value>Խոշորացման միջակայքը և անթափանցիկությունը կիրառվում են շերտի վրա՝ անկախ դրա սիմվոլիկայից։</value>
+  </data>
+  <data name="layerStyles_modeSimple" xml:space="preserve">
+    <value>Պարզ</value>
+  </data>
+  <data name="layerStyles_modeStyles" xml:space="preserve">
+    <value>Ոճեր (SLD)</value>
+  </data>
+  <data name="layerStyles_simpleHint" xml:space="preserve">
+    <value>Մեկ պարզ ոճ՝ ստորև նշված գույներից։ Անցեք «Ոճեր»-ին՝ ըստ ատրիբուտի կանոնների և օգտատերերի ընտրության համար մի քանի սիմվոլիկայի համար։</value>
+  </data>
+  <data name="layerStyles_previewOf" xml:space="preserve">
+    <value>Լեգենդ՝ {0}</value>
+  </data>
+  <data name="layerStyles_switchToSimpleConfirm" xml:space="preserve">
+    <value>Հեռացնե՞լ այս շերտի {0} ոճը։ Փոխարենը կօգտագործվեն պարզ գույները։</value>
+  </data>
+  <data name="layerStyles_labelsNote" xml:space="preserve">
+    <value>Այս շերտը գծվում է SLD ոճերով. այս պիտակը գծվում է ակտիվ ոճի վրայից, որն էլ որ լինի։</value>
+  </data>
+  <data name="layerStyles_tab_changedStyles" xml:space="preserve">
+    <value>Դուք այս համակարգչում փոխել եք հետևյալ ոճերը՝ {0}։ Փոփոխությունները պահվում են ձեր նախագծում. «Վերականգնել ադմինի ոճերը» կոճակը վերադարձնում է սերվերի ոճերը։</value>
+  </data>
+  <data name="layerStyles_tab_simpleHint" xml:space="preserve">
+    <value>Այս շերտը գծվում է պարզ գույներով. դրանք փոխելու համար օգտագործեք «Արագ խմբագրում»-ը։</value>
+  </data>
+  <data name="layerStyles_tab_editInSld" xml:space="preserve">
+    <value>Խմբագրել ոճը SLD խմբագրիչում</value>
+  </data>
+  <data name="layerStyles_tab_restore" xml:space="preserve">
+    <value>Վերականգնել ադմինի ոճերը</value>
+  </data>
+  <data name="layerStyles_tab_restoreTip" xml:space="preserve">
+    <value>Չեղարկել ձեր փոփոխությունները այս շերտի բոլոր ոճերում և գծել այն այնպես, ինչպես սահմանում է սերվերը։</value>
+  </data>
+  <data name="layerStyles_tab_changedMark" xml:space="preserve">
+    <value>Փոխվել է ձեր կողմից</value>
+  </data>
+  <data name="dialog_symbology_restoreAdmin" xml:space="preserve">
+    <value>Վերականգնել ադմինի ոճը</value>
+  </data>
+  <data name="dialog_symbology_userChanged" xml:space="preserve">
+    <value>Դուք այս համակարգչում փոխել եք այս շերտի գույները։</value>
+  </data>
+  <data name="dialog_symbology_editInSld" xml:space="preserve">
+    <value>Խմբագրել SLD խմբագրիչում</value>
+  </data>
+  <data name="dialog_symbology_advancedHint" xml:space="preserve">
+    <value>SLD խմբագրիչը ավելացնում է կանոններ ըստ ատրիբուտի, պիտակներ և այլն։ Այնտեղ պահպանելուց հետո այս շերտը կբացվի SLD խմբագրիչում. «Վերականգնել ադմինի ոճը» կոճակը վերադարձնում է արագ գույները։</value>
+  </data>
+  <data name="layerSettings_statistics_liveOnServer" xml:space="preserve">
+    <value>Այս շերտը Live ռեժիմում է. դրա վիճակագրությունը հաշվում է սերվերը՝ բոլոր օբյեկտների վրա։ Չպահպանված խմբագրումները ներառված չեն։</value>
+  </data>
+  <data name="layerSettings_general_featureCountServer" xml:space="preserve">
+    <value>Հաշվված է սերվերում՝ բոլոր օբյեկտների վրա (չպահպանված խմբագրումները ներառված չեն)</value>
+  </data>
+  <data name="serverLayerSettings_importModel_export" xml:space="preserve">
+    <value>Արտահանել ներմուծման մոդելը…</value>
+  </data>
+  <data name="serverLayerSettings_importModel_exportTip" xml:space="preserve">
+    <value>Արտահանել ներմուծման մոդելը. պահպանել բոլոր ակտիվ շերտերի տվյալների մոդելը (աղյուսակներ, սյունակներ, տիպեր, տիրույթներ) որպես ֆայլ, որը կարդում է ներմուծման գործիքը</value>
+  </data>
+  <data name="serverLayerSettings_importModel_saved" xml:space="preserve">
+    <value>{0} շերտի ներմուծման մոդելը պահպանվեց {1}-ում։</value>
+  </data>
+  <data name="serverLayerSettings_importModel_failed" xml:space="preserve">
+    <value>Ներմուծման մոդելը հնարավոր չեղավ պահպանել։</value>
+  </data>
+  <data name="ribbon_topology_header" xml:space="preserve">
+    <value>Տոպոլոգիա</value>
+  </data>
+  <data name="ribbon_topology_groupCheck" xml:space="preserve">
+    <value>Ստուգում</value>
+  </data>
+  <data name="ribbon_topology_check" xml:space="preserve">
+    <value>Ստուգել</value>
+  </data>
+  <data name="ribbon_topology_checkTooltip" xml:space="preserve">
+    <value>Ստուգել տվյալները տոպոլոգիայի կանոնների համաձայն</value>
+  </data>
+  <data name="ribbon_topology_groupResults" xml:space="preserve">
+    <value>Արդյունքներ</value>
+  </data>
+  <data name="ribbon_topology_issues" xml:space="preserve">
+    <value>Խնդիրներ</value>
+  </data>
+  <data name="ribbon_topology_issuesTooltip" xml:space="preserve">
+    <value>Վերջին ստուգման խնդիրները</value>
+  </data>
+  <data name="ribbon_topology_showOnMap" xml:space="preserve">
+    <value>Ցույց տալ քարտեզում</value>
+  </data>
+  <data name="ribbon_topology_showOnMapTooltip" xml:space="preserve">
+    <value>Գծել խնդիրները քարտեզի վրա, նաև խմբագրման ընթացքում</value>
+  </data>
+  <data name="ribbon_topology_groupSettings" xml:space="preserve">
+    <value>Կարգավորումներ</value>
+  </data>
+  <data name="ribbon_topology_rules" xml:space="preserve">
+    <value>Կանոններ</value>
+  </data>
+  <data name="ribbon_topology_rulesTooltip" xml:space="preserve">
+    <value>Ինչ է ստուգում յուրաքանչյուր կանոն. փոխել հեռավորությունները և տեսակները այս սեսիայի համար</value>
+  </data>
+  <data name="ribbon_topology_groupOutput" xml:space="preserve">
+    <value>Արդյունք</value>
+  </data>
+  <data name="ribbon_topology_export" xml:space="preserve">
+    <value>Արտահանել</value>
+  </data>
+  <data name="ribbon_topology_exportTooltip" xml:space="preserve">
+    <value>Զտված խնդիրների ցանկը՝ Excel</value>
+  </data>
+  <data name="ribbon_topology_groupHelp" xml:space="preserve">
+    <value>Օգնություն</value>
+  </data>
+  <data name="ribbon_topology_guide" xml:space="preserve">
+    <value>Ուղեցույց</value>
+  </data>
+  <data name="ribbon_topology_guideTooltip" xml:space="preserve">
+    <value>Ինչ է ստուգում «Տոպոլոգիա» ներդիրը և ինչպես այն օգտագործել</value>
+  </data>
+  <data name="topology_panel_checkTitle" xml:space="preserve">
+    <value>Տոպոլոգիայի ստուգում</value>
+  </data>
+  <data name="topology_panel_issuesTitle" xml:space="preserve">
+    <value>Տոպոլոգիայի խնդիրներ</value>
+  </data>
+  <data name="topology_panel_rulesTitle" xml:space="preserve">
+    <value>Տոպոլոգիայի կանոններ</value>
+  </data>
+  <data name="topology_guide_title" xml:space="preserve">
+    <value>Տոպոլոգիա</value>
+  </data>
+  <data name="topology_check_whatTitle" xml:space="preserve">
+    <value>Ինչ ստուգել</value>
+  </data>
+  <data name="topology_check_rulesLabel" xml:space="preserve">
+    <value>Կանոններ</value>
+  </data>
+  <data name="topology_check_rules" xml:space="preserve">
+    <value>«{1}»-ի {0} կանոն</value>
+  </data>
+  <data name="topology_check_dataLabel" xml:space="preserve">
+    <value>Տվյալներ</value>
+  </data>
+  <data name="topology_check_layerLabel" xml:space="preserve">
+    <value>Շերտ</value>
+  </data>
+  <data name="topology_check_scopeWholeData" xml:space="preserve">
+    <value>Բոլոր տվյալները</value>
+  </data>
+  <data name="topology_check_scopeLayer" xml:space="preserve">
+    <value>Մեկ շերտ</value>
+  </data>
+  <data name="topology_check_scopeExtent" xml:space="preserve">
+    <value>Քարտեզի ընդգրկույթ</value>
+  </data>
+  <data name="topology_check_scopeFeatures" xml:space="preserve">
+    <value>Ընտրված օբյեկտներ</value>
+  </data>
+  <data name="topology_check_layersTitle" xml:space="preserve">
+    <value>Կանոններին անհրաժեշտ շերտերը</value>
+  </data>
+  <data name="topology_check_refresh" xml:space="preserve">
+    <value>Նորից կարդալ շերտերը</value>
+  </data>
+  <data name="topology_check_layerLoaded" xml:space="preserve">
+    <value>բեռնված</value>
+  </data>
+  <data name="topology_check_layerLive" xml:space="preserve">
+    <value>Live. միայն քարտեզի ընդգրկույթը կամ ընտրությունը</value>
+  </data>
+  <data name="topology_check_layerNotLoaded" xml:space="preserve">
+    <value>բեռնված չէ. դրա կանոնները բաց են թողնվում</value>
+  </data>
+  <data name="topology_check_settingsInvalid" xml:space="preserve">
+    <value>«Կանոններ» վահանակի կարգավորումներից մեկը հնարավոր չէ օգտագործել. ուղղեք այն կամ վերակայեք բոլորը։</value>
+  </data>
+  <data name="topology_check_liveNeedsPartialScope" xml:space="preserve">
+    <value>Live շերտը պարունակում է միայն տեսադաշտում եղածը. ստուգեք քարտեզի ընդգրկույթը կամ ընտրությունը, կամ շերտը փոխարկեք Cache ռեժիմի։</value>
+  </data>
+  <data name="topology_check_noSelection" xml:space="preserve">
+    <value>Նախ քարտեզում ընտրեք այս շերտի օբյեկտներ։</value>
+  </data>
+  <data name="topology_check_largeScope" xml:space="preserve">
+    <value>Այս ստուգումը կարդում է {0} օբյեկտ և կարող է որոշ ժամանակ տևել. քարտեզի ընդգրկույթն ավելի արագ է։</value>
+  </data>
+  <data name="topology_check_someNotLoaded" xml:space="preserve">
+    <value>Չբեռնված շերտերը բաց են թողնվում՝ իրենց կանոնների հետ միասին։</value>
+  </data>
+  <data name="topology_check_run" xml:space="preserve">
+    <value>Ստուգել</value>
+  </data>
+  <data name="topology_check_cancel" xml:space="preserve">
+    <value>Չեղարկել</value>
+  </data>
+  <data name="topology_check_progress" xml:space="preserve">
+    <value>Ստուգվում է՝ {2} … {1} կանոնից {0}-ը</value>
+  </data>
+  <data name="topology_check_done" xml:space="preserve">
+    <value>{0} խնդիր {1} օբյեկտում</value>
+  </data>
+  <data name="topology_check_cancelled" xml:space="preserve">
+    <value>Չեղարկվեց. նախորդ արդյունքները պահպանված են։</value>
+  </data>
+  <data name="topology_issues_noCheck" xml:space="preserve">
+    <value>Նախ կատարեք ստուգում։</value>
+  </data>
+  <data name="topology_issues_header" xml:space="preserve">
+    <value>Ստուգված է {0} · {1} · {2} օբյեկտ</value>
+  </data>
+  <data name="topology_issues_settingsChanged" xml:space="preserve">
+    <value>Կարգավորումները փոխված են այս սեսիայի համար</value>
+  </data>
+  <data name="topology_issues_skipped" xml:space="preserve">
+    <value>Չստուգված (շերտը բեռնված չէ)՝ {0}</value>
+  </data>
+  <data name="topology_issues_errors" xml:space="preserve">
+    <value>{0} սխալ</value>
+  </data>
+  <data name="topology_issues_warnings" xml:space="preserve">
+    <value>{0} զգուշացում</value>
+  </data>
+  <data name="topology_issues_infos" xml:space="preserve">
+    <value>{0} ծանուցում</value>
+  </data>
+  <data name="topology_issues_allRules" xml:space="preserve">
+    <value>Բոլոր կանոնները</value>
+  </data>
+  <data name="topology_issues_changeAll" xml:space="preserve">
+    <value>Բոլորը</value>
+  </data>
+  <data name="topology_issues_changeNew" xml:space="preserve">
+    <value>Նոր՝ վերջին ստուգումից հետո</value>
+  </data>
+  <data name="topology_issues_changeStillThere" xml:space="preserve">
+    <value>Դեռ առկա են</value>
+  </data>
+  <data name="topology_issues_changeGone" xml:space="preserve">
+    <value>Վերացած՝ վերջին ստուգումից հետո</value>
+  </data>
+  <data name="topology_issues_changeTooltip" xml:space="preserve">
+    <value>Համեմատում է նույն տվյալների նախորդ ստուգման հետ</value>
+  </data>
+  <data name="topology_issues_searchTooltip" xml:space="preserve">
+    <value>Որոնել id-ներ և նախադասություններ</value>
+  </data>
+  <data name="topology_issues_none" xml:space="preserve">
+    <value>{0} օբյեկտում խնդիրներ չեն գտնվել</value>
+  </data>
+  <data name="topology_issues_overlayLimited" xml:space="preserve">
+    <value>Ավելի քան {0} խնդիր. քարտեզը ցույց է տալիս միայն սխալները</value>
+  </data>
+  <data name="topology_issues_allowed" xml:space="preserve">
+    <value>թույլատրելի՝ {0} m</value>
+  </data>
+  <data name="topology_issues_new" xml:space="preserve">
+    <value>նոր</value>
+  </data>
+  <data name="topology_issues_showInTable" xml:space="preserve">
+    <value>Ցույց տալ ատրիբուտների աղյուսակում</value>
+  </data>
+  <data name="topology_issues_export" xml:space="preserve">
+    <value>Արտահանել ցանկը Excel</value>
+  </data>
+  <data name="topology_severity_error" xml:space="preserve">
+    <value>Սխալ</value>
+  </data>
+  <data name="topology_severity_warning" xml:space="preserve">
+    <value>Զգուշացում</value>
+  </data>
+  <data name="topology_severity_info" xml:space="preserve">
+    <value>Ծանուցում</value>
+  </data>
+  <data name="topology_unit_metres" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="topology_unit_squareMetres" xml:space="preserve">
+    <value>m²</value>
+  </data>
+  <data name="topology_rules_header" xml:space="preserve">
+    <value>{0} կանոն · տարբերակ {1}</value>
+  </data>
+  <data name="topology_rules_resetAll" xml:space="preserve">
+    <value>Վերակայել բոլորը</value>
+  </data>
+  <data name="topology_rules_sessionOnly" xml:space="preserve">
+    <value>Այստեղի փոփոխությունները գործում են մինչև ծրագրի փակումը. ոչինչ չի պահվում։</value>
+  </data>
+  <data name="topology_rules_changed" xml:space="preserve">
+    <value>Փոխված է այս սեսիայում</value>
+  </data>
+  <data name="topology_rules_hidden" xml:space="preserve">
+    <value>Թաքնված</value>
+  </data>
+  <data name="topology_parameter_distance" xml:space="preserve">
+    <value>Հեռավորություն (m)</value>
+  </data>
+  <data name="topology_parameter_nearDistance" xml:space="preserve">
+    <value>Մոտիկության հեռավորություն (m)</value>
+  </data>
+  <data name="topology_parameter_searchDistance" xml:space="preserve">
+    <value>Որոնման հեռավորություն (m)</value>
+  </data>
+  <data name="topology_parameter_maxOvershoot" xml:space="preserve">
+    <value>Առավելագույն անցում (m)</value>
+  </data>
+  <data name="topology_parameter_maxGap" xml:space="preserve">
+    <value>Առավելագույն ճեղք (m)</value>
+  </data>
+  <data name="topology_parameter_minimumPoints" xml:space="preserve">
+    <value>Նվազագույն կետեր</value>
+  </data>
+  <data name="topology_parameter_minimumLength" xml:space="preserve">
+    <value>Նվազագույն երկարություն (m)</value>
+  </data>
+  <data name="topology_parameter_minimumArea" xml:space="preserve">
+    <value>Նվազագույն մակերես (m²)</value>
+  </data>
+  <data name="topology_parameter_minimumWidth" xml:space="preserve">
+    <value>Նվազագույն լայնություն (m)</value>
+  </data>
+  <data name="topology_parameter_sliverWidth" xml:space="preserve">
+    <value>Նեղ շերտի լայնություն (m)</value>
+  </data>
+  <data name="topology_parameter_interiorPartEnds" xml:space="preserve">
+    <value>Ստուգել մասերի հանդիպման ծայրերը (1 = այո)</value>
+  </data>
+  <data name="topology_parameter_sharedStretch" xml:space="preserve">
+    <value>Հաղորդել ընդհանուր հատվածները (1 = այո)</value>
+  </data>
+  <data name="topology_parameter_enclosedGaps" xml:space="preserve">
+    <value>Հաղորդել փակ բացերը (1 = այո)</value>
+  </data>
+  <data name="topology_parameter_maximumGapArea" xml:space="preserve">
+    <value>Բացի առավելագույն մակերես (m²)</value>
+  </data>
+  <data name="topology_export_rule" xml:space="preserve">
+    <value>Կանոն</value>
+  </data>
+  <data name="topology_export_kind" xml:space="preserve">
+    <value>Տեսակ</value>
+  </data>
+  <data name="topology_export_severity" xml:space="preserve">
+    <value>Կարևորություն</value>
+  </data>
+  <data name="topology_export_sentence" xml:space="preserve">
+    <value>Խնդիր</value>
+  </data>
+  <data name="topology_export_value" xml:space="preserve">
+    <value>Արժեք</value>
+  </data>
+  <data name="topology_export_features" xml:space="preserve">
+    <value>Օբյեկտներ</value>
+  </data>
+  <data name="topology_export_location" xml:space="preserve">
+    <value>Տեղադրություն (երկայնություն, լայնություն)</value>
+  </data>
+  <data name="topology_rule_geometryValid" xml:space="preserve">
+    <value>Երկրաչափությունը պետք է վավեր լինի</value>
+  </data>
+  <data name="topology_rule_distinctPoints" xml:space="preserve">
+    <value>Կետերը չպետք է համընկնեն</value>
+  </data>
+  <data name="topology_rule_pointOnLine" xml:space="preserve">
+    <value>Կետը պետք է լինի գծի վրա</value>
+  </data>
+  <data name="topology_rule_lineEndCovered" xml:space="preserve">
+    <value>Գծի ծայրերը պետք է կետեր ունենան</value>
+  </data>
+  <data name="topology_rule_lineCarriesPoints" xml:space="preserve">
+    <value>Գիծը պետք է կետեր կրի</value>
+  </data>
+  <data name="topology_rule_pointOnOneLine" xml:space="preserve">
+    <value>Կետ մեկից ավելի գծի վրա</value>
+  </data>
+  <data name="topology_rule_sequenceAlongLine" xml:space="preserve">
+    <value>Համարները պետք է աճեն գծի երկայնքով</value>
+  </data>
+  <data name="topology_rule_lineEndsConnect" xml:space="preserve">
+    <value>Գծի ծայրերը պետք է միանան</value>
+  </data>
+  <data name="topology_rule_partsJoin" xml:space="preserve">
+    <value>Գծի մասերը պետք է միանան</value>
+  </data>
+  <data name="topology_rule_distinctLines" xml:space="preserve">
+    <value>Գծերը չպետք է կրկնվեն</value>
+  </data>
+  <data name="topology_rule_touchAndReturn" xml:space="preserve">
+    <value>Գծերը չպետք է հպվեն և վերադառնան</value>
+  </data>
+  <data name="topology_rule_polygonsNoOverlap" xml:space="preserve">
+    <value>Բազմանկյունները չպետք է համընկնեն</value>
+  </data>
+  <data name="topology_rule_polygonsNoGap" xml:space="preserve">
+    <value>Բազմանկյունները չպետք է բացեր թողնեն</value>
+  </data>
+  <data name="topology_kind_geometryValid_NoGeometry" xml:space="preserve">
+    <value>Օբյեկտը երկրաչափություն չունի</value>
+  </data>
+  <data name="topology_kind_geometryValid_ClosedRing" xml:space="preserve">
+    <value>Օղակը կրկնում է իր առաջին կետը</value>
+  </data>
+  <data name="topology_kind_geometryValid_RepeatedPoint" xml:space="preserve">
+    <value>Նույն կետը երկու անգամ անընդմեջ</value>
+  </data>
+  <data name="topology_kind_geometryValid_TooFewPoints" xml:space="preserve">
+    <value>Չափազանց քիչ կետեր</value>
+  </data>
+  <data name="topology_kind_geometryValid_ZeroAreaRing" xml:space="preserve">
+    <value>Զրոյական մակերեսով օղակ</value>
+  </data>
+  <data name="topology_kind_geometryValid_InvalidCoordinate" xml:space="preserve">
+    <value>Կոորդինատը թիվ չէ</value>
+  </data>
+  <data name="topology_kind_geometryValid_CoordinateOutOfRange" xml:space="preserve">
+    <value>Երկայնությունը կամ լայնությունը միջակայքից դուրս է</value>
+  </data>
+  <data name="topology_kind_geometryValid_WrongRingOrientation" xml:space="preserve">
+    <value>Սխալ ուղղությամբ օղակ (ուղղվել է ավտոմատ)</value>
+  </data>
+  <data name="topology_kind_distinctPoints_samePlace" xml:space="preserve">
+    <value>Կետեր նույն տեղում</value>
+  </data>
+  <data name="topology_kind_distinctPoints_close" xml:space="preserve">
+    <value>Կետեր՝ իրարից {0} հեռավորությամբ</value>
+  </data>
+  <data name="topology_kind_distinctPoints_chain" xml:space="preserve">
+    <value>Մեկը մյուսի միջոցով կապված կետեր, {0} տարածությամբ</value>
+  </data>
+  <data name="topology_kind_pointOnLine_nearLine" xml:space="preserve">
+    <value>Կետը մոտակա գծից {0} հեռու է</value>
+  </data>
+  <data name="topology_kind_pointOnLine_farFromLines" xml:space="preserve">
+    <value>Կետը հեռու է բոլոր գծերից</value>
+  </data>
+  <data name="topology_kind_lineEndCovered_start" xml:space="preserve">
+    <value>Գծի սկզբում կետ չկա</value>
+  </data>
+  <data name="topology_kind_lineEndCovered_end" xml:space="preserve">
+    <value>Գծի վերջում կետ չկա</value>
+  </data>
+  <data name="topology_kind_lineCarriesPoints_tooFewPoints" xml:space="preserve">
+    <value>Գծի վրա միայն {0} կետ կա</value>
+  </data>
+  <data name="topology_kind_pointOnOneLine_onSeveralLines" xml:space="preserve">
+    <value>Կետ {0} գծի վրա</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_missing" xml:space="preserve">
+    <value>Կետ առանց համարի</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_duplicate" xml:space="preserve">
+    <value>{0} համարն օգտագործված է երկու անգամ</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_outOfOrder" xml:space="preserve">
+    <value>{0} համարը հերթականությունից դուրս է</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_gap" xml:space="preserve">
+    <value>Բացակայում է {0} համար</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_directionUndecided" xml:space="preserve">
+    <value>Համարները չեն աճում ոչ մի ուղղությամբ</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_unsnappedEnd" xml:space="preserve">
+    <value>Գծի ծայրերը իրարից {0} հեռու են, միացված չեն</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_overshoot" xml:space="preserve">
+    <value>Գիծն ավարտվում է հատումից {0} այն կողմ</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_undershoot" xml:space="preserve">
+    <value>Գիծն ավարտվում է մեկ այլ գծից {0} առաջ</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_freeEnd" xml:space="preserve">
+    <value>Գծի ծայրը ոչնչի միացված չէ</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_chain" xml:space="preserve">
+    <value>Մեկը մյուսի միջոցով կապված գծի ծայրեր, {0} տարածությամբ</value>
+  </data>
+  <data name="topology_kind_partsJoin_gap" xml:space="preserve">
+    <value>{0} ճեղք մասերի միջև</value>
+  </data>
+  <data name="topology_kind_partsJoin_detachedPart" xml:space="preserve">
+    <value>Մաս՝ մյուսներից {0} հեռու</value>
+  </data>
+  <data name="topology_kind_partsJoin_branch" xml:space="preserve">
+    <value>Մասերի {0} ծայր հանդիպում են մեկ տեղում</value>
+  </data>
+  <data name="topology_kind_partsJoin_outOfOrder" xml:space="preserve">
+    <value>Մասերը պահված են անկանոն հերթականությամբ</value>
+  </data>
+  <data name="topology_kind_partsJoin_reversedPart" xml:space="preserve">
+    <value>Մյուսներին հակառակ ուղղությամբ գծված մաս</value>
+  </data>
+  <data name="topology_kind_distinctLines_wholeLine" xml:space="preserve">
+    <value>Կրկնվող գիծ</value>
+  </data>
+  <data name="topology_kind_distinctLines_sharedStretch" xml:space="preserve">
+    <value>Գծերն ունեն {0} ընդհանուր հատված</value>
+  </data>
+  <data name="topology_kind_touchAndReturn_touchAndReturn" xml:space="preserve">
+    <value>Գծերը հատվում են երկու անգամ {0}-ի սահմաններում</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_duplicate" xml:space="preserve">
+    <value>Կրկնվող բազմանկյուն</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_inside" xml:space="preserve">
+    <value>Բազմանկյուն մեկ այլի ներսում, {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_overlap" xml:space="preserve">
+    <value>Բազմանկյունները համընկնում են {0}-ով</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_thinOverlap" xml:space="preserve">
+    <value>{0} նեղ համընկնում</value>
+  </data>
+  <data name="topology_kind_polygonsNoGap_sliver" xml:space="preserve">
+    <value>{0} երկարությամբ նեղ շերտ հարևանների միջև</value>
+  </data>
+  <data name="topology_kind_polygonsNoGap_enclosedGap" xml:space="preserve">
+    <value>Բազմանկյուններով շրջապատված {0} դատարկ տարածք</value>
+  </data>
+  <data name="topology_fix_title" xml:space="preserve">
+    <value>Ուղղում</value>
+  </data>
+  <data name="topology_fix_preview" xml:space="preserve">
+    <value>Նախադիտում</value>
+  </data>
+  <data name="topology_fix_apply" xml:space="preserve">
+    <value>Կիրառել</value>
+  </data>
+  <data name="topology_fix_cancel" xml:space="preserve">
+    <value>Չեղարկել</value>
+  </data>
+  <data name="topology_fix_evaluating" xml:space="preserve">
+    <value>Ուղղումը ստուգվում է…</value>
+  </data>
+  <data name="topology_fix_pending" xml:space="preserve">
+    <value>ուղղումը սպասում է</value>
+  </data>
+  <data name="topology_fix_pendingNote" xml:space="preserve">
+    <value>Ուղղումը կիրառվեց։ Պահպանեք շերտը, ապա նորից ստուգեք։</value>
+  </data>
+  <data name="topology_fix_pendingFooter" xml:space="preserve">
+    <value>Կիրառվել է {0} ուղղում։ Պահպանեք շերտերը՝ դրանք պահելու համար, ապա նորից ստուգեք։</value>
+  </data>
+  <data name="topology_fix_failed" xml:space="preserve">
+    <value>Ուղղումը հնարավոր չեղավ կիրառել՝ {0}</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_movePoint" xml:space="preserve">
+    <value>{0}-ը տեղափոխվում է {1}՝ {2}-ի վրա։</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_moveLineVertex" xml:space="preserve">
+    <value>{2}-ի գագաթը տեղափոխվում է {1}՝ {0}-ի վրա։</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_insertLineVertex" xml:space="preserve">
+    <value>{2}-ը ստանում է նոր գագաթ {0}-ում՝ իր ներկայիս ընթացքից {1} հեռու։</value>
+  </data>
+  <data name="topology_fix_reason_featureMissing" xml:space="preserve">
+    <value>Ուղղում չկա. այս խնդրի օբյեկտներից մեկն այլևս քարտեզում չէ։</value>
+  </data>
+  <data name="topology_fix_reason_beyondFixDistance" xml:space="preserve">
+    <value>Ուղղում չկա. տեղաշարժը կլինի {0}, ինչը գերազանցում է ուղղման հեռավորությունը ({1})։ Խմբագրեք ձեռքով։</value>
+  </data>
+  <data name="topology_fix_reason_doesNotResolve" xml:space="preserve">
+    <value>Մերժված է. ուղղումից հետո խնդիրը դեռ կմնա։</value>
+  </data>
+  <data name="topology_fix_reason_createsIssue" xml:space="preserve">
+    <value>Մերժված է. ուղղումը կառաջացնի «{0}» ({1})։</value>
+  </data>
+  <data name="topology_fix_reason_noPermission" xml:space="preserve">
+    <value>Դուք իրավունք չունեք խմբագրելու երկրաչափությունները։</value>
+  </data>
+  <data name="topology_fix_reason_notEditable" xml:space="preserve">
+    <value>{0} շերտը հնարավոր չէ խմբագրել այստեղ։</value>
+  </data>
+  <data name="topology_fix_reason_cannotRemove" xml:space="preserve">
+    <value>Այս ուղղումը ջնջում է օբյեկտ, իսկ այստեղ օբյեկտներ ջնջել հնարավոր չէ։ Խմբագրեք ձեռքով։</value>
+  </data>
+  <data name="topology_guide_correct" xml:space="preserve">
+    <value>Ճիշտ տվյալներ</value>
+  </data>
+  <data name="topology_parameter_fixDistance" xml:space="preserve">
+    <value>Ուղղման հեռավորություն (m)</value>
+  </data>
+  <data name="topology_fix_choose" xml:space="preserve">
+    <value>Ընտրեք, թե որն է մնում:</value>
+  </data>
+  <data name="topology_fix_snapLineEnds_snap" xml:space="preserve">
+    <value>{0}-ի ծայրերը հանդիպում են մեկ կետում (ամենամեծ տեղաշարժը {1} է)։</value>
+  </data>
+  <data name="topology_fix_trimOvershoot_trim" xml:space="preserve">
+    <value>{0}-ը կրճատվում է {1}-ով, որպեսզի ավարտվի {2}-ի վրա։</value>
+  </data>
+  <data name="topology_fix_extendUndershoot_extendAlong" xml:space="preserve">
+    <value>{0}-ը երկարացվում է {1} ուղիղ առաջ, մինչև հասնի {2}-ին։</value>
+  </data>
+  <data name="topology_fix_extendUndershoot_joinNearest" xml:space="preserve">
+    <value>{0}-ը ստանում է {1} նոր վերջնահատված դեպի {2}-ի մոտակա կետը։</value>
+  </data>
+  <data name="topology_fix_deleteDuplicatePoints_keep" xml:space="preserve">
+    <value>Պահել {0}-ը. ջնջել {1}-ը։</value>
+  </data>
+  <data name="topology_fix_deleteDuplicateLines_keep" xml:space="preserve">
+    <value>Պահել {0}-ը. ջնջել {1}-ը։</value>
+  </data>
+  <data name="topology_fix_reason_notFound" xml:space="preserve">
+    <value>Ուղղում չկա. ուղղման տեղն այլևս այնտեղ չէ, որտեղ գտել էր ստուգումը։ Նորից ստուգեք։</value>
+  </data>
+  <data name="topology_fix_cutOverlap_cutFrom" xml:space="preserve">
+    <value>Կտրել ընդհանուր տարածքը {0}-ից. {1}-ը մնում է անփոփոխ։</value>
+  </data>
+  <data name="topology_fix_deleteDuplicatePolygons_keep" xml:space="preserve">
+    <value>Պահել {0}-ը. ջնջել {1}-ը։</value>
+  </data>
+  <data name="topology_fix_giveGap_takeGap" xml:space="preserve">
+    <value>Ավելացնել դատարկ տարածքը {0}-ին։</value>
+  </data>
+  <data name="topology_fix_giveGap_takeSliver" xml:space="preserve">
+    <value>Լայնացնել {0}-ը մինչև {1}՝ լցնելով նեղ շերտը։</value>
+  </data>
+  <data name="topology_fix_reason_nothingLeft" xml:space="preserve">
+    <value>Ուղղում չկա. {0}-ից ոչինչ չի մնա։</value>
+  </data>
 </root>

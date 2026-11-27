@@ -3337,4 +3337,1471 @@
   <data name="dialog_fileGdbPicker_reasonUnreadable" xml:space="preserve">
     <value>Не удаётся прочитать</value>
   </data>
+  <data name="versioning_review_title" xml:space="preserve">
+    <value>Проверка версий</value>
+  </data>
+  <data name="versioning_review_refresh" xml:space="preserve">
+    <value>Обновить</value>
+  </data>
+  <data name="versioning_review_lastRefresh" xml:space="preserve">
+    <value>Последнее обновление</value>
+  </data>
+  <data name="versioning_review_competitions" xml:space="preserve">
+    <value>Конкурирующие предложения</value>
+  </data>
+  <data name="versioning_review_singles" xml:space="preserve">
+    <value>Одиночные предложения</value>
+  </data>
+  <data name="versioning_review_acceptSelected" xml:space="preserve">
+    <value>Принять выбранные</value>
+  </data>
+  <data name="versioning_review_groupSelected" xml:space="preserve">
+    <value>Объединить в конкуренцию</value>
+  </data>
+  <data name="versioning_review_compare" xml:space="preserve">
+    <value>Проверить</value>
+  </data>
+  <data name="versioning_review_colFeature" xml:space="preserve">
+    <value>Объект</value>
+  </data>
+  <data name="versioning_review_colLayer" xml:space="preserve">
+    <value>Слой</value>
+  </data>
+  <data name="versioning_review_colCount" xml:space="preserve">
+    <value>Предложения</value>
+  </data>
+  <data name="versioning_review_colAuthors" xml:space="preserve">
+    <value>Редакторы</value>
+  </data>
+  <data name="versioning_review_colAge" xml:space="preserve">
+    <value>Возраст</value>
+  </data>
+  <data name="versioning_review_colSuggestions" xml:space="preserve">
+    <value>Перекрытия</value>
+  </data>
+  <data name="versioning_review_badgeStale" xml:space="preserve">
+    <value>Устарело</value>
+  </data>
+  <data name="versioning_review_badgeOrphaned" xml:space="preserve">
+    <value>Без объекта</value>
+  </data>
+  <data name="versioning_review_badgeQueued" xml:space="preserve">
+    <value>В очереди</value>
+  </data>
+  <data name="versioning_review_badgeDelete" xml:space="preserve">
+    <value>Удаление</value>
+  </data>
+  <data name="versioning_review_empty" xml:space="preserve">
+    <value>Нет предложений на рассмотрении — здесь появляются отправленные изменения версионных слоёв.</value>
+  </data>
+  <data name="versioning_compare_back" xml:space="preserve">
+    <value>Назад к очереди</value>
+  </data>
+  <data name="versioning_compare_live" xml:space="preserve">
+    <value>Действующее</value>
+  </data>
+  <data name="versioning_compare_field" xml:space="preserve">
+    <value>Поле</value>
+  </data>
+  <data name="versioning_compare_selectWinner" xml:space="preserve">
+    <value>Выбрать победителем</value>
+  </data>
+  <data name="versioning_compare_closeNoWinner" xml:space="preserve">
+    <value>Отклонить все (без победителя)</value>
+  </data>
+  <data name="versioning_compare_reason" xml:space="preserve">
+    <value>Причина отклонения</value>
+  </data>
+  <data name="versioning_compare_staleOverride" xml:space="preserve">
+    <value>Я знаю, что действующий объект изменился после этого предложения (переопределение записывается)</value>
+  </data>
+  <data name="versioning_compare_showOnMap" xml:space="preserve">
+    <value>Показать на карте</value>
+  </data>
+  <data name="versioning_compare_deleteProposal" xml:space="preserve">
+    <value>ПРЕДЛОЖЕНИЕ УДАЛЕНИЯ</value>
+  </data>
+  <data name="versioning_compare_orphanBanner" xml:space="preserve">
+    <value>Целевого объекта больше нет в действующих данных; можно только отклонить все.</value>
+  </data>
+  <data name="versioning_compare_queuedBanner" xml:space="preserve">
+    <value>Эта конкуренция стоит в очереди за другой, ожидающей утверждения.</value>
+  </data>
+  <data name="versioning_approval_title" xml:space="preserve">
+    <value>Очередь утверждения</value>
+  </data>
+  <data name="versioning_approval_commitSelected" xml:space="preserve">
+    <value>Зафиксировать выбранные</value>
+  </data>
+  <data name="versioning_approval_return" xml:space="preserve">
+    <value>Вернуть</value>
+  </data>
+  <data name="versioning_approval_returnReason" xml:space="preserve">
+    <value>Причина возврата</value>
+  </data>
+  <data name="versioning_approval_returnReasonRequired" xml:space="preserve">
+    <value>При возврате нужно указать причину.</value>
+  </data>
+  <data name="versioning_approval_staleNeedsOverride" xml:space="preserve">
+    <value>Среди выбранных есть устаревшие предложения; отметьте переопределение, чтобы зафиксировать их.</value>
+  </data>
+  <data name="versioning_approval_colWinner" xml:space="preserve">
+    <value>Победитель</value>
+  </data>
+  <data name="versioning_approval_colReviewer" xml:space="preserve">
+    <value>Проверяющий</value>
+  </data>
+  <data name="versioning_approval_colType" xml:space="preserve">
+    <value>Изменение</value>
+  </data>
+  <data name="versioning_approval_colResolved" xml:space="preserve">
+    <value>Решено</value>
+  </data>
+  <data name="versioning_myPending_title" xml:space="preserve">
+    <value>Мои предложения на рассмотрении</value>
+  </data>
+  <data name="versioning_myPending_colSession" xml:space="preserve">
+    <value>Сеанс</value>
+  </data>
+  <data name="versioning_myPending_colStatus" xml:space="preserve">
+    <value>Состояние</value>
+  </data>
+  <data name="versioning_myPending_colSubmitted" xml:space="preserve">
+    <value>Отправлено</value>
+  </data>
+  <data name="versioning_status_pendingReview" xml:space="preserve">
+    <value>Ожидает проверки</value>
+  </data>
+  <data name="versioning_status_inCompetition" xml:space="preserve">
+    <value>В конкуренции ({0})</value>
+  </data>
+  <data name="versioning_status_underReview" xml:space="preserve">
+    <value>На проверке</value>
+  </data>
+  <data name="versioning_status_committed" xml:space="preserve">
+    <value>Зафиксировано</value>
+  </data>
+  <data name="versioning_status_rejected" xml:space="preserve">
+    <value>Отклонено</value>
+  </data>
+  <data name="versioning_status_withdrawn" xml:space="preserve">
+    <value>Отозвано</value>
+  </data>
+  <data name="versioning_submit_title" xml:space="preserve">
+    <value>Сеанс отправлен</value>
+  </data>
+  <data name="versioning_submit_summary" xml:space="preserve">
+    <value>Отправлено на рассмотрение предложений: {0}. Карта по-прежнему показывает зафиксированное состояние; следите за ходом в разделе «Мои предложения на рассмотрении».</value>
+  </data>
+  <data name="versioning_submit_competitions" xml:space="preserve">
+    <value>Вошли в конкуренцию: {0}.</value>
+  </data>
+  <data name="versioning_submit_superseded" xml:space="preserve">
+    <value>Заменили ваше прежнее предложение: {0}.</value>
+  </data>
+  <data name="versioning_submit_overlaps" xml:space="preserve">
+    <value>Перекрываются с существующими объектами (для сведения): {0}.</value>
+  </data>
+  <data name="versioning_timeline_featureId" xml:space="preserve">
+    <value>Идентификатор объекта</value>
+  </data>
+  <data name="versioning_timeline_load" xml:space="preserve">
+    <value>Показать историю</value>
+  </data>
+  <data name="versioning_timeline_liveNow" xml:space="preserve">
+    <value>Текущее состояние</value>
+  </data>
+  <data name="versioning_timeline_deleted" xml:space="preserve">
+    <value>Этот объект удалён</value>
+  </data>
+  <data name="versioning_timeline_colUntil" xml:space="preserve">
+    <value>Действует до</value>
+  </data>
+  <data name="versioning_timeline_colReplacedBy" xml:space="preserve">
+    <value>Заменено</value>
+  </data>
+  <data name="versioning_timeline_colApprover" xml:space="preserve">
+    <value>Утвердивший</value>
+  </data>
+  <data name="versioning_timeline_colBatch" xml:space="preserve">
+    <value>Пакет фиксации</value>
+  </data>
+  <data name="versioning_timeline_attributes" xml:space="preserve">
+    <value>Значения</value>
+  </data>
+  <data name="versioning_timeline_empty" xml:space="preserve">
+    <value>Для этого объекта история не записана</value>
+  </data>
+  <data name="versioning_timeline_featureIdInvalid" xml:space="preserve">
+    <value>Выберите слой и введите правильный идентификатор объекта</value>
+  </data>
+  <data name="versioning_inbox_markAllRead" xml:space="preserve">
+    <value>Отметить все как прочитанные</value>
+  </data>
+  <data name="versioning_inbox_colWhen" xml:space="preserve">
+    <value>Когда</value>
+  </data>
+  <data name="versioning_inbox_colEvent" xml:space="preserve">
+    <value>Событие</value>
+  </data>
+  <data name="versioning_inbox_colDetails" xml:space="preserve">
+    <value>Подробности</value>
+  </data>
+  <data name="versioning_inbox_unread" xml:space="preserve">
+    <value>Непрочитанных: {0}</value>
+  </data>
+  <data name="versioning_inbox_items" xml:space="preserve">
+    <value>Элементов: {0}</value>
+  </data>
+  <data name="versioning_inbox_features" xml:space="preserve">
+    <value>Объекты: {0}</value>
+  </data>
+  <data name="versioning_inbox_reason" xml:space="preserve">
+    <value>Причина: {0}</value>
+  </data>
+  <data name="versioning_inbox_typeCompetitionJoined" xml:space="preserve">
+    <value>Ваше предложение вошло в конкуренцию</value>
+  </data>
+  <data name="versioning_inbox_typeCommitted" xml:space="preserve">
+    <value>Ваши предложения зафиксированы</value>
+  </data>
+  <data name="versioning_inbox_typeRejected" xml:space="preserve">
+    <value>Ваши предложения отклонены</value>
+  </data>
+  <data name="versioning_inbox_typeClosedNoWinner" xml:space="preserve">
+    <value>Конкуренция закрыта без победителя</value>
+  </data>
+  <data name="versioning_inbox_typeReturned" xml:space="preserve">
+    <value>Утверждающий вернул ваше решение</value>
+  </data>
+  <data name="versioning_inbox_typeOrphaned" xml:space="preserve">
+    <value>Целевого объекта больше нет</value>
+  </data>
+  <data name="message_error_versionedLayerWriteRejected" xml:space="preserve">
+    <value>Этот слой находится под управлением версиями; правки нужно отправлять как предложения на проверку, а не сохранять напрямую.</value>
+  </data>
+  <data name="message_error_versioningInvalidSubmission" xml:space="preserve">
+    <value>Отправленный сеанс недействителен; перезагрузите слой и повторите попытку.</value>
+  </data>
+  <data name="message_error_versioningInvalidProposal" xml:space="preserve">
+    <value>Одно из предложенных изменений недействительно; перезагрузите слой и повторите попытку.</value>
+  </data>
+  <data name="message_error_versioningUnknownVersionedLayer" xml:space="preserve">
+    <value>Этот слой не зарегистрирован для управления версиями.</value>
+  </data>
+  <data name="message_error_versioningVersioningNotEnabled" xml:space="preserve">
+    <value>Для этого слоя управление версиями не включено; сохраняйте обычным способом.</value>
+  </data>
+  <data name="message_error_versioningProposalUnderApproval" xml:space="preserve">
+    <value>Ваше прежнее предложение для этого объекта ожидает окончательного утверждения; дождитесь его фиксации или возврата, прежде чем отправлять снова.</value>
+  </data>
+  <data name="message_error_versioningConcurrentSubmission" xml:space="preserve">
+    <value>Другая отправка в тот же момент затронула тот же объект; обновите и повторите попытку.</value>
+  </data>
+  <data name="message_error_versioningCompetitionAlreadyResolved" xml:space="preserve">
+    <value>Конкуренцию изменил или решил другой проверяющий; обновите и повторите попытку.</value>
+  </data>
+  <data name="message_error_versioningConcurrentModification" xml:space="preserve">
+    <value>Что-то изменилось одновременно; обновите и повторите попытку.</value>
+  </data>
+  <data name="message_error_versioningConcurrentLiveChange" xml:space="preserve">
+    <value>Во время фиксации изменилась конкуренция или действующий объект; ничего не зафиксировано — обновите и повторите попытку.</value>
+  </data>
+  <data name="message_error_versioningStaleBaseRequiresOverride" xml:space="preserve">
+    <value>Действующий объект изменился после создания этого предложения; для принятия нужно явное переопределение устаревания.</value>
+  </data>
+  <data name="message_error_versioningOrphanedTarget" xml:space="preserve">
+    <value>Целевого объекта больше нет; вместо этого верните конкуренцию. Ничего не зафиксировано.</value>
+  </data>
+  <data name="message_error_versioningOrphanedTargetRejectOnly" xml:space="preserve">
+    <value>Целевого объекта больше нет в действующих данных; можно только закрыть без победителя.</value>
+  </data>
+  <data name="message_error_versioningRejectionReasonRequired" xml:space="preserve">
+    <value>Нужно указать причину отклонения.</value>
+  </data>
+  <data name="message_error_versioningReturnReasonRequired" xml:space="preserve">
+    <value>При возврате нужно указать причину.</value>
+  </data>
+  <data name="message_error_versioningUnknownCompetition" xml:space="preserve">
+    <value>Конкуренция не найдена; возможно, она решена или удалена — обновите.</value>
+  </data>
+  <data name="message_error_versioningUnknownProposal" xml:space="preserve">
+    <value>Предложение не найдено в этой конкуренции; обновите.</value>
+  </data>
+  <data name="message_error_versioningUnknownSuggestion" xml:space="preserve">
+    <value>Подсказка о перекрытии не найдена; обновите.</value>
+  </data>
+  <data name="message_error_versioningInvalidGrouping" xml:space="preserve">
+    <value>Эти предложения нельзя объединить; объединять можно только ожидающие создания объектов одного слоя.</value>
+  </data>
+  <data name="message_error_versioningCompetitionBlockedByPredecessor" xml:space="preserve">
+    <value>Эта конкуренция стоит в очереди за нерешённой предыдущей; сначала решите её.</value>
+  </data>
+  <data name="message_error_versioningEmptyCompetition" xml:space="preserve">
+    <value>В конкуренции нет активных предложений.</value>
+  </data>
+  <data name="message_error_versioningNotASingleton" xml:space="preserve">
+    <value>В этой конкуренции несколько предложений; используйте окно сравнения.</value>
+  </data>
+  <data name="message_error_versioningInvalidCommit" xml:space="preserve">
+    <value>Пакет фиксации пуст или недействителен.</value>
+  </data>
+  <data name="message_error_versioningCompetitionNotResolved" xml:space="preserve">
+    <value>Конкуренция не в состоянии «решено»; обновите очередь.</value>
+  </data>
+  <data name="message_error_versioningSchemaMismatch" xml:space="preserve">
+    <value>Предложение больше не соответствует схеме слоя; его нельзя зафиксировать.</value>
+  </data>
+  <data name="versioning_map_pendingStatus" xml:space="preserve">
+    <value>Предложения на рассмотрении</value>
+  </data>
+  <data name="versioning_map_history" xml:space="preserve">
+    <value>История объекта</value>
+  </data>
+  <data name="versioning_map_myPendingOverlay" xml:space="preserve">
+    <value>Мои предложения на карте</value>
+  </data>
+  <data name="versioning_map_selectFeature" xml:space="preserve">
+    <value>Сначала выберите объект</value>
+  </data>
+  <data name="versioning_map_noPending" xml:space="preserve">
+    <value>Для этого объекта нет предложений на рассмотрении</value>
+  </data>
+  <data name="versioning_map_pendingSummary" xml:space="preserve">
+    <value>Предложений на рассмотрении: {0}</value>
+  </data>
+  <data name="versioning_map_pendingAuthors" xml:space="preserve">
+    <value>Редакторы: {0}</value>
+  </data>
+  <data name="versioning_map_pendingHasOwn" xml:space="preserve">
+    <value>Есть и ваше предложение</value>
+  </data>
+  <data name="versioning_map_overlayEmpty" xml:space="preserve">
+    <value>У вас нет предложений на рассмотрении для этого слоя</value>
+  </data>
+  <data name="versioning_map_overlayName" xml:space="preserve">
+    <value>Мои предложения — {0}</value>
+  </data>
+  <data name="versioning_changeType_create" xml:space="preserve">
+    <value>Создание</value>
+  </data>
+  <data name="versioning_changeType_update" xml:space="preserve">
+    <value>Изменение</value>
+  </data>
+  <data name="versioning_changeType_delete" xml:space="preserve">
+    <value>Удаление</value>
+  </data>
+  <data name="versioning_myPending_empty" xml:space="preserve">
+    <value>У вас нет предложений на рассмотрении.</value>
+  </data>
+  <data name="versioning_approval_empty" xml:space="preserve">
+    <value>Ничто не ожидает утверждения.</value>
+  </data>
+  <data name="versioning_inbox_empty" xml:space="preserve">
+    <value>У вас нет уведомлений.</value>
+  </data>
+  <data name="versioning_compare_empty" xml:space="preserve">
+    <value>Выберите конкуренцию в очереди проверки, чтобы сравнить её предложения.</value>
+  </data>
+  <data name="versioning_submit_confirm" xml:space="preserve">
+    <value>Изменения ({0}) в слое {1} будут отправлены на проверку, а не сохранены напрямую. Карта будет показывать утверждённое состояние, пока утверждающий их не зафиксирует. Отправить сейчас?</value>
+  </data>
+  <data name="versioning_layer_badgeTooltip" xml:space="preserve">
+    <value>Версионный слой — «Сохранить» отправляет ваши правки на проверку, а не записывает их напрямую.</value>
+  </data>
+  <data name="versioning_review_ageDays" xml:space="preserve">
+    <value>{0} д</value>
+  </data>
+  <data name="versioning_review_ageHours" xml:space="preserve">
+    <value>{0} ч</value>
+  </data>
+  <data name="versioning_review_ageMinutes" xml:space="preserve">
+    <value>{0} мин</value>
+  </data>
+  <data name="dialog_goto_quickEntry" xml:space="preserve">
+    <value>Быстрый ввод</value>
+  </data>
+  <data name="dialog_goto_quickEntryWatermark" xml:space="preserve">
+    <value>Вставьте координаты — 35.6892, 51.3890 · 35°41′21″N 51°23′20″E · 39N 534123 3950123 · ссылка на карту</value>
+  </data>
+  <data name="dialog_goto_quickEntryRecognized" xml:space="preserve">
+    <value>Распознано:</value>
+  </data>
+  <data name="dialog_goto_quickEntryNotRecognized" xml:space="preserve">
+    <value>Не распознано как координата</value>
+  </data>
+  <data name="dialog_goto_tabGeodetic" xml:space="preserve">
+    <value>Геодезические</value>
+  </data>
+  <data name="dialog_goto_tabUtm" xml:space="preserve">
+    <value>UTM</value>
+  </data>
+  <data name="dialog_goto_tabProjected" xml:space="preserve">
+    <value>Проекционные</value>
+  </data>
+  <data name="dialog_goto_format" xml:space="preserve">
+    <value>Формат</value>
+  </data>
+  <data name="dialog_goto_datum" xml:space="preserve">
+    <value>Датум (эллипсоид)</value>
+  </data>
+  <data name="dialog_goto_latitude" xml:space="preserve">
+    <value>Широта</value>
+  </data>
+  <data name="dialog_goto_longitude" xml:space="preserve">
+    <value>Долгота</value>
+  </data>
+  <data name="dialog_goto_hemisphere" xml:space="preserve">
+    <value>Полушарие</value>
+  </data>
+  <data name="dialog_goto_decimalHint" xml:space="preserve">
+    <value>Отрицательные значения — юг и запад. Здесь также принимается запись в DMS, например 35 41 21.1 N.</value>
+  </data>
+  <data name="dialog_goto_easting" xml:space="preserve">
+    <value>Восточное смещение</value>
+  </data>
+  <data name="dialog_goto_northing" xml:space="preserve">
+    <value>Северное смещение</value>
+  </data>
+  <data name="dialog_goto_projection" xml:space="preserve">
+    <value>Проекция</value>
+  </data>
+  <data name="dialog_goto_projectionCustom" xml:space="preserve">
+    <value>пользовательская</value>
+  </data>
+  <data name="dialog_goto_paramCentralMeridian" xml:space="preserve">
+    <value>Осевой меридиан</value>
+  </data>
+  <data name="dialog_goto_paramLatitudeOfOrigin" xml:space="preserve">
+    <value>Широта начала</value>
+  </data>
+  <data name="dialog_goto_paramScaleFactor" xml:space="preserve">
+    <value>Масштабный коэффициент</value>
+  </data>
+  <data name="dialog_goto_paramFalseEasting" xml:space="preserve">
+    <value>Ложное восточное смещение</value>
+  </data>
+  <data name="dialog_goto_paramFalseNorthing" xml:space="preserve">
+    <value>Ложное северное смещение</value>
+  </data>
+  <data name="dialog_goto_paramStandardParallel1" xml:space="preserve">
+    <value>Стандартная параллель 1</value>
+  </data>
+  <data name="dialog_goto_paramStandardParallel2" xml:space="preserve">
+    <value>Стандартная параллель 2</value>
+  </data>
+  <data name="dialog_goto_x" xml:space="preserve">
+    <value>X (восточное смещение)</value>
+  </data>
+  <data name="dialog_goto_y" xml:space="preserve">
+    <value>Y (северное смещение)</value>
+  </data>
+  <data name="dialog_goto_position" xml:space="preserve">
+    <value>Положение</value>
+  </data>
+  <data name="dialog_goto_positionSubtitle" xml:space="preserve">
+    <value>WGS 84 · широта, долгота</value>
+  </data>
+  <data name="dialog_goto_copy" xml:space="preserve">
+    <value>Копировать координаты</value>
+  </data>
+  <data name="dialog_goto_statusReady" xml:space="preserve">
+    <value>Готово</value>
+  </data>
+  <data name="dialog_goto_statusInvalid" xml:space="preserve">
+    <value>Проверьте ввод</value>
+  </data>
+  <data name="dialog_goto_errorLatitudeRange" xml:space="preserve">
+    <value>Широта должна быть от −90° до 90°</value>
+  </data>
+  <data name="dialog_goto_errorLongitudeRange" xml:space="preserve">
+    <value>Долгота должна быть от −180° до 180°</value>
+  </data>
+  <data name="dialog_goto_errorDmsComponents" xml:space="preserve">
+    <value>Минуты и секунды должны быть от 0 до 60</value>
+  </data>
+  <data name="dialog_goto_errorNumber" xml:space="preserve">
+    <value>Введите числовое значение для {0}</value>
+  </data>
+  <data name="dialog_goto_errorNorthingRange" xml:space="preserve">
+    <value>Северное смещение должно быть от 0 до 10 000 000 m</value>
+  </data>
+  <data name="dialog_goto_warningEastingRange" xml:space="preserve">
+    <value>Восточное смещение вне обычного диапазона зоны UTM (100 000 – 900 000 m)</value>
+  </data>
+  <data name="dialog_goto_errorProjection" xml:space="preserve">
+    <value>Эти значения не соответствуют точке на Земле</value>
+  </data>
+  <data name="srs_lccTitle" xml:space="preserve">
+    <value>Коническая равноугольная проекция Ламберта</value>
+  </data>
+  <data name="dialog_goto_coordinateSystem" xml:space="preserve">
+    <value>Система координат</value>
+  </data>
+  <data name="layerSettings_statistics_field" xml:space="preserve">
+    <value>Поле</value>
+  </data>
+  <data name="layerSettings_statistics_compute" xml:space="preserve">
+    <value>Вычислить</value>
+  </data>
+  <data name="layerSettings_statistics_liveNotSupported" xml:space="preserve">
+    <value>Этот слой в режиме Live: его объекты остаются на сервере, поэтому статистика пока недоступна. Переключите слой в режим Cache, чтобы её увидеть.</value>
+  </data>
+  <data name="layerSettings_statistics_emptyState" xml:space="preserve">
+    <value>Выберите поле и нажмите «Вычислить»</value>
+  </data>
+  <data name="layerSettings_statistics_failed" xml:space="preserve">
+    <value>Не удалось вычислить статистику:</value>
+  </data>
+  <data name="layerSettings_statistics_summary" xml:space="preserve">
+    <value>Подробности</value>
+  </data>
+  <data name="layerSettings_statistics_topValues" xml:space="preserve">
+    <value>Самые частые значения</value>
+  </data>
+  <data name="layerSettings_statistics_value" xml:space="preserve">
+    <value>Значение</value>
+  </data>
+  <data name="layerSettings_statistics_count" xml:space="preserve">
+    <value>Количество</value>
+  </data>
+  <data name="layerSettings_statistics_featureCount" xml:space="preserve">
+    <value>Объекты</value>
+  </data>
+  <data name="layerSettings_statistics_emptyCount" xml:space="preserve">
+    <value>Пустые значения</value>
+  </data>
+  <data name="layerSettings_statistics_distinctCount" xml:space="preserve">
+    <value>Различные значения</value>
+  </data>
+  <data name="layerSettings_statistics_min" xml:space="preserve">
+    <value>Минимум</value>
+  </data>
+  <data name="layerSettings_statistics_max" xml:space="preserve">
+    <value>Максимум</value>
+  </data>
+  <data name="layerSettings_statistics_sum" xml:space="preserve">
+    <value>Сумма</value>
+  </data>
+  <data name="layerSettings_statistics_mean" xml:space="preserve">
+    <value>Среднее</value>
+  </data>
+  <data name="layerSettings_statistics_median" xml:space="preserve">
+    <value>Медиана</value>
+  </data>
+  <data name="layerSettings_statistics_standardDeviation" xml:space="preserve">
+    <value>Стандартное отклонение</value>
+  </data>
+  <data name="layerSettings_statistics_minDate" xml:space="preserve">
+    <value>Самое раннее</value>
+  </data>
+  <data name="layerSettings_statistics_maxDate" xml:space="preserve">
+    <value>Самое позднее</value>
+  </data>
+  <data name="layerSettings_statistics_emptyValue" xml:space="preserve">
+    <value>(пусто)</value>
+  </data>
+  <data name="layerSettings_statistics_modeField" xml:space="preserve">
+    <value>Статистика поля</value>
+  </data>
+  <data name="layerSettings_statistics_modeGroupBy" xml:space="preserve">
+    <value>Группировка по полю</value>
+  </data>
+  <data name="layerSettings_statistics_groupByField" xml:space="preserve">
+    <value>Группировать по</value>
+  </data>
+  <data name="layerSettings_statistics_sumField" xml:space="preserve">
+    <value>Сумма по</value>
+  </data>
+  <data name="layerSettings_statistics_none" xml:space="preserve">
+    <value>(нет)</value>
+  </data>
+  <data name="layerSettings_statistics_groupCount" xml:space="preserve">
+    <value>Группы</value>
+  </data>
+  <data name="layerSettings_statistics_totalLength" xml:space="preserve">
+    <value>Общая длина</value>
+  </data>
+  <data name="layerSettings_statistics_totalArea" xml:space="preserve">
+    <value>Общая площадь</value>
+  </data>
+  <data name="layerSettings_statistics_sumOf" xml:space="preserve">
+    <value>Сумма {0}</value>
+  </data>
+  <data name="layerSettings_statistics_groups" xml:space="preserve">
+    <value>Группы</value>
+  </data>
+  <data name="layerSettings_statistics_groupsTruncated" xml:space="preserve">
+    <value>Показаны первые {0} из {1} групп.</value>
+  </data>
+  <data name="layerSettings_statistics_invalidNote" xml:space="preserve">
+    <value>Значений, которые не удалось прочитать как тип поля (не учтены): {0}.</value>
+  </data>
+  <data name="layerSettings_statistics_total" xml:space="preserve">
+    <value>Итого</value>
+  </data>
+  <data name="layerSettings_statistics_topOfDistinct" xml:space="preserve">
+    <value>{0} из {1} значений</value>
+  </data>
+  <data name="layerSettings_statistics_sortedByCount" xml:space="preserve">
+    <value>По убыванию количества</value>
+  </data>
+  <data name="layerSettings_statistics_modeGeometry" xml:space="preserve">
+    <value>Геометрия</value>
+  </data>
+  <data name="layerSettings_statistics_emptyGeometryCount" xml:space="preserve">
+    <value>Пустые геометрии</value>
+  </data>
+  <data name="layerSettings_statistics_distribution" xml:space="preserve">
+    <value>Распределение</value>
+  </data>
+  <data name="layerSettings_statistics_lengthPerFeature" xml:space="preserve">
+    <value>Длина объекта ({0})</value>
+  </data>
+  <data name="layerSettings_statistics_areaPerFeature" xml:space="preserve">
+    <value>Площадь объекта ({0})</value>
+  </data>
+  <data name="layerSettings_statistics_binCount" xml:space="preserve">
+    <value>Интервалов: {0}</value>
+  </data>
+  <data name="layerSettings_statistics_noMeasureNote" xml:space="preserve">
+    <value>Длина и площадь применимы только к линейным и полигональным слоям.</value>
+  </data>
+  <data name="layerSettings_statistics_unmeasuredNote" xml:space="preserve">
+    <value>Геометрий, которые не удалось измерить (не учтены): {0}.</value>
+  </data>
+  <data name="layerSettings_statistics_viewHistogram" xml:space="preserve">
+    <value>Диаграмма</value>
+  </data>
+  <data name="layerSettings_statistics_viewTable" xml:space="preserve">
+    <value>Частые значения</value>
+  </data>
+  <data name="layerSettings_statistics_geometryHint" xml:space="preserve">
+    <value>Геодезическая длина (линейные слои) или площадь (полигональные слои) каждого объекта на эллипсоиде WGS84.</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainCount" xml:space="preserve">
+    <value>Вне домена</value>
+  </data>
+  <data name="layerSettings_statistics_domainUsage" xml:space="preserve">
+    <value>Использовано {0} из {1} значений домена</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainNote" xml:space="preserve">
+    <value>Объектов со значением вне домена поля: {0}.</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainTooltip" xml:space="preserve">
+    <value>Не входит в домен поля</value>
+  </data>
+  <data name="sldGenerator_title" xml:space="preserve">
+    <value>Создать правила по значениям поля</value>
+  </data>
+  <data name="sldGenerator_field" xml:space="preserve">
+    <value>Поле</value>
+  </data>
+  <data name="sldGenerator_geometry" xml:space="preserve">
+    <value>Геометрия</value>
+  </data>
+  <data name="sldGenerator_geometryPoint" xml:space="preserve">
+    <value>Точка</value>
+  </data>
+  <data name="sldGenerator_geometryLine" xml:space="preserve">
+    <value>Линия</value>
+  </data>
+  <data name="sldGenerator_geometryPolygon" xml:space="preserve">
+    <value>Полигон</value>
+  </data>
+  <data name="sldGenerator_values" xml:space="preserve">
+    <value>Значения</value>
+  </data>
+  <data name="sldGenerator_valuesData" xml:space="preserve">
+    <value>Значения в слое</value>
+  </data>
+  <data name="sldGenerator_valuesDomain" xml:space="preserve">
+    <value>Все значения домена</value>
+  </data>
+  <data name="sldGenerator_colors" xml:space="preserve">
+    <value>Цвета</value>
+  </data>
+  <data name="sldGenerator_colorsPalette" xml:space="preserve">
+    <value>Встроенная палитра</value>
+  </data>
+  <data name="sldGenerator_colorsDomain" xml:space="preserve">
+    <value>Цвета домена</value>
+  </data>
+  <data name="sldGenerator_includeOther" xml:space="preserve">
+    <value>Добавить правило для остальных значений</value>
+  </data>
+  <data name="sldGenerator_replaceExisting" xml:space="preserve">
+    <value>Заменить текущие правила</value>
+  </data>
+  <data name="sldGenerator_preview" xml:space="preserve">
+    <value>Предпросмотр</value>
+  </data>
+  <data name="sldGenerator_noField" xml:space="preserve">
+    <value>Нет поля для категоризации</value>
+  </data>
+  <data name="sldGenerator_noValues" xml:space="preserve">
+    <value>У поля нет значений</value>
+  </data>
+  <data name="sldGenerator_ruleCount" xml:space="preserve">
+    <value>Правил: {0}</value>
+  </data>
+  <data name="sldGenerator_previewCut" xml:space="preserve">
+    <value>(показаны первые {0})</value>
+  </data>
+  <data name="sldGenerator_failed" xml:space="preserve">
+    <value>Не удалось прочитать значения:</value>
+  </data>
+  <data name="sldGenerator_generate" xml:space="preserve">
+    <value>Создать</value>
+  </data>
+  <data name="sldGenerator_otherValues" xml:space="preserve">
+    <value>Остальные значения</value>
+  </data>
+  <data name="layerSettings_general_summary" xml:space="preserve">
+    <value>Сводка по слою</value>
+  </data>
+  <data name="layerSettings_general_loadMode" xml:space="preserve">
+    <value>Режим загрузки:</value>
+  </data>
+  <data name="layerSettings_general_loadModeCache" xml:space="preserve">
+    <value>Загрузить всё сразу (Cache)</value>
+  </data>
+  <data name="layerSettings_general_loadModeLive" xml:space="preserve">
+    <value>Загружать по виду карты (Live)</value>
+  </data>
+  <data name="layerSettings_general_featureCount" xml:space="preserve">
+    <value>Объекты:</value>
+  </data>
+  <data name="layerSettings_general_featureCountLive" xml:space="preserve">
+    <value>Недоступно в режиме Live (загружается только видимая область)</value>
+  </data>
+  <data name="layerSettings_general_fieldCount" xml:space="preserve">
+    <value>Поля:</value>
+  </data>
+  <data name="layerSettings_general_geometryType" xml:space="preserve">
+    <value>Тип геометрии:</value>
+  </data>
+  <data name="layerSettings_general_srs" xml:space="preserve">
+    <value>Пространственная привязка:</value>
+  </data>
+  <data name="layerSettings_general_originalSrs" xml:space="preserve">
+    <value>Исходная пространственная привязка:</value>
+  </data>
+  <data name="layerSettings_general_extentWgs84" xml:space="preserve">
+    <value>Экстент (WGS84):</value>
+  </data>
+  <data name="layerSettings_general_extentUtm" xml:space="preserve">
+    <value>Экстент (UTM {0}):</value>
+  </data>
+  <data name="layerSettings_general_unknown" xml:space="preserve">
+    <value>Неизвестно</value>
+  </data>
+  <data name="layerStyles_ruleCount" xml:space="preserve">
+    <value>Правил: {0}</value>
+  </data>
+  <data name="layerStyles_untitled" xml:space="preserve">
+    <value>Стиль без названия</value>
+  </data>
+  <data name="layerStyles_newTitle" xml:space="preserve">
+    <value>Стиль {0}</value>
+  </data>
+  <data name="layerStyles_copyTitle" xml:space="preserve">
+    <value>{0} (копия)</value>
+  </data>
+  <data name="layerStyles_addFirst" xml:space="preserve">
+    <value>Добавить стиль</value>
+  </data>
+  <data name="layerStyles_adminBanner" xml:space="preserve">
+    <value>Пользователи начинают со стиля по умолчанию и могут переключиться на другие на вкладке «Символика» или в легенде карты.</value>
+  </data>
+  <data name="layerStyles_add" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
+  <data name="layerStyles_copy" xml:space="preserve">
+    <value>Копировать</value>
+  </data>
+  <data name="layerStyles_edit" xml:space="preserve">
+    <value>Изменить</value>
+  </data>
+  <data name="layerStyles_setDefault" xml:space="preserve">
+    <value>Сделать стилем по умолчанию</value>
+  </data>
+  <data name="layerStyles_moveUp" xml:space="preserve">
+    <value>Вверх</value>
+  </data>
+  <data name="layerStyles_moveDown" xml:space="preserve">
+    <value>Вниз</value>
+  </data>
+  <data name="layerStyles_delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="layerStyles_defaultBadge" xml:space="preserve">
+    <value>По умолчанию</value>
+  </data>
+  <data name="layerStyles_titleWatermark" xml:space="preserve">
+    <value>Название стиля</value>
+  </data>
+  <data name="layerStyles_legend_pick" xml:space="preserve">
+    <value>Стиль</value>
+  </data>
+  <data name="layerStyles_tab_notAvailable" xml:space="preserve">
+    <value>Для этого слоя символику задать нельзя.</value>
+  </data>
+  <data name="layerStyles_tab_styles" xml:space="preserve">
+    <value>Стили</value>
+  </data>
+  <data name="layerStyles_tab_singleStyle" xml:space="preserve">
+    <value>У этого слоя один стиль. Администратор может добавить другие в серверных настройках слоя.</value>
+  </data>
+  <data name="layerStyles_tab_legend" xml:space="preserve">
+    <value>Легенда</value>
+  </data>
+  <data name="layerStyles_tab_exportLegend" xml:space="preserve">
+    <value>Экспортировать легенду в PNG</value>
+  </data>
+  <data name="layerStyles_tab_quickEdit" xml:space="preserve">
+    <value>Быстрая правка</value>
+  </data>
+  <data name="layerStyles_tab_myChanges" xml:space="preserve">
+    <value>Мои изменения</value>
+  </data>
+  <data name="layerStyles_tab_noChanges" xml:space="preserve">
+    <value>Нет: слой рисуется так, как задано на сервере.</value>
+  </data>
+  <data name="layerStyles_tab_hasChanges" xml:space="preserve">
+    <value>Вы изменили символику этого слоя. Изменение хранится в вашем проекте; «Восстановить стили администратора» возвращает стили сервера.</value>
+  </data>
+  <data name="serverLayerSettings_error_styleTitleRequired" xml:space="preserve">
+    <value>Если у слоя несколько стилей, у каждого должно быть название.</value>
+  </data>
+  <data name="serverLayerSettings_error_duplicateStyleTitle" xml:space="preserve">
+    <value>У двух стилей одинаковое название.</value>
+  </data>
+  <data name="layerStyles_wholeLayer" xml:space="preserve">
+    <value>Весь слой</value>
+  </data>
+  <data name="layerStyles_wholeLayerHint" xml:space="preserve">
+    <value>Диапазон масштабов и прозрачность применяются к слою независимо от его символики.</value>
+  </data>
+  <data name="layerStyles_modeSimple" xml:space="preserve">
+    <value>Простой</value>
+  </data>
+  <data name="layerStyles_modeStyles" xml:space="preserve">
+    <value>Стили (SLD)</value>
+  </data>
+  <data name="layerStyles_simpleHint" xml:space="preserve">
+    <value>Один простой стиль из цветов ниже. Переключитесь на «Стили», чтобы задать правила по атрибутам и несколько вариантов символики на выбор пользователям.</value>
+  </data>
+  <data name="layerStyles_previewOf" xml:space="preserve">
+    <value>Легенда: {0}</value>
+  </data>
+  <data name="layerStyles_switchToSimpleConfirm" xml:space="preserve">
+    <value>Удалить стили этого слоя ({0})? Вместо них будут использоваться простые цвета.</value>
+  </data>
+  <data name="layerStyles_labelsNote" xml:space="preserve">
+    <value>Этот слой рисуется стилями SLD: эта подпись рисуется поверх активного стиля.</value>
+  </data>
+  <data name="layerStyles_tab_changedStyles" xml:space="preserve">
+    <value>Вы изменили на этом компьютере стили: {0}. Изменения хранятся в вашем проекте; «Восстановить стили администратора» возвращает стили сервера.</value>
+  </data>
+  <data name="layerStyles_tab_simpleHint" xml:space="preserve">
+    <value>Этот слой рисуется простыми цветами; изменить их можно в «Быстрой правке».</value>
+  </data>
+  <data name="layerStyles_tab_editInSld" xml:space="preserve">
+    <value>Изменить стиль в редакторе SLD</value>
+  </data>
+  <data name="layerStyles_tab_restore" xml:space="preserve">
+    <value>Восстановить стили администратора</value>
+  </data>
+  <data name="layerStyles_tab_restoreTip" xml:space="preserve">
+    <value>Отменить ваши изменения во всех стилях этого слоя и рисовать его так, как задано на сервере.</value>
+  </data>
+  <data name="layerStyles_tab_changedMark" xml:space="preserve">
+    <value>Изменено вами</value>
+  </data>
+  <data name="dialog_symbology_restoreAdmin" xml:space="preserve">
+    <value>Восстановить стиль администратора</value>
+  </data>
+  <data name="dialog_symbology_userChanged" xml:space="preserve">
+    <value>Вы изменили цвета этого слоя на этом компьютере.</value>
+  </data>
+  <data name="dialog_symbology_editInSld" xml:space="preserve">
+    <value>Изменить в редакторе SLD</value>
+  </data>
+  <data name="dialog_symbology_advancedHint" xml:space="preserve">
+    <value>Редактор SLD добавляет правила по атрибутам, подписи и многое другое. После сохранения там этот слой будет открываться в редакторе SLD; «Восстановить стиль администратора» вернёт быстрые цвета.</value>
+  </data>
+  <data name="layerSettings_statistics_liveOnServer" xml:space="preserve">
+    <value>Этот слой в режиме Live: его статистика вычисляется сервером по всем объектам. Несохранённые правки не учитываются.</value>
+  </data>
+  <data name="layerSettings_general_featureCountServer" xml:space="preserve">
+    <value>Подсчитано на сервере по всем объектам (несохранённые правки не учитываются)</value>
+  </data>
+  <data name="serverLayerSettings_importModel_export" xml:space="preserve">
+    <value>Экспортировать модель импорта…</value>
+  </data>
+  <data name="serverLayerSettings_importModel_exportTip" xml:space="preserve">
+    <value>Экспорт модели импорта: сохранить модель данных всех активных слоёв (таблицы, столбцы, типы, домены) в файл, который читает инструмент импорта</value>
+  </data>
+  <data name="serverLayerSettings_importModel_saved" xml:space="preserve">
+    <value>Модель импорта слоёв ({0}) сохранена в {1}.</value>
+  </data>
+  <data name="serverLayerSettings_importModel_failed" xml:space="preserve">
+    <value>Не удалось сохранить модель импорта.</value>
+  </data>
+  <data name="ribbon_topology_header" xml:space="preserve">
+    <value>Топология</value>
+  </data>
+  <data name="ribbon_topology_groupCheck" xml:space="preserve">
+    <value>Проверка</value>
+  </data>
+  <data name="ribbon_topology_check" xml:space="preserve">
+    <value>Проверить</value>
+  </data>
+  <data name="ribbon_topology_checkTooltip" xml:space="preserve">
+    <value>Проверить данные по правилам топологии</value>
+  </data>
+  <data name="ribbon_topology_groupResults" xml:space="preserve">
+    <value>Результаты</value>
+  </data>
+  <data name="ribbon_topology_issues" xml:space="preserve">
+    <value>Проблемы</value>
+  </data>
+  <data name="ribbon_topology_issuesTooltip" xml:space="preserve">
+    <value>Проблемы последней проверки</value>
+  </data>
+  <data name="ribbon_topology_showOnMap" xml:space="preserve">
+    <value>Показать на карте</value>
+  </data>
+  <data name="ribbon_topology_showOnMapTooltip" xml:space="preserve">
+    <value>Рисовать проблемы на карте, в том числе при редактировании</value>
+  </data>
+  <data name="ribbon_topology_groupSettings" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="ribbon_topology_rules" xml:space="preserve">
+    <value>Правила</value>
+  </data>
+  <data name="ribbon_topology_rulesTooltip" xml:space="preserve">
+    <value>Что проверяет каждое правило; изменение расстояний и видов на этот сеанс</value>
+  </data>
+  <data name="ribbon_topology_groupOutput" xml:space="preserve">
+    <value>Вывод</value>
+  </data>
+  <data name="ribbon_topology_export" xml:space="preserve">
+    <value>Экспорт</value>
+  </data>
+  <data name="ribbon_topology_exportTooltip" xml:space="preserve">
+    <value>Отфильтрованный список проблем в Excel</value>
+  </data>
+  <data name="ribbon_topology_groupHelp" xml:space="preserve">
+    <value>Справка</value>
+  </data>
+  <data name="ribbon_topology_guide" xml:space="preserve">
+    <value>Руководство</value>
+  </data>
+  <data name="ribbon_topology_guideTooltip" xml:space="preserve">
+    <value>Что проверяет вкладка «Топология» и как ею пользоваться</value>
+  </data>
+  <data name="topology_panel_checkTitle" xml:space="preserve">
+    <value>Проверка топологии</value>
+  </data>
+  <data name="topology_panel_issuesTitle" xml:space="preserve">
+    <value>Проблемы топологии</value>
+  </data>
+  <data name="topology_panel_rulesTitle" xml:space="preserve">
+    <value>Правила топологии</value>
+  </data>
+  <data name="topology_guide_title" xml:space="preserve">
+    <value>Топология</value>
+  </data>
+  <data name="topology_check_whatTitle" xml:space="preserve">
+    <value>Что проверять</value>
+  </data>
+  <data name="topology_check_rulesLabel" xml:space="preserve">
+    <value>Правила</value>
+  </data>
+  <data name="topology_check_rules" xml:space="preserve">
+    <value>{0} правил из «{1}»</value>
+  </data>
+  <data name="topology_check_dataLabel" xml:space="preserve">
+    <value>Данные</value>
+  </data>
+  <data name="topology_check_layerLabel" xml:space="preserve">
+    <value>Слой</value>
+  </data>
+  <data name="topology_check_scopeWholeData" xml:space="preserve">
+    <value>Все данные</value>
+  </data>
+  <data name="topology_check_scopeLayer" xml:space="preserve">
+    <value>Один слой</value>
+  </data>
+  <data name="topology_check_scopeExtent" xml:space="preserve">
+    <value>Экстент карты</value>
+  </data>
+  <data name="topology_check_scopeFeatures" xml:space="preserve">
+    <value>Выбранные объекты</value>
+  </data>
+  <data name="topology_check_layersTitle" xml:space="preserve">
+    <value>Слои, нужные правилам</value>
+  </data>
+  <data name="topology_check_refresh" xml:space="preserve">
+    <value>Перечитать слои</value>
+  </data>
+  <data name="topology_check_layerLoaded" xml:space="preserve">
+    <value>загружен</value>
+  </data>
+  <data name="topology_check_layerLive" xml:space="preserve">
+    <value>Live: только экстент карты или выборка</value>
+  </data>
+  <data name="topology_check_layerNotLoaded" xml:space="preserve">
+    <value>не загружен: его правила пропускаются</value>
+  </data>
+  <data name="topology_check_settingsInvalid" xml:space="preserve">
+    <value>Одну из настроек на панели «Правила» использовать нельзя; исправьте её или сбросьте все.</value>
+  </data>
+  <data name="topology_check_liveNeedsPartialScope" xml:space="preserve">
+    <value>Слой Live содержит только то, что видно: проверьте экстент карты или выборку либо переключите слой в режим Cache.</value>
+  </data>
+  <data name="topology_check_noSelection" xml:space="preserve">
+    <value>Сначала выберите на карте объекты этого слоя.</value>
+  </data>
+  <data name="topology_check_largeScope" xml:space="preserve">
+    <value>Эта проверка читает {0} объектов и может занять время; экстент карты проверяется быстрее.</value>
+  </data>
+  <data name="topology_check_someNotLoaded" xml:space="preserve">
+    <value>Незагруженные слои пропускаются вместе с их правилами.</value>
+  </data>
+  <data name="topology_check_run" xml:space="preserve">
+    <value>Проверить</value>
+  </data>
+  <data name="topology_check_cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="topology_check_progress" xml:space="preserve">
+    <value>Проверка: {2} … {0} из {1} правил</value>
+  </data>
+  <data name="topology_check_done" xml:space="preserve">
+    <value>Проблем: {0} в объектах: {1}</value>
+  </data>
+  <data name="topology_check_cancelled" xml:space="preserve">
+    <value>Отменено: прежние результаты сохранены.</value>
+  </data>
+  <data name="topology_issues_noCheck" xml:space="preserve">
+    <value>Сначала выполните проверку.</value>
+  </data>
+  <data name="topology_issues_header" xml:space="preserve">
+    <value>Проверено {0} · {1} · объектов: {2}</value>
+  </data>
+  <data name="topology_issues_settingsChanged" xml:space="preserve">
+    <value>Настройки изменены на этот сеанс</value>
+  </data>
+  <data name="topology_issues_skipped" xml:space="preserve">
+    <value>Не проверено (слой не загружен): {0}</value>
+  </data>
+  <data name="topology_issues_errors" xml:space="preserve">
+    <value>Ошибок: {0}</value>
+  </data>
+  <data name="topology_issues_warnings" xml:space="preserve">
+    <value>Предупреждений: {0}</value>
+  </data>
+  <data name="topology_issues_infos" xml:space="preserve">
+    <value>Замечаний: {0}</value>
+  </data>
+  <data name="topology_issues_allRules" xml:space="preserve">
+    <value>Все правила</value>
+  </data>
+  <data name="topology_issues_changeAll" xml:space="preserve">
+    <value>Все</value>
+  </data>
+  <data name="topology_issues_changeNew" xml:space="preserve">
+    <value>Новые с последней проверки</value>
+  </data>
+  <data name="topology_issues_changeStillThere" xml:space="preserve">
+    <value>Остались</value>
+  </data>
+  <data name="topology_issues_changeGone" xml:space="preserve">
+    <value>Исчезли с последней проверки</value>
+  </data>
+  <data name="topology_issues_changeTooltip" xml:space="preserve">
+    <value>Сравнение с предыдущей проверкой тех же данных</value>
+  </data>
+  <data name="topology_issues_searchTooltip" xml:space="preserve">
+    <value>Поиск по идентификаторам и описаниям</value>
+  </data>
+  <data name="topology_issues_none" xml:space="preserve">
+    <value>В объектах ({0}) проблем не найдено</value>
+  </data>
+  <data name="topology_issues_overlayLimited" xml:space="preserve">
+    <value>Проблем больше {0}: на карте показаны только ошибки</value>
+  </data>
+  <data name="topology_issues_allowed" xml:space="preserve">
+    <value>допустимо {0} m</value>
+  </data>
+  <data name="topology_issues_new" xml:space="preserve">
+    <value>новая</value>
+  </data>
+  <data name="topology_issues_showInTable" xml:space="preserve">
+    <value>Показать в таблице атрибутов</value>
+  </data>
+  <data name="topology_issues_export" xml:space="preserve">
+    <value>Экспортировать список в Excel</value>
+  </data>
+  <data name="topology_severity_error" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="topology_severity_warning" xml:space="preserve">
+    <value>Предупреждение</value>
+  </data>
+  <data name="topology_severity_info" xml:space="preserve">
+    <value>Замечание</value>
+  </data>
+  <data name="topology_unit_metres" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="topology_unit_squareMetres" xml:space="preserve">
+    <value>m²</value>
+  </data>
+  <data name="topology_rules_header" xml:space="preserve">
+    <value>Правил: {0} · версия {1}</value>
+  </data>
+  <data name="topology_rules_resetAll" xml:space="preserve">
+    <value>Сбросить все</value>
+  </data>
+  <data name="topology_rules_sessionOnly" xml:space="preserve">
+    <value>Изменения здесь действуют до закрытия приложения; ничего не сохраняется.</value>
+  </data>
+  <data name="topology_rules_changed" xml:space="preserve">
+    <value>Изменено в этом сеансе</value>
+  </data>
+  <data name="topology_rules_hidden" xml:space="preserve">
+    <value>Скрыто</value>
+  </data>
+  <data name="topology_parameter_distance" xml:space="preserve">
+    <value>Расстояние (m)</value>
+  </data>
+  <data name="topology_parameter_nearDistance" xml:space="preserve">
+    <value>Расстояние близости (m)</value>
+  </data>
+  <data name="topology_parameter_searchDistance" xml:space="preserve">
+    <value>Расстояние поиска (m)</value>
+  </data>
+  <data name="topology_parameter_maxOvershoot" xml:space="preserve">
+    <value>Наибольший перехлёст (m)</value>
+  </data>
+  <data name="topology_parameter_maxGap" xml:space="preserve">
+    <value>Наибольший разрыв (m)</value>
+  </data>
+  <data name="topology_parameter_minimumPoints" xml:space="preserve">
+    <value>Наименьшее число точек</value>
+  </data>
+  <data name="topology_parameter_minimumLength" xml:space="preserve">
+    <value>Наименьшая длина (m)</value>
+  </data>
+  <data name="topology_parameter_minimumArea" xml:space="preserve">
+    <value>Наименьшая площадь (m²)</value>
+  </data>
+  <data name="topology_parameter_minimumWidth" xml:space="preserve">
+    <value>Наименьшая ширина (m)</value>
+  </data>
+  <data name="topology_parameter_sliverWidth" xml:space="preserve">
+    <value>Ширина щели (m)</value>
+  </data>
+  <data name="topology_parameter_interiorPartEnds" xml:space="preserve">
+    <value>Проверять концы в местах стыка частей (1 = да)</value>
+  </data>
+  <data name="topology_parameter_sharedStretch" xml:space="preserve">
+    <value>Сообщать об общих участках (1 = да)</value>
+  </data>
+  <data name="topology_parameter_enclosedGaps" xml:space="preserve">
+    <value>Сообщать о замкнутых пустотах (1 = да)</value>
+  </data>
+  <data name="topology_parameter_maximumGapArea" xml:space="preserve">
+    <value>Наибольшая площадь пустоты (m²)</value>
+  </data>
+  <data name="topology_export_rule" xml:space="preserve">
+    <value>Правило</value>
+  </data>
+  <data name="topology_export_kind" xml:space="preserve">
+    <value>Вид</value>
+  </data>
+  <data name="topology_export_severity" xml:space="preserve">
+    <value>Важность</value>
+  </data>
+  <data name="topology_export_sentence" xml:space="preserve">
+    <value>Проблема</value>
+  </data>
+  <data name="topology_export_value" xml:space="preserve">
+    <value>Значение</value>
+  </data>
+  <data name="topology_export_features" xml:space="preserve">
+    <value>Объекты</value>
+  </data>
+  <data name="topology_export_location" xml:space="preserve">
+    <value>Местоположение (долгота, широта)</value>
+  </data>
+  <data name="topology_rule_geometryValid" xml:space="preserve">
+    <value>Геометрия должна быть корректной</value>
+  </data>
+  <data name="topology_rule_distinctPoints" xml:space="preserve">
+    <value>Точки не должны совпадать</value>
+  </data>
+  <data name="topology_rule_pointOnLine" xml:space="preserve">
+    <value>Точка должна лежать на линии</value>
+  </data>
+  <data name="topology_rule_lineEndCovered" xml:space="preserve">
+    <value>На концах линии должны быть точки</value>
+  </data>
+  <data name="topology_rule_lineCarriesPoints" xml:space="preserve">
+    <value>На линии должны быть точки</value>
+  </data>
+  <data name="topology_rule_pointOnOneLine" xml:space="preserve">
+    <value>Точка на нескольких линиях</value>
+  </data>
+  <data name="topology_rule_sequenceAlongLine" xml:space="preserve">
+    <value>Номера должны возрастать вдоль линии</value>
+  </data>
+  <data name="topology_rule_lineEndsConnect" xml:space="preserve">
+    <value>Концы линий должны соединяться</value>
+  </data>
+  <data name="topology_rule_partsJoin" xml:space="preserve">
+    <value>Части линии должны стыковаться</value>
+  </data>
+  <data name="topology_rule_distinctLines" xml:space="preserve">
+    <value>Линии не должны дублироваться</value>
+  </data>
+  <data name="topology_rule_touchAndReturn" xml:space="preserve">
+    <value>Линии не должны касаться и возвращаться</value>
+  </data>
+  <data name="topology_rule_polygonsNoOverlap" xml:space="preserve">
+    <value>Полигоны не должны перекрываться</value>
+  </data>
+  <data name="topology_rule_polygonsNoGap" xml:space="preserve">
+    <value>Полигоны не должны оставлять пустот</value>
+  </data>
+  <data name="topology_kind_geometryValid_NoGeometry" xml:space="preserve">
+    <value>У объекта нет геометрии</value>
+  </data>
+  <data name="topology_kind_geometryValid_ClosedRing" xml:space="preserve">
+    <value>Кольцо повторяет свою первую точку</value>
+  </data>
+  <data name="topology_kind_geometryValid_RepeatedPoint" xml:space="preserve">
+    <value>Одна и та же точка дважды подряд</value>
+  </data>
+  <data name="topology_kind_geometryValid_TooFewPoints" xml:space="preserve">
+    <value>Слишком мало точек</value>
+  </data>
+  <data name="topology_kind_geometryValid_ZeroAreaRing" xml:space="preserve">
+    <value>Кольцо с нулевой площадью</value>
+  </data>
+  <data name="topology_kind_geometryValid_InvalidCoordinate" xml:space="preserve">
+    <value>Координата не является числом</value>
+  </data>
+  <data name="topology_kind_geometryValid_CoordinateOutOfRange" xml:space="preserve">
+    <value>Долгота или широта вне диапазона</value>
+  </data>
+  <data name="topology_kind_geometryValid_WrongRingOrientation" xml:space="preserve">
+    <value>Кольцо обходится не в ту сторону (исправляется автоматически)</value>
+  </data>
+  <data name="topology_kind_distinctPoints_samePlace" xml:space="preserve">
+    <value>Точки в одном месте</value>
+  </data>
+  <data name="topology_kind_distinctPoints_close" xml:space="preserve">
+    <value>Точки на расстоянии {0}</value>
+  </data>
+  <data name="topology_kind_distinctPoints_chain" xml:space="preserve">
+    <value>Точки, связанные друг через друга, протяжённостью {0}</value>
+  </data>
+  <data name="topology_kind_pointOnLine_nearLine" xml:space="preserve">
+    <value>Точка в {0} от ближайшей линии</value>
+  </data>
+  <data name="topology_kind_pointOnLine_farFromLines" xml:space="preserve">
+    <value>Точка далеко от всех линий</value>
+  </data>
+  <data name="topology_kind_lineEndCovered_start" xml:space="preserve">
+    <value>Нет точки в начале линии</value>
+  </data>
+  <data name="topology_kind_lineEndCovered_end" xml:space="preserve">
+    <value>Нет точки в конце линии</value>
+  </data>
+  <data name="topology_kind_lineCarriesPoints_tooFewPoints" xml:space="preserve">
+    <value>На линии всего точек: {0}</value>
+  </data>
+  <data name="topology_kind_pointOnOneLine_onSeveralLines" xml:space="preserve">
+    <value>Точка на линиях: {0}</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_missing" xml:space="preserve">
+    <value>Точка без номера</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_duplicate" xml:space="preserve">
+    <value>Номер {0} использован дважды</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_outOfOrder" xml:space="preserve">
+    <value>Номер {0} не по порядку</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_gap" xml:space="preserve">
+    <value>Пропущено номеров: {0}</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_directionUndecided" xml:space="preserve">
+    <value>Номера не возрастают ни в одном направлении</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_unsnappedEnd" xml:space="preserve">
+    <value>Концы линий в {0} друг от друга, не соединены</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_overshoot" xml:space="preserve">
+    <value>Конец линии на {0} за пересечением</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_undershoot" xml:space="preserve">
+    <value>Конец линии не доходит {0} до другой линии</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_freeEnd" xml:space="preserve">
+    <value>Конец линии ни с чем не соединён</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_chain" xml:space="preserve">
+    <value>Концы линий, связанные друг через друга, протяжённостью {0}</value>
+  </data>
+  <data name="topology_kind_partsJoin_gap" xml:space="preserve">
+    <value>Разрыв {0} между частями</value>
+  </data>
+  <data name="topology_kind_partsJoin_detachedPart" xml:space="preserve">
+    <value>Часть в {0} от остальных</value>
+  </data>
+  <data name="topology_kind_partsJoin_branch" xml:space="preserve">
+    <value>Концы частей ({0}) сходятся в одном месте</value>
+  </data>
+  <data name="topology_kind_partsJoin_outOfOrder" xml:space="preserve">
+    <value>Части хранятся не по порядку</value>
+  </data>
+  <data name="topology_kind_partsJoin_reversedPart" xml:space="preserve">
+    <value>Часть нарисована против остальных</value>
+  </data>
+  <data name="topology_kind_distinctLines_wholeLine" xml:space="preserve">
+    <value>Дублирующаяся линия</value>
+  </data>
+  <data name="topology_kind_distinctLines_sharedStretch" xml:space="preserve">
+    <value>Общий участок линий: {0}</value>
+  </data>
+  <data name="topology_kind_touchAndReturn_touchAndReturn" xml:space="preserve">
+    <value>Линии пересекаются дважды в пределах {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_duplicate" xml:space="preserve">
+    <value>Дублирующийся полигон</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_inside" xml:space="preserve">
+    <value>Полигон внутри другого, {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_overlap" xml:space="preserve">
+    <value>Полигоны перекрываются на {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_thinOverlap" xml:space="preserve">
+    <value>Тонкое перекрытие {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoGap_sliver" xml:space="preserve">
+    <value>Щель длиной {0} между соседями</value>
+  </data>
+  <data name="topology_kind_polygonsNoGap_enclosedGap" xml:space="preserve">
+    <value>Пустота {0}, окружённая полигонами</value>
+  </data>
+  <data name="topology_fix_title" xml:space="preserve">
+    <value>Исправление</value>
+  </data>
+  <data name="topology_fix_preview" xml:space="preserve">
+    <value>Предпросмотр</value>
+  </data>
+  <data name="topology_fix_apply" xml:space="preserve">
+    <value>Применить</value>
+  </data>
+  <data name="topology_fix_cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="topology_fix_evaluating" xml:space="preserve">
+    <value>Проверка исправления…</value>
+  </data>
+  <data name="topology_fix_pending" xml:space="preserve">
+    <value>исправление ожидает</value>
+  </data>
+  <data name="topology_fix_pendingNote" xml:space="preserve">
+    <value>Исправление применено. Сохраните слой и проверьте снова.</value>
+  </data>
+  <data name="topology_fix_pendingFooter" xml:space="preserve">
+    <value>Применено исправлений: {0}. Сохраните слои, чтобы оставить их, и проверьте снова.</value>
+  </data>
+  <data name="topology_fix_failed" xml:space="preserve">
+    <value>Не удалось применить исправление: {0}</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_movePoint" xml:space="preserve">
+    <value>{0} перемещается на {1} на {2}.</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_moveLineVertex" xml:space="preserve">
+    <value>Вершина {2} перемещается на {1} на {0}.</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_insertLineVertex" xml:space="preserve">
+    <value>{2} получает новую вершину в {0}, в {1} от своего нынешнего хода.</value>
+  </data>
+  <data name="topology_fix_reason_featureMissing" xml:space="preserve">
+    <value>Исправления нет: объекта этой проблемы больше нет на карте.</value>
+  </data>
+  <data name="topology_fix_reason_beyondFixDistance" xml:space="preserve">
+    <value>Исправления нет: перемещение составило бы {0}, больше расстояния исправления ({1}). Исправьте вручную.</value>
+  </data>
+  <data name="topology_fix_reason_doesNotResolve" xml:space="preserve">
+    <value>Отклонено: проблема осталась бы после исправления.</value>
+  </data>
+  <data name="topology_fix_reason_createsIssue" xml:space="preserve">
+    <value>Отклонено: исправление вызвало бы «{0}» ({1}).</value>
+  </data>
+  <data name="topology_fix_reason_noPermission" xml:space="preserve">
+    <value>Вам нельзя редактировать геометрию.</value>
+  </data>
+  <data name="topology_fix_reason_notEditable" xml:space="preserve">
+    <value>Слой {0} здесь редактировать нельзя.</value>
+  </data>
+  <data name="topology_fix_reason_cannotRemove" xml:space="preserve">
+    <value>Это исправление удаляет объект, а удалять объекты здесь нельзя. Исправьте вручную.</value>
+  </data>
+  <data name="topology_guide_correct" xml:space="preserve">
+    <value>Исправление данных</value>
+  </data>
+  <data name="topology_parameter_fixDistance" xml:space="preserve">
+    <value>Расстояние исправления (m)</value>
+  </data>
+  <data name="topology_fix_choose" xml:space="preserve">
+    <value>Выберите, что остаётся:</value>
+  </data>
+  <data name="topology_fix_snapLineEnds_snap" xml:space="preserve">
+    <value>Концы {0} сходятся в одной точке (наибольшее перемещение — {1}).</value>
+  </data>
+  <data name="topology_fix_trimOvershoot_trim" xml:space="preserve">
+    <value>{0} укорачивается на {1}, чтобы заканчиваться на {2}.</value>
+  </data>
+  <data name="topology_fix_extendUndershoot_extendAlong" xml:space="preserve">
+    <value>{0} продлевается на {1} по прямой, пока не дойдёт до {2}.</value>
+  </data>
+  <data name="topology_fix_extendUndershoot_joinNearest" xml:space="preserve">
+    <value>{0} получает новый концевой отрезок длиной {1} до ближайшей точки {2}.</value>
+  </data>
+  <data name="topology_fix_deleteDuplicatePoints_keep" xml:space="preserve">
+    <value>Оставить {0}; удалить {1}.</value>
+  </data>
+  <data name="topology_fix_deleteDuplicateLines_keep" xml:space="preserve">
+    <value>Оставить {0}; удалить {1}.</value>
+  </data>
+  <data name="topology_fix_reason_notFound" xml:space="preserve">
+    <value>Исправления нет: исправляемое место уже не там, где его нашла проверка. Проверьте снова.</value>
+  </data>
+  <data name="topology_fix_cutOverlap_cutFrom" xml:space="preserve">
+    <value>Вырезать общую площадь из {0}; {1} остаётся без изменений.</value>
+  </data>
+  <data name="topology_fix_deleteDuplicatePolygons_keep" xml:space="preserve">
+    <value>Оставить {0}; удалить {1}.</value>
+  </data>
+  <data name="topology_fix_giveGap_takeGap" xml:space="preserve">
+    <value>Добавить пустоту к {0}.</value>
+  </data>
+  <data name="topology_fix_giveGap_takeSliver" xml:space="preserve">
+    <value>Расширить {0} до {1}, заполнив щель.</value>
+  </data>
+  <data name="topology_fix_reason_nothingLeft" xml:space="preserve">
+    <value>Исправления нет: от {0} ничего бы не осталось.</value>
+  </data>
 </root>

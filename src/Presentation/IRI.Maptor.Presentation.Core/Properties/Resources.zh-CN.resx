@@ -3337,4 +3337,1471 @@
   <data name="dialog_fileGdbPicker_reasonUnreadable" xml:space="preserve">
     <value>无法读取</value>
   </data>
+  <data name="versioning_review_title" xml:space="preserve">
+    <value>版本审核</value>
+  </data>
+  <data name="versioning_review_refresh" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="versioning_review_lastRefresh" xml:space="preserve">
+    <value>上次刷新</value>
+  </data>
+  <data name="versioning_review_competitions" xml:space="preserve">
+    <value>竞争</value>
+  </data>
+  <data name="versioning_review_singles" xml:space="preserve">
+    <value>单个提案</value>
+  </data>
+  <data name="versioning_review_acceptSelected" xml:space="preserve">
+    <value>接受所选</value>
+  </data>
+  <data name="versioning_review_groupSelected" xml:space="preserve">
+    <value>合并为竞争</value>
+  </data>
+  <data name="versioning_review_compare" xml:space="preserve">
+    <value>审核</value>
+  </data>
+  <data name="versioning_review_colFeature" xml:space="preserve">
+    <value>要素</value>
+  </data>
+  <data name="versioning_review_colLayer" xml:space="preserve">
+    <value>图层</value>
+  </data>
+  <data name="versioning_review_colCount" xml:space="preserve">
+    <value>提案数</value>
+  </data>
+  <data name="versioning_review_colAuthors" xml:space="preserve">
+    <value>编辑者</value>
+  </data>
+  <data name="versioning_review_colAge" xml:space="preserve">
+    <value>时长</value>
+  </data>
+  <data name="versioning_review_colSuggestions" xml:space="preserve">
+    <value>重叠</value>
+  </data>
+  <data name="versioning_review_badgeStale" xml:space="preserve">
+    <value>已过时</value>
+  </data>
+  <data name="versioning_review_badgeOrphaned" xml:space="preserve">
+    <value>无目标</value>
+  </data>
+  <data name="versioning_review_badgeQueued" xml:space="preserve">
+    <value>排队中</value>
+  </data>
+  <data name="versioning_review_badgeDelete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="versioning_review_empty" xml:space="preserve">
+    <value>没有待处理的提案——在版本化图层上提交的更改将显示在这里。</value>
+  </data>
+  <data name="versioning_compare_back" xml:space="preserve">
+    <value>返回队列</value>
+  </data>
+  <data name="versioning_compare_live" xml:space="preserve">
+    <value>现行</value>
+  </data>
+  <data name="versioning_compare_field" xml:space="preserve">
+    <value>字段</value>
+  </data>
+  <data name="versioning_compare_selectWinner" xml:space="preserve">
+    <value>选为胜出</value>
+  </data>
+  <data name="versioning_compare_closeNoWinner" xml:space="preserve">
+    <value>全部拒绝（无胜出）</value>
+  </data>
+  <data name="versioning_compare_reason" xml:space="preserve">
+    <value>拒绝原因</value>
+  </data>
+  <data name="versioning_compare_staleOverride" xml:space="preserve">
+    <value>我知道自此提案以来现行要素已更改（记录为强制覆盖）</value>
+  </data>
+  <data name="versioning_compare_showOnMap" xml:space="preserve">
+    <value>在地图上显示</value>
+  </data>
+  <data name="versioning_compare_deleteProposal" xml:space="preserve">
+    <value>删除提案</value>
+  </data>
+  <data name="versioning_compare_orphanBanner" xml:space="preserve">
+    <value>目标要素在现行数据中已不存在；只能全部拒绝。</value>
+  </data>
+  <data name="versioning_compare_queuedBanner" xml:space="preserve">
+    <value>此竞争正排在另一个等待审批的竞争之后。</value>
+  </data>
+  <data name="versioning_approval_title" xml:space="preserve">
+    <value>审批队列</value>
+  </data>
+  <data name="versioning_approval_commitSelected" xml:space="preserve">
+    <value>入库所选</value>
+  </data>
+  <data name="versioning_approval_return" xml:space="preserve">
+    <value>退回</value>
+  </data>
+  <data name="versioning_approval_returnReason" xml:space="preserve">
+    <value>退回原因</value>
+  </data>
+  <data name="versioning_approval_returnReasonRequired" xml:space="preserve">
+    <value>退回时必须说明原因。</value>
+  </data>
+  <data name="versioning_approval_staleNeedsOverride" xml:space="preserve">
+    <value>所选项包含已过时的提案；请勾选强制覆盖后再入库。</value>
+  </data>
+  <data name="versioning_approval_colWinner" xml:space="preserve">
+    <value>胜出者</value>
+  </data>
+  <data name="versioning_approval_colReviewer" xml:space="preserve">
+    <value>审核人</value>
+  </data>
+  <data name="versioning_approval_colType" xml:space="preserve">
+    <value>更改</value>
+  </data>
+  <data name="versioning_approval_colResolved" xml:space="preserve">
+    <value>已决</value>
+  </data>
+  <data name="versioning_myPending_title" xml:space="preserve">
+    <value>我的待处理提案</value>
+  </data>
+  <data name="versioning_myPending_colSession" xml:space="preserve">
+    <value>会话</value>
+  </data>
+  <data name="versioning_myPending_colStatus" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="versioning_myPending_colSubmitted" xml:space="preserve">
+    <value>提交时间</value>
+  </data>
+  <data name="versioning_status_pendingReview" xml:space="preserve">
+    <value>待审核</value>
+  </data>
+  <data name="versioning_status_inCompetition" xml:space="preserve">
+    <value>竞争中（{0}）</value>
+  </data>
+  <data name="versioning_status_underReview" xml:space="preserve">
+    <value>审核中</value>
+  </data>
+  <data name="versioning_status_committed" xml:space="preserve">
+    <value>已入库</value>
+  </data>
+  <data name="versioning_status_rejected" xml:space="preserve">
+    <value>已拒绝</value>
+  </data>
+  <data name="versioning_status_withdrawn" xml:space="preserve">
+    <value>已撤回</value>
+  </data>
+  <data name="versioning_submit_title" xml:space="preserve">
+    <value>会话已提交</value>
+  </data>
+  <data name="versioning_submit_summary" xml:space="preserve">
+    <value>{0} 个提案已提交为待处理。地图仍显示已入库的状态；请在“我的待处理提案”中跟踪进度。</value>
+  </data>
+  <data name="versioning_submit_competitions" xml:space="preserve">
+    <value>{0} 个进入了竞争。</value>
+  </data>
+  <data name="versioning_submit_superseded" xml:space="preserve">
+    <value>{0} 个替换了您之前的提案。</value>
+  </data>
+  <data name="versioning_submit_overlaps" xml:space="preserve">
+    <value>{0} 个与现有要素重叠（仅供参考）。</value>
+  </data>
+  <data name="versioning_timeline_featureId" xml:space="preserve">
+    <value>要素 ID</value>
+  </data>
+  <data name="versioning_timeline_load" xml:space="preserve">
+    <value>显示历史</value>
+  </data>
+  <data name="versioning_timeline_liveNow" xml:space="preserve">
+    <value>当前状态</value>
+  </data>
+  <data name="versioning_timeline_deleted" xml:space="preserve">
+    <value>此要素已被删除</value>
+  </data>
+  <data name="versioning_timeline_colUntil" xml:space="preserve">
+    <value>有效期至</value>
+  </data>
+  <data name="versioning_timeline_colReplacedBy" xml:space="preserve">
+    <value>替换者</value>
+  </data>
+  <data name="versioning_timeline_colApprover" xml:space="preserve">
+    <value>审批人</value>
+  </data>
+  <data name="versioning_timeline_colBatch" xml:space="preserve">
+    <value>入库批次</value>
+  </data>
+  <data name="versioning_timeline_attributes" xml:space="preserve">
+    <value>值</value>
+  </data>
+  <data name="versioning_timeline_empty" xml:space="preserve">
+    <value>此要素没有记录历史</value>
+  </data>
+  <data name="versioning_timeline_featureIdInvalid" xml:space="preserve">
+    <value>请选择图层并输入有效的要素 ID</value>
+  </data>
+  <data name="versioning_inbox_markAllRead" xml:space="preserve">
+    <value>全部标为已读</value>
+  </data>
+  <data name="versioning_inbox_colWhen" xml:space="preserve">
+    <value>时间</value>
+  </data>
+  <data name="versioning_inbox_colEvent" xml:space="preserve">
+    <value>事件</value>
+  </data>
+  <data name="versioning_inbox_colDetails" xml:space="preserve">
+    <value>详细信息</value>
+  </data>
+  <data name="versioning_inbox_unread" xml:space="preserve">
+    <value>{0} 条未读</value>
+  </data>
+  <data name="versioning_inbox_items" xml:space="preserve">
+    <value>{0} 项</value>
+  </data>
+  <data name="versioning_inbox_features" xml:space="preserve">
+    <value>要素：{0}</value>
+  </data>
+  <data name="versioning_inbox_reason" xml:space="preserve">
+    <value>原因：{0}</value>
+  </data>
+  <data name="versioning_inbox_typeCompetitionJoined" xml:space="preserve">
+    <value>您的提案进入了竞争</value>
+  </data>
+  <data name="versioning_inbox_typeCommitted" xml:space="preserve">
+    <value>您的提案已入库</value>
+  </data>
+  <data name="versioning_inbox_typeRejected" xml:space="preserve">
+    <value>您的提案已被拒绝</value>
+  </data>
+  <data name="versioning_inbox_typeClosedNoWinner" xml:space="preserve">
+    <value>竞争已关闭，无胜出</value>
+  </data>
+  <data name="versioning_inbox_typeReturned" xml:space="preserve">
+    <value>您的决定被审批人退回</value>
+  </data>
+  <data name="versioning_inbox_typeOrphaned" xml:space="preserve">
+    <value>目标要素已不存在</value>
+  </data>
+  <data name="message_error_versionedLayerWriteRejected" xml:space="preserve">
+    <value>此图层处于版本管理下；编辑必须作为提案提交审核，不能直接保存。</value>
+  </data>
+  <data name="message_error_versioningInvalidSubmission" xml:space="preserve">
+    <value>提交的会话无效；请重新加载图层后重试。</value>
+  </data>
+  <data name="message_error_versioningInvalidProposal" xml:space="preserve">
+    <value>某个提议的更改无效；请重新加载图层后重试。</value>
+  </data>
+  <data name="message_error_versioningUnknownVersionedLayer" xml:space="preserve">
+    <value>此图层未注册版本管理。</value>
+  </data>
+  <data name="message_error_versioningVersioningNotEnabled" xml:space="preserve">
+    <value>此图层未启用版本管理；请按常规方式保存。</value>
+  </data>
+  <data name="message_error_versioningProposalUnderApproval" xml:space="preserve">
+    <value>您之前对此要素的提案正在等待最终审批；请等其入库或退回后再重新提交。</value>
+  </data>
+  <data name="message_error_versioningConcurrentSubmission" xml:space="preserve">
+    <value>另一次提交在同一时刻涉及了同一要素；请刷新后重试。</value>
+  </data>
+  <data name="message_error_versioningCompetitionAlreadyResolved" xml:space="preserve">
+    <value>竞争已被另一位审核人更改或解决；请刷新后重试。</value>
+  </data>
+  <data name="message_error_versioningConcurrentModification" xml:space="preserve">
+    <value>有内容被同时更改；请刷新后重试。</value>
+  </data>
+  <data name="message_error_versioningConcurrentLiveChange" xml:space="preserve">
+    <value>入库期间某个竞争或现行要素发生了更改；未入库任何内容——请刷新后重试。</value>
+  </data>
+  <data name="message_error_versioningStaleBaseRequiresOverride" xml:space="preserve">
+    <value>此提案创建后现行要素已更改；接受它需要显式的过时强制覆盖。</value>
+  </data>
+  <data name="message_error_versioningOrphanedTarget" xml:space="preserve">
+    <value>目标要素已不存在；请改为退回该竞争。未入库任何内容。</value>
+  </data>
+  <data name="message_error_versioningOrphanedTargetRejectOnly" xml:space="preserve">
+    <value>目标要素在现行数据中已不存在；只允许无胜出关闭。</value>
+  </data>
+  <data name="message_error_versioningRejectionReasonRequired" xml:space="preserve">
+    <value>必须填写拒绝原因。</value>
+  </data>
+  <data name="message_error_versioningReturnReasonRequired" xml:space="preserve">
+    <value>退回时必须说明原因。</value>
+  </data>
+  <data name="message_error_versioningUnknownCompetition" xml:space="preserve">
+    <value>未找到该竞争；它可能已被解决或删除——请刷新。</value>
+  </data>
+  <data name="message_error_versioningUnknownProposal" xml:space="preserve">
+    <value>在此竞争中未找到该提案；请刷新。</value>
+  </data>
+  <data name="message_error_versioningUnknownSuggestion" xml:space="preserve">
+    <value>未找到该重叠建议；请刷新。</value>
+  </data>
+  <data name="message_error_versioningInvalidGrouping" xml:space="preserve">
+    <value>这些提案无法合并；只有同一图层中待处理的新建提案才能合并。</value>
+  </data>
+  <data name="message_error_versioningCompetitionBlockedByPredecessor" xml:space="preserve">
+    <value>此竞争排在一个未解决的前序竞争之后；请先解决那一个。</value>
+  </data>
+  <data name="message_error_versioningEmptyCompetition" xml:space="preserve">
+    <value>此竞争没有有效的提案。</value>
+  </data>
+  <data name="message_error_versioningNotASingleton" xml:space="preserve">
+    <value>此竞争包含多个提案；请使用比较视图。</value>
+  </data>
+  <data name="message_error_versioningInvalidCommit" xml:space="preserve">
+    <value>入库批次为空或无效。</value>
+  </data>
+  <data name="message_error_versioningCompetitionNotResolved" xml:space="preserve">
+    <value>此竞争不处于已解决状态；请刷新队列。</value>
+  </data>
+  <data name="message_error_versioningSchemaMismatch" xml:space="preserve">
+    <value>此提案已不再符合图层结构；无法入库。</value>
+  </data>
+  <data name="versioning_map_pendingStatus" xml:space="preserve">
+    <value>待处理提案</value>
+  </data>
+  <data name="versioning_map_history" xml:space="preserve">
+    <value>要素历史</value>
+  </data>
+  <data name="versioning_map_myPendingOverlay" xml:space="preserve">
+    <value>在地图上显示我的待处理</value>
+  </data>
+  <data name="versioning_map_selectFeature" xml:space="preserve">
+    <value>请先选择一个要素</value>
+  </data>
+  <data name="versioning_map_noPending" xml:space="preserve">
+    <value>此要素没有待处理提案</value>
+  </data>
+  <data name="versioning_map_pendingSummary" xml:space="preserve">
+    <value>{0} 个待处理提案</value>
+  </data>
+  <data name="versioning_map_pendingAuthors" xml:space="preserve">
+    <value>编辑者：{0}</value>
+  </data>
+  <data name="versioning_map_pendingHasOwn" xml:space="preserve">
+    <value>包含您自己的提案</value>
+  </data>
+  <data name="versioning_map_overlayEmpty" xml:space="preserve">
+    <value>您在此图层上没有待处理提案</value>
+  </data>
+  <data name="versioning_map_overlayName" xml:space="preserve">
+    <value>我的待处理 — {0}</value>
+  </data>
+  <data name="versioning_changeType_create" xml:space="preserve">
+    <value>新建</value>
+  </data>
+  <data name="versioning_changeType_update" xml:space="preserve">
+    <value>修改</value>
+  </data>
+  <data name="versioning_changeType_delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="versioning_myPending_empty" xml:space="preserve">
+    <value>您没有待处理提案。</value>
+  </data>
+  <data name="versioning_approval_empty" xml:space="preserve">
+    <value>没有等待审批的内容。</value>
+  </data>
+  <data name="versioning_inbox_empty" xml:space="preserve">
+    <value>您没有通知。</value>
+  </data>
+  <data name="versioning_compare_empty" xml:space="preserve">
+    <value>从审核队列中选择一个竞争以比较其提案。</value>
+  </data>
+  <data name="versioning_submit_confirm" xml:space="preserve">
+    <value>图层 {1} 上的 {0} 项更改将提交审核，而不是直接保存。在审批人将其入库之前，地图仍显示已批准的状态。立即提交？</value>
+  </data>
+  <data name="versioning_layer_badgeTooltip" xml:space="preserve">
+    <value>版本化图层——“保存”会将您的编辑提交审核，而不是直接写入。</value>
+  </data>
+  <data name="versioning_review_ageDays" xml:space="preserve">
+    <value>{0} 天</value>
+  </data>
+  <data name="versioning_review_ageHours" xml:space="preserve">
+    <value>{0} 小时</value>
+  </data>
+  <data name="versioning_review_ageMinutes" xml:space="preserve">
+    <value>{0} 分钟</value>
+  </data>
+  <data name="dialog_goto_quickEntry" xml:space="preserve">
+    <value>快速输入</value>
+  </data>
+  <data name="dialog_goto_quickEntryWatermark" xml:space="preserve">
+    <value>粘贴坐标 — 35.6892, 51.3890 · 35°41′21″N 51°23′20″E · 39N 534123 3950123 · 地图链接</value>
+  </data>
+  <data name="dialog_goto_quickEntryRecognized" xml:space="preserve">
+    <value>已识别：</value>
+  </data>
+  <data name="dialog_goto_quickEntryNotRecognized" xml:space="preserve">
+    <value>无法识别为坐标</value>
+  </data>
+  <data name="dialog_goto_tabGeodetic" xml:space="preserve">
+    <value>大地坐标</value>
+  </data>
+  <data name="dialog_goto_tabUtm" xml:space="preserve">
+    <value>UTM</value>
+  </data>
+  <data name="dialog_goto_tabProjected" xml:space="preserve">
+    <value>投影坐标</value>
+  </data>
+  <data name="dialog_goto_format" xml:space="preserve">
+    <value>格式</value>
+  </data>
+  <data name="dialog_goto_datum" xml:space="preserve">
+    <value>基准（椭球体）</value>
+  </data>
+  <data name="dialog_goto_latitude" xml:space="preserve">
+    <value>纬度</value>
+  </data>
+  <data name="dialog_goto_longitude" xml:space="preserve">
+    <value>经度</value>
+  </data>
+  <data name="dialog_goto_hemisphere" xml:space="preserve">
+    <value>半球</value>
+  </data>
+  <data name="dialog_goto_decimalHint" xml:space="preserve">
+    <value>负值表示南纬和西经。此处也可输入度分秒格式，例如 35 41 21.1 N。</value>
+  </data>
+  <data name="dialog_goto_easting" xml:space="preserve">
+    <value>东坐标</value>
+  </data>
+  <data name="dialog_goto_northing" xml:space="preserve">
+    <value>北坐标</value>
+  </data>
+  <data name="dialog_goto_projection" xml:space="preserve">
+    <value>投影</value>
+  </data>
+  <data name="dialog_goto_projectionCustom" xml:space="preserve">
+    <value>自定义</value>
+  </data>
+  <data name="dialog_goto_paramCentralMeridian" xml:space="preserve">
+    <value>中央经线</value>
+  </data>
+  <data name="dialog_goto_paramLatitudeOfOrigin" xml:space="preserve">
+    <value>原点纬度</value>
+  </data>
+  <data name="dialog_goto_paramScaleFactor" xml:space="preserve">
+    <value>比例因子</value>
+  </data>
+  <data name="dialog_goto_paramFalseEasting" xml:space="preserve">
+    <value>东偏移</value>
+  </data>
+  <data name="dialog_goto_paramFalseNorthing" xml:space="preserve">
+    <value>北偏移</value>
+  </data>
+  <data name="dialog_goto_paramStandardParallel1" xml:space="preserve">
+    <value>标准纬线 1</value>
+  </data>
+  <data name="dialog_goto_paramStandardParallel2" xml:space="preserve">
+    <value>标准纬线 2</value>
+  </data>
+  <data name="dialog_goto_x" xml:space="preserve">
+    <value>X（东坐标）</value>
+  </data>
+  <data name="dialog_goto_y" xml:space="preserve">
+    <value>Y（北坐标）</value>
+  </data>
+  <data name="dialog_goto_position" xml:space="preserve">
+    <value>位置</value>
+  </data>
+  <data name="dialog_goto_positionSubtitle" xml:space="preserve">
+    <value>WGS 84 · 纬度, 经度</value>
+  </data>
+  <data name="dialog_goto_copy" xml:space="preserve">
+    <value>复制坐标</value>
+  </data>
+  <data name="dialog_goto_statusReady" xml:space="preserve">
+    <value>就绪</value>
+  </data>
+  <data name="dialog_goto_statusInvalid" xml:space="preserve">
+    <value>请检查输入</value>
+  </data>
+  <data name="dialog_goto_errorLatitudeRange" xml:space="preserve">
+    <value>纬度必须介于 −90° 和 90° 之间</value>
+  </data>
+  <data name="dialog_goto_errorLongitudeRange" xml:space="preserve">
+    <value>经度必须介于 −180° 和 180° 之间</value>
+  </data>
+  <data name="dialog_goto_errorDmsComponents" xml:space="preserve">
+    <value>分和秒必须介于 0 和 60 之间</value>
+  </data>
+  <data name="dialog_goto_errorNumber" xml:space="preserve">
+    <value>请为 {0} 输入数值</value>
+  </data>
+  <data name="dialog_goto_errorNorthingRange" xml:space="preserve">
+    <value>北坐标必须介于 0 和 10,000,000 m 之间</value>
+  </data>
+  <data name="dialog_goto_warningEastingRange" xml:space="preserve">
+    <value>东坐标超出 UTM 投影带的常规范围（100,000 – 900,000 m）</value>
+  </data>
+  <data name="dialog_goto_errorProjection" xml:space="preserve">
+    <value>这些值无法对应到地球上的位置</value>
+  </data>
+  <data name="srs_lccTitle" xml:space="preserve">
+    <value>兰伯特等角圆锥投影</value>
+  </data>
+  <data name="dialog_goto_coordinateSystem" xml:space="preserve">
+    <value>坐标系</value>
+  </data>
+  <data name="layerSettings_statistics_field" xml:space="preserve">
+    <value>字段</value>
+  </data>
+  <data name="layerSettings_statistics_compute" xml:space="preserve">
+    <value>计算</value>
+  </data>
+  <data name="layerSettings_statistics_liveNotSupported" xml:space="preserve">
+    <value>此图层处于 Live 模式：其要素保留在服务器上，因此暂时无法提供统计。将图层切换到 Cache 模式即可查看。</value>
+  </data>
+  <data name="layerSettings_statistics_emptyState" xml:space="preserve">
+    <value>选择一个字段并点击“计算”</value>
+  </data>
+  <data name="layerSettings_statistics_failed" xml:space="preserve">
+    <value>统计计算失败：</value>
+  </data>
+  <data name="layerSettings_statistics_summary" xml:space="preserve">
+    <value>详细信息</value>
+  </data>
+  <data name="layerSettings_statistics_topValues" xml:space="preserve">
+    <value>最常见的值</value>
+  </data>
+  <data name="layerSettings_statistics_value" xml:space="preserve">
+    <value>值</value>
+  </data>
+  <data name="layerSettings_statistics_count" xml:space="preserve">
+    <value>计数</value>
+  </data>
+  <data name="layerSettings_statistics_featureCount" xml:space="preserve">
+    <value>要素</value>
+  </data>
+  <data name="layerSettings_statistics_emptyCount" xml:space="preserve">
+    <value>空值</value>
+  </data>
+  <data name="layerSettings_statistics_distinctCount" xml:space="preserve">
+    <value>不同值</value>
+  </data>
+  <data name="layerSettings_statistics_min" xml:space="preserve">
+    <value>最小值</value>
+  </data>
+  <data name="layerSettings_statistics_max" xml:space="preserve">
+    <value>最大值</value>
+  </data>
+  <data name="layerSettings_statistics_sum" xml:space="preserve">
+    <value>总和</value>
+  </data>
+  <data name="layerSettings_statistics_mean" xml:space="preserve">
+    <value>平均值</value>
+  </data>
+  <data name="layerSettings_statistics_median" xml:space="preserve">
+    <value>中位数</value>
+  </data>
+  <data name="layerSettings_statistics_standardDeviation" xml:space="preserve">
+    <value>标准差</value>
+  </data>
+  <data name="layerSettings_statistics_minDate" xml:space="preserve">
+    <value>最早</value>
+  </data>
+  <data name="layerSettings_statistics_maxDate" xml:space="preserve">
+    <value>最晚</value>
+  </data>
+  <data name="layerSettings_statistics_emptyValue" xml:space="preserve">
+    <value>（空）</value>
+  </data>
+  <data name="layerSettings_statistics_modeField" xml:space="preserve">
+    <value>字段统计</value>
+  </data>
+  <data name="layerSettings_statistics_modeGroupBy" xml:space="preserve">
+    <value>按字段分组</value>
+  </data>
+  <data name="layerSettings_statistics_groupByField" xml:space="preserve">
+    <value>分组依据</value>
+  </data>
+  <data name="layerSettings_statistics_sumField" xml:space="preserve">
+    <value>求和字段</value>
+  </data>
+  <data name="layerSettings_statistics_none" xml:space="preserve">
+    <value>（无）</value>
+  </data>
+  <data name="layerSettings_statistics_groupCount" xml:space="preserve">
+    <value>组数</value>
+  </data>
+  <data name="layerSettings_statistics_totalLength" xml:space="preserve">
+    <value>总长度</value>
+  </data>
+  <data name="layerSettings_statistics_totalArea" xml:space="preserve">
+    <value>总面积</value>
+  </data>
+  <data name="layerSettings_statistics_sumOf" xml:space="preserve">
+    <value>{0} 的总和</value>
+  </data>
+  <data name="layerSettings_statistics_groups" xml:space="preserve">
+    <value>分组</value>
+  </data>
+  <data name="layerSettings_statistics_groupsTruncated" xml:space="preserve">
+    <value>显示 {1} 个组中的前 {0} 个。</value>
+  </data>
+  <data name="layerSettings_statistics_invalidNote" xml:space="preserve">
+    <value>{0} 个值无法按字段类型读取，已被排除。</value>
+  </data>
+  <data name="layerSettings_statistics_total" xml:space="preserve">
+    <value>合计</value>
+  </data>
+  <data name="layerSettings_statistics_topOfDistinct" xml:space="preserve">
+    <value>{1} 个值中的 {0} 个</value>
+  </data>
+  <data name="layerSettings_statistics_sortedByCount" xml:space="preserve">
+    <value>按计数排序</value>
+  </data>
+  <data name="layerSettings_statistics_modeGeometry" xml:space="preserve">
+    <value>几何</value>
+  </data>
+  <data name="layerSettings_statistics_emptyGeometryCount" xml:space="preserve">
+    <value>空几何</value>
+  </data>
+  <data name="layerSettings_statistics_distribution" xml:space="preserve">
+    <value>分布</value>
+  </data>
+  <data name="layerSettings_statistics_lengthPerFeature" xml:space="preserve">
+    <value>每个要素的长度（{0}）</value>
+  </data>
+  <data name="layerSettings_statistics_areaPerFeature" xml:space="preserve">
+    <value>每个要素的面积（{0}）</value>
+  </data>
+  <data name="layerSettings_statistics_binCount" xml:space="preserve">
+    <value>{0} 个分组区间</value>
+  </data>
+  <data name="layerSettings_statistics_noMeasureNote" xml:space="preserve">
+    <value>长度和面积仅适用于线图层和面图层。</value>
+  </data>
+  <data name="layerSettings_statistics_unmeasuredNote" xml:space="preserve">
+    <value>{0} 个几何无法量测，已被排除。</value>
+  </data>
+  <data name="layerSettings_statistics_viewHistogram" xml:space="preserve">
+    <value>图表</value>
+  </data>
+  <data name="layerSettings_statistics_viewTable" xml:space="preserve">
+    <value>最常见值</value>
+  </data>
+  <data name="layerSettings_statistics_geometryHint" xml:space="preserve">
+    <value>每个要素在 WGS84 椭球体上的测地线长度（线图层）或面积（面图层）。</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainCount" xml:space="preserve">
+    <value>超出值域</value>
+  </data>
+  <data name="layerSettings_statistics_domainUsage" xml:space="preserve">
+    <value>已使用 {1} 个值域值中的 {0} 个</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainNote" xml:space="preserve">
+    <value>{0} 个要素的值超出字段值域。</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainTooltip" xml:space="preserve">
+    <value>不是该字段值域中的值</value>
+  </data>
+  <data name="sldGenerator_title" xml:space="preserve">
+    <value>根据字段值生成规则</value>
+  </data>
+  <data name="sldGenerator_field" xml:space="preserve">
+    <value>字段</value>
+  </data>
+  <data name="sldGenerator_geometry" xml:space="preserve">
+    <value>几何</value>
+  </data>
+  <data name="sldGenerator_geometryPoint" xml:space="preserve">
+    <value>点</value>
+  </data>
+  <data name="sldGenerator_geometryLine" xml:space="preserve">
+    <value>线</value>
+  </data>
+  <data name="sldGenerator_geometryPolygon" xml:space="preserve">
+    <value>面</value>
+  </data>
+  <data name="sldGenerator_values" xml:space="preserve">
+    <value>值</value>
+  </data>
+  <data name="sldGenerator_valuesData" xml:space="preserve">
+    <value>图层中的值</value>
+  </data>
+  <data name="sldGenerator_valuesDomain" xml:space="preserve">
+    <value>全部值域值</value>
+  </data>
+  <data name="sldGenerator_colors" xml:space="preserve">
+    <value>颜色</value>
+  </data>
+  <data name="sldGenerator_colorsPalette" xml:space="preserve">
+    <value>内置调色板</value>
+  </data>
+  <data name="sldGenerator_colorsDomain" xml:space="preserve">
+    <value>值域颜色</value>
+  </data>
+  <data name="sldGenerator_includeOther" xml:space="preserve">
+    <value>为其他值添加规则</value>
+  </data>
+  <data name="sldGenerator_replaceExisting" xml:space="preserve">
+    <value>替换现有规则</value>
+  </data>
+  <data name="sldGenerator_preview" xml:space="preserve">
+    <value>预览</value>
+  </data>
+  <data name="sldGenerator_noField" xml:space="preserve">
+    <value>没有可用于分类的字段</value>
+  </data>
+  <data name="sldGenerator_noValues" xml:space="preserve">
+    <value>该字段没有值</value>
+  </data>
+  <data name="sldGenerator_ruleCount" xml:space="preserve">
+    <value>{0} 条规则</value>
+  </data>
+  <data name="sldGenerator_previewCut" xml:space="preserve">
+    <value>（仅显示前 {0} 条）</value>
+  </data>
+  <data name="sldGenerator_failed" xml:space="preserve">
+    <value>读取值失败：</value>
+  </data>
+  <data name="sldGenerator_generate" xml:space="preserve">
+    <value>生成</value>
+  </data>
+  <data name="sldGenerator_otherValues" xml:space="preserve">
+    <value>其他值</value>
+  </data>
+  <data name="layerSettings_general_summary" xml:space="preserve">
+    <value>图层摘要</value>
+  </data>
+  <data name="layerSettings_general_loadMode" xml:space="preserve">
+    <value>加载模式：</value>
+  </data>
+  <data name="layerSettings_general_loadModeCache" xml:space="preserve">
+    <value>一次性全部加载（Cache）</value>
+  </data>
+  <data name="layerSettings_general_loadModeLive" xml:space="preserve">
+    <value>按地图视图加载（Live）</value>
+  </data>
+  <data name="layerSettings_general_featureCount" xml:space="preserve">
+    <value>要素：</value>
+  </data>
+  <data name="layerSettings_general_featureCountLive" xml:space="preserve">
+    <value>在 Live 模式下不可用（仅加载可见区域）</value>
+  </data>
+  <data name="layerSettings_general_fieldCount" xml:space="preserve">
+    <value>字段：</value>
+  </data>
+  <data name="layerSettings_general_geometryType" xml:space="preserve">
+    <value>几何类型：</value>
+  </data>
+  <data name="layerSettings_general_srs" xml:space="preserve">
+    <value>空间参考：</value>
+  </data>
+  <data name="layerSettings_general_originalSrs" xml:space="preserve">
+    <value>源空间参考：</value>
+  </data>
+  <data name="layerSettings_general_extentWgs84" xml:space="preserve">
+    <value>范围（WGS84）：</value>
+  </data>
+  <data name="layerSettings_general_extentUtm" xml:space="preserve">
+    <value>范围（UTM {0}）：</value>
+  </data>
+  <data name="layerSettings_general_unknown" xml:space="preserve">
+    <value>未知</value>
+  </data>
+  <data name="layerStyles_ruleCount" xml:space="preserve">
+    <value>{0} 条规则</value>
+  </data>
+  <data name="layerStyles_untitled" xml:space="preserve">
+    <value>未命名样式</value>
+  </data>
+  <data name="layerStyles_newTitle" xml:space="preserve">
+    <value>样式 {0}</value>
+  </data>
+  <data name="layerStyles_copyTitle" xml:space="preserve">
+    <value>{0}（副本）</value>
+  </data>
+  <data name="layerStyles_addFirst" xml:space="preserve">
+    <value>添加样式</value>
+  </data>
+  <data name="layerStyles_adminBanner" xml:space="preserve">
+    <value>用户从默认样式开始，可在“符号系统”选项卡或地图图例中切换到其他样式。</value>
+  </data>
+  <data name="layerStyles_add" xml:space="preserve">
+    <value>添加</value>
+  </data>
+  <data name="layerStyles_copy" xml:space="preserve">
+    <value>复制</value>
+  </data>
+  <data name="layerStyles_edit" xml:space="preserve">
+    <value>编辑</value>
+  </data>
+  <data name="layerStyles_setDefault" xml:space="preserve">
+    <value>设为默认</value>
+  </data>
+  <data name="layerStyles_moveUp" xml:space="preserve">
+    <value>上移</value>
+  </data>
+  <data name="layerStyles_moveDown" xml:space="preserve">
+    <value>下移</value>
+  </data>
+  <data name="layerStyles_delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="layerStyles_defaultBadge" xml:space="preserve">
+    <value>默认</value>
+  </data>
+  <data name="layerStyles_titleWatermark" xml:space="preserve">
+    <value>样式标题</value>
+  </data>
+  <data name="layerStyles_legend_pick" xml:space="preserve">
+    <value>样式</value>
+  </data>
+  <data name="layerStyles_tab_notAvailable" xml:space="preserve">
+    <value>此图层没有可设置的符号系统。</value>
+  </data>
+  <data name="layerStyles_tab_styles" xml:space="preserve">
+    <value>样式</value>
+  </data>
+  <data name="layerStyles_tab_singleStyle" xml:space="preserve">
+    <value>此图层只有一个样式。管理员可在服务器图层设置中添加更多样式。</value>
+  </data>
+  <data name="layerStyles_tab_legend" xml:space="preserve">
+    <value>图例</value>
+  </data>
+  <data name="layerStyles_tab_exportLegend" xml:space="preserve">
+    <value>将图例导出为 PNG</value>
+  </data>
+  <data name="layerStyles_tab_quickEdit" xml:space="preserve">
+    <value>快速编辑</value>
+  </data>
+  <data name="layerStyles_tab_myChanges" xml:space="preserve">
+    <value>我的更改</value>
+  </data>
+  <data name="layerStyles_tab_noChanges" xml:space="preserve">
+    <value>无：图层按服务器的定义绘制。</value>
+  </data>
+  <data name="layerStyles_tab_hasChanges" xml:space="preserve">
+    <value>您更改了此图层的符号系统。更改保存在您的项目中；“恢复管理员样式”可恢复服务器的样式。</value>
+  </data>
+  <data name="serverLayerSettings_error_styleTitleRequired" xml:space="preserve">
+    <value>当图层有多个样式时，每个样式都需要标题。</value>
+  </data>
+  <data name="serverLayerSettings_error_duplicateStyleTitle" xml:space="preserve">
+    <value>有两个样式的标题相同。</value>
+  </data>
+  <data name="layerStyles_wholeLayer" xml:space="preserve">
+    <value>整个图层</value>
+  </data>
+  <data name="layerStyles_wholeLayerHint" xml:space="preserve">
+    <value>无论使用何种符号系统，缩放范围和不透明度都适用于整个图层。</value>
+  </data>
+  <data name="layerStyles_modeSimple" xml:space="preserve">
+    <value>简单</value>
+  </data>
+  <data name="layerStyles_modeStyles" xml:space="preserve">
+    <value>样式（SLD）</value>
+  </data>
+  <data name="layerStyles_simpleHint" xml:space="preserve">
+    <value>使用下方颜色的单一简单样式。切换到“样式”可按属性设置规则，并提供多种可供用户选择的符号系统。</value>
+  </data>
+  <data name="layerStyles_previewOf" xml:space="preserve">
+    <value>图例：{0}</value>
+  </data>
+  <data name="layerStyles_switchToSimpleConfirm" xml:space="preserve">
+    <value>删除此图层的 {0} 个样式？将改用简单颜色。</value>
+  </data>
+  <data name="layerStyles_labelsNote" xml:space="preserve">
+    <value>此图层使用 SLD 样式绘制：此标注绘制在当前所用样式之上。</value>
+  </data>
+  <data name="layerStyles_tab_changedStyles" xml:space="preserve">
+    <value>您在此计算机上更改了这些样式：{0}。更改保存在您的项目中；“恢复管理员样式”可恢复服务器的样式。</value>
+  </data>
+  <data name="layerStyles_tab_simpleHint" xml:space="preserve">
+    <value>此图层使用简单颜色绘制；使用“快速编辑”可更改颜色。</value>
+  </data>
+  <data name="layerStyles_tab_editInSld" xml:space="preserve">
+    <value>在 SLD 编辑器中编辑样式</value>
+  </data>
+  <data name="layerStyles_tab_restore" xml:space="preserve">
+    <value>恢复管理员样式</value>
+  </data>
+  <data name="layerStyles_tab_restoreTip" xml:space="preserve">
+    <value>撤销您对此图层所有样式的更改，并按服务器的定义绘制。</value>
+  </data>
+  <data name="layerStyles_tab_changedMark" xml:space="preserve">
+    <value>已由您更改</value>
+  </data>
+  <data name="dialog_symbology_restoreAdmin" xml:space="preserve">
+    <value>恢复管理员样式</value>
+  </data>
+  <data name="dialog_symbology_userChanged" xml:space="preserve">
+    <value>您在此计算机上更改了此图层的颜色。</value>
+  </data>
+  <data name="dialog_symbology_editInSld" xml:space="preserve">
+    <value>在 SLD 编辑器中编辑</value>
+  </data>
+  <data name="dialog_symbology_advancedHint" xml:space="preserve">
+    <value>SLD 编辑器可添加按属性的规则、标注等。在那里保存后，此图层将在 SLD 编辑器中打开；“恢复管理员样式”可恢复快速颜色。</value>
+  </data>
+  <data name="layerSettings_statistics_liveOnServer" xml:space="preserve">
+    <value>此图层处于 Live 模式：其统计由服务器基于全部要素计算。未保存的编辑不包括在内。</value>
+  </data>
+  <data name="layerSettings_general_featureCountServer" xml:space="preserve">
+    <value>在服务器上基于全部要素计数（未保存的编辑不包括在内）</value>
+  </data>
+  <data name="serverLayerSettings_importModel_export" xml:space="preserve">
+    <value>导出导入模型…</value>
+  </data>
+  <data name="serverLayerSettings_importModel_exportTip" xml:space="preserve">
+    <value>导出导入模型：将每个活动图层的数据模型（表、列、类型、值域）保存为导入工具读取的文件</value>
+  </data>
+  <data name="serverLayerSettings_importModel_saved" xml:space="preserve">
+    <value>{0} 个图层的导入模型已保存到 {1}。</value>
+  </data>
+  <data name="serverLayerSettings_importModel_failed" xml:space="preserve">
+    <value>无法保存导入模型。</value>
+  </data>
+  <data name="ribbon_topology_header" xml:space="preserve">
+    <value>拓扑</value>
+  </data>
+  <data name="ribbon_topology_groupCheck" xml:space="preserve">
+    <value>检查</value>
+  </data>
+  <data name="ribbon_topology_check" xml:space="preserve">
+    <value>检查</value>
+  </data>
+  <data name="ribbon_topology_checkTooltip" xml:space="preserve">
+    <value>根据拓扑规则检查数据</value>
+  </data>
+  <data name="ribbon_topology_groupResults" xml:space="preserve">
+    <value>结果</value>
+  </data>
+  <data name="ribbon_topology_issues" xml:space="preserve">
+    <value>问题</value>
+  </data>
+  <data name="ribbon_topology_issuesTooltip" xml:space="preserve">
+    <value>上次检查发现的问题</value>
+  </data>
+  <data name="ribbon_topology_showOnMap" xml:space="preserve">
+    <value>在地图上显示</value>
+  </data>
+  <data name="ribbon_topology_showOnMapTooltip" xml:space="preserve">
+    <value>在地图上绘制问题，编辑时也显示</value>
+  </data>
+  <data name="ribbon_topology_groupSettings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="ribbon_topology_rules" xml:space="preserve">
+    <value>规则</value>
+  </data>
+  <data name="ribbon_topology_rulesTooltip" xml:space="preserve">
+    <value>每条规则检查的内容；可为本次会话更改距离和类别</value>
+  </data>
+  <data name="ribbon_topology_groupOutput" xml:space="preserve">
+    <value>输出</value>
+  </data>
+  <data name="ribbon_topology_export" xml:space="preserve">
+    <value>导出</value>
+  </data>
+  <data name="ribbon_topology_exportTooltip" xml:space="preserve">
+    <value>将筛选后的问题列表导出到 Excel</value>
+  </data>
+  <data name="ribbon_topology_groupHelp" xml:space="preserve">
+    <value>帮助</value>
+  </data>
+  <data name="ribbon_topology_guide" xml:space="preserve">
+    <value>指南</value>
+  </data>
+  <data name="ribbon_topology_guideTooltip" xml:space="preserve">
+    <value>“拓扑”选项卡检查什么以及如何使用</value>
+  </data>
+  <data name="topology_panel_checkTitle" xml:space="preserve">
+    <value>拓扑检查</value>
+  </data>
+  <data name="topology_panel_issuesTitle" xml:space="preserve">
+    <value>拓扑问题</value>
+  </data>
+  <data name="topology_panel_rulesTitle" xml:space="preserve">
+    <value>拓扑规则</value>
+  </data>
+  <data name="topology_guide_title" xml:space="preserve">
+    <value>拓扑</value>
+  </data>
+  <data name="topology_check_whatTitle" xml:space="preserve">
+    <value>检查内容</value>
+  </data>
+  <data name="topology_check_rulesLabel" xml:space="preserve">
+    <value>规则</value>
+  </data>
+  <data name="topology_check_rules" xml:space="preserve">
+    <value>“{1}”的 {0} 条规则</value>
+  </data>
+  <data name="topology_check_dataLabel" xml:space="preserve">
+    <value>数据</value>
+  </data>
+  <data name="topology_check_layerLabel" xml:space="preserve">
+    <value>图层</value>
+  </data>
+  <data name="topology_check_scopeWholeData" xml:space="preserve">
+    <value>全部数据</value>
+  </data>
+  <data name="topology_check_scopeLayer" xml:space="preserve">
+    <value>单个图层</value>
+  </data>
+  <data name="topology_check_scopeExtent" xml:space="preserve">
+    <value>地图范围</value>
+  </data>
+  <data name="topology_check_scopeFeatures" xml:space="preserve">
+    <value>所选要素</value>
+  </data>
+  <data name="topology_check_layersTitle" xml:space="preserve">
+    <value>规则所需的图层</value>
+  </data>
+  <data name="topology_check_refresh" xml:space="preserve">
+    <value>重新读取图层</value>
+  </data>
+  <data name="topology_check_layerLoaded" xml:space="preserve">
+    <value>已加载</value>
+  </data>
+  <data name="topology_check_layerLive" xml:space="preserve">
+    <value>Live：仅限地图范围或所选内容</value>
+  </data>
+  <data name="topology_check_layerNotLoaded" xml:space="preserve">
+    <value>未加载：将跳过其规则</value>
+  </data>
+  <data name="topology_check_settingsInvalid" xml:space="preserve">
+    <value>“规则”面板中的某项设置无法使用；请更正或全部重置。</value>
+  </data>
+  <data name="topology_check_liveNeedsPartialScope" xml:space="preserve">
+    <value>Live 图层只包含视图中的内容：请检查地图范围或所选内容，或将图层切换为 Cache。</value>
+  </data>
+  <data name="topology_check_noSelection" xml:space="preserve">
+    <value>请先在地图上选择此图层的要素。</value>
+  </data>
+  <data name="topology_check_largeScope" xml:space="preserve">
+    <value>此检查将读取 {0} 个要素，可能需要一段时间；检查地图范围会更快。</value>
+  </data>
+  <data name="topology_check_someNotLoaded" xml:space="preserve">
+    <value>未加载的图层及其规则将被跳过。</value>
+  </data>
+  <data name="topology_check_run" xml:space="preserve">
+    <value>检查</value>
+  </data>
+  <data name="topology_check_cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="topology_check_progress" xml:space="preserve">
+    <value>正在检查：{2} … 第 {0} 条，共 {1} 条规则</value>
+  </data>
+  <data name="topology_check_done" xml:space="preserve">
+    <value>{1} 个要素中有 {0} 个问题</value>
+  </data>
+  <data name="topology_check_cancelled" xml:space="preserve">
+    <value>已取消：保留之前的结果。</value>
+  </data>
+  <data name="topology_issues_noCheck" xml:space="preserve">
+    <value>请先运行检查。</value>
+  </data>
+  <data name="topology_issues_header" xml:space="preserve">
+    <value>检查时间 {0} · {1} · {2} 个要素</value>
+  </data>
+  <data name="topology_issues_settingsChanged" xml:space="preserve">
+    <value>本次会话中设置已更改</value>
+  </data>
+  <data name="topology_issues_skipped" xml:space="preserve">
+    <value>未检查（图层未加载）：{0}</value>
+  </data>
+  <data name="topology_issues_errors" xml:space="preserve">
+    <value>{0} 个错误</value>
+  </data>
+  <data name="topology_issues_warnings" xml:space="preserve">
+    <value>{0} 个警告</value>
+  </data>
+  <data name="topology_issues_infos" xml:space="preserve">
+    <value>{0} 个提示</value>
+  </data>
+  <data name="topology_issues_allRules" xml:space="preserve">
+    <value>所有规则</value>
+  </data>
+  <data name="topology_issues_changeAll" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="topology_issues_changeNew" xml:space="preserve">
+    <value>自上次检查后新增</value>
+  </data>
+  <data name="topology_issues_changeStillThere" xml:space="preserve">
+    <value>仍然存在</value>
+  </data>
+  <data name="topology_issues_changeGone" xml:space="preserve">
+    <value>自上次检查后消失</value>
+  </data>
+  <data name="topology_issues_changeTooltip" xml:space="preserve">
+    <value>与同一数据的上一次检查进行比较</value>
+  </data>
+  <data name="topology_issues_searchTooltip" xml:space="preserve">
+    <value>搜索 ID 和描述</value>
+  </data>
+  <data name="topology_issues_none" xml:space="preserve">
+    <value>在 {0} 个要素中未发现问题</value>
+  </data>
+  <data name="topology_issues_overlayLimited" xml:space="preserve">
+    <value>问题超过 {0} 个：地图仅显示错误</value>
+  </data>
+  <data name="topology_issues_allowed" xml:space="preserve">
+    <value>允许 {0} m</value>
+  </data>
+  <data name="topology_issues_new" xml:space="preserve">
+    <value>新</value>
+  </data>
+  <data name="topology_issues_showInTable" xml:space="preserve">
+    <value>在属性表中显示</value>
+  </data>
+  <data name="topology_issues_export" xml:space="preserve">
+    <value>将列表导出到 Excel</value>
+  </data>
+  <data name="topology_severity_error" xml:space="preserve">
+    <value>错误</value>
+  </data>
+  <data name="topology_severity_warning" xml:space="preserve">
+    <value>警告</value>
+  </data>
+  <data name="topology_severity_info" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="topology_unit_metres" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="topology_unit_squareMetres" xml:space="preserve">
+    <value>m²</value>
+  </data>
+  <data name="topology_rules_header" xml:space="preserve">
+    <value>{0} 条规则 · 版本 {1}</value>
+  </data>
+  <data name="topology_rules_resetAll" xml:space="preserve">
+    <value>全部重置</value>
+  </data>
+  <data name="topology_rules_sessionOnly" xml:space="preserve">
+    <value>此处的更改在应用程序关闭前有效；不会保存任何内容。</value>
+  </data>
+  <data name="topology_rules_changed" xml:space="preserve">
+    <value>本次会话中已更改</value>
+  </data>
+  <data name="topology_rules_hidden" xml:space="preserve">
+    <value>已隐藏</value>
+  </data>
+  <data name="topology_parameter_distance" xml:space="preserve">
+    <value>距离 (m)</value>
+  </data>
+  <data name="topology_parameter_nearDistance" xml:space="preserve">
+    <value>邻近距离 (m)</value>
+  </data>
+  <data name="topology_parameter_searchDistance" xml:space="preserve">
+    <value>搜索距离 (m)</value>
+  </data>
+  <data name="topology_parameter_maxOvershoot" xml:space="preserve">
+    <value>最大超出长度 (m)</value>
+  </data>
+  <data name="topology_parameter_maxGap" xml:space="preserve">
+    <value>最大间隙 (m)</value>
+  </data>
+  <data name="topology_parameter_minimumPoints" xml:space="preserve">
+    <value>最少点数</value>
+  </data>
+  <data name="topology_parameter_minimumLength" xml:space="preserve">
+    <value>最短长度 (m)</value>
+  </data>
+  <data name="topology_parameter_minimumArea" xml:space="preserve">
+    <value>最小面积 (m²)</value>
+  </data>
+  <data name="topology_parameter_minimumWidth" xml:space="preserve">
+    <value>最小宽度 (m)</value>
+  </data>
+  <data name="topology_parameter_sliverWidth" xml:space="preserve">
+    <value>狭长条宽度 (m)</value>
+  </data>
+  <data name="topology_parameter_interiorPartEnds" xml:space="preserve">
+    <value>检查各部分相接处的端点（1 = 是）</value>
+  </data>
+  <data name="topology_parameter_sharedStretch" xml:space="preserve">
+    <value>报告共享路段（1 = 是）</value>
+  </data>
+  <data name="topology_parameter_enclosedGaps" xml:space="preserve">
+    <value>报告封闭间隙（1 = 是）</value>
+  </data>
+  <data name="topology_parameter_maximumGapArea" xml:space="preserve">
+    <value>最大间隙面积 (m²)</value>
+  </data>
+  <data name="topology_export_rule" xml:space="preserve">
+    <value>规则</value>
+  </data>
+  <data name="topology_export_kind" xml:space="preserve">
+    <value>类别</value>
+  </data>
+  <data name="topology_export_severity" xml:space="preserve">
+    <value>严重程度</value>
+  </data>
+  <data name="topology_export_sentence" xml:space="preserve">
+    <value>问题</value>
+  </data>
+  <data name="topology_export_value" xml:space="preserve">
+    <value>值</value>
+  </data>
+  <data name="topology_export_features" xml:space="preserve">
+    <value>要素</value>
+  </data>
+  <data name="topology_export_location" xml:space="preserve">
+    <value>位置（经度, 纬度）</value>
+  </data>
+  <data name="topology_rule_geometryValid" xml:space="preserve">
+    <value>几何必须有效</value>
+  </data>
+  <data name="topology_rule_distinctPoints" xml:space="preserve">
+    <value>点不得重合</value>
+  </data>
+  <data name="topology_rule_pointOnLine" xml:space="preserve">
+    <value>点必须位于线上</value>
+  </data>
+  <data name="topology_rule_lineEndCovered" xml:space="preserve">
+    <value>线端点必须有点</value>
+  </data>
+  <data name="topology_rule_lineCarriesPoints" xml:space="preserve">
+    <value>线必须承载点</value>
+  </data>
+  <data name="topology_rule_pointOnOneLine" xml:space="preserve">
+    <value>点位于多条线上</value>
+  </data>
+  <data name="topology_rule_sequenceAlongLine" xml:space="preserve">
+    <value>编号必须沿线递增</value>
+  </data>
+  <data name="topology_rule_lineEndsConnect" xml:space="preserve">
+    <value>线端点必须连接</value>
+  </data>
+  <data name="topology_rule_partsJoin" xml:space="preserve">
+    <value>线的各部分必须相接</value>
+  </data>
+  <data name="topology_rule_distinctLines" xml:space="preserve">
+    <value>线不得重复</value>
+  </data>
+  <data name="topology_rule_touchAndReturn" xml:space="preserve">
+    <value>线不得接触后折回</value>
+  </data>
+  <data name="topology_rule_polygonsNoOverlap" xml:space="preserve">
+    <value>面不得重叠</value>
+  </data>
+  <data name="topology_rule_polygonsNoGap" xml:space="preserve">
+    <value>面之间不得留有间隙</value>
+  </data>
+  <data name="topology_kind_geometryValid_NoGeometry" xml:space="preserve">
+    <value>要素没有几何</value>
+  </data>
+  <data name="topology_kind_geometryValid_ClosedRing" xml:space="preserve">
+    <value>环重复了其首点</value>
+  </data>
+  <data name="topology_kind_geometryValid_RepeatedPoint" xml:space="preserve">
+    <value>同一点连续出现两次</value>
+  </data>
+  <data name="topology_kind_geometryValid_TooFewPoints" xml:space="preserve">
+    <value>点数过少</value>
+  </data>
+  <data name="topology_kind_geometryValid_ZeroAreaRing" xml:space="preserve">
+    <value>环没有面积</value>
+  </data>
+  <data name="topology_kind_geometryValid_InvalidCoordinate" xml:space="preserve">
+    <value>坐标不是数字</value>
+  </data>
+  <data name="topology_kind_geometryValid_CoordinateOutOfRange" xml:space="preserve">
+    <value>经度或纬度超出范围</value>
+  </data>
+  <data name="topology_kind_geometryValid_WrongRingOrientation" xml:space="preserve">
+    <value>环的方向错误（已自动修正）</value>
+  </data>
+  <data name="topology_kind_distinctPoints_samePlace" xml:space="preserve">
+    <value>点位于同一位置</value>
+  </data>
+  <data name="topology_kind_distinctPoints_close" xml:space="preserve">
+    <value>点相距 {0}</value>
+  </data>
+  <data name="topology_kind_distinctPoints_chain" xml:space="preserve">
+    <value>点彼此串连，跨度 {0}</value>
+  </data>
+  <data name="topology_kind_pointOnLine_nearLine" xml:space="preserve">
+    <value>点距最近的线 {0}</value>
+  </data>
+  <data name="topology_kind_pointOnLine_farFromLines" xml:space="preserve">
+    <value>点远离所有线</value>
+  </data>
+  <data name="topology_kind_lineEndCovered_start" xml:space="preserve">
+    <value>线的起点没有点</value>
+  </data>
+  <data name="topology_kind_lineEndCovered_end" xml:space="preserve">
+    <value>线的终点没有点</value>
+  </data>
+  <data name="topology_kind_lineCarriesPoints_tooFewPoints" xml:space="preserve">
+    <value>线上只有 {0} 个点</value>
+  </data>
+  <data name="topology_kind_pointOnOneLine_onSeveralLines" xml:space="preserve">
+    <value>点位于 {0} 条线上</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_missing" xml:space="preserve">
+    <value>点没有编号</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_duplicate" xml:space="preserve">
+    <value>编号 {0} 被使用两次</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_outOfOrder" xml:space="preserve">
+    <value>编号 {0} 顺序错误</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_gap" xml:space="preserve">
+    <value>缺少 {0} 个编号</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_directionUndecided" xml:space="preserve">
+    <value>编号在两个方向上都不递增</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_unsnappedEnd" xml:space="preserve">
+    <value>线端点相距 {0}，未连接</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_overshoot" xml:space="preserve">
+    <value>线端点超出交叉处 {0}</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_undershoot" xml:space="preserve">
+    <value>线端点距另一条线还差 {0}</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_freeEnd" xml:space="preserve">
+    <value>线端点未连接任何对象</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_chain" xml:space="preserve">
+    <value>线端点彼此串连，跨度 {0}</value>
+  </data>
+  <data name="topology_kind_partsJoin_gap" xml:space="preserve">
+    <value>各部分之间有 {0} 的间隙</value>
+  </data>
+  <data name="topology_kind_partsJoin_detachedPart" xml:space="preserve">
+    <value>某部分与其他部分相距 {0}</value>
+  </data>
+  <data name="topology_kind_partsJoin_branch" xml:space="preserve">
+    <value>{0} 个部分端点交汇于一处</value>
+  </data>
+  <data name="topology_kind_partsJoin_outOfOrder" xml:space="preserve">
+    <value>各部分存储顺序错误</value>
+  </data>
+  <data name="topology_kind_partsJoin_reversedPart" xml:space="preserve">
+    <value>某部分的方向与其他部分相反</value>
+  </data>
+  <data name="topology_kind_distinctLines_wholeLine" xml:space="preserve">
+    <value>重复的线</value>
+  </data>
+  <data name="topology_kind_distinctLines_sharedStretch" xml:space="preserve">
+    <value>线共享 {0}</value>
+  </data>
+  <data name="topology_kind_touchAndReturn_touchAndReturn" xml:space="preserve">
+    <value>线在 {0} 内交叉两次</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_duplicate" xml:space="preserve">
+    <value>重复的面</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_inside" xml:space="preserve">
+    <value>一个面位于另一个面内，{0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_overlap" xml:space="preserve">
+    <value>面重叠 {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_thinOverlap" xml:space="preserve">
+    <value>{0} 的狭长重叠</value>
+  </data>
+  <data name="topology_kind_polygonsNoGap_sliver" xml:space="preserve">
+    <value>相邻面之间长 {0} 的狭长条</value>
+  </data>
+  <data name="topology_kind_polygonsNoGap_enclosedGap" xml:space="preserve">
+    <value>被面包围的 {0} 空隙</value>
+  </data>
+  <data name="topology_fix_title" xml:space="preserve">
+    <value>修复</value>
+  </data>
+  <data name="topology_fix_preview" xml:space="preserve">
+    <value>预览</value>
+  </data>
+  <data name="topology_fix_apply" xml:space="preserve">
+    <value>应用</value>
+  </data>
+  <data name="topology_fix_cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="topology_fix_evaluating" xml:space="preserve">
+    <value>正在检查修复…</value>
+  </data>
+  <data name="topology_fix_pending" xml:space="preserve">
+    <value>待修复</value>
+  </data>
+  <data name="topology_fix_pendingNote" xml:space="preserve">
+    <value>已应用修复。请保存图层，然后重新检查。</value>
+  </data>
+  <data name="topology_fix_pendingFooter" xml:space="preserve">
+    <value>已应用 {0} 项修复。请保存图层以保留修复，然后重新检查。</value>
+  </data>
+  <data name="topology_fix_failed" xml:space="preserve">
+    <value>无法应用修复：{0}</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_movePoint" xml:space="preserve">
+    <value>{0} 移动 {1}，落到 {2} 上。</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_moveLineVertex" xml:space="preserve">
+    <value>{2} 的一个折点移动 {1}，落到 {0} 上。</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_insertLineVertex" xml:space="preserve">
+    <value>{2} 在 {0} 处新增一个折点，距其当前走向 {1}。</value>
+  </data>
+  <data name="topology_fix_reason_featureMissing" xml:space="preserve">
+    <value>无法修复：此问题涉及的某个要素已不在地图上。</value>
+  </data>
+  <data name="topology_fix_reason_beyondFixDistance" xml:space="preserve">
+    <value>无法修复：移动距离为 {0}，超过修复距离（{1}）。请手动编辑。</value>
+  </data>
+  <data name="topology_fix_reason_doesNotResolve" xml:space="preserve">
+    <value>已拒绝：修复后问题仍然存在。</value>
+  </data>
+  <data name="topology_fix_reason_createsIssue" xml:space="preserve">
+    <value>已拒绝：修复将导致“{0}”（{1}）。</value>
+  </data>
+  <data name="topology_fix_reason_noPermission" xml:space="preserve">
+    <value>您无权编辑几何。</value>
+  </data>
+  <data name="topology_fix_reason_notEditable" xml:space="preserve">
+    <value>无法在此处编辑图层 {0}。</value>
+  </data>
+  <data name="topology_fix_reason_cannotRemove" xml:space="preserve">
+    <value>此修复会删除要素，而此处不能删除要素。请手动编辑。</value>
+  </data>
+  <data name="topology_guide_correct" xml:space="preserve">
+    <value>修正数据</value>
+  </data>
+  <data name="topology_parameter_fixDistance" xml:space="preserve">
+    <value>修复距离 (m)</value>
+  </data>
+  <data name="topology_fix_choose" xml:space="preserve">
+    <value>选择保留哪一个：</value>
+  </data>
+  <data name="topology_fix_snapLineEnds_snap" xml:space="preserve">
+    <value>{0} 的端点交汇于一点（最大移动 {1}）。</value>
+  </data>
+  <data name="topology_fix_trimOvershoot_trim" xml:space="preserve">
+    <value>{0} 被截短 {1}，使其终止于 {2}。</value>
+  </data>
+  <data name="topology_fix_extendUndershoot_extendAlong" xml:space="preserve">
+    <value>{0} 沿直线延长 {1}，直至到达 {2}。</value>
+  </data>
+  <data name="topology_fix_extendUndershoot_joinNearest" xml:space="preserve">
+    <value>{0} 新增一段长 {1} 的末端线段，连接到 {2} 的最近点。</value>
+  </data>
+  <data name="topology_fix_deleteDuplicatePoints_keep" xml:space="preserve">
+    <value>保留 {0}；删除 {1}。</value>
+  </data>
+  <data name="topology_fix_deleteDuplicateLines_keep" xml:space="preserve">
+    <value>保留 {0}；删除 {1}。</value>
+  </data>
+  <data name="topology_fix_reason_notFound" xml:space="preserve">
+    <value>无法修复：需要修复的位置已不在检查时发现的地方。请重新检查。</value>
+  </data>
+  <data name="topology_fix_cutOverlap_cutFrom" xml:space="preserve">
+    <value>从 {0} 中切除共享区域；{1} 保持不变。</value>
+  </data>
+  <data name="topology_fix_deleteDuplicatePolygons_keep" xml:space="preserve">
+    <value>保留 {0}；删除 {1}。</value>
+  </data>
+  <data name="topology_fix_giveGap_takeGap" xml:space="preserve">
+    <value>将空隙并入 {0}。</value>
+  </data>
+  <data name="topology_fix_giveGap_takeSliver" xml:space="preserve">
+    <value>加宽 {0} 使其与 {1} 相接，填满狭长条。</value>
+  </data>
+  <data name="topology_fix_reason_nothingLeft" xml:space="preserve">
+    <value>无法修复：{0} 将不剩任何部分。</value>
+  </data>
 </root>

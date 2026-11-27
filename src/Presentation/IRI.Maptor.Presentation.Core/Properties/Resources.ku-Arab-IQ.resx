@@ -3337,4 +3337,1471 @@
   <data name="dialog_fileGdbPicker_reasonUnreadable" xml:space="preserve">
     <value>ناخوێندرێتەوە</value>
   </data>
+  <data name="versioning_review_title" xml:space="preserve">
+    <value>پشکنینی وەشانەکان</value>
+  </data>
+  <data name="versioning_review_refresh" xml:space="preserve">
+    <value>نوێکردنەوە</value>
+  </data>
+  <data name="versioning_review_lastRefresh" xml:space="preserve">
+    <value>دوایین نوێکردنەوە</value>
+  </data>
+  <data name="versioning_review_competitions" xml:space="preserve">
+    <value>کێبڕکێکان</value>
+  </data>
+  <data name="versioning_review_singles" xml:space="preserve">
+    <value>پێشنیارە تاکەکان</value>
+  </data>
+  <data name="versioning_review_acceptSelected" xml:space="preserve">
+    <value>پەسەندکردنی هەڵبژێردراوەکان</value>
+  </data>
+  <data name="versioning_review_groupSelected" xml:space="preserve">
+    <value>گرووپکردن وەک کێبڕکێ</value>
+  </data>
+  <data name="versioning_review_compare" xml:space="preserve">
+    <value>پشکنین</value>
+  </data>
+  <data name="versioning_review_colFeature" xml:space="preserve">
+    <value>دیاردە</value>
+  </data>
+  <data name="versioning_review_colLayer" xml:space="preserve">
+    <value>چین</value>
+  </data>
+  <data name="versioning_review_colCount" xml:space="preserve">
+    <value>پێشنیارەکان</value>
+  </data>
+  <data name="versioning_review_colAuthors" xml:space="preserve">
+    <value>دەستکاریکەران</value>
+  </data>
+  <data name="versioning_review_colAge" xml:space="preserve">
+    <value>تەمەن</value>
+  </data>
+  <data name="versioning_review_colSuggestions" xml:space="preserve">
+    <value>داپۆشینەکان</value>
+  </data>
+  <data name="versioning_review_badgeStale" xml:space="preserve">
+    <value>کۆن</value>
+  </data>
+  <data name="versioning_review_badgeOrphaned" xml:space="preserve">
+    <value>بێ ئامانج</value>
+  </data>
+  <data name="versioning_review_badgeQueued" xml:space="preserve">
+    <value>لە ڕیزدا</value>
+  </data>
+  <data name="versioning_review_badgeDelete" xml:space="preserve">
+    <value>سڕینەوە</value>
+  </data>
+  <data name="versioning_review_empty" xml:space="preserve">
+    <value>هیچ پێشنیارێکی چاوەڕوانکراو نییە — گۆڕانکارییە نێردراوەکانی چینە وەشانبەندکراوەکان لێرەدا دەردەکەون.</value>
+  </data>
+  <data name="versioning_compare_back" xml:space="preserve">
+    <value>گەڕانەوە بۆ ڕیز</value>
+  </data>
+  <data name="versioning_compare_live" xml:space="preserve">
+    <value>زیندوو</value>
+  </data>
+  <data name="versioning_compare_field" xml:space="preserve">
+    <value>خانە</value>
+  </data>
+  <data name="versioning_compare_selectWinner" xml:space="preserve">
+    <value>هەڵبژاردن وەک براوە</value>
+  </data>
+  <data name="versioning_compare_closeNoWinner" xml:space="preserve">
+    <value>ڕەتکردنەوەی هەموو (بێ براوە)</value>
+  </data>
+  <data name="versioning_compare_reason" xml:space="preserve">
+    <value>هۆکاری ڕەتکردنەوە</value>
+  </data>
+  <data name="versioning_compare_staleOverride" xml:space="preserve">
+    <value>دەزانم دیاردە زیندووەکە لەدوای ئەم پێشنیارەوە گۆڕاوە (تێپەڕاندنی تۆمارکراو)</value>
+  </data>
+  <data name="versioning_compare_showOnMap" xml:space="preserve">
+    <value>پیشاندان لەسەر نەخشە</value>
+  </data>
+  <data name="versioning_compare_deleteProposal" xml:space="preserve">
+    <value>پێشنیاری سڕینەوە</value>
+  </data>
+  <data name="versioning_compare_orphanBanner" xml:space="preserve">
+    <value>دیاردەی ئامانج چیتر لە باری زیندوودا بوونی نییە؛ تەنها ڕەتکردنەوەی هەموو دەکرێت.</value>
+  </data>
+  <data name="versioning_compare_queuedBanner" xml:space="preserve">
+    <value>ئەم کێبڕکێیە لە ڕیزدایە لە دوای کێبڕکێیەک کە چاوەڕێی پەسەندکردنە.</value>
+  </data>
+  <data name="versioning_approval_title" xml:space="preserve">
+    <value>ڕیزی پەسەندکردن</value>
+  </data>
+  <data name="versioning_approval_commitSelected" xml:space="preserve">
+    <value>جێگیرکردنی هەڵبژێردراوەکان</value>
+  </data>
+  <data name="versioning_approval_return" xml:space="preserve">
+    <value>گەڕاندنەوە</value>
+  </data>
+  <data name="versioning_approval_returnReason" xml:space="preserve">
+    <value>هۆکاری گەڕاندنەوە</value>
+  </data>
+  <data name="versioning_approval_returnReasonRequired" xml:space="preserve">
+    <value>گەڕاندنەوە دەبێت هۆکارەکەی ڕوون بکاتەوە.</value>
+  </data>
+  <data name="versioning_approval_staleNeedsOverride" xml:space="preserve">
+    <value>هەڵبژێردراوەکان پێشنیاری کۆنیان تێدایە؛ بۆ جێگیرکردنیان تێپەڕاندن دیاری بکە.</value>
+  </data>
+  <data name="versioning_approval_colWinner" xml:space="preserve">
+    <value>براوە</value>
+  </data>
+  <data name="versioning_approval_colReviewer" xml:space="preserve">
+    <value>پشکنەر</value>
+  </data>
+  <data name="versioning_approval_colType" xml:space="preserve">
+    <value>گۆڕانکاری</value>
+  </data>
+  <data name="versioning_approval_colResolved" xml:space="preserve">
+    <value>یەکلاکراوە</value>
+  </data>
+  <data name="versioning_myPending_title" xml:space="preserve">
+    <value>پێشنیارە چاوەڕوانکراوەکانم</value>
+  </data>
+  <data name="versioning_myPending_colSession" xml:space="preserve">
+    <value>دانیشتن</value>
+  </data>
+  <data name="versioning_myPending_colStatus" xml:space="preserve">
+    <value>دۆخ</value>
+  </data>
+  <data name="versioning_myPending_colSubmitted" xml:space="preserve">
+    <value>نێردراو</value>
+  </data>
+  <data name="versioning_status_pendingReview" xml:space="preserve">
+    <value>چاوەڕێی پشکنین</value>
+  </data>
+  <data name="versioning_status_inCompetition" xml:space="preserve">
+    <value>لە کێبڕکێدا ({0})</value>
+  </data>
+  <data name="versioning_status_underReview" xml:space="preserve">
+    <value>ژێر پشکنین</value>
+  </data>
+  <data name="versioning_status_committed" xml:space="preserve">
+    <value>جێگیرکرا</value>
+  </data>
+  <data name="versioning_status_rejected" xml:space="preserve">
+    <value>ڕەتکرایەوە</value>
+  </data>
+  <data name="versioning_status_withdrawn" xml:space="preserve">
+    <value>کشێندرایەوە</value>
+  </data>
+  <data name="versioning_submit_title" xml:space="preserve">
+    <value>دانیشتن نێردرا</value>
+  </data>
+  <data name="versioning_submit_summary" xml:space="preserve">
+    <value>{0} پێشنیار وەک چاوەڕوانکراو نێردران. نەخشەکە هەر باری جێگیرکراو پیشان دەدات؛ بەرەوپێشچوون لە «پێشنیارە چاوەڕوانکراوەکانم» بەدوادا بچۆ.</value>
+  </data>
+  <data name="versioning_submit_competitions" xml:space="preserve">
+    <value>{0} چوونە ناو کێبڕکێیەکەوە.</value>
+  </data>
+  <data name="versioning_submit_superseded" xml:space="preserve">
+    <value>{0} جێی پێشنیارە پێشووەکەتیان گرتەوە.</value>
+  </data>
+  <data name="versioning_submit_overlaps" xml:space="preserve">
+    <value>{0} لەگەڵ دیاردە هەبووەکان یەکدەگرنەوە (ئامۆژگاری).</value>
+  </data>
+  <data name="versioning_timeline_featureId" xml:space="preserve">
+    <value>ناسنامەی دیاردە</value>
+  </data>
+  <data name="versioning_timeline_load" xml:space="preserve">
+    <value>پیشاندانی مێژوو</value>
+  </data>
+  <data name="versioning_timeline_liveNow" xml:space="preserve">
+    <value>باری ئێستا</value>
+  </data>
+  <data name="versioning_timeline_deleted" xml:space="preserve">
+    <value>ئەم دیاردەیە سڕاوەتەوە</value>
+  </data>
+  <data name="versioning_timeline_colUntil" xml:space="preserve">
+    <value>دروستە تا</value>
+  </data>
+  <data name="versioning_timeline_colReplacedBy" xml:space="preserve">
+    <value>جێگرەوە</value>
+  </data>
+  <data name="versioning_timeline_colApprover" xml:space="preserve">
+    <value>پەسەندکەر</value>
+  </data>
+  <data name="versioning_timeline_colBatch" xml:space="preserve">
+    <value>کۆمەڵەی جێگیرکردن</value>
+  </data>
+  <data name="versioning_timeline_attributes" xml:space="preserve">
+    <value>بەهاکان</value>
+  </data>
+  <data name="versioning_timeline_empty" xml:space="preserve">
+    <value>هیچ مێژوویەک بۆ ئەم دیاردەیە تۆمار نەکراوە</value>
+  </data>
+  <data name="versioning_timeline_featureIdInvalid" xml:space="preserve">
+    <value>چینێک هەڵبژێرە و ناسنامەیەکی دروستی دیاردە بنووسە</value>
+  </data>
+  <data name="versioning_inbox_markAllRead" xml:space="preserve">
+    <value>هەمووی وەک خوێندراوە نیشان بکە</value>
+  </data>
+  <data name="versioning_inbox_colWhen" xml:space="preserve">
+    <value>کات</value>
+  </data>
+  <data name="versioning_inbox_colEvent" xml:space="preserve">
+    <value>ڕووداو</value>
+  </data>
+  <data name="versioning_inbox_colDetails" xml:space="preserve">
+    <value>وردەکاری</value>
+  </data>
+  <data name="versioning_inbox_unread" xml:space="preserve">
+    <value>{0} نەخوێندراوە</value>
+  </data>
+  <data name="versioning_inbox_items" xml:space="preserve">
+    <value>{0} بڕگە</value>
+  </data>
+  <data name="versioning_inbox_features" xml:space="preserve">
+    <value>دیاردەکان: {0}</value>
+  </data>
+  <data name="versioning_inbox_reason" xml:space="preserve">
+    <value>هۆکار: {0}</value>
+  </data>
+  <data name="versioning_inbox_typeCompetitionJoined" xml:space="preserve">
+    <value>پێشنیارەکەت چووە ناو کێبڕکێیەکەوە</value>
+  </data>
+  <data name="versioning_inbox_typeCommitted" xml:space="preserve">
+    <value>پێشنیارەکانت جێگیرکران</value>
+  </data>
+  <data name="versioning_inbox_typeRejected" xml:space="preserve">
+    <value>پێشنیارەکانت ڕەتکرانەوە</value>
+  </data>
+  <data name="versioning_inbox_typeClosedNoWinner" xml:space="preserve">
+    <value>کێبڕکێ بێ براوە داخرا</value>
+  </data>
+  <data name="versioning_inbox_typeReturned" xml:space="preserve">
+    <value>بڕیارەکەت لەلایەن پەسەندکەرەوە گەڕێندرایەوە</value>
+  </data>
+  <data name="versioning_inbox_typeOrphaned" xml:space="preserve">
+    <value>دیاردەی ئامانج چیتر بوونی نییە</value>
+  </data>
+  <data name="message_error_versionedLayerWriteRejected" xml:space="preserve">
+    <value>ئەم چینە ژێر وەشانبەندییە؛ دەستکارییەکان دەبێت وەک پێشنیار بۆ پشکنین بنێردرێن، نەک ڕاستەوخۆ پاشەکەوت بکرێن.</value>
+  </data>
+  <data name="message_error_versioningInvalidSubmission" xml:space="preserve">
+    <value>دانیشتنی نێردراو نادروستە؛ چینەکە دووبارە بار بکە و جارێکی تر هەوڵ بدە.</value>
+  </data>
+  <data name="message_error_versioningInvalidProposal" xml:space="preserve">
+    <value>یەکێک لە گۆڕانکارییە پێشنیارکراوەکان نادروستە؛ چینەکە دووبارە بار بکە و جارێکی تر هەوڵ بدە.</value>
+  </data>
+  <data name="message_error_versioningUnknownVersionedLayer" xml:space="preserve">
+    <value>ئەم چینە بۆ وەشانبەندی تۆمار نەکراوە.</value>
+  </data>
+  <data name="message_error_versioningVersioningNotEnabled" xml:space="preserve">
+    <value>وەشانبەندی بۆ ئەم چینە چالاک نییە؛ بە ڕێگای ئاسایی پاشەکەوت بکە.</value>
+  </data>
+  <data name="message_error_versioningProposalUnderApproval" xml:space="preserve">
+    <value>پێشنیارە پێشووەکەت بۆ ئەم دیاردەیە چاوەڕێی پەسەندکردنی کۆتاییە؛ پێش ناردنەوە چاوەڕێی جێگیرکردن یان گەڕاندنەوەی بکە.</value>
+  </data>
+  <data name="message_error_versioningConcurrentSubmission" xml:space="preserve">
+    <value>ناردنێکی تر لە هەمان کاتدا دەستی لە هەمان دیاردە دا؛ نوێ بکەرەوە و دووبارە هەوڵ بدە.</value>
+  </data>
+  <data name="message_error_versioningCompetitionAlreadyResolved" xml:space="preserve">
+    <value>کێبڕکێکە لەلایەن پشکنەرێکی ترەوە گۆڕا یان یەکلاکرایەوە؛ نوێ بکەرەوە و دووبارە هەوڵ بدە.</value>
+  </data>
+  <data name="message_error_versioningConcurrentModification" xml:space="preserve">
+    <value>شتێک لە هەمان کاتدا گۆڕا؛ نوێ بکەرەوە و دووبارە هەوڵ بدە.</value>
+  </data>
+  <data name="message_error_versioningConcurrentLiveChange" xml:space="preserve">
+    <value>کێبڕکێیەک یان دیاردەیەکی زیندوو لە کاتی جێگیرکردندا گۆڕا؛ هیچ شتێک جێگیر نەکرا — نوێ بکەرەوە و دووبارە هەوڵ بدە.</value>
+  </data>
+  <data name="message_error_versioningStaleBaseRequiresOverride" xml:space="preserve">
+    <value>دیاردە زیندووەکە لەدوای نووسینی ئەم پێشنیارە گۆڕاوە؛ پەسەندکردن تێپەڕاندنی ئاشکرای کۆنبوون پێویستە.</value>
+  </data>
+  <data name="message_error_versioningOrphanedTarget" xml:space="preserve">
+    <value>دیاردەی ئامانج چیتر بوونی نییە؛ لە جیاتی ئەوە کێبڕکێکە بگەڕێنەوە. هیچ شتێک جێگیر نەکرا.</value>
+  </data>
+  <data name="message_error_versioningOrphanedTargetRejectOnly" xml:space="preserve">
+    <value>دیاردەی ئامانج چیتر لە باری زیندوودا بوونی نییە؛ تەنها داخستن بێ براوە ڕێگەپێدراوە.</value>
+  </data>
+  <data name="message_error_versioningRejectionReasonRequired" xml:space="preserve">
+    <value>هۆکاری ڕەتکردنەوە پێویستە.</value>
+  </data>
+  <data name="message_error_versioningReturnReasonRequired" xml:space="preserve">
+    <value>گەڕاندنەوە دەبێت هۆکارێک دیاری بکات.</value>
+  </data>
+  <data name="message_error_versioningUnknownCompetition" xml:space="preserve">
+    <value>کێبڕکێکە نەدۆزرایەوە؛ لەوانەیە یەکلاکرابێتەوە یان لابرابێت — نوێ بکەرەوە.</value>
+  </data>
+  <data name="message_error_versioningUnknownProposal" xml:space="preserve">
+    <value>پێشنیارەکە لەم کێبڕکێیەدا نەدۆزرایەوە؛ نوێ بکەرەوە.</value>
+  </data>
+  <data name="message_error_versioningUnknownSuggestion" xml:space="preserve">
+    <value>پێشنیاری داپۆشینەکە نەدۆزرایەوە؛ نوێ بکەرەوە.</value>
+  </data>
+  <data name="message_error_versioningInvalidGrouping" xml:space="preserve">
+    <value>ئەم پێشنیارانە گرووپ ناکرێن؛ تەنها دروستکردنە چاوەڕوانکراوەکانی یەک چین گرووپ دەکرێن.</value>
+  </data>
+  <data name="message_error_versioningCompetitionBlockedByPredecessor" xml:space="preserve">
+    <value>ئەم کێبڕکێیە لە دوای کێبڕکێیەکی پێشووی یەکلانەکراوە لە ڕیزدایە؛ سەرەتا ئەوە یەکلا بکەرەوە.</value>
+  </data>
+  <data name="message_error_versioningEmptyCompetition" xml:space="preserve">
+    <value>کێبڕکێکە هیچ پێشنیارێکی چالاکی نییە.</value>
+  </data>
+  <data name="message_error_versioningNotASingleton" xml:space="preserve">
+    <value>ئەم کێبڕکێیە چەند پێشنیارێکی هەیە؛ دیمەنی بەراوردکردن بەکاربهێنە.</value>
+  </data>
+  <data name="message_error_versioningInvalidCommit" xml:space="preserve">
+    <value>کۆمەڵەی جێگیرکردن بەتاڵە یان نادروستە.</value>
+  </data>
+  <data name="message_error_versioningCompetitionNotResolved" xml:space="preserve">
+    <value>کێبڕکێکە لە باری یەکلاکراوەدا نییە؛ ڕیزەکە نوێ بکەرەوە.</value>
+  </data>
+  <data name="message_error_versioningSchemaMismatch" xml:space="preserve">
+    <value>پێشنیارەکە چیتر لەگەڵ پێکهاتەی چینەکە ناگونجێت؛ ناتوانرێت جێگیر بکرێت.</value>
+  </data>
+  <data name="versioning_map_pendingStatus" xml:space="preserve">
+    <value>پێشنیارە چاوەڕوانکراوەکان</value>
+  </data>
+  <data name="versioning_map_history" xml:space="preserve">
+    <value>مێژووی دیاردە</value>
+  </data>
+  <data name="versioning_map_myPendingOverlay" xml:space="preserve">
+    <value>چاوەڕوانکراوەکانم لەسەر نەخشە</value>
+  </data>
+  <data name="versioning_map_selectFeature" xml:space="preserve">
+    <value>سەرەتا دیاردەیەک هەڵبژێرە</value>
+  </data>
+  <data name="versioning_map_noPending" xml:space="preserve">
+    <value>هیچ پێشنیارێکی چاوەڕوانکراو بۆ ئەم دیاردەیە نییە</value>
+  </data>
+  <data name="versioning_map_pendingSummary" xml:space="preserve">
+    <value>{0} پێشنیاری چاوەڕوانکراو</value>
+  </data>
+  <data name="versioning_map_pendingAuthors" xml:space="preserve">
+    <value>دەستکاریکەران: {0}</value>
+  </data>
+  <data name="versioning_map_pendingHasOwn" xml:space="preserve">
+    <value>پێشنیاری خۆشتی تێدایە</value>
+  </data>
+  <data name="versioning_map_overlayEmpty" xml:space="preserve">
+    <value>هیچ پێشنیارێکی چاوەڕوانکراوت بۆ ئەم چینە نییە</value>
+  </data>
+  <data name="versioning_map_overlayName" xml:space="preserve">
+    <value>چاوەڕوانکراوەکانم — {0}</value>
+  </data>
+  <data name="versioning_changeType_create" xml:space="preserve">
+    <value>دروستکردن</value>
+  </data>
+  <data name="versioning_changeType_update" xml:space="preserve">
+    <value>نوێکردنەوە</value>
+  </data>
+  <data name="versioning_changeType_delete" xml:space="preserve">
+    <value>سڕینەوە</value>
+  </data>
+  <data name="versioning_myPending_empty" xml:space="preserve">
+    <value>هیچ پێشنیارێکی چاوەڕوانکراوت نییە.</value>
+  </data>
+  <data name="versioning_approval_empty" xml:space="preserve">
+    <value>هیچ شتێک چاوەڕێی پەسەندکردن نییە.</value>
+  </data>
+  <data name="versioning_inbox_empty" xml:space="preserve">
+    <value>هیچ ئاگادارکردنەوەیەکت نییە.</value>
+  </data>
+  <data name="versioning_compare_empty" xml:space="preserve">
+    <value>کێبڕکێیەک لە ڕیزی پشکنین هەڵبژێرە بۆ بەراوردکردنی پێشنیارەکانی.</value>
+  </data>
+  <data name="versioning_submit_confirm" xml:space="preserve">
+    <value>{0} گۆڕانکاری لەسەر چینی {1} بۆ پشکنین دەنێردرێن، نەک ڕاستەوخۆ پاشەکەوت بکرێن. نەخشەکە هەر باری پەسەندکراو پیشان دەدات تا پەسەندکەرێک جێگیریان دەکات. ئێستا بنێردرێن؟</value>
+  </data>
+  <data name="versioning_layer_badgeTooltip" xml:space="preserve">
+    <value>چینی وەشانبەندکراو — پاشەکەوتکردن دەستکارییەکانت بۆ پشکنین دەنێرێت لە جیاتی ئەوەی ڕاستەوخۆ بیاننووسێت.</value>
+  </data>
+  <data name="versioning_review_ageDays" xml:space="preserve">
+    <value>{0} ڕۆژ</value>
+  </data>
+  <data name="versioning_review_ageHours" xml:space="preserve">
+    <value>{0} کاتژمێر</value>
+  </data>
+  <data name="versioning_review_ageMinutes" xml:space="preserve">
+    <value>{0} خولەک</value>
+  </data>
+  <data name="dialog_goto_quickEntry" xml:space="preserve">
+    <value>تێخستنی خێرا</value>
+  </data>
+  <data name="dialog_goto_quickEntryWatermark" xml:space="preserve">
+    <value>کۆردینات بلکێنە — 35.6892, 51.3890 · 35°41′21″N 51°23′20″E · 39N 534123 3950123 · بەستەری نەخشە</value>
+  </data>
+  <data name="dialog_goto_quickEntryRecognized" xml:space="preserve">
+    <value>ناسرایەوە:</value>
+  </data>
+  <data name="dialog_goto_quickEntryNotRecognized" xml:space="preserve">
+    <value>وەک کۆردینات نەناسرایەوە</value>
+  </data>
+  <data name="dialog_goto_tabGeodetic" xml:space="preserve">
+    <value>جیۆدێتیک</value>
+  </data>
+  <data name="dialog_goto_tabUtm" xml:space="preserve">
+    <value>UTM</value>
+  </data>
+  <data name="dialog_goto_tabProjected" xml:space="preserve">
+    <value>پرۆجێکتکراو</value>
+  </data>
+  <data name="dialog_goto_format" xml:space="preserve">
+    <value>فۆرمات</value>
+  </data>
+  <data name="dialog_goto_datum" xml:space="preserve">
+    <value>داتۆم (ئێلیپسۆید)</value>
+  </data>
+  <data name="dialog_goto_latitude" xml:space="preserve">
+    <value>پانی</value>
+  </data>
+  <data name="dialog_goto_longitude" xml:space="preserve">
+    <value>درێژی</value>
+  </data>
+  <data name="dialog_goto_hemisphere" xml:space="preserve">
+    <value>نیوەگۆ</value>
+  </data>
+  <data name="dialog_goto_decimalHint" xml:space="preserve">
+    <value>بەها نەرێنییەکان باشوور و ڕۆژئاوان. خوێندنەوەیەکی DMS وەک 35 41 21.1 N لێرەشدا وەردەگیرێت.</value>
+  </data>
+  <data name="dialog_goto_easting" xml:space="preserve">
+    <value>ڕۆژهەڵاتی (Easting)</value>
+  </data>
+  <data name="dialog_goto_northing" xml:space="preserve">
+    <value>باکووری (Northing)</value>
+  </data>
+  <data name="dialog_goto_projection" xml:space="preserve">
+    <value>پرۆجێکشن</value>
+  </data>
+  <data name="dialog_goto_projectionCustom" xml:space="preserve">
+    <value>تایبەت</value>
+  </data>
+  <data name="dialog_goto_paramCentralMeridian" xml:space="preserve">
+    <value>نیوەڕۆهێڵی ناوەند</value>
+  </data>
+  <data name="dialog_goto_paramLatitudeOfOrigin" xml:space="preserve">
+    <value>پانیی سەرچاوە</value>
+  </data>
+  <data name="dialog_goto_paramScaleFactor" xml:space="preserve">
+    <value>هۆکاری پێوەر</value>
+  </data>
+  <data name="dialog_goto_paramFalseEasting" xml:space="preserve">
+    <value>ڕۆژهەڵاتیی ساختە</value>
+  </data>
+  <data name="dialog_goto_paramFalseNorthing" xml:space="preserve">
+    <value>باکووریی ساختە</value>
+  </data>
+  <data name="dialog_goto_paramStandardParallel1" xml:space="preserve">
+    <value>هێڵی پانیی ستاندارد 1</value>
+  </data>
+  <data name="dialog_goto_paramStandardParallel2" xml:space="preserve">
+    <value>هێڵی پانیی ستاندارد 2</value>
+  </data>
+  <data name="dialog_goto_x" xml:space="preserve">
+    <value>X (ڕۆژهەڵاتی)</value>
+  </data>
+  <data name="dialog_goto_y" xml:space="preserve">
+    <value>Y (باکووری)</value>
+  </data>
+  <data name="dialog_goto_position" xml:space="preserve">
+    <value>شوێن</value>
+  </data>
+  <data name="dialog_goto_positionSubtitle" xml:space="preserve">
+    <value>WGS 84 · پانی، درێژی</value>
+  </data>
+  <data name="dialog_goto_copy" xml:space="preserve">
+    <value>کۆپیکردنی کۆردینات</value>
+  </data>
+  <data name="dialog_goto_statusReady" xml:space="preserve">
+    <value>ئامادەیە</value>
+  </data>
+  <data name="dialog_goto_statusInvalid" xml:space="preserve">
+    <value>تێخراوەکان بپشکنە</value>
+  </data>
+  <data name="dialog_goto_errorLatitudeRange" xml:space="preserve">
+    <value>پانی دەبێت لە نێوان −90° و 90° بێت</value>
+  </data>
+  <data name="dialog_goto_errorLongitudeRange" xml:space="preserve">
+    <value>درێژی دەبێت لە نێوان −180° و 180° بێت</value>
+  </data>
+  <data name="dialog_goto_errorDmsComponents" xml:space="preserve">
+    <value>خولەک و چرکە دەبێت لە نێوان 0 و 60 بن</value>
+  </data>
+  <data name="dialog_goto_errorNumber" xml:space="preserve">
+    <value>بەهایەکی ژمارەیی بۆ {0} بنووسە</value>
+  </data>
+  <data name="dialog_goto_errorNorthingRange" xml:space="preserve">
+    <value>باکووری دەبێت لە نێوان 0 و 10,000,000 m بێت</value>
+  </data>
+  <data name="dialog_goto_warningEastingRange" xml:space="preserve">
+    <value>ڕۆژهەڵاتی لە دەرەوەی مەودای ئاسایی ناوچەیەکی UTM ـە (100,000 – 900,000 m)</value>
+  </data>
+  <data name="dialog_goto_errorProjection" xml:space="preserve">
+    <value>ئەم بەهایانە بەرامبەر هیچ شوێنێک لەسەر زەوی نین</value>
+  </data>
+  <data name="srs_lccTitle" xml:space="preserve">
+    <value>لامبێرت کۆنفۆرمال کۆنیک</value>
+  </data>
+  <data name="dialog_goto_coordinateSystem" xml:space="preserve">
+    <value>سیستەمی کۆردینات</value>
+  </data>
+  <data name="layerSettings_statistics_field" xml:space="preserve">
+    <value>خانە</value>
+  </data>
+  <data name="layerSettings_statistics_compute" xml:space="preserve">
+    <value>ژماردن</value>
+  </data>
+  <data name="layerSettings_statistics_liveNotSupported" xml:space="preserve">
+    <value>ئەم چینە لە دۆخی Live دایە: دیاردەکانی لەسەر ڕاژەکار دەمێننەوە، بۆیە ئامارەکانی هێشتا بەردەست نین. بۆ بینینیان چینەکە بگۆڕە بۆ دۆخی Cache.</value>
+  </data>
+  <data name="layerSettings_statistics_emptyState" xml:space="preserve">
+    <value>خانەیەک هەڵبژێرە و ژماردن دابگرە</value>
+  </data>
+  <data name="layerSettings_statistics_failed" xml:space="preserve">
+    <value>ژماردنی ئامارەکان سەرکەوتوو نەبوو:</value>
+  </data>
+  <data name="layerSettings_statistics_summary" xml:space="preserve">
+    <value>وردەکاری</value>
+  </data>
+  <data name="layerSettings_statistics_topValues" xml:space="preserve">
+    <value>زۆرترین بەها دووبارەکان</value>
+  </data>
+  <data name="layerSettings_statistics_value" xml:space="preserve">
+    <value>بەها</value>
+  </data>
+  <data name="layerSettings_statistics_count" xml:space="preserve">
+    <value>ژمارە</value>
+  </data>
+  <data name="layerSettings_statistics_featureCount" xml:space="preserve">
+    <value>دیاردەکان</value>
+  </data>
+  <data name="layerSettings_statistics_emptyCount" xml:space="preserve">
+    <value>بەها بەتاڵەکان</value>
+  </data>
+  <data name="layerSettings_statistics_distinctCount" xml:space="preserve">
+    <value>بەها جیاوازەکان</value>
+  </data>
+  <data name="layerSettings_statistics_min" xml:space="preserve">
+    <value>کەمترین</value>
+  </data>
+  <data name="layerSettings_statistics_max" xml:space="preserve">
+    <value>زۆرترین</value>
+  </data>
+  <data name="layerSettings_statistics_sum" xml:space="preserve">
+    <value>کۆ</value>
+  </data>
+  <data name="layerSettings_statistics_mean" xml:space="preserve">
+    <value>تێکڕا</value>
+  </data>
+  <data name="layerSettings_statistics_median" xml:space="preserve">
+    <value>ناوەندی</value>
+  </data>
+  <data name="layerSettings_statistics_standardDeviation" xml:space="preserve">
+    <value>لادانی ستاندارد</value>
+  </data>
+  <data name="layerSettings_statistics_minDate" xml:space="preserve">
+    <value>کۆنترین</value>
+  </data>
+  <data name="layerSettings_statistics_maxDate" xml:space="preserve">
+    <value>نوێترین</value>
+  </data>
+  <data name="layerSettings_statistics_emptyValue" xml:space="preserve">
+    <value>(بەتاڵ)</value>
+  </data>
+  <data name="layerSettings_statistics_modeField" xml:space="preserve">
+    <value>ئاماری خانە</value>
+  </data>
+  <data name="layerSettings_statistics_modeGroupBy" xml:space="preserve">
+    <value>گرووپکردن بەپێی خانە</value>
+  </data>
+  <data name="layerSettings_statistics_groupByField" xml:space="preserve">
+    <value>گرووپکردن بەپێی</value>
+  </data>
+  <data name="layerSettings_statistics_sumField" xml:space="preserve">
+    <value>کۆی</value>
+  </data>
+  <data name="layerSettings_statistics_none" xml:space="preserve">
+    <value>(هیچ)</value>
+  </data>
+  <data name="layerSettings_statistics_groupCount" xml:space="preserve">
+    <value>گرووپەکان</value>
+  </data>
+  <data name="layerSettings_statistics_totalLength" xml:space="preserve">
+    <value>کۆی درێژی</value>
+  </data>
+  <data name="layerSettings_statistics_totalArea" xml:space="preserve">
+    <value>کۆی ڕووبەر</value>
+  </data>
+  <data name="layerSettings_statistics_sumOf" xml:space="preserve">
+    <value>کۆی {0}</value>
+  </data>
+  <data name="layerSettings_statistics_groups" xml:space="preserve">
+    <value>گرووپەکان</value>
+  </data>
+  <data name="layerSettings_statistics_groupsTruncated" xml:space="preserve">
+    <value>یەکەم {0} گرووپ لە {1} پیشان دەدرێت.</value>
+  </data>
+  <data name="layerSettings_statistics_invalidNote" xml:space="preserve">
+    <value>{0} بەها وەک جۆری خانەکە نەخوێندرانەوە و لابران.</value>
+  </data>
+  <data name="layerSettings_statistics_total" xml:space="preserve">
+    <value>کۆی گشتی</value>
+  </data>
+  <data name="layerSettings_statistics_topOfDistinct" xml:space="preserve">
+    <value>{0} لە {1} بەها</value>
+  </data>
+  <data name="layerSettings_statistics_sortedByCount" xml:space="preserve">
+    <value>ڕیزکراو بەپێی ژمارە</value>
+  </data>
+  <data name="layerSettings_statistics_modeGeometry" xml:space="preserve">
+    <value>ئەندازە</value>
+  </data>
+  <data name="layerSettings_statistics_emptyGeometryCount" xml:space="preserve">
+    <value>ئەندازە بەتاڵەکان</value>
+  </data>
+  <data name="layerSettings_statistics_distribution" xml:space="preserve">
+    <value>دابەشبوون</value>
+  </data>
+  <data name="layerSettings_statistics_lengthPerFeature" xml:space="preserve">
+    <value>درێژی بۆ هەر دیاردەیەک ({0})</value>
+  </data>
+  <data name="layerSettings_statistics_areaPerFeature" xml:space="preserve">
+    <value>ڕووبەر بۆ هەر دیاردەیەک ({0})</value>
+  </data>
+  <data name="layerSettings_statistics_binCount" xml:space="preserve">
+    <value>{0} بەش</value>
+  </data>
+  <data name="layerSettings_statistics_noMeasureNote" xml:space="preserve">
+    <value>درێژی و ڕووبەر تەنها بۆ چینەکانی هێڵ و فرەگۆشەن.</value>
+  </data>
+  <data name="layerSettings_statistics_unmeasuredNote" xml:space="preserve">
+    <value>{0} ئەندازە نەپێوران و لابران.</value>
+  </data>
+  <data name="layerSettings_statistics_viewHistogram" xml:space="preserve">
+    <value>چارت</value>
+  </data>
+  <data name="layerSettings_statistics_viewTable" xml:space="preserve">
+    <value>بەها سەرەکییەکان</value>
+  </data>
+  <data name="layerSettings_statistics_geometryHint" xml:space="preserve">
+    <value>درێژیی جیۆدێسی (چینەکانی هێڵ) یان ڕووبەری (چینەکانی فرەگۆشە) هەر دیاردەیەک، لەسەر ئێلیپسۆیدی WGS84.</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainCount" xml:space="preserve">
+    <value>لە دەرەوەی دۆمەین</value>
+  </data>
+  <data name="layerSettings_statistics_domainUsage" xml:space="preserve">
+    <value>{0} لە {1} بەهای دۆمەین بەکارهاتوون</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainNote" xml:space="preserve">
+    <value>{0} دیاردە بەهایەکیان هەیە لە دەرەوەی دۆمەینی خانەکە.</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainTooltip" xml:space="preserve">
+    <value>بەهایەکی دۆمەینی خانەکە نییە</value>
+  </data>
+  <data name="sldGenerator_title" xml:space="preserve">
+    <value>دروستکردنی یاساکان لە بەهاکانی خانە</value>
+  </data>
+  <data name="sldGenerator_field" xml:space="preserve">
+    <value>خانە</value>
+  </data>
+  <data name="sldGenerator_geometry" xml:space="preserve">
+    <value>ئەندازە</value>
+  </data>
+  <data name="sldGenerator_geometryPoint" xml:space="preserve">
+    <value>خاڵ</value>
+  </data>
+  <data name="sldGenerator_geometryLine" xml:space="preserve">
+    <value>هێڵ</value>
+  </data>
+  <data name="sldGenerator_geometryPolygon" xml:space="preserve">
+    <value>فرەگۆشە</value>
+  </data>
+  <data name="sldGenerator_values" xml:space="preserve">
+    <value>بەهاکان</value>
+  </data>
+  <data name="sldGenerator_valuesData" xml:space="preserve">
+    <value>بەهاکانی ناو چینەکە</value>
+  </data>
+  <data name="sldGenerator_valuesDomain" xml:space="preserve">
+    <value>هەموو بەهاکانی دۆمەین</value>
+  </data>
+  <data name="sldGenerator_colors" xml:space="preserve">
+    <value>ڕەنگەکان</value>
+  </data>
+  <data name="sldGenerator_colorsPalette" xml:space="preserve">
+    <value>پالێتی ناوخۆیی</value>
+  </data>
+  <data name="sldGenerator_colorsDomain" xml:space="preserve">
+    <value>ڕەنگەکانی دۆمەین</value>
+  </data>
+  <data name="sldGenerator_includeOther" xml:space="preserve">
+    <value>یاسایەک بۆ بەهاکانی تر زیاد بکە</value>
+  </data>
+  <data name="sldGenerator_replaceExisting" xml:space="preserve">
+    <value>یاسا ئێستاکان بگۆڕە</value>
+  </data>
+  <data name="sldGenerator_preview" xml:space="preserve">
+    <value>پێشبینین</value>
+  </data>
+  <data name="sldGenerator_noField" xml:space="preserve">
+    <value>هیچ خانەیەک نییە بۆ پۆلێنکردن</value>
+  </data>
+  <data name="sldGenerator_noValues" xml:space="preserve">
+    <value>خانەکە هیچ بەهایەکی نییە</value>
+  </data>
+  <data name="sldGenerator_ruleCount" xml:space="preserve">
+    <value>{0} یاسا</value>
+  </data>
+  <data name="sldGenerator_previewCut" xml:space="preserve">
+    <value>(یەکەم {0} پیشان دەدرێن)</value>
+  </data>
+  <data name="sldGenerator_failed" xml:space="preserve">
+    <value>خوێندنەوەی بەهاکان سەرکەوتوو نەبوو:</value>
+  </data>
+  <data name="sldGenerator_generate" xml:space="preserve">
+    <value>دروستکردن</value>
+  </data>
+  <data name="sldGenerator_otherValues" xml:space="preserve">
+    <value>بەهاکانی تر</value>
+  </data>
+  <data name="layerSettings_general_summary" xml:space="preserve">
+    <value>پوختەی چین</value>
+  </data>
+  <data name="layerSettings_general_loadMode" xml:space="preserve">
+    <value>دۆخی بارکردن:</value>
+  </data>
+  <data name="layerSettings_general_loadModeCache" xml:space="preserve">
+    <value>بارکردنی هەموو بە یەکجار (Cache)</value>
+  </data>
+  <data name="layerSettings_general_loadModeLive" xml:space="preserve">
+    <value>بارکردن بەپێی دیمەنی نەخشە (Live)</value>
+  </data>
+  <data name="layerSettings_general_featureCount" xml:space="preserve">
+    <value>دیاردەکان:</value>
+  </data>
+  <data name="layerSettings_general_featureCountLive" xml:space="preserve">
+    <value>لە دۆخی Live دا بەردەست نییە (تەنها ناوچەی دیار بار دەکرێت)</value>
+  </data>
+  <data name="layerSettings_general_fieldCount" xml:space="preserve">
+    <value>خانەکان:</value>
+  </data>
+  <data name="layerSettings_general_geometryType" xml:space="preserve">
+    <value>جۆری ئەندازە:</value>
+  </data>
+  <data name="layerSettings_general_srs" xml:space="preserve">
+    <value>سیستەمی ئاماژەی شوێنی:</value>
+  </data>
+  <data name="layerSettings_general_originalSrs" xml:space="preserve">
+    <value>سیستەمی ئاماژەی شوێنیی سەرچاوە:</value>
+  </data>
+  <data name="layerSettings_general_extentWgs84" xml:space="preserve">
+    <value>سنوور (WGS84):</value>
+  </data>
+  <data name="layerSettings_general_extentUtm" xml:space="preserve">
+    <value>سنوور (UTM {0}):</value>
+  </data>
+  <data name="layerSettings_general_unknown" xml:space="preserve">
+    <value>نەزانراو</value>
+  </data>
+  <data name="layerStyles_ruleCount" xml:space="preserve">
+    <value>{0} یاسا</value>
+  </data>
+  <data name="layerStyles_untitled" xml:space="preserve">
+    <value>شێوازی بێ ناونیشان</value>
+  </data>
+  <data name="layerStyles_newTitle" xml:space="preserve">
+    <value>شێوازی {0}</value>
+  </data>
+  <data name="layerStyles_copyTitle" xml:space="preserve">
+    <value>{0} (کۆپی)</value>
+  </data>
+  <data name="layerStyles_addFirst" xml:space="preserve">
+    <value>شێوازێک زیاد بکە</value>
+  </data>
+  <data name="layerStyles_adminBanner" xml:space="preserve">
+    <value>بەکارهێنەران بە شێوازی بنەڕەتی دەست پێدەکەن و دەتوانن لە تابی هێماسازی یان لە ڕێبەری نەخشەوە بگۆڕن بۆ شێوازەکانی تر.</value>
+  </data>
+  <data name="layerStyles_add" xml:space="preserve">
+    <value>زیادکردن</value>
+  </data>
+  <data name="layerStyles_copy" xml:space="preserve">
+    <value>کۆپی</value>
+  </data>
+  <data name="layerStyles_edit" xml:space="preserve">
+    <value>دەستکاری</value>
+  </data>
+  <data name="layerStyles_setDefault" xml:space="preserve">
+    <value>دانان وەک بنەڕەت</value>
+  </data>
+  <data name="layerStyles_moveUp" xml:space="preserve">
+    <value>بۆ سەرەوە</value>
+  </data>
+  <data name="layerStyles_moveDown" xml:space="preserve">
+    <value>بۆ خوارەوە</value>
+  </data>
+  <data name="layerStyles_delete" xml:space="preserve">
+    <value>سڕینەوە</value>
+  </data>
+  <data name="layerStyles_defaultBadge" xml:space="preserve">
+    <value>بنەڕەت</value>
+  </data>
+  <data name="layerStyles_titleWatermark" xml:space="preserve">
+    <value>ناونیشانی شێواز</value>
+  </data>
+  <data name="layerStyles_legend_pick" xml:space="preserve">
+    <value>شێواز</value>
+  </data>
+  <data name="layerStyles_tab_notAvailable" xml:space="preserve">
+    <value>ئەم چینە هیچ هێماسازییەکی نییە بۆ ڕێکخستن.</value>
+  </data>
+  <data name="layerStyles_tab_styles" xml:space="preserve">
+    <value>شێوازەکان</value>
+  </data>
+  <data name="layerStyles_tab_singleStyle" xml:space="preserve">
+    <value>ئەم چینە یەک شێوازی هەیە. بەڕێوەبەر دەتوانێت لە ڕێکخستنەکانی چینی ڕاژەکاردا زیاتر زیاد بکات.</value>
+  </data>
+  <data name="layerStyles_tab_legend" xml:space="preserve">
+    <value>ڕێبەری نەخشە</value>
+  </data>
+  <data name="layerStyles_tab_exportLegend" xml:space="preserve">
+    <value>هەناردەکردنی ڕێبەری نەخشە وەک PNG</value>
+  </data>
+  <data name="layerStyles_tab_quickEdit" xml:space="preserve">
+    <value>دەستکاریی خێرا</value>
+  </data>
+  <data name="layerStyles_tab_myChanges" xml:space="preserve">
+    <value>گۆڕانکارییەکانم</value>
+  </data>
+  <data name="layerStyles_tab_noChanges" xml:space="preserve">
+    <value>هیچ: چینەکە وەک ئەوەی ڕاژەکار دیاری دەکات دەکێشرێت.</value>
+  </data>
+  <data name="layerStyles_tab_hasChanges" xml:space="preserve">
+    <value>تۆ هێماسازیی ئەم چینەت گۆڕیوە. گۆڕانکارییەکە لە پرۆژەکەتدا هەڵدەگیرێت؛ «گەڕاندنەوەی شێوازەکانی بەڕێوەبەر» شێوازەکانی ڕاژەکار دەگەڕێنێتەوە.</value>
+  </data>
+  <data name="serverLayerSettings_error_styleTitleRequired" xml:space="preserve">
+    <value>کاتێک چینێک چەند شێوازێکی هەیە، هەر یەکەیان ناونیشانێکی پێویستە.</value>
+  </data>
+  <data name="serverLayerSettings_error_duplicateStyleTitle" xml:space="preserve">
+    <value>دوو شێواز هەمان ناونیشانیان هەیە.</value>
+  </data>
+  <data name="layerStyles_wholeLayer" xml:space="preserve">
+    <value>هەموو چینەکە</value>
+  </data>
+  <data name="layerStyles_wholeLayerHint" xml:space="preserve">
+    <value>مەودای زووم و ناڕوونی بۆ چینەکە جێبەجێ دەبن، هێماسازییەکەی هەرچییەک بێت.</value>
+  </data>
+  <data name="layerStyles_modeSimple" xml:space="preserve">
+    <value>سادە</value>
+  </data>
+  <data name="layerStyles_modeStyles" xml:space="preserve">
+    <value>شێوازەکان (SLD)</value>
+  </data>
+  <data name="layerStyles_simpleHint" xml:space="preserve">
+    <value>یەک شێوازی سادە لە ڕەنگەکانی خوارەوە. بۆ یاسا بەپێی تایبەتمەندی و بۆ چەند هێماسازییەک کە بەکارهێنەران هەڵیبژێرن، بگۆڕە بۆ شێوازەکان.</value>
+  </data>
+  <data name="layerStyles_previewOf" xml:space="preserve">
+    <value>ڕێبەری نەخشە: {0}</value>
+  </data>
+  <data name="layerStyles_switchToSimpleConfirm" xml:space="preserve">
+    <value>{0} شێوازی ئەم چینە لاببرێن؟ لە جیاتیان ڕەنگە سادەکان بەکاردەهێنرێن.</value>
+  </data>
+  <data name="layerStyles_labelsNote" xml:space="preserve">
+    <value>ئەم چینە بە شێوازەکانی SLD دەکێشرێت: ئەم ناونیشانە لەسەر هەر شێوازێک کە چالاک بێت دەکێشرێت.</value>
+  </data>
+  <data name="layerStyles_tab_changedStyles" xml:space="preserve">
+    <value>تۆ ئەم شێوازانەت لەسەر ئەم کۆمپیوتەرە گۆڕیوە: {0}. گۆڕانکارییەکان لە پرۆژەکەتدا هەڵدەگیرێن؛ «گەڕاندنەوەی شێوازەکانی بەڕێوەبەر» شێوازەکانی ڕاژەکار دەگەڕێنێتەوە.</value>
+  </data>
+  <data name="layerStyles_tab_simpleHint" xml:space="preserve">
+    <value>ئەم چینە بە ڕەنگی سادە دەکێشرێت؛ بۆ گۆڕینیان دەستکاریی خێرا بەکاربهێنە.</value>
+  </data>
+  <data name="layerStyles_tab_editInSld" xml:space="preserve">
+    <value>دەستکاریکردنی شێواز لە دەستکاریکەری SLD</value>
+  </data>
+  <data name="layerStyles_tab_restore" xml:space="preserve">
+    <value>گەڕاندنەوەی شێوازەکانی بەڕێوەبەر</value>
+  </data>
+  <data name="layerStyles_tab_restoreTip" xml:space="preserve">
+    <value>گۆڕانکارییەکانت لە هەموو شێوازەکانی ئەم چینە هەڵبوەشێنەرەوە و وەک ئەوەی ڕاژەکار دیاری دەکات بیکێشە.</value>
+  </data>
+  <data name="layerStyles_tab_changedMark" xml:space="preserve">
+    <value>لەلایەن تۆوە گۆڕاوە</value>
+  </data>
+  <data name="dialog_symbology_restoreAdmin" xml:space="preserve">
+    <value>گەڕاندنەوەی شێوازی بەڕێوەبەر</value>
+  </data>
+  <data name="dialog_symbology_userChanged" xml:space="preserve">
+    <value>تۆ ڕەنگەکانی ئەم چینەت لەسەر ئەم کۆمپیوتەرە گۆڕیوە.</value>
+  </data>
+  <data name="dialog_symbology_editInSld" xml:space="preserve">
+    <value>دەستکاری لە دەستکاریکەری SLD</value>
+  </data>
+  <data name="dialog_symbology_advancedHint" xml:space="preserve">
+    <value>دەستکاریکەری SLD یاسا بەپێی تایبەتمەندی، ناونیشان و زیاتر زیاد دەکات. کاتێک لەوێ پاشەکەوت دەکەیت، ئەم چینە لە دەستکاریکەری SLD دا دەکرێتەوە؛ «گەڕاندنەوەی شێوازی بەڕێوەبەر» ڕەنگە خێراکان دەگەڕێنێتەوە.</value>
+  </data>
+  <data name="layerSettings_statistics_liveOnServer" xml:space="preserve">
+    <value>ئەم چینە لە دۆخی Live دایە: ئامارەکانی لەلایەن ڕاژەکارەوە بەسەر هەموو دیاردەکانیدا دەژمێردرێن. ئەو دەستکارییانەی پاشەکەوتت نەکردوون تێیدا نین.</value>
+  </data>
+  <data name="layerSettings_general_featureCountServer" xml:space="preserve">
+    <value>لەسەر ڕاژەکار ژمێردراوە، بەسەر هەموو دیاردەکاندا (ئەو دەستکارییانەی پاشەکەوتت نەکردوون تێیدا نین)</value>
+  </data>
+  <data name="serverLayerSettings_importModel_export" xml:space="preserve">
+    <value>هەناردەکردنی مۆدێلی هاوردەکردن…</value>
+  </data>
+  <data name="serverLayerSettings_importModel_exportTip" xml:space="preserve">
+    <value>هەناردەکردنی مۆدێلی هاوردەکردن: مۆدێلی داتای هەموو چینە چالاکەکان (خشتە، ستوون، جۆر، دۆمەین) وەک ئەو فایلەی ئامرازی هاوردەکردن دەیخوێنێتەوە پاشەکەوت بکە</value>
+  </data>
+  <data name="serverLayerSettings_importModel_saved" xml:space="preserve">
+    <value>مۆدێلی هاوردەکردنی {0} چین لە {1} پاشەکەوت کرا.</value>
+  </data>
+  <data name="serverLayerSettings_importModel_failed" xml:space="preserve">
+    <value>مۆدێلی هاوردەکردن پاشەکەوت نەکرا.</value>
+  </data>
+  <data name="ribbon_topology_header" xml:space="preserve">
+    <value>تۆپۆلۆژی</value>
+  </data>
+  <data name="ribbon_topology_groupCheck" xml:space="preserve">
+    <value>پشکنین</value>
+  </data>
+  <data name="ribbon_topology_check" xml:space="preserve">
+    <value>پشکنین</value>
+  </data>
+  <data name="ribbon_topology_checkTooltip" xml:space="preserve">
+    <value>داتاکە بەپێی یاساکانی تۆپۆلۆژی بپشکنە</value>
+  </data>
+  <data name="ribbon_topology_groupResults" xml:space="preserve">
+    <value>ئەنجامەکان</value>
+  </data>
+  <data name="ribbon_topology_issues" xml:space="preserve">
+    <value>کێشەکان</value>
+  </data>
+  <data name="ribbon_topology_issuesTooltip" xml:space="preserve">
+    <value>کێشەکانی دوایین پشکنین</value>
+  </data>
+  <data name="ribbon_topology_showOnMap" xml:space="preserve">
+    <value>پیشاندان لەسەر نەخشە</value>
+  </data>
+  <data name="ribbon_topology_showOnMapTooltip" xml:space="preserve">
+    <value>کێشەکان لەسەر نەخشە بکێشە، لە کاتی دەستکاریکردنیشدا</value>
+  </data>
+  <data name="ribbon_topology_groupSettings" xml:space="preserve">
+    <value>ڕێکخستنەکان</value>
+  </data>
+  <data name="ribbon_topology_rules" xml:space="preserve">
+    <value>یاساکان</value>
+  </data>
+  <data name="ribbon_topology_rulesTooltip" xml:space="preserve">
+    <value>هەر یاسایەک چی دەپشکنێت؛ دووری و جۆرەکان بۆ ئەم دانیشتنە بگۆڕە</value>
+  </data>
+  <data name="ribbon_topology_groupOutput" xml:space="preserve">
+    <value>دەرچوون</value>
+  </data>
+  <data name="ribbon_topology_export" xml:space="preserve">
+    <value>هەناردەکردن</value>
+  </data>
+  <data name="ribbon_topology_exportTooltip" xml:space="preserve">
+    <value>لیستی پاڵێوراوی کێشەکان بۆ Excel</value>
+  </data>
+  <data name="ribbon_topology_groupHelp" xml:space="preserve">
+    <value>یارمەتی</value>
+  </data>
+  <data name="ribbon_topology_guide" xml:space="preserve">
+    <value>ڕێنمایی</value>
+  </data>
+  <data name="ribbon_topology_guideTooltip" xml:space="preserve">
+    <value>تابی تۆپۆلۆژی چی دەپشکنێت و چۆن بەکاری بهێنیت</value>
+  </data>
+  <data name="topology_panel_checkTitle" xml:space="preserve">
+    <value>پشکنینی تۆپۆلۆژی</value>
+  </data>
+  <data name="topology_panel_issuesTitle" xml:space="preserve">
+    <value>کێشەکانی تۆپۆلۆژی</value>
+  </data>
+  <data name="topology_panel_rulesTitle" xml:space="preserve">
+    <value>یاساکانی تۆپۆلۆژی</value>
+  </data>
+  <data name="topology_guide_title" xml:space="preserve">
+    <value>تۆپۆلۆژی</value>
+  </data>
+  <data name="topology_check_whatTitle" xml:space="preserve">
+    <value>چی بپشکنرێت</value>
+  </data>
+  <data name="topology_check_rulesLabel" xml:space="preserve">
+    <value>یاساکان</value>
+  </data>
+  <data name="topology_check_rules" xml:space="preserve">
+    <value>{0} یاسای «{1}»</value>
+  </data>
+  <data name="topology_check_dataLabel" xml:space="preserve">
+    <value>داتا</value>
+  </data>
+  <data name="topology_check_layerLabel" xml:space="preserve">
+    <value>چین</value>
+  </data>
+  <data name="topology_check_scopeWholeData" xml:space="preserve">
+    <value>هەموو داتاکە</value>
+  </data>
+  <data name="topology_check_scopeLayer" xml:space="preserve">
+    <value>یەک چین</value>
+  </data>
+  <data name="topology_check_scopeExtent" xml:space="preserve">
+    <value>سنووری نەخشە</value>
+  </data>
+  <data name="topology_check_scopeFeatures" xml:space="preserve">
+    <value>دیاردە هەڵبژێردراوەکان</value>
+  </data>
+  <data name="topology_check_layersTitle" xml:space="preserve">
+    <value>ئەو چینانەی یاساکان پێویستیانە</value>
+  </data>
+  <data name="topology_check_refresh" xml:space="preserve">
+    <value>چینەکان دووبارە بخوێنەوە</value>
+  </data>
+  <data name="topology_check_layerLoaded" xml:space="preserve">
+    <value>بارکراوە</value>
+  </data>
+  <data name="topology_check_layerLive" xml:space="preserve">
+    <value>Live: تەنها سنووری نەخشە یان هەڵبژاردن</value>
+  </data>
+  <data name="topology_check_layerNotLoaded" xml:space="preserve">
+    <value>بار نەکراوە: یاساکانی تێدەپەڕێندرێن</value>
+  </data>
+  <data name="topology_check_settingsInvalid" xml:space="preserve">
+    <value>ڕێکخستنێک لە پانێڵی یاساکاندا بەکارنایەت؛ ڕاستی بکەرەوە یان هەموو بگەڕێنەوە بۆ بنەڕەت.</value>
+  </data>
+  <data name="topology_check_liveNeedsPartialScope" xml:space="preserve">
+    <value>چینێکی Live تەنها ئەوەی لە دیمەندایە هەڵدەگرێت: سنووری نەخشە یان هەڵبژاردنێک بپشکنە، یان چینەکە بگۆڕە بۆ Cache.</value>
+  </data>
+  <data name="topology_check_noSelection" xml:space="preserve">
+    <value>سەرەتا دیاردەکانی ئەم چینە لەسەر نەخشە هەڵبژێرە.</value>
+  </data>
+  <data name="topology_check_largeScope" xml:space="preserve">
+    <value>ئەم پشکنینە {0} دیاردە دەخوێنێتەوە و لەوانەیە ماوەیەک بخایەنێت؛ سنووری نەخشە خێراترە.</value>
+  </data>
+  <data name="topology_check_someNotLoaded" xml:space="preserve">
+    <value>ئەو چینانەی بار نەکراون، لەگەڵ یاساکانیان، تێدەپەڕێندرێن.</value>
+  </data>
+  <data name="topology_check_run" xml:space="preserve">
+    <value>پشکنین</value>
+  </data>
+  <data name="topology_check_cancel" xml:space="preserve">
+    <value>هەڵوەشاندنەوە</value>
+  </data>
+  <data name="topology_check_progress" xml:space="preserve">
+    <value>پشکنین: {2} … {0} لە {1} یاسا</value>
+  </data>
+  <data name="topology_check_done" xml:space="preserve">
+    <value>{0} کێشە لە {1} دیاردەدا</value>
+  </data>
+  <data name="topology_check_cancelled" xml:space="preserve">
+    <value>هەڵوەشێندرایەوە: ئەنجامە پێشووەکان دەمێننەوە.</value>
+  </data>
+  <data name="topology_issues_noCheck" xml:space="preserve">
+    <value>سەرەتا پشکنینێک ئەنجام بدە.</value>
+  </data>
+  <data name="topology_issues_header" xml:space="preserve">
+    <value>پشکنرا {0} · {1} · {2} دیاردە</value>
+  </data>
+  <data name="topology_issues_settingsChanged" xml:space="preserve">
+    <value>ڕێکخستنەکان بۆ ئەم دانیشتنە گۆڕدران</value>
+  </data>
+  <data name="topology_issues_skipped" xml:space="preserve">
+    <value>نەپشکنرا (چین بار نەکراوە): {0}</value>
+  </data>
+  <data name="topology_issues_errors" xml:space="preserve">
+    <value>{0} هەڵە</value>
+  </data>
+  <data name="topology_issues_warnings" xml:space="preserve">
+    <value>{0} ئاگاداری</value>
+  </data>
+  <data name="topology_issues_infos" xml:space="preserve">
+    <value>{0} تێبینی</value>
+  </data>
+  <data name="topology_issues_allRules" xml:space="preserve">
+    <value>هەموو یاساکان</value>
+  </data>
+  <data name="topology_issues_changeAll" xml:space="preserve">
+    <value>هەموو</value>
+  </data>
+  <data name="topology_issues_changeNew" xml:space="preserve">
+    <value>نوێ لە دوایین پشکنینەوە</value>
+  </data>
+  <data name="topology_issues_changeStillThere" xml:space="preserve">
+    <value>هێشتا ماوە</value>
+  </data>
+  <data name="topology_issues_changeGone" xml:space="preserve">
+    <value>نەماوە لە دوایین پشکنینەوە</value>
+  </data>
+  <data name="topology_issues_changeTooltip" xml:space="preserve">
+    <value>بەراورد دەکات لەگەڵ پشکنینی پێشووی هەمان داتا</value>
+  </data>
+  <data name="topology_issues_searchTooltip" xml:space="preserve">
+    <value>گەڕان لە ناسنامە و ڕستەکاندا</value>
+  </data>
+  <data name="topology_issues_none" xml:space="preserve">
+    <value>هیچ کێشەیەک لە {0} دیاردەدا نەدۆزرایەوە</value>
+  </data>
+  <data name="topology_issues_overlayLimited" xml:space="preserve">
+    <value>زیاتر لە {0} کێشە: نەخشەکە تەنها هەڵەکان پیشان دەدات</value>
+  </data>
+  <data name="topology_issues_allowed" xml:space="preserve">
+    <value>ڕێگەپێدراو {0} m</value>
+  </data>
+  <data name="topology_issues_new" xml:space="preserve">
+    <value>نوێ</value>
+  </data>
+  <data name="topology_issues_showInTable" xml:space="preserve">
+    <value>پیشاندان لە خشتەی تایبەتمەندییەکان</value>
+  </data>
+  <data name="topology_issues_export" xml:space="preserve">
+    <value>هەناردەکردنی لیستەکە بۆ Excel</value>
+  </data>
+  <data name="topology_severity_error" xml:space="preserve">
+    <value>هەڵە</value>
+  </data>
+  <data name="topology_severity_warning" xml:space="preserve">
+    <value>ئاگاداری</value>
+  </data>
+  <data name="topology_severity_info" xml:space="preserve">
+    <value>تێبینی</value>
+  </data>
+  <data name="topology_unit_metres" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="topology_unit_squareMetres" xml:space="preserve">
+    <value>m²</value>
+  </data>
+  <data name="topology_rules_header" xml:space="preserve">
+    <value>{0} یاسا · وەشانی {1}</value>
+  </data>
+  <data name="topology_rules_resetAll" xml:space="preserve">
+    <value>گەڕاندنەوەی هەموو</value>
+  </data>
+  <data name="topology_rules_sessionOnly" xml:space="preserve">
+    <value>گۆڕانکارییەکانی ئێرە تا داخستنی بەرنامەکە دەمێننەوە؛ هیچ شتێک هەڵناگیرێت.</value>
+  </data>
+  <data name="topology_rules_changed" xml:space="preserve">
+    <value>لەم دانیشتنەدا گۆڕدراوە</value>
+  </data>
+  <data name="topology_rules_hidden" xml:space="preserve">
+    <value>شاراوە</value>
+  </data>
+  <data name="topology_parameter_distance" xml:space="preserve">
+    <value>دووری (m)</value>
+  </data>
+  <data name="topology_parameter_nearDistance" xml:space="preserve">
+    <value>دووریی نزیک (m)</value>
+  </data>
+  <data name="topology_parameter_searchDistance" xml:space="preserve">
+    <value>دووریی گەڕان (m)</value>
+  </data>
+  <data name="topology_parameter_maxOvershoot" xml:space="preserve">
+    <value>گەورەترین تێپەڕین (m)</value>
+  </data>
+  <data name="topology_parameter_maxGap" xml:space="preserve">
+    <value>گەورەترین بۆشایی (m)</value>
+  </data>
+  <data name="topology_parameter_minimumPoints" xml:space="preserve">
+    <value>کەمترین ژمارەی خاڵ</value>
+  </data>
+  <data name="topology_parameter_minimumLength" xml:space="preserve">
+    <value>کورتترین درێژی (m)</value>
+  </data>
+  <data name="topology_parameter_minimumArea" xml:space="preserve">
+    <value>بچووکترین ڕووبەر (m²)</value>
+  </data>
+  <data name="topology_parameter_minimumWidth" xml:space="preserve">
+    <value>کەمترین پانی (m)</value>
+  </data>
+  <data name="topology_parameter_sliverWidth" xml:space="preserve">
+    <value>پانیی پارچە باریکەکان (m)</value>
+  </data>
+  <data name="topology_parameter_interiorPartEnds" xml:space="preserve">
+    <value>پشکنینی کۆتاییەکان لە شوێنی بەیەکگەیشتنی بەشەکان (1 = بەڵێ)</value>
+  </data>
+  <data name="topology_parameter_sharedStretch" xml:space="preserve">
+    <value>ڕاپۆرتکردنی بەشە هاوبەشەکان (1 = بەڵێ)</value>
+  </data>
+  <data name="topology_parameter_enclosedGaps" xml:space="preserve">
+    <value>ڕاپۆرتکردنی بۆشاییە داخراوەکان (1 = بەڵێ)</value>
+  </data>
+  <data name="topology_parameter_maximumGapArea" xml:space="preserve">
+    <value>گەورەترین ڕووبەری بۆشایی (m²)</value>
+  </data>
+  <data name="topology_export_rule" xml:space="preserve">
+    <value>یاسا</value>
+  </data>
+  <data name="topology_export_kind" xml:space="preserve">
+    <value>جۆر</value>
+  </data>
+  <data name="topology_export_severity" xml:space="preserve">
+    <value>توندی</value>
+  </data>
+  <data name="topology_export_sentence" xml:space="preserve">
+    <value>کێشە</value>
+  </data>
+  <data name="topology_export_value" xml:space="preserve">
+    <value>بەها</value>
+  </data>
+  <data name="topology_export_features" xml:space="preserve">
+    <value>دیاردەکان</value>
+  </data>
+  <data name="topology_export_location" xml:space="preserve">
+    <value>شوێن (درێژی، پانی)</value>
+  </data>
+  <data name="topology_rule_geometryValid" xml:space="preserve">
+    <value>ئەندازە دەبێت دروست بێت</value>
+  </data>
+  <data name="topology_rule_distinctPoints" xml:space="preserve">
+    <value>خاڵەکان نابێت لەسەر یەک بکەون</value>
+  </data>
+  <data name="topology_rule_pointOnLine" xml:space="preserve">
+    <value>خاڵ دەبێت لەسەر هێڵ بێت</value>
+  </data>
+  <data name="topology_rule_lineEndCovered" xml:space="preserve">
+    <value>کۆتاییەکانی هێڵ دەبێت خاڵیان هەبێت</value>
+  </data>
+  <data name="topology_rule_lineCarriesPoints" xml:space="preserve">
+    <value>هێڵ دەبێت خاڵی لەسەر بێت</value>
+  </data>
+  <data name="topology_rule_pointOnOneLine" xml:space="preserve">
+    <value>خاڵ لەسەر زیاتر لە یەک هێڵ</value>
+  </data>
+  <data name="topology_rule_sequenceAlongLine" xml:space="preserve">
+    <value>ژمارەکان دەبێت بە درێژایی هێڵ زیاد بکەن</value>
+  </data>
+  <data name="topology_rule_lineEndsConnect" xml:space="preserve">
+    <value>کۆتاییەکانی هێڵ دەبێت پەیوەست بن</value>
+  </data>
+  <data name="topology_rule_partsJoin" xml:space="preserve">
+    <value>بەشەکانی هێڵێک دەبێت بەیەکەوە بلکێن</value>
+  </data>
+  <data name="topology_rule_distinctLines" xml:space="preserve">
+    <value>هێڵەکان نابێت دووبارە بن</value>
+  </data>
+  <data name="topology_rule_touchAndReturn" xml:space="preserve">
+    <value>هێڵەکان نابێت بەریەک بکەون و بگەڕێنەوە</value>
+  </data>
+  <data name="topology_rule_polygonsNoOverlap" xml:space="preserve">
+    <value>فرەگۆشەکان نابێت یەکتر داپۆشن</value>
+  </data>
+  <data name="topology_rule_polygonsNoGap" xml:space="preserve">
+    <value>فرەگۆشەکان نابێت بۆشایی بەجێبهێڵن</value>
+  </data>
+  <data name="topology_kind_geometryValid_NoGeometry" xml:space="preserve">
+    <value>دیاردەکە هیچ ئەندازەیەکی نییە</value>
+  </data>
+  <data name="topology_kind_geometryValid_ClosedRing" xml:space="preserve">
+    <value>ئەڵقەیەک خاڵی یەکەمی خۆی دووبارە دەکاتەوە</value>
+  </data>
+  <data name="topology_kind_geometryValid_RepeatedPoint" xml:space="preserve">
+    <value>هەمان خاڵ دوو جار لە دوای یەک</value>
+  </data>
+  <data name="topology_kind_geometryValid_TooFewPoints" xml:space="preserve">
+    <value>خاڵەکان زۆر کەمن</value>
+  </data>
+  <data name="topology_kind_geometryValid_ZeroAreaRing" xml:space="preserve">
+    <value>ئەڵقەیەکی بێ ڕووبەر</value>
+  </data>
+  <data name="topology_kind_geometryValid_InvalidCoordinate" xml:space="preserve">
+    <value>کۆردیناتێک ژمارە نییە</value>
+  </data>
+  <data name="topology_kind_geometryValid_CoordinateOutOfRange" xml:space="preserve">
+    <value>درێژی یان پانییەک لە دەرەوەی مەودا</value>
+  </data>
+  <data name="topology_kind_geometryValid_WrongRingOrientation" xml:space="preserve">
+    <value>ئەڵقەیەک بە ئاراستەی هەڵە پێچراوە (خۆکارانە ڕاستکرایەوە)</value>
+  </data>
+  <data name="topology_kind_distinctPoints_samePlace" xml:space="preserve">
+    <value>خاڵەکان لە هەمان شوێندا</value>
+  </data>
+  <data name="topology_kind_distinctPoints_close" xml:space="preserve">
+    <value>خاڵەکان {0} لە یەکترەوە دوورن</value>
+  </data>
+  <data name="topology_kind_distinctPoints_chain" xml:space="preserve">
+    <value>خاڵەکان لە ڕێگەی یەکترەوە بەستراون، بە پانیی {0}</value>
+  </data>
+  <data name="topology_kind_pointOnLine_nearLine" xml:space="preserve">
+    <value>خاڵ {0} لە نزیکترین هێڵەوە دوورە</value>
+  </data>
+  <data name="topology_kind_pointOnLine_farFromLines" xml:space="preserve">
+    <value>خاڵ لە هەموو هێڵەکان دوورە</value>
+  </data>
+  <data name="topology_kind_lineEndCovered_start" xml:space="preserve">
+    <value>هیچ خاڵێک لە سەرەتای هێڵەکەدا نییە</value>
+  </data>
+  <data name="topology_kind_lineEndCovered_end" xml:space="preserve">
+    <value>هیچ خاڵێک لە کۆتایی هێڵەکەدا نییە</value>
+  </data>
+  <data name="topology_kind_lineCarriesPoints_tooFewPoints" xml:space="preserve">
+    <value>تەنها {0} خاڵ لەسەر هێڵەکە</value>
+  </data>
+  <data name="topology_kind_pointOnOneLine_onSeveralLines" xml:space="preserve">
+    <value>خاڵ لەسەر {0} هێڵ</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_missing" xml:space="preserve">
+    <value>خاڵی بێ ژمارە</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_duplicate" xml:space="preserve">
+    <value>ژمارەی {0} دوو جار بەکارهاتووە</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_outOfOrder" xml:space="preserve">
+    <value>ژمارەی {0} لە ڕیزبەندیدا نییە</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_gap" xml:space="preserve">
+    <value>{0} ژمارە ونن</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_directionUndecided" xml:space="preserve">
+    <value>ژمارەکان لە هیچ ئاراستەیەکدا زیاد ناکەن</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_unsnappedEnd" xml:space="preserve">
+    <value>کۆتاییەکانی هێڵ {0} لە یەکترەوە دوورن، نەلکاون</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_overshoot" xml:space="preserve">
+    <value>هێڵ {0} لە دوای یەکتربڕینێک کۆتایی دێت</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_undershoot" xml:space="preserve">
+    <value>هێڵ {0} پێش گەیشتن بە هێڵێکی تر کۆتایی دێت</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_freeEnd" xml:space="preserve">
+    <value>کۆتایی هێڵ بە هیچ شتێکەوە نەبەستراوە</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_chain" xml:space="preserve">
+    <value>کۆتاییەکانی هێڵ لە ڕێگەی یەکترەوە بەستراون، بە پانیی {0}</value>
+  </data>
+  <data name="topology_kind_partsJoin_gap" xml:space="preserve">
+    <value>بۆشایی {0} لە نێوان بەشەکاندا</value>
+  </data>
+  <data name="topology_kind_partsJoin_detachedPart" xml:space="preserve">
+    <value>بەشێک {0} لە بەشەکانی تر دوورە</value>
+  </data>
+  <data name="topology_kind_partsJoin_branch" xml:space="preserve">
+    <value>{0} کۆتایی بەش لە یەک شوێندا بەیەک دەگەن</value>
+  </data>
+  <data name="topology_kind_partsJoin_outOfOrder" xml:space="preserve">
+    <value>بەشەکان بە ڕیزبەندیی هەڵە هەڵگیراون</value>
+  </data>
+  <data name="topology_kind_partsJoin_reversedPart" xml:space="preserve">
+    <value>بەشێک پێچەوانەی بەشەکانی تر کێشراوە</value>
+  </data>
+  <data name="topology_kind_distinctLines_wholeLine" xml:space="preserve">
+    <value>هێڵی دووبارە</value>
+  </data>
+  <data name="topology_kind_distinctLines_sharedStretch" xml:space="preserve">
+    <value>هێڵەکان {0} هاوبەشن</value>
+  </data>
+  <data name="topology_kind_touchAndReturn_touchAndReturn" xml:space="preserve">
+    <value>هێڵەکان دوو جار لە ماوەی {0} دا یەکتر دەبڕن</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_duplicate" xml:space="preserve">
+    <value>فرەگۆشەی دووبارە</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_inside" xml:space="preserve">
+    <value>فرەگۆشەیەک لە ناو یەکێکی تردا، {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_overlap" xml:space="preserve">
+    <value>فرەگۆشەکان {0} یەکتر دادەپۆشن</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_thinOverlap" xml:space="preserve">
+    <value>داپۆشینی باریکی {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoGap_sliver" xml:space="preserve">
+    <value>پارچەیەکی باریک بە درێژیی {0} لە نێوان دراوسێکاندا</value>
+  </data>
+  <data name="topology_kind_polygonsNoGap_enclosedGap" xml:space="preserve">
+    <value>بۆشاییەکی {0} کە فرەگۆشەکان دەوریان داوە</value>
+  </data>
+  <data name="topology_fix_title" xml:space="preserve">
+    <value>چاککردن</value>
+  </data>
+  <data name="topology_fix_preview" xml:space="preserve">
+    <value>پێشبینین</value>
+  </data>
+  <data name="topology_fix_apply" xml:space="preserve">
+    <value>جێبەجێکردن</value>
+  </data>
+  <data name="topology_fix_cancel" xml:space="preserve">
+    <value>هەڵوەشاندنەوە</value>
+  </data>
+  <data name="topology_fix_evaluating" xml:space="preserve">
+    <value>پشکنینی چاککردنەکە…</value>
+  </data>
+  <data name="topology_fix_pending" xml:space="preserve">
+    <value>چاککردن چاوەڕوانە</value>
+  </data>
+  <data name="topology_fix_pendingNote" xml:space="preserve">
+    <value>چاککردنێک جێبەجێکرا. چینەکە پاشەکەوت بکە، پاشان دووبارە بپشکنە.</value>
+  </data>
+  <data name="topology_fix_pendingFooter" xml:space="preserve">
+    <value>{0} چاککردن جێبەجێکران. بۆ هێشتنەوەیان چینەکان پاشەکەوت بکە، پاشان دووبارە بپشکنە.</value>
+  </data>
+  <data name="topology_fix_failed" xml:space="preserve">
+    <value>چاککردنەکە جێبەجێ نەکرا: {0}</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_movePoint" xml:space="preserve">
+    <value>{0} بە ئەندازەی {1} دەجووڵێت بۆ سەر {2}.</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_moveLineVertex" xml:space="preserve">
+    <value>لووتکەیەکی {2} بە ئەندازەی {1} دەجووڵێت بۆ سەر {0}.</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_insertLineVertex" xml:space="preserve">
+    <value>{2} لووتکەیەکی نوێ لە {0} وەردەگرێت، {1} لەو شوێنەی ئێستا پێیدا دەڕوات.</value>
+  </data>
+  <data name="topology_fix_reason_featureMissing" xml:space="preserve">
+    <value>بێ چاککردن: دیاردەیەکی ئەم کێشەیە چیتر لەسەر نەخشە نییە.</value>
+  </data>
+  <data name="topology_fix_reason_beyondFixDistance" xml:space="preserve">
+    <value>بێ چاککردن: جووڵاندنەکە {0} دەبێت، زیاتر لە دووریی چاککردن ({1}). بە دەست دەستکاری بکە.</value>
+  </data>
+  <data name="topology_fix_reason_doesNotResolve" xml:space="preserve">
+    <value>ڕەتکرایەوە: کێشەکە لەدوای چاککردنیش هەر دەمێنێت.</value>
+  </data>
+  <data name="topology_fix_reason_createsIssue" xml:space="preserve">
+    <value>ڕەتکرایەوە: چاککردنەکە دەبێتە هۆی “{0}” ({1}).</value>
+  </data>
+  <data name="topology_fix_reason_noPermission" xml:space="preserve">
+    <value>مۆڵەتی دەستکاریکردنی ئەندازەکانت نییە.</value>
+  </data>
+  <data name="topology_fix_reason_notEditable" xml:space="preserve">
+    <value>چینی {0} لێرەدا دەستکاری ناکرێت.</value>
+  </data>
+  <data name="topology_fix_reason_cannotRemove" xml:space="preserve">
+    <value>ئەم چاککردنە دیاردەیەک دەسڕێتەوە، و لێرەدا دیاردە ناسڕدرێتەوە. بە دەست دەستکاری بکە.</value>
+  </data>
+  <data name="topology_guide_correct" xml:space="preserve">
+    <value>داتای دروست</value>
+  </data>
+  <data name="topology_parameter_fixDistance" xml:space="preserve">
+    <value>دووریی چاککردن (m)</value>
+  </data>
+  <data name="topology_fix_choose" xml:space="preserve">
+    <value>هەڵبژێرە کامیان بمێنێتەوە:</value>
+  </data>
+  <data name="topology_fix_snapLineEnds_snap" xml:space="preserve">
+    <value>کۆتاییەکانی {0} لە یەک خاڵدا بەیەک دەگەن (درێژترین جووڵە {1} ـە).</value>
+  </data>
+  <data name="topology_fix_trimOvershoot_trim" xml:space="preserve">
+    <value>{0} بە ئەندازەی {1} کورت دەکرێتەوە تا لەسەر {2} کۆتایی بێت.</value>
+  </data>
+  <data name="topology_fix_extendUndershoot_extendAlong" xml:space="preserve">
+    <value>{0} بە ئەندازەی {1} ڕاستەوخۆ درێژ دەکرێتەوە، تا دەگاتە {2}.</value>
+  </data>
+  <data name="topology_fix_extendUndershoot_joinNearest" xml:space="preserve">
+    <value>{0} پارچەیەکی کۆتایی نوێی {1} وەردەگرێت بۆ نزیکترین خاڵی {2}.</value>
+  </data>
+  <data name="topology_fix_deleteDuplicatePoints_keep" xml:space="preserve">
+    <value>{0} بهێڵەرەوە؛ {1} بسڕەوە.</value>
+  </data>
+  <data name="topology_fix_deleteDuplicateLines_keep" xml:space="preserve">
+    <value>{0} بهێڵەرەوە؛ {1} بسڕەوە.</value>
+  </data>
+  <data name="topology_fix_reason_notFound" xml:space="preserve">
+    <value>بێ چاککردن: شوێنی چاککردن چیتر لەو شوێنە نییە کە پشکنین دۆزییەوە. دووبارە بپشکنە.</value>
+  </data>
+  <data name="topology_fix_cutOverlap_cutFrom" xml:space="preserve">
+    <value>ڕووبەرە هاوبەشەکە لە {0} ببڕە؛ {1} وەک خۆی دەمێنێتەوە.</value>
+  </data>
+  <data name="topology_fix_deleteDuplicatePolygons_keep" xml:space="preserve">
+    <value>{0} بهێڵەرەوە؛ {1} بسڕەوە.</value>
+  </data>
+  <data name="topology_fix_giveGap_takeGap" xml:space="preserve">
+    <value>بۆشاییەکە بخە سەر {0}.</value>
+  </data>
+  <data name="topology_fix_giveGap_takeSliver" xml:space="preserve">
+    <value>{0} فراوان بکە تا بگاتە {1}، و پارچە باریکەکە پڕ بکەرەوە.</value>
+  </data>
+  <data name="topology_fix_reason_nothingLeft" xml:space="preserve">
+    <value>بێ چاککردن: هیچ شتێک لە {0} نامێنێتەوە.</value>
+  </data>
 </root>

@@ -3337,4 +3337,1471 @@
   <data name="dialog_fileGdbPicker_reasonUnreadable" xml:space="preserve">
     <value>پڑھی نہیں جا سکتی</value>
   </data>
+  <data name="versioning_review_title" xml:space="preserve">
+    <value>ورژن کا جائزہ</value>
+  </data>
+  <data name="versioning_review_refresh" xml:space="preserve">
+    <value>ریفریش</value>
+  </data>
+  <data name="versioning_review_lastRefresh" xml:space="preserve">
+    <value>آخری ریفریش</value>
+  </data>
+  <data name="versioning_review_competitions" xml:space="preserve">
+    <value>مقابلے</value>
+  </data>
+  <data name="versioning_review_singles" xml:space="preserve">
+    <value>انفرادی تجاویز</value>
+  </data>
+  <data name="versioning_review_acceptSelected" xml:space="preserve">
+    <value>منتخب کو قبول کریں</value>
+  </data>
+  <data name="versioning_review_groupSelected" xml:space="preserve">
+    <value>مقابلے کے طور پر گروپ کریں</value>
+  </data>
+  <data name="versioning_review_compare" xml:space="preserve">
+    <value>جائزہ</value>
+  </data>
+  <data name="versioning_review_colFeature" xml:space="preserve">
+    <value>فیچر</value>
+  </data>
+  <data name="versioning_review_colLayer" xml:space="preserve">
+    <value>لیئر</value>
+  </data>
+  <data name="versioning_review_colCount" xml:space="preserve">
+    <value>تجاویز</value>
+  </data>
+  <data name="versioning_review_colAuthors" xml:space="preserve">
+    <value>ترمیم کنندگان</value>
+  </data>
+  <data name="versioning_review_colAge" xml:space="preserve">
+    <value>عمر</value>
+  </data>
+  <data name="versioning_review_colSuggestions" xml:space="preserve">
+    <value>اوورلیپس</value>
+  </data>
+  <data name="versioning_review_badgeStale" xml:space="preserve">
+    <value>پرانی</value>
+  </data>
+  <data name="versioning_review_badgeOrphaned" xml:space="preserve">
+    <value>یتیم</value>
+  </data>
+  <data name="versioning_review_badgeQueued" xml:space="preserve">
+    <value>قطار میں</value>
+  </data>
+  <data name="versioning_review_badgeDelete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="versioning_review_empty" xml:space="preserve">
+    <value>کوئی زیرِ التوا تجویز نہیں — ورژن شدہ لیئرز پر جمع کرائی گئی تبدیلیاں یہاں ظاہر ہوتی ہیں۔</value>
+  </data>
+  <data name="versioning_compare_back" xml:space="preserve">
+    <value>قطار پر واپس</value>
+  </data>
+  <data name="versioning_compare_live" xml:space="preserve">
+    <value>Live</value>
+  </data>
+  <data name="versioning_compare_field" xml:space="preserve">
+    <value>فیلڈ</value>
+  </data>
+  <data name="versioning_compare_selectWinner" xml:space="preserve">
+    <value>فاتح کے طور پر منتخب کریں</value>
+  </data>
+  <data name="versioning_compare_closeNoWinner" xml:space="preserve">
+    <value>سب مسترد کریں (کوئی فاتح نہیں)</value>
+  </data>
+  <data name="versioning_compare_reason" xml:space="preserve">
+    <value>مسترد کرنے کی وجہ</value>
+  </data>
+  <data name="versioning_compare_staleOverride" xml:space="preserve">
+    <value>مجھے معلوم ہے کہ اس تجویز کے بعد Live فیچر بدل چکا ہے (اوور رائیڈ ریکارڈ ہوگا)</value>
+  </data>
+  <data name="versioning_compare_showOnMap" xml:space="preserve">
+    <value>نقشے پر دکھائیں</value>
+  </data>
+  <data name="versioning_compare_deleteProposal" xml:space="preserve">
+    <value>حذف کی تجویز</value>
+  </data>
+  <data name="versioning_compare_orphanBanner" xml:space="preserve">
+    <value>ہدف فیچر اب Live میں موجود نہیں؛ صرف سب کو مسترد کرنا ممکن ہے۔</value>
+  </data>
+  <data name="versioning_compare_queuedBanner" xml:space="preserve">
+    <value>یہ مقابلہ منظوری کے منتظر ایک دوسرے مقابلے کے پیچھے قطار میں ہے۔</value>
+  </data>
+  <data name="versioning_approval_title" xml:space="preserve">
+    <value>منظوری کی قطار</value>
+  </data>
+  <data name="versioning_approval_commitSelected" xml:space="preserve">
+    <value>منتخب کو کمٹ کریں</value>
+  </data>
+  <data name="versioning_approval_return" xml:space="preserve">
+    <value>واپس کریں</value>
+  </data>
+  <data name="versioning_approval_returnReason" xml:space="preserve">
+    <value>واپسی کی وجہ</value>
+  </data>
+  <data name="versioning_approval_returnReasonRequired" xml:space="preserve">
+    <value>واپسی کے لیے وجہ بتانا ضروری ہے۔</value>
+  </data>
+  <data name="versioning_approval_staleNeedsOverride" xml:space="preserve">
+    <value>منتخب آئٹمز میں پرانی تجاویز شامل ہیں؛ انہیں کمٹ کرنے کے لیے اوور رائیڈ کو نشان زد کریں۔</value>
+  </data>
+  <data name="versioning_approval_colWinner" xml:space="preserve">
+    <value>فاتح</value>
+  </data>
+  <data name="versioning_approval_colReviewer" xml:space="preserve">
+    <value>جائزہ کار</value>
+  </data>
+  <data name="versioning_approval_colType" xml:space="preserve">
+    <value>تبدیلی</value>
+  </data>
+  <data name="versioning_approval_colResolved" xml:space="preserve">
+    <value>حل شدہ</value>
+  </data>
+  <data name="versioning_myPending_title" xml:space="preserve">
+    <value>میری زیرِ التوا تجاویز</value>
+  </data>
+  <data name="versioning_myPending_colSession" xml:space="preserve">
+    <value>سیشن</value>
+  </data>
+  <data name="versioning_myPending_colStatus" xml:space="preserve">
+    <value>حیثیت</value>
+  </data>
+  <data name="versioning_myPending_colSubmitted" xml:space="preserve">
+    <value>جمع کرایا گیا</value>
+  </data>
+  <data name="versioning_status_pendingReview" xml:space="preserve">
+    <value>جائزے کی منتظر</value>
+  </data>
+  <data name="versioning_status_inCompetition" xml:space="preserve">
+    <value>مقابلے میں ({0})</value>
+  </data>
+  <data name="versioning_status_underReview" xml:space="preserve">
+    <value>زیرِ جائزہ</value>
+  </data>
+  <data name="versioning_status_committed" xml:space="preserve">
+    <value>کمٹ شدہ</value>
+  </data>
+  <data name="versioning_status_rejected" xml:space="preserve">
+    <value>مسترد</value>
+  </data>
+  <data name="versioning_status_withdrawn" xml:space="preserve">
+    <value>واپس لی گئی</value>
+  </data>
+  <data name="versioning_submit_title" xml:space="preserve">
+    <value>سیشن جمع کرا دیا گیا</value>
+  </data>
+  <data name="versioning_submit_summary" xml:space="preserve">
+    <value>{0} تجویز (تجاویز) زیرِ التوا کے طور پر جمع کرائی گئیں۔ نقشہ کمٹ شدہ حالت ہی دکھاتا رہے گا؛ پیش رفت «میری زیرِ التوا تجاویز» میں دیکھیں۔</value>
+  </data>
+  <data name="versioning_submit_competitions" xml:space="preserve">
+    <value>{0} مقابلے میں شامل ہوئیں۔</value>
+  </data>
+  <data name="versioning_submit_superseded" xml:space="preserve">
+    <value>{0} نے آپ کی پچھلی تجویز کی جگہ لے لی۔</value>
+  </data>
+  <data name="versioning_submit_overlaps" xml:space="preserve">
+    <value>{0} موجودہ فیچرز سے اوورلیپ کرتی ہیں (مشاورتی)۔</value>
+  </data>
+  <data name="versioning_timeline_featureId" xml:space="preserve">
+    <value>فیچر id</value>
+  </data>
+  <data name="versioning_timeline_load" xml:space="preserve">
+    <value>تاریخچہ دکھائیں</value>
+  </data>
+  <data name="versioning_timeline_liveNow" xml:space="preserve">
+    <value>موجودہ حالت</value>
+  </data>
+  <data name="versioning_timeline_deleted" xml:space="preserve">
+    <value>یہ فیچر حذف ہو چکا ہے</value>
+  </data>
+  <data name="versioning_timeline_colUntil" xml:space="preserve">
+    <value>تک درست</value>
+  </data>
+  <data name="versioning_timeline_colReplacedBy" xml:space="preserve">
+    <value>جس سے بدلا گیا</value>
+  </data>
+  <data name="versioning_timeline_colApprover" xml:space="preserve">
+    <value>منظور کنندہ</value>
+  </data>
+  <data name="versioning_timeline_colBatch" xml:space="preserve">
+    <value>کمٹ بیچ</value>
+  </data>
+  <data name="versioning_timeline_attributes" xml:space="preserve">
+    <value>اقدار</value>
+  </data>
+  <data name="versioning_timeline_empty" xml:space="preserve">
+    <value>اس فیچر کا کوئی تاریخچہ ریکارڈ نہیں</value>
+  </data>
+  <data name="versioning_timeline_featureIdInvalid" xml:space="preserve">
+    <value>کوئی لیئر منتخب کریں اور درست فیچر id درج کریں</value>
+  </data>
+  <data name="versioning_inbox_markAllRead" xml:space="preserve">
+    <value>سب کو پڑھا ہوا نشان زد کریں</value>
+  </data>
+  <data name="versioning_inbox_colWhen" xml:space="preserve">
+    <value>کب</value>
+  </data>
+  <data name="versioning_inbox_colEvent" xml:space="preserve">
+    <value>واقعہ</value>
+  </data>
+  <data name="versioning_inbox_colDetails" xml:space="preserve">
+    <value>تفصیلات</value>
+  </data>
+  <data name="versioning_inbox_unread" xml:space="preserve">
+    <value>{0} غیر پڑھے</value>
+  </data>
+  <data name="versioning_inbox_items" xml:space="preserve">
+    <value>{0} آئٹم</value>
+  </data>
+  <data name="versioning_inbox_features" xml:space="preserve">
+    <value>فیچرز: {0}</value>
+  </data>
+  <data name="versioning_inbox_reason" xml:space="preserve">
+    <value>وجہ: {0}</value>
+  </data>
+  <data name="versioning_inbox_typeCompetitionJoined" xml:space="preserve">
+    <value>آپ کی تجویز ایک مقابلے میں شامل ہوئی</value>
+  </data>
+  <data name="versioning_inbox_typeCommitted" xml:space="preserve">
+    <value>آپ کی تجاویز کمٹ ہو گئیں</value>
+  </data>
+  <data name="versioning_inbox_typeRejected" xml:space="preserve">
+    <value>آپ کی تجاویز مسترد ہو گئیں</value>
+  </data>
+  <data name="versioning_inbox_typeClosedNoWinner" xml:space="preserve">
+    <value>مقابلہ بغیر فاتح کے بند ہو گیا</value>
+  </data>
+  <data name="versioning_inbox_typeReturned" xml:space="preserve">
+    <value>منظور کنندہ نے آپ کا فیصلہ واپس کر دیا</value>
+  </data>
+  <data name="versioning_inbox_typeOrphaned" xml:space="preserve">
+    <value>ہدف فیچر اب موجود نہیں</value>
+  </data>
+  <data name="message_error_versionedLayerWriteRejected" xml:space="preserve">
+    <value>یہ لیئر ورژننگ کے تحت ہے؛ ترامیم براہِ راست محفوظ نہیں ہوتیں بلکہ جائزے کے لیے تجاویز کے طور پر جمع کرانی ہوں گی۔</value>
+  </data>
+  <data name="message_error_versioningInvalidSubmission" xml:space="preserve">
+    <value>جمع کرایا گیا سیشن غلط ہے؛ لیئر دوبارہ لوڈ کریں اور پھر کوشش کریں۔</value>
+  </data>
+  <data name="message_error_versioningInvalidProposal" xml:space="preserve">
+    <value>تجویز کردہ تبدیلیوں میں سے ایک غلط ہے؛ لیئر دوبارہ لوڈ کریں اور پھر کوشش کریں۔</value>
+  </data>
+  <data name="message_error_versioningUnknownVersionedLayer" xml:space="preserve">
+    <value>یہ لیئر ورژننگ کے لیے رجسٹرڈ نہیں ہے۔</value>
+  </data>
+  <data name="message_error_versioningVersioningNotEnabled" xml:space="preserve">
+    <value>اس لیئر کے لیے ورژننگ فعال نہیں ہے؛ معمول کے طریقے سے محفوظ کریں۔</value>
+  </data>
+  <data name="message_error_versioningProposalUnderApproval" xml:space="preserve">
+    <value>اس فیچر کے لیے آپ کی پچھلی تجویز حتمی منظوری کی منتظر ہے؛ دوبارہ جمع کرانے سے پہلے اس کے کمٹ ہونے یا واپس آنے کا انتظار کریں۔</value>
+  </data>
+  <data name="message_error_versioningConcurrentSubmission" xml:space="preserve">
+    <value>اسی لمحے کسی اور جمع کرائی گئی تبدیلی نے اسی فیچر کو چھوا؛ ریفریش کریں اور دوبارہ کوشش کریں۔</value>
+  </data>
+  <data name="message_error_versioningCompetitionAlreadyResolved" xml:space="preserve">
+    <value>مقابلہ کسی دوسرے جائزہ کار نے بدل دیا یا حل کر دیا؛ ریفریش کریں اور دوبارہ کوشش کریں۔</value>
+  </data>
+  <data name="message_error_versioningConcurrentModification" xml:space="preserve">
+    <value>اسی وقت کچھ اور بدل گیا؛ ریفریش کریں اور دوبارہ کوشش کریں۔</value>
+  </data>
+  <data name="message_error_versioningConcurrentLiveChange" xml:space="preserve">
+    <value>کمٹ کے دوران کوئی مقابلہ یا Live فیچر بدل گیا؛ کچھ بھی کمٹ نہیں ہوا — ریفریش کریں اور دوبارہ کوشش کریں۔</value>
+  </data>
+  <data name="message_error_versioningStaleBaseRequiresOverride" xml:space="preserve">
+    <value>یہ تجویز لکھے جانے کے بعد Live فیچر بدل گیا؛ قبول کرنے کے لیے واضح اوور رائیڈ ضروری ہے۔</value>
+  </data>
+  <data name="message_error_versioningOrphanedTarget" xml:space="preserve">
+    <value>ہدف فیچر اب موجود نہیں؛ اس کے بجائے مقابلہ واپس کریں۔ کچھ بھی کمٹ نہیں ہوا۔</value>
+  </data>
+  <data name="message_error_versioningOrphanedTargetRejectOnly" xml:space="preserve">
+    <value>ہدف فیچر اب Live میں موجود نہیں؛ صرف بغیر فاتح کے بند کرنے کی اجازت ہے۔</value>
+  </data>
+  <data name="message_error_versioningRejectionReasonRequired" xml:space="preserve">
+    <value>مسترد کرنے کی وجہ ضروری ہے۔</value>
+  </data>
+  <data name="message_error_versioningReturnReasonRequired" xml:space="preserve">
+    <value>واپسی کی وجہ بتانا ضروری ہے۔</value>
+  </data>
+  <data name="message_error_versioningUnknownCompetition" xml:space="preserve">
+    <value>مقابلہ نہیں ملا؛ شاید یہ حل یا حذف ہو چکا ہے — ریفریش کریں۔</value>
+  </data>
+  <data name="message_error_versioningUnknownProposal" xml:space="preserve">
+    <value>یہ تجویز اس مقابلے میں نہیں ملی؛ ریفریش کریں۔</value>
+  </data>
+  <data name="message_error_versioningUnknownSuggestion" xml:space="preserve">
+    <value>اوورلیپ کی تجویز نہیں ملی؛ ریفریش کریں۔</value>
+  </data>
+  <data name="message_error_versioningInvalidGrouping" xml:space="preserve">
+    <value>ان تجاویز کو گروپ نہیں کیا جا سکتا؛ صرف ایک ہی لیئر کی زیرِ التوا تخلیقی تجاویز گروپ ہو سکتی ہیں۔</value>
+  </data>
+  <data name="message_error_versioningCompetitionBlockedByPredecessor" xml:space="preserve">
+    <value>یہ مقابلہ ایک غیر حل شدہ پچھلے مقابلے کے پیچھے قطار میں ہے؛ پہلے اسے حل کریں۔</value>
+  </data>
+  <data name="message_error_versioningEmptyCompetition" xml:space="preserve">
+    <value>اس مقابلے میں کوئی فعال تجویز نہیں ہے۔</value>
+  </data>
+  <data name="message_error_versioningNotASingleton" xml:space="preserve">
+    <value>اس مقابلے میں کئی تجاویز ہیں؛ موازنہ ویو استعمال کریں۔</value>
+  </data>
+  <data name="message_error_versioningInvalidCommit" xml:space="preserve">
+    <value>کمٹ بیچ خالی یا غلط ہے۔</value>
+  </data>
+  <data name="message_error_versioningCompetitionNotResolved" xml:space="preserve">
+    <value>مقابلہ حل شدہ حالت میں نہیں ہے؛ قطار ریفریش کریں۔</value>
+  </data>
+  <data name="message_error_versioningSchemaMismatch" xml:space="preserve">
+    <value>تجویز اب لیئر کے اسکیما سے مطابقت نہیں رکھتی؛ اسے کمٹ نہیں کیا جا سکتا۔</value>
+  </data>
+  <data name="versioning_map_pendingStatus" xml:space="preserve">
+    <value>زیرِ التوا تجاویز</value>
+  </data>
+  <data name="versioning_map_history" xml:space="preserve">
+    <value>فیچر کا تاریخچہ</value>
+  </data>
+  <data name="versioning_map_myPendingOverlay" xml:space="preserve">
+    <value>نقشے پر میری زیرِ التوا</value>
+  </data>
+  <data name="versioning_map_selectFeature" xml:space="preserve">
+    <value>پہلے کوئی فیچر منتخب کریں</value>
+  </data>
+  <data name="versioning_map_noPending" xml:space="preserve">
+    <value>اس فیچر کے لیے کوئی زیرِ التوا تجویز نہیں</value>
+  </data>
+  <data name="versioning_map_pendingSummary" xml:space="preserve">
+    <value>{0} زیرِ التوا تجویز (تجاویز)</value>
+  </data>
+  <data name="versioning_map_pendingAuthors" xml:space="preserve">
+    <value>ترمیم کنندگان: {0}</value>
+  </data>
+  <data name="versioning_map_pendingHasOwn" xml:space="preserve">
+    <value>آپ کی اپنی تجویز شامل ہے</value>
+  </data>
+  <data name="versioning_map_overlayEmpty" xml:space="preserve">
+    <value>اس لیئر کے لیے آپ کی کوئی زیرِ التوا تجویز نہیں</value>
+  </data>
+  <data name="versioning_map_overlayName" xml:space="preserve">
+    <value>میری زیرِ التوا — {0}</value>
+  </data>
+  <data name="versioning_changeType_create" xml:space="preserve">
+    <value>تخلیق</value>
+  </data>
+  <data name="versioning_changeType_update" xml:space="preserve">
+    <value>اپ ڈیٹ</value>
+  </data>
+  <data name="versioning_changeType_delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="versioning_myPending_empty" xml:space="preserve">
+    <value>آپ کی کوئی زیرِ التوا تجویز نہیں۔</value>
+  </data>
+  <data name="versioning_approval_empty" xml:space="preserve">
+    <value>منظوری کے لیے کچھ بھی منتظر نہیں۔</value>
+  </data>
+  <data name="versioning_inbox_empty" xml:space="preserve">
+    <value>آپ کے لیے کوئی اطلاع نہیں۔</value>
+  </data>
+  <data name="versioning_compare_empty" xml:space="preserve">
+    <value>تجاویز کا موازنہ کرنے کے لیے جائزے کی قطار سے کوئی مقابلہ منتخب کریں۔</value>
+  </data>
+  <data name="versioning_submit_confirm" xml:space="preserve">
+    <value>لیئر {1} پر {0} تبدیلی (تبدیلیاں) براہِ راست محفوظ ہونے کے بجائے جائزے کے لیے جمع کرائی جائیں گی۔ جب تک منظور کنندہ انہیں کمٹ نہ کرے، نقشہ منظور شدہ حالت دکھاتا رہے گا۔ ابھی جمع کرائیں؟</value>
+  </data>
+  <data name="versioning_layer_badgeTooltip" xml:space="preserve">
+    <value>ورژن شدہ لیئر — محفوظ کریں آپ کی ترامیم کو براہِ راست لکھنے کے بجائے جائزے کے لیے جمع کراتا ہے۔</value>
+  </data>
+  <data name="versioning_review_ageDays" xml:space="preserve">
+    <value>{0} دن</value>
+  </data>
+  <data name="versioning_review_ageHours" xml:space="preserve">
+    <value>{0} گھنٹے</value>
+  </data>
+  <data name="versioning_review_ageMinutes" xml:space="preserve">
+    <value>{0} منٹ</value>
+  </data>
+  <data name="dialog_goto_quickEntry" xml:space="preserve">
+    <value>فوری اندراج</value>
+  </data>
+  <data name="dialog_goto_quickEntryWatermark" xml:space="preserve">
+    <value>کوآرڈینیٹس پیسٹ کریں — 35.6892, 51.3890 · 35°41′21″N 51°23′20″E · 39N 534123 3950123 · نقشے کا لنک</value>
+  </data>
+  <data name="dialog_goto_quickEntryRecognized" xml:space="preserve">
+    <value>پہچانا گیا:</value>
+  </data>
+  <data name="dialog_goto_quickEntryNotRecognized" xml:space="preserve">
+    <value>کوآرڈینیٹ کے طور پر نہیں پہچانا گیا</value>
+  </data>
+  <data name="dialog_goto_tabGeodetic" xml:space="preserve">
+    <value>جیوڈیٹک</value>
+  </data>
+  <data name="dialog_goto_tabUtm" xml:space="preserve">
+    <value>UTM</value>
+  </data>
+  <data name="dialog_goto_tabProjected" xml:space="preserve">
+    <value>پروجیکٹڈ</value>
+  </data>
+  <data name="dialog_goto_format" xml:space="preserve">
+    <value>فارمیٹ</value>
+  </data>
+  <data name="dialog_goto_datum" xml:space="preserve">
+    <value>ڈیٹم (بیضوی)</value>
+  </data>
+  <data name="dialog_goto_latitude" xml:space="preserve">
+    <value>عرض البلد</value>
+  </data>
+  <data name="dialog_goto_longitude" xml:space="preserve">
+    <value>طول البلد</value>
+  </data>
+  <data name="dialog_goto_hemisphere" xml:space="preserve">
+    <value>نصف کرہ</value>
+  </data>
+  <data name="dialog_goto_decimalHint" xml:space="preserve">
+    <value>منفی اقدار جنوب اور مغرب ہیں۔ یہاں 35 41 21.1 N جیسی DMS قدر بھی قبول کی جاتی ہے۔</value>
+  </data>
+  <data name="dialog_goto_easting" xml:space="preserve">
+    <value>ایسٹنگ</value>
+  </data>
+  <data name="dialog_goto_northing" xml:space="preserve">
+    <value>نارتھنگ</value>
+  </data>
+  <data name="dialog_goto_projection" xml:space="preserve">
+    <value>پروجیکشن</value>
+  </data>
+  <data name="dialog_goto_projectionCustom" xml:space="preserve">
+    <value>حسبِ ضرورت</value>
+  </data>
+  <data name="dialog_goto_paramCentralMeridian" xml:space="preserve">
+    <value>مرکزی میریڈین</value>
+  </data>
+  <data name="dialog_goto_paramLatitudeOfOrigin" xml:space="preserve">
+    <value>مبدا کا عرض البلد</value>
+  </data>
+  <data name="dialog_goto_paramScaleFactor" xml:space="preserve">
+    <value>اسکیل فیکٹر</value>
+  </data>
+  <data name="dialog_goto_paramFalseEasting" xml:space="preserve">
+    <value>فالس ایسٹنگ</value>
+  </data>
+  <data name="dialog_goto_paramFalseNorthing" xml:space="preserve">
+    <value>فالس نارتھنگ</value>
+  </data>
+  <data name="dialog_goto_paramStandardParallel1" xml:space="preserve">
+    <value>معیاری متوازی 1</value>
+  </data>
+  <data name="dialog_goto_paramStandardParallel2" xml:space="preserve">
+    <value>معیاری متوازی 2</value>
+  </data>
+  <data name="dialog_goto_x" xml:space="preserve">
+    <value>X (ایسٹنگ)</value>
+  </data>
+  <data name="dialog_goto_y" xml:space="preserve">
+    <value>Y (نارتھنگ)</value>
+  </data>
+  <data name="dialog_goto_position" xml:space="preserve">
+    <value>مقام</value>
+  </data>
+  <data name="dialog_goto_positionSubtitle" xml:space="preserve">
+    <value>WGS 84 · عرض البلد، طول البلد</value>
+  </data>
+  <data name="dialog_goto_copy" xml:space="preserve">
+    <value>کوآرڈینیٹس کاپی کریں</value>
+  </data>
+  <data name="dialog_goto_statusReady" xml:space="preserve">
+    <value>تیار</value>
+  </data>
+  <data name="dialog_goto_statusInvalid" xml:space="preserve">
+    <value>ان پٹ چیک کریں</value>
+  </data>
+  <data name="dialog_goto_errorLatitudeRange" xml:space="preserve">
+    <value>عرض البلد −90° اور 90° کے درمیان ہونا چاہیے</value>
+  </data>
+  <data name="dialog_goto_errorLongitudeRange" xml:space="preserve">
+    <value>طول البلد −180° اور 180° کے درمیان ہونا چاہیے</value>
+  </data>
+  <data name="dialog_goto_errorDmsComponents" xml:space="preserve">
+    <value>منٹ اور سیکنڈ 0 اور 60 کے درمیان ہونے چاہئیں</value>
+  </data>
+  <data name="dialog_goto_errorNumber" xml:space="preserve">
+    <value>{0} کے لیے عددی قدر درج کریں</value>
+  </data>
+  <data name="dialog_goto_errorNorthingRange" xml:space="preserve">
+    <value>نارتھنگ 0 اور 10,000,000 m کے درمیان ہونی چاہیے</value>
+  </data>
+  <data name="dialog_goto_warningEastingRange" xml:space="preserve">
+    <value>ایسٹنگ UTM زون کی معمول کی حد (100,000 – 900,000 m) سے باہر ہے</value>
+  </data>
+  <data name="dialog_goto_errorProjection" xml:space="preserve">
+    <value>یہ اقدار زمین پر کسی مقام سے مطابقت نہیں رکھتیں</value>
+  </data>
+  <data name="srs_lccTitle" xml:space="preserve">
+    <value>لیمبرٹ کونفارمل کونک</value>
+  </data>
+  <data name="dialog_goto_coordinateSystem" xml:space="preserve">
+    <value>کوآرڈینیٹ سسٹم</value>
+  </data>
+  <data name="layerSettings_statistics_field" xml:space="preserve">
+    <value>فیلڈ</value>
+  </data>
+  <data name="layerSettings_statistics_compute" xml:space="preserve">
+    <value>حساب کریں</value>
+  </data>
+  <data name="layerSettings_statistics_liveNotSupported" xml:space="preserve">
+    <value>یہ لیئر Live موڈ میں ہے: اس کے فیچرز سرور پر رہتے ہیں، اس لیے اس کے اعداد و شمار ابھی دستیاب نہیں۔ انہیں دیکھنے کے لیے لیئر کو Cache موڈ پر کریں۔</value>
+  </data>
+  <data name="layerSettings_statistics_emptyState" xml:space="preserve">
+    <value>کوئی فیلڈ چنیں اور حساب کریں دبائیں</value>
+  </data>
+  <data name="layerSettings_statistics_failed" xml:space="preserve">
+    <value>اعداد و شمار کا حساب ناکام ہو گیا:</value>
+  </data>
+  <data name="layerSettings_statistics_summary" xml:space="preserve">
+    <value>تفصیلات</value>
+  </data>
+  <data name="layerSettings_statistics_topValues" xml:space="preserve">
+    <value>سب سے زیادہ آنے والی اقدار</value>
+  </data>
+  <data name="layerSettings_statistics_value" xml:space="preserve">
+    <value>قدر</value>
+  </data>
+  <data name="layerSettings_statistics_count" xml:space="preserve">
+    <value>تعداد</value>
+  </data>
+  <data name="layerSettings_statistics_featureCount" xml:space="preserve">
+    <value>فیچرز</value>
+  </data>
+  <data name="layerSettings_statistics_emptyCount" xml:space="preserve">
+    <value>خالی اقدار</value>
+  </data>
+  <data name="layerSettings_statistics_distinctCount" xml:space="preserve">
+    <value>منفرد اقدار</value>
+  </data>
+  <data name="layerSettings_statistics_min" xml:space="preserve">
+    <value>کم از کم</value>
+  </data>
+  <data name="layerSettings_statistics_max" xml:space="preserve">
+    <value>زیادہ سے زیادہ</value>
+  </data>
+  <data name="layerSettings_statistics_sum" xml:space="preserve">
+    <value>مجموعہ</value>
+  </data>
+  <data name="layerSettings_statistics_mean" xml:space="preserve">
+    <value>اوسط</value>
+  </data>
+  <data name="layerSettings_statistics_median" xml:space="preserve">
+    <value>وسطانیہ</value>
+  </data>
+  <data name="layerSettings_statistics_standardDeviation" xml:space="preserve">
+    <value>معیاری انحراف</value>
+  </data>
+  <data name="layerSettings_statistics_minDate" xml:space="preserve">
+    <value>قدیم ترین</value>
+  </data>
+  <data name="layerSettings_statistics_maxDate" xml:space="preserve">
+    <value>تازہ ترین</value>
+  </data>
+  <data name="layerSettings_statistics_emptyValue" xml:space="preserve">
+    <value>(خالی)</value>
+  </data>
+  <data name="layerSettings_statistics_modeField" xml:space="preserve">
+    <value>فیلڈ کے اعداد و شمار</value>
+  </data>
+  <data name="layerSettings_statistics_modeGroupBy" xml:space="preserve">
+    <value>فیلڈ کے لحاظ سے گروپ</value>
+  </data>
+  <data name="layerSettings_statistics_groupByField" xml:space="preserve">
+    <value>گروپ بندی بلحاظ</value>
+  </data>
+  <data name="layerSettings_statistics_sumField" xml:space="preserve">
+    <value>مجموعہ برائے</value>
+  </data>
+  <data name="layerSettings_statistics_none" xml:space="preserve">
+    <value>(کوئی نہیں)</value>
+  </data>
+  <data name="layerSettings_statistics_groupCount" xml:space="preserve">
+    <value>گروپس</value>
+  </data>
+  <data name="layerSettings_statistics_totalLength" xml:space="preserve">
+    <value>کل لمبائی</value>
+  </data>
+  <data name="layerSettings_statistics_totalArea" xml:space="preserve">
+    <value>کل رقبہ</value>
+  </data>
+  <data name="layerSettings_statistics_sumOf" xml:space="preserve">
+    <value>{0} کا مجموعہ</value>
+  </data>
+  <data name="layerSettings_statistics_groups" xml:space="preserve">
+    <value>گروپس</value>
+  </data>
+  <data name="layerSettings_statistics_groupsTruncated" xml:space="preserve">
+    <value>{1} گروپس میں سے پہلے {0} دکھائے جا رہے ہیں۔</value>
+  </data>
+  <data name="layerSettings_statistics_invalidNote" xml:space="preserve">
+    <value>{0} اقدار فیلڈ کی قسم کے طور پر نہیں پڑھی جا سکیں اور شامل نہیں کی گئیں۔</value>
+  </data>
+  <data name="layerSettings_statistics_total" xml:space="preserve">
+    <value>کل</value>
+  </data>
+  <data name="layerSettings_statistics_topOfDistinct" xml:space="preserve">
+    <value>{1} میں سے {0} اقدار</value>
+  </data>
+  <data name="layerSettings_statistics_sortedByCount" xml:space="preserve">
+    <value>تعداد کے لحاظ سے ترتیب شدہ</value>
+  </data>
+  <data name="layerSettings_statistics_modeGeometry" xml:space="preserve">
+    <value>جیومیٹری</value>
+  </data>
+  <data name="layerSettings_statistics_emptyGeometryCount" xml:space="preserve">
+    <value>خالی جیومیٹریز</value>
+  </data>
+  <data name="layerSettings_statistics_distribution" xml:space="preserve">
+    <value>تقسیم</value>
+  </data>
+  <data name="layerSettings_statistics_lengthPerFeature" xml:space="preserve">
+    <value>فی فیچر لمبائی ({0})</value>
+  </data>
+  <data name="layerSettings_statistics_areaPerFeature" xml:space="preserve">
+    <value>فی فیچر رقبہ ({0})</value>
+  </data>
+  <data name="layerSettings_statistics_binCount" xml:space="preserve">
+    <value>{0} خانے</value>
+  </data>
+  <data name="layerSettings_statistics_noMeasureNote" xml:space="preserve">
+    <value>لمبائی اور رقبہ صرف لائن اور پولیگون لیئرز پر لاگو ہوتے ہیں۔</value>
+  </data>
+  <data name="layerSettings_statistics_unmeasuredNote" xml:space="preserve">
+    <value>{0} جیومیٹریز کی پیمائش نہیں ہو سکی اور شامل نہیں کی گئیں۔</value>
+  </data>
+  <data name="layerSettings_statistics_viewHistogram" xml:space="preserve">
+    <value>چارٹ</value>
+  </data>
+  <data name="layerSettings_statistics_viewTable" xml:space="preserve">
+    <value>سرفہرست اقدار</value>
+  </data>
+  <data name="layerSettings_statistics_geometryHint" xml:space="preserve">
+    <value>ہر فیچر کی جیوڈیسک لمبائی (لائن لیئرز) یا رقبہ (پولیگون لیئرز)، WGS84 بیضوی پر۔</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainCount" xml:space="preserve">
+    <value>ڈومین سے باہر</value>
+  </data>
+  <data name="layerSettings_statistics_domainUsage" xml:space="preserve">
+    <value>{1} ڈومین اقدار میں سے {0} استعمال شدہ</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainNote" xml:space="preserve">
+    <value>{0} فیچرز کی قدر فیلڈ کے ڈومین سے باہر ہے۔</value>
+  </data>
+  <data name="layerSettings_statistics_outOfDomainTooltip" xml:space="preserve">
+    <value>فیلڈ کے ڈومین کی قدر نہیں</value>
+  </data>
+  <data name="sldGenerator_title" xml:space="preserve">
+    <value>فیلڈ کی اقدار سے اصول بنائیں</value>
+  </data>
+  <data name="sldGenerator_field" xml:space="preserve">
+    <value>فیلڈ</value>
+  </data>
+  <data name="sldGenerator_geometry" xml:space="preserve">
+    <value>جیومیٹری</value>
+  </data>
+  <data name="sldGenerator_geometryPoint" xml:space="preserve">
+    <value>پوائنٹ</value>
+  </data>
+  <data name="sldGenerator_geometryLine" xml:space="preserve">
+    <value>لائن</value>
+  </data>
+  <data name="sldGenerator_geometryPolygon" xml:space="preserve">
+    <value>پولیگون</value>
+  </data>
+  <data name="sldGenerator_values" xml:space="preserve">
+    <value>اقدار</value>
+  </data>
+  <data name="sldGenerator_valuesData" xml:space="preserve">
+    <value>لیئر میں موجود اقدار</value>
+  </data>
+  <data name="sldGenerator_valuesDomain" xml:space="preserve">
+    <value>ڈومین کی تمام اقدار</value>
+  </data>
+  <data name="sldGenerator_colors" xml:space="preserve">
+    <value>رنگ</value>
+  </data>
+  <data name="sldGenerator_colorsPalette" xml:space="preserve">
+    <value>بلٹ اِن پیلیٹ</value>
+  </data>
+  <data name="sldGenerator_colorsDomain" xml:space="preserve">
+    <value>ڈومین کے رنگ</value>
+  </data>
+  <data name="sldGenerator_includeOther" xml:space="preserve">
+    <value>دیگر اقدار کے لیے ایک اصول شامل کریں</value>
+  </data>
+  <data name="sldGenerator_replaceExisting" xml:space="preserve">
+    <value>موجودہ اصولوں کی جگہ لیں</value>
+  </data>
+  <data name="sldGenerator_preview" xml:space="preserve">
+    <value>پیش نظارہ</value>
+  </data>
+  <data name="sldGenerator_noField" xml:space="preserve">
+    <value>زمرہ بندی کے لیے کوئی فیلڈ نہیں</value>
+  </data>
+  <data name="sldGenerator_noValues" xml:space="preserve">
+    <value>فیلڈ میں کوئی قدر نہیں</value>
+  </data>
+  <data name="sldGenerator_ruleCount" xml:space="preserve">
+    <value>{0} اصول</value>
+  </data>
+  <data name="sldGenerator_previewCut" xml:space="preserve">
+    <value>(پہلے {0} دکھائے گئے ہیں)</value>
+  </data>
+  <data name="sldGenerator_failed" xml:space="preserve">
+    <value>اقدار پڑھنا ناکام ہو گیا:</value>
+  </data>
+  <data name="sldGenerator_generate" xml:space="preserve">
+    <value>بنائیں</value>
+  </data>
+  <data name="sldGenerator_otherValues" xml:space="preserve">
+    <value>دیگر اقدار</value>
+  </data>
+  <data name="layerSettings_general_summary" xml:space="preserve">
+    <value>لیئر کا خلاصہ</value>
+  </data>
+  <data name="layerSettings_general_loadMode" xml:space="preserve">
+    <value>لوڈنگ موڈ:</value>
+  </data>
+  <data name="layerSettings_general_loadModeCache" xml:space="preserve">
+    <value>سب ایک ساتھ لوڈ کریں (Cache)</value>
+  </data>
+  <data name="layerSettings_general_loadModeLive" xml:space="preserve">
+    <value>نقشے کے منظر کے مطابق لوڈ کریں (Live)</value>
+  </data>
+  <data name="layerSettings_general_featureCount" xml:space="preserve">
+    <value>فیچرز:</value>
+  </data>
+  <data name="layerSettings_general_featureCountLive" xml:space="preserve">
+    <value>Live موڈ میں دستیاب نہیں (صرف نظر آنے والا علاقہ لوڈ ہوتا ہے)</value>
+  </data>
+  <data name="layerSettings_general_fieldCount" xml:space="preserve">
+    <value>فیلڈز:</value>
+  </data>
+  <data name="layerSettings_general_geometryType" xml:space="preserve">
+    <value>جیومیٹری کی قسم:</value>
+  </data>
+  <data name="layerSettings_general_srs" xml:space="preserve">
+    <value>مکانی حوالہ:</value>
+  </data>
+  <data name="layerSettings_general_originalSrs" xml:space="preserve">
+    <value>ماخذ مکانی حوالہ:</value>
+  </data>
+  <data name="layerSettings_general_extentWgs84" xml:space="preserve">
+    <value>حد (WGS84):</value>
+  </data>
+  <data name="layerSettings_general_extentUtm" xml:space="preserve">
+    <value>حد (UTM {0}):</value>
+  </data>
+  <data name="layerSettings_general_unknown" xml:space="preserve">
+    <value>نامعلوم</value>
+  </data>
+  <data name="layerStyles_ruleCount" xml:space="preserve">
+    <value>{0} اصول</value>
+  </data>
+  <data name="layerStyles_untitled" xml:space="preserve">
+    <value>بے نام اسٹائل</value>
+  </data>
+  <data name="layerStyles_newTitle" xml:space="preserve">
+    <value>اسٹائل {0}</value>
+  </data>
+  <data name="layerStyles_copyTitle" xml:space="preserve">
+    <value>{0} (کاپی)</value>
+  </data>
+  <data name="layerStyles_addFirst" xml:space="preserve">
+    <value>اسٹائل شامل کریں</value>
+  </data>
+  <data name="layerStyles_adminBanner" xml:space="preserve">
+    <value>صارفین ڈیفالٹ اسٹائل سے شروع کرتے ہیں اور علامت نگاری ٹیب یا نقشے کے لیجنڈ سے دوسرے اسٹائلز پر جا سکتے ہیں۔</value>
+  </data>
+  <data name="layerStyles_add" xml:space="preserve">
+    <value>شامل کریں</value>
+  </data>
+  <data name="layerStyles_copy" xml:space="preserve">
+    <value>کاپی</value>
+  </data>
+  <data name="layerStyles_edit" xml:space="preserve">
+    <value>ترمیم</value>
+  </data>
+  <data name="layerStyles_setDefault" xml:space="preserve">
+    <value>ڈیفالٹ بنائیں</value>
+  </data>
+  <data name="layerStyles_moveUp" xml:space="preserve">
+    <value>اوپر لے جائیں</value>
+  </data>
+  <data name="layerStyles_moveDown" xml:space="preserve">
+    <value>نیچے لے جائیں</value>
+  </data>
+  <data name="layerStyles_delete" xml:space="preserve">
+    <value>حذف کریں</value>
+  </data>
+  <data name="layerStyles_defaultBadge" xml:space="preserve">
+    <value>ڈیفالٹ</value>
+  </data>
+  <data name="layerStyles_titleWatermark" xml:space="preserve">
+    <value>اسٹائل کا عنوان</value>
+  </data>
+  <data name="layerStyles_legend_pick" xml:space="preserve">
+    <value>اسٹائل</value>
+  </data>
+  <data name="layerStyles_tab_notAvailable" xml:space="preserve">
+    <value>اس لیئر کے لیے طے کرنے کو کوئی علامت نگاری نہیں۔</value>
+  </data>
+  <data name="layerStyles_tab_styles" xml:space="preserve">
+    <value>اسٹائلز</value>
+  </data>
+  <data name="layerStyles_tab_singleStyle" xml:space="preserve">
+    <value>اس لیئر کا ایک اسٹائل ہے۔ منتظم سرور لیئر کی ترتیبات میں مزید شامل کر سکتا ہے۔</value>
+  </data>
+  <data name="layerStyles_tab_legend" xml:space="preserve">
+    <value>لیجنڈ</value>
+  </data>
+  <data name="layerStyles_tab_exportLegend" xml:space="preserve">
+    <value>لیجنڈ کو PNG کے طور پر برآمد کریں</value>
+  </data>
+  <data name="layerStyles_tab_quickEdit" xml:space="preserve">
+    <value>فوری ترمیم</value>
+  </data>
+  <data name="layerStyles_tab_myChanges" xml:space="preserve">
+    <value>میری تبدیلیاں</value>
+  </data>
+  <data name="layerStyles_tab_noChanges" xml:space="preserve">
+    <value>کوئی نہیں: لیئر ویسے ہی بنتی ہے جیسے سرور نے طے کیا ہے۔</value>
+  </data>
+  <data name="layerStyles_tab_hasChanges" xml:space="preserve">
+    <value>آپ نے اس لیئر کی علامت نگاری بدلی ہے۔ تبدیلی آپ کے پروجیکٹ میں محفوظ رہتی ہے؛ «منتظم کے اسٹائلز بحال کریں» سرور کے اسٹائلز واپس لاتا ہے۔</value>
+  </data>
+  <data name="serverLayerSettings_error_styleTitleRequired" xml:space="preserve">
+    <value>جب کسی لیئر کے کئی اسٹائلز ہوں تو ہر ایک کا عنوان ضروری ہے۔</value>
+  </data>
+  <data name="serverLayerSettings_error_duplicateStyleTitle" xml:space="preserve">
+    <value>دو اسٹائلز کا عنوان ایک ہی ہے۔</value>
+  </data>
+  <data name="layerStyles_wholeLayer" xml:space="preserve">
+    <value>پوری لیئر</value>
+  </data>
+  <data name="layerStyles_wholeLayerHint" xml:space="preserve">
+    <value>زوم کی حد اور دھندلاپن لیئر پر لاگو ہوتے ہیں، اس کی علامت نگاری جو بھی ہو۔</value>
+  </data>
+  <data name="layerStyles_modeSimple" xml:space="preserve">
+    <value>سادہ</value>
+  </data>
+  <data name="layerStyles_modeStyles" xml:space="preserve">
+    <value>اسٹائلز (SLD)</value>
+  </data>
+  <data name="layerStyles_simpleHint" xml:space="preserve">
+    <value>نیچے دیے گئے رنگوں سے ایک سادہ اسٹائل۔ ایٹری بیوٹ کے لحاظ سے اصولوں اور ایسی کئی علامت نگاریوں کے لیے جن میں سے صارفین انتخاب کر سکیں، اسٹائلز پر جائیں۔</value>
+  </data>
+  <data name="layerStyles_previewOf" xml:space="preserve">
+    <value>لیجنڈ: {0}</value>
+  </data>
+  <data name="layerStyles_switchToSimpleConfirm" xml:space="preserve">
+    <value>اس لیئر کے {0} اسٹائل ہٹا دیں؟ ان کے بجائے سادہ رنگ استعمال ہوں گے۔</value>
+  </data>
+  <data name="layerStyles_labelsNote" xml:space="preserve">
+    <value>یہ لیئر SLD اسٹائلز سے بنتی ہے: یہ لیبل جو بھی اسٹائل فعال ہو اس کے اوپر بنتا ہے۔</value>
+  </data>
+  <data name="layerStyles_tab_changedStyles" xml:space="preserve">
+    <value>آپ نے اس کمپیوٹر پر یہ اسٹائلز بدلے ہیں: {0}۔ تبدیلیاں آپ کے پروجیکٹ میں محفوظ رہتی ہیں؛ «منتظم کے اسٹائلز بحال کریں» سرور کے اسٹائلز واپس لاتا ہے۔</value>
+  </data>
+  <data name="layerStyles_tab_simpleHint" xml:space="preserve">
+    <value>یہ لیئر سادہ رنگوں سے بنتی ہے؛ انہیں بدلنے کے لیے فوری ترمیم استعمال کریں۔</value>
+  </data>
+  <data name="layerStyles_tab_editInSld" xml:space="preserve">
+    <value>SLD ایڈیٹر میں اسٹائل میں ترمیم کریں</value>
+  </data>
+  <data name="layerStyles_tab_restore" xml:space="preserve">
+    <value>منتظم کے اسٹائلز بحال کریں</value>
+  </data>
+  <data name="layerStyles_tab_restoreTip" xml:space="preserve">
+    <value>اس لیئر کے ہر اسٹائل میں اپنی تبدیلیاں واپس لیں اور اسے ویسے ہی بنائیں جیسے سرور نے طے کیا ہے۔</value>
+  </data>
+  <data name="layerStyles_tab_changedMark" xml:space="preserve">
+    <value>آپ کی تبدیل کردہ</value>
+  </data>
+  <data name="dialog_symbology_restoreAdmin" xml:space="preserve">
+    <value>منتظم کا اسٹائل بحال کریں</value>
+  </data>
+  <data name="dialog_symbology_userChanged" xml:space="preserve">
+    <value>آپ نے اس کمپیوٹر پر اس لیئر کے رنگ بدلے ہیں۔</value>
+  </data>
+  <data name="dialog_symbology_editInSld" xml:space="preserve">
+    <value>SLD ایڈیٹر میں ترمیم کریں</value>
+  </data>
+  <data name="dialog_symbology_advancedHint" xml:space="preserve">
+    <value>SLD ایڈیٹر ایٹری بیوٹ کے لحاظ سے اصول، لیبل اور مزید چیزیں شامل کرتا ہے۔ وہاں محفوظ کرنے کے بعد یہ لیئر SLD ایڈیٹر میں کھلتی ہے؛ «منتظم کا اسٹائل بحال کریں» فوری رنگ واپس لاتا ہے۔</value>
+  </data>
+  <data name="layerSettings_statistics_liveOnServer" xml:space="preserve">
+    <value>یہ لیئر Live موڈ میں ہے: اس کے اعداد و شمار سرور اس کے تمام فیچرز پر شمار کرتا ہے۔ وہ ترامیم جو آپ نے محفوظ نہیں کیں، شامل نہیں ہیں۔</value>
+  </data>
+  <data name="layerSettings_general_featureCountServer" xml:space="preserve">
+    <value>سرور پر تمام فیچرز کی گنتی (وہ ترامیم جو آپ نے محفوظ نہیں کیں، شامل نہیں)</value>
+  </data>
+  <data name="serverLayerSettings_importModel_export" xml:space="preserve">
+    <value>امپورٹ ماڈل برآمد کریں…</value>
+  </data>
+  <data name="serverLayerSettings_importModel_exportTip" xml:space="preserve">
+    <value>امپورٹ ماڈل برآمد کریں: ہر فعال لیئر کا ڈیٹا ماڈل (ٹیبلز، کالمز، اقسام، ڈومینز) اس فائل کے طور پر محفوظ کریں جو امپورٹ ٹول پڑھتا ہے</value>
+  </data>
+  <data name="serverLayerSettings_importModel_saved" xml:space="preserve">
+    <value>{0} لیئرز کا امپورٹ ماڈل {1} میں محفوظ ہو گیا۔</value>
+  </data>
+  <data name="serverLayerSettings_importModel_failed" xml:space="preserve">
+    <value>امپورٹ ماڈل محفوظ نہیں ہو سکا۔</value>
+  </data>
+  <data name="ribbon_topology_header" xml:space="preserve">
+    <value>ٹوپولوجی</value>
+  </data>
+  <data name="ribbon_topology_groupCheck" xml:space="preserve">
+    <value>جانچ</value>
+  </data>
+  <data name="ribbon_topology_check" xml:space="preserve">
+    <value>جانچیں</value>
+  </data>
+  <data name="ribbon_topology_checkTooltip" xml:space="preserve">
+    <value>ڈیٹا کو ٹوپولوجی کے اصولوں کے مطابق جانچیں</value>
+  </data>
+  <data name="ribbon_topology_groupResults" xml:space="preserve">
+    <value>نتائج</value>
+  </data>
+  <data name="ribbon_topology_issues" xml:space="preserve">
+    <value>مسائل</value>
+  </data>
+  <data name="ribbon_topology_issuesTooltip" xml:space="preserve">
+    <value>آخری جانچ کے مسائل</value>
+  </data>
+  <data name="ribbon_topology_showOnMap" xml:space="preserve">
+    <value>نقشے پر دکھائیں</value>
+  </data>
+  <data name="ribbon_topology_showOnMapTooltip" xml:space="preserve">
+    <value>مسائل کو نقشے پر دکھائیں، ترمیم کے دوران بھی</value>
+  </data>
+  <data name="ribbon_topology_groupSettings" xml:space="preserve">
+    <value>ترتیبات</value>
+  </data>
+  <data name="ribbon_topology_rules" xml:space="preserve">
+    <value>اصول</value>
+  </data>
+  <data name="ribbon_topology_rulesTooltip" xml:space="preserve">
+    <value>ہر اصول کیا جانچتا ہے؛ اس سیشن کے لیے فاصلے اور اقسام بدلیں</value>
+  </data>
+  <data name="ribbon_topology_groupOutput" xml:space="preserve">
+    <value>آؤٹ پٹ</value>
+  </data>
+  <data name="ribbon_topology_export" xml:space="preserve">
+    <value>برآمد</value>
+  </data>
+  <data name="ribbon_topology_exportTooltip" xml:space="preserve">
+    <value>فلٹر شدہ مسائل کی فہرست Excel میں</value>
+  </data>
+  <data name="ribbon_topology_groupHelp" xml:space="preserve">
+    <value>مدد</value>
+  </data>
+  <data name="ribbon_topology_guide" xml:space="preserve">
+    <value>رہنما</value>
+  </data>
+  <data name="ribbon_topology_guideTooltip" xml:space="preserve">
+    <value>ٹوپولوجی ٹیب کیا جانچتا ہے اور اسے کیسے استعمال کریں</value>
+  </data>
+  <data name="topology_panel_checkTitle" xml:space="preserve">
+    <value>ٹوپولوجی جانچ</value>
+  </data>
+  <data name="topology_panel_issuesTitle" xml:space="preserve">
+    <value>ٹوپولوجی کے مسائل</value>
+  </data>
+  <data name="topology_panel_rulesTitle" xml:space="preserve">
+    <value>ٹوپولوجی کے اصول</value>
+  </data>
+  <data name="topology_guide_title" xml:space="preserve">
+    <value>ٹوپولوجی</value>
+  </data>
+  <data name="topology_check_whatTitle" xml:space="preserve">
+    <value>کیا جانچنا ہے</value>
+  </data>
+  <data name="topology_check_rulesLabel" xml:space="preserve">
+    <value>اصول</value>
+  </data>
+  <data name="topology_check_rules" xml:space="preserve">
+    <value>«{1}» کے {0} اصول</value>
+  </data>
+  <data name="topology_check_dataLabel" xml:space="preserve">
+    <value>ڈیٹا</value>
+  </data>
+  <data name="topology_check_layerLabel" xml:space="preserve">
+    <value>لیئر</value>
+  </data>
+  <data name="topology_check_scopeWholeData" xml:space="preserve">
+    <value>پورا ڈیٹا</value>
+  </data>
+  <data name="topology_check_scopeLayer" xml:space="preserve">
+    <value>ایک لیئر</value>
+  </data>
+  <data name="topology_check_scopeExtent" xml:space="preserve">
+    <value>نقشے کی حد</value>
+  </data>
+  <data name="topology_check_scopeFeatures" xml:space="preserve">
+    <value>منتخب فیچرز</value>
+  </data>
+  <data name="topology_check_layersTitle" xml:space="preserve">
+    <value>اصولوں کو درکار لیئرز</value>
+  </data>
+  <data name="topology_check_refresh" xml:space="preserve">
+    <value>لیئرز دوبارہ پڑھیں</value>
+  </data>
+  <data name="topology_check_layerLoaded" xml:space="preserve">
+    <value>لوڈ شدہ</value>
+  </data>
+  <data name="topology_check_layerLive" xml:space="preserve">
+    <value>Live: صرف نقشے کی حد یا انتخاب</value>
+  </data>
+  <data name="topology_check_layerNotLoaded" xml:space="preserve">
+    <value>لوڈ نہیں: اس کے اصول چھوڑ دیے جاتے ہیں</value>
+  </data>
+  <data name="topology_check_settingsInvalid" xml:space="preserve">
+    <value>اصول پینل کی ایک ترتیب استعمال نہیں ہو سکتی؛ اسے درست کریں یا سب ری سیٹ کریں۔</value>
+  </data>
+  <data name="topology_check_liveNeedsPartialScope" xml:space="preserve">
+    <value>Live لیئر میں صرف وہی ہوتا ہے جو منظر میں ہو: نقشے کی حد یا کوئی انتخاب جانچیں، یا لیئر کو Cache پر کریں۔</value>
+  </data>
+  <data name="topology_check_noSelection" xml:space="preserve">
+    <value>پہلے نقشے پر اس لیئر کے فیچرز منتخب کریں۔</value>
+  </data>
+  <data name="topology_check_largeScope" xml:space="preserve">
+    <value>یہ جانچ {0} فیچرز پڑھتی ہے اور وقت لے سکتی ہے؛ نقشے کی حد زیادہ تیز ہے۔</value>
+  </data>
+  <data name="topology_check_someNotLoaded" xml:space="preserve">
+    <value>جو لیئرز لوڈ نہیں ہیں وہ اپنے اصولوں سمیت چھوڑ دی جاتی ہیں۔</value>
+  </data>
+  <data name="topology_check_run" xml:space="preserve">
+    <value>جانچیں</value>
+  </data>
+  <data name="topology_check_cancel" xml:space="preserve">
+    <value>منسوخ کریں</value>
+  </data>
+  <data name="topology_check_progress" xml:space="preserve">
+    <value>جانچ جاری: {2} … {1} میں سے {0} اصول</value>
+  </data>
+  <data name="topology_check_done" xml:space="preserve">
+    <value>{1} فیچرز میں {0} مسائل</value>
+  </data>
+  <data name="topology_check_cancelled" xml:space="preserve">
+    <value>منسوخ: پچھلے نتائج برقرار ہیں۔</value>
+  </data>
+  <data name="topology_issues_noCheck" xml:space="preserve">
+    <value>پہلے جانچ چلائیں۔</value>
+  </data>
+  <data name="topology_issues_header" xml:space="preserve">
+    <value>جانچا گیا {0} · {1} · {2} فیچرز</value>
+  </data>
+  <data name="topology_issues_settingsChanged" xml:space="preserve">
+    <value>اس سیشن کے لیے ترتیبات بدلی گئیں</value>
+  </data>
+  <data name="topology_issues_skipped" xml:space="preserve">
+    <value>جانچا نہیں گیا (لیئر لوڈ نہیں): {0}</value>
+  </data>
+  <data name="topology_issues_errors" xml:space="preserve">
+    <value>{0} غلطیاں</value>
+  </data>
+  <data name="topology_issues_warnings" xml:space="preserve">
+    <value>{0} انتباہات</value>
+  </data>
+  <data name="topology_issues_infos" xml:space="preserve">
+    <value>{0} اطلاعات</value>
+  </data>
+  <data name="topology_issues_allRules" xml:space="preserve">
+    <value>تمام اصول</value>
+  </data>
+  <data name="topology_issues_changeAll" xml:space="preserve">
+    <value>سب</value>
+  </data>
+  <data name="topology_issues_changeNew" xml:space="preserve">
+    <value>آخری جانچ کے بعد نئے</value>
+  </data>
+  <data name="topology_issues_changeStillThere" xml:space="preserve">
+    <value>اب بھی موجود</value>
+  </data>
+  <data name="topology_issues_changeGone" xml:space="preserve">
+    <value>آخری جانچ کے بعد ختم</value>
+  </data>
+  <data name="topology_issues_changeTooltip" xml:space="preserve">
+    <value>اسی ڈیٹا کی پچھلی جانچ سے موازنہ کرتا ہے</value>
+  </data>
+  <data name="topology_issues_searchTooltip" xml:space="preserve">
+    <value>id اور جملے تلاش کریں</value>
+  </data>
+  <data name="topology_issues_none" xml:space="preserve">
+    <value>{0} فیچرز میں کوئی مسئلہ نہیں ملا</value>
+  </data>
+  <data name="topology_issues_overlayLimited" xml:space="preserve">
+    <value>{0} سے زیادہ مسائل: نقشہ صرف غلطیاں دکھاتا ہے</value>
+  </data>
+  <data name="topology_issues_allowed" xml:space="preserve">
+    <value>اجازت {0} m</value>
+  </data>
+  <data name="topology_issues_new" xml:space="preserve">
+    <value>نیا</value>
+  </data>
+  <data name="topology_issues_showInTable" xml:space="preserve">
+    <value>ایٹری بیوٹ ٹیبل میں دکھائیں</value>
+  </data>
+  <data name="topology_issues_export" xml:space="preserve">
+    <value>فہرست Excel میں برآمد کریں</value>
+  </data>
+  <data name="topology_severity_error" xml:space="preserve">
+    <value>غلطی</value>
+  </data>
+  <data name="topology_severity_warning" xml:space="preserve">
+    <value>انتباہ</value>
+  </data>
+  <data name="topology_severity_info" xml:space="preserve">
+    <value>اطلاع</value>
+  </data>
+  <data name="topology_unit_metres" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="topology_unit_squareMetres" xml:space="preserve">
+    <value>m²</value>
+  </data>
+  <data name="topology_rules_header" xml:space="preserve">
+    <value>{0} اصول · ورژن {1}</value>
+  </data>
+  <data name="topology_rules_resetAll" xml:space="preserve">
+    <value>سب ری سیٹ کریں</value>
+  </data>
+  <data name="topology_rules_sessionOnly" xml:space="preserve">
+    <value>یہاں کی تبدیلیاں ایپلیکیشن بند ہونے تک رہتی ہیں؛ کچھ محفوظ نہیں ہوتا۔</value>
+  </data>
+  <data name="topology_rules_changed" xml:space="preserve">
+    <value>اس سیشن میں تبدیل شدہ</value>
+  </data>
+  <data name="topology_rules_hidden" xml:space="preserve">
+    <value>پوشیدہ</value>
+  </data>
+  <data name="topology_parameter_distance" xml:space="preserve">
+    <value>فاصلہ (m)</value>
+  </data>
+  <data name="topology_parameter_nearDistance" xml:space="preserve">
+    <value>قریبی فاصلہ (m)</value>
+  </data>
+  <data name="topology_parameter_searchDistance" xml:space="preserve">
+    <value>تلاش کا فاصلہ (m)</value>
+  </data>
+  <data name="topology_parameter_maxOvershoot" xml:space="preserve">
+    <value>سب سے بڑا اوورشوٹ (m)</value>
+  </data>
+  <data name="topology_parameter_maxGap" xml:space="preserve">
+    <value>سب سے بڑا خلا (m)</value>
+  </data>
+  <data name="topology_parameter_minimumPoints" xml:space="preserve">
+    <value>کم از کم پوائنٹس</value>
+  </data>
+  <data name="topology_parameter_minimumLength" xml:space="preserve">
+    <value>کم از کم لمبائی (m)</value>
+  </data>
+  <data name="topology_parameter_minimumArea" xml:space="preserve">
+    <value>کم از کم رقبہ (m²)</value>
+  </data>
+  <data name="topology_parameter_minimumWidth" xml:space="preserve">
+    <value>کم از کم چوڑائی (m)</value>
+  </data>
+  <data name="topology_parameter_sliverWidth" xml:space="preserve">
+    <value>سلیور کی چوڑائی (m)</value>
+  </data>
+  <data name="topology_parameter_interiorPartEnds" xml:space="preserve">
+    <value>حصوں کے ملنے کی جگہ پر سرے جانچیں (1 = ہاں)</value>
+  </data>
+  <data name="topology_parameter_sharedStretch" xml:space="preserve">
+    <value>مشترک حصے رپورٹ کریں (1 = ہاں)</value>
+  </data>
+  <data name="topology_parameter_enclosedGaps" xml:space="preserve">
+    <value>گھرے ہوئے خلا رپورٹ کریں (1 = ہاں)</value>
+  </data>
+  <data name="topology_parameter_maximumGapArea" xml:space="preserve">
+    <value>خلا کا سب سے بڑا رقبہ (m²)</value>
+  </data>
+  <data name="topology_export_rule" xml:space="preserve">
+    <value>اصول</value>
+  </data>
+  <data name="topology_export_kind" xml:space="preserve">
+    <value>قسم</value>
+  </data>
+  <data name="topology_export_severity" xml:space="preserve">
+    <value>شدت</value>
+  </data>
+  <data name="topology_export_sentence" xml:space="preserve">
+    <value>مسئلہ</value>
+  </data>
+  <data name="topology_export_value" xml:space="preserve">
+    <value>قدر</value>
+  </data>
+  <data name="topology_export_features" xml:space="preserve">
+    <value>فیچرز</value>
+  </data>
+  <data name="topology_export_location" xml:space="preserve">
+    <value>مقام (طول البلد، عرض البلد)</value>
+  </data>
+  <data name="topology_rule_geometryValid" xml:space="preserve">
+    <value>جیومیٹری درست ہونی چاہیے</value>
+  </data>
+  <data name="topology_rule_distinctPoints" xml:space="preserve">
+    <value>پوائنٹس ایک دوسرے پر نہیں ہونے چاہئیں</value>
+  </data>
+  <data name="topology_rule_pointOnLine" xml:space="preserve">
+    <value>پوائنٹ لائن پر ہونا چاہیے</value>
+  </data>
+  <data name="topology_rule_lineEndCovered" xml:space="preserve">
+    <value>لائن کے سروں پر پوائنٹس ہونے چاہئیں</value>
+  </data>
+  <data name="topology_rule_lineCarriesPoints" xml:space="preserve">
+    <value>لائن پر پوائنٹس ہونے چاہئیں</value>
+  </data>
+  <data name="topology_rule_pointOnOneLine" xml:space="preserve">
+    <value>ایک سے زیادہ لائنوں پر پوائنٹ</value>
+  </data>
+  <data name="topology_rule_sequenceAlongLine" xml:space="preserve">
+    <value>نمبر لائن کے ساتھ بڑھنے چاہئیں</value>
+  </data>
+  <data name="topology_rule_lineEndsConnect" xml:space="preserve">
+    <value>لائن کے سرے جڑے ہونے چاہئیں</value>
+  </data>
+  <data name="topology_rule_partsJoin" xml:space="preserve">
+    <value>لائن کے حصے آپس میں جڑنے چاہئیں</value>
+  </data>
+  <data name="topology_rule_distinctLines" xml:space="preserve">
+    <value>لائنیں دہرائی نہیں جانی چاہئیں</value>
+  </data>
+  <data name="topology_rule_touchAndReturn" xml:space="preserve">
+    <value>لائنیں چھو کر واپس نہیں آنی چاہئیں</value>
+  </data>
+  <data name="topology_rule_polygonsNoOverlap" xml:space="preserve">
+    <value>پولیگون ایک دوسرے پر نہیں چڑھنے چاہئیں</value>
+  </data>
+  <data name="topology_rule_polygonsNoGap" xml:space="preserve">
+    <value>پولیگونز کے درمیان خلا نہیں ہونا چاہیے</value>
+  </data>
+  <data name="topology_kind_geometryValid_NoGeometry" xml:space="preserve">
+    <value>فیچر کی کوئی جیومیٹری نہیں</value>
+  </data>
+  <data name="topology_kind_geometryValid_ClosedRing" xml:space="preserve">
+    <value>ایک رِنگ اپنا پہلا پوائنٹ دہراتی ہے</value>
+  </data>
+  <data name="topology_kind_geometryValid_RepeatedPoint" xml:space="preserve">
+    <value>ایک ہی پوائنٹ لگاتار دو بار</value>
+  </data>
+  <data name="topology_kind_geometryValid_TooFewPoints" xml:space="preserve">
+    <value>بہت کم پوائنٹس</value>
+  </data>
+  <data name="topology_kind_geometryValid_ZeroAreaRing" xml:space="preserve">
+    <value>بغیر رقبے کی رِنگ</value>
+  </data>
+  <data name="topology_kind_geometryValid_InvalidCoordinate" xml:space="preserve">
+    <value>ایک کوآرڈینیٹ عدد نہیں ہے</value>
+  </data>
+  <data name="topology_kind_geometryValid_CoordinateOutOfRange" xml:space="preserve">
+    <value>حد سے باہر طول البلد یا عرض البلد</value>
+  </data>
+  <data name="topology_kind_geometryValid_WrongRingOrientation" xml:space="preserve">
+    <value>غلط سمت میں بنی رِنگ (خودکار طور پر درست کی گئی)</value>
+  </data>
+  <data name="topology_kind_distinctPoints_samePlace" xml:space="preserve">
+    <value>ایک ہی جگہ پر پوائنٹس</value>
+  </data>
+  <data name="topology_kind_distinctPoints_close" xml:space="preserve">
+    <value>{0} کے فاصلے پر پوائنٹس</value>
+  </data>
+  <data name="topology_kind_distinctPoints_chain" xml:space="preserve">
+    <value>ایک دوسرے کے ذریعے جڑے پوائنٹس، {0} پر پھیلے</value>
+  </data>
+  <data name="topology_kind_pointOnLine_nearLine" xml:space="preserve">
+    <value>قریب ترین لائن سے {0} پر پوائنٹ</value>
+  </data>
+  <data name="topology_kind_pointOnLine_farFromLines" xml:space="preserve">
+    <value>ہر لائن سے دور پوائنٹ</value>
+  </data>
+  <data name="topology_kind_lineEndCovered_start" xml:space="preserve">
+    <value>لائن کے آغاز پر کوئی پوائنٹ نہیں</value>
+  </data>
+  <data name="topology_kind_lineEndCovered_end" xml:space="preserve">
+    <value>لائن کے اختتام پر کوئی پوائنٹ نہیں</value>
+  </data>
+  <data name="topology_kind_lineCarriesPoints_tooFewPoints" xml:space="preserve">
+    <value>لائن پر صرف {0} پوائنٹس</value>
+  </data>
+  <data name="topology_kind_pointOnOneLine_onSeveralLines" xml:space="preserve">
+    <value>{0} لائنوں پر پوائنٹ</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_missing" xml:space="preserve">
+    <value>بغیر نمبر کا پوائنٹ</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_duplicate" xml:space="preserve">
+    <value>نمبر {0} دو بار استعمال ہوا</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_outOfOrder" xml:space="preserve">
+    <value>نمبر {0} ترتیب سے باہر</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_gap" xml:space="preserve">
+    <value>{0} نمبر غائب</value>
+  </data>
+  <data name="topology_kind_sequenceAlongLine_directionUndecided" xml:space="preserve">
+    <value>نمبر کسی بھی سمت میں نہیں بڑھتے</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_unsnappedEnd" xml:space="preserve">
+    <value>لائن کے سرے {0} کے فاصلے پر، جڑے نہیں</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_overshoot" xml:space="preserve">
+    <value>لائن تقاطع سے {0} آگے ختم ہوتی ہے</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_undershoot" xml:space="preserve">
+    <value>لائن دوسری لائن سے {0} پہلے ختم ہوتی ہے</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_freeEnd" xml:space="preserve">
+    <value>لائن کا سرا کسی سے جڑا نہیں</value>
+  </data>
+  <data name="topology_kind_lineEndsConnect_chain" xml:space="preserve">
+    <value>ایک دوسرے کے ذریعے جڑے لائن کے سرے، {0} پر پھیلے</value>
+  </data>
+  <data name="topology_kind_partsJoin_gap" xml:space="preserve">
+    <value>حصوں کے درمیان {0} کا خلا</value>
+  </data>
+  <data name="topology_kind_partsJoin_detachedPart" xml:space="preserve">
+    <value>ایک حصہ دوسروں سے {0} دور</value>
+  </data>
+  <data name="topology_kind_partsJoin_branch" xml:space="preserve">
+    <value>{0} حصوں کے سرے ایک جگہ ملتے ہیں</value>
+  </data>
+  <data name="topology_kind_partsJoin_outOfOrder" xml:space="preserve">
+    <value>حصے ترتیب سے ہٹ کر محفوظ ہیں</value>
+  </data>
+  <data name="topology_kind_partsJoin_reversedPart" xml:space="preserve">
+    <value>ایک حصہ دوسروں کی الٹی سمت میں بنا ہے</value>
+  </data>
+  <data name="topology_kind_distinctLines_wholeLine" xml:space="preserve">
+    <value>دہرائی گئی لائن</value>
+  </data>
+  <data name="topology_kind_distinctLines_sharedStretch" xml:space="preserve">
+    <value>لائنیں {0} مشترک رکھتی ہیں</value>
+  </data>
+  <data name="topology_kind_touchAndReturn_touchAndReturn" xml:space="preserve">
+    <value>لائنیں {0} کے اندر دو بار کراس کرتی ہیں</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_duplicate" xml:space="preserve">
+    <value>دہرایا گیا پولیگون</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_inside" xml:space="preserve">
+    <value>ایک پولیگون دوسرے کے اندر، {0}</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_overlap" xml:space="preserve">
+    <value>پولیگونز {0} اوورلیپ کرتے ہیں</value>
+  </data>
+  <data name="topology_kind_polygonsNoOverlap_thinOverlap" xml:space="preserve">
+    <value>{0} کا باریک اوورلیپ</value>
+  </data>
+  <data name="topology_kind_polygonsNoGap_sliver" xml:space="preserve">
+    <value>پڑوسیوں کے درمیان {0} لمبا سلیور</value>
+  </data>
+  <data name="topology_kind_polygonsNoGap_enclosedGap" xml:space="preserve">
+    <value>پولیگونز سے گھری {0} کی خالی جگہ</value>
+  </data>
+  <data name="topology_fix_title" xml:space="preserve">
+    <value>درستی</value>
+  </data>
+  <data name="topology_fix_preview" xml:space="preserve">
+    <value>پیش نظارہ</value>
+  </data>
+  <data name="topology_fix_apply" xml:space="preserve">
+    <value>لاگو کریں</value>
+  </data>
+  <data name="topology_fix_cancel" xml:space="preserve">
+    <value>منسوخ کریں</value>
+  </data>
+  <data name="topology_fix_evaluating" xml:space="preserve">
+    <value>درستی جانچی جا رہی ہے…</value>
+  </data>
+  <data name="topology_fix_pending" xml:space="preserve">
+    <value>درستی زیرِ التوا</value>
+  </data>
+  <data name="topology_fix_pendingNote" xml:space="preserve">
+    <value>ایک درستی لاگو کی گئی۔ لیئر محفوظ کریں، پھر دوبارہ جانچیں۔</value>
+  </data>
+  <data name="topology_fix_pendingFooter" xml:space="preserve">
+    <value>{0} درستیاں لاگو کی گئیں۔ انہیں برقرار رکھنے کے لیے لیئرز محفوظ کریں، پھر دوبارہ جانچیں۔</value>
+  </data>
+  <data name="topology_fix_failed" xml:space="preserve">
+    <value>درستی لاگو نہیں ہو سکی: {0}</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_movePoint" xml:space="preserve">
+    <value>{0} کو {1} ہٹا کر {2} پر لایا جاتا ہے۔</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_moveLineVertex" xml:space="preserve">
+    <value>{2} کا ایک ورٹیکس {1} ہٹ کر {0} پر آتا ہے۔</value>
+  </data>
+  <data name="topology_fix_pointOntoLine_insertLineVertex" xml:space="preserve">
+    <value>{2} کو {0} پر ایک نیا ورٹیکس ملتا ہے، جو اس کے موجودہ راستے سے {1} دور ہے۔</value>
+  </data>
+  <data name="topology_fix_reason_featureMissing" xml:space="preserve">
+    <value>کوئی درستی نہیں: اس مسئلے کا ایک فیچر اب نقشے پر نہیں ہے۔</value>
+  </data>
+  <data name="topology_fix_reason_beyondFixDistance" xml:space="preserve">
+    <value>کوئی درستی نہیں: حرکت {0} ہوگی، جو درستی کے فاصلے ({1}) سے زیادہ ہے۔ اسے ہاتھ سے ترمیم کریں۔</value>
+  </data>
+  <data name="topology_fix_reason_doesNotResolve" xml:space="preserve">
+    <value>مسترد: درستی کے بعد بھی مسئلہ موجود رہے گا۔</value>
+  </data>
+  <data name="topology_fix_reason_createsIssue" xml:space="preserve">
+    <value>مسترد: درستی سے “{0}” ({1}) پیدا ہوگا۔</value>
+  </data>
+  <data name="topology_fix_reason_noPermission" xml:space="preserve">
+    <value>آپ جیومیٹری میں ترمیم نہیں کر سکتے۔</value>
+  </data>
+  <data name="topology_fix_reason_notEditable" xml:space="preserve">
+    <value>لیئر {0} میں یہاں ترمیم نہیں ہو سکتی۔</value>
+  </data>
+  <data name="topology_fix_reason_cannotRemove" xml:space="preserve">
+    <value>یہ درستی ایک فیچر حذف کرتی ہے، اور یہاں فیچرز حذف نہیں کیے جا سکتے۔ اسے ہاتھ سے ترمیم کریں۔</value>
+  </data>
+  <data name="topology_guide_correct" xml:space="preserve">
+    <value>ڈیٹا درست کریں</value>
+  </data>
+  <data name="topology_parameter_fixDistance" xml:space="preserve">
+    <value>درستی کا فاصلہ (m)</value>
+  </data>
+  <data name="topology_fix_choose" xml:space="preserve">
+    <value>منتخب کریں کہ کون سا رہے:</value>
+  </data>
+  <data name="topology_fix_snapLineEnds_snap" xml:space="preserve">
+    <value>{0} کے سرے ایک پوائنٹ پر ملتے ہیں (سب سے لمبی حرکت {1} ہے)۔</value>
+  </data>
+  <data name="topology_fix_trimOvershoot_trim" xml:space="preserve">
+    <value>{0} کو {1} کاٹا جاتا ہے تاکہ یہ {2} پر ختم ہو۔</value>
+  </data>
+  <data name="topology_fix_extendUndershoot_extendAlong" xml:space="preserve">
+    <value>{0} کو سیدھا {1} بڑھایا جاتا ہے، یہاں تک کہ یہ {2} تک پہنچ جائے۔</value>
+  </data>
+  <data name="topology_fix_extendUndershoot_joinNearest" xml:space="preserve">
+    <value>{0} کو {2} کے قریب ترین پوائنٹ تک {1} کا نیا آخری سیگمنٹ ملتا ہے۔</value>
+  </data>
+  <data name="topology_fix_deleteDuplicatePoints_keep" xml:space="preserve">
+    <value>{0} رکھیں؛ {1} حذف کریں۔</value>
+  </data>
+  <data name="topology_fix_deleteDuplicateLines_keep" xml:space="preserve">
+    <value>{0} رکھیں؛ {1} حذف کریں۔</value>
+  </data>
+  <data name="topology_fix_reason_notFound" xml:space="preserve">
+    <value>کوئی درستی نہیں: درست کرنے کی جگہ اب وہاں نہیں جہاں جانچ نے اسے پایا تھا۔ دوبارہ جانچیں۔</value>
+  </data>
+  <data name="topology_fix_cutOverlap_cutFrom" xml:space="preserve">
+    <value>مشترک رقبہ {0} سے کاٹ دیں؛ {1} جیسا ہے ویسا رہتا ہے۔</value>
+  </data>
+  <data name="topology_fix_deleteDuplicatePolygons_keep" xml:space="preserve">
+    <value>{0} رکھیں؛ {1} حذف کریں۔</value>
+  </data>
+  <data name="topology_fix_giveGap_takeGap" xml:space="preserve">
+    <value>خالی جگہ {0} میں شامل کریں۔</value>
+  </data>
+  <data name="topology_fix_giveGap_takeSliver" xml:space="preserve">
+    <value>سلیور کو بھرتے ہوئے {0} کو {1} تک چوڑا کریں۔</value>
+  </data>
+  <data name="topology_fix_reason_nothingLeft" xml:space="preserve">
+    <value>کوئی درستی نہیں: {0} کا کچھ بھی باقی نہیں رہے گا۔</value>
+  </data>
 </root>
