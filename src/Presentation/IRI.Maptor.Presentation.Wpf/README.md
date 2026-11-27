@@ -31,6 +31,12 @@ reference it from your WPF app.
   - `DayNightLayers.Create(source)`: the night side with its twilight bands.
   - `SatelliteLayers.Create(source, style?)`: satellite positions, names, and for the selected one its track, the area that sees it and its imaging swath. It also draws the source's region for passes, and a highlighted pass in bold. `SatelliteLayerStyle` sets the colours and sizes. `SatelliteLayers.HitTest(map, source, mouseEvent)` finds the satellite under the mouse, within 10 pixels.
   - `MapClockBinding` keeps either layer in step with a `MapClock`. On each tick it sets the source's time and redraws the layer in place, so the legend row is kept. A burst of ticks gives one redraw.
+- Snapping while drawing, measuring and editing: a new point, or a dragged vertex of the geometry being edited, jumps onto a nearby vertex or edge of the map's vector layers, and a marker shows the target (a square for a vertex, a circle for an edge; a vertex wins over an edge). It works with any `MapViewer` and needs no set-up:
+  - The sketch bar has a magnet toggle (on by default) and a list to choose the kinds (vertices, edges) and the layers. Holding Ctrl places a point freely.
+  - The snap distance and the kinds are map settings: `Snapping_TolerancePixels` (10; `MapSettingsModel` keeps it within 5 to 25), `Snapping_ToVertices` and `Snapping_ToEdges`. An application saves them with its other map settings and can show the distance in its own settings window.
+  - The layers left out are kept in the project file (`MapProject.SnapExcludedLayerNames`, by layer name).
+  - The classes are in `Snapping/`: `SnapLayerChoice` (on/off and the layers, at `SketchBarViewModel.Snapping`), `MapSnapCache` (the index for the current extent; nothing is indexed above 50,000 vertices in view), `MapSnapper` (the point to use for a map point) and `SnapMarker`. The engine itself is UI-free: `SnapIndex` and `SnapEngine` in IRI.Maptor.Core.Spatial.
+  - Not snapped: rectangle drawing, identify, and markers such as text labels.
 - Cartography primitives: `VisualParameters`, symbologies, and rendering helpers.
 - Map markers: WPF user controls for location, label, photo, and textbox markers. The textbox marker is the text label of the map's Text tool: a hover formatting bar, Box / Plain text / Halo display modes, width and rotate handles, saving with the drawings as a GeoJSON point with a `TextSymbolizer` SLD, and printing in the PDF export as vector shapes.
 - Localization: RTL-aware language switching (`LanguageCombo`, WPF binding extensions) on top of
