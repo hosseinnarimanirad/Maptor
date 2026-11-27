@@ -65,8 +65,11 @@ internal sealed class GdbTestTableBuilder
     public GdbTestTableBuilder ShortField(string name, GdbFieldType type, byte width, bool nullable)
         => AddField(name, null, type, w => { w.Write(width); w.Write(Flags(nullable, true)); });
 
-    public GdbTestTableBuilder GeometryField(string name, string? wkt, bool hasZ, bool hasM)
+    /// <param name="extent">The layer extent written to the field; (44, 25)–(63.5, 40) when not given.</param>
+    public GdbTestTableBuilder GeometryField(string name, string? wkt, bool hasZ, bool hasM, (double XMin, double YMin, double XMax, double YMax)? extent = null)
     {
+        var (xMin, yMin, xMax, yMax) = extent ?? (44.0, 25.0, 63.5, 40.0);
+
         _tableHasZ = hasZ;
         _tableHasM = hasM;
 
@@ -89,7 +92,7 @@ internal sealed class GdbTestTableBuilder
             if (hasM) w.Write(0.001);
             if (hasZ) w.Write(0.001);
 
-            w.Write(44.0); w.Write(25.0); w.Write(63.5); w.Write(40.0); // extent
+            w.Write(xMin); w.Write(yMin); w.Write(xMax); w.Write(yMax); // extent
             if (hasZ) { w.Write(0.0); w.Write(100.0); }
             if (hasM) { w.Write(double.NaN); w.Write(double.NaN); }
 

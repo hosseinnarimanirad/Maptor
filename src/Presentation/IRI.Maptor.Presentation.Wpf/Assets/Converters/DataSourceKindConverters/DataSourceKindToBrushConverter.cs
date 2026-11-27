@@ -42,6 +42,7 @@ public class DataSourceKindToBrushConverter : IValueConverter
             DataSourceKind.EsriJson => ModernUIColors.BrownBrush,
             DataSourceKind.MBTiles => ModernUIColors.MauveBrush,
             DataSourceKind.GeoPackage => ModernUIColors.OliveBrush,
+            DataSourceKind.FileGdb => ModernUIColors.YellowBrush,
             //DataSourceKind.SVG => ModernUIColors.BrownBrush,
             //DataSourceKind.GRD => ModernUIColors.OliveBrush,
 

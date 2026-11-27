@@ -63,6 +63,10 @@ public enum DataSourceKind
     [Description("GeoPackage"), DataSourceKindInfo(Category = Vector, FileFilter = "OGC GeoPackage|*.gpkg")]
     GeoPackage = 18,
 
+    // a File GDB is a folder (name.gdb), chosen with a folder dialog: no file filter
+    [Description("FileGdb"), DataSourceKindInfo(Category = Vector, FileFilter = "")]
+    FileGdb = 19,
+
 
     [Description("..."), DataSourceKindInfo(Category = None, FileFilter = "All files (*.*)|*.*")]
     Other = 100,

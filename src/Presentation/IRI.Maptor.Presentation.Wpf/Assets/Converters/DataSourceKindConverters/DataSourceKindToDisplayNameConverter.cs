@@ -31,6 +31,7 @@ public class DataSourceKindToDisplayNameConverter : IValueConverter
             DataSourceKind.Tsv => "TSV",
             DataSourceKind.GML => "GML",
             DataSourceKind.GeoPackage => "GeoPackage",
+            DataSourceKind.FileGdb => "File Geodatabase",
             DataSourceKind.GeoTiff => "GeoTIFF",
             DataSourceKind.MBTiles => "MBTiles",
             _ => string.Empty

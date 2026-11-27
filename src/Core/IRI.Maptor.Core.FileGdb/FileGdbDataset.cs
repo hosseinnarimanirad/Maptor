@@ -4,7 +4,10 @@ using IRI.Maptor.Core.FileGdb.Catalog.Model;
 using IRI.Maptor.Core.FileGdb.Enums;
 using IRI.Maptor.Core.FileGdb.Shapes;
 using IRI.Maptor.Core.FileGdb.Table;
+using IRI.Maptor.Core.Spatial.IO.Prj;
 using IRI.Maptor.Core.Spatial.Primitives;
+using IRI.Maptor.Core.SpatialReferenceSystem;
+using IRI.Maptor.Core.SpatialReferenceSystem.MapProjections;
 
 namespace IRI.Maptor.Core.FileGdb;
 
@@ -118,6 +121,102 @@ public sealed class FileGdbDataset
     /// </summary>
     public FileGdbDomain? GetDomain(string fieldName, int? subtypeCode = null)
         => Geodatabase.GetDomain(_info.GetDomainName(fieldName, subtypeCode));
+
+    #region Coded fields and value types
+
+    /// <summary>Whether the field is the subtype field of a dataset that has subtypes.</summary>
+    public bool IsSubtypeField(FileGdbField field)
+        => Subtypes.Count > 0 && string.Equals(SubtypeFieldName, field.Name, StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// The coded-value domains a field can use: its own, and any a subtype sets for it.
+    /// </summary>
+    public IEnumerable<FileGdbCodedValueDomain> GetCodedDomains(FileGdbField field)
+    {
+        return new[] { field.DomainName }
+            .Concat(Subtypes.Select(s => s.GetField(field.Name)?.DomainName))
+            .Where(n => !string.IsNullOrWhiteSpace(n))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Select(n => Geodatabase.GetDomain(n))
+            .OfType<FileGdbCodedValueDomain>();
+    }
+
+    /// <summary>
+    /// Whether the field's values can be shown as names (<see cref="FileGdbFeature.GetDisplayValue"/>):
+    /// the subtype field, or a field with a coded-value domain of its own or from a subtype.
+    /// </summary>
+    public bool IsCodedField(FileGdbField field)
+        => IsSubtypeField(field) || GetCodedDomains(field).Any();
+
+    /// <summary>
+    /// The .NET type of a field's values: <see cref="string"/> for a coded field
+    /// (<see cref="IsCodedField"/>), whose values are taken as text names, else the stored type.
+    /// </summary>
+    public Type GetValueType(FileGdbField field)
+    {
+        if (IsCodedField(field))
+            return typeof(string);
+
+        return field.FieldType switch
+        {
+            GdbFieldType.Int16 => typeof(short),
+            GdbFieldType.Int32 => typeof(int),
+            GdbFieldType.ObjectId => typeof(long),
+            GdbFieldType.Int64 => typeof(long),
+            GdbFieldType.Float32 => typeof(float),
+            GdbFieldType.Float64 => typeof(double),
+            GdbFieldType.String => typeof(string),
+            GdbFieldType.Xml => typeof(string),
+            GdbFieldType.DateTime => typeof(DateTime),
+            GdbFieldType.DateOnly => typeof(DateTime),
+            GdbFieldType.TimeOnly => typeof(TimeSpan),
+            GdbFieldType.DateTimeWithOffset => typeof(DateTimeOffset),
+            GdbFieldType.Guid => typeof(Guid),
+            GdbFieldType.GlobalId => typeof(Guid),
+            _ => typeof(byte[]),
+        };
+    }
+
+    #endregion
+
+    /// <summary>
+    /// The dataset's coordinate system: from its WKT, else from its SRID. When neither is one
+    /// Maptor can project, coordinates that all fall inside longitude/latitude bounds are taken as
+    /// WGS84 (the rule the shapefile import uses); anything else is refused, because guessing a
+    /// projection would put every shape in the wrong place without any error.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">The coordinate system is unknown and the coordinates are not longitude/latitude.</exception>
+    public SrsBase GetSrs()
+    {
+        var wkt = SpatialReference?.Wkt;
+
+        if (!string.IsNullOrWhiteSpace(wkt))
+        {
+            try
+            {
+                return EsriPrjFile.Parse(wkt!).AsMapProjection();
+            }
+            catch
+            {
+                // an unknown or unsupported coordinate system; try the SRID
+            }
+        }
+
+        if (Srid != 0 && SridHelper.AsSrsBase(Srid) is SrsBase known)
+            return known;
+
+        // an empty layer has no extent, and nothing to project either
+        if (Extent is not BoundingBox extent)
+            return SrsBases.GeodeticWgs84;
+
+        var looksGeodetic = extent.XMin >= -180 && extent.XMax <= 180 && extent.YMin >= -90 && extent.YMax <= 90;
+
+        if (!looksGeodetic)
+            throw new InvalidOperationException(
+                $"The coordinate system of {Name} (SRID {Srid}) is not one Maptor can project, and its coordinates are not longitude/latitude, so its shapes cannot be converted to WGS84.");
+
+        return SrsBases.GeodeticWgs84;
+    }
 
     /// <summary>
     /// Streams the rows in OBJECTID order, one at a time. The table is opened when enumeration

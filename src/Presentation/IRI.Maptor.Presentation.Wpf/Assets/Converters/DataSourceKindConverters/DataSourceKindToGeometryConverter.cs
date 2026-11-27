@@ -69,6 +69,7 @@ public class DataSourceKindToGeometryConverter : IValueConverter
         {
             DataSourceKind.MBTiles => "MBT",
             DataSourceKind.GeoPackage => "GPKG",
+            DataSourceKind.FileGdb => "GDB",
             _ => string.Empty
         };
 
