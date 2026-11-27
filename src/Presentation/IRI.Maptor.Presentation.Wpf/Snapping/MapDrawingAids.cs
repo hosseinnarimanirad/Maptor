@@ -80,22 +80,31 @@ public sealed class MapDrawingAids
     /// An existing edge to draw guides from, or null: its extension beyond each end, and, once a vertex is placed,
     /// the perpendicular and the parallel to it through that vertex.
     /// </param>
-    public DrawingAidResult Resolve(Point pointer, Point? previous, Point? last, bool lockToSteps, SegmentConstraint? typed = null, ReferenceEdge? reference = null)
+    /// <param name="next">
+    /// For a vertex between two others (a vertex of an existing geometry being moved): the vertex after it, or null.
+    /// With <paramref name="afterNext"/> it gives the same guides from that side as <paramref name="previous"/> and
+    /// <paramref name="last"/> give from theirs. Typed values and the angle steps stay with <paramref name="last"/>.
+    /// </param>
+    /// <param name="afterNext">The vertex after <paramref name="next"/>, or null.</param>
+    public DrawingAidResult Resolve(Point pointer, Point? previous, Point? last, bool lockToSteps, SegmentConstraint? typed = null, ReferenceEdge? reference = null,
+                                    Point? next = null, Point? afterNext = null)
     {
+        var far = next is not null && afterNext is not null ? (afterNext, next) : ((Point, Point)?)null;
+
         if (last is null || typed is not { IsActive: true })
-            return Untyped(pointer, previous, last, lockToSteps, reference);
+            return Untyped(pointer, previous, last, lockToSteps, reference, far);
 
         if (typed.HasAngle)
             return new DrawingAidResult(typed.Resolve(previous, last, pointer), null, null, isTyped: true, isDirectionFixed: true);
 
         // only the length: along the direction snapping and guides give
-        var free = Untyped(pointer, previous, last, lockToSteps, reference);
+        var free = Untyped(pointer, previous, last, lockToSteps, reference, far);
 
         return new DrawingAidResult(typed.Resolve(previous, last, free.Point), null, null, isTyped: true,
                                     isDirectionFixed: free.Guide is { } onGuide && PassesThrough(onGuide.Guide, last));
     }
 
-    private DrawingAidResult Untyped(Point pointer, Point? previous, Point? last, bool lockToSteps, ReferenceEdge? reference)
+    private DrawingAidResult Untyped(Point pointer, Point? previous, Point? last, bool lockToSteps, ReferenceEdge? reference, (Point Before, Point At)? far)
     {
         if (_snapper.IsSuspended)
             return new DrawingAidResult(pointer, null, null);
@@ -128,6 +137,9 @@ public sealed class MapDrawingAids
 
             if (previous is not null && last is not null)
                 guides.AddRange(GuideBuilder.FromPreviousSegment(previous, last));
+
+            if (far is { } side)
+                guides.AddRange(GuideBuilder.FromPreviousSegment(side.Before, side.At));
 
             if (reference is not null)
                 guides.AddRange(GuideBuilder.FromReferenceSegment(reference.Start, reference.End, last));

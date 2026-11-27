@@ -1231,6 +1231,42 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
     public IReadOnlyList<Point> GetCurrentPartPoints()
         => _webMercatorGeometry?.GetLastPart() is { } points ? points : Array.Empty<Point>();
 
+    /// <summary>
+    /// The vertices around <paramref name="vertex"/> in its part, as points (Web Mercator): the one before it and
+    /// the one before that, the one after it and the one after that. A ring goes round; a line stops at its ends.
+    /// Null where there is none, and never the vertex itself.
+    /// </summary>
+    public (Point? BeforePrevious, Point? Previous, Point? Next, Point? AfterNext) GetVertexNeighbours(Locateable vertex)
+    {
+        var isRing = _webMercatorGeometry?.IsRingBase() == true;
+
+        foreach (var part in GetPartsLocateables())
+        {
+            var index = part.IndexOf(vertex);
+
+            if (index < 0)
+                continue;
+
+            Point? At(int offset)
+            {
+                var i = index + offset;
+
+                if (isRing)
+                    i = ((i % part.Count) + part.Count) % part.Count;
+
+                // going round a small ring comes back to the vertex itself: not a neighbour
+                if (i < 0 || i >= part.Count || i == index)
+                    return null;
+
+                return new Point(part[i].X, part[i].Y);
+            }
+
+            return (At(-2), At(-1), At(1), At(2));
+        }
+
+        return (null, null, null, null);
+    }
+
     public Geometry GetLastGeometry()
     {
         if (_webMercatorGeometry.Type == GeometryType.MultiPolygon)

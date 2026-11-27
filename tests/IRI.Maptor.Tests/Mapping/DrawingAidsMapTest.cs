@@ -396,6 +396,105 @@ public class DrawingAidsMapTest
 
     #endregion
 
+    #region Moving a vertex of an existing geometry
+
+    [Fact]
+    public void AVertexBetweenTwoOthers_HasGuidesFromBothSides()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var (aids, _) = Aids(new VectorLayer[0]);
+
+            // ... (100 100) -> (200 100) -> [the vertex] -> (600 400) -> (600 700) ...
+            var next = new Point(600, 400);
+            var afterNext = new Point(600, 700);
+
+            // straight below (600 400): on the extension of the far side, running back from it
+            var far = aids.Resolve(new Point(603, 250), Previous, Last, lockToSteps: false, next: next, afterNext: afterNext);
+
+            Assert.Equal(GuideKind.Extension, far.Guide!.Guide.Kind);
+            Assert.Equal((600.0, 250.0), (far.Point.X, far.Point.Y));
+
+            // level with (600 400): square to the far side
+            var square = aids.Resolve(new Point(300, 398), Previous, Last, lockToSteps: false, next: next, afterNext: afterNext);
+
+            Assert.Equal(GuideKind.Perpendicular, square.Guide!.Guide.Kind);
+            Assert.Equal((300.0, 400.0), (square.Point.X, square.Point.Y));
+
+            // the near side still gives its own
+            var near = aids.Resolve(new Point(300, 103), Previous, Last, lockToSteps: false, next: next, afterNext: afterNext);
+            Assert.Equal((300.0, 100.0), (near.Point.X, near.Point.Y));
+
+            // a typed length is of the segment from the near neighbour
+            var typed = aids.Resolve(new Point(603, 250), Previous, Last, lockToSteps: false, Typed(length: 20), next: next, afterNext: afterNext);
+            Assert.Equal(20, WebMercatorGround.Length(Last, typed.Point), 3);
+
+            // one far vertex alone is no segment to guide from
+            var alone = aids.Resolve(new Point(603, 250), Previous, Last, lockToSteps: false, next: next);
+            Assert.Null(alone.Guide);
+        });
+    }
+
+    private static EditableFeatureLayer Editable(Core.Common.Enums.GeometryType type, params (double X, double Y)[] points)
+        => new("edit", points.Select(p => new Point(p.X, p.Y)).ToList(), System.Windows.Media.Transform.Identity, d => d, type, (locateable, index) => { });
+
+    private static (double X, double Y)? XY(Point? point) => point is null ? null : (point.X, point.Y);
+
+    [Fact]
+    public void VertexNeighbours_OfALine_StopAtItsEnds()
+    {
+        WpfTestHost.Run(() =>
+        {
+            WpfTestHost.EnsureMahAppsResources();
+
+            var layer = Editable(Core.Common.Enums.GeometryType.LineString, (0, 0), (10, 0), (20, 0), (30, 0));
+            var vertices = layer.GetVertices().Items;
+
+            var first = layer.GetVertexNeighbours(vertices[0]);
+            Assert.Null(first.BeforePrevious);
+            Assert.Null(first.Previous);
+            Assert.Equal((10.0, 0.0), XY(first.Next));
+            Assert.Equal((20.0, 0.0), XY(first.AfterNext));
+
+            var second = layer.GetVertexNeighbours(vertices[1]);
+            Assert.Null(second.BeforePrevious);
+            Assert.Equal((0.0, 0.0), XY(second.Previous));
+            Assert.Equal((20.0, 0.0), XY(second.Next));
+            Assert.Equal((30.0, 0.0), XY(second.AfterNext));
+
+            var last = layer.GetVertexNeighbours(vertices[3]);
+            Assert.Equal((10.0, 0.0), XY(last.BeforePrevious));
+            Assert.Equal((20.0, 0.0), XY(last.Previous));
+            Assert.Null(last.Next);
+            Assert.Null(last.AfterNext);
+        });
+    }
+
+    [Fact]
+    public void VertexNeighbours_OfARing_GoRound()
+    {
+        WpfTestHost.Run(() =>
+        {
+            WpfTestHost.EnsureMahAppsResources();
+
+            var layer = Editable(Core.Common.Enums.GeometryType.Polygon, (0, 0), (10, 0), (10, 10), (0, 10));
+            var vertices = layer.GetVertices().Items;
+
+            var first = layer.GetVertexNeighbours(vertices[0]);
+            Assert.Equal((10.0, 10.0), XY(first.BeforePrevious));
+            Assert.Equal((0.0, 10.0), XY(first.Previous));
+            Assert.Equal((10.0, 0.0), XY(first.Next));
+            Assert.Equal((10.0, 10.0), XY(first.AfterNext));
+
+            // a vertex that is not of this layer
+            var foreign = layer.GetVertexNeighbours(Editable(Core.Common.Enums.GeometryType.LineString, (0, 0), (1, 1)).GetVertices().Items[0]);
+            Assert.Null(foreign.Previous);
+            Assert.Null(foreign.Next);
+        });
+    }
+
+    #endregion
+
     #region Typed values
 
     private static SegmentConstraint Typed(double? length = null, double? angle = null, bool bearing = false)

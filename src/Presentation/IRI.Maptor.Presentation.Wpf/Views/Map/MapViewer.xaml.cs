@@ -620,7 +620,7 @@ public partial class MapViewer : NotifiableUserControl
         _cursorBox = new CursorBox(mapOverlay);
 
         // a new or dropped reference shows at once, without waiting for a mouse move
-        _referenceEdge.Changed += () => _drawPhaseGesture?.RaiseHover();
+        _referenceEdge.Changed += RefreshDrawingAids;
 
         _snapper = new MapSnapper(
             presenter.SketchBar.Snapping,
@@ -2424,10 +2424,26 @@ public partial class MapViewer : NotifiableUserControl
         _vertexDragOffset = locateable is { CanBeUsedAsEditingPoint: true } && ReferenceEquals(layer, CurrentEditingLayer?.GetVertices())
             ? new Point(locateable.X, locateable.Y) - ScreenToMap(this.prevMouseLocation)
             : null;
+
+        _vertexDragSegment = _vertexDragOffset is null ? null : VertexDragSegment(CurrentEditingLayer!.GetVertexNeighbours(locateable!));
     }
 
     // set while a vertex of the edited geometry is dragged: from the pointer (map units) to where the vertex was grabbed
     private Vector? _vertexDragOffset;
+
+    // with it, the vertices around the dragged one, as the segment the aids work on: Last is the neighbour the
+    // measured segment starts from (length, angle and typed values are of Last -> the vertex), Previous the one
+    // before it; Next and AfterNext are the other side, which only gives guides
+    private (sb.Point? Previous, sb.Point? Last, sb.Point? Next, sb.Point? AfterNext)? _vertexDragSegment;
+
+    private static (sb.Point? Previous, sb.Point? Last, sb.Point? Next, sb.Point? AfterNext) VertexDragSegment(
+        (sb.Point? BeforePrevious, sb.Point? Previous, sb.Point? Next, sb.Point? AfterNext) neighbours)
+    {
+        // the first vertex of a line has no vertex before it: its only neighbour is the one to measure from
+        return neighbours.Previous is null
+            ? (neighbours.AfterNext, neighbours.Next, null, null)
+            : (neighbours.BeforePrevious, neighbours.Previous, neighbours.Next, neighbours.AfterNext);
+    }
 
     /// <summary>Where a dragged vertex goes for the pointer at <paramref name="screenPoint"/>: under it, snapped when it can be.</summary>
     private Point VertexDragTarget(Point screenPoint)
@@ -2435,6 +2451,23 @@ public partial class MapViewer : NotifiableUserControl
         var target = ScreenToMap(screenPoint) + _vertexDragOffset!.Value;
 
         return SnapForDrawing(new sb.Point(target.X, target.Y)).AsWpfPoint();
+    }
+
+    /// <summary>Puts the dragged vertex where the pointer is now; after a key changed what that place is.</summary>
+    private void RefreshVertexDrag()
+    {
+        if (_vertexDragOffset is null || this.currentMoveableItem?.Tag is not LayerTag { Layer: SpecialPointLayer layer })
+            return;
+
+        if (layer.Get(this.currentMoveableItem) is not { } locateable)
+            return;
+
+        var target = VertexDragTarget(Mouse.GetPosition(this.mapView));
+
+        locateable.X = target.X;
+        locateable.Y = target.Y;
+
+        this.CurrentEditingPoint = target;
     }
 
     public void Element_MouseMoveForMoveableItem(object sender, MouseEventArgs e)
@@ -2534,6 +2567,10 @@ public partial class MapViewer : NotifiableUserControl
         itemIsMoving = false;
 
         _vertexDragOffset = null;
+        _vertexDragSegment = null;
+
+        // typed values are for one move
+        _segmentInput.Clear();
 
         HideDrawingAids();
     }
@@ -4964,16 +5001,24 @@ public partial class MapViewer : NotifiableUserControl
         if (mapPoint.IsNaN() || _aids is null)
             return HideSnapMarker(mapPoint);
 
-        var (previous, last) = withGuides ? SketchEnds() : (null, null);
+        // the segment the aids work on: while a vertex of an edited geometry is dragged, the one from its
+        // neighbour; while a vertex of a sketch is placed, the one from the last placed vertex
+        sb.Point? previous = null, last = null, next = null, afterNext = null;
 
-        // only a draw phase has a reference edge: dragging a vertex of an edited geometry does not
-        var isDrawPhase = _drawPhaseGesture is not null;
+        if (_vertexDragSegment is { } dragged)
+            (previous, last, next, afterNext) = dragged;
+        else if (withGuides)
+            (previous, last) = SketchEnds();
+
+        // a reference edge belongs to a draw phase or to the drag of a vertex
+        var isDrawPhase = _drawPhaseGesture is not null || _vertexDragSegment is not null;
 
         var reference = isDrawPhase ? _referenceEdge.Reference : null;
 
         var result = _aids.Resolve(mapPoint, previous, last, lockToSteps: (Keyboard.Modifiers & ModifierKeys.Shift) != 0,
                                    typed: last is null ? null : _segmentInput.Constraint,
-                                   reference: reference);
+                                   reference: reference,
+                                   next: next, afterNext: afterNext);
 
         // resting on an edge (the pointer snapped onto it, not onto one of its vertices) makes it the reference
         if (isDrawPhase)
@@ -5109,7 +5154,11 @@ public partial class MapViewer : NotifiableUserControl
     // Not while typing in a text box, and not with Ctrl or Alt (shortcuts stay shortcuts).
     private void HostWindow_PreviewKeyDownForSegmentInput(object sender, KeyEventArgs e)
     {
-        if (e.Handled || _drawPhaseGesture is null || _presenter is null ||
+        // while a vertex of an edited geometry is dragged the same keys type the length and direction of the
+        // segment from its neighbour; releasing the mouse places it (Enter does nothing there)
+        var isDragging = _vertexDragSegment is not null;
+
+        if (e.Handled || (_drawPhaseGesture is null && CurrentEditingLayer is null) || _presenter is null ||
             Keyboard.FocusedElement is System.Windows.Controls.Primitives.TextBoxBase ||
             (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Windows)) != 0)
             return;
@@ -5122,10 +5171,10 @@ public partial class MapViewer : NotifiableUserControl
             return;
         }
 
-        if (!_isPlacingVertex)
+        if (!_isPlacingVertex && !isDragging)
             return;
 
-        var (previous, last) = SketchEnds();
+        var (previous, last) = _vertexDragSegment is { } dragged ? (dragged.Previous, dragged.Last) : SketchEnds();
 
         if (last is null)
             return;
@@ -5160,11 +5209,14 @@ public partial class MapViewer : NotifiableUserControl
                 _segmentInput.Backspace();
                 break;
 
+            case Key.Enter when isDragging && _segmentInput.IsActive:
+                break;
+
             case Key.Enter when _segmentInput.Constraint.IsActive:
                 e.Handled = true;
 
                 // the click callback places the point the typed values give and drops them
-                if (_drawPhaseGesture.RaiseClick())
+                if (_drawPhaseGesture?.RaiseClick() == true)
                     _drawPhaseGesture?.RaiseHover();
 
                 return;
@@ -5183,7 +5235,16 @@ public partial class MapViewer : NotifiableUserControl
 
         e.Handled = true;
 
-        _drawPhaseGesture?.RaiseHover();
+        RefreshDrawingAids();
+    }
+
+    /// <summary>Works the point out again where the pointer is, without a mouse move: a key or the reference edge changed it.</summary>
+    private void RefreshDrawingAids()
+    {
+        if (_vertexDragSegment is not null)
+            RefreshVertexDrag();
+        else
+            _drawPhaseGesture?.RaiseHover();
     }
 
     private static char? SegmentInputCharacter(Key key) => key switch
@@ -5893,6 +5954,9 @@ public partial class MapViewer : NotifiableUserControl
 
         // dragged vertices snap; the stored copy of this geometry in its layer is left out of the candidates
         _snapper?.BeginSession(edited: geometry);
+
+        // a reference edge is for one edit
+        _referenceEdge.Clear();
 
         CurrentEditingLayer = new EditableFeatureLayer(
             "edit",
