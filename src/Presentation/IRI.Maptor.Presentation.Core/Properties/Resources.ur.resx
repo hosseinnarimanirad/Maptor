@@ -4828,4 +4828,16 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>منظر میں سنیپ کے لیے بہت زیادہ فیچرز ہیں۔ زوم اِن کریں۔</value>
   </data>
+  <data name="settings_snapping_header" xml:space="preserve">
+    <value>سنیپنگ</value>
+  </data>
+  <data name="settings_snapping_toleranceLabel" xml:space="preserve">
+    <value>سنیپ فاصلہ (پکسل)</value>
+  </data>
+  <data name="sketchBar_snapping_toVertices" xml:space="preserve">
+    <value>راسوں پر سنیپ کریں</value>
+  </data>
+  <data name="sketchBar_snapping_toEdges" xml:space="preserve">
+    <value>کناروں پر سنیپ کریں</value>
+  </data>
 </root>

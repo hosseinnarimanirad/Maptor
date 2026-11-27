@@ -4828,4 +4828,16 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>Տեսադաշտում կպցման համար չափազանց շատ օբյեկտներ կան։ Մոտեցրեք։</value>
   </data>
+  <data name="settings_snapping_header" xml:space="preserve">
+    <value>Կպցում</value>
+  </data>
+  <data name="settings_snapping_toleranceLabel" xml:space="preserve">
+    <value>Կպցման հեռավորություն (պիքսել)</value>
+  </data>
+  <data name="sketchBar_snapping_toVertices" xml:space="preserve">
+    <value>Կպցնել գագաթներին</value>
+  </data>
+  <data name="sketchBar_snapping_toEdges" xml:space="preserve">
+    <value>Կպցնել կողերին</value>
+  </data>
 </root>

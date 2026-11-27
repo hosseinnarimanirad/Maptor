@@ -604,7 +604,11 @@ public partial class MapViewer : NotifiableUserControl
             () => this.CurrentExtent,
             ScreenToMap,
             () => presenter.GetAllVectorLayers(this.Layers)
-                           .Where(l => l.Type == LayerType.VectorLayer && l.Visibility == Visibility.Visible && l.IsInScaleRange));
+                           .Where(l => l.Type == LayerType.VectorLayer && l.Visibility == Visibility.Visible && l.IsInScaleRange),
+            () => presenter.MapSettings?.Snapping_TolerancePixels ?? MapSnapper.DefaultTolerancePixels,
+            () => presenter.MapSettings is { } settings
+                ? new SnapOptions { SnapToVertices = settings.Snapping_ToVertices, SnapToEdges = settings.Snapping_ToEdges }
+                : SnapOptions.Default);
 
         _layerManager.RequestUpdateLayerTocOrder = presenter.UpdateLayerCanMoveUpDown;
 

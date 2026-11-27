@@ -4828,4 +4828,16 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>Слишком много объектов в видимой области для привязки. Увеличьте масштаб.</value>
   </data>
+  <data name="settings_snapping_header" xml:space="preserve">
+    <value>Привязка</value>
+  </data>
+  <data name="settings_snapping_toleranceLabel" xml:space="preserve">
+    <value>Расстояние привязки (пиксели)</value>
+  </data>
+  <data name="sketchBar_snapping_toVertices" xml:space="preserve">
+    <value>Привязка к вершинам</value>
+  </data>
+  <data name="sketchBar_snapping_toEdges" xml:space="preserve">
+    <value>Привязка к сегментам</value>
+  </data>
 </root>

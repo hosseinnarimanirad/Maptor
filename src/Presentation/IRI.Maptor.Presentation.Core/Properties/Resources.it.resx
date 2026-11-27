@@ -4828,4 +4828,16 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>Troppi elementi nella vista per l'aggancio. Ingrandisci.</value>
   </data>
+  <data name="settings_snapping_header" xml:space="preserve">
+    <value>Aggancio</value>
+  </data>
+  <data name="settings_snapping_toleranceLabel" xml:space="preserve">
+    <value>Distanza di aggancio (pixel)</value>
+  </data>
+  <data name="sketchBar_snapping_toVertices" xml:space="preserve">
+    <value>Aggancia ai vertici</value>
+  </data>
+  <data name="sketchBar_snapping_toEdges" xml:space="preserve">
+    <value>Aggancia ai segmenti</value>
+  </data>
 </root>

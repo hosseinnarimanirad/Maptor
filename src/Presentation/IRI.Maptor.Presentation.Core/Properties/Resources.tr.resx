@@ -4828,4 +4828,16 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>Görünümde yapıştırma için çok fazla nesne var. Yakınlaştırın.</value>
   </data>
+  <data name="settings_snapping_header" xml:space="preserve">
+    <value>Yapıştırma</value>
+  </data>
+  <data name="settings_snapping_toleranceLabel" xml:space="preserve">
+    <value>Yapıştırma mesafesi (piksel)</value>
+  </data>
+  <data name="sketchBar_snapping_toVertices" xml:space="preserve">
+    <value>Köşelere yapıştır</value>
+  </data>
+  <data name="sketchBar_snapping_toEdges" xml:space="preserve">
+    <value>Kenarlara yapıştır</value>
+  </data>
 </root>

@@ -242,6 +242,45 @@ public class MapSettingsModel : Notifier, IMapSettings
 
     #endregion
 
+
+    #region Snapping
+
+    public const int MinSnappingTolerancePixels = 5;
+
+    public const int MaxSnappingTolerancePixels = 25;
+
+    public int Snapping_TolerancePixels
+    {
+        get => _settings.Snapping_TolerancePixels;
+        set
+        {
+            _settings.Snapping_TolerancePixels = Math.Clamp(value, MinSnappingTolerancePixels, MaxSnappingTolerancePixels);
+            RaisePropertyChanged();
+        }
+    }
+
+    public bool Snapping_ToVertices
+    {
+        get => _settings.Snapping_ToVertices;
+        set
+        {
+            _settings.Snapping_ToVertices = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    public bool Snapping_ToEdges
+    {
+        get => _settings.Snapping_ToEdges;
+        set
+        {
+            _settings.Snapping_ToEdges = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    #endregion
+
     public MapSettingsModel(IMapSettings settings/*, Action<bool> fireIsMouseWheelZoomEnabledChanged, Action<bool> fireIsDoubleClickZoomEnabledChanged*/)
     {
         this._settings = settings;

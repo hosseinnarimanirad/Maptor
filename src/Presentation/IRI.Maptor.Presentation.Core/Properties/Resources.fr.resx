@@ -4828,4 +4828,16 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>Trop d'entités dans la vue pour l'accrochage. Zoomez.</value>
   </data>
+  <data name="settings_snapping_header" xml:space="preserve">
+    <value>Accrochage</value>
+  </data>
+  <data name="settings_snapping_toleranceLabel" xml:space="preserve">
+    <value>Distance d'accrochage (pixels)</value>
+  </data>
+  <data name="sketchBar_snapping_toVertices" xml:space="preserve">
+    <value>Accrocher aux sommets</value>
+  </data>
+  <data name="sketchBar_snapping_toEdges" xml:space="preserve">
+    <value>Accrocher aux segments</value>
+  </data>
 </root>

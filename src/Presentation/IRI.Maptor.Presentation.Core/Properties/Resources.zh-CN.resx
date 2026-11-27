@@ -4828,4 +4828,16 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>视图中的要素过多，无法捕捉。请放大。</value>
   </data>
+  <data name="settings_snapping_header" xml:space="preserve">
+    <value>捕捉</value>
+  </data>
+  <data name="settings_snapping_toleranceLabel" xml:space="preserve">
+    <value>捕捉距离（像素）</value>
+  </data>
+  <data name="sketchBar_snapping_toVertices" xml:space="preserve">
+    <value>捕捉到顶点</value>
+  </data>
+  <data name="sketchBar_snapping_toEdges" xml:space="preserve">
+    <value>捕捉到线段</value>
+  </data>
 </root>

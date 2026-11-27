@@ -158,6 +158,19 @@
                                 <StaticResource ResourceKey="IRI.Maptor.Effects.Elevation2"/>
                             </Border.Effect>
                             <StackPanel Margin="4">
+                                <!--what to snap to: map settings (kept between sessions), reached through the sketch bar's
+                                    own DataContext since this border's is the layer choice-->
+                                <CheckBox Margin="2" IsChecked="{Binding DataContext.MapSettings.Snapping_ToVertices, ElementName=root, Mode=TwoWay}">
+                                    <TextBlock Text="{Binding [sketchBar_snapping_toVertices], Source={StaticResource Localization}}"
+                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                                </CheckBox>
+                                <CheckBox Margin="2" IsChecked="{Binding DataContext.MapSettings.Snapping_ToEdges, ElementName=root, Mode=TwoWay}">
+                                    <TextBlock Text="{Binding [sketchBar_snapping_toEdges], Source={StaticResource Localization}}"
+                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                                </CheckBox>
+
+                                <Separator Margin="0,4"/>
+
                                 <TextBlock Text="{Binding [sketchBar_snapping_layers], Source={StaticResource Localization}}"
                                            FontWeight="SemiBold" Margin="2,0,2,4"/>
 

@@ -444,6 +444,63 @@ public class SnappingTest
         });
     }
 
+    [Fact]
+    public void Snapper_FollowsTheDistanceAndKindsSettings()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var layer = Layer("lines", Line(SridHelper.WebMercator, (100, 100), (200, 100)));
+
+            var tolerance = 10.0;
+            var options = new SnapOptions();
+
+            var snapper = new MapSnapper(new SnapLayerChoice(), () => View, pixels => pixels, () => new[] { layer }, () => tolerance, () => options);
+
+            snapper.BeginSession();
+            snapper.Snap(new Point(0, 0));
+            SpinWait.SpinUntil(() => snapper.Snap(new Point(150, 103.5)) is not null, 5000);
+
+            // 4 away from the line: in at 10 px, out at 2 px, and a new value applies to the same point at once
+            Assert.NotNull(snapper.Snap(new Point(150, 104)));
+
+            tolerance = 2;
+            Assert.Null(snapper.Snap(new Point(150, 104)));
+
+            tolerance = 10;
+            Assert.NotNull(snapper.Snap(new Point(150, 104)));
+
+            // near the line's end: a vertex by default, the edge when vertices are off, nothing when both are off
+            Assert.Equal(SnapKind.Vertex, snapper.Snap(new Point(198, 102))!.Kind);
+
+            options = new SnapOptions { SnapToVertices = false };
+            Assert.Equal(SnapKind.Edge, snapper.Snap(new Point(198, 102))!.Kind);
+
+            options = new SnapOptions { SnapToVertices = false, SnapToEdges = false };
+            Assert.Null(snapper.Snap(new Point(198, 102)));
+        });
+    }
+
+    [Fact]
+    public void MapSettings_SnappingDefaults_AndTheDistanceIsClamped()
+    {
+        var settings = new IRI.Maptor.Presentation.Core.Data.MapSettings();
+
+        Assert.Equal(10, settings.Snapping_TolerancePixels);
+        Assert.True(settings.Snapping_ToVertices);
+        Assert.True(settings.Snapping_ToEdges);
+
+        var model = new IRI.Maptor.Presentation.Wpf.Models.Settings.MapSettingsModel(settings);
+
+        model.Snapping_TolerancePixels = 3;
+        Assert.Equal(5, settings.Snapping_TolerancePixels);
+
+        model.Snapping_TolerancePixels = 40;
+        Assert.Equal(25, settings.Snapping_TolerancePixels);
+
+        model.Snapping_TolerancePixels = 12;
+        Assert.Equal(12, model.Snapping_TolerancePixels);
+    }
+
     #endregion
 
     [Fact]

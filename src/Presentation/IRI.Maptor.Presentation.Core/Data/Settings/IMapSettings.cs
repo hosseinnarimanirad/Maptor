@@ -36,4 +36,13 @@ public interface IMapSettings
     bool Identify_IncludeNotInScaleRangeLayers { get; set; }
     bool Identify_IncludeInvisibleLayers { get; set; }
     int Identify_SelectionTolerance { get; set; }
+
+    /// <summary>How near (screen pixels) a vertex or edge must be for a drawn or dragged point to snap to it.</summary>
+    int Snapping_TolerancePixels { get; set; }
+
+    /// <summary>Snap to vertices (and point features).</summary>
+    bool Snapping_ToVertices { get; set; }
+
+    /// <summary>Snap to the nearest place on an edge.</summary>
+    bool Snapping_ToEdges { get; set; }
 }

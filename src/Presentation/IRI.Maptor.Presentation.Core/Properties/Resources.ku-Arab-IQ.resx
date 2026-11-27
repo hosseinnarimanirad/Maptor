@@ -4828,4 +4828,16 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>دیاردەکانی ناو دیمەنەکە بۆ لکاندن زۆرن. نزیک بکەرەوە.</value>
   </data>
+  <data name="settings_snapping_header" xml:space="preserve">
+    <value>لکاندن</value>
+  </data>
+  <data name="settings_snapping_toleranceLabel" xml:space="preserve">
+    <value>دووری لکاندن (پیکسڵ)</value>
+  </data>
+  <data name="sketchBar_snapping_toVertices" xml:space="preserve">
+    <value>لکاندن بە خاڵەکان</value>
+  </data>
+  <data name="sketchBar_snapping_toEdges" xml:space="preserve">
+    <value>لکاندن بە لێوارەکان</value>
+  </data>
 </root>

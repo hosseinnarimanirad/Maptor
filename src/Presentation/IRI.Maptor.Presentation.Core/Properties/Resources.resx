@@ -4983,4 +4983,16 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>Too many features in view to snap to. Zoom in.</value>
   </data>
+  <data name="settings_snapping_header" xml:space="preserve">
+    <value>Snapping</value>
+  </data>
+  <data name="settings_snapping_toleranceLabel" xml:space="preserve">
+    <value>Snap distance (pixels)</value>
+  </data>
+  <data name="sketchBar_snapping_toVertices" xml:space="preserve">
+    <value>Snap to vertices</value>
+  </data>
+  <data name="sketchBar_snapping_toEdges" xml:space="preserve">
+    <value>Snap to edges</value>
+  </data>
 </root>

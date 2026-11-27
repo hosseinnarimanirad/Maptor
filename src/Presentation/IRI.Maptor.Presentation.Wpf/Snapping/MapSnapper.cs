@@ -11,33 +11,49 @@ namespace IRI.Maptor.Presentation.Wpf.Snapping;
 
 /// <summary>
 /// Turns the map point under the pointer into the point to use while drawing: snapped when snapping is on, Ctrl is not
-/// held, and a vertex or edge of a checked layer is within <see cref="TolerancePixels"/>. It keeps the layer list and
-/// the cache in step with the map; it does not load features (<see cref="MapSnapCache"/>) or draw (<see cref="SnapMarker"/>).
+/// held, and a vertex or edge of a checked layer is within the snap distance (map settings, in pixels). It keeps the
+/// layer list and the cache in step with the map; it does not load features (<see cref="MapSnapCache"/>) or draw
+/// (<see cref="SnapMarker"/>).
 /// </summary>
 public sealed class MapSnapper
 {
-    public const double TolerancePixels = 10;
+    /// <summary>The snap distance when no setting is given.</summary>
+    public const double DefaultTolerancePixels = 10;
 
     private readonly SnapLayerChoice _choice;
     private readonly MapSnapCache _cache = new();
     private readonly Func<BoundingBox> _currentExtent;
     private readonly Func<double, double> _screenToMapDistance;
     private readonly Func<IEnumerable<VectorLayer>> _snappableLayers;
+    private readonly Func<double> _tolerancePixels;
+    private readonly Func<SnapOptions> _options;
 
-    // one-entry memo: a mouse move asks for the same point twice (current point, then hover)
+    // one-entry memo: a mouse move asks for the same point twice (current point, then hover); a change of distance or
+    // kinds is part of the key, so a new setting applies at once
     private Point? _lastRaw;
+    private (double Tolerance, bool Vertices, bool Edges) _lastSettings;
     private SnapResult<Point>? _lastResult;
 
     /// <param name="choice">The user's choice (on/off, layers).</param>
     /// <param name="currentExtent">The map extent in Web Mercator.</param>
     /// <param name="screenToMapDistance">Pixels to Web Mercator units at the current scale.</param>
     /// <param name="snappableLayers">The vector layers that could be snapped to now (visible, in scale range).</param>
-    public MapSnapper(SnapLayerChoice choice, Func<BoundingBox> currentExtent, Func<double, double> screenToMapDistance, Func<IEnumerable<VectorLayer>> snappableLayers)
+    /// <param name="tolerancePixels">The snap distance in pixels, read at each snap; <see cref="DefaultTolerancePixels"/> when null.</param>
+    /// <param name="options">The kinds to snap to, read at each snap; both when null.</param>
+    public MapSnapper(
+        SnapLayerChoice choice,
+        Func<BoundingBox> currentExtent,
+        Func<double, double> screenToMapDistance,
+        Func<IEnumerable<VectorLayer>> snappableLayers,
+        Func<double>? tolerancePixels = null,
+        Func<SnapOptions>? options = null)
     {
         _choice = choice ?? throw new ArgumentNullException(nameof(choice));
         _currentExtent = currentExtent;
         _screenToMapDistance = screenToMapDistance;
         _snappableLayers = snappableLayers;
+        _tolerancePixels = tolerancePixels ?? (() => DefaultTolerancePixels);
+        _options = options ?? (() => SnapOptions.Default);
 
         _choice.Changed += () =>
         {
@@ -83,7 +99,10 @@ public sealed class MapSnapper
         if (!_choice.IsEnabled || (Keyboard.Modifiers & ModifierKeys.Control) != 0)
             return null;
 
-        if (_lastRaw is { } last && last.X == mapPoint.X && last.Y == mapPoint.Y)
+        var options = _options();
+        var settings = (_tolerancePixels(), options.SnapToVertices, options.SnapToEdges);
+
+        if (_lastRaw is { } last && last.X == mapPoint.X && last.Y == mapPoint.Y && settings == _lastSettings)
             return _lastResult;
 
         var extent = _currentExtent();
@@ -95,9 +114,10 @@ public sealed class MapSnapper
 
         var index = _cache.Index;
 
-        var result = index is null ? null : SnapEngine.Snap(index, mapPoint, _screenToMapDistance(TolerancePixels), accept: Accept(index));
+        var result = index is null ? null : SnapEngine.Snap(index, mapPoint, _screenToMapDistance(settings.Item1), options, Accept(index));
 
         _lastRaw = mapPoint;
+        _lastSettings = settings;
         _lastResult = result;
 
         return result;

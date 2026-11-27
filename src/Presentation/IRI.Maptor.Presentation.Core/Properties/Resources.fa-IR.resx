@@ -4887,4 +4887,16 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>عارضه‌های این محدوده برای چسبیدن بیش از حد زیاد است. بزرگ‌نمایی کنید.</value>
   </data>
+  <data name="settings_snapping_header" xml:space="preserve">
+    <value>چسبیدن</value>
+  </data>
+  <data name="settings_snapping_toleranceLabel" xml:space="preserve">
+    <value>فاصلهٔ چسبیدن (پیکسل)</value>
+  </data>
+  <data name="sketchBar_snapping_toVertices" xml:space="preserve">
+    <value>چسبیدن به نقطه‌ها</value>
+  </data>
+  <data name="sketchBar_snapping_toEdges" xml:space="preserve">
+    <value>چسبیدن به اضلاع</value>
+  </data>
 </root>

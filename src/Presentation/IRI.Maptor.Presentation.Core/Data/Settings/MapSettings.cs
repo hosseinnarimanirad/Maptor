@@ -45,6 +45,14 @@ public class MapSettings : IMapSettings
 
     public int Identify_SelectionTolerance { get; set; } = 7;
 
+    public const int DefaultSnappingTolerancePixels = 10;
+
+    public int Snapping_TolerancePixels { get; set; } = DefaultSnappingTolerancePixels;
+
+    public bool Snapping_ToVertices { get; set; } = true;
+
+    public bool Snapping_ToEdges { get; set; } = true;
+
 
     public static MapSettings Default = new MapSettings();
 }

@@ -8656,6 +8656,24 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Snapping.
+        /// </summary>
+        public static string settings_snapping_header {
+            get {
+                return ResourceManager.GetString("settings_snapping_header", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Snap distance (pixels).
+        /// </summary>
+        public static string settings_snapping_toleranceLabel {
+            get {
+                return ResourceManager.GetString("settings_snapping_toleranceLabel", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Layers to snap to.
         /// </summary>
         public static string sketchBar_snapping_layers {
@@ -8670,6 +8688,24 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string sketchBar_snapping_noLayers {
             get {
                 return ResourceManager.GetString("sketchBar_snapping_noLayers", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Snap to edges.
+        /// </summary>
+        public static string sketchBar_snapping_toEdges {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_toEdges", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Snap to vertices.
+        /// </summary>
+        public static string sketchBar_snapping_toVertices {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_toVertices", resourceCulture);
             }
         }
 

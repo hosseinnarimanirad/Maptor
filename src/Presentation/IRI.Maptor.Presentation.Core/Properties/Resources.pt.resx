@@ -4828,4 +4828,16 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>Há feições demais na visualização para ajuste. Aproxime o zoom.</value>
   </data>
+  <data name="settings_snapping_header" xml:space="preserve">
+    <value>Ajuste</value>
+  </data>
+  <data name="settings_snapping_toleranceLabel" xml:space="preserve">
+    <value>Distância de ajuste (pixels)</value>
+  </data>
+  <data name="sketchBar_snapping_toVertices" xml:space="preserve">
+    <value>Ajustar aos vértices</value>
+  </data>
+  <data name="sketchBar_snapping_toEdges" xml:space="preserve">
+    <value>Ajustar aos segmentos</value>
+  </data>
 </root>

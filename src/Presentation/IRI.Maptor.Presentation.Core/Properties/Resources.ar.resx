@@ -4828,4 +4828,16 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>المعالم في العرض كثيرة جدًا للالتقاط. قم بالتكبير.</value>
   </data>
+  <data name="settings_snapping_header" xml:space="preserve">
+    <value>الالتقاط</value>
+  </data>
+  <data name="settings_snapping_toleranceLabel" xml:space="preserve">
+    <value>مسافة الالتقاط (بكسل)</value>
+  </data>
+  <data name="sketchBar_snapping_toVertices" xml:space="preserve">
+    <value>الالتقاط إلى الرؤوس</value>
+  </data>
+  <data name="sketchBar_snapping_toEdges" xml:space="preserve">
+    <value>الالتقاط إلى الحواف</value>
+  </data>
 </root>

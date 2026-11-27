@@ -4828,4 +4828,16 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>दृश्य में स्नैप करने के लिए बहुत अधिक फ़ीचर हैं। ज़ूम इन करें।</value>
   </data>
+  <data name="settings_snapping_header" xml:space="preserve">
+    <value>स्नैपिंग</value>
+  </data>
+  <data name="settings_snapping_toleranceLabel" xml:space="preserve">
+    <value>स्नैप दूरी (पिक्सेल)</value>
+  </data>
+  <data name="sketchBar_snapping_toVertices" xml:space="preserve">
+    <value>शीर्षों पर स्नैप करें</value>
+  </data>
+  <data name="sketchBar_snapping_toEdges" xml:space="preserve">
+    <value>किनारों पर स्नैप करें</value>
+  </data>
 </root>
