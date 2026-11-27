@@ -3274,4 +3274,19 @@
   <data name="legend_panel_showHide" xml:space="preserve">
     <value>Mostrar ou ocultar a legenda</value>
   </data>
+  <data name="cmd_legend_addFileGdb" xml:space="preserve">
+    <value>Geodatabase de arquivos</value>
+  </data>
+  <data name="ribbon_vector_addFileGdb" xml:space="preserve">
+    <value>Geodatabase de arquivos</value>
+  </data>
+  <data name="ribbon_vector_addFileGdbTooltip" xml:space="preserve">
+    <value>Adicionar as camadas de um geodatabase de arquivos da Esri (uma pasta .gdb).</value>
+  </data>
+  <data name="msg_fileGdb_skipped" xml:space="preserve">
+    <value>Estas camadas não foram adicionadas:</value>
+  </data>
+  <data name="msg_fileGdb_nothingAdded" xml:space="preserve">
+    <value>Nenhuma camada deste geodatabase pôde ser adicionada.</value>
+  </data>
 </root>

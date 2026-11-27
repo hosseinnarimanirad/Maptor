@@ -3,6 +3,7 @@ using System.Text.Json;
 
 using IRI.Maptor.Core.Common.Enums;
 using IRI.Maptor.Core.Common.Attributes;
+using IRI.Maptor.Core.FileGdb;
 
 namespace IRI.Maptor.Core.Persistence.Import;
 
@@ -91,6 +92,13 @@ public static class ImportFormatDetector
             default: return null;
         }
     }
+
+    /// <summary>
+    /// The format of a folder: <see cref="DataSourceKind.FileGdb"/> for an Esri file geodatabase (a <c>*.gdb</c>
+    /// folder with its system catalog), null for any other folder. Nothing is read.
+    /// </summary>
+    public static DataSourceKind? DetectFromFolder(string folderPath)
+        => FileGeodatabase.IsGeodatabaseFolder(folderPath) ? DataSourceKind.FileGdb : null;
 
     /// <summary>
     /// The format of pasted text: JSON by its content, KML for XML with a <c>kml</c> element, otherwise TSV when a

@@ -3274,4 +3274,19 @@
   <data name="legend_panel_showHide" xml:space="preserve">
     <value>Göstergeyi göster veya gizle</value>
   </data>
+  <data name="cmd_legend_addFileGdb" xml:space="preserve">
+    <value>Dosya coğrafi veritabanı</value>
+  </data>
+  <data name="ribbon_vector_addFileGdb" xml:space="preserve">
+    <value>Dosya coğrafi veritabanı</value>
+  </data>
+  <data name="ribbon_vector_addFileGdbTooltip" xml:space="preserve">
+    <value>Esri dosya coğrafi veritabanının (.gdb klasörü) katmanlarını ekleyin.</value>
+  </data>
+  <data name="msg_fileGdb_skipped" xml:space="preserve">
+    <value>Bu katmanlar eklenmedi:</value>
+  </data>
+  <data name="msg_fileGdb_nothingAdded" xml:space="preserve">
+    <value>Bu coğrafi veritabanından hiçbir katman eklenemedi.</value>
+  </data>
 </root>

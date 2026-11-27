@@ -46,6 +46,12 @@ public sealed class AddDataFromFileTest : IDisposable
 
         public List<string> ErrorMessages { get; } = new();
 
+        /// <summary>The texts of the plain messages (ShowMessageAsync).</summary>
+        public List<string> Messages { get; } = new();
+
+        /// <summary>What the folder dialog returns.</summary>
+        public string? FolderResult { get; set; }
+
         public ImportOptionsDialogResult? OptionsResult { get; set; }
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
@@ -60,6 +66,13 @@ public sealed class AddDataFromFileTest : IDisposable
                     Errors.Add(args![0]!.GetType());
                     ErrorMessages.Add(((Exception)args[0]!).Message);
                     return Task.CompletedTask;
+
+                case nameof(IDialogService.ShowMessageAsync):
+                    Messages.Add((string)args![0]!);
+                    return Task.CompletedTask;
+
+                case nameof(IDialogService.ShowOpenFolderDialogAsync):
+                    return Task.FromResult(FolderResult);
             }
 
             var type = targetMethod?.ReturnType;

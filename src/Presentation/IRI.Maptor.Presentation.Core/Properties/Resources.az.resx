@@ -3274,4 +3274,19 @@
   <data name="legend_panel_showHide" xml:space="preserve">
     <value>Leqendi göstər və ya gizlət</value>
   </data>
+  <data name="cmd_legend_addFileGdb" xml:space="preserve">
+    <value>Fayl geoverilənlər bazası</value>
+  </data>
+  <data name="ribbon_vector_addFileGdb" xml:space="preserve">
+    <value>Fayl geoverilənlər bazası</value>
+  </data>
+  <data name="ribbon_vector_addFileGdbTooltip" xml:space="preserve">
+    <value>Esri fayl geoverilənlər bazasının (.gdb qovluğu) qatlarını əlavə edin.</value>
+  </data>
+  <data name="msg_fileGdb_skipped" xml:space="preserve">
+    <value>Bu qatlar əlavə edilmədi:</value>
+  </data>
+  <data name="msg_fileGdb_nothingAdded" xml:space="preserve">
+    <value>Bu geoverilənlər bazasından heç bir qat əlavə edilə bilmədi.</value>
+  </data>
 </root>

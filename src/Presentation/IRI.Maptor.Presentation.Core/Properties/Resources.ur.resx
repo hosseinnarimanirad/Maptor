@@ -3274,4 +3274,19 @@
   <data name="legend_panel_showHide" xml:space="preserve">
     <value>لیجنڈ دکھائیں یا چھپائیں</value>
   </data>
+  <data name="cmd_legend_addFileGdb" xml:space="preserve">
+    <value>فائل جیو ڈیٹا بیس</value>
+  </data>
+  <data name="ribbon_vector_addFileGdb" xml:space="preserve">
+    <value>فائل جیو ڈیٹا بیس</value>
+  </data>
+  <data name="ribbon_vector_addFileGdbTooltip" xml:space="preserve">
+    <value>Esri فائل جیو ڈیٹا بیس (.gdb فولڈر) کی پرتیں شامل کریں۔</value>
+  </data>
+  <data name="msg_fileGdb_skipped" xml:space="preserve">
+    <value>یہ پرتیں شامل نہیں کی گئیں:</value>
+  </data>
+  <data name="msg_fileGdb_nothingAdded" xml:space="preserve">
+    <value>اس جیو ڈیٹا بیس کی کوئی پرت شامل نہیں کی جا سکی۔</value>
+  </data>
 </root>

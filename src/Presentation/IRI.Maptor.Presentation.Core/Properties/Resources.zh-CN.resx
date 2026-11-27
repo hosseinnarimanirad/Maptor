@@ -3274,4 +3274,19 @@
   <data name="legend_panel_showHide" xml:space="preserve">
     <value>显示或隐藏图例</value>
   </data>
+  <data name="cmd_legend_addFileGdb" xml:space="preserve">
+    <value>文件地理数据库</value>
+  </data>
+  <data name="ribbon_vector_addFileGdb" xml:space="preserve">
+    <value>文件地理数据库</value>
+  </data>
+  <data name="ribbon_vector_addFileGdbTooltip" xml:space="preserve">
+    <value>添加 Esri 文件地理数据库（.gdb 文件夹）中的图层。</value>
+  </data>
+  <data name="msg_fileGdb_skipped" xml:space="preserve">
+    <value>以下图层未添加：</value>
+  </data>
+  <data name="msg_fileGdb_nothingAdded" xml:space="preserve">
+    <value>无法添加此地理数据库中的任何图层。</value>
+  </data>
 </root>

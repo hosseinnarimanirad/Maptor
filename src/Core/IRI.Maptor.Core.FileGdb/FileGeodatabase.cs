@@ -46,6 +46,23 @@ public sealed class FileGeodatabase
     public IReadOnlyList<string> Warnings => _catalog.Warnings;
 
     /// <summary>
+    /// Whether <paramref name="path"/> looks like a file geodatabase without opening it: a folder named
+    /// <c>*.gdb</c> holding the system catalog table. <see cref="Open"/> still checks the content.
+    /// </summary>
+    public static bool IsGeodatabaseFolder(string? path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return false;
+
+        // a folder picked or dropped may end with a separator ("C:\data\Roads.gdb\")
+        var folder = path!.TrimEnd(System.IO.Path.DirectorySeparatorChar, System.IO.Path.AltDirectorySeparatorChar);
+
+        return folder.EndsWith(".gdb", StringComparison.OrdinalIgnoreCase)
+            && System.IO.Directory.Exists(folder)
+            && System.IO.File.Exists(System.IO.Path.Combine(folder, GdbSystemCatalog.CatalogFileName));
+    }
+
+    /// <summary>
     /// Opens the geodatabase in <paramref name="gdbPath"/>.
     /// </summary>
     /// <exception cref="DirectoryNotFoundException">The folder does not exist.</exception>

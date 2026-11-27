@@ -51,11 +51,11 @@ public class ImportOptionsDialogViewTest
     }
 
     /// <summary>
-    /// The legend's import pop-up has the two ways in of the ribbon, "add data" and "paste data", and no row per
-    /// format any more.
+    /// The legend's import pop-up has the ways in of the ribbon, "add data", "paste data" and "file geodatabase"
+    /// (a folder), and no row per file format.
     /// </summary>
     [Fact]
-    public void LegendImportPopup_HasAddAndPasteOnly()
+    public void LegendImportPopup_HasAddPasteAndFileGeodatabase()
     {
         WpfTestHost.Run(() =>
         {
@@ -84,7 +84,7 @@ public class ImportOptionsDialogViewTest
                 .Select(b => System.Windows.Data.BindingOperations.GetBinding(b, System.Windows.Controls.Primitives.ButtonBase.CommandProperty)?.Path.Path)
                 .ToList();
 
-            Assert.Equal(new[] { "AddDataFromFileCommand", "PasteDataCommand" }, commands);
+            Assert.Equal(new[] { "AddDataFromFileCommand", "PasteDataCommand", "AddFileGeodatabaseCommand" }, commands);
         });
     }
 }

@@ -40,7 +40,7 @@ public sealed class PasteDataTest : IDisposable
     }
 
     /// <summary>Stands in for MapViewer the way MapGridsViewModelTest does: layers go into <see cref="MapViewModelBase.Layers"/>.</summary>
-    private sealed class TestMap : MapViewModelBase
+    internal sealed class TestMap : MapViewModelBase
     {
         public TestMap()
         {
@@ -84,7 +84,7 @@ public sealed class PasteDataTest : IDisposable
     /// Runs <paramref name="action"/> on this STA thread's dispatcher, the way the app's UI thread does, so every
     /// continuation after an await comes back here: WPF layers cannot be built on a thread-pool thread.
     /// </summary>
-    private static void Pump(Func<System.Threading.Tasks.Task> action)
+    internal static void Pump(Func<System.Threading.Tasks.Task> action)
     {
         var dispatcher = System.Windows.Threading.Dispatcher.CurrentDispatcher;
         System.Threading.SynchronizationContext.SetSynchronizationContext(new System.Windows.Threading.DispatcherSynchronizationContext(dispatcher));
@@ -105,7 +105,7 @@ public sealed class PasteDataTest : IDisposable
             System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(failure).Throw();
     }
 
-    private static List<ILayer> Leaves(MapViewModelBase map) => map.GetAllLayers(map.Layers.ToList()).ToList();
+    internal static List<ILayer> Leaves(MapViewModelBase map) => map.GetAllLayers(map.Layers.ToList()).ToList();
 
     private static ImportOptionsDialogResult Pasted(DataSourceKind kind, string text, int srid)
         => new(kind, null, text, srid, true, false, GeometryType.Point);

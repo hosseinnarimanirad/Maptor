@@ -3274,4 +3274,19 @@
   <data name="legend_panel_showHide" xml:space="preserve">
     <value>Ցույց տալ կամ թաքցնել լեգենդը</value>
   </data>
+  <data name="cmd_legend_addFileGdb" xml:space="preserve">
+    <value>Ֆայլային գեոտվյալների բազա</value>
+  </data>
+  <data name="ribbon_vector_addFileGdb" xml:space="preserve">
+    <value>Ֆայլային գեոտվյալների բազա</value>
+  </data>
+  <data name="ribbon_vector_addFileGdbTooltip" xml:space="preserve">
+    <value>Ավելացնել Esri ֆայլային գեոտվյալների բազայի (.gdb թղթապանակ) շերտերը։</value>
+  </data>
+  <data name="msg_fileGdb_skipped" xml:space="preserve">
+    <value>Այս շերտերը չեն ավելացվել՝</value>
+  </data>
+  <data name="msg_fileGdb_nothingAdded" xml:space="preserve">
+    <value>Այս գեոտվյալների բազայից ոչ մի շերտ հնարավոր չեղավ ավելացնել։</value>
+  </data>
 </root>

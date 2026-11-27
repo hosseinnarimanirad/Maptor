@@ -4800,4 +4800,19 @@
   <data name="topology_fix_reason_nothingLeft" xml:space="preserve">
     <value>اصلاحی ندارد: چیزی از {0} باقی نمی‌ماند.</value>
   </data>
+  <data name="cmd_legend_addFileGdb" xml:space="preserve">
+    <value>ژئودیتابیس فایلی</value>
+  </data>
+  <data name="ribbon_vector_addFileGdb" xml:space="preserve">
+    <value>ژئودیتابیس فایلی</value>
+  </data>
+  <data name="ribbon_vector_addFileGdbTooltip" xml:space="preserve">
+    <value>افزودن لایه‌های یک ژئودیتابیس فایلی Esri (پوشهٔ .gdb).</value>
+  </data>
+  <data name="msg_fileGdb_skipped" xml:space="preserve">
+    <value>این لایه‌ها افزوده نشدند:</value>
+  </data>
+  <data name="msg_fileGdb_nothingAdded" xml:space="preserve">
+    <value>هیچ لایه‌ای از این ژئودیتابیس افزوده نشد.</value>
+  </data>
 </root>

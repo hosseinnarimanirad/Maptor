@@ -38,6 +38,12 @@ public class FileGdbDataSource : VectorDataSource
     /// <summary>The feature class name inside the geodatabase.</summary>
     public string DatasetName => _dataset.Name;
 
+    /// <summary>The feature class's alias, or its name when it has none.</summary>
+    public string Title => string.IsNullOrWhiteSpace(_dataset.AliasName) ? _dataset.Name : _dataset.AliasName!;
+
+    /// <summary>The feature dataset holding the feature class, or null at the geodatabase root.</summary>
+    public string? FeatureDatasetName => _dataset.FeatureDatasetName;
+
     public override SourceLocation? Location => new FileLocation { Path = GeodatabasePath, TableName = DatasetName };
 
     public override DataSourceKind DataSourceKind => DataSourceKind.FileGdb;
@@ -101,6 +107,31 @@ public class FileGdbDataSource : VectorDataSource
     }
 
     public override string ToString() => $"{nameof(FileGdbDataSource)}";
+
+    /// <summary>
+    /// A data source for every feature class of <paramref name="geodatabase"/>, in catalog order. Standalone tables
+    /// are left out; a feature class that cannot be shown (compressed, multipatch, unknown coordinate system, ...)
+    /// is in <c>Skipped</c> with the reason, and does not stop the others.
+    /// </summary>
+    public static (List<FileGdbDataSource> Created, List<(string Name, string Reason)> Skipped) CreateAll(FileGeodatabase geodatabase)
+    {
+        var created = new List<FileGdbDataSource>();
+        var skipped = new List<(string Name, string Reason)>();
+
+        foreach (var dataset in geodatabase.Datasets.Where(d => d.Kind == GdbDatasetKind.FeatureClass))
+        {
+            try
+            {
+                created.Add(new FileGdbDataSource(dataset));
+            }
+            catch (Exception ex)
+            {
+                skipped.Add((dataset.Name, ex.Message));
+            }
+        }
+
+        return (created, skipped);
+    }
 
     #region Schema
 

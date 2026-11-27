@@ -511,7 +511,7 @@
                         <Border.Effect>
                             <StaticResource ResourceKey="IRI.Maptor.Effects.Elevation2"/>
                         </Border.Effect>
-                        <!--two ways in, as in the ribbon: a file of any supported format, or pasted text-->
+                        <!--three ways in, as in the ribbon: a file of any supported format, pasted text, or a file geodatabase (a folder)-->
                         <StackPanel>
                             <Button Style="{StaticResource importMenuItem}" Tag="{x:Static iconPacks:PackIconMaterialKind.FilePlusOutline}"
                                     Command="{Binding AddDataFromFileCommand}"
@@ -527,6 +527,14 @@
                                 <StackPanel>
                                     <TextBlock Style="{StaticResource importMenuName}" Text="{Binding [cmd_legend_pasteData], Source={StaticResource Localization}}"/>
                                     <TextBlock Style="{StaticResource importMenuDetail}" Text="GeoJSON  TopoJSON  Esri JSON  KML  CSV  TSV"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource importMenuItem}" Tag="{x:Static iconPacks:PackIconMaterialKind.FolderOpenOutline}"
+                                    Command="{Binding AddFileGeodatabaseCommand}"
+                                    AutomationProperties.Name="{Binding [cmd_legend_addFileGdb], Source={StaticResource Localization}}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource importMenuName}" Text="{Binding [cmd_legend_addFileGdb], Source={StaticResource Localization}}"/>
+                                    <TextBlock Style="{StaticResource importMenuDetail}" Text="Esri GDB"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>

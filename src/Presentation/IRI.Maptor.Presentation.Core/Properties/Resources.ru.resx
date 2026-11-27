@@ -3274,4 +3274,19 @@
   <data name="legend_panel_showHide" xml:space="preserve">
     <value>Показать или скрыть легенду</value>
   </data>
+  <data name="cmd_legend_addFileGdb" xml:space="preserve">
+    <value>Файловая база геоданных</value>
+  </data>
+  <data name="ribbon_vector_addFileGdb" xml:space="preserve">
+    <value>Файловая база геоданных</value>
+  </data>
+  <data name="ribbon_vector_addFileGdbTooltip" xml:space="preserve">
+    <value>Добавить слои файловой базы геоданных Esri (папка .gdb).</value>
+  </data>
+  <data name="msg_fileGdb_skipped" xml:space="preserve">
+    <value>Эти слои не добавлены:</value>
+  </data>
+  <data name="msg_fileGdb_nothingAdded" xml:space="preserve">
+    <value>Не удалось добавить ни одного слоя из этой базы геоданных.</value>
+  </data>
 </root>

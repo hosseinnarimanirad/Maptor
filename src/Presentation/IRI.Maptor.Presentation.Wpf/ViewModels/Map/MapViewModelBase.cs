@@ -31,6 +31,7 @@ using IRI.Maptor.Core.Spatial.GeoJsonFormat;
 using IRI.Maptor.Core.SpatialReferenceSystem;
 using IRI.Maptor.Core.Persistence.DataSources;
 using IRI.Maptor.Core.Persistence.Import;
+using IRI.Maptor.Core.FileGdb;
 using IRI.Maptor.Core.Persistence.Abstractions;
 using IRI.Maptor.Core.Persistence.RasterDataSources;
 using IRI.Maptor.Core.SpatialReferenceSystem.MapProjections;
@@ -7264,6 +7265,121 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
     /// <summary>
+    /// "File geodatabase": an Esri file geodatabase, which is a folder (<c>name.gdb</c>), so it is picked with a
+    /// folder dialog rather than with "Add data".
+    /// </summary>
+    public virtual async Task AddFileGeodatabase(object owner)
+    {
+        // No IsBusy before the dialog (see AddDxffile); it is raised once the geodatabase is being read.
+        var folder = await DialogService.ShowOpenFolderDialogAsync(owner);
+
+        if (string.IsNullOrWhiteSpace(folder))
+            return;
+
+        await AddFileGeodatabase(folder, owner);
+    }
+
+    /// <summary>
+    /// Adds every feature class of the geodatabase in <paramref name="folder"/> as one group named after it, with a
+    /// sub-group per feature dataset. Each layer loads its features once added, as a shapefile layer does. The feature
+    /// classes that cannot be shown are listed in a message; a folder that is not a geodatabase gets the
+    /// unsupported-format message.
+    /// </summary>
+    public async Task AddFileGeodatabase(string folder, object owner)
+    {
+        if (ImportFormatDetector.DetectFromFolder(folder) != DataSourceKind.FileGdb)
+        {
+            await ShowExceptionMessageAsync(MaptorUnsupportedFileFormatException.Instance);
+
+            return;
+        }
+
+        List<FileGdbDataSource> created;
+        List<(string Name, string Reason)> skipped;
+
+        try
+        {
+            IsBusy = true;
+
+            // reads the catalog and the schema of every feature class
+            (created, skipped) = await Task.Run(() => FileGdbDataSource.CreateAll(FileGeodatabase.Open(folder)));
+
+            if (created.Count > 0)
+                AddLayer(CreateFileGeodatabaseGroup(folder, created));
+        }
+        catch (Exception ex)
+        {
+            await ShowExceptionMessageAsync(ex);
+
+            return;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+
+        if (created.Count == 0 || skipped.Count > 0)
+            await DialogService.ShowMessageAsync(GetFileGeodatabaseSkippedMessage(created.Count, skipped), null, owner);
+    }
+
+    private GroupLayer CreateFileGeodatabaseGroup(string folder, List<FileGdbDataSource> dataSources)
+    {
+        // searchable so identify/search descend into the sub-layers
+        var group = new GroupLayer(Path.GetFileNameWithoutExtension(Path.TrimEndingDirectorySeparator(folder))) { IsSearchable = true };
+
+        foreach (var dataSource in dataSources.Where(d => d.FeatureDatasetName is null))
+            group.AddSubLayer(CreateFileGeodatabaseLayer(dataSource));
+
+        foreach (var featureDataset in dataSources.Where(d => d.FeatureDatasetName is not null)
+                                                  .GroupBy(d => d.FeatureDatasetName!, StringComparer.OrdinalIgnoreCase))
+        {
+            var subGroup = new GroupLayer(featureDataset.Key) { IsSearchable = true };
+
+            foreach (var dataSource in featureDataset)
+                subGroup.AddSubLayer(CreateFileGeodatabaseLayer(dataSource));
+
+            group.AddSubLayer(subGroup);
+        }
+
+        return group;
+    }
+
+    // as AddShapefile makes a shapefile layer
+    private static VectorLayer CreateFileGeodatabaseLayer(FileGdbDataSource dataSource)
+        => new(dataSource.Title,
+               dataSource,
+               [SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1)],
+               LayerType.VectorLayer,
+               RenderMode.Default,
+               RasterizationMethod.GdiPlus,
+               ScaleInterval.All,
+               LegendViewModel.DefaultTocGroup)
+        {
+            IsSearchable = true
+        };
+
+    private static string GetFileGeodatabaseSkippedMessage(int addedCount, List<(string Name, string Reason)> skipped)
+    {
+        const int maxListed = 20;
+
+        var lines = new List<string>
+        {
+            LocalizationManager.Instance[addedCount == 0 ? "msg_fileGdb_nothingAdded" : "msg_fileGdb_skipped"]
+        };
+
+        if (skipped.Count > 0)
+        {
+            lines.Add(string.Empty);
+            lines.AddRange(skipped.Take(maxListed).Select(s => $"{s.Name}: {s.Reason}"));
+
+            if (skipped.Count > maxListed)
+                lines.Add("…");
+        }
+
+        return string.Join(Environment.NewLine, lines);
+    }
+
+    /// <summary>
     /// "Paste data": the import options dialog in paste mode. The format is guessed from the text (GeoJSON, TopoJSON,
     /// Esri JSON, KML, CSV, TSV) and can be changed there; the layer is added with that format's reader.
     /// </summary>
@@ -7524,6 +7640,11 @@ public abstract class MapViewModelBase : ViewModelBase
     private RelayCommand? _pasteDataCommand;
     /// <summary>Pasted GeoJSON, TopoJSON, Esri JSON, KML, CSV or TSV text; the format is guessed from the text.</summary>
     public RelayCommand PasteDataCommand => _pasteDataCommand ??= new RelayCommand(async param => await PasteData(param));
+
+
+    private RelayCommand? _addFileGeodatabaseCommand;
+    /// <summary>An Esri file geodatabase, a folder, picked with a folder dialog.</summary>
+    public RelayCommand AddFileGeodatabaseCommand => _addFileGeodatabaseCommand ??= new RelayCommand(async param => await AddFileGeodatabase(param));
 
 
     private RelayCommand _addShapefileCommand;

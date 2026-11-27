@@ -4896,4 +4896,19 @@
   <data name="topology_fix_reason_nothingLeft" xml:space="preserve">
     <value>No fix: nothing of {0} would be left.</value>
   </data>
+  <data name="cmd_legend_addFileGdb" xml:space="preserve">
+    <value>File geodatabase</value>
+  </data>
+  <data name="ribbon_vector_addFileGdb" xml:space="preserve">
+    <value>File geodatabase</value>
+  </data>
+  <data name="ribbon_vector_addFileGdbTooltip" xml:space="preserve">
+    <value>Add the layers of an Esri file geodatabase (a .gdb folder).</value>
+  </data>
+  <data name="msg_fileGdb_skipped" xml:space="preserve">
+    <value>These layers were not added:</value>
+  </data>
+  <data name="msg_fileGdb_nothingAdded" xml:space="preserve">
+    <value>No layer of this geodatabase could be added.</value>
+  </data>
 </root>

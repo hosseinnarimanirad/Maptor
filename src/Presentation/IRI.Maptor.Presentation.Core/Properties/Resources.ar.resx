@@ -3274,4 +3274,19 @@
   <data name="legend_panel_showHide" xml:space="preserve">
     <value>إظهار وسيلة الإيضاح أو إخفاؤها</value>
   </data>
+  <data name="cmd_legend_addFileGdb" xml:space="preserve">
+    <value>قاعدة بيانات جغرافية ملفية</value>
+  </data>
+  <data name="ribbon_vector_addFileGdb" xml:space="preserve">
+    <value>قاعدة بيانات جغرافية ملفية</value>
+  </data>
+  <data name="ribbon_vector_addFileGdbTooltip" xml:space="preserve">
+    <value>إضافة طبقات قاعدة بيانات جغرافية ملفية من Esri (مجلد .gdb).</value>
+  </data>
+  <data name="msg_fileGdb_skipped" xml:space="preserve">
+    <value>لم تُضَف هذه الطبقات:</value>
+  </data>
+  <data name="msg_fileGdb_nothingAdded" xml:space="preserve">
+    <value>تعذّرت إضافة أي طبقة من قاعدة البيانات الجغرافية هذه.</value>
+  </data>
 </root>

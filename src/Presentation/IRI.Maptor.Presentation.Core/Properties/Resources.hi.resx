@@ -3274,4 +3274,19 @@
   <data name="legend_panel_showHide" xml:space="preserve">
     <value>लेजेंड दिखाएँ या छिपाएँ</value>
   </data>
+  <data name="cmd_legend_addFileGdb" xml:space="preserve">
+    <value>फ़ाइल जियोडेटाबेस</value>
+  </data>
+  <data name="ribbon_vector_addFileGdb" xml:space="preserve">
+    <value>फ़ाइल जियोडेटाबेस</value>
+  </data>
+  <data name="ribbon_vector_addFileGdbTooltip" xml:space="preserve">
+    <value>Esri फ़ाइल जियोडेटाबेस (.gdb फ़ोल्डर) की परतें जोड़ें।</value>
+  </data>
+  <data name="msg_fileGdb_skipped" xml:space="preserve">
+    <value>ये परतें नहीं जोड़ी गईं:</value>
+  </data>
+  <data name="msg_fileGdb_nothingAdded" xml:space="preserve">
+    <value>इस जियोडेटाबेस की कोई भी परत नहीं जोड़ी जा सकी।</value>
+  </data>
 </root>

@@ -198,4 +198,43 @@ public sealed class ImportFormatDetectorTest : IDisposable
     {
         Assert.All(ImportFormatDetector.PasteKinds, k => Assert.Contains(k, ImportFormatDetector.FileKinds));
     }
+
+    /// <summary>A folder with the name and system catalog file of a file geodatabase (the content is not read).</summary>
+    private string MakeGdbFolder(string name, bool withCatalog = true)
+    {
+        var folder = Path.Combine(_folder, name);
+        Directory.CreateDirectory(folder);
+
+        if (withCatalog)
+            File.WriteAllBytes(Path.Combine(folder, "a00000001.gdbtable"), new byte[] { 0 });
+
+        return folder;
+    }
+
+    [Fact]
+    public void Folder_FileGeodatabase()
+    {
+        var gdb = MakeGdbFolder("Roads.gdb");
+
+        Assert.Equal(DataSourceKind.FileGdb, ImportFormatDetector.DetectFromFolder(gdb));
+        Assert.Equal(DataSourceKind.FileGdb, ImportFormatDetector.DetectFromFolder(gdb + Path.DirectorySeparatorChar));
+        Assert.Equal(DataSourceKind.FileGdb, ImportFormatDetector.DetectFromFolder(MakeGdbFolder("UPPER.GDB")));
+    }
+
+    [Fact]
+    public void Folder_NotAGeodatabase()
+    {
+        Assert.Null(ImportFormatDetector.DetectFromFolder(MakeGdbFolder("Empty.gdb", withCatalog: false)));
+        Assert.Null(ImportFormatDetector.DetectFromFolder(MakeGdbFolder("Roads")));          // the catalog, but not a .gdb folder
+        Assert.Null(ImportFormatDetector.DetectFromFolder(Path.Combine(_folder, "Missing.gdb")));
+        Assert.Null(ImportFormatDetector.DetectFromFolder(""));
+    }
+
+    [Fact]
+    public void FileGeodatabase_IsNotAFileKind()
+    {
+        // a folder, not a file: "Add data" does not offer it, and a file inside it is not taken for it
+        Assert.DoesNotContain(DataSourceKind.FileGdb, ImportFormatDetector.FileKinds);
+        Assert.Null(ImportFormatDetector.DetectFromFile(Path.Combine(MakeGdbFolder("Roads.gdb"), "a00000001.gdbtable")));
+    }
 }

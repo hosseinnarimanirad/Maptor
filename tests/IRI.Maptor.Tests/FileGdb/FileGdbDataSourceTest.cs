@@ -31,16 +31,17 @@ public sealed class FileGdbDataSourceTest : IDisposable
     public FileGdbDataSourceTest()
     {
         Directory.CreateDirectory(_folder);
-        WriteGeodatabase();
+        WriteGeodatabase(_folder);
     }
 
     public void Dispose() => Directory.Delete(Path.GetDirectoryName(_folder)!, recursive: true);
 
     #region Synthetic geodatabase
 
-    private void WriteGeodatabase()
+    /// <summary>Writes the synthetic geodatabase into <paramref name="folder"/>; also used by the map-level tests.</summary>
+    internal static void WriteGeodatabase(string folder)
     {
-        GdbTestGeodatabase.WriteSystemCatalog(_folder,
+        GdbTestGeodatabase.WriteSystemCatalog(folder,
             (1, "GDB_SystemCatalog"), (4, "GDB_Items"),
             (9, "Parcels"), (10, "Owners"), (11, "Archive"), (12, "Patches"), (13, "Wells"), (14, "Plots"));
 
@@ -70,7 +71,7 @@ public sealed class FileGdbDataSourceTest : IDisposable
             "</CodedValues></GPCodedValueDomain2>";
 
         // Wells and Plots have no item definition: their coordinate system is only what their geometry field stores
-        GdbTestGeodatabase.WriteItems(_folder,
+        GdbTestGeodatabase.WriteItems(folder,
             (GdbItemTypes.FeatureDataset, "Cadastre", @"\Cadastre", $"<DEFeatureDataset xsi:type='typens:DEFeatureDataset' {Ns}><Name>Cadastre</Name></DEFeatureDataset>"),
             (GdbItemTypes.FeatureClass, "Parcels", @"\Cadastre\Parcels", parcels),
             (GdbItemTypes.Table, "Owners", @"\Owners", owners),
@@ -78,40 +79,40 @@ public sealed class FileGdbDataSourceTest : IDisposable
             (GdbItemTypes.CodedValueDomain, "LandUse", "", Domain("LandUse", (1, "Housing"), (2, "Shops"))),
             (GdbItemTypes.CodedValueDomain, "ResidentialUse", "", Domain("ResidentialUse", (1, "Apartment"), (2, "Villa"))));
 
-        WriteParcels();
+        WriteParcels(folder);
 
         new GdbTestTableBuilder()
             .ObjectIdField()
             .StringField("OwnerName", 50, nullable: true)
             .Row(1, GdbTestTableBuilder.Record(w => { w.Write((byte)0); GdbTestGeodatabase.WriteVarString(w, "Ali"); }))
-            .Write(_folder, "a0000000a");
+            .Write(folder, "a0000000a");
 
         // a compressed feature class
-        new GdbTestTableBuilder().ObjectIdField().Write(_folder, "a0000000b");
-        File.WriteAllBytes(Path.Combine(_folder, "a0000000b.gdbtable.cdf"), new byte[] { 0 });
+        new GdbTestTableBuilder().ObjectIdField().Write(folder, "a0000000b");
+        File.WriteAllBytes(Path.Combine(folder, "a0000000b.gdbtable.cdf"), new byte[] { 0 });
 
         // a multipatch feature class
         new GdbTestTableBuilder { GeometryType = GdbTableGeometryType.Multipatch }
             .ObjectIdField()
             .GeometryField("SHAPE", Wgs84Wkt, hasZ: true, hasM: false)
-            .Write(_folder, "a0000000c");
+            .Write(folder, "a0000000c");
 
         // WGS84 given only as WKT, without an EPSG code
         new GdbTestTableBuilder { GeometryType = GdbTableGeometryType.Point }
             .ObjectIdField()
             .GeometryField("SHAPE", Wgs84Wkt, hasZ: false, hasM: false)
             .Row(1, GdbTestTableBuilder.Record(w => { w.Write((byte)0); WritePoint(w, 52, 33); }))
-            .Write(_folder, "a0000000d");
+            .Write(folder, "a0000000d");
 
         // no coordinate system at all, and coordinates that are not longitude/latitude (UTM 39N metres)
         new GdbTestTableBuilder { GeometryType = GdbTableGeometryType.Point }
             .ObjectIdField()
             .GeometryField("SHAPE", null, hasZ: false, hasM: false, extent: (499000, 3499000, 501000, 3501000))
             .Row(1, GdbTestTableBuilder.Record(w => { w.Write((byte)0); WritePoint(w, 500000, 3500000); }))
-            .Write(_folder, "a0000000e");
+            .Write(folder, "a0000000e");
     }
 
-    private void WriteParcels()
+    private static void WriteParcels(string folder)
     {
         // nullable fields in order: SHAPE (bit 0), Use (bit 1), Kind (bit 2), Name (bit 3)
         var builder = new GdbTestTableBuilder { GeometryType = GdbTableGeometryType.Point }
@@ -136,7 +137,7 @@ public sealed class FileGdbDataSourceTest : IDisposable
         // 9 is not a code of LandUse and the subtype field is null: kept as text
         builder.Row(5, GdbTestTableBuilder.Record(w => { w.Write((byte)0b1100); WritePoint(w, 55, 32); w.Write((short)9); }));
 
-        builder.Write(_folder, "a00000009");
+        builder.Write(folder, "a00000009");
     }
 
     /// <summary>A point shape as stored with the builder's grid: origin -400, scale 1e9, value + 1.</summary>
@@ -306,6 +307,25 @@ public sealed class FileGdbDataSourceTest : IDisposable
 
         var missing = Assert.Throws<InvalidOperationException>(() => new FileGdbDataSource(_folder, "Nothing"));
         Assert.Contains("Nothing", missing.Message);
+    }
+
+    [Fact]
+    public void CreateAll_TakesEveryFeatureClass_AndSaysWhyOthersAreLeftOut()
+    {
+        var (created, skipped) = FileGdbDataSource.CreateAll(FileGeodatabase.Open(_folder));
+
+        // catalog order; Owners is a standalone table: not listed at all
+        Assert.Equal(new[] { "Parcels", "Wells" }, created.Select(d => d.DatasetName));
+        Assert.Equal(new[] { "Archive", "Patches", "Plots" }, skipped.Select(s => s.Name));
+        Assert.Contains("compressed", skipped[0].Reason);
+        Assert.Contains("multipatch", skipped[1].Reason);
+        Assert.Contains("coordinate system", skipped[2].Reason);
+
+        Assert.Equal("Land parcels", created[0].Title);          // the alias
+        Assert.Equal("Cadastre", created[0].FeatureDatasetName);
+        Assert.Equal("Wells", created[1].Title);                 // no alias: the name
+        Assert.Null(created[1].FeatureDatasetName);
+        Assert.All(created, d => Assert.False(d.IsLoaded));
     }
 
     [Fact]

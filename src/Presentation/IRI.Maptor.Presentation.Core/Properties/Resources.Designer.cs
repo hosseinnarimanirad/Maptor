@@ -7466,7 +7466,52 @@ namespace IRI.Maptor.Presentation.Core.Properties {
                 return ResourceManager.GetString("ribbon_vector_pasteTooltip", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to File geodatabase.
+        /// </summary>
+        public static string ribbon_vector_addFileGdb {
+            get {
+                return ResourceManager.GetString("ribbon_vector_addFileGdb", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Add the layers of an Esri file geodatabase (a .gdb folder)..
+        /// </summary>
+        public static string ribbon_vector_addFileGdbTooltip {
+            get {
+                return ResourceManager.GetString("ribbon_vector_addFileGdbTooltip", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to File geodatabase.
+        /// </summary>
+        public static string cmd_legend_addFileGdb {
+            get {
+                return ResourceManager.GetString("cmd_legend_addFileGdb", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to These layers were not added:.
+        /// </summary>
+        public static string msg_fileGdb_skipped {
+            get {
+                return ResourceManager.GetString("msg_fileGdb_skipped", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No layer of this geodatabase could be added..
+        /// </summary>
+        public static string msg_fileGdb_nothingAdded {
+            get {
+                return ResourceManager.GetString("msg_fileGdb_nothingAdded", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Vector.
         /// </summary>

@@ -3274,4 +3274,19 @@
   <data name="legend_panel_showHide" xml:space="preserve">
     <value>پیشاندان یان شاردنەوەی ڕێبەری نەخشە</value>
   </data>
+  <data name="cmd_legend_addFileGdb" xml:space="preserve">
+    <value>جیۆداتابەیسی فایل</value>
+  </data>
+  <data name="ribbon_vector_addFileGdb" xml:space="preserve">
+    <value>جیۆداتابەیسی فایل</value>
+  </data>
+  <data name="ribbon_vector_addFileGdbTooltip" xml:space="preserve">
+    <value>زیادکردنی چینەکانی جیۆداتابەیسی فایلی Esri (بوخچەی .gdb).</value>
+  </data>
+  <data name="msg_fileGdb_skipped" xml:space="preserve">
+    <value>ئەم چینانە زیاد نەکران:</value>
+  </data>
+  <data name="msg_fileGdb_nothingAdded" xml:space="preserve">
+    <value>هیچ چینێکی ئەم جیۆداتابەیسە زیاد نەکرا.</value>
+  </data>
 </root>
