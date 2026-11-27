@@ -31,7 +31,7 @@ public sealed class MapSnapper
     // one-entry memo: a mouse move asks for the same point twice (current point, then hover); a change of distance or
     // kinds is part of the key, so a new setting applies at once
     private Point? _lastRaw;
-    private (double Tolerance, bool Vertices, bool Edges) _lastSettings;
+    private (double Tolerance, bool Ends, bool Vertices, bool Intersections, bool Midpoints, bool Edges) _lastSettings;
     private SnapResult<Point>? _lastResult;
 
     /// <param name="choice">The user's choice (on/off, layers).</param>
@@ -100,7 +100,7 @@ public sealed class MapSnapper
             return null;
 
         var options = _options();
-        var settings = (_tolerancePixels(), options.SnapToVertices, options.SnapToEdges);
+        var settings = (_tolerancePixels(), options.SnapToEnds, options.SnapToVertices, options.SnapToIntersections, options.SnapToMidpoints, options.SnapToEdges);
 
         if (_lastRaw is { } last && last.X == mapPoint.X && last.Y == mapPoint.Y && settings == _lastSettings)
             return _lastResult;

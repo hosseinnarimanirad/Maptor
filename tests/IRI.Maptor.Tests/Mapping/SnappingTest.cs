@@ -233,7 +233,7 @@ public class SnappingTest
 
             var snap = SnapEngine.Snap(cache.Index!, new Point(198, 103), 5);
 
-            Assert.Equal(SnapKind.Vertex, snap!.Kind);
+            Assert.Equal(SnapKind.End, snap!.Kind);
             Assert.Equal(200, snap.Location.X);
             Assert.False(cache.IsOverLimit);
         });
@@ -297,7 +297,7 @@ public class SnappingTest
 
             Assert.Equal(1, source.BoxReads);
             Assert.Equal(0, source.GeometryReads);
-            Assert.Equal(SnapKind.Vertex, SnapEngine.Snap(cache.Index!, new Point(199, 102), 5)!.Kind);
+            Assert.Equal(SnapKind.End, SnapEngine.Snap(cache.Index!, new Point(199, 102), 5)!.Kind);
         });
     }
 
@@ -358,17 +358,18 @@ public class SnappingTest
             snapper.BeginSession();
 
             // the first request starts the build and finds no index yet
-            Assert.Null(snapper.Snap(new Point(150, 104)));
+            Assert.Null(snapper.Snap(new Point(130, 104)));
 
-            SpinWait.SpinUntil(() => snapper.Snap(new Point(150, 104.5)) is not null, 5000);
+            SpinWait.SpinUntil(() => snapper.Snap(new Point(130, 104.5)) is not null, 5000);
 
-            var snap = snapper.Snap(new Point(150, 104));
+            // 20 from the segment's midpoint, so the edge is the target
+            var snap = snapper.Snap(new Point(130, 104));
 
             Assert.Equal(SnapKind.Edge, snap!.Kind);
             Assert.Equal(100, snap.Location.Y, 9);
 
             choice.IsEnabled = false;
-            Assert.Null(snapper.Snap(new Point(150, 103)));
+            Assert.Null(snapper.Snap(new Point(130, 103)));
         });
     }
 
@@ -414,7 +415,7 @@ public class SnappingTest
 
             // the other line is still a target
             var snap = snapper.Snap(new Point(199, 128));
-            Assert.Equal(SnapKind.Vertex, snap!.Kind);
+            Assert.Equal(SnapKind.End, snap!.Kind);
             Assert.Equal(130, snap.Location.Y);
         });
     }
@@ -469,13 +470,17 @@ public class SnappingTest
             tolerance = 10;
             Assert.NotNull(snapper.Snap(new Point(150, 104)));
 
-            // near the line's end: a vertex by default, the edge when vertices are off, nothing when both are off
+            // near the line's end: a line end by default, a vertex with ends off, the edge with vertices off too,
+            // nothing with every kind off; each change applies to the same point at once
+            Assert.Equal(SnapKind.End, snapper.Snap(new Point(198, 102))!.Kind);
+
+            options = new SnapOptions { SnapToEnds = false };
             Assert.Equal(SnapKind.Vertex, snapper.Snap(new Point(198, 102))!.Kind);
 
-            options = new SnapOptions { SnapToVertices = false };
+            options = new SnapOptions { SnapToEnds = false, SnapToVertices = false };
             Assert.Equal(SnapKind.Edge, snapper.Snap(new Point(198, 102))!.Kind);
 
-            options = new SnapOptions { SnapToVertices = false, SnapToEdges = false };
+            options = new SnapOptions { SnapToEnds = false, SnapToVertices = false, SnapToIntersections = false, SnapToMidpoints = false, SnapToEdges = false };
             Assert.Null(snapper.Snap(new Point(198, 102)));
         });
     }

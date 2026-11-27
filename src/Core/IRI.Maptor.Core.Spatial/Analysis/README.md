@@ -231,10 +231,14 @@ converts its pixel tolerance first.
 
 | Type | Does |
 |---|---|
-| `SnapIndex<T>` | Indexes the vertices (a `BoxGrid`) and the edges (a `LineProximity`) of a fixed list of geometries; lines give their segments, polygons every ring with its closing segment, points only vertices |
-| `SnapEngine` | `Snap(index, point, tolerance, options, accept)`: a vertex within the tolerance wins over any edge; otherwise the nearest place on an edge; otherwise null. `accept` leaves geometries out, such as the one being edited |
-| `SnapOptions` | Snap to vertices and/or edges (both by default) |
-| `SnapResult<T>`, `SnapKind` | The snapped location (a vertex is returned as the stored point itself), `Vertex` or `Edge`, the distance and the geometry's position in the list |
+| `SnapIndex<T>` | Indexes the vertices (a `BoxGrid`) and the edges (a `LineProximity`) of a fixed list of geometries; lines give their segments, polygons every ring with its closing segment, points only vertices. The first and last vertex of each line part are marked as line ends. Midpoints and intersections are worked out from the segments near the asked point |
+| `SnapEngine` | `Snap(index, point, tolerance, options, accept)`: the kinds are tried in a fixed order and the first with a candidate within the tolerance wins, even over a nearer candidate of a later kind: line end, vertex, intersection, midpoint, edge. Otherwise null. `accept` leaves geometries out, such as the one being edited |
+| `SnapOptions` | Which kinds are on (all by default). With line ends off, a line end is an ordinary vertex |
+| `SnapResult<T>`, `SnapKind` | The snapped location (a vertex or line end is returned as the stored point itself), the kind (`End`, `Vertex`, `Intersection`, `Midpoint`, `Edge`), the distance and the geometry's position in the list |
+
+An intersection is where two segments meet in one point with no shared vertex there: a crossing, or one segment's end
+on the inside of another. Two segments that only share an end vertex do not count, and neither do segments lying along
+each other. In a dense place only the 64 segments nearest the point are paired.
 
 ```csharp
 var index = new SnapIndex<Point>(geometries);                 // once per set of geometries

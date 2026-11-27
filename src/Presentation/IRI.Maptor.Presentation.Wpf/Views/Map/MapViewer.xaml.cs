@@ -606,9 +606,15 @@ public partial class MapViewer : NotifiableUserControl
             () => presenter.GetAllVectorLayers(this.Layers)
                            .Where(l => l.Type == LayerType.VectorLayer && l.Visibility == Visibility.Visible && l.IsInScaleRange),
             () => presenter.MapSettings?.Snapping_TolerancePixels ?? MapSnapper.DefaultTolerancePixels,
-            () => presenter.MapSettings is { } settings
-                ? new SnapOptions { SnapToVertices = settings.Snapping_ToVertices, SnapToEdges = settings.Snapping_ToEdges }
-                : SnapOptions.Default);
+            // line ends, intersections and midpoints stay off here until they have their settings and markers
+            () => new SnapOptions
+            {
+                SnapToVertices = presenter.MapSettings?.Snapping_ToVertices ?? true,
+                SnapToEdges = presenter.MapSettings?.Snapping_ToEdges ?? true,
+                SnapToEnds = false,
+                SnapToIntersections = false,
+                SnapToMidpoints = false,
+            });
 
         _layerManager.RequestUpdateLayerTocOrder = presenter.UpdateLayerCanMoveUpDown;
 

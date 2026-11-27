@@ -47,15 +47,36 @@ public sealed class LineProximity<T> where T : IPoint, new()
     /// </summary>
     public NearestOnLine<T>? Nearest(T point, double maxDistance, Func<int, bool>? accept = null)
     {
+        NearestOnLine<T>? best = null;
+
+        foreach (var near in SegmentsNear(point, maxDistance, accept))
+        {
+            if (best is not null && near.Distance >= best.Distance)
+                continue;
+
+            var part = _lines[near.Line].Parts[near.Part];
+
+            var measure = part.Cumulative[near.Segment] + near.Fraction * (part.Cumulative[near.Segment + 1] - part.Cumulative[near.Segment]);
+
+            best = new NearestOnLine<T>(near.Line, part.Index, measure, near.Distance, near.Nearest());
+        }
+
+        return best;
+    }
+
+    /// <summary>
+    /// Every segment within <paramref name="maxDistance"/> of <paramref name="point"/>, of the lines that
+    /// <paramref name="accept"/> allows (all when null), in the index's own order.
+    /// </summary>
+    internal IEnumerable<NearSegment> SegmentsNear(T point, double maxDistance, Func<int, bool>? accept = null)
+    {
         if (_lines.Count == 0)
-            return null;
+            yield break;
 
         var isGeodetic = _lines[0].IsGeodetic;
 
         var frame = LocalMetricFrame.At(point, isGeodetic);
         var (dx, dy) = frame.SearchHalfSize(maxDistance);
-
-        NearestOnLine<T>? best = null;
 
         foreach (var reference in _grid.Query(point.X - dx, point.Y - dy, point.X + dx, point.Y + dy))
         {
@@ -80,16 +101,46 @@ public sealed class LineProximity<T> where T : IPoint, new()
 
             var distance = Math.Sqrt(fx * fx + fy * fy);
 
-            if (distance > maxDistance || (best is not null && distance >= best.Distance))
+            if (distance > maxDistance)
                 continue;
 
-            var measure = part.Cumulative[reference.Segment] + t * (part.Cumulative[reference.Segment + 1] - part.Cumulative[reference.Segment]);
+            yield return new NearSegment(reference.Line, reference.Part, reference.Segment, a, b, t, distance);
+        }
+    }
 
-            var location = new T { X = a.X + t * (b.X - a.X), Y = a.Y + t * (b.Y - a.Y) };
-
-            best = new NearestOnLine<T>(reference.Line, part.Index, measure, distance, location);
+    /// <summary>A segment near a point: which one, its two ends, and the nearest place on it.</summary>
+    internal readonly struct NearSegment
+    {
+        public NearSegment(int line, int part, int segment, T a, T b, double fraction, double distance)
+        {
+            Line = line;
+            Part = part;
+            Segment = segment;
+            A = a;
+            B = b;
+            Fraction = fraction;
+            Distance = distance;
         }
 
-        return best;
+        public int Line { get; }
+
+        /// <summary>Position in the line's <see cref="MeasuredLine{T}.Parts"/> list.</summary>
+        public int Part { get; }
+
+        public int Segment { get; }
+
+        public T A { get; }
+
+        public T B { get; }
+
+        /// <summary>How far along the segment (0 to 1) the nearest place is.</summary>
+        public double Fraction { get; }
+
+        /// <summary>From the point to the nearest place (metres when geodetic, coordinate units otherwise).</summary>
+        public double Distance { get; }
+
+        public T Nearest() => At(Fraction);
+
+        public T At(double fraction) => new T { X = A.X + fraction * (B.X - A.X), Y = A.Y + fraction * (B.Y - A.Y) };
     }
 }
