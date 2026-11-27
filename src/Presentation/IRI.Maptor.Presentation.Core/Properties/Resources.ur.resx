@@ -4840,4 +4840,28 @@
   <data name="sketchBar_snapping_toEdges" xml:space="preserve">
     <value>کناروں پر سنیپ کریں</value>
   </data>
+  <data name="sketchBar_snapping_toEnds" xml:space="preserve">
+    <value>لکیر کے سروں پر سنیپ کریں</value>
+  </data>
+  <data name="sketchBar_snapping_toIntersections" xml:space="preserve">
+    <value>تقاطع پر سنیپ کریں</value>
+  </data>
+  <data name="sketchBar_snapping_toMidpoints" xml:space="preserve">
+    <value>وسطی نقطوں پر سنیپ کریں</value>
+  </data>
+  <data name="sketchBar_snapping_kind_end" xml:space="preserve">
+    <value>لکیر کا سرا</value>
+  </data>
+  <data name="sketchBar_snapping_kind_vertex" xml:space="preserve">
+    <value>راس</value>
+  </data>
+  <data name="sketchBar_snapping_kind_intersection" xml:space="preserve">
+    <value>تقاطع</value>
+  </data>
+  <data name="sketchBar_snapping_kind_midpoint" xml:space="preserve">
+    <value>وسطی نقطہ</value>
+  </data>
+  <data name="sketchBar_snapping_kind_edge" xml:space="preserve">
+    <value>کنارہ</value>
+  </data>
 </root>

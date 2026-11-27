@@ -53,6 +53,12 @@ public class MapSettings : IMapSettings
 
     public bool Snapping_ToEdges { get; set; } = true;
 
+    public bool Snapping_ToEnds { get; set; } = true;
+
+    public bool Snapping_ToMidpoints { get; set; } = true;
+
+    public bool Snapping_ToIntersections { get; set; } = true;
+
 
     public static MapSettings Default = new MapSettings();
 }

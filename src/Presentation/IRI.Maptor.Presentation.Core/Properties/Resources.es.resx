@@ -4840,4 +4840,28 @@
   <data name="sketchBar_snapping_toEdges" xml:space="preserve">
     <value>Ajustar a segmentos</value>
   </data>
+  <data name="sketchBar_snapping_toEnds" xml:space="preserve">
+    <value>Ajustar a extremos de línea</value>
+  </data>
+  <data name="sketchBar_snapping_toIntersections" xml:space="preserve">
+    <value>Ajustar a intersecciones</value>
+  </data>
+  <data name="sketchBar_snapping_toMidpoints" xml:space="preserve">
+    <value>Ajustar a puntos medios</value>
+  </data>
+  <data name="sketchBar_snapping_kind_end" xml:space="preserve">
+    <value>Extremo de línea</value>
+  </data>
+  <data name="sketchBar_snapping_kind_vertex" xml:space="preserve">
+    <value>Vértice</value>
+  </data>
+  <data name="sketchBar_snapping_kind_intersection" xml:space="preserve">
+    <value>Intersección</value>
+  </data>
+  <data name="sketchBar_snapping_kind_midpoint" xml:space="preserve">
+    <value>Punto medio</value>
+  </data>
+  <data name="sketchBar_snapping_kind_edge" xml:space="preserve">
+    <value>Segmento</value>
+  </data>
 </root>

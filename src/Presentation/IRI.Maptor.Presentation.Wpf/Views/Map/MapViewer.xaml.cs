@@ -606,15 +606,18 @@ public partial class MapViewer : NotifiableUserControl
             () => presenter.GetAllVectorLayers(this.Layers)
                            .Where(l => l.Type == LayerType.VectorLayer && l.Visibility == Visibility.Visible && l.IsInScaleRange),
             () => presenter.MapSettings?.Snapping_TolerancePixels ?? MapSnapper.DefaultTolerancePixels,
-            // line ends, intersections and midpoints stay off here until they have their settings and markers
-            () => new SnapOptions
-            {
-                SnapToVertices = presenter.MapSettings?.Snapping_ToVertices ?? true,
-                SnapToEdges = presenter.MapSettings?.Snapping_ToEdges ?? true,
-                SnapToEnds = false,
-                SnapToIntersections = false,
-                SnapToMidpoints = false,
-            });
+            () => presenter.MapSettings is { } settings
+                ? new SnapOptions
+                {
+                    SnapToEnds = settings.Snapping_ToEnds,
+                    SnapToVertices = settings.Snapping_ToVertices,
+                    SnapToIntersections = settings.Snapping_ToIntersections,
+                    SnapToMidpoints = settings.Snapping_ToMidpoints,
+                    SnapToEdges = settings.Snapping_ToEdges,
+                }
+                : SnapOptions.Default,
+            // the user's drawings, as one group; text labels are not snap targets
+            () => presenter.DrawingItems.Where(d => !d.IsTextLayer && d.Visibility == Visibility.Visible && d.Geometry is not null));
 
         _layerManager.RequestUpdateLayerTocOrder = presenter.UpdateLayerCanMoveUpDown;
 
@@ -4869,9 +4872,39 @@ public partial class MapViewer : NotifiableUserControl
         if (snap is null)
             return HideSnapMarker(mapPoint);
 
-        _snapMarker?.Show(MapToScreen(snap.Location.AsWpfPoint()), snap.Kind);
+        var localization = IRI.Maptor.Presentation.Core.Localization.LocalizationManager.Instance;
+
+        _snapMarker?.Show(
+            MapToScreen(snap.Location.AsWpfPoint()),
+            snap.Kind,
+            SnapLabel(snap),
+            localization.IsRightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight);
 
         return new sb.Point(snap.Location.X, snap.Location.Y);
+    }
+
+    /// <summary>What the pointer snapped to, for the label beside the marker: the kind and the layer, e.g. "Vertex — Towers".</summary>
+    private string SnapLabel(SnapResult<sb.Point> snap)
+    {
+        var localization = IRI.Maptor.Presentation.Core.Localization.LocalizationManager.Instance;
+
+        var kind = localization[snap.Kind switch
+        {
+            SnapKind.End => "sketchBar_snapping_kind_end",
+            SnapKind.Vertex => "sketchBar_snapping_kind_vertex",
+            SnapKind.Intersection => "sketchBar_snapping_kind_intersection",
+            SnapKind.Midpoint => "sketchBar_snapping_kind_midpoint",
+            _ => "sketchBar_snapping_kind_edge",
+        }];
+
+        var source = _snapper?.SourceOf(snap) switch
+        {
+            DrawingItemLayer => localization["ui_header_drawingLegend"],
+            { } layer => layer.LayerName,
+            null => null,
+        };
+
+        return string.IsNullOrEmpty(source) ? kind : $"{kind} — {source}";
     }
 
     private sb.Point HideSnapMarker(sb.Point mapPoint)

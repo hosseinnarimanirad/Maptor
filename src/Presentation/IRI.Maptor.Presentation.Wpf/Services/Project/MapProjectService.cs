@@ -49,6 +49,7 @@ public class MapProjectService
             BaseMapFullName = _map.SelectedMapProvider?.FullName,
             BaseMapOpacity = _map.BaseMapSettings.BaseMapOpacity,
             SnapExcludedLayerNames = _map.SketchBar.Snapping.UncheckedLayerNames.ToList(),
+            SnapExcludesDrawings = !_map.SketchBar.Snapping.IsDrawingsChecked,
         };
 
         CollectImportedLayers(project, projectDir);
@@ -345,6 +346,7 @@ public class MapProjectService
 
         // by name, so it also reaches server layers the host application loads after the project
         _map.SketchBar.Snapping.RestoreUncheckedLayerNames(project.SnapExcludedLayerNames);
+        _map.SketchBar.Snapping.IsDrawingsChecked = !project.SnapExcludesDrawings;
 
         if (project.Extent is { } extent)
             _map.ZoomToExtent(new BoundingBox(extent.XMin, extent.YMin, extent.XMax, extent.YMax), isExactExtent: true, isNewExtent: true);

@@ -4840,4 +4840,28 @@
   <data name="sketchBar_snapping_toEdges" xml:space="preserve">
     <value>الالتقاط إلى الحواف</value>
   </data>
+  <data name="sketchBar_snapping_toEnds" xml:space="preserve">
+    <value>الالتقاط إلى نهايات الخطوط</value>
+  </data>
+  <data name="sketchBar_snapping_toIntersections" xml:space="preserve">
+    <value>الالتقاط إلى التقاطعات</value>
+  </data>
+  <data name="sketchBar_snapping_toMidpoints" xml:space="preserve">
+    <value>الالتقاط إلى نقاط المنتصف</value>
+  </data>
+  <data name="sketchBar_snapping_kind_end" xml:space="preserve">
+    <value>نهاية خط</value>
+  </data>
+  <data name="sketchBar_snapping_kind_vertex" xml:space="preserve">
+    <value>رأس</value>
+  </data>
+  <data name="sketchBar_snapping_kind_intersection" xml:space="preserve">
+    <value>تقاطع</value>
+  </data>
+  <data name="sketchBar_snapping_kind_midpoint" xml:space="preserve">
+    <value>نقطة المنتصف</value>
+  </data>
+  <data name="sketchBar_snapping_kind_edge" xml:space="preserve">
+    <value>حافة</value>
+  </data>
 </root>

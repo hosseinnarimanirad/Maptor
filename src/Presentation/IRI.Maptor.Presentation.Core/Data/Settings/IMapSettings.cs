@@ -45,4 +45,13 @@ public interface IMapSettings
 
     /// <summary>Snap to the nearest place on an edge.</summary>
     bool Snapping_ToEdges { get; set; }
+
+    /// <summary>Line ends as their own kind, ahead of other vertices.</summary>
+    bool Snapping_ToEnds { get; set; }
+
+    /// <summary>Snap to the middle of a segment.</summary>
+    bool Snapping_ToMidpoints { get; set; }
+
+    /// <summary>Snap to where two edges meet without a vertex there.</summary>
+    bool Snapping_ToIntersections { get; set; }
 }

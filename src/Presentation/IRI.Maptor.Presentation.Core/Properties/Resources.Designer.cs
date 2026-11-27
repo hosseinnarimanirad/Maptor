@@ -8674,6 +8674,51 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Edge.
+        /// </summary>
+        public static string sketchBar_snapping_kind_edge {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_kind_edge", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Line end.
+        /// </summary>
+        public static string sketchBar_snapping_kind_end {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_kind_end", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Intersection.
+        /// </summary>
+        public static string sketchBar_snapping_kind_intersection {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_kind_intersection", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Midpoint.
+        /// </summary>
+        public static string sketchBar_snapping_kind_midpoint {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_kind_midpoint", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Vertex.
+        /// </summary>
+        public static string sketchBar_snapping_kind_vertex {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_kind_vertex", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Layers to snap to.
         /// </summary>
         public static string sketchBar_snapping_layers {
@@ -8697,6 +8742,33 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         public static string sketchBar_snapping_toEdges {
             get {
                 return ResourceManager.GetString("sketchBar_snapping_toEdges", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Snap to line ends.
+        /// </summary>
+        public static string sketchBar_snapping_toEnds {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_toEnds", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Snap to intersections.
+        /// </summary>
+        public static string sketchBar_snapping_toIntersections {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_toIntersections", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Snap to midpoints.
+        /// </summary>
+        public static string sketchBar_snapping_toMidpoints {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_toMidpoints", resourceCulture);
             }
         }
 

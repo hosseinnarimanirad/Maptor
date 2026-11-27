@@ -41,4 +41,10 @@ public class MapProject
     /// Empty in files written before it existed, which snaps to every layer.
     /// </summary>
     public List<string> SnapExcludedLayerNames { get; set; } = [];
+
+    /// <summary>
+    /// True when the drawings (the drawing items) are left out of snapping: the "Drawings" entry of the snapping list
+    /// is unticked. False in files written before it existed, which snaps to them.
+    /// </summary>
+    public bool SnapExcludesDrawings { get; set; }
 }

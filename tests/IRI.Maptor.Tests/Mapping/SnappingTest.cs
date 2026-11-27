@@ -198,11 +198,12 @@ public class SnappingTest
         {
             var path = System.IO.Path.Combine(folder, "p.mtproj");
 
-            var project = new IRI.Maptor.Presentation.Core.Models.Project.MapProject { SnapExcludedLayerNames = ["towers", "lines"] };
+            var project = new IRI.Maptor.Presentation.Core.Models.Project.MapProject { SnapExcludedLayerNames = ["towers", "lines"], SnapExcludesDrawings = true };
             IRI.Maptor.Presentation.Core.Models.Project.MapProjectFile.Save(path, project);
 
             var loaded = IRI.Maptor.Presentation.Core.Models.Project.MapProjectFile.Load(path);
             Assert.Equal(new[] { "towers", "lines" }, loaded!.SnapExcludedLayerNames);
+            Assert.True(loaded.SnapExcludesDrawings);
 
             // a file written before the list existed
             System.IO.File.WriteAllText(path, "{ \"formatVersion\": 1, \"name\": \"old\" }");
@@ -210,6 +211,7 @@ public class SnappingTest
             var old = IRI.Maptor.Presentation.Core.Models.Project.MapProjectFile.Load(path);
             Assert.NotNull(old!.SnapExcludedLayerNames);
             Assert.Empty(old.SnapExcludedLayerNames);
+            Assert.False(old.SnapExcludesDrawings);
         }
         finally
         {
@@ -504,6 +506,143 @@ public class SnappingTest
 
         model.Snapping_TolerancePixels = 12;
         Assert.Equal(12, model.Snapping_TolerancePixels);
+    }
+
+    [Fact]
+    public void Snapper_SnapsToDrawings_WhileTheirEntryIsChecked()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var layer = Layer("lines", Line(SridHelper.WebMercator, (100, 100), (200, 100)));
+            var drawing = DrawingItemLayer.Create("sketch", Line(SridHelper.WebMercator, (100, 300), (200, 300)).AsFeature(), [])!;
+
+            var choice = new SnapLayerChoice();
+            var snapper = new MapSnapper(choice, () => View, pixels => pixels, () => new[] { layer }, drawings: () => new[] { drawing });
+
+            Assert.True(choice.IsDrawingsChecked);
+
+            snapper.BeginSession();
+            snapper.Snap(new Point(0, 0));
+            SpinWait.SpinUntil(() => snapper.Snap(new Point(130, 303.5)) is not null, 5000);
+
+            // on the drawing: its source is the drawing item; on the layer: the layer
+            var onDrawing = snapper.Snap(new Point(199, 302));
+            Assert.Equal(SnapKind.End, onDrawing!.Kind);
+            Assert.Equal(300, onDrawing.Location.Y);
+            Assert.Same(drawing, snapper.SourceOf(onDrawing));
+
+            var onLayer = snapper.Snap(new Point(199, 102));
+            Assert.Same(layer, snapper.SourceOf(onLayer!));
+
+            // unticked: the drawing is no longer a target, the layer still is
+            choice.IsDrawingsChecked = false;
+
+            snapper.Snap(new Point(0, 0));
+            SpinWait.SpinUntil(() => snapper.Snap(new Point(130, 103.5)) is not null, 5000);
+
+            Assert.Null(snapper.Snap(new Point(199, 302)));
+            Assert.NotNull(snapper.Snap(new Point(199, 102)));
+        });
+    }
+
+    [Fact]
+    public void Snapper_EditingADrawing_LeavesItsOwnCopyOut()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var drawing = DrawingItemLayer.Create("sketch", Line(SridHelper.WebMercator, (100, 300), (200, 300)).AsFeature(), [])!;
+            var other = DrawingItemLayer.Create("other", Line(SridHelper.WebMercator, (100, 340), (200, 340)).AsFeature(), [])!;
+
+            var snapper = new MapSnapper(new SnapLayerChoice(), () => View, pixels => pixels, () => System.Array.Empty<VectorLayer>(), drawings: () => new[] { drawing, other });
+
+            snapper.BeginSession(edited: drawing.Geometry);
+            snapper.Snap(new Point(0, 0));
+            SpinWait.SpinUntil(() => snapper.Snap(new Point(130, 343.5)) is not null, 5000);
+
+            Assert.Null(snapper.Snap(new Point(199, 302)));
+            Assert.Same(other, snapper.SourceOf(snapper.Snap(new Point(199, 342))!));
+        });
+    }
+
+    [Fact]
+    public void Choice_Drawings_AreOnByDefault_AndAChangeIsReported()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var choice = new SnapLayerChoice();
+
+            var changes = 0;
+            choice.Changed += () => changes++;
+
+            Assert.True(choice.IsDrawingsChecked);
+
+            choice.IsDrawingsChecked = false;
+            choice.IsDrawingsChecked = false;
+
+            Assert.Equal(1, changes);
+        });
+    }
+
+    [Fact]
+    public void Marker_ShowsOneShapePerKind_AndTheLabel()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var overlay = new System.Windows.Controls.Canvas { Width = 400, Height = 300 };
+            overlay.Measure(new System.Windows.Size(400, 300));
+            overlay.Arrange(new System.Windows.Rect(0, 0, 400, 300));
+
+            var marker = new SnapMarker(overlay);
+
+            var kinds = new[] { SnapKind.End, SnapKind.Vertex, SnapKind.Intersection, SnapKind.Midpoint, SnapKind.Edge };
+
+            // five different shapes
+            Assert.Equal(5, kinds.Select(k => marker.ShapeOf(k)).Distinct().Count());
+            Assert.All(kinds, k => Assert.NotNull(marker.ShapeOf(k)));
+
+            foreach (var kind in kinds)
+            {
+                marker.Show(new System.Windows.Point(100, 100), kind, $"{kind} — layer");
+
+                Assert.All(kinds, k => Assert.Equal(
+                    k == kind ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed,
+                    marker.ShapeOf(k)!.Visibility));
+
+                Assert.Equal($"{kind} — layer", marker.VisibleLabel);
+
+                // centred on the target
+                Assert.Equal(94, System.Windows.Controls.Canvas.GetLeft(marker.ShapeOf(kind)!));
+                Assert.Equal(94, System.Windows.Controls.Canvas.GetTop(marker.ShapeOf(kind)!));
+            }
+
+            // no label asked for: only the shape
+            marker.Show(new System.Windows.Point(100, 100), SnapKind.Vertex);
+            Assert.Null(marker.VisibleLabel);
+
+            marker.Hide();
+            Assert.All(kinds, k => Assert.Equal(System.Windows.Visibility.Collapsed, marker.ShapeOf(k)!.Visibility));
+            Assert.Null(marker.VisibleLabel);
+        });
+    }
+
+    [Fact]
+    public void MapSettings_NewSnapKinds_AreOnByDefault()
+    {
+        var settings = new IRI.Maptor.Presentation.Core.Data.MapSettings();
+
+        Assert.True(settings.Snapping_ToEnds);
+        Assert.True(settings.Snapping_ToMidpoints);
+        Assert.True(settings.Snapping_ToIntersections);
+
+        var model = new IRI.Maptor.Presentation.Wpf.Models.Settings.MapSettingsModel(settings);
+
+        model.Snapping_ToEnds = false;
+        model.Snapping_ToMidpoints = false;
+        model.Snapping_ToIntersections = false;
+
+        Assert.False(settings.Snapping_ToEnds);
+        Assert.False(settings.Snapping_ToMidpoints);
+        Assert.False(settings.Snapping_ToIntersections);
     }
 
     #endregion

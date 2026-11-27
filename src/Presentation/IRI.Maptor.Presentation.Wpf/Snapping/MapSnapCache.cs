@@ -43,6 +43,12 @@ public sealed class MapSnapCache
     /// <summary>The geometries <see cref="Index"/> was built from, in its order (a result's GeometryIndex points here).</summary>
     public IReadOnlyList<Geometry<Point>?> Geometries { get; private set; } = Array.Empty<Geometry<Point>?>();
 
+    /// <summary>
+    /// Where each of <see cref="Geometries"/> came from, in the same order: the map layer, or for a drawing its
+    /// <see cref="DrawingItemLayer"/>.
+    /// </summary>
+    public IReadOnlyList<VectorLayer> Sources { get; private set; } = Array.Empty<VectorLayer>();
+
     public bool IsOverLimit { get; private set; }
 
     /// <summary>Raised on the UI thread when a new index (or none, over the limit) is in place.</summary>
@@ -55,28 +61,54 @@ public sealed class MapSnapCache
         _requestedExtent = null;
         Index = null;
         Geometries = Array.Empty<Geometry<Point>?>();
+        Sources = Array.Empty<VectorLayer>();
     }
 
     /// <summary>Starts a rebuild unless the index already is (or is being) built for <paramref name="extent"/>.</summary>
-    public void EnsureFor(BoundingBox extent, IReadOnlyList<VectorLayer> layers)
+    /// <param name="extent">The map extent in Web Mercator.</param>
+    /// <param name="layers">The layers to snap to.</param>
+    /// <param name="drawings">The drawings to snap to as well (their geometry as it is now), or null for none.</param>
+    public void EnsureFor(BoundingBox extent, IReadOnlyList<VectorLayer> layers, IReadOnlyList<DrawingItemLayer>? drawings = null)
     {
         if (_requestedExtent is { } requested && requested.Equals(extent))
             return;
 
         _requestedExtent = extent;
 
-        _ = BuildAsync(++_version, extent, layers);
+        _ = BuildAsync(++_version, extent, layers, drawings ?? Array.Empty<DrawingItemLayer>());
     }
 
-    private async Task BuildAsync(int version, BoundingBox extent, IReadOnlyList<VectorLayer> layers)
+    private async Task BuildAsync(int version, BoundingBox extent, IReadOnlyList<VectorLayer> layers, IReadOnlyList<DrawingItemLayer> drawings)
     {
         try
         {
-            var query = Padded(extent).AsGeometry<Point>(SridHelper.WebMercator);
+            var padded = Padded(extent);
+            var query = padded.AsGeometry<Point>(SridHelper.WebMercator);
 
             var geometries = new List<Geometry<Point>?>();
+            var sources = new List<VectorLayer>();
             var vertices = 0;
             var isComplete = true;
+
+            // drawings are in memory: no read to wait for
+            foreach (var drawing in drawings)
+            {
+                var geometry = ToWebMercator(drawing.Geometry);
+
+                if (geometry is null || !geometry.GetBoundingBox().Intersects(padded))
+                    continue;
+
+                vertices += geometry.TotalNumberOfPoints;
+
+                if (vertices > MaxVertices)
+                {
+                    Finish(version, null, Array.Empty<Geometry<Point>?>(), Array.Empty<VectorLayer>(), isOverLimit: true, isComplete);
+                    return;
+                }
+
+                geometries.Add(geometry);
+                sources.Add(drawing);
+            }
 
             foreach (var layer in layers)
             {
@@ -92,7 +124,7 @@ public sealed class MapSnapCache
                 // when a tile is incomplete (meant for small identify boxes). Other layers are asked with a geometry,
                 // the path that applies a layer's filter geometry.
                 var set = MapLayerFeatureSource.IsLiveLayer(layer) && layer.DataSource is IVectorDataSource live
-                    ? await live.GetAsFeatureSetAsync(Padded(extent))
+                    ? await live.GetAsFeatureSetAsync(padded)
                     : await layer.GetFeaturesAsync(query);
 
                 if (version != _version)
@@ -109,33 +141,35 @@ public sealed class MapSnapCache
 
                     if (vertices > MaxVertices)
                     {
-                        Finish(version, null, Array.Empty<Geometry<Point>?>(), isOverLimit: true, isComplete);
+                        Finish(version, null, Array.Empty<Geometry<Point>?>(), Array.Empty<VectorLayer>(), isOverLimit: true, isComplete);
                         return;
                     }
 
                     geometries.Add(geometry);
+                    sources.Add(layer);
                 }
             }
 
             var index = await Task.Run(() => new SnapIndex<Point>(geometries));
 
-            Finish(version, index, geometries, isOverLimit: false, isComplete);
+            Finish(version, index, geometries, sources, isOverLimit: false, isComplete);
         }
         catch (Exception)
         {
             // snapping is a help, never a reason for drawing to fail: without an index the point is placed as clicked.
             // Not retried for this extent, so a failing layer is not read again on every mouse move.
-            Finish(version, null, Array.Empty<Geometry<Point>?>(), isOverLimit: false, isComplete: true);
+            Finish(version, null, Array.Empty<Geometry<Point>?>(), Array.Empty<VectorLayer>(), isOverLimit: false, isComplete: true);
         }
     }
 
-    private void Finish(int version, SnapIndex<Point>? index, IReadOnlyList<Geometry<Point>?> geometries, bool isOverLimit, bool isComplete)
+    private void Finish(int version, SnapIndex<Point>? index, IReadOnlyList<Geometry<Point>?> geometries, IReadOnlyList<VectorLayer> sources, bool isOverLimit, bool isComplete)
     {
         if (version != _version)
             return;
 
         Index = index;
         Geometries = geometries;
+        Sources = sources;
         IsOverLimit = isOverLimit;
 
         if (!isComplete)

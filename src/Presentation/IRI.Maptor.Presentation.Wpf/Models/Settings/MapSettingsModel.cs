@@ -279,6 +279,36 @@ public class MapSettingsModel : Notifier, IMapSettings
         }
     }
 
+    public bool Snapping_ToEnds
+    {
+        get => _settings.Snapping_ToEnds;
+        set
+        {
+            _settings.Snapping_ToEnds = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    public bool Snapping_ToMidpoints
+    {
+        get => _settings.Snapping_ToMidpoints;
+        set
+        {
+            _settings.Snapping_ToMidpoints = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    public bool Snapping_ToIntersections
+    {
+        get => _settings.Snapping_ToIntersections;
+        set
+        {
+            _settings.Snapping_ToIntersections = value;
+            RaisePropertyChanged();
+        }
+    }
+
     #endregion
 
     public MapSettingsModel(IMapSettings settings/*, Action<bool> fireIsMouseWheelZoomEnabledChanged, Action<bool> fireIsDoubleClickZoomEnabledChanged*/)

@@ -79,6 +79,25 @@ public sealed class SnapLayerChoice : Notifier
         }
     }
 
+    private bool _isDrawingsChecked = true;
+    /// <summary>
+    /// Whether the user's drawings (the drawing items on the map, text labels apart) are snapped to: one entry for
+    /// all of them, at the top of the layer list. On by default; kept in the project file.
+    /// </summary>
+    public bool IsDrawingsChecked
+    {
+        get => _isDrawingsChecked;
+        set
+        {
+            if (_isDrawingsChecked == value)
+                return;
+
+            _isDrawingsChecked = value;
+            RaisePropertyChanged();
+            Changed?.Invoke();
+        }
+    }
+
     public ObservableCollection<SnapLayerItem> Layers { get; } = new();
 
     public bool HasNoLayers => Layers.Count == 0;

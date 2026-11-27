@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 
 using IRI.Maptor.Core.Common.Primitives;
@@ -27,6 +28,7 @@ public sealed class MapSnapper
     private readonly Func<IEnumerable<VectorLayer>> _snappableLayers;
     private readonly Func<double> _tolerancePixels;
     private readonly Func<SnapOptions> _options;
+    private readonly Func<IEnumerable<DrawingItemLayer>> _drawings;
 
     // one-entry memo: a mouse move asks for the same point twice (current point, then hover); a change of distance or
     // kinds is part of the key, so a new setting applies at once
@@ -39,14 +41,19 @@ public sealed class MapSnapper
     /// <param name="screenToMapDistance">Pixels to Web Mercator units at the current scale.</param>
     /// <param name="snappableLayers">The vector layers that could be snapped to now (visible, in scale range).</param>
     /// <param name="tolerancePixels">The snap distance in pixels, read at each snap; <see cref="DefaultTolerancePixels"/> when null.</param>
-    /// <param name="options">The kinds to snap to, read at each snap; both when null.</param>
+    /// <param name="options">The kinds to snap to, read at each snap; all when null.</param>
+    /// <param name="drawings">
+    /// The drawings that could be snapped to now (visible, not text labels); none when null. They are used while the
+    /// choice's "Drawings" entry is checked.
+    /// </param>
     public MapSnapper(
         SnapLayerChoice choice,
         Func<BoundingBox> currentExtent,
         Func<double, double> screenToMapDistance,
         Func<IEnumerable<VectorLayer>> snappableLayers,
         Func<double>? tolerancePixels = null,
-        Func<SnapOptions>? options = null)
+        Func<SnapOptions>? options = null,
+        Func<IEnumerable<DrawingItemLayer>>? drawings = null)
     {
         _choice = choice ?? throw new ArgumentNullException(nameof(choice));
         _currentExtent = currentExtent;
@@ -54,6 +61,7 @@ public sealed class MapSnapper
         _snappableLayers = snappableLayers;
         _tolerancePixels = tolerancePixels ?? (() => DefaultTolerancePixels);
         _options = options ?? (() => SnapOptions.Default);
+        _drawings = drawings ?? (() => Array.Empty<DrawingItemLayer>());
 
         _choice.Changed += () =>
         {
@@ -110,7 +118,7 @@ public sealed class MapSnapper
         // visibility and scale range change with zoom; Update does nothing when the list is unchanged
         _choice.Update(_snappableLayers());
 
-        _cache.EnsureFor(extent, _choice.CheckedLayers);
+        _cache.EnsureFor(extent, _choice.CheckedLayers, _choice.IsDrawingsChecked ? _drawings().ToList() : null);
 
         var index = _cache.Index;
 
@@ -121,6 +129,17 @@ public sealed class MapSnapper
         _lastResult = result;
 
         return result;
+    }
+
+    /// <summary>
+    /// The layer the snapped geometry belongs to (for a drawing, its <see cref="DrawingItemLayer"/>), or null when
+    /// <paramref name="snap"/> is not from the current index.
+    /// </summary>
+    public VectorLayer? SourceOf(SnapResult<Point> snap)
+    {
+        var sources = _cache.Sources;
+
+        return snap is not null && snap.GeometryIndex >= 0 && snap.GeometryIndex < sources.Count ? sources[snap.GeometryIndex] : null;
     }
 
     private Func<int, bool>? Accept(SnapIndex<Point> index)
