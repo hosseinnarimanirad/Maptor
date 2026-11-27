@@ -223,6 +223,25 @@ measured in metres through `LocalMetricFrame`; any other SRS in its own units.
 | `EnclosedGaps` | Holes enclosed by two or more polygons taken together |
 | `PolygonBoolean` | Difference and union of two polygons from their boundary pieces, right where boundaries share edges or vertices; house rings (never closed, outer counterclockwise) |
 
+## Snapping
+
+Where a point snaps to among the vertices and edges of a set of geometries, for drawing and editing on a map.
+Coordinates are flat (a projected SRS such as Web Mercator), and the tolerance is in coordinate units, so a map
+converts its pixel tolerance first.
+
+| Type | Does |
+|---|---|
+| `SnapIndex<T>` | Indexes the vertices (a `BoxGrid`) and the edges (a `LineProximity`) of a fixed list of geometries; lines give their segments, polygons every ring with its closing segment, points only vertices |
+| `SnapEngine` | `Snap(index, point, tolerance, options, accept)`: a vertex within the tolerance wins over any edge; otherwise the nearest place on an edge; otherwise null. `accept` leaves geometries out, such as the one being edited |
+| `SnapOptions` | Snap to vertices and/or edges (both by default) |
+| `SnapResult<T>`, `SnapKind` | The snapped location (a vertex is returned as the stored point itself), `Vertex` or `Edge`, the distance and the geometry's position in the list |
+
+```csharp
+var index = new SnapIndex<Point>(geometries);                 // once per set of geometries
+var snap = SnapEngine.Snap(index, mousePoint, tolerance);     // per mouse move
+var point = snap?.Location ?? mousePoint;
+```
+
 ## Statistics & shape characteristics
 
 `AreaStatistics` summarizes the area distribution of a set of `Geometry<Point>` polygons (mean, standard deviation, histogram, CSV export). The `CharacteristicsMeasure` enum names McMaster's displacement measures (PCC, PDD, PCLL, …) computed by the simplification metrics above.
