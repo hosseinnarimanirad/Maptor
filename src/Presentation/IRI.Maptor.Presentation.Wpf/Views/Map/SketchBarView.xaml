@@ -105,9 +105,22 @@
                 </ToggleButton>
 
 
-                <!--snapping: on/off and the layers to snap to (the choice lives on SketchBar, so it holds across modes)-->
-                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal"
-                            Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
+                <!--snapping: on/off and the layers to snap to (the choice lives on SketchBar, so it holds across modes).
+                    Shown while drawing (new points snap) and while editing (dragged vertices snap).-->
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsDrawMode}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding SketchBar.Options.IsEditing}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
 
                     <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" Margin="2"
                                   IsChecked="{Binding SketchBar.Snapping.IsEnabled, Mode=TwoWay}"

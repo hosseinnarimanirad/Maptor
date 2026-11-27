@@ -235,6 +235,59 @@ public class SnappingTest
         });
     }
 
+    [Fact]
+    public void Snapper_Editing_LeavesTheStoredCopyOfTheEditedGeometryOut()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var edited = Line(SridHelper.WebMercator, (100, 100), (200, 100));
+            // 30 away: outside the 10-unit tolerance of the edited line's end
+            var other = Line(SridHelper.WebMercator, (100, 130), (200, 130));
+
+            var layer = Layer("lines", edited, other);
+            var snapper = new MapSnapper(new SnapLayerChoice(), () => View, pixels => pixels, () => new[] { layer });
+
+            // the edit is handed an equal copy, as an edit of a layer feature is (repaired or re-read)
+            snapper.BeginSession(edited: Line(SridHelper.WebMercator, (100, 100), (200, 100)));
+
+            snapper.Snap(new Point(0, 0));
+            SpinWait.SpinUntil(() => snapper.Snap(new Point(150, 128)) is not null, 5000);
+
+            // next to the edited line's old end: its own copy does not pull the vertex back
+            Assert.Null(snapper.Snap(new Point(200, 101)));
+
+            // the other line is still a target
+            var snap = snapper.Snap(new Point(199, 128));
+            Assert.Equal(SnapKind.Vertex, snap!.Kind);
+            Assert.Equal(130, snap.Location.Y);
+        });
+    }
+
+    [Fact]
+    public void Snapper_Editing_TheSameObjectIsLeftOutToo()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var edited = Line(SridHelper.WebMercator, (100, 100), (200, 100));
+            var layer = Layer("lines", edited);
+            var snapper = new MapSnapper(new SnapLayerChoice(), () => View, pixels => pixels, () => new[] { layer });
+
+            snapper.BeginSession(edited: edited);
+
+            snapper.Snap(new Point(0, 0));
+            Thread.Sleep(200);
+
+            Assert.Null(snapper.Snap(new Point(200, 101)));
+
+            // a drawing session afterwards snaps to it again
+            snapper.BeginSession();
+            snapper.Snap(new Point(0, 0));
+            SpinWait.SpinUntil(() => snapper.Snap(new Point(200, 101.5)) is not null, 5000);
+
+            Assert.NotNull(snapper.Snap(new Point(200, 101)));
+        });
+    }
+
     #endregion
 
     [Fact]

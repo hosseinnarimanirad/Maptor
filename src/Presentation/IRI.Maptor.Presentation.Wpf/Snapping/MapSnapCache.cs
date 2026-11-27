@@ -38,6 +38,9 @@ public sealed class MapSnapCache
     /// <summary>The index to snap with, or null while none is ready.</summary>
     public SnapIndex<Point>? Index { get; private set; }
 
+    /// <summary>The geometries <see cref="Index"/> was built from, in its order (a result's GeometryIndex points here).</summary>
+    public IReadOnlyList<Geometry<Point>?> Geometries { get; private set; } = Array.Empty<Geometry<Point>?>();
+
     public bool IsOverLimit { get; private set; }
 
     /// <summary>Raised on the UI thread when a new index (or none, over the limit) is in place.</summary>
@@ -49,6 +52,7 @@ public sealed class MapSnapCache
         _version++;
         _requestedExtent = null;
         Index = null;
+        Geometries = Array.Empty<Geometry<Point>?>();
     }
 
     /// <summary>Starts a rebuild unless the index already is (or is being) built for <paramref name="extent"/>.</summary>
@@ -97,7 +101,7 @@ public sealed class MapSnapCache
 
                     if (vertices > MaxVertices)
                     {
-                        Finish(version, null, isOverLimit: true, isComplete);
+                        Finish(version, null, Array.Empty<Geometry<Point>?>(), isOverLimit: true, isComplete);
                         return;
                     }
 
@@ -107,22 +111,23 @@ public sealed class MapSnapCache
 
             var index = await Task.Run(() => new SnapIndex<Point>(geometries));
 
-            Finish(version, index, isOverLimit: false, isComplete);
+            Finish(version, index, geometries, isOverLimit: false, isComplete);
         }
         catch (Exception)
         {
             // snapping is a help, never a reason for drawing to fail: without an index the point is placed as clicked.
             // Not retried for this extent, so a failing layer is not read again on every mouse move.
-            Finish(version, null, isOverLimit: false, isComplete: true);
+            Finish(version, null, Array.Empty<Geometry<Point>?>(), isOverLimit: false, isComplete: true);
         }
     }
 
-    private void Finish(int version, SnapIndex<Point>? index, bool isOverLimit, bool isComplete)
+    private void Finish(int version, SnapIndex<Point>? index, IReadOnlyList<Geometry<Point>?> geometries, bool isOverLimit, bool isComplete)
     {
         if (version != _version)
             return;
 
         Index = index;
+        Geometries = geometries;
         IsOverLimit = isOverLimit;
 
         if (!isComplete)

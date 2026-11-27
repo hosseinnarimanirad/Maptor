@@ -2372,6 +2372,25 @@ public partial class MapViewer : NotifiableUserControl
         var layer = ((this.currentMoveableItem.Tag as LayerTag).Layer as SpecialPointLayer);
 
         layer.SelectLocatable(this.currentMoveableItem);
+
+        // a vertex of the geometry being edited follows the pointer by position (so it can snap); every other moveable
+        // item (text markers, Bezier points, ...) keeps moving by the mouse's steps
+        var locateable = layer.Get(this.currentMoveableItem);
+
+        _vertexDragOffset = locateable is { CanBeUsedAsEditingPoint: true } && ReferenceEquals(layer, CurrentEditingLayer?.GetVertices())
+            ? new Point(locateable.X, locateable.Y) - ScreenToMap(this.prevMouseLocation)
+            : null;
+    }
+
+    // set while a vertex of the edited geometry is dragged: from the pointer (map units) to where the vertex was grabbed
+    private Vector? _vertexDragOffset;
+
+    /// <summary>Where a dragged vertex goes for the pointer at <paramref name="screenPoint"/>: under it, snapped when it can be.</summary>
+    private Point VertexDragTarget(Point screenPoint)
+    {
+        var target = ScreenToMap(screenPoint) + _vertexDragOffset!.Value;
+
+        return SnapForDrawing(new sb.Point(target.X, target.Y)).AsWpfPoint();
     }
 
     public void Element_MouseMoveForMoveableItem(object sender, MouseEventArgs e)
@@ -2396,8 +2415,18 @@ public partial class MapViewer : NotifiableUserControl
 
         if (locateable != null)
         {
-            locateable.X += currentMapLocation.X - prevMapLocation.X;
-            locateable.Y += currentMapLocation.Y - prevMapLocation.Y;
+            if (_vertexDragOffset is not null)
+            {
+                var target = VertexDragTarget(currentMouseLocation);
+
+                locateable.X = target.X;
+                locateable.Y = target.Y;
+            }
+            else
+            {
+                locateable.X += currentMapLocation.X - prevMapLocation.X;
+                locateable.Y += currentMapLocation.Y - prevMapLocation.Y;
+            }
 
             if (locateable.CanBeUsedAsEditingPoint)
             {
@@ -2425,8 +2454,18 @@ public partial class MapViewer : NotifiableUserControl
 
         if (locateable != null)
         {
-            locateable.X += offset.X;
-            locateable.Y += offset.Y;
+            if (_vertexDragOffset is not null)
+            {
+                var target = VertexDragTarget(e.GetPosition(this.mapView));
+
+                locateable.X = target.X;
+                locateable.Y = target.Y;
+            }
+            else
+            {
+                locateable.X += offset.X;
+                locateable.Y += offset.Y;
+            }
 
             if (locateable.CanBeUsedAsEditingPoint)
             {
@@ -2449,6 +2488,10 @@ public partial class MapViewer : NotifiableUserControl
         this.mapView.LostMouseCapture -= MapView_LostMouseCaptureForMoveableItem;
 
         itemIsMoving = false;
+
+        _vertexDragOffset = null;
+
+        _snapMarker?.Hide();
     }
 
     private void MapView_LostMouseCaptureForMoveableItem(object sender, MouseEventArgs e)
@@ -5378,6 +5421,9 @@ public partial class MapViewer : NotifiableUserControl
         }
 
         //options.IsNewDrawing = false;
+
+        // dragged vertices snap; the stored copy of this geometry in its layer is left out of the candidates
+        _snapper?.BeginSession(edited: geometry);
 
         CurrentEditingLayer = new EditableFeatureLayer(
             "edit",

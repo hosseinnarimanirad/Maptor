@@ -4,6 +4,7 @@ using System.Windows.Input;
 
 using IRI.Maptor.Core.Common.Primitives;
 using IRI.Maptor.Core.Spatial.Analysis;
+using IRI.Maptor.Core.Spatial.Primitives;
 using IRI.Maptor.Presentation.Wpf.Layers;
 
 namespace IRI.Maptor.Presentation.Wpf.Snapping;
@@ -51,12 +52,26 @@ public sealed class MapSnapper
         };
     }
 
+    // the geometry being edited (its stored copy in the layer is left out) and the positions in the current index
+    // that hold that copy, worked out once per index
+    private Geometry<Point>? _edited;
+    private SnapIndex<Point>? _excludedFor;
+    private HashSet<int>? _excluded;
+
     /// <summary>
-    /// A new drawing starts: the layer list is refreshed and the cache rebuilt, so features saved since the last
-    /// drawing are included.
+    /// A new drawing or edit starts: the layer list is refreshed and the cache rebuilt, so features saved since the
+    /// last session are included.
     /// </summary>
-    public void BeginSession()
+    /// <param name="edited">
+    /// When editing, the geometry as it was handed to the edit: its stored copy in the layer is not snapped to, or
+    /// the old position of a dragged vertex would pull it back. A copy is recognised by having the same points.
+    /// </param>
+    public void BeginSession(Geometry<Point>? edited = null)
     {
+        _edited = edited;
+        _excludedFor = null;
+        _excluded = null;
+
         _choice.Update(_snappableLayers());
         _cache.Invalidate();
         Forget();
@@ -80,10 +95,71 @@ public sealed class MapSnapper
 
         var index = _cache.Index;
 
-        var result = index is null ? null : SnapEngine.Snap(index, mapPoint, _screenToMapDistance(TolerancePixels));
+        var result = index is null ? null : SnapEngine.Snap(index, mapPoint, _screenToMapDistance(TolerancePixels), accept: Accept(index));
 
         _lastRaw = mapPoint;
         _lastResult = result;
+
+        return result;
+    }
+
+    private Func<int, bool>? Accept(SnapIndex<Point> index)
+    {
+        if (_edited is null)
+            return null;
+
+        if (!ReferenceEquals(_excludedFor, index))
+        {
+            _excludedFor = index;
+            _excluded = CopiesOf(_edited, _cache.Geometries);
+        }
+
+        var excluded = _excluded!;
+
+        return excluded.Count == 0 ? null : g => !excluded.Contains(g);
+    }
+
+    /// <summary>The positions in <paramref name="geometries"/> that hold the same points as <paramref name="edited"/>.</summary>
+    private static HashSet<int> CopiesOf(Geometry<Point> edited, IReadOnlyList<Geometry<Point>?> geometries)
+    {
+        var result = new HashSet<int>();
+
+        var points = edited.GetAllPoints();
+
+        if (points is null || points.Count == 0)
+            return result;
+
+        var box = edited.GetBoundingBox();
+
+        for (int g = 0; g < geometries.Count; g++)
+        {
+            var candidate = geometries[g];
+
+            if (candidate is null)
+                continue;
+
+            if (ReferenceEquals(candidate, edited))
+            {
+                result.Add(g);
+                continue;
+            }
+
+            if (candidate.Type != edited.Type || !candidate.GetBoundingBox().Equals(box))
+                continue;
+
+            var others = candidate.GetAllPoints();
+
+            if (others is null || others.Count != points.Count)
+                continue;
+
+            var same = true;
+
+            for (int i = 0; i < points.Count && same; i++)
+                same = points[i].X == others[i].X && points[i].Y == others[i].Y;
+
+            if (same)
+                result.Add(g);
+        }
 
         return result;
     }
