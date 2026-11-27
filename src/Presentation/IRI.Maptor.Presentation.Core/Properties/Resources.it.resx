@@ -4828,7 +4828,4 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>Troppi elementi nella vista per l'aggancio. Ingrandisci.</value>
   </data>
-  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
-    <value>Questo livello carica solo gli elementi nella vista, quindi non è ancora possibile agganciarvisi</value>
-  </data>
 </root>

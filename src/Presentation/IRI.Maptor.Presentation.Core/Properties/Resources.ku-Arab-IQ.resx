@@ -4828,7 +4828,4 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>دیاردەکانی ناو دیمەنەکە بۆ لکاندن زۆرن. نزیک بکەرەوە.</value>
   </data>
-  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
-    <value>ئەم چینە تەنها دیاردەکانی ناو دیمەنەکە بار دەکات، بۆیە هێشتا ناتوانرێت پێیەوە بلکێنرێت</value>
-  </data>
 </root>

@@ -4828,7 +4828,4 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>Görünüşdə yapışdırmaq üçün çox obyekt var. Yaxınlaşdırın.</value>
   </data>
-  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
-    <value>Bu lay yalnız görünüşdəki obyektləri yükləyir, ona görə də hələ ona yapışdırmaq olmur</value>
-  </data>
 </root>

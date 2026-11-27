@@ -4828,7 +4828,4 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>Trop d'entités dans la vue pour l'accrochage. Zoomez.</value>
   </data>
-  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
-    <value>Cette couche ne charge que les entités de la vue, l'accrochage n'y est donc pas encore possible</value>
-  </data>
 </root>

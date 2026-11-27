@@ -4828,7 +4828,4 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>Hay demasiados elementos en la vista para ajustar. Acerque el mapa.</value>
   </data>
-  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
-    <value>Esta capa solo carga los elementos de la vista, así que aún no se puede ajustar a ella</value>
-  </data>
 </root>

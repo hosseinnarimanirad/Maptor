@@ -4828,7 +4828,4 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>视图中的要素过多，无法捕捉。请放大。</value>
   </data>
-  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
-    <value>此图层只加载视图中的要素，因此暂时无法捕捉到它</value>
-  </data>
 </root>

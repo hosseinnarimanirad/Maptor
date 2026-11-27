@@ -5,7 +5,6 @@ using System.Linq;
 
 using IRI.Maptor.Presentation.Core;
 using IRI.Maptor.Presentation.Wpf.Layers;
-using IRI.Maptor.Presentation.Wpf.Topology;
 
 namespace IRI.Maptor.Presentation.Wpf.Snapping;
 
@@ -24,9 +23,6 @@ public sealed class SnapLayerItem : Notifier
     public VectorLayer Layer { get; }
 
     public string Name => Layer.LayerName;
-
-    /// <summary>False for a Live layer: it holds only part of its features, so it cannot be snapped to yet.</summary>
-    public bool IsAvailable => !MapLayerFeatureSource.IsLiveLayer(Layer);
 
     private bool _isChecked;
     public bool IsChecked
@@ -51,10 +47,19 @@ public sealed class SnapLayerItem : Notifier
 /// Snapping is on by default and every layer starts checked; a layer the user unchecks stays unchecked for the
 /// session, also when it leaves the list (turned off, out of scale range) and comes back.
 /// </para>
+/// <para>
+/// A project file keeps the unchecked layers by name (<see cref="UncheckedLayerNames"/>,
+/// <see cref="RestoreUncheckedLayerNames"/>), as layer ids change every session. A restored name stays in force for
+/// layers that appear later (server layers load after the project), and applies to every layer of that name.
+/// </para>
 /// </summary>
 public sealed class SnapLayerChoice : Notifier
 {
-    private readonly HashSet<Guid> _unchecked = new();
+    // unchecked in this session, by layer id (with the name, for saving)
+    private readonly Dictionary<Guid, string> _unchecked = new();
+
+    // unchecked by name, from a project file
+    private readonly HashSet<string> _uncheckedNames = new();
 
     /// <summary>Raised when snapping is turned on or off or a layer is checked or unchecked.</summary>
     public event Action? Changed;
@@ -93,8 +98,8 @@ public sealed class SnapLayerChoice : Notifier
         }
     }
 
-    /// <summary>The layers to snap to: checked and available.</summary>
-    public IReadOnlyList<VectorLayer> CheckedLayers => Layers.Where(i => i.IsChecked && i.IsAvailable).Select(i => i.Layer).ToList();
+    /// <summary>The layers to snap to.</summary>
+    public IReadOnlyList<VectorLayer> CheckedLayers => Layers.Where(i => i.IsChecked).Select(i => i.Layer).ToList();
 
     /// <summary>Shows <paramref name="layers"/> in the list, keeping each layer's checked state; no change when they are the listed ones.</summary>
     public void Update(IEnumerable<VectorLayer> layers)
@@ -107,10 +112,49 @@ public sealed class SnapLayerChoice : Notifier
         Layers.Clear();
 
         foreach (var layer in wanted)
-            Layers.Add(new SnapLayerItem(layer, !_unchecked.Contains(layer.LayerId), () => OnItemChanged(layer)));
+            Layers.Add(new SnapLayerItem(layer, !IsUnchecked(layer), () => OnItemChanged(layer)));
 
         RaisePropertyChanged(nameof(HasNoLayers));
         Changed?.Invoke();
+    }
+
+    /// <summary>The names of the unchecked layers, for a project file: this session's and those restored but not seen yet.</summary>
+    public IReadOnlyList<string> UncheckedLayerNames =>
+        _unchecked.Values.Concat(_uncheckedNames).Where(n => !string.IsNullOrEmpty(n)).Distinct().OrderBy(n => n, StringComparer.Ordinal).ToList();
+
+    /// <summary>Replaces the unchecked layers with those of a project file (by name); every other layer is checked.</summary>
+    public void RestoreUncheckedLayerNames(IEnumerable<string>? names)
+    {
+        _unchecked.Clear();
+        _uncheckedNames.Clear();
+
+        foreach (var name in names ?? Enumerable.Empty<string>())
+        {
+            if (!string.IsNullOrEmpty(name))
+                _uncheckedNames.Add(name);
+        }
+
+        // rebuild the items so their check boxes show the restored state
+        var listed = Layers.Select(i => i.Layer).ToList();
+
+        Layers.Clear();
+
+        Update(listed);
+
+        Changed?.Invoke();
+    }
+
+    private bool IsUnchecked(VectorLayer layer)
+    {
+        if (_unchecked.ContainsKey(layer.LayerId))
+            return true;
+
+        if (!_uncheckedNames.Contains(layer.LayerName))
+            return false;
+
+        _unchecked[layer.LayerId] = layer.LayerName;
+
+        return true;
     }
 
     private void OnItemChanged(VectorLayer layer)
@@ -121,9 +165,14 @@ public sealed class SnapLayerChoice : Notifier
             return;
 
         if (item.IsChecked)
+        {
             _unchecked.Remove(layer.LayerId);
+            _uncheckedNames.Remove(layer.LayerName);
+        }
         else
-            _unchecked.Add(layer.LayerId);
+        {
+            _unchecked[layer.LayerId] = layer.LayerName;
+        }
 
         Changed?.Invoke();
     }

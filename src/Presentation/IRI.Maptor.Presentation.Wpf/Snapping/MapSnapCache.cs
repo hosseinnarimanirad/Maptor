@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using IRI.Maptor.Core.Common.Primitives;
+using IRI.Maptor.Core.Persistence.Abstractions;
 using IRI.Maptor.Core.Spatial.Analysis;
 using IRI.Maptor.Core.Spatial.Primitives;
 using IRI.Maptor.Core.SpatialReferenceSystem;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Presentation.Wpf.Layers;
+using IRI.Maptor.Presentation.Wpf.Topology;
 
 namespace IRI.Maptor.Presentation.Wpf.Snapping;
 
@@ -85,7 +87,13 @@ public sealed class MapSnapCache
                     continue;
                 }
 
-                var set = await layer.GetFeaturesAsync(query);
+                // A Live layer is asked for a box, as the map asks when it draws: that loads the view's tiles and
+                // returns what is loaded. Asked with a geometry it would fetch everything in the view from the server
+                // when a tile is incomplete (meant for small identify boxes). Other layers are asked with a geometry,
+                // the path that applies a layer's filter geometry.
+                var set = MapLayerFeatureSource.IsLiveLayer(layer) && layer.DataSource is IVectorDataSource live
+                    ? await live.GetAsFeatureSetAsync(Padded(extent))
+                    : await layer.GetFeaturesAsync(query);
 
                 if (version != _version)
                     return;

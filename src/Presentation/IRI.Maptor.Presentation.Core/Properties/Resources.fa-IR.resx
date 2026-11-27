@@ -4887,7 +4887,4 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>عارضه‌های این محدوده برای چسبیدن بیش از حد زیاد است. بزرگ‌نمایی کنید.</value>
   </data>
-  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
-    <value>این لایه فقط عارضه‌های محدودهٔ دید را بار می‌کند، پس هنوز نمی‌توان به آن چسبید</value>
-  </data>
 </root>

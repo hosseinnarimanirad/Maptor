@@ -4828,7 +4828,4 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>المعالم في العرض كثيرة جدًا للالتقاط. قم بالتكبير.</value>
   </data>
-  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
-    <value>تحمّل هذه الطبقة المعالم الظاهرة في العرض فقط، لذا لا يمكن الالتقاط إليها بعد</value>
-  </data>
 </root>

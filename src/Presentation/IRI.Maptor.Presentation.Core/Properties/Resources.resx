@@ -4983,7 +4983,4 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>Too many features in view to snap to. Zoom in.</value>
   </data>
-  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
-    <value>This layer loads only the features in view, so it cannot be snapped to yet</value>
-  </data>
 </root>

@@ -4828,7 +4828,4 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>Görünümde yapıştırma için çok fazla nesne var. Yakınlaştırın.</value>
   </data>
-  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
-    <value>Bu katman yalnızca görünümdeki nesneleri yükler, bu yüzden henüz ona yapıştırılamaz</value>
-  </data>
 </root>

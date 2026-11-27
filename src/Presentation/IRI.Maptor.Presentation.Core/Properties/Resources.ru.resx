@@ -4828,7 +4828,4 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>Слишком много объектов в видимой области для привязки. Увеличьте масштаб.</value>
   </data>
-  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
-    <value>Этот слой загружает только объекты в видимой области, поэтому привязка к нему пока недоступна</value>
-  </data>
 </root>

@@ -34,4 +34,11 @@ public class MapProject
     public List<DrawingItemEntry> DrawingItems { get; set; } = [];
 
     public List<ServerLayerOverride> ServerLayerOverrides { get; set; } = [];
+
+    /// <summary>
+    /// Layers left out of snapping (unticked in the sketch bar's snapping list), by layer name since layer ids are
+    /// regenerated every session. Covers imported and server layers alike; a name applies to every layer of that name.
+    /// Empty in files written before it existed, which snaps to every layer.
+    /// </summary>
+    public List<string> SnapExcludedLayerNames { get; set; } = [];
 }

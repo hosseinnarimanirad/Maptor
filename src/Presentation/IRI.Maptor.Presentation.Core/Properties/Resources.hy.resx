@@ -4828,7 +4828,4 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>Տեսադաշտում կպցման համար չափազանց շատ օբյեկտներ կան։ Մոտեցրեք։</value>
   </data>
-  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
-    <value>Այս շերտը բեռնում է միայն տեսադաշտի օբյեկտները, ուստի դեռ հնարավոր չէ դրան կպցնել</value>
-  </data>
 </root>

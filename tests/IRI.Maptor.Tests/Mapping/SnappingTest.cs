@@ -125,6 +125,98 @@ public class SnappingTest
         });
     }
 
+    [Fact]
+    public void Choice_UncheckedNames_RoundTripThroughAProject()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var a = Layer("towers", Line(SridHelper.WebMercator, (0, 0), (10, 0)));
+            var b = Layer("lines", Line(SridHelper.WebMercator, (0, 5), (10, 5)));
+
+            var saved = new SnapLayerChoice();
+            saved.Update(new[] { a, b });
+            saved.Layers[0].IsChecked = false;
+
+            Assert.Equal(new[] { "towers" }, saved.UncheckedLayerNames);
+
+            // next session: new layer objects (new ids) with the same names, and one that loads later
+            var restored = new SnapLayerChoice();
+            restored.RestoreUncheckedLayerNames(saved.UncheckedLayerNames);
+
+            var a2 = Layer("towers", Line(SridHelper.WebMercator, (0, 0), (10, 0)));
+            var b2 = Layer("lines", Line(SridHelper.WebMercator, (0, 5), (10, 5)));
+
+            restored.Update(new[] { b2 });
+            Assert.Equal(new[] { b2 }, restored.CheckedLayers);
+
+            restored.Update(new[] { a2, b2 });
+            Assert.Equal(new[] { b2 }, restored.CheckedLayers);
+
+            // a name not seen yet is still saved
+            Assert.Equal(new[] { "towers" }, restored.UncheckedLayerNames);
+
+            // checking it again drops the name
+            restored.Layers.Single(i => i.Layer == a2).IsChecked = true;
+            Assert.Empty(restored.UncheckedLayerNames);
+        });
+    }
+
+    [Fact]
+    public void Choice_Restore_UpdatesTheListedLayersAndChecksTheRest()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var a = Layer("a", Line(SridHelper.WebMercator, (0, 0), (10, 0)));
+            var b = Layer("b", Line(SridHelper.WebMercator, (0, 5), (10, 5)));
+
+            var choice = new SnapLayerChoice();
+            choice.Update(new[] { a, b });
+            choice.Layers[1].IsChecked = false;
+
+            var changes = 0;
+            choice.Changed += () => changes++;
+
+            choice.RestoreUncheckedLayerNames(new[] { "a" });
+
+            Assert.True(changes > 0);
+            Assert.Equal(new[] { b }, choice.CheckedLayers);
+            Assert.False(choice.Layers.Single(i => i.Layer == a).IsChecked);
+
+            // an old project file has no list: everything is checked
+            choice.RestoreUncheckedLayerNames(null);
+            Assert.Equal(new[] { a, b }, choice.CheckedLayers);
+        });
+    }
+
+    [Fact]
+    public void ProjectFile_KeepsTheSnapExcludedLayers_AndOldFilesHaveNone()
+    {
+        var folder = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "maptor-snapping-" + System.Guid.NewGuid().ToString("N"));
+        System.IO.Directory.CreateDirectory(folder);
+
+        try
+        {
+            var path = System.IO.Path.Combine(folder, "p.mtproj");
+
+            var project = new IRI.Maptor.Presentation.Core.Models.Project.MapProject { SnapExcludedLayerNames = ["towers", "lines"] };
+            IRI.Maptor.Presentation.Core.Models.Project.MapProjectFile.Save(path, project);
+
+            var loaded = IRI.Maptor.Presentation.Core.Models.Project.MapProjectFile.Load(path);
+            Assert.Equal(new[] { "towers", "lines" }, loaded!.SnapExcludedLayerNames);
+
+            // a file written before the list existed
+            System.IO.File.WriteAllText(path, "{ \"formatVersion\": 1, \"name\": \"old\" }");
+
+            var old = IRI.Maptor.Presentation.Core.Models.Project.MapProjectFile.Load(path);
+            Assert.NotNull(old!.SnapExcludedLayerNames);
+            Assert.Empty(old.SnapExcludedLayerNames);
+        }
+        finally
+        {
+            System.IO.Directory.Delete(folder, recursive: true);
+        }
+    }
+
     #endregion
 
     #region MapSnapCache
@@ -182,6 +274,70 @@ public class SnappingTest
             Assert.True(cache.IsOverLimit);
             Assert.Null(cache.Index);
         });
+    }
+
+    [Fact]
+    public void Cache_LiveLayer_IsReadByBox_NeverByGeometry()
+    {
+        WpfTestHost.Run(() =>
+        {
+            var source = new LiveSource(new[] { new Feature<Point>(Line(SridHelper.WebMercator, (100, 100), (200, 100))) });
+
+            var layer = new VectorLayer("live", source, VisualParameters.CreateNew(1), LayerType.VectorLayer,
+                                        RenderMode.Default, RasterizationMethod.GdiPlus, IRI.Maptor.Presentation.Core.Models.ScaleInterval.All);
+
+            var choice = new SnapLayerChoice();
+            choice.Update(new[] { layer });
+
+            // listed and checked like any other layer
+            Assert.Equal(new[] { layer }, choice.CheckedLayers);
+
+            var cache = new MapSnapCache();
+            Build(cache, View, choice.CheckedLayers);
+
+            Assert.Equal(1, source.BoxReads);
+            Assert.Equal(0, source.GeometryReads);
+            Assert.Equal(SnapKind.Vertex, SnapEngine.Snap(cache.Index!, new Point(199, 102), 5)!.Kind);
+        });
+    }
+
+    /// <summary>A Live source: asked with a geometry it would fetch the whole area from the server.</summary>
+    private sealed class LiveSource(IEnumerable<Feature<Point>> features)
+        : IRI.Maptor.Core.Persistence.DataSources.MemoryDataSource(features), IRI.Maptor.Core.Persistence.Abstractions.IServerQueryableVectorDataSource
+    {
+        public int BoxReads { get; private set; }
+
+        public int GeometryReads { get; private set; }
+
+        public bool CanQueryServer => true;
+
+        public bool IsViewTruncated => false;
+
+        public event System.EventHandler<bool>? ViewTruncatedChanged { add { } remove { } }
+
+        public FeatureSet<Point> GetLoadedFeatures() => _webMercatorFeatureSet;
+
+        public override System.Threading.Tasks.Task<FeatureSet<Point>> GetAsFeatureSetAsync(BoundingBox boundingBox)
+        {
+            BoxReads++;
+            return base.GetAsFeatureSetAsync(boundingBox);
+        }
+
+        public override System.Threading.Tasks.Task<FeatureSet<Point>> GetAsFeatureSetAsync(Geometry<Point>? geometry)
+        {
+            GeometryReads++;
+            return base.GetAsFeatureSetAsync(geometry);
+        }
+
+        public System.Threading.Tasks.Task<IRI.Maptor.Core.Persistence.Abstractions.FeatureQueryPage> QueryPageAsync(IRI.Maptor.Core.Spatial.Dtos.FeatureQueryDto query, CancellationToken cancellationToken = default) => throw new System.NotSupportedException();
+
+        public System.Threading.Tasks.Task<IRI.Maptor.Core.Spatial.Dtos.DistinctValuesDto> GetDistinctValuesAsync(string fieldName, CancellationToken cancellationToken = default) => throw new System.NotSupportedException();
+
+        public System.Threading.Tasks.Task<IRI.Maptor.Core.Spatial.Dtos.FieldStatisticsDto> GetFieldStatisticsAsync(string fieldName, CancellationToken cancellationToken = default) => throw new System.NotSupportedException();
+
+        public System.Threading.Tasks.Task<IRI.Maptor.Core.Spatial.Dtos.GroupStatisticsDto> GetGroupStatisticsAsync(string fieldName, string? sumFieldName, string? measureKind, CancellationToken cancellationToken = default) => throw new System.NotSupportedException();
+
+        public System.Threading.Tasks.Task<IRI.Maptor.Core.Spatial.Dtos.GeometryStatisticsDto> GetGeometryStatisticsAsync(string? measureKind, CancellationToken cancellationToken = default) => throw new System.NotSupportedException();
     }
 
     #endregion

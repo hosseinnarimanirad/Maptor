@@ -4828,7 +4828,4 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>दृश्य में स्नैप करने के लिए बहुत अधिक फ़ीचर हैं। ज़ूम इन करें।</value>
   </data>
-  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
-    <value>यह लेयर केवल दृश्य में मौजूद फ़ीचर लोड करती है, इसलिए अभी इस पर स्नैप नहीं किया जा सकता</value>
-  </data>
 </root>

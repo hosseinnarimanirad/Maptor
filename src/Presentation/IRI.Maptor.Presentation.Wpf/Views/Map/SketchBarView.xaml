@@ -166,18 +166,7 @@
                                     <ItemsControl ItemsSource="{Binding Layers}" Focusable="False">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <!--a Live layer is listed but cannot be checked yet-->
-                                                <CheckBox Margin="2" IsChecked="{Binding IsChecked, Mode=TwoWay}" IsEnabled="{Binding IsAvailable}">
-                                                    <CheckBox.Style>
-                                                        <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding IsAvailable}" Value="False">
-                                                                    <Setter Property="ToolTip" Value="{Binding [sketchBar_snapping_liveLayer], Source={StaticResource Localization}}"/>
-                                                                    <Setter Property="ToolTipService.ShowOnDisabled" Value="True"/>
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </CheckBox.Style>
+                                                <CheckBox Margin="2" IsChecked="{Binding IsChecked, Mode=TwoWay}">
                                                     <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis"
                                                                Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
                                                 </CheckBox>

@@ -8665,15 +8665,6 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to This layer loads only the features in view, so it cannot be snapped to yet.
-        /// </summary>
-        public static string sketchBar_snapping_liveLayer {
-            get {
-                return ResourceManager.GetString("sketchBar_snapping_liveLayer", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to No visible vector layer to snap to.
         /// </summary>
         public static string sketchBar_snapping_noLayers {

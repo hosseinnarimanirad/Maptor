@@ -4828,7 +4828,4 @@
   <data name="sketchBar_snapping_tooMany" xml:space="preserve">
     <value>منظر میں سنیپ کے لیے بہت زیادہ فیچرز ہیں۔ زوم اِن کریں۔</value>
   </data>
-  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
-    <value>یہ پرت صرف منظر میں موجود فیچرز لوڈ کرتی ہے، اس لیے ابھی اس پر سنیپ نہیں کیا جا سکتا</value>
-  </data>
 </root>
