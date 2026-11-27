@@ -30,7 +30,8 @@ public class BaseMapSettings : IBaseMapSettings
 
     public BaseMapSettings()
     {
-        BaseMapCacheDirectory = $"{Environment.CurrentDirectory}\\Data";
+        //BaseMapCacheDirectory = $"{Environment.CurrentDirectory}\\Data";
+        BaseMapCacheDirectory = Path.Combine(AppContext.BaseDirectory, "Data");
         IsBaseMapCacheEnabled = true;
         BaseMapOpacity = 0.7;
 
