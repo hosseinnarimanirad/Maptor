@@ -4816,4 +4816,19 @@
   <data name="guide_next" xml:space="preserve">
     <value>Հաջորդ բաժին</value>
   </data>
+  <data name="sketchBar_snapping_toggle" xml:space="preserve">
+    <value>Կպցնել օբյեկտներին (կետը ազատ տեղադրելու համար սեղմած պահեք Ctrl)</value>
+  </data>
+  <data name="sketchBar_snapping_layers" xml:space="preserve">
+    <value>Կպցման շերտեր</value>
+  </data>
+  <data name="sketchBar_snapping_noLayers" xml:space="preserve">
+    <value>Կպցման համար տեսանելի վեկտորային շերտ չկա</value>
+  </data>
+  <data name="sketchBar_snapping_tooMany" xml:space="preserve">
+    <value>Տեսադաշտում կպցման համար չափազանց շատ օբյեկտներ կան։ Մոտեցրեք։</value>
+  </data>
+  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
+    <value>Այս շերտը բեռնում է միայն տեսադաշտի օբյեկտները, ուստի դեռ հնարավոր չէ դրան կպցնել</value>
+  </data>
 </root>

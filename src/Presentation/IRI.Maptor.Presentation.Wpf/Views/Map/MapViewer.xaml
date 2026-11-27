@@ -7,6 +7,11 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Border>
-        <Canvas x:Name="mapView" Margin="0" ClipToBounds="True" FlowDirection="LeftToRight" Background="Transparent" />
+        <Grid>
+            <Canvas x:Name="mapView" Margin="0" ClipToBounds="True" FlowDirection="LeftToRight" Background="Transparent" />
+            <!--screen-space marks above the map that take no mouse input (the snap marker); kept out of mapView,
+                whose children the viewer adds, moves and clears with the layers-->
+            <Canvas x:Name="mapOverlay" Margin="0" ClipToBounds="True" FlowDirection="LeftToRight" IsHitTestVisible="False" />
+        </Grid>
     </Border>
 </maptor:NotifiableUserControl>

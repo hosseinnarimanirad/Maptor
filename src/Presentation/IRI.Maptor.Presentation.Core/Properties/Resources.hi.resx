@@ -4816,4 +4816,19 @@
   <data name="guide_next" xml:space="preserve">
     <value>अगला खंड</value>
   </data>
+  <data name="sketchBar_snapping_toggle" xml:space="preserve">
+    <value>फ़ीचर पर स्नैप करें (बिंदु को स्वतंत्र रूप से रखने के लिए Ctrl दबाए रखें)</value>
+  </data>
+  <data name="sketchBar_snapping_layers" xml:space="preserve">
+    <value>स्नैप करने के लिए लेयर</value>
+  </data>
+  <data name="sketchBar_snapping_noLayers" xml:space="preserve">
+    <value>स्नैप करने के लिए कोई दिखाई देने वाली वेक्टर लेयर नहीं है</value>
+  </data>
+  <data name="sketchBar_snapping_tooMany" xml:space="preserve">
+    <value>दृश्य में स्नैप करने के लिए बहुत अधिक फ़ीचर हैं। ज़ूम इन करें।</value>
+  </data>
+  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
+    <value>यह लेयर केवल दृश्य में मौजूद फ़ीचर लोड करती है, इसलिए अभी इस पर स्नैप नहीं किया जा सकता</value>
+  </data>
 </root>

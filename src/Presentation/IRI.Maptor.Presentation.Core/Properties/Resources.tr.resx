@@ -4816,4 +4816,19 @@
   <data name="guide_next" xml:space="preserve">
     <value>Sonraki bölüm</value>
   </data>
+  <data name="sketchBar_snapping_toggle" xml:space="preserve">
+    <value>Nesnelere yapıştır (noktayı serbestçe koymak için Ctrl tuşunu basılı tutun)</value>
+  </data>
+  <data name="sketchBar_snapping_layers" xml:space="preserve">
+    <value>Yapıştırılacak katmanlar</value>
+  </data>
+  <data name="sketchBar_snapping_noLayers" xml:space="preserve">
+    <value>Yapıştırılacak görünür vektör katman yok</value>
+  </data>
+  <data name="sketchBar_snapping_tooMany" xml:space="preserve">
+    <value>Görünümde yapıştırma için çok fazla nesne var. Yakınlaştırın.</value>
+  </data>
+  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
+    <value>Bu katman yalnızca görünümdeki nesneleri yükler, bu yüzden henüz ona yapıştırılamaz</value>
+  </data>
 </root>

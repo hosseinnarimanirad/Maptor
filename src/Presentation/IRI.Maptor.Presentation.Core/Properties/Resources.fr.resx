@@ -4816,4 +4816,19 @@
   <data name="guide_next" xml:space="preserve">
     <value>Section suivante</value>
   </data>
+  <data name="sketchBar_snapping_toggle" xml:space="preserve">
+    <value>Accrocher aux entités (maintenez Ctrl pour placer un point librement)</value>
+  </data>
+  <data name="sketchBar_snapping_layers" xml:space="preserve">
+    <value>Couches d'accrochage</value>
+  </data>
+  <data name="sketchBar_snapping_noLayers" xml:space="preserve">
+    <value>Aucune couche vectorielle visible pour l'accrochage</value>
+  </data>
+  <data name="sketchBar_snapping_tooMany" xml:space="preserve">
+    <value>Trop d'entités dans la vue pour l'accrochage. Zoomez.</value>
+  </data>
+  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
+    <value>Cette couche ne charge que les entités de la vue, l'accrochage n'y est donc pas encore possible</value>
+  </data>
 </root>

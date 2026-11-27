@@ -49,6 +49,7 @@ using IRI.Maptor.Presentation.Wpf.Controls.Identify;
 using IRI.Maptor.Presentation.Wpf.ViewModels.Identify;
 using IRI.Maptor.Presentation.Wpf.Controls.MapOptions;
 using IRI.Maptor.Presentation.Wpf.Layers;
+using IRI.Maptor.Presentation.Wpf.Snapping;
 using IRI.Maptor.Presentation.Wpf.Controls.MapMarkers;
 using IRI.Maptor.Presentation.Core;
 using IRI.Maptor.Presentation.Core.Layers;
@@ -582,6 +583,10 @@ public partial class MapViewer : NotifiableUserControl
 
     MapViewModelBase _presenter;
 
+    // snapping while drawing: created in Register (they need the presenter's sketch bar)
+    private MapSnapper? _snapper;
+    private SnapMarker? _snapMarker;
+
     #endregion
 
     public async Task Register(MapViewModelBase presenter,
@@ -591,6 +596,15 @@ public partial class MapViewer : NotifiableUserControl
             return;
 
         _presenter = presenter;
+
+        _snapMarker = new SnapMarker(mapOverlay);
+
+        _snapper = new MapSnapper(
+            presenter.SketchBar.Snapping,
+            () => this.CurrentExtent,
+            ScreenToMap,
+            () => presenter.GetAllVectorLayers(this.Layers)
+                           .Where(l => l.Type == LayerType.VectorLayer && l.Visibility == Visibility.Visible && l.IsInScaleRange));
 
         _layerManager.RequestUpdateLayerTocOrder = presenter.UpdateLayerCanMoveUpDown;
 
@@ -4738,11 +4752,14 @@ public partial class MapViewer : NotifiableUserControl
 
         if (this.drawMode == DrawMode.Rectangle)
         {
-            // Drag-based axis-aligned rectangle drawing
+            // Drag-based axis-aligned rectangle drawing (not snapped)
             Subscribe_DrawingEvents_StartRectangleDrawing();
         }
         else
         {
+            // a new session reads the layers again, so features saved since the last drawing can be snapped to
+            _snapper?.BeginSession();
+
             // Waiting for user's first click
             BeginDrawPhase(onConfirmedClick: AddFirstPointForNewDrawing);
         }
@@ -4763,15 +4780,19 @@ public partial class MapViewer : NotifiableUserControl
         Action<sb.Point>? onAfterPan = null)
     {
         EndDrawPhase();
+
+        // every point of a draw phase goes through snapping; panning (left button down) never snaps
         var gesture = new ClickOrPanGesture(
             this,
-            onClick: onConfirmedClick,
-            onHover: onMove,
-            onAfterPan: onAfterPan,
+            onClick: pt => onConfirmedClick(SnapForDrawing(pt)),
+            onHover: onMove is null ? null : pt => onMove(SnapForDrawing(pt)),
+            onAfterPan: onAfterPan is null ? null : pt => onAfterPan(SnapForDrawing(pt)),
             onAnyMove: mapPt =>
             {
+                var point = Mouse.LeftButton == MouseButtonState.Pressed ? HideSnapMarker(mapPt) : SnapForDrawing(mapPt);
+
                 if (_presenter.SketchBar.Options.IsLinkedToMouseMove)
-                    CurrentEditingPoint = mapPt.AsWpfPoint();
+                    CurrentEditingPoint = point.AsWpfPoint();
             });
         // Only act while this exact gesture is still the installed draw-phase gesture.
         gesture.IsActive = () => ReferenceEquals(_drawPhaseGesture, gesture);
@@ -4783,6 +4804,28 @@ public partial class MapViewer : NotifiableUserControl
     {
         _drawPhaseGesture?.End();
         _drawPhaseGesture = null;
+
+        _snapMarker?.Hide();
+    }
+
+    /// <summary>The point to use for <paramref name="mapPoint"/> while drawing (snapped when it can be), with the marker shown or hidden to match.</summary>
+    private sb.Point SnapForDrawing(sb.Point mapPoint)
+    {
+        var snap = mapPoint.IsNaN() ? null : _snapper?.Snap(mapPoint);
+
+        if (snap is null)
+            return HideSnapMarker(mapPoint);
+
+        _snapMarker?.Show(MapToScreen(snap.Location.AsWpfPoint()), snap.Kind);
+
+        return new sb.Point(snap.Location.X, snap.Location.Y);
+    }
+
+    private sb.Point HideSnapMarker(sb.Point mapPoint)
+    {
+        _snapMarker?.Hide();
+
+        return mapPoint;
     }
 
     // *********************** Rectangle Drawing Events *********************** 

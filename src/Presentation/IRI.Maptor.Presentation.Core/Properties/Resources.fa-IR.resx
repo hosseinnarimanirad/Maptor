@@ -4875,4 +4875,19 @@
   <data name="guide_next" xml:space="preserve">
     <value>بخش بعدی</value>
   </data>
+  <data name="sketchBar_snapping_toggle" xml:space="preserve">
+    <value>چسبیدن به عارضه‌ها (برای گذاشتن آزاد نقطه، Ctrl را نگه دارید)</value>
+  </data>
+  <data name="sketchBar_snapping_layers" xml:space="preserve">
+    <value>لایه‌ها برای چسبیدن</value>
+  </data>
+  <data name="sketchBar_snapping_noLayers" xml:space="preserve">
+    <value>لایهٔ برداری قابل‌مشاهده‌ای برای چسبیدن نیست</value>
+  </data>
+  <data name="sketchBar_snapping_tooMany" xml:space="preserve">
+    <value>عارضه‌های این محدوده برای چسبیدن بیش از حد زیاد است. بزرگ‌نمایی کنید.</value>
+  </data>
+  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
+    <value>این لایه فقط عارضه‌های محدودهٔ دید را بار می‌کند، پس هنوز نمی‌توان به آن چسبید</value>
+  </data>
 </root>

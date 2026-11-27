@@ -4816,4 +4816,19 @@
   <data name="guide_next" xml:space="preserve">
     <value>اگلا حصہ</value>
   </data>
+  <data name="sketchBar_snapping_toggle" xml:space="preserve">
+    <value>فیچرز پر سنیپ کریں (نقطہ آزادانہ رکھنے کے لیے Ctrl دبائے رکھیں)</value>
+  </data>
+  <data name="sketchBar_snapping_layers" xml:space="preserve">
+    <value>سنیپ کرنے کے لیے پرتیں</value>
+  </data>
+  <data name="sketchBar_snapping_noLayers" xml:space="preserve">
+    <value>سنیپ کرنے کے لیے کوئی نظر آنے والی ویکٹر پرت نہیں</value>
+  </data>
+  <data name="sketchBar_snapping_tooMany" xml:space="preserve">
+    <value>منظر میں سنیپ کے لیے بہت زیادہ فیچرز ہیں۔ زوم اِن کریں۔</value>
+  </data>
+  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
+    <value>یہ پرت صرف منظر میں موجود فیچرز لوڈ کرتی ہے، اس لیے ابھی اس پر سنیپ نہیں کیا جا سکتا</value>
+  </data>
 </root>

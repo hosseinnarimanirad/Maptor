@@ -4816,4 +4816,19 @@
   <data name="guide_next" xml:space="preserve">
     <value>بەشی دواتر</value>
   </data>
+  <data name="sketchBar_snapping_toggle" xml:space="preserve">
+    <value>لکاندن بە دیاردەکان (بۆ دانانی ئازادانەی خاڵ، Ctrl دابگرە)</value>
+  </data>
+  <data name="sketchBar_snapping_layers" xml:space="preserve">
+    <value>چینەکان بۆ لکاندن</value>
+  </data>
+  <data name="sketchBar_snapping_noLayers" xml:space="preserve">
+    <value>هیچ چینێکی ڤێکتەری بینراو نییە بۆ لکاندن</value>
+  </data>
+  <data name="sketchBar_snapping_tooMany" xml:space="preserve">
+    <value>دیاردەکانی ناو دیمەنەکە بۆ لکاندن زۆرن. نزیک بکەرەوە.</value>
+  </data>
+  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
+    <value>ئەم چینە تەنها دیاردەکانی ناو دیمەنەکە بار دەکات، بۆیە هێشتا ناتوانرێت پێیەوە بلکێنرێت</value>
+  </data>
 </root>

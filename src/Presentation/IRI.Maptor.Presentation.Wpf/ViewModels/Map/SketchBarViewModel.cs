@@ -1,6 +1,7 @@
 using System;
 
 using IRI.Maptor.Presentation.Wpf.Models;
+using IRI.Maptor.Presentation.Wpf.Snapping;
 using IRI.Maptor.Presentation.Core.Localization;
 using IRI.Maptor.Core.Common.Primitives;
 using IRI.Maptor.Core.SpatialReferenceSystem;
@@ -63,6 +64,12 @@ public class SketchBarViewModel : Notifier
             RaisePropertyChanged(nameof(IsDetailsVisible));
         }
     }
+
+    /// <summary>
+    /// Snapping on/off and the layers it uses. Kept here rather than in <see cref="Options"/>, which is a different
+    /// object per mode (drawing, editing, measuring): the user's choice must hold across them.
+    /// </summary>
+    public SnapLayerChoice Snapping { get; } = new SnapLayerChoice();
 
     private EditableFeatureLayerOptions _options;
     public EditableFeatureLayerOptions Options

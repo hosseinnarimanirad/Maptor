@@ -4816,4 +4816,19 @@
   <data name="guide_next" xml:space="preserve">
     <value>القسم التالي</value>
   </data>
+  <data name="sketchBar_snapping_toggle" xml:space="preserve">
+    <value>الالتقاط إلى المعالم (اضغط مع الاستمرار على Ctrl لوضع نقطة بحرية)</value>
+  </data>
+  <data name="sketchBar_snapping_layers" xml:space="preserve">
+    <value>الطبقات المراد الالتقاط إليها</value>
+  </data>
+  <data name="sketchBar_snapping_noLayers" xml:space="preserve">
+    <value>لا توجد طبقة متجهية مرئية للالتقاط إليها</value>
+  </data>
+  <data name="sketchBar_snapping_tooMany" xml:space="preserve">
+    <value>المعالم في العرض كثيرة جدًا للالتقاط. قم بالتكبير.</value>
+  </data>
+  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
+    <value>تحمّل هذه الطبقة المعالم الظاهرة في العرض فقط، لذا لا يمكن الالتقاط إليها بعد</value>
+  </data>
 </root>

@@ -4816,4 +4816,19 @@
   <data name="guide_next" xml:space="preserve">
     <value>下一节</value>
   </data>
+  <data name="sketchBar_snapping_toggle" xml:space="preserve">
+    <value>捕捉到要素（按住 Ctrl 可自由放置点）</value>
+  </data>
+  <data name="sketchBar_snapping_layers" xml:space="preserve">
+    <value>要捕捉的图层</value>
+  </data>
+  <data name="sketchBar_snapping_noLayers" xml:space="preserve">
+    <value>没有可捕捉的可见矢量图层</value>
+  </data>
+  <data name="sketchBar_snapping_tooMany" xml:space="preserve">
+    <value>视图中的要素过多，无法捕捉。请放大。</value>
+  </data>
+  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
+    <value>此图层只加载视图中的要素，因此暂时无法捕捉到它</value>
+  </data>
 </root>

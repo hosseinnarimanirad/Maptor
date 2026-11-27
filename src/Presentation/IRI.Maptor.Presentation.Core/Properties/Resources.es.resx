@@ -4816,4 +4816,19 @@
   <data name="guide_next" xml:space="preserve">
     <value>Sección siguiente</value>
   </data>
+  <data name="sketchBar_snapping_toggle" xml:space="preserve">
+    <value>Ajustar a elementos (mantenga Ctrl pulsado para colocar un punto libremente)</value>
+  </data>
+  <data name="sketchBar_snapping_layers" xml:space="preserve">
+    <value>Capas a las que ajustar</value>
+  </data>
+  <data name="sketchBar_snapping_noLayers" xml:space="preserve">
+    <value>No hay ninguna capa vectorial visible a la que ajustar</value>
+  </data>
+  <data name="sketchBar_snapping_tooMany" xml:space="preserve">
+    <value>Hay demasiados elementos en la vista para ajustar. Acerque el mapa.</value>
+  </data>
+  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
+    <value>Esta capa solo carga los elementos de la vista, así que aún no se puede ajustar a ella</value>
+  </data>
 </root>

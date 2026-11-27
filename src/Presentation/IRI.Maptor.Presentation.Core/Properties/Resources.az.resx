@@ -4816,4 +4816,19 @@
   <data name="guide_next" xml:space="preserve">
     <value>Növbəti bölmə</value>
   </data>
+  <data name="sketchBar_snapping_toggle" xml:space="preserve">
+    <value>Obyektlərə yapışdır (nöqtəni sərbəst qoymaq üçün Ctrl düyməsini basılı saxlayın)</value>
+  </data>
+  <data name="sketchBar_snapping_layers" xml:space="preserve">
+    <value>Yapışdırılacaq laylar</value>
+  </data>
+  <data name="sketchBar_snapping_noLayers" xml:space="preserve">
+    <value>Yapışdırmaq üçün görünən vektor lay yoxdur</value>
+  </data>
+  <data name="sketchBar_snapping_tooMany" xml:space="preserve">
+    <value>Görünüşdə yapışdırmaq üçün çox obyekt var. Yaxınlaşdırın.</value>
+  </data>
+  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
+    <value>Bu lay yalnız görünüşdəki obyektləri yükləyir, ona görə də hələ ona yapışdırmaq olmur</value>
+  </data>
 </root>

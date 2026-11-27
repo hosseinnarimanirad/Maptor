@@ -8656,6 +8656,51 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Layers to snap to.
+        /// </summary>
+        public static string sketchBar_snapping_layers {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_layers", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to This layer loads only the features in view, so it cannot be snapped to yet.
+        /// </summary>
+        public static string sketchBar_snapping_liveLayer {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_liveLayer", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No visible vector layer to snap to.
+        /// </summary>
+        public static string sketchBar_snapping_noLayers {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_noLayers", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Snap to features (hold Ctrl to place a point freely).
+        /// </summary>
+        public static string sketchBar_snapping_toggle {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_toggle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Too many features in view to snap to. Zoom in..
+        /// </summary>
+        public static string sketchBar_snapping_tooMany {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_tooMany", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Draw Point.
         /// </summary>
         public static string sketchBar_title_drawPoint {

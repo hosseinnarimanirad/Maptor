@@ -4816,4 +4816,19 @@
   <data name="guide_next" xml:space="preserve">
     <value>Próxima seção</value>
   </data>
+  <data name="sketchBar_snapping_toggle" xml:space="preserve">
+    <value>Ajustar a feições (mantenha Ctrl pressionado para posicionar um ponto livremente)</value>
+  </data>
+  <data name="sketchBar_snapping_layers" xml:space="preserve">
+    <value>Camadas para ajuste</value>
+  </data>
+  <data name="sketchBar_snapping_noLayers" xml:space="preserve">
+    <value>Nenhuma camada vetorial visível para ajuste</value>
+  </data>
+  <data name="sketchBar_snapping_tooMany" xml:space="preserve">
+    <value>Há feições demais na visualização para ajuste. Aproxime o zoom.</value>
+  </data>
+  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
+    <value>Esta camada carrega apenas as feições da visualização, por isso ainda não é possível ajustar a ela</value>
+  </data>
 </root>

@@ -4816,4 +4816,19 @@
   <data name="guide_next" xml:space="preserve">
     <value>Следующий раздел</value>
   </data>
+  <data name="sketchBar_snapping_toggle" xml:space="preserve">
+    <value>Привязка к объектам (удерживайте Ctrl, чтобы поставить точку свободно)</value>
+  </data>
+  <data name="sketchBar_snapping_layers" xml:space="preserve">
+    <value>Слои для привязки</value>
+  </data>
+  <data name="sketchBar_snapping_noLayers" xml:space="preserve">
+    <value>Нет видимых векторных слоёв для привязки</value>
+  </data>
+  <data name="sketchBar_snapping_tooMany" xml:space="preserve">
+    <value>Слишком много объектов в видимой области для привязки. Увеличьте масштаб.</value>
+  </data>
+  <data name="sketchBar_snapping_liveLayer" xml:space="preserve">
+    <value>Этот слой загружает только объекты в видимой области, поэтому привязка к нему пока недоступна</value>
+  </data>
 </root>

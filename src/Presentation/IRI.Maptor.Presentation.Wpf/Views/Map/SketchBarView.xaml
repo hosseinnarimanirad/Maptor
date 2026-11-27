@@ -5,6 +5,7 @@
             xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls" 
             xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+            xmlns:behaviors="clr-namespace:IRI.Maptor.Presentation.Wpf.Behaviors"
             x:Name="root" FlowDirection="{Binding Path=CurrentFlowDirection, Source={x:Static localization:LocalizationManager.Instance}}"
             Visibility="{Binding ShowMapInfoPanel, Converter={StaticResource boolToVisibilityConverter}}">
     <UserControl.Resources>
@@ -103,7 +104,90 @@
                     </iconPacks:PackIconPhosphorIcons>
                 </ToggleButton>
 
-                
+
+                <!--snapping: on/off and the layers to snap to (the choice lives on SketchBar, so it holds across modes)-->
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal"
+                            Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                    <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" Margin="2"
+                                  IsChecked="{Binding SketchBar.Snapping.IsEnabled, Mode=TwoWay}"
+                                  ToolTip="{Binding [sketchBar_snapping_toggle], Source={StaticResource Localization}}">
+                        <iconPacks:PackIconMaterial>
+                            <iconPacks:PackIconMaterial.Style>
+                                <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}">
+                                    <Setter Property="Kind" Value="MagnetOn"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=ToggleButton}}" Value="False">
+                                            <Setter Property="Kind" Value="Magnet"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </iconPacks:PackIconMaterial.Style>
+                        </iconPacks:PackIconMaterial>
+                    </ToggleButton>
+
+                    <ToggleButton x:Name="snapLayersToggle" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" Margin="0,2,2,2"
+                                  IsEnabled="{Binding SketchBar.Snapping.IsEnabled}"
+                                  ToolTip="{Binding [sketchBar_snapping_layers], Source={StaticResource Localization}}">
+                        <iconPacks:Material Kind="ChevronDown"/>
+                    </ToggleButton>
+
+                    <Popup IsOpen="{Binding IsChecked, ElementName=snapLayersToggle}"
+                           PlacementTarget="{Binding ElementName=snapLayersToggle}"
+                           Placement="Bottom" StaysOpen="False" AllowsTransparency="True"
+                           PopupAnimation="Slide"
+                           behaviors:PopupMenuBehavior.IsMenu="True"
+                           behaviors:PopupMenuBehavior.CloseOnClick="False">
+                        <Border Style="{StaticResource IRI.Maptor.Styles.Border.Popup}" MinWidth="200" MaxWidth="320"
+                                DataContext="{Binding SketchBar.Snapping}"
+                                FlowDirection="{Binding Path=CurrentFlowDirection, Source={x:Static localization:LocalizationManager.Instance}}">
+                            <Border.Effect>
+                                <StaticResource ResourceKey="IRI.Maptor.Effects.Elevation2"/>
+                            </Border.Effect>
+                            <StackPanel Margin="4">
+                                <TextBlock Text="{Binding [sketchBar_snapping_layers], Source={StaticResource Localization}}"
+                                           FontWeight="SemiBold" Margin="2,0,2,4"/>
+
+                                <ScrollViewer MaxHeight="300" VerticalScrollBarVisibility="Auto"
+                                              HorizontalScrollBarVisibility="Disabled" Focusable="False">
+                                    <ItemsControl ItemsSource="{Binding Layers}" Focusable="False">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <!--a Live layer is listed but cannot be checked yet-->
+                                                <CheckBox Margin="2" IsChecked="{Binding IsChecked, Mode=TwoWay}" IsEnabled="{Binding IsAvailable}">
+                                                    <CheckBox.Style>
+                                                        <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsAvailable}" Value="False">
+                                                                    <Setter Property="ToolTip" Value="{Binding [sketchBar_snapping_liveLayer], Source={StaticResource Localization}}"/>
+                                                                    <Setter Property="ToolTipService.ShowOnDisabled" Value="True"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </CheckBox.Style>
+                                                    <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis"
+                                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                                                </CheckBox>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+
+                                <TextBlock Text="{Binding [sketchBar_snapping_noLayers], Source={StaticResource Localization}}"
+                                           Margin="2" Opacity=".7" TextWrapping="Wrap"
+                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                                           Visibility="{Binding HasNoLayers, Converter={StaticResource boolToVisibilityConverter}}"/>
+
+                                <TextBlock Text="{Binding [sketchBar_snapping_tooMany], Source={StaticResource Localization}}"
+                                           Margin="2,4,2,0" TextWrapping="Wrap"
+                                           Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                           Visibility="{Binding IsOverLimit, Converter={StaticResource boolToVisibilityConverter}}"/>
+                            </StackPanel>
+                        </Border>
+                    </Popup>
+                </StackPanel>
+
+
                 <!--input X-->
                 <TextBlock DockPanel.Dock="Left" Text="X:" Margin="8 0 0 0"
                            Visibility="{Binding SketchBar.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"/>
