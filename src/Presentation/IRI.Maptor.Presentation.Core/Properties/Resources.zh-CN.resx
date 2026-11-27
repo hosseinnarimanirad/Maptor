@@ -4804,4 +4804,16 @@
   <data name="topology_fix_reason_nothingLeft" xml:space="preserve">
     <value>无法修复：{0} 将不剩任何部分。</value>
   </data>
+  <data name="guide_contents" xml:space="preserve">
+    <value>目录</value>
+  </data>
+  <data name="guide_showAll" xml:space="preserve">
+    <value>在一页中全部显示</value>
+  </data>
+  <data name="guide_previous" xml:space="preserve">
+    <value>上一节</value>
+  </data>
+  <data name="guide_next" xml:space="preserve">
+    <value>下一节</value>
+  </data>
 </root>

@@ -4804,4 +4804,16 @@
   <data name="topology_fix_reason_nothingLeft" xml:space="preserve">
     <value>بێ چاککردن: هیچ شتێک لە {0} نامێنێتەوە.</value>
   </data>
+  <data name="guide_contents" xml:space="preserve">
+    <value>ناوەڕۆک</value>
+  </data>
+  <data name="guide_showAll" xml:space="preserve">
+    <value>هەمووی لە یەک پەڕەدا پیشان بدە</value>
+  </data>
+  <data name="guide_previous" xml:space="preserve">
+    <value>بەشی پێشوو</value>
+  </data>
+  <data name="guide_next" xml:space="preserve">
+    <value>بەشی دواتر</value>
+  </data>
 </root>

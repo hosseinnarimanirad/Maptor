@@ -4863,4 +4863,16 @@
   <data name="dialog_fileGdbPicker_reasonUnreadable" xml:space="preserve">
     <value>قابل خواندن نیست</value>
   </data>
+  <data name="guide_contents" xml:space="preserve">
+    <value>فهرست</value>
+  </data>
+  <data name="guide_showAll" xml:space="preserve">
+    <value>نمایش همه در یک صفحه</value>
+  </data>
+  <data name="guide_previous" xml:space="preserve">
+    <value>بخش قبلی</value>
+  </data>
+  <data name="guide_next" xml:space="preserve">
+    <value>بخش بعدی</value>
+  </data>
 </root>

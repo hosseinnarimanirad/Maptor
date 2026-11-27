@@ -4804,4 +4804,16 @@
   <data name="topology_fix_reason_nothingLeft" xml:space="preserve">
     <value>Ուղղում չկա. {0}-ից ոչինչ չի մնա։</value>
   </data>
+  <data name="guide_contents" xml:space="preserve">
+    <value>Բովանդակություն</value>
+  </data>
+  <data name="guide_showAll" xml:space="preserve">
+    <value>Ցույց տալ ամբողջը մեկ էջում</value>
+  </data>
+  <data name="guide_previous" xml:space="preserve">
+    <value>Նախորդ բաժին</value>
+  </data>
+  <data name="guide_next" xml:space="preserve">
+    <value>Հաջորդ բաժին</value>
+  </data>
 </root>

@@ -4804,4 +4804,16 @@
   <data name="topology_fix_reason_nothingLeft" xml:space="preserve">
     <value>Düzeltme yok: {0} öğesinden geriye hiçbir şey kalmazdı.</value>
   </data>
+  <data name="guide_contents" xml:space="preserve">
+    <value>İçindekiler</value>
+  </data>
+  <data name="guide_showAll" xml:space="preserve">
+    <value>Tümünü tek sayfada göster</value>
+  </data>
+  <data name="guide_previous" xml:space="preserve">
+    <value>Önceki bölüm</value>
+  </data>
+  <data name="guide_next" xml:space="preserve">
+    <value>Sonraki bölüm</value>
+  </data>
 </root>

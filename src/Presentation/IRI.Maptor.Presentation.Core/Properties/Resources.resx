@@ -4959,4 +4959,16 @@
   <data name="dialog_fileGdbPicker_reasonUnreadable" xml:space="preserve">
     <value>Cannot be read</value>
   </data>
+  <data name="guide_contents" xml:space="preserve">
+    <value>Contents</value>
+  </data>
+  <data name="guide_showAll" xml:space="preserve">
+    <value>Show all on one page</value>
+  </data>
+  <data name="guide_previous" xml:space="preserve">
+    <value>Previous section</value>
+  </data>
+  <data name="guide_next" xml:space="preserve">
+    <value>Next section</value>
+  </data>
 </root>

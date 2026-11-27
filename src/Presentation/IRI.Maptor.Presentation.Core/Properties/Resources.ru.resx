@@ -4804,4 +4804,16 @@
   <data name="topology_fix_reason_nothingLeft" xml:space="preserve">
     <value>Исправления нет: от {0} ничего бы не осталось.</value>
   </data>
+  <data name="guide_contents" xml:space="preserve">
+    <value>Содержание</value>
+  </data>
+  <data name="guide_showAll" xml:space="preserve">
+    <value>Показать всё на одной странице</value>
+  </data>
+  <data name="guide_previous" xml:space="preserve">
+    <value>Предыдущий раздел</value>
+  </data>
+  <data name="guide_next" xml:space="preserve">
+    <value>Следующий раздел</value>
+  </data>
 </root>

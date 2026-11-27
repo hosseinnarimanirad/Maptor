@@ -4804,4 +4804,16 @@
   <data name="topology_fix_reason_nothingLeft" xml:space="preserve">
     <value>Düzəliş yoxdur: {0} obyektindən heç nə qalmazdı.</value>
   </data>
+  <data name="guide_contents" xml:space="preserve">
+    <value>Mündəricat</value>
+  </data>
+  <data name="guide_showAll" xml:space="preserve">
+    <value>Hamısını bir səhifədə göstər</value>
+  </data>
+  <data name="guide_previous" xml:space="preserve">
+    <value>Əvvəlki bölmə</value>
+  </data>
+  <data name="guide_next" xml:space="preserve">
+    <value>Növbəti bölmə</value>
+  </data>
 </root>

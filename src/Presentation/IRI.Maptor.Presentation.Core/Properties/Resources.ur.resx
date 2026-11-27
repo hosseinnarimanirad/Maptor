@@ -4804,4 +4804,16 @@
   <data name="topology_fix_reason_nothingLeft" xml:space="preserve">
     <value>کوئی درستی نہیں: {0} کا کچھ بھی باقی نہیں رہے گا۔</value>
   </data>
+  <data name="guide_contents" xml:space="preserve">
+    <value>فہرست</value>
+  </data>
+  <data name="guide_showAll" xml:space="preserve">
+    <value>سب ایک صفحے پر دکھائیں</value>
+  </data>
+  <data name="guide_previous" xml:space="preserve">
+    <value>پچھلا حصہ</value>
+  </data>
+  <data name="guide_next" xml:space="preserve">
+    <value>اگلا حصہ</value>
+  </data>
 </root>

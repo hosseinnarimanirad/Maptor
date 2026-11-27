@@ -4804,4 +4804,16 @@
   <data name="topology_fix_reason_nothingLeft" xml:space="preserve">
     <value>لا إصلاح: لن يتبقى شيء من {0}.</value>
   </data>
+  <data name="guide_contents" xml:space="preserve">
+    <value>المحتويات</value>
+  </data>
+  <data name="guide_showAll" xml:space="preserve">
+    <value>عرض الكل في صفحة واحدة</value>
+  </data>
+  <data name="guide_previous" xml:space="preserve">
+    <value>القسم السابق</value>
+  </data>
+  <data name="guide_next" xml:space="preserve">
+    <value>القسم التالي</value>
+  </data>
 </root>

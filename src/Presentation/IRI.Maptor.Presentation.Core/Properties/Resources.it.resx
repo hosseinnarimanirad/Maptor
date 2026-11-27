@@ -4804,4 +4804,16 @@
   <data name="topology_fix_reason_nothingLeft" xml:space="preserve">
     <value>Nessuna correzione: di {0} non resterebbe nulla.</value>
   </data>
+  <data name="guide_contents" xml:space="preserve">
+    <value>Indice</value>
+  </data>
+  <data name="guide_showAll" xml:space="preserve">
+    <value>Mostra tutto in una pagina</value>
+  </data>
+  <data name="guide_previous" xml:space="preserve">
+    <value>Sezione precedente</value>
+  </data>
+  <data name="guide_next" xml:space="preserve">
+    <value>Sezione successiva</value>
+  </data>
 </root>

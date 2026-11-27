@@ -26,8 +26,12 @@ namespace IRI.Maptor.Presentation.Wpf.Controls;
 /// (English, the neutral page). So a language without its own page falls back to English. Each page is a
 /// <c>Page</c> build item whose root is a <see cref="FlowDocument"/> (no x:Class); it merges
 /// <c>Assets/Styles/Guide.xaml</c> for its styles.</para>
+/// <para>A page with two or more main headings (<c>IRI.Maptor.Styles.Guide.Heading</c>) is read one section at a
+/// time: the contents list beside the page names the sections (<see cref="GuideSections"/>), previous/next buttons
+/// under the page step through them, and "Show all" shows the whole page, the list then jumping to a heading. A page
+/// with fewer headings is shown whole, without the list. Guide pages need nothing for this beyond their headings.</para>
 /// <para>One window per guide: opening the same guide again brings its window to the front. A language switch
-/// reloads the page and the title in the new language.</para>
+/// reloads the page and the title in the new language, on the same section.</para>
 /// </remarks>
 public partial class GuideWindow : MetroWindow
 {
@@ -36,6 +40,15 @@ public partial class GuideWindow : MetroWindow
     private readonly string _source;
 
     private readonly Func<string?> _title;
+
+    // the whole page, shown by "Show all"; the headings of _sections are its paragraphs, the jump targets
+    private FlowDocument? _wholePage;
+
+    private IReadOnlyList<GuideSection> _sections = Array.Empty<GuideSection>();
+
+    private int _index;
+
+    private bool _fillingList;
 
     private GuideWindow(string source, Func<string?> title)
     {
@@ -132,12 +145,34 @@ public partial class GuideWindow : MetroWindow
         Show();
     }
 
+    // document: a freshly loaded page, kept as the whole page
     private void SetDocument(FlowDocument document)
     {
         Title = _title() ?? string.Empty;
 
-        // The page's own look stays in Guide.xaml; what depends on the window is set here: the UI font (Persian
-        // face in a Persian UI, through the window style), the theme colours, and a reading width.
+        Prepare(document);
+
+        _wholePage = document;
+        _sections = GuideSections.Find(document);
+        _index = Math.Clamp(_index, 0, _sections.Count - 1);
+
+        var hasContents = _sections.Count > 1;
+
+        contentsColumn.Width = hasContents ? new GridLength(240) : new GridLength(0);
+        contentsPane.Visibility = hasContents ? Visibility.Visible : Visibility.Collapsed;
+
+        _fillingList = true;
+        contentsList.ItemsSource = hasContents ? _sections : null;
+        contentsList.SelectedIndex = hasContents ? _index : -1;
+        _fillingList = false;
+
+        ShowCurrent();
+    }
+
+    // The page's own look stays in Guide.xaml; what depends on the window is set here: the UI font (Persian face in a
+    // Persian UI, through the window style), the theme colours, and a reading width.
+    private void Prepare(FlowDocument document)
+    {
         document.SetBinding(FlowDocument.FontFamilyProperty, new Binding(nameof(FontFamily)) { Source = this });
         document.SetResourceReference(FlowDocument.ForegroundProperty, "MahApps.Brushes.ThemeForeground");
         document.SetResourceReference(FlowDocument.BackgroundProperty, "MahApps.Brushes.ThemeBackground");
@@ -146,8 +181,82 @@ public partial class GuideWindow : MetroWindow
         document.MaxPageWidth = 860;
         document.TextAlignment = TextAlignment.Left;
         document.FlowDirection = LocalizationManager.Instance.IsRightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
+    }
 
-        viewer.Document = document;
+    private void ShowCurrent()
+    {
+        if (_wholePage is null)
+            return;
+
+        var whole = _sections.Count < 2 || showAllCheck.IsChecked == true;
+
+        footer.Visibility = whole ? Visibility.Collapsed : Visibility.Visible;
+
+        if (whole)
+        {
+            if (!ReferenceEquals(viewer.Document, _wholePage))
+                viewer.Document = _wholePage;
+
+            if (_sections.Count > 1)
+                JumpTo(_index == 0 ? _wholePage.Blocks.FirstBlock : _sections[_index].Heading);
+
+            return;
+        }
+
+        // a section page is cut from its own copy, so the whole page stays intact for "Show all"
+        var copy = LoadDocument(_source, LocalizationManager.Instance.CurrentCulture);
+
+        if (copy is null || GuideSections.Find(copy).Count != _sections.Count)
+            return;
+
+        var page = GuideSections.TakeSection(copy, _index);
+
+        Prepare(page);
+
+        viewer.Document = page;
+
+        previousButton.Visibility = _index > 0 ? Visibility.Visible : Visibility.Hidden;
+        nextButton.Visibility = _index < _sections.Count - 1 ? Visibility.Visible : Visibility.Hidden;
+
+        previousText.Text = _index > 0 ? _sections[_index - 1].Title : string.Empty;
+        nextText.Text = _index < _sections.Count - 1 ? _sections[_index + 1].Title : string.Empty;
+    }
+
+    // once the page is laid out, so the target has a position
+    private void JumpTo(Block? block)
+    {
+        if (block is null)
+            return;
+
+        Dispatcher.BeginInvoke(() => block.BringIntoView(), System.Windows.Threading.DispatcherPriority.Loaded);
+    }
+
+    private void ContentsList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        if (_fillingList || contentsList.SelectedIndex < 0)
+            return;
+
+        _index = contentsList.SelectedIndex;
+
+        ShowCurrent();
+    }
+
+    private void ShowAll_Changed(object sender, RoutedEventArgs e) => ShowCurrent();
+
+    private void PreviousButton_Click(object sender, RoutedEventArgs e) => Step(-1);
+
+    private void NextButton_Click(object sender, RoutedEventArgs e) => Step(+1);
+
+    private void Step(int delta)
+    {
+        var target = _index + delta;
+
+        if (target < 0 || target >= _sections.Count)
+            return;
+
+        contentsList.SelectedIndex = target;
+
+        contentsList.ScrollIntoView(contentsList.SelectedItem);
     }
 
     // LanguageChanged is raised before the localized bindings refresh, so the title (usually bound to a key) is read
