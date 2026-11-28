@@ -55,7 +55,7 @@ public sealed class CursorBox
 
         _length = new Row("L", fontSize: 12);
         _angle = new Row("A", fontSize: 12);
-        _bearing = new Row("B", fontSize: 10.5);
+        _bearing = new Row("B", fontSize: 12);
 
         var rows = new StackPanel();
 

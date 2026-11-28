@@ -703,8 +703,7 @@ public class GeometryEditorViewModel : Notifier
         _isUpdatingFromChangeCurrentEditingPoint = true;
         try
         {
-            SelectedPoint.X = currentWebMercatorEditingPoint.X;
-            SelectedPoint.Y = currentWebMercatorEditingPoint.Y;
+            SelectedPoint.MoveTo(currentWebMercatorEditingPoint.X, currentWebMercatorEditingPoint.Y);
 
             // Update CurrentPointEditor when coordinates change from map
             _currentPointEditor?.UpdateFromSelectedPoint();
@@ -756,8 +755,7 @@ public class GeometryEditorViewModel : Notifier
 
         if (this.SelectedPoint != null)
         {
-            this.SelectedPoint.X = l.X;
-            this.SelectedPoint.Y = l.Y;
+            this.SelectedPoint.MoveTo(l.X, l.Y);
 
             // Update CurrentPointEditor when coordinates change
             if (_currentPointEditor is not null)

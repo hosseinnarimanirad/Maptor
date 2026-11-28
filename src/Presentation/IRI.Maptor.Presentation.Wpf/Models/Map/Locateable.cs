@@ -45,21 +45,7 @@ public class Locateable : Notifier
     public double X
     {
         get { return _x; }
-        set
-        {
-            if (_x == value)
-                return;
-
-            var oldValue = new WpfPoint(_x, _y);
-
-            _x = value;
-            RaisePropertyChanged();
-
-            _location.X = value;
-
-            if (CanTriggerPositionChange)
-                OnPositionChanged?.Invoke(this, new ChangeEventArgs<WpfPoint>(oldValue, new WpfPoint(_x, _y)));
-        }
+        set { MoveTo(value, _y); }
     }
 
 
@@ -71,21 +57,37 @@ public class Locateable : Notifier
     public double Y
     {
         get { return _y; }
-        set
-        {
-            if (_y == value)
-                return;
+        set { MoveTo(_x, value); }
+    }
 
-            var oldValue = new WpfPoint(_x, _y);
+    /// <summary>
+    /// Moves to (<paramref name="x"/>, <paramref name="y"/>) (Web Mercator) as one change: <see cref="OnPositionChanged"/>
+    /// is raised once, for the new place. Setting <see cref="X"/> and then <see cref="Y"/> raises it twice, the first
+    /// time for a place the item never was at (new X, old Y).
+    /// </summary>
+    public void MoveTo(double x, double y)
+    {
+        var xChanged = _x != x;
+        var yChanged = _y != y;
 
-            _y = value;
-            RaisePropertyChanged();
+        if (!xChanged && !yChanged)
+            return;
 
-            _location.Y = value;
+        var oldValue = new WpfPoint(_x, _y);
 
-            if (CanTriggerPositionChange)
-                OnPositionChanged?.Invoke(this, new ChangeEventArgs<WpfPoint>(oldValue, new WpfPoint(_x, _y)));
-        }
+        _x = x;
+        _y = y;
+
+        _location = new WpfPoint(x, y);
+
+        if (xChanged)
+            RaisePropertyChanged(nameof(X));
+
+        if (yChanged)
+            RaisePropertyChanged(nameof(Y));
+
+        if (CanTriggerPositionChange)
+            OnPositionChanged?.Invoke(this, new ChangeEventArgs<WpfPoint>(oldValue, new WpfPoint(_x, _y)));
     }
 
     private WpfPoint _location;

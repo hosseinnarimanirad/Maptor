@@ -215,7 +215,6 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         Options = options ?? EditableFeatureLayerOptions.CreateDefault();
 
         Options.RequestHandleMeasureVisibilityChanged = UpdateEdgeLabels;
-        System.Diagnostics.Trace.WriteLine("RequestHandleMeasureVisibilityChanged called #2");
 
         LayerName = name;
 
@@ -269,8 +268,10 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
             RaisePropertyChanged(nameof(IsNextPartAvailable));
         };
 
-        _midVerticesLayer = new SpecialPointLayer("#int. vert", new List<Locateable>(), .7, ScaleInterval.All, layerType) { AlwaysTop = true, IsMovable = isMovable };
+        // a mid-vertex is clicked (it inserts a vertex), never dragged
+        _midVerticesLayer = new SpecialPointLayer("#int. vert", new List<Locateable>(), .7, ScaleInterval.All, layerType) { AlwaysTop = true, IsMovable = false };
 
+        // the labels can be dragged, so the user can lay them out around the line or polygon (user decision 2026-11-28)
         _edgeLabelLayer = new SpecialPointLayer("#edge length", new List<Locateable>(), .9, ScaleInterval.All, layerType) { AlwaysTop = false, IsMovable = isMovable };
 
         _primaryVerticesLabelLayer = new SpecialPointLayer("#vert length", new List<Locateable>(), .9, ScaleInterval.All, layerType) { AlwaysTop = false, IsMovable = isMovable };
@@ -358,7 +359,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
             ReconstructLocateables();
         }
 
-        return true;
+        return result;
     }
 
     internal void CancelDrawing()
@@ -510,8 +511,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
             //(item.Element as CoordinateMarker).WebMercatorLocation = new Point(locatable.X, locatable.Y);
             (item.Element as CoordinateMarker)!.WebMercatorLocation = locatable;
 
-            item.X = locatable.X;
-            item.Y = locatable.Y;
+            item.MoveTo(locatable.X, locatable.Y);
         }
     }
 
@@ -579,9 +579,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         if (currentEditingPoint == null)
             return;
 
-        currentEditingPoint.X = point.X;
-
-        currentEditingPoint.Y = point.Y;
+        currentEditingPoint.MoveTo(point.X, point.Y);
     }
 
     private void MakePathGeometry()
@@ -730,12 +728,19 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
         MouseButtonEventHandler leftDown = (sender, e) =>
         {
+            // the press belongs to the mid-vertex: it must not reach the map and start a pan
+            e.Handled = true;
+
             webMercatorPoint.X = locateable.X;
 
             webMercatorPoint.Y = locateable.Y;
 
             if (!TryInsertPoint(webMercatorPoint, first, second, _webMercatorGeometry))
-                throw new NotImplementedException();
+            {
+                System.Diagnostics.Debug.WriteLine($"{nameof(EditableFeatureLayer)}: the segment of a mid-vertex was not found; nothing inserted");
+
+                return;
+            }
 
             RequestRefresh?.Invoke(this);
         };
@@ -944,36 +949,33 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         return false;
     }
 
-    private bool TryDeleteVertex(double x, double y, Geometry geometry, bool isRing)
+    /// <summary>
+    /// The point of the geometry that <paramref name="vertex"/> stands for, or null. The vertices are kept in the
+    /// same structure as the geometry (part by part, in order), so the point is found by place, not by coordinates:
+    /// two vertices at the same place are still two points.
+    /// </summary>
+    private static Point? FindPointOf(Locateable vertex, Geometry geometry, RecursiveCollection<Locateable>? vertices)
     {
+        if (vertices is null)
+            return null;
+
         if (geometry.Points != null)
         {
-            var minimumPoints = isRing ? 3 : 2;
+            var index = vertices.Values?.IndexOf(vertex) ?? -1;
 
-            if (geometry.Points.Count() <= minimumPoints)
-                return false;
-
-            geometry.Remove(x, y);
-
-            MakePathGeometry();
-
-            ReconstructLocateables();
-
-            return true;
-
+            return index >= 0 && index < geometry.Points.Count ? geometry.Points[index] : null;
         }
-        else
+
+        if (geometry.Geometries is null || vertices.Collections is null)
+            return null;
+
+        for (int g = 0; g < geometry.Geometries.Count && g < vertices.Collections.Count; g++)
         {
-            for (int g = 0; g < geometry.Geometries.Count; g++)
-            {
-                if (TryDeleteVertex(x, y, geometry.Geometries[g], geometry.Type == GeometryType.Polygon))
-                {
-                    return true;
-                }
-            }
+            if (FindPointOf(vertex, geometry.Geometries[g], vertices.Collections[g]) is { } point)
+                return point;
         }
 
-        return false;
+        return null;
     }
 
     private void UpdateLineSegment(Point point, Point newValue)
@@ -1017,12 +1019,10 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
             }
         }
 
-        var matched = UpdateLineSegment(point, newValue, _webMercatorGeometry, _midVertices);
-
-        if (!matched)
-        {
-            throw new NotImplementedException();
-        }
+        // a vertex that is not in the geometry any more has no mid-vertices to move: nothing to do (the screen
+        // is rebuilt from the geometry on the next refresh)
+        if (!UpdateLineSegment(point, newValue, _webMercatorGeometry, _midVertices))
+            System.Diagnostics.Debug.WriteLine($"{nameof(EditableFeatureLayer)}: a moved vertex was not found in the geometry");
     }
 
     private bool UpdateLineSegment(Point point, Point newPoint, Geometry geometry, RecursiveCollection<Locateable> midCollection)
@@ -1055,37 +1055,23 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
     private void UpdateMidPoints(Point point, Point newPoint, int pointIndex, RecursiveCollection<Locateable> midCollection)
     {
-        try
-        {
-            var displacement = new Point((newPoint.X - point.X) / 2.0, (newPoint.Y - point.Y) / 2.0);
+        // a sketch being drawn has no mid-vertices, and neither has a point: there is nothing to move then
+        if (midCollection?.Values is not { } mids)
+            return;
 
-            var length = midCollection.Values.Count;
+        var displacement = new Point((newPoint.X - point.X) / 2.0, (newPoint.Y - point.Y) / 2.0);
 
-            var leftIndex = GetLeftMidPointIndex(pointIndex, length);
+        var length = mids.Count;
 
-            var rightIndex = GetRightMidPointIndex(pointIndex, length);
+        var leftIndex = GetLeftMidPointIndex(pointIndex, length);
 
-            Locateable left = leftIndex == int.MinValue ? null : midCollection.Values[leftIndex];
+        var rightIndex = GetRightMidPointIndex(pointIndex, length);
 
-            if (left != null)
-            {
-                left.X = left.X + displacement.X;
-                left.Y = left.Y + displacement.Y;
-            }
+        if (leftIndex >= 0 && leftIndex < length)
+            mids[leftIndex].MoveTo(mids[leftIndex].X + displacement.X, mids[leftIndex].Y + displacement.Y);
 
-            Locateable right = rightIndex == int.MinValue ? null : midCollection.Values[rightIndex];
-
-            if (right != null)
-            {
-                right.X = right.X + displacement.X;
-                right.Y = right.Y + displacement.Y;
-            }
-
-        }
-        catch (Exception ex)
-        {
-
-        }
+        if (rightIndex >= 0 && rightIndex < length)
+            mids[rightIndex].MoveTo(mids[rightIndex].X + displacement.X, mids[rightIndex].Y + displacement.Y);
     }
 
     //probably this method can be better
@@ -1452,9 +1438,11 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
         var index = _primaryVerticesLayer.FindSelectedLocatableIndex();
 
-        _primaryVerticesLabelLayer.Remove(locateable.Id);
-
-        TryDeleteVertex(locateable.X, locateable.Y, _webMercatorGeometry, _webMercatorGeometry.Type == GeometryType.Polygon || _webMercatorGeometry.Type == GeometryType.MultiPolygon);
+        // the selected vertex itself, in whatever part it is; when nothing is deleted (a line of two points, a
+        // ring of three) the selection stays where it is
+        if (FindPointOf(locateable, _webMercatorGeometry, _vertices) is not { } point ||
+            !TryDeleteVertex(point, _webMercatorGeometry, _webMercatorGeometry.Type == GeometryType.Polygon))
+            return;
 
         SelectPoint(Math.Max(0, index - 1));
 

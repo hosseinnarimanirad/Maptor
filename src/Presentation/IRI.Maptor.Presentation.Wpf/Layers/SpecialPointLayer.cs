@@ -137,11 +137,6 @@ public class SpecialPointLayer : BaseLayer
 
     public void Remove(Guid id)
     {
-        if (Items.Count(i => i.Id == id) > 1)
-        {
-            throw new NotImplementedException("more than one locateable found");
-        }
-
         for (int i = Items.Count - 1; i >= 0; i--)
         {
             if (Items[i].Id == id)

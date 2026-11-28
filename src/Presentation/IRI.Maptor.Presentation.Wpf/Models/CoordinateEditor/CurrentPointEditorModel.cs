@@ -364,8 +364,7 @@ public class CurrentPointEditorModel : Notifier
             Point webMercatorPoint = SrsViewModel.ConvertToWebMercator(x, y, UtmZone);
 
             // Update Locateable
-            CurrentPoint.X = webMercatorPoint.X;
-            CurrentPoint.Y = webMercatorPoint.Y;
+            CurrentPoint.MoveTo(webMercatorPoint.X, webMercatorPoint.Y);
 
             // Note: Z and M values are stored in the underlying geometry, not in Locateable
             // Updating Z/M would require modifying the geometry directly through EditableFeatureLayer

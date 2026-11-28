@@ -2165,25 +2165,11 @@ public partial class MapViewer : NotifiableUserControl
             switch (e.Action)
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-                    {
-                        var canvasChildren = new HashSet<UIElement>(this.mapView.Children.Cast<UIElement>());
-
-                        var animateBatch = e.NewItems.Count <= MaxItemsWithAnimation;
-
-                        foreach (var item in e.NewItems)
-                        {
-                            AddComplexLayerItem(specialPointLayer, (Locateable)item, withAnimation, canvasChildren, animateBatch);
-                        }
-                    }
+                    addItems(e.NewItems);
                     break;
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-                    foreach (var item in e.OldItems)
-                    {
-                        var locateable = item as Locateable;
 
-                        if (this.mapView.Children.Contains(locateable.Element))
-                            this.mapView.Children.Remove(locateable.Element);
-                    }
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    removeItems(e.OldItems);
                     break;
 
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
@@ -2191,11 +2177,39 @@ public partial class MapViewer : NotifiableUserControl
                     break;
 
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
+                    removeItems(e.OldItems);
+                    addItems(e.NewItems);
+                    break;
+
+                // the order of the items is not the order on the canvas: nothing to do
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Move:
                 default:
-                    throw new NotImplementedException();
+                    break;
             }
         };
+
+        void addItems(System.Collections.IList newItems)
+        {
+            var children = new HashSet<UIElement>(this.mapView.Children.Cast<UIElement>());
+
+            var animate = newItems.Count <= MaxItemsWithAnimation;
+
+            foreach (var item in newItems)
+            {
+                AddComplexLayerItem(specialPointLayer, (Locateable)item, withAnimation, children, animate);
+            }
+        }
+
+        void removeItems(System.Collections.IList oldItems)
+        {
+            foreach (var item in oldItems)
+            {
+                var locateable = item as Locateable;
+
+                if (this.mapView.Children.Contains(locateable.Element))
+                    this.mapView.Children.Remove(locateable.Element);
+            }
+        }
 
         // read once rather than per item; CurrentExtent is a computed property
         var currentExtent = this.CurrentExtent;
@@ -2431,10 +2445,33 @@ public partial class MapViewer : NotifiableUserControl
             : null;
 
         _vertexDragSegment = _vertexDragOffset is null ? null : VertexDragSegment(CurrentEditingLayer!.GetVertexNeighbours(locateable!));
+
+        _vertexPressLocation = this.prevMouseLocation;
+
+        _vertexDragStarted = false;
     }
 
     // set while a vertex of the edited geometry is dragged: from the pointer (map units) to where the vertex was grabbed
     private Vector? _vertexDragOffset;
+
+    // A press on a vertex of the edited geometry selects it; it is moved only once the pointer has left the press
+    // point by more than the click threshold (or a value is typed for it). Without this a plain click moved the
+    // vertex: its target is "pointer + snap", and a snap point or a guide near it is enough to pull it away.
+    private Point _vertexPressLocation;
+
+    private bool _vertexDragStarted;
+
+    private bool HasVertexDragStarted(Point screenPoint)
+    {
+        if (!_vertexDragStarted)
+        {
+            _vertexDragStarted =
+                Math.Abs(screenPoint.X - _vertexPressLocation.X) > _knownAsPanThreshold ||
+                Math.Abs(screenPoint.Y - _vertexPressLocation.Y) > _knownAsPanThreshold;
+        }
+
+        return _vertexDragStarted;
+    }
 
     // with it, the vertices around the dragged one, as the segment the aids work on: Last is the neighbour the
     // measured segment starts from (length, angle and typed values are of Last -> the vertex), Previous the one
@@ -2467,10 +2504,18 @@ public partial class MapViewer : NotifiableUserControl
         if (layer.Get(this.currentMoveableItem) is not { } locateable)
             return;
 
+        // before the pointer has moved, only a typed length or direction moves the vertex
+        if (!_vertexDragStarted)
+        {
+            if (!_segmentInput.Constraint.IsActive)
+                return;
+
+            _vertexDragStarted = true;
+        }
+
         var target = VertexDragTarget(Mouse.GetPosition(this.mapView));
 
-        locateable.X = target.X;
-        locateable.Y = target.Y;
+        locateable.MoveTo(target.X, target.Y);
 
         this.CurrentEditingPoint = target;
     }
@@ -2499,15 +2544,18 @@ public partial class MapViewer : NotifiableUserControl
         {
             if (_vertexDragOffset is not null)
             {
-                var target = VertexDragTarget(currentMouseLocation);
+                if (HasVertexDragStarted(currentMouseLocation))
+                {
+                    var target = VertexDragTarget(currentMouseLocation);
 
-                locateable.X = target.X;
-                locateable.Y = target.Y;
+                    locateable.MoveTo(target.X, target.Y);
+                }
             }
             else
             {
-                locateable.X += currentMapLocation.X - prevMapLocation.X;
-                locateable.Y += currentMapLocation.Y - prevMapLocation.Y;
+                locateable.MoveTo(
+                    locateable.X + currentMapLocation.X - prevMapLocation.X,
+                    locateable.Y + currentMapLocation.Y - prevMapLocation.Y);
             }
 
             if (locateable.CanBeUsedAsEditingPoint)
@@ -2538,15 +2586,17 @@ public partial class MapViewer : NotifiableUserControl
         {
             if (_vertexDragOffset is not null)
             {
-                var target = VertexDragTarget(e.GetPosition(this.mapView));
+                // a click (no move, nothing typed) leaves the vertex where it is
+                if (HasVertexDragStarted(e.GetPosition(this.mapView)))
+                {
+                    var target = VertexDragTarget(e.GetPosition(this.mapView));
 
-                locateable.X = target.X;
-                locateable.Y = target.Y;
+                    locateable.MoveTo(target.X, target.Y);
+                }
             }
             else
             {
-                locateable.X += offset.X;
-                locateable.Y += offset.Y;
+                locateable.MoveTo(locateable.X + offset.X, locateable.Y + offset.Y);
             }
 
             if (locateable.CanBeUsedAsEditingPoint)
@@ -2573,6 +2623,7 @@ public partial class MapViewer : NotifiableUserControl
 
         _vertexDragOffset = null;
         _vertexDragSegment = null;
+        _vertexDragStarted = false;
 
         // typed values are for one move
         _segmentInput.Clear();
@@ -3510,6 +3561,9 @@ public partial class MapViewer : NotifiableUserControl
         // from a vertex click that finished the previous drawing — leaking in as a point).
         private bool _leftButtonDownObserved;
 
+        // true while this gesture holds the mouse capture for a pan, so the release is seen wherever it happens
+        private bool _hasCapture;
+
         public bool IsPanning => _wasPanning;
 
         /// <summary>
@@ -3574,6 +3628,7 @@ public partial class MapViewer : NotifiableUserControl
             _v.mapView.MouseDown += OnMouseDown;
             _v.mapView.MouseMove += OnMouseMove;
             _v.mapView.MouseUp += OnMouseUp;
+            _v.mapView.LostMouseCapture += OnLostMouseCapture;
         }
 
         public void End()
@@ -3583,6 +3638,47 @@ public partial class MapViewer : NotifiableUserControl
             _v.mapView.MouseDown -= OnMouseDown;
             _v.mapView.MouseMove -= OnMouseMove;
             _v.mapView.MouseUp -= OnMouseUp;
+            _v.mapView.LostMouseCapture -= OnLostMouseCapture;
+
+            ReleaseCapture();
+        }
+
+        private void ReleaseCapture()
+        {
+            if (!_hasCapture)
+                return;
+
+            // cleared first: releasing raises LostMouseCapture, which must see this as our own release
+            _hasCapture = false;
+
+            if (_v.mapView.IsMouseCaptured)
+                _v.mapView.ReleaseMouseCapture();
+        }
+
+        // The capture went away without a mouse-up reaching the map (Alt+Tab, a dialog): the pan is over, so the
+        // map is refreshed here; otherwise it would stay panned and un-rendered until the next action.
+        private void OnLostMouseCapture(object sender, MouseEventArgs e)
+        {
+            if (!_hasCapture)
+                return;
+
+            _hasCapture = false;
+            _leftButtonDownObserved = false;
+
+            if (Stale || !_wasPanning)
+                return;
+
+            EndPan(Mouse.GetPosition(_v.mapView));
+        }
+
+        private void EndPan(Point screenPoint)
+        {
+            _wasPanning = false;
+            _v.Refresh(isNewExtent: true);
+            // Restore the active interaction's cursor (set by GetDrawing/SelectThePoint), NOT
+            // CursorSettings[MapAction] — during Measure MapAction is Pan, which would wrongly snap to Hand.
+            _v.SetCursor(_v._activeCursor);
+            _onAfterPan?.Invoke(_v.ScreenToMap(screenPoint).AsPoint());
         }
 
         private void OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -3626,6 +3722,11 @@ public partial class MapViewer : NotifiableUserControl
                 {
                     _v.ApplyPanOffset(dx, dy);
                     _v.prevMouseLocation = loc;
+
+                    // hold the mouse for the pan: its release must be seen even outside the map
+                    if (!_wasPanning)
+                        _hasCapture = _v.mapView.CaptureMouse();
+
                     _wasPanning = true;
                 }
             }
@@ -3654,12 +3755,8 @@ public partial class MapViewer : NotifiableUserControl
 
             if (_wasPanning)
             {
-                _wasPanning = false;
-                _v.Refresh(isNewExtent: true);
-                // Restore the active interaction's cursor (set by GetDrawing/SelectThePoint), NOT
-                // CursorSettings[MapAction] — during Measure MapAction is Pan, which would wrongly snap to Hand.
-                _v.SetCursor(_v._activeCursor);
-                _onAfterPan?.Invoke(_v.ScreenToMap(e.GetPosition(_v.mapView)).AsPoint());
+                ReleaseCapture();
+                EndPan(e.GetPosition(_v.mapView));
                 return;
             }
 
@@ -5120,7 +5217,16 @@ public partial class MapViewer : NotifiableUserControl
             return isAvailable ? new CursorBoxValue(live()) : null;
         }
 
-        static string Degrees(double value) => string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.0}°", value);
+        // rounded first, and a zero without its sign: a tiny negative turn would read "-0.0"
+        static string Degrees(double value)
+        {
+            var rounded = Math.Round(value, 1, MidpointRounding.AwayFromZero);
+
+            if (rounded == 0)
+                rounded = 0;
+
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.0}°", rounded);
+        }
 
         var length = Value(SegmentField.Length, " m", () => IRI.Maptor.Core.Common.Helpers.UnitHelper.GetLengthLabel(WebMercatorGround.Length(last, point)), isAvailable: true)!.Value;
 
@@ -5393,6 +5499,12 @@ public partial class MapViewer : NotifiableUserControl
         if (this.rectangleFirstMapPoint.IsNaN())
             return;
 
+        _rectanglePressObserved = true;
+
+        // the button may be released where the map never sees it (Alt+Tab, a dialog): drop the rectangle then
+        this.mapView.LostMouseCapture -= MapView_LostMouseCaptureForRectangleDrawing;
+        this.mapView.LostMouseCapture += MapView_LostMouseCaptureForRectangleDrawing;
+
         Mouse.Capture(this.mapView);
 
         drawingRectangle.Width = 0;
@@ -5405,9 +5517,25 @@ public partial class MapViewer : NotifiableUserControl
         }
     }
 
+    // true between the press that starts a rectangle and its release (or the loss of the capture)
+    private bool _rectanglePressObserved;
+
+    // The drag ended without a mouse-up: remove the dashed rectangle and wait for the next press. The tool stays on.
+    private void MapView_LostMouseCaptureForRectangleDrawing(object sender, MouseEventArgs e)
+    {
+        this.mapView.LostMouseCapture -= MapView_LostMouseCaptureForRectangleDrawing;
+
+        _rectanglePressObserved = false;
+
+        _inMiddleOfDrawingRectangle = false;
+
+        if (drawingRectangle != null)
+            this.mapView.Children.Remove(drawingRectangle);
+    }
+
     private void MapView_MouseMoveForRectangleDrawing(object sender, MouseEventArgs e)
     {
-        if (e.LeftButton != MouseButtonState.Pressed)
+        if (e.LeftButton != MouseButtonState.Pressed || !_rectanglePressObserved)
             return;
 
         _inMiddleOfDrawingRectangle = true;
@@ -5428,6 +5556,13 @@ public partial class MapViewer : NotifiableUserControl
         if (e.ChangedButton != MouseButton.Left)
             return;
 
+        // a release whose press this drawing did not see (it was lost, or made elsewhere) is not a rectangle
+        if (!_rectanglePressObserved)
+            return;
+
+        _rectanglePressObserved = false;
+
+        // detaches the lost-capture handler too, before the capture is released below
         Unsubscribe_DrawingEvents_StartRectangleDrawing();
 
         _inMiddleOfDrawingRectangle = false;
@@ -5470,9 +5605,13 @@ public partial class MapViewer : NotifiableUserControl
 
         token?.Dispose();
 
-        drawingTcs.SetResult(ResponseFactory.Create(polygon));
+        // The result is handed over last: the code awaiting it runs at once, and whatever it starts (the next
+        // drawing, an edit) must not be hit by clean-up still to come.
+        var tcs = drawingTcs;
 
         RestoreNavigationAfterDrawing();
+
+        tcs.SetResult(ResponseFactory.Create(polygon));
     }
 
     private void Subscribe_DrawingEvents_StartRectangleDrawing()
@@ -5492,6 +5631,7 @@ public partial class MapViewer : NotifiableUserControl
         this.mapView.MouseDown -= MapView_MouseDownForRectangleDrawing;
         this.mapView.MouseMove -= MapView_MouseMoveForRectangleDrawing;
         this.mapView.MouseUp -= MapView_MouseUpForRectangleDrawing;
+        this.mapView.LostMouseCapture -= MapView_LostMouseCaptureForRectangleDrawing;
     }
 
 
@@ -5516,9 +5656,12 @@ public partial class MapViewer : NotifiableUserControl
             _presenter.RequestSelectedLocatableChanged,
             _presenter.SketchBar.Options);
 
+        // A click on a placed vertex finishes the sketch. While the sketch is not valid yet (a line of one point, a
+        // polygon of two) the click does nothing: FinishDrawing would throw the sketch away.
         this.drawingLayer.OnRequestFinishDrawing += (s, arg) =>
         {
-            FinishDrawing();
+            if (drawingLayer?.GetLastGeometry()?.IsValid() == true)
+                FinishDrawing();
         };
 
         // The layer owns geometry-change detection; recompute Finish/Finish-part state on its signal.
@@ -5594,10 +5737,13 @@ public partial class MapViewer : NotifiableUserControl
 
         token?.Dispose();
 
-        drawingTcs.SetResult(ResponseFactory.Create(geometry));
+        // The result is handed over last: the code awaiting it runs at once, and whatever it starts (the next
+        // drawing, an edit of the new feature) must not be hit by clean-up still to come.
+        var tcs = drawingTcs;
 
         RestoreNavigationAfterDrawing();
 
+        tcs.SetResult(ResponseFactory.Create(geometry));
     }
 
     private void StartNewPartAt(sb.Point pt)
@@ -5995,8 +6141,6 @@ public partial class MapViewer : NotifiableUserControl
 
         CurrentEditingLayer.RequestFinishEditing = (g) =>
         {
-            tcs.SetResult(ResponseFactory.Create(g));
-
             this.RemoveEditableFeatureLayer(CurrentEditingLayer);
 
             CurrentEditingLayer?.Dispose();
@@ -6006,6 +6150,10 @@ public partial class MapViewer : NotifiableUserControl
             // Token already disposed via GetNewEditingToken, but nullify field
             Interlocked.Exchange(ref _editingCancellationToken, null)?.Dispose();
             //_editingCancellationToken = null;
+
+            // The result is handed over last: the code awaiting it runs at once, and an edit it starts must not be
+            // removed by the clean-up of this one.
+            tcs.SetResult(ResponseFactory.Create(g));
         };
 
         CurrentEditingLayer.RequestConvertToDrawingItem = (g) =>
@@ -6030,8 +6178,6 @@ public partial class MapViewer : NotifiableUserControl
 
         CurrentEditingLayer.RequestCancelEditing = (g) =>
         {
-            tcs?.TrySetCanceled();
-
             this.RemoveEditableFeatureLayer(CurrentEditingLayer);
 
             CurrentEditingLayer?.Dispose();
@@ -6039,6 +6185,9 @@ public partial class MapViewer : NotifiableUserControl
 
             Interlocked.Exchange(ref _editingCancellationToken, null)?.Dispose();
             //_editingCancellationToken = null;
+
+            // last, as in RequestFinishEditing
+            tcs?.TrySetCanceled();
         };
 
 
@@ -6371,8 +6520,7 @@ public partial class MapViewer : NotifiableUserControl
             //measureLayer.Items.First().X = p.X;
             //measureLayer.Items.First().Y = p.Y + offsetOnMap;
             var firstItem = measureLayer.Items.First();
-            firstItem.X = p.X;
-            firstItem.Y = p.Y + offsetOnMap;
+            firstItem.MoveTo(p.X, p.Y + offsetOnMap);
 
             //var marker = (measureLayer.Items.First().Element as IRI.Maptor.Presentation.Wpf.Controls.MapMarkers.LabelMarker);
             var marker = firstItem.Element as LabelMarker;
