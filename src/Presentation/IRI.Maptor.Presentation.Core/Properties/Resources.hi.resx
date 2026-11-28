@@ -4909,4 +4909,31 @@
   <data name="sketchBar_details" xml:space="preserve">
     <value>विवरण: वर्तमान बिंदु, बहु भाग, स्थानिक संदर्भ प्रणाली, माप</value>
   </data>
+  <data name="sketchBar_snapping_kinds" xml:space="preserve">
+    <value>स्नैप करें</value>
+  </data>
+  <data name="sketchBar_snapping_tipTitle" xml:space="preserve">
+    <value>स्नैपिंग कैसे काम करती है</value>
+  </data>
+  <data name="sketchBar_snapping_tipText" xml:space="preserve">
+    <value>किसी मौजूदा फ़ीचर के पास नया या खिसकाया गया बिंदु उस पर कूद जाता है और एक निशान बताता है कि क्या मिला; हर प्रकार का निशान यहाँ उसके नाम के पास है। दो पास हों तो सूची में ऊपर वाला जीतता है। केवल नीचे चुनी गई लेयर इस्तेमाल होती हैं।</value>
+  </data>
+  <data name="sketchBar_snapping_tipPause" xml:space="preserve">
+    <value>बिना स्नैप के बिंदु रखने के लिए दबाए रखें</value>
+  </data>
+  <data name="sketchBar_snapping_tipSteps" xml:space="preserve">
+    <value>दिशा को 15° के चरणों पर रखने के लिए दबाए रखें</value>
+  </data>
+  <data name="sketchBar_snapping_tipType" xml:space="preserve">
+    <value>लंबाई, कोण या दिक्मान टाइप करें; अगला मान; साफ़ करें</value>
+  </data>
+  <data name="sketchBar_snapping_tipFinish" xml:space="preserve">
+    <value>समाप्त करें; अंतिम बिंदु वापस लें</value>
+  </data>
+  <data name="sketchBar_snapping_tipUndo" xml:space="preserve">
+    <value>पूर्ववत; फिर से करें</value>
+  </data>
+  <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
+    <value>गाइड: ड्रॉ करते समय किसी रेखा पर राइट-क्लिक करें और उसके विस्तार, लंब और समांतर के लिए "इस रेखा से गाइड" चुनें।</value>
+  </data>
 </root>

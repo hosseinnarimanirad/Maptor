@@ -4909,4 +4909,31 @@
   <data name="sketchBar_details" xml:space="preserve">
     <value>Подробности: Текущая точка, Мульти часть, Пространственная система отсчета, Измерение</value>
   </data>
+  <data name="sketchBar_snapping_kinds" xml:space="preserve">
+    <value>Привязка к</value>
+  </data>
+  <data name="sketchBar_snapping_tipTitle" xml:space="preserve">
+    <value>Как работает привязка</value>
+  </data>
+  <data name="sketchBar_snapping_tipText" xml:space="preserve">
+    <value>Рядом с существующим объектом новая или перемещаемая точка перескакивает на него, а значок показывает, что найдено; значок каждого вида стоит здесь рядом с его названием. Если два вида рядом, побеждает тот, что выше в списке. Используются только слои, отмеченные ниже.</value>
+  </data>
+  <data name="sketchBar_snapping_tipPause" xml:space="preserve">
+    <value>Удерживайте, чтобы поставить точку без привязки</value>
+  </data>
+  <data name="sketchBar_snapping_tipSteps" xml:space="preserve">
+    <value>Удерживайте, чтобы держать направление с шагом 15°</value>
+  </data>
+  <data name="sketchBar_snapping_tipType" xml:space="preserve">
+    <value>Ввести длину, угол или азимут; следующее значение; очистить</value>
+  </data>
+  <data name="sketchBar_snapping_tipFinish" xml:space="preserve">
+    <value>Завершить; убрать последнюю точку</value>
+  </data>
+  <data name="sketchBar_snapping_tipUndo" xml:space="preserve">
+    <value>Отменить; вернуть</value>
+  </data>
+  <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
+    <value>Направляющие: во время рисования щёлкните правой кнопкой по линии и выберите «Направляющие от этой линии» — её продолжение, перпендикуляр и параллель.</value>
+  </data>
 </root>

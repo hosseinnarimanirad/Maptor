@@ -4909,4 +4909,31 @@
   <data name="sketchBar_details" xml:space="preserve">
     <value>التفاصيل: النقطة الحالية، جزء متعدد، نظام الإسناد المكاني، قياس</value>
   </data>
+  <data name="sketchBar_snapping_kinds" xml:space="preserve">
+    <value>الالتقاط إلى</value>
+  </data>
+  <data name="sketchBar_snapping_tipTitle" xml:space="preserve">
+    <value>كيف يعمل الالتقاط</value>
+  </data>
+  <data name="sketchBar_snapping_tipText" xml:space="preserve">
+    <value>قرب معلم موجود تقفز النقطة الجديدة أو المنقولة إليه، وتُظهر علامةٌ ما وجدته؛ علامة كل نوع بجانب اسمه هنا. إذا تقارب نوعان يفوز الأعلى في القائمة. تُستخدم الطبقات المحددة أدناه فقط.</value>
+  </data>
+  <data name="sketchBar_snapping_tipPause" xml:space="preserve">
+    <value>اضغط مع الاستمرار لوضع نقطة دون التقاط</value>
+  </data>
+  <data name="sketchBar_snapping_tipSteps" xml:space="preserve">
+    <value>اضغط مع الاستمرار لإبقاء الاتجاه على خطوات 15°</value>
+  </data>
+  <data name="sketchBar_snapping_tipType" xml:space="preserve">
+    <value>اكتب طولًا أو زاوية أو اتجاهًا؛ القيمة التالية؛ مسح</value>
+  </data>
+  <data name="sketchBar_snapping_tipFinish" xml:space="preserve">
+    <value>إنهاء؛ التراجع عن آخر نقطة</value>
+  </data>
+  <data name="sketchBar_snapping_tipUndo" xml:space="preserve">
+    <value>تراجع؛ إعادة</value>
+  </data>
+  <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
+    <value>خطوط الإرشاد: أثناء الرسم انقر بزر الفأرة الأيمن على خط واختر «خطوط إرشاد من هذا الخط» لامتداده والعمودي عليه والموازي له.</value>
+  </data>
 </root>

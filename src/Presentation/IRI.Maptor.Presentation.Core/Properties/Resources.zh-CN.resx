@@ -4909,4 +4909,31 @@
   <data name="sketchBar_details" xml:space="preserve">
     <value>详细信息：当前点、多部分、空间参考系统、测量</value>
   </data>
+  <data name="sketchBar_snapping_kinds" xml:space="preserve">
+    <value>捕捉到</value>
+  </data>
+  <data name="sketchBar_snapping_tipTitle" xml:space="preserve">
+    <value>捕捉如何工作</value>
+  </data>
+  <data name="sketchBar_snapping_tipText" xml:space="preserve">
+    <value>靠近现有要素时，新放置或移动的点会跳到要素上，并用标记显示找到的内容；每种类型的标记就在这里它的名称旁。两者相近时，列表中靠上的优先。只使用下方勾选的图层。</value>
+  </data>
+  <data name="sketchBar_snapping_tipPause" xml:space="preserve">
+    <value>按住可不捕捉地放置点</value>
+  </data>
+  <data name="sketchBar_snapping_tipSteps" xml:space="preserve">
+    <value>按住可将方向锁定在 15° 步长上</value>
+  </data>
+  <data name="sketchBar_snapping_tipType" xml:space="preserve">
+    <value>输入长度、角度或方位角；下一个值；清除</value>
+  </data>
+  <data name="sketchBar_snapping_tipFinish" xml:space="preserve">
+    <value>完成；撤回最后一个点</value>
+  </data>
+  <data name="sketchBar_snapping_tipUndo" xml:space="preserve">
+    <value>撤消；重做</value>
+  </data>
+  <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
+    <value>参考线：绘制时右键单击一条线并选择“以此线为参考”，即可得到其延长线、垂线和平行线。</value>
+  </data>
 </root>

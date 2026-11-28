@@ -8737,6 +8737,87 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Snap to.
+        /// </summary>
+        public static string sketchBar_snapping_kinds {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_kinds", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to How snapping works.
+        /// </summary>
+        public static string sketchBar_snapping_tipTitle {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_tipTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Near an existing feature, a new or moved point jumps onto it, and a marker shows what it found; each kind's marker is beside its name here. When two are close, the one higher in the list wins. Only the layers ticked below are used..
+        /// </summary>
+        public static string sketchBar_snapping_tipText {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_tipText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Hold to place a point without snapping.
+        /// </summary>
+        public static string sketchBar_snapping_tipPause {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_tipPause", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Hold to keep the direction on 15° steps.
+        /// </summary>
+        public static string sketchBar_snapping_tipSteps {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_tipSteps", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Type a length, angle or bearing; next value; clear.
+        /// </summary>
+        public static string sketchBar_snapping_tipType {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_tipType", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Finish; take back the last point.
+        /// </summary>
+        public static string sketchBar_snapping_tipFinish {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_tipFinish", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Undo; redo.
+        /// </summary>
+        public static string sketchBar_snapping_tipUndo {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_tipUndo", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Guides: while drawing, right-click a line and choose “Guides from this line” for its extension, perpendicular and parallel..
+        /// </summary>
+        public static string sketchBar_snapping_tipFooter {
+            get {
+                return ResourceManager.GetString("sketchBar_snapping_tipFooter", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Drag to move the bar. Double-click to put it back..
         /// </summary>
         public static string sketchBar_move_tip {

@@ -4909,4 +4909,31 @@
   <data name="sketchBar_details" xml:space="preserve">
     <value>وردەکارییەکان: خالی ئێستا، چەند بەش، سیستەمی ئاماژەپێدانی شوێن، پێوانە</value>
   </data>
+  <data name="sketchBar_snapping_kinds" xml:space="preserve">
+    <value>لکاندن بە</value>
+  </data>
+  <data name="sketchBar_snapping_tipTitle" xml:space="preserve">
+    <value>لکاندن چۆن کار دەکات</value>
+  </data>
+  <data name="sketchBar_snapping_tipText" xml:space="preserve">
+    <value>لە نزیک دیاردەیەکی هەبوو، خاڵی نوێ یان جووڵێنراو بازدەداتە سەری و نیشانەیەک پیشان دەدات چی دۆزیوەتەوە؛ نیشانەی هەر جۆرێک لێرە لە تەنیشت ناوەکەیەتی. ئەگەر دوو جۆر نزیک بن، ئەوەی لە لیستەکەدا سەرترە دەباتەوە. تەنها ئەو چینانەی خوارەوە کە نیشانکراون بەکاردێن.</value>
+  </data>
+  <data name="sketchBar_snapping_tipPause" xml:space="preserve">
+    <value>دابگرە بۆ دانانی خاڵ بێ لکاندن</value>
+  </data>
+  <data name="sketchBar_snapping_tipSteps" xml:space="preserve">
+    <value>دابگرە بۆ هێشتنەوەی ئاراستە لەسەر هەنگاوی 15°</value>
+  </data>
+  <data name="sketchBar_snapping_tipType" xml:space="preserve">
+    <value>درێژی، گۆشە یان ئاراستە بنووسە؛ بەهای دواتر؛ سڕینەوە</value>
+  </data>
+  <data name="sketchBar_snapping_tipFinish" xml:space="preserve">
+    <value>تەواوکردن؛ گەڕاندنەوەی دوایین خاڵ</value>
+  </data>
+  <data name="sketchBar_snapping_tipUndo" xml:space="preserve">
+    <value>پاشگەزبوونەوە؛ دووبارەکردنەوە</value>
+  </data>
+  <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
+    <value>ڕێنماکان: لە کاتی کێشاندا کلیکی ڕاست لەسەر هێڵێک بکە و «ڕێنما لەم هێڵەوە» هەڵبژێرە بۆ درێژکراوە، ستوون و تەریبەکەی.</value>
+  </data>
 </root>

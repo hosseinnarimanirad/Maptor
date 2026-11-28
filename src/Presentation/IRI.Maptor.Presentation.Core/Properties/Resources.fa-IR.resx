@@ -4968,4 +4968,31 @@
   <data name="sketchBar_details" xml:space="preserve">
     <value>جزئیات: نقطه جاری، عوارض چندتکه‌ای، سیستم مرجع مکانی، اندازه‌گیری</value>
   </data>
+  <data name="sketchBar_snapping_kinds" xml:space="preserve">
+    <value>چسبیدن به</value>
+  </data>
+  <data name="sketchBar_snapping_tipTitle" xml:space="preserve">
+    <value>چسبیدن چطور کار می‌کند</value>
+  </data>
+  <data name="sketchBar_snapping_tipText" xml:space="preserve">
+    <value>نزدیک یک عارضهٔ موجود، نقطهٔ تازه یا جابه‌جاشده روی آن می‌پرد و نشانه‌ای نشان می‌دهد چه پیدا کرده است؛ نشانهٔ هر نوع اینجا کنار نامش است. اگر دو نوع نزدیک هم باشند، آنکه در فهرست بالاتر است برنده است. فقط لایه‌های تیک‌خوردهٔ پایین به کار می‌روند.</value>
+  </data>
+  <data name="sketchBar_snapping_tipPause" xml:space="preserve">
+    <value>نگه دارید تا نقطه بدون چسبیدن گذاشته شود</value>
+  </data>
+  <data name="sketchBar_snapping_tipSteps" xml:space="preserve">
+    <value>نگه دارید تا جهت روی گام‌های ۱۵ درجه بماند</value>
+  </data>
+  <data name="sketchBar_snapping_tipType" xml:space="preserve">
+    <value>طول، زاویه یا آزیموت را تایپ کنید؛ مقدار بعدی؛ پاک کردن</value>
+  </data>
+  <data name="sketchBar_snapping_tipFinish" xml:space="preserve">
+    <value>پایان؛ برداشتن آخرین نقطه</value>
+  </data>
+  <data name="sketchBar_snapping_tipUndo" xml:space="preserve">
+    <value>واگرد؛ ازنو</value>
+  </data>
+  <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
+    <value>راهنماها: هنگام ترسیم، روی یک خط کلیک راست کنید و «راهنما از این خط» را بزنید تا امتداد، عمود و موازی آن نشان داده شود.</value>
+  </data>
 </root>

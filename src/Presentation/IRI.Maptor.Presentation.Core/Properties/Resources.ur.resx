@@ -4909,4 +4909,31 @@
   <data name="sketchBar_details" xml:space="preserve">
     <value>تفصیلات: کرنٹ پوائنٹ، کثیر حصہ، مقامی حوالہ نظام، پیمائش</value>
   </data>
+  <data name="sketchBar_snapping_kinds" xml:space="preserve">
+    <value>سنیپ کریں</value>
+  </data>
+  <data name="sketchBar_snapping_tipTitle" xml:space="preserve">
+    <value>سنیپنگ کیسے کام کرتی ہے</value>
+  </data>
+  <data name="sketchBar_snapping_tipText" xml:space="preserve">
+    <value>کسی موجودہ فیچر کے قریب نیا یا ہلایا گیا نقطہ اس پر چلا جاتا ہے اور ایک نشان دکھاتا ہے کہ کیا ملا؛ ہر قسم کا نشان یہاں اس کے نام کے ساتھ ہے۔ دو قریب ہوں تو فہرست میں اوپر والا جیتتا ہے۔ صرف نیچے نشان زدہ پرتیں استعمال ہوتی ہیں۔</value>
+  </data>
+  <data name="sketchBar_snapping_tipPause" xml:space="preserve">
+    <value>سنیپ کے بغیر نقطہ رکھنے کے لیے دبائے رکھیں</value>
+  </data>
+  <data name="sketchBar_snapping_tipSteps" xml:space="preserve">
+    <value>سمت کو 15° کے قدموں پر رکھنے کے لیے دبائے رکھیں</value>
+  </data>
+  <data name="sketchBar_snapping_tipType" xml:space="preserve">
+    <value>لمبائی، زاویہ یا سمتی زاویہ لکھیں؛ اگلی قدر؛ صاف کریں</value>
+  </data>
+  <data name="sketchBar_snapping_tipFinish" xml:space="preserve">
+    <value>ختم کریں؛ آخری نقطہ واپس لیں</value>
+  </data>
+  <data name="sketchBar_snapping_tipUndo" xml:space="preserve">
+    <value>واپس کریں؛ دوبارہ کریں</value>
+  </data>
+  <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
+    <value>رہنما خطوط: ڈرا کرتے وقت کسی لکیر پر دائیں کلک کریں اور اس کی توسیع، عمود اور متوازی کے لیے «اس لکیر سے رہنما خطوط» چنیں۔</value>
+  </data>
 </root>

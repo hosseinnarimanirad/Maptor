@@ -6,6 +6,8 @@
             xmlns:localization="clr-namespace:IRI.Maptor.Presentation.Core.Localization;assembly=IRI.Maptor.Presentation.Core"
             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
             xmlns:behaviors="clr-namespace:IRI.Maptor.Presentation.Wpf.Behaviors"
+            xmlns:controls="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls"
+            xmlns:models="clr-namespace:IRI.Maptor.Presentation.Wpf.Models"
             x:Name="root" FlowDirection="{Binding Path=CurrentFlowDirection, Source={x:Static localization:LocalizationManager.Instance}}"
             Visibility="{Binding ShowMapInfoPanel, Converter={StaticResource boolToVisibilityConverter}}">
     <UserControl.Resources>
@@ -215,26 +217,84 @@
                                     <Style x:Key="snapGroupHeader" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}">
                                         <Setter Property="Margin" Value="2,0,2,2"/>
                                     </Style>
+                                    <!--a kind's caption: the marker the map shows for it, then its name-->
+                                    <Style x:Key="snapKindName" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.FieldValue}">
+                                        <Setter Property="Margin" Value="8,0,0,0"/>
+                                    </Style>
+                                    <Style x:Key="snapGlyph" TargetType="Shape">
+                                        <Setter Property="Width" Value="10"/>
+                                        <Setter Property="Height" Value="10"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="Fill" Value="{DynamicResource IRI.Maptor.Brushes.OnMap.HandleFill}"/>
+                                        <Setter Property="Stroke" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                                        <Setter Property="StrokeThickness" Value="2"/>
+                                    </Style>
                                     <Style x:Key="snapNote" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}">
                                         <Setter Property="TextWrapping" Value="Wrap"/>
                                         <Setter Property="Margin" Value="2"/>
                                     </Style>
                                 </StackPanel.Resources>
 
+                                <!--the header and the tip: how snapping works and the keys that go with it. The tip is the
+                                    place to teach (InfoTip), the tooltips stay short labels.-->
+                                <DockPanel Margin="0,0,0,2">
+                                    <controls:InfoTip DockPanel.Dock="Right" VerticalAlignment="Center"
+                                                      Title="{Binding [sketchBar_snapping_tipTitle], Source={StaticResource Localization}}"
+                                                      Text="{Binding [sketchBar_snapping_tipText], Source={StaticResource Localization}}"
+                                                      Footer="{Binding [sketchBar_snapping_tipFooter], Source={StaticResource Localization}}">
+                                        <controls:InfoTip.Examples>
+                                            <models:InfoTipExampleCollection>
+                                                <models:InfoTipExample Label="{Binding [sketchBar_snapping_tipPause], Source={StaticResource Localization}}" Value="Ctrl"/>
+                                                <models:InfoTipExample Label="{Binding [sketchBar_snapping_tipSteps], Source={StaticResource Localization}}" Value="Shift"/>
+                                                <models:InfoTipExample Label="{Binding [sketchBar_snapping_tipType], Source={StaticResource Localization}}" Value="L · A · B, Tab, Esc"/>
+                                                <models:InfoTipExample Label="{Binding [sketchBar_snapping_tipFinish], Source={StaticResource Localization}}" Value="Enter · Backspace"/>
+                                                <models:InfoTipExample Label="{Binding [sketchBar_snapping_tipUndo], Source={StaticResource Localization}}" Value="Ctrl+Z · Ctrl+Y"/>
+                                            </models:InfoTipExampleCollection>
+                                        </controls:InfoTip.Examples>
+                                    </controls:InfoTip>
+                                    <TextBlock Style="{StaticResource snapGroupHeader}" VerticalAlignment="Center"
+                                               Text="{Binding [sketchBar_snapping_kinds], Source={StaticResource Localization}}"/>
+                                </DockPanel>
+
                                 <!--what to snap to: map settings (kept between sessions), reached through the sketch bar's
                                     own DataContext since this border's is the layer choice-->
                                 <!--the kinds, in the order they win: a line end over a vertex over an intersection over a
                                     midpoint over an edge-->
                                 <CheckBox IsChecked="{Binding DataContext.MapSettings.Snapping_ToEnds, ElementName=root, Mode=TwoWay}"
-                                          Content="{Binding [sketchBar_snapping_toEnds], Source={StaticResource Localization}}"/>
+>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Rectangle Style="{StaticResource snapGlyph}" Fill="{DynamicResource MahApps.Brushes.Highlight}" Stroke="{DynamicResource IRI.Maptor.Brushes.OnMap.HandleFill}" StrokeThickness="1.5"/>
+                                        <TextBlock Style="{StaticResource snapKindName}" Text="{Binding [sketchBar_snapping_toEnds], Source={StaticResource Localization}}"/>
+                                    </StackPanel>
+                                </CheckBox>
                                 <CheckBox IsChecked="{Binding DataContext.MapSettings.Snapping_ToVertices, ElementName=root, Mode=TwoWay}"
-                                          Content="{Binding [sketchBar_snapping_toVertices], Source={StaticResource Localization}}"/>
+>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Rectangle Style="{StaticResource snapGlyph}"/>
+                                        <TextBlock Style="{StaticResource snapKindName}" Text="{Binding [sketchBar_snapping_toVertices], Source={StaticResource Localization}}"/>
+                                    </StackPanel>
+                                </CheckBox>
                                 <CheckBox IsChecked="{Binding DataContext.MapSettings.Snapping_ToIntersections, ElementName=root, Mode=TwoWay}"
-                                          Content="{Binding [sketchBar_snapping_toIntersections], Source={StaticResource Localization}}"/>
+>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Path Style="{x:Null}" Width="10" Height="10" VerticalAlignment="Center" Data="M 1,1 L 9,9 M 9,1 L 1,9" StrokeThickness="2.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Stroke="{DynamicResource MahApps.Brushes.Highlight}"/>
+                                        <TextBlock Style="{StaticResource snapKindName}" Text="{Binding [sketchBar_snapping_toIntersections], Source={StaticResource Localization}}"/>
+                                    </StackPanel>
+                                </CheckBox>
                                 <CheckBox IsChecked="{Binding DataContext.MapSettings.Snapping_ToMidpoints, ElementName=root, Mode=TwoWay}"
-                                          Content="{Binding [sketchBar_snapping_toMidpoints], Source={StaticResource Localization}}"/>
+>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Polygon Style="{StaticResource snapGlyph}" Points="5,1 9,9 1,9" StrokeLineJoin="Round"/>
+                                        <TextBlock Style="{StaticResource snapKindName}" Text="{Binding [sketchBar_snapping_toMidpoints], Source={StaticResource Localization}}"/>
+                                    </StackPanel>
+                                </CheckBox>
                                 <CheckBox IsChecked="{Binding DataContext.MapSettings.Snapping_ToEdges, ElementName=root, Mode=TwoWay}"
-                                          Content="{Binding [sketchBar_snapping_toEdges], Source={StaticResource Localization}}"/>
+>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Style="{StaticResource snapGlyph}"/>
+                                        <TextBlock Style="{StaticResource snapKindName}" Text="{Binding [sketchBar_snapping_toEdges], Source={StaticResource Localization}}"/>
+                                    </StackPanel>
+                                </CheckBox>
 
                                 <Separator Style="{StaticResource IRI.Maptor.Styles.Separator.Horizontal}"/>
 

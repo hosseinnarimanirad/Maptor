@@ -4909,4 +4909,31 @@
   <data name="sketchBar_details" xml:space="preserve">
     <value>Մանրամասներ: Ընթացիկ կետ, Բազմամաս, Տարածական հղման համակարգ, Չափում</value>
   </data>
+  <data name="sketchBar_snapping_kinds" xml:space="preserve">
+    <value>Կպցնել</value>
+  </data>
+  <data name="sketchBar_snapping_tipTitle" xml:space="preserve">
+    <value>Ինչպես է աշխատում կպցումը</value>
+  </data>
+  <data name="sketchBar_snapping_tipText" xml:space="preserve">
+    <value>Գոյություն ունեցող օբյեկտի մոտ նոր կամ տեղափոխված կետը ցատկում է դրա վրա, և նշանը ցույց է տալիս, թե ինչ է գտել․ յուրաքանչյուր տեսակի նշանն այստեղ իր անվան կողքին է։ Եթե երկուսը մոտ են, հաղթում է ցանկում ավելի վերևում գտնվողը։ Օգտագործվում են միայն ներքևում նշված շերտերը։</value>
+  </data>
+  <data name="sketchBar_snapping_tipPause" xml:space="preserve">
+    <value>Պահեք՝ կետն առանց կպցման դնելու համար</value>
+  </data>
+  <data name="sketchBar_snapping_tipSteps" xml:space="preserve">
+    <value>Պահեք՝ ուղղությունը 15° քայլերով պահելու համար</value>
+  </data>
+  <data name="sketchBar_snapping_tipType" xml:space="preserve">
+    <value>Մուտքագրեք երկարություն, անկյուն կամ ազիմուտ․ հաջորդ արժեքը․ մաքրել</value>
+  </data>
+  <data name="sketchBar_snapping_tipFinish" xml:space="preserve">
+    <value>Ավարտել․ հետ վերցնել վերջին կետը</value>
+  </data>
+  <data name="sketchBar_snapping_tipUndo" xml:space="preserve">
+    <value>Հետարկել․ կրկնել</value>
+  </data>
+  <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
+    <value>Ուղեցույցներ․ գծելիս աջ սեղմեք գծի վրա և ընտրեք «Ուղեցույցներ այս գծից»՝ դրա շարունակության, ուղղահայացի և զուգահեռի համար։</value>
+  </data>
 </root>

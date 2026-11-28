@@ -5064,4 +5064,31 @@
   <data name="sketchBar_details" xml:space="preserve">
     <value>Details: Current Point, Multi part, Spatial Reference System, Measurement</value>
   </data>
+  <data name="sketchBar_snapping_kinds" xml:space="preserve">
+    <value>Snap to</value>
+  </data>
+  <data name="sketchBar_snapping_tipTitle" xml:space="preserve">
+    <value>How snapping works</value>
+  </data>
+  <data name="sketchBar_snapping_tipText" xml:space="preserve">
+    <value>Near an existing feature, a new or moved point jumps onto it, and a marker shows what it found; each kind's marker is beside its name here. When two are close, the one higher in the list wins. Only the layers ticked below are used.</value>
+  </data>
+  <data name="sketchBar_snapping_tipPause" xml:space="preserve">
+    <value>Hold to place a point without snapping</value>
+  </data>
+  <data name="sketchBar_snapping_tipSteps" xml:space="preserve">
+    <value>Hold to keep the direction on 15° steps</value>
+  </data>
+  <data name="sketchBar_snapping_tipType" xml:space="preserve">
+    <value>Type a length, angle or bearing; next value; clear</value>
+  </data>
+  <data name="sketchBar_snapping_tipFinish" xml:space="preserve">
+    <value>Finish; take back the last point</value>
+  </data>
+  <data name="sketchBar_snapping_tipUndo" xml:space="preserve">
+    <value>Undo; redo</value>
+  </data>
+  <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
+    <value>Guides: while drawing, right-click a line and choose “Guides from this line” for its extension, perpendicular and parallel.</value>
+  </data>
 </root>

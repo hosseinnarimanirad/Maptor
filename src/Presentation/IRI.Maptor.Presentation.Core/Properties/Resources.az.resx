@@ -4909,4 +4909,31 @@
   <data name="sketchBar_details" xml:space="preserve">
     <value>Təfərrüatlar: Cari nöqtə, Çox hissəli, Məkan Referans Sistemi, Ölçmə</value>
   </data>
+  <data name="sketchBar_snapping_kinds" xml:space="preserve">
+    <value>Yapışdır</value>
+  </data>
+  <data name="sketchBar_snapping_tipTitle" xml:space="preserve">
+    <value>Yapışdırma necə işləyir</value>
+  </data>
+  <data name="sketchBar_snapping_tipText" xml:space="preserve">
+    <value>Mövcud obyektin yaxınlığında yeni və ya köçürülən nöqtə onun üzərinə keçir və işarə nə tapdığını göstərir; hər növün işarəsi burada adının yanındadır. İki növ yaxın olduqda siyahıda yuxarıda olan qalib gəlir. Yalnız aşağıda seçilmiş laylar istifadə olunur.</value>
+  </data>
+  <data name="sketchBar_snapping_tipPause" xml:space="preserve">
+    <value>Yapışdırmadan nöqtə qoymaq üçün basılı saxlayın</value>
+  </data>
+  <data name="sketchBar_snapping_tipSteps" xml:space="preserve">
+    <value>İstiqaməti 15° addımlarda saxlamaq üçün basılı saxlayın</value>
+  </data>
+  <data name="sketchBar_snapping_tipType" xml:space="preserve">
+    <value>Uzunluq, bucaq və ya azimut yazın; növbəti dəyər; təmizlə</value>
+  </data>
+  <data name="sketchBar_snapping_tipFinish" xml:space="preserve">
+    <value>Bitir; son nöqtəni geri götür</value>
+  </data>
+  <data name="sketchBar_snapping_tipUndo" xml:space="preserve">
+    <value>Geri al; təkrarla</value>
+  </data>
+  <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
+    <value>Bələdçilər: çəkərkən xəttin üzərində sağ klikləyin və uzantısı, perpendikulyarı və paraleli üçün "Bu xətdən bələdçilər" seçin.</value>
+  </data>
 </root>

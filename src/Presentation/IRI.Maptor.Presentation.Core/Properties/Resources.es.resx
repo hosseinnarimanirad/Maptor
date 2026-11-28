@@ -4909,4 +4909,31 @@
   <data name="sketchBar_details" xml:space="preserve">
     <value>Detalles: Punto actual, varias partes, Sistema de referencia espacial, Medición</value>
   </data>
+  <data name="sketchBar_snapping_kinds" xml:space="preserve">
+    <value>Ajustar a</value>
+  </data>
+  <data name="sketchBar_snapping_tipTitle" xml:space="preserve">
+    <value>Cómo funciona el ajuste</value>
+  </data>
+  <data name="sketchBar_snapping_tipText" xml:space="preserve">
+    <value>Cerca de un elemento existente, el punto nuevo o movido salta sobre él y una marca muestra lo que encontró; la marca de cada tipo está junto a su nombre aquí. Si dos están cerca, gana el que está más arriba en la lista. Solo se usan las capas marcadas abajo.</value>
+  </data>
+  <data name="sketchBar_snapping_tipPause" xml:space="preserve">
+    <value>Mantener para colocar un punto sin ajuste</value>
+  </data>
+  <data name="sketchBar_snapping_tipSteps" xml:space="preserve">
+    <value>Mantener para fijar la dirección en pasos de 15°</value>
+  </data>
+  <data name="sketchBar_snapping_tipType" xml:space="preserve">
+    <value>Escribir longitud, ángulo o rumbo; valor siguiente; borrar</value>
+  </data>
+  <data name="sketchBar_snapping_tipFinish" xml:space="preserve">
+    <value>Terminar; quitar el último punto</value>
+  </data>
+  <data name="sketchBar_snapping_tipUndo" xml:space="preserve">
+    <value>Deshacer; rehacer</value>
+  </data>
+  <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
+    <value>Guías: mientras dibuja, haga clic derecho en una línea y elija «Guías desde esta línea» para su prolongación, perpendicular y paralela.</value>
+  </data>
 </root>

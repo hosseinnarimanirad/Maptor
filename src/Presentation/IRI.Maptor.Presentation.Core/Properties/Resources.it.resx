@@ -4909,4 +4909,31 @@
   <data name="sketchBar_details" xml:space="preserve">
     <value>Dettagli: Punto corrente, Multiparte, Sistema di riferimento spaziale, Misurazione</value>
   </data>
+  <data name="sketchBar_snapping_kinds" xml:space="preserve">
+    <value>Aggancia a</value>
+  </data>
+  <data name="sketchBar_snapping_tipTitle" xml:space="preserve">
+    <value>Come funziona l'aggancio</value>
+  </data>
+  <data name="sketchBar_snapping_tipText" xml:space="preserve">
+    <value>Vicino a un elemento esistente, il punto nuovo o spostato salta su di esso e un segno mostra cosa ha trovato; il segno di ogni tipo è accanto al suo nome qui. Se due sono vicini vince quello più in alto nell'elenco. Si usano solo i livelli spuntati qui sotto.</value>
+  </data>
+  <data name="sketchBar_snapping_tipPause" xml:space="preserve">
+    <value>Tieni premuto per posizionare un punto senza aggancio</value>
+  </data>
+  <data name="sketchBar_snapping_tipSteps" xml:space="preserve">
+    <value>Tieni premuto per mantenere la direzione a passi di 15°</value>
+  </data>
+  <data name="sketchBar_snapping_tipType" xml:space="preserve">
+    <value>Digita lunghezza, angolo o azimut; valore successivo; cancella</value>
+  </data>
+  <data name="sketchBar_snapping_tipFinish" xml:space="preserve">
+    <value>Termina; togli l'ultimo punto</value>
+  </data>
+  <data name="sketchBar_snapping_tipUndo" xml:space="preserve">
+    <value>Annulla; ripeti</value>
+  </data>
+  <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
+    <value>Guide: mentre disegni, fai clic destro su una linea e scegli «Guide da questa linea» per il suo prolungamento, la perpendicolare e la parallela.</value>
+  </data>
 </root>

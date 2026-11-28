@@ -4909,4 +4909,31 @@
   <data name="sketchBar_details" xml:space="preserve">
     <value>Ayrıntılar: Geçerli Nokta, Çok parçalı, Mekansal Referans Sistemi, Ölçüm</value>
   </data>
+  <data name="sketchBar_snapping_kinds" xml:space="preserve">
+    <value>Yapıştır</value>
+  </data>
+  <data name="sketchBar_snapping_tipTitle" xml:space="preserve">
+    <value>Yapıştırma nasıl çalışır</value>
+  </data>
+  <data name="sketchBar_snapping_tipText" xml:space="preserve">
+    <value>Var olan bir nesnenin yakınında yeni ya da taşınan nokta onun üzerine atlar ve bir işaret ne bulduğunu gösterir; her türün işareti burada adının yanındadır. İki tür yakınsa listede daha yukarıda olan kazanır. Yalnızca aşağıda işaretli katmanlar kullanılır.</value>
+  </data>
+  <data name="sketchBar_snapping_tipPause" xml:space="preserve">
+    <value>Yapıştırmadan nokta koymak için basılı tutun</value>
+  </data>
+  <data name="sketchBar_snapping_tipSteps" xml:space="preserve">
+    <value>Yönü 15° adımlarda tutmak için basılı tutun</value>
+  </data>
+  <data name="sketchBar_snapping_tipType" xml:space="preserve">
+    <value>Uzunluk, açı ya da semt açısı yazın; sonraki değer; temizle</value>
+  </data>
+  <data name="sketchBar_snapping_tipFinish" xml:space="preserve">
+    <value>Bitir; son noktayı geri al</value>
+  </data>
+  <data name="sketchBar_snapping_tipUndo" xml:space="preserve">
+    <value>Geri al; yinele</value>
+  </data>
+  <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
+    <value>Kılavuzlar: çizerken bir çizgiye sağ tıklayın ve uzantısı, dikmesi ve paraleli için "Bu çizgiden kılavuzlar" seçin.</value>
+  </data>
 </root>
