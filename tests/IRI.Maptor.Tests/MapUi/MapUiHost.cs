@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -85,6 +86,15 @@ internal sealed class MapUiHost
                 SetCursorPos(pointerBefore.X, pointerBefore.Y);
 
                 host._window?.Close();
+
+                // and whatever the check opened besides (a notification toast, a dialog): left open, it would cover
+                // the map of the next check where its clicks land
+                // (the windows of this thread: Application.Windows belongs to the thread of the first check)
+                foreach (var source in PresentationSource.CurrentSources.OfType<PresentationSource>().ToList())
+                {
+                    if (source.CheckAccess() && source.RootVisual is Window window)
+                        window.Close();
+                }
 
                 host.Pump(50);
 

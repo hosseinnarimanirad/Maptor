@@ -16,7 +16,7 @@
                 <Button Content="Measure area" Command="{Binding MeasureAreaCommand}" />
                 <Button Content="Pan" Command="{Binding PanCommand}" />
                 <Button Content="Add a long line" Click="OnAddLongLine"
-                        ToolTip="A drawing of 2,000 vertices along the road: edit it to feel how dragging behaves on a big geometry" />
+                        ToolTip="A drawing of 2,500 vertices: edit it to see a big geometry. With all of it in view its handles are hidden (more than 2,000); zoom in to edit it" />
                 <Button Content="Remove drawings" Command="{Binding RemoveAllDrawingItemsCommand}" />
             </StackPanel>
         </Border>

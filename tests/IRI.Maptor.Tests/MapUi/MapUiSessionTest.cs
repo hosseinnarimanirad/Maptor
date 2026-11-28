@@ -423,6 +423,51 @@ public class MapUiSessionTest
     }
 
     [Fact]
+    public void AboveTheLimitInView_NoHandles_AndAPressPans_ZoomedInTheyAreBack()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            // 2,500 vertices across the window, all in view: over the limit of 2,000
+            var count = 2_500;
+
+            var onMap = Enumerable.Range(0, count).Select(i => new WpfPoint(100 + i * 700.0 / count, 300 + (i % 2))).ToArray();
+
+            StartEdit(host, out var editing, onMap);
+
+            int Handles() => host.CountInMap<IRI.Maptor.Presentation.Wpf.Controls.MapMarkers.Circle>(_ => true);
+
+            Assert.Equal(0, Handles());
+
+            // no edge handle either: a press on the line pans the map and adds nothing
+            var centre = Copy(host.Map.CurrentExtent.Center);
+
+            host.Drag(new WpfPoint(400, 300), new WpfPoint(400, 380), steps: 8);
+
+            host.Pump(500);
+
+            Assert.Equal(count, Points(host).Length);
+            Assert.True(Math.Abs(host.Map.CurrentExtent.Center.Y - centre.Y) > host.MapLength(30), "the map did not pan");
+
+            // zoomed in on a tenth of the line: its vertices get their handles
+            var first = Points(host)[1_000];
+            var last = Points(host)[1_200];
+
+            host.Map.ZoomToExtent(new IRI.Maptor.Core.Common.Primitives.BoundingBox(first.X, first.Y - 50, last.X, last.Y + 50));
+
+            host.WaitFor(() => Handles() > 0, "no handles after zooming in");
+
+            Assert.True(Handles() <= IRI.Maptor.Presentation.Wpf.Layers.EditableFeatureLayer.MaxHandlesInView);
+
+            host.Snapshot("handles-after-zoom-in");
+
+            CancelEdit(host, editing);
+        }, Plain);
+    }
+
+    [Fact]
     public void NoHandles_StandBetweenTheVertices()
     {
         if (!MapUiHost.IsEnabled)

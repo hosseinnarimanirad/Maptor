@@ -119,9 +119,10 @@ public class SpecialPointLayer : BaseLayer
 
     public Locateable Get(System.Windows.FrameworkElement element)
     {
+        // CreatedElement: an item whose element was never made is not this one, and must not be made to find out
         for (int i = 0; i < Items.Count; i++)
         {
-            if (Items[i].Element == element)
+            if (Items[i].CreatedElement == element)
             {
                 return Items[i];
             }
@@ -165,9 +166,24 @@ public class SpecialPointLayer : BaseLayer
 
     public void SelectLocatable(System.Windows.FrameworkElement element)
     {
+        Select(i => ReferenceEquals(i.CreatedElement, element));
+    }
+
+    /// <summary>Selects <paramref name="item"/> and nothing else, whether or not its element was made.</summary>
+    public void SelectLocatable(Locateable item)
+    {
+        Select(i => ReferenceEquals(i, item));
+    }
+
+    private void Select(Func<Locateable, bool> isTheOne)
+    {
+        // only the items whose state changes are touched: with thousands of items, setting each one costs
         for (int i = 0; i < Items.Count; i++)
         {
-            Items[i].IsSelected = Items[i].Element == element;
+            var selected = isTheOne(Items[i]);
+
+            if (Items[i].IsSelected != selected)
+                Items[i].IsSelected = selected;
         }
 
         RequestSelectedLocatableChanged?.Invoke(FindSelectedLocatable(), FindSelectedLocatableIndex());

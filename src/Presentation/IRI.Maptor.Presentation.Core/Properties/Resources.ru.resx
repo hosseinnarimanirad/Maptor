@@ -4894,4 +4894,7 @@
   <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
     <value>Показывает длину, угол и азимут рядом с точкой. Нажмите L, A или B и введите значение; Enter ставит точку</value>
   </data>
+  <data name="notification_editVertices_zoomIn" xml:space="preserve">
+    <value>В области просмотра больше {0} вершин, поэтому их маркеры скрыты. Увеличьте масштаб, чтобы редактировать их.</value>
+  </data>
 </root>

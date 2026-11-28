@@ -2153,7 +2153,10 @@ public partial class MapViewer : NotifiableUserControl
 
     // the edited layer while editing a line or a polygon, and only then
     private EditableFeatureLayer? EdgeHandleLayer
-        => CurrentEditingLayer is { CanInsertVertices: true } layer && this.Status != MapStatus.Drawing && !itemIsMoving ? layer : null;
+        => CurrentEditingLayer is { CanInsertVertices: true } layer && this.Status != MapStatus.Drawing && !itemIsMoving &&
+           !_layersOverHandleLimit.Contains(layer.GetVertices())
+            ? layer
+            : null;
 
     /// <summary>The edge and the point of it a press at <paramref name="screenPoint"/> would insert a vertex at, or null.</summary>
     private (EditableFeatureLayer.EdgeHit Hit, sb.Point At, bool IsMiddle)? EdgeHandleAt(Point screenPoint, object? originalSource)
@@ -2285,9 +2288,18 @@ public partial class MapViewer : NotifiableUserControl
     // every animated element costs its own WPF animation clock for the duration
     private const int MaxItemsWithAnimation = 50;
 
+    // The handles and labels of a geometry being drawn or edited (layers of type EditableItem) are put on the map only
+    // when they are in view, and not at all while more than EditableFeatureLayer.MaxHandlesInView of them are
+    // (decision D5): then the layer is in this set, and the map says once that zooming in shows them.
+    private readonly HashSet<SpecialPointLayer> _layersOverHandleLimit = new();
+
+    private bool _handleLimitNotified;
+
     //POTENTIALLY ERROR PRONE; What if the Element has no scaletransform
     private void AddComplexLayer(SpecialPointLayer specialPointLayer, bool withAnimation = true)
     {
+        var onlyInView = specialPointLayer.Type == LayerType.EditableItem;
+
         specialPointLayer.HandleCollectionChanged = (e) =>
         {
             switch (e.Action)
@@ -2318,11 +2330,22 @@ public partial class MapViewer : NotifiableUserControl
 
         void addItems(System.Collections.IList newItems)
         {
+            if (onlyInView && _layersOverHandleLimit.Contains(specialPointLayer))
+                return;
+
+            var extent = this.CurrentExtent;
+
             var animate = newItems.Count <= MaxItemsWithAnimation;
 
             foreach (var item in newItems)
             {
-                AddComplexLayerItem(specialPointLayer, (Locateable)item, withAnimation, animate);
+                var locateable = (Locateable)item;
+
+                // one out of view is put on the map by the next refresh, if it comes into view
+                if (onlyInView && !extent.Intersects(new sb.Point(locateable.X, locateable.Y)))
+                    continue;
+
+                AddComplexLayerItem(specialPointLayer, locateable, withAnimation, animate);
             }
         }
 
@@ -2330,10 +2353,9 @@ public partial class MapViewer : NotifiableUserControl
         {
             foreach (var item in oldItems)
             {
-                var locateable = item as Locateable;
-
-                if (this.mapView.Children.Contains(locateable.Element))
-                    this.mapView.Children.Remove(locateable.Element);
+                // CreatedElement: an item never put on the map has no element, and must not get one now
+                if ((item as Locateable)?.CreatedElement is { } element && IsOnMapCanvas(element))
+                    this.mapView.Children.Remove(element);
             }
         }
 
@@ -2341,6 +2363,25 @@ public partial class MapViewer : NotifiableUserControl
         var currentExtent = this.CurrentExtent;
 
         var items = specialPointLayer.Items.Where(i => currentExtent.Intersects(new sb.Point(i.X, i.Y))).ToList();
+
+        if (onlyInView)
+        {
+            var overLimit = items.Count > EditableFeatureLayer.MaxHandlesInView;
+
+            if (overLimit)
+            {
+                _layersOverHandleLimit.Add(specialPointLayer);
+
+                items.Clear();
+            }
+            else
+            {
+                _layersOverHandleLimit.Remove(specialPointLayer);
+            }
+
+            if (ReferenceEquals(specialPointLayer, CurrentEditingLayer?.GetVertices()))
+                NotifyHandleLimit(overLimit);
+        }
 
         // animateBatch only suppresses the opacity animation for large batches; it must NOT
         // change which add-branch runs — the two branches apply different z-index policies
@@ -2350,6 +2391,27 @@ public partial class MapViewer : NotifiableUserControl
         {
             AddComplexLayerItem(specialPointLayer, item, withAnimation, animateBatch);
         }
+    }
+
+    // once each time the vertices in view go over the limit; a later zoom out says it again
+    private void NotifyHandleLimit(bool overLimit)
+    {
+        if (!overLimit)
+        {
+            _handleLimitNotified = false;
+            return;
+        }
+
+        if (_handleLimitNotified)
+            return;
+
+        _handleLimitNotified = true;
+
+        var message = string.Format(
+            IRI.Maptor.Presentation.Core.Localization.LocalizationManager.Instance["notification_editVertices_zoomIn"],
+            IRI.Maptor.Presentation.Core.Localization.LocalizationManager.GetLocalizedNumberString(EditableFeatureLayer.MaxHandlesInView));
+
+        _presenter?.DialogService?.ShowNotification(message, Window.GetWindow(this));
     }
 
     // Whether the element is already a child of the map canvas: asked of the element itself. Scanning the canvas
@@ -6222,7 +6284,13 @@ public partial class MapViewer : NotifiableUserControl
             var editingChanged = (_currentEditingLayer is null) != (value is null);
 
             if (value is null)
+            {
                 HideEdgeHandle();
+
+                _layersOverHandleLimit.Clear();
+
+                _handleLimitNotified = false;
+            }
 
             _currentEditingLayer = value;
 

@@ -4894,4 +4894,7 @@
   <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
     <value>درێژی، گۆشە و ئاڕاستە لە تەنیشت خاڵەکە پیشان دەدات. L، A یان B دابگرە و بەهاکە بنووسە؛ Enter خاڵەکە دادەنێت</value>
   </data>
+  <data name="notification_editVertices_zoomIn" xml:space="preserve">
+    <value>زیاتر لە {0} لووتکە لە دیمەندایە، بۆیە دەستگرەکانیان شاردراونەتەوە. بۆ دەستکاریکردنیان نزیک بکەرەوە.</value>
+  </data>
 </root>

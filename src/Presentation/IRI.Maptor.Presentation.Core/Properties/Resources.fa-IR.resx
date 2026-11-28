@@ -4953,4 +4953,7 @@
   <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
     <value>طول، زاویه و آزیموت را کنار نقطه نشان می‌دهد. کلید L، A یا B را بزنید و مقدار را وارد کنید؛ Enter نقطه را ثبت می‌کند</value>
   </data>
+  <data name="notification_editVertices_zoomIn" xml:space="preserve">
+    <value>بیش از {0} رأس در دید است و دستگیره‌های آن‌ها پنهان شده است. برای ویرایش آن‌ها بزرگ‌نمایی کنید.</value>
+  </data>
 </root>

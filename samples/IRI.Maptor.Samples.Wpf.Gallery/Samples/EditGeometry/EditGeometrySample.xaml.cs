@@ -141,13 +141,16 @@ public partial class EditGeometrySample : UserControl
             visibleRange: ScaleInterval.All);
     }
 
-    /// <summary>A drawing of 2,000 vertices north of the block, about 20 cm apart, to edit as a big geometry.</summary>
+    /// <summary>
+    /// A drawing of 2,500 vertices north of the block, about 16 cm apart, to edit as a big geometry: more than the
+    /// 2,000 vertices in view that get handles, so zoomed out the map asks to zoom in.
+    /// </summary>
     private void OnAddLongLine(object sender, RoutedEventArgs e)
     {
         if (DataContext is not MapViewModelBase presenter)
             return;
 
-        const int count = 2_000;
+        const int count = 2_500;
 
         var points = new List<Point>(count);
 
@@ -162,6 +165,6 @@ public partial class EditGeometrySample : UserControl
             points.Add(ToWebMercator(longitude, latitude));
         }
 
-        presenter.AddDrawingItem(Geometry<Point>.Create(points, GeometryType.LineString, SridHelper.WebMercator), "Long line (2,000 vertices)");
+        presenter.AddDrawingItem(Geometry<Point>.Create(points, GeometryType.LineString, SridHelper.WebMercator), "Long line (2,500 vertices)");
     }
 }

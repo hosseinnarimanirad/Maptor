@@ -278,7 +278,8 @@ public class EditableFeatureLayerEditTest
         Assert.Same(vertex, layer.GetVertices().Items[4]);
         Assert.Equal(4, layer.GetVertices().FindSelectedLocatableIndex());
 
-        Assert.Equal(1, refreshes);
+        // in place: the map is not asked to put the whole layer on again
+        Assert.Equal(0, refreshes);
         Assert.True(layer.HasChanges);
     });
 
@@ -553,6 +554,177 @@ public class EditableFeatureLayerEditTest
         layer.GetVertices().Items[1].MoveTo(10, 7);
 
         Assert.Equal(new System.Windows.Point(10, 7), ((System.Windows.Media.LineSegment)path.Figures[0].Segments[0]).Point);
+    });
+
+    // ---- step 5: controls only when needed, insert and delete in place ----
+
+    private static Geometry<Point> LongLine(int count)
+        => Geometry<Point>.Create(Enumerable.Range(0, count).Select(i => new Point(i * 10, (i % 2) * 5)).ToList(), GeometryType.LineString, SridHelper.WebMercator);
+
+    [Fact]
+    public void StartingAnEdit_MakesNoControls_UntilTheMapAsksForThem() => RunWithOwnStyles(() =>
+    {
+        var options = EditableFeatureLayerOptions.CreateDefaultForEditing(true, true);
+
+        options.IsMeasureVisible = true;
+        options.IsEdgeLabelVisible = true;
+
+        using var layer = new EditableFeatureLayer("edit", LongLine(1_000), Transform.Identity, d => d, (_, _) => { }, options);
+
+        Assert.Equal(1_000, layer.GetVertices().Items.Count);
+        Assert.All(layer.GetVertices().Items, v => Assert.Null(v.CreatedElement));
+
+        // the edge labels too (the label of the whole is one, and made at once)
+        var labels = layer.GetEdgeLengths().Items;
+
+        Assert.Equal(999, labels.Count(l => l.CreatedElement is null));
+
+        // selecting does not make them either
+        layer.SelectPoint(500);
+        layer.GetVertices().SelectLocatable(layer.GetVertices().Items[600]);
+
+        Assert.All(layer.GetVertices().Items, v => Assert.Null(v.CreatedElement));
+
+        // the map asks for one: it is made, and shows the selection
+        var element = layer.GetVertices().Items[600].Element;
+
+        Assert.NotNull(element);
+        Assert.True(((IRI.Maptor.Presentation.Wpf.Views.IMapMarker)element).IsSelected);
+    });
+
+    [Fact]
+    public void AnEdgeLabelsText_ChangedBeforeItsControlIsMade_IsShownWhenItIs() => RunWithOwnStyles(() =>
+    {
+        using var layer = EditWithLabels(Line((0, 0), (100, 0), (200, 0)));
+
+        var labels = layer.GetEdgeLengths().Items;
+
+        var before = ((RectangleLabelMarker)labels[0].Element).LabelValue;
+
+        Assert.Null(labels[1].CreatedElement);
+
+        layer.GetVertices().Items[1].MoveTo(100, 80);
+
+        // label 0 was made before the move and changed in place; label 1 is made now, with the new length
+        Assert.NotEqual(before, Text(labels[0]));
+        Assert.Equal(Text(labels[0]), Text(labels[1]));
+    });
+
+    [Fact]
+    public void InsertVertex_ChangesNothingElse_InPlace() => RunWithOwnStyles(() =>
+    {
+        using var layer = Edit(Line((0, 0), (100, 0), (200, 0)));
+
+        var path = (PathGeometry)layer.GetPath(Transform.Identity).Data;
+
+        var figure = path.Figures[0];
+
+        var before = layer.GetVertices().Items.ToList();
+
+        var hit = layer.FindEdge(new Point(150, 1), reach: 6, vertexReach: 8)!.Value;
+
+        var vertex = layer.InsertVertex(hit, hit.Point)!;
+
+        // the same vertices, one more in its place; the same figure, one more segment
+        Assert.Equal(new[] { before[0], before[1], vertex, before[2] }, layer.GetVertices().Items);
+        Assert.Same(figure, path.Figures[0]);
+        Assert.Equal(
+            new[] { new System.Windows.Point(100, 0), new System.Windows.Point(150, 0), new System.Windows.Point(200, 0) },
+            figure.Segments.Cast<System.Windows.Media.LineSegment>().Select(s => s.Point));
+
+        // the vertex after it has its new place: moving it moves its own point of the path and of the geometry
+        before[2].MoveTo(200, 40);
+
+        Assert.Equal((200d, 40d), (layer.GetLastGeometry().Points[3].X, layer.GetLastGeometry().Points[3].Y));
+        Assert.Equal(new System.Windows.Point(200, 40), ((System.Windows.Media.LineSegment)figure.Segments[2]).Point);
+    });
+
+    [Fact]
+    public void DeleteTheFirstVertex_InPlace_TheNextOneStartsTheFigure() => RunWithOwnStyles(() =>
+    {
+        using var layer = Edit(Line((0, 0), (100, 0), (200, 0)));
+
+        var path = (PathGeometry)layer.GetPath(Transform.Identity).Data;
+
+        var figure = path.Figures[0];
+
+        var kept = layer.GetVertices().Items.Skip(1).ToList();
+
+        layer.SelectPoint(0);
+        layer.TryDeleteCurrentPoint();
+
+        Assert.Equal(kept, layer.GetVertices().Items);
+        Assert.Same(figure, path.Figures[0]);
+        Assert.Equal(new System.Windows.Point(100, 0), figure.StartPoint);
+        Assert.Single(figure.Segments);
+
+        // the vertex now first moves the start of the figure
+        kept[0].MoveTo(100, 30);
+
+        Assert.Equal(new System.Windows.Point(100, 30), figure.StartPoint);
+        Assert.Equal((100d, 30d), (layer.GetLastGeometry().Points[0].X, layer.GetLastGeometry().Points[0].Y));
+    });
+
+    [Fact]
+    public void DeleteAVertexInTheMiddle_InPlace_TheOthersKeepTheirPlaces() => RunWithOwnStyles(() =>
+    {
+        using var layer = Edit(MultiLine(Line((0, 0), (100, 0)), Line((0, 50), (100, 50), (200, 50), (300, 50))));
+
+        var path = (PathGeometry)layer.GetPath(Transform.Identity).Data;
+
+        var vertices = layer.GetVertices().Items.ToList();
+
+        // the fourth vertex over all parts: (100 50), the second of the second part
+        layer.SelectPoint(3);
+        layer.TryDeleteCurrentPoint();
+
+        Assert.Equal(vertices.Where((_, i) => i != 3), layer.GetVertices().Items);
+        Assert.Equal(
+            new[] { new System.Windows.Point(200, 50), new System.Windows.Point(300, 50) },
+            path.Figures[1].Segments.Cast<System.Windows.Media.LineSegment>().Select(s => s.Point));
+
+        vertices[5].MoveTo(300, 90);
+
+        Assert.Equal((300d, 90d), (layer.GetLastGeometry().Geometries[1].Points[2].X, layer.GetLastGeometry().Geometries[1].Points[2].Y));
+        Assert.Equal(new System.Windows.Point(300, 90), ((System.Windows.Media.LineSegment)path.Figures[1].Segments[1]).Point);
+    });
+
+    [Fact]
+    public void AskingForTheLabelsAgain_KeepsWhereTheUserPutThem() => RunWithOwnStyles(() =>
+    {
+        using var layer = EditWithLabels(Line((0, 0), (100, 0), (200, 0)));
+
+        var labels = layer.GetEdgeLengths().Items;
+
+        var first = labels[0];
+
+        first.MoveTo(50, 30);
+
+        // the map asks for them again on every pan and zoom
+        var again = layer.GetEdgeLengths().Items;
+
+        Assert.Same(first, again[0]);
+        Assert.Equal((50d, 30d), (again[0].X, again[0].Y));
+    });
+
+    [Fact]
+    public void EditingABigGeometry_StartsAndChangesQuickly() => RunWithOwnStyles(() =>
+    {
+        var watch = System.Diagnostics.Stopwatch.StartNew();
+
+        using var layer = new EditableFeatureLayer("edit", LongLine(10_000), Transform.Identity, d => d, (_, _) => { },
+            EditableFeatureLayerOptions.CreateDefaultForEditing(true, true));
+
+        var hit = layer.FindEdge(new Point(50_005, 2), reach: 6, vertexReach: 1)!.Value;
+
+        layer.InsertVertex(hit, hit.Point);
+
+        layer.SelectPoint(7_000);
+        layer.TryDeleteCurrentPoint();
+
+        // before step 5 the start alone took 19 s or more, an insert or a delete over a minute
+        Assert.True(watch.Elapsed.TotalSeconds < 5, $"took {watch.Elapsed.TotalSeconds:0.0} s");
+        Assert.Equal(10_000, layer.GetLastGeometry().Points.Count);
     });
 
     // ---- the point layer ----

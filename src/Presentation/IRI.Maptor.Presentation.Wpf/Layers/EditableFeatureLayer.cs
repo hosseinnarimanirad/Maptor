@@ -65,6 +65,9 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         /// <summary>The index of the part's figure in the screen path.</summary>
         public int Figure;
 
+        /// <summary>The vertices of the part, in the order of its points (the same list as in <c>_vertices</c>).</summary>
+        public List<Locateable> Vertices = new();
+
         /// <summary>The label of the edge that starts at each point, while edge labels are shown; else empty.</summary>
         public List<Locateable> EdgeLabels = new();
     }
@@ -601,8 +604,13 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
         var label = part.EdgeLabels[edge];
 
-        if (label.Element is RectangleLabelMarker marker)
-            marker.LabelValue = EdgeLengthLabel(points[edge], points[(edge + 1) % points.Count]);
+        var text = EdgeLengthLabel(points[edge], points[(edge + 1) % points.Count]);
+
+        if (label is EdgeLabel edgeLabel)
+            edgeLabel.Text = text;
+
+        if (label.CreatedElement is RectangleLabelMarker marker)
+            marker.LabelValue = text;
 
         // one end of the edge moved, so its middle moved by half of that
         label.MoveTo(label.X + displacement.X / 2.0, label.Y + displacement.Y / 2.0);
@@ -644,7 +652,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
             primaryCollection.Values = new List<Locateable>();
 
             // the parts are met in the order MakePathGeometry adds their figures
-            var part = new EditedPart { Geometry = geometry, Figure = _parts.Count };
+            var part = new EditedPart { Geometry = geometry, Figure = _parts.Count, Vertices = primaryCollection.Values };
 
             _parts.Add(part);
 
@@ -731,64 +739,23 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
     {
         var webMercatorPoint = point;
 
-        var element = /*Options*/this.MakePrimaryVertex();
-
         var locateable = new Locateable(AnchorFunctionHandlers.CenterCenter)
         {
-            Element = element,
             X = webMercatorPoint.X,
             Y = webMercatorPoint.Y,
             Id = Guid.NewGuid(),
             CanBeUsedAsEditingPoint = true
         };
 
+        // The control is made when the vertex goes on the map, so only for the vertices in view: a geometry of
+        // thousands of vertices no longer makes thousands of controls (step 5 of the drawing and editing plan).
+        locateable.CreateElement = () => MakeVertexElement(locateable, webMercatorPoint);
+
         locateable.RequestChangeIsSelected = (isSelected) =>
         {
-            ((IMapMarker)locateable.Element).IsSelected = isSelected;
+            if (locateable.CreatedElement is IMapMarker marker)
+                marker.IsSelected = isSelected;
         };
-
-        if (Options.IsNewDrawing)
-        {
-            locateable.Element.MouseDown -= Element_MouseDown;
-            locateable.Element.MouseDown += Element_MouseDown;
-
-            locateable.OnDetach += () => locateable.Element.MouseDown -= Element_MouseDown;
-
-            //Finish Drawing if click on any point
-            //locateable.Element.MouseDown += (sender, e) =>
-            //{
-            //    if (e.LeftButton == MouseButtonState.Pressed)
-            //    {
-            //        OnRequestFinishDrawing?.Invoke(this, EventArgs.Empty);
-
-            //        e.Handled = true;
-            //    }
-            //};
-        }
-        else
-        {
-            MouseButtonEventHandler rightDown = (sender, e) =>
-            {
-                _primaryVerticesLayer.SelectLocatable(locateable.Element);
-            };
-
-            MouseButtonEventHandler rightUp = (sender, e) =>
-            {
-                e.Handled = true;
-
-                RegisterMapOptionsForVertices(e, webMercatorPoint, locateable);
-            };
-
-            element.MouseRightButtonDown += rightDown;
-
-            element.MouseRightButtonUp += rightUp;
-
-            locateable.OnDetach += () =>
-            {
-                element.MouseRightButtonDown -= rightDown;
-                element.MouseRightButtonUp -= rightUp;
-            };
-        }
 
         locateable.OnPositionChanged += (sender, e) =>
         {
@@ -818,6 +785,57 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         };
 
         return locateable;
+    }
+
+    /// <summary>The control of a vertex, with its mouse handlers; undone by the vertex's <see cref="Locateable.Detach"/>.</summary>
+    private FrameworkElement MakeVertexElement(Locateable locateable, IPoint webMercatorPoint)
+    {
+        var element = /*Options*/this.MakePrimaryVertex();
+
+        if (Options.IsNewDrawing)
+        {
+            element.MouseDown -= Element_MouseDown;
+            element.MouseDown += Element_MouseDown;
+
+            locateable.OnDetach += () => element.MouseDown -= Element_MouseDown;
+
+            //Finish Drawing if click on any point
+            //locateable.Element.MouseDown += (sender, e) =>
+            //{
+            //    if (e.LeftButton == MouseButtonState.Pressed)
+            //    {
+            //        OnRequestFinishDrawing?.Invoke(this, EventArgs.Empty);
+
+            //        e.Handled = true;
+            //    }
+            //};
+        }
+        else
+        {
+            MouseButtonEventHandler rightDown = (sender, e) =>
+            {
+                _primaryVerticesLayer.SelectLocatable(locateable);
+            };
+
+            MouseButtonEventHandler rightUp = (sender, e) =>
+            {
+                e.Handled = true;
+
+                RegisterMapOptionsForVertices(e, webMercatorPoint, locateable);
+            };
+
+            element.MouseRightButtonDown += rightDown;
+
+            element.MouseRightButtonUp += rightUp;
+
+            locateable.OnDetach += () =>
+            {
+                element.MouseRightButtonDown -= rightDown;
+                element.MouseRightButtonUp -= rightUp;
+            };
+        }
+
+        return element;
     }
 
 
@@ -878,11 +896,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
         presenter.MiddleCommandAction = i =>
         {
-            _primaryVerticesLabelLayer.Remove(locateable.Id);
-
             TryDeleteVertex(locateable);
-
-            RequestRefresh?.Invoke(this);
 
             RemoveMapOptions();
         };
@@ -943,6 +957,12 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
     }
 
     // ---------------------------------------------------------------- inserting a vertex on an edge
+
+    /// <summary>
+    /// Above this many vertices in view no handles are drawn and the map asks to zoom in (decision D5): a handle is
+    /// a control, and thousands of them make the map slow while giving nothing that can be aimed at.
+    /// </summary>
+    public const int MaxHandlesInView = 2_000;
 
     /// <summary>How far from an edge, in pixels, the edge handle shows and a press inserts a vertex (decision D6).</summary>
     public const double EdgeHandleReach = 6;
@@ -1014,24 +1034,71 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         if (hit.Part < 0 || hit.Part >= _parts.Count || _parts[hit.Part].Geometry.Points is not { } points || hit.Edge >= points.Count)
             return null;
 
-        var index = hit.Edge + 1;
-
-        points.Insert(index, new Point(at.X, at.Y));
-
-        MakePathGeometry();
-
-        ReconstructLocateables();
-
         var part = _parts[hit.Part];
 
-        var vertex = _addresses.FirstOrDefault(a => ReferenceEquals(a.Value.Part, part) && a.Value.Index == index).Key;
+        var index = hit.Edge + 1;
 
-        if (vertex is not null)
-            _primaryVerticesLayer.SelectLocatable(vertex.Element);
+        var point = new Point(at.X, at.Y);
 
-        RequestRefresh?.Invoke(this);
+        // in place: one point, one vertex, one segment of the screen path; the map puts the vertex on itself
+        // through the collection change (nothing is rebuilt, step 5 of the drawing and editing plan)
+        points.Insert(index, point);
+
+        var vertex = ToPrimaryLocateable(point);
+
+        part.Vertices.Insert(index, vertex);
+
+        Readdress(part, index);
+
+        _primaryVerticesLayer.Items.Insert(FlatIndex(part, index), vertex);
+
+        if (part.Figure < _pathGeometry.Figures.Count)
+            _pathGeometry.Figures[part.Figure].Segments.Insert(index - 1, new LineSegment(ToScreen(point.AsWpfPoint()), true));
+
+        AfterStructureChangeInPlace();
+
+        _primaryVerticesLayer.SelectLocatable(vertex);
 
         return vertex;
+    }
+
+    /// <summary>The addresses of the vertices of <paramref name="part"/> from <paramref name="from"/> on, after one was added or removed there.</summary>
+    private void Readdress(EditedPart part, int from)
+    {
+        for (int i = Math.Max(0, from); i < part.Vertices.Count; i++)
+        {
+            _addresses[part.Vertices[i]] = (part, i);
+        }
+    }
+
+    /// <summary>The place of the vertex at <paramref name="index"/> of <paramref name="part"/> among all vertices of the geometry.</summary>
+    private int FlatIndex(EditedPart part, int index)
+    {
+        var before = 0;
+
+        foreach (var other in _parts)
+        {
+            if (ReferenceEquals(other, part))
+                break;
+
+            before += other.Vertices.Count;
+        }
+
+        return before + index;
+    }
+
+    /// <summary>What follows a vertex added or removed in place: the labels, the measures and the notifications.</summary>
+    private void AfterStructureChangeInPlace()
+    {
+        InvalidateMeasures();
+
+        UpdateEdgeLabels();
+
+        HasChanges = true;
+
+        LocateablesReconstructed?.Invoke();
+
+        OnGeometryChanged?.Invoke();
     }
 
     /// <summary>A point of the screen path (in the path's own units) as a map point (Web Mercator).</summary>
@@ -1075,12 +1142,46 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         if (points is null || points.Count <= minimumPoints || address.Index >= points.Count)
             return false;
 
-        // by its place in the part: another vertex at the same coordinates is another point
-        points.RemoveAt(address.Index);
+        var part = address.Part;
 
-        MakePathGeometry();
+        var index = address.Index;
 
-        ReconstructLocateables();
+        // by its place in the part: another vertex at the same coordinates is another point; in place, as an insert
+        points.RemoveAt(index);
+
+        part.Vertices.RemoveAt(index);
+
+        _addresses.Remove(vertex);
+
+        Readdress(part, index);
+
+        _primaryVerticesLayer.Items.Remove(vertex);
+
+        _primaryVerticesLabelLayer.Remove(vertex.Id);
+
+        vertex.Detach();
+
+        if (part.Figure < _pathGeometry.Figures.Count)
+        {
+            var figure = _pathGeometry.Figures[part.Figure];
+
+            // the first point is the start of the figure: the next point takes its place
+            if (index == 0)
+            {
+                if (figure.Segments.Count > 0 && figure.Segments[0] is LineSegment first)
+                {
+                    figure.StartPoint = first.Point;
+
+                    figure.Segments.RemoveAt(0);
+                }
+            }
+            else if (index - 1 < figure.Segments.Count)
+            {
+                figure.Segments.RemoveAt(index - 1);
+            }
+        }
+
+        AfterStructureChangeInPlace();
 
         return true;
     }
@@ -1159,11 +1260,22 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
     {
         var edge = new LineSegment<Point>(first, second);
 
-        var element = new RectangleLabelMarker(EdgeLengthLabel(first, second));
+        var label = new EdgeLabel { X = edge.Middle.X, Y = edge.Middle.Y, Text = EdgeLengthLabel(first, second) };
 
-        //var offset = _screenToMap(15);
+        // made when the label goes on the map, with the text it has then
+        label.CreateElement = () => new RectangleLabelMarker(label.Text);
 
-        return new Locateable(AnchorFunctionHandlers.BottomCenter) { Element = element, X = edge.Middle.X, Y = edge.Middle.Y };
+        return label;
+    }
+
+    /// <summary>The label of an edge: its text is kept here, so it can change before the label's control is made.</summary>
+    private sealed class EdgeLabel : Locateable
+    {
+        public EdgeLabel() : base(AnchorFunctionHandlers.BottomCenter)
+        {
+        }
+
+        public string Text = string.Empty;
     }
 
     private static string EdgeLengthLabel(Point first, Point second)
@@ -1257,9 +1369,14 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
     public SpecialPointLayer GetVertices() => _primaryVerticesLayer;
 
+    /// <summary>
+    /// The edge labels and the label of the whole. They are kept between calls (the map asks for them on every pan
+    /// and zoom), so a label the user dragged stays where it was put; they are built only when they are not up to date.
+    /// </summary>
     public SpecialPointLayer GetEdgeLengths()
     {
-        UpdateEdgeLabels();
+        if (!_edgeLabelsInSync)
+            UpdateEdgeLabels();
 
         return _edgeLabelLayer;
     }
@@ -1500,8 +1617,6 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
             return;
 
         SelectPoint(Math.Max(0, index - 1));
-
-        RequestRefresh?.Invoke(this);
     }
 
     private void ZoomToCurrentPoint()
@@ -1680,7 +1795,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
             return;
 
         // Selecting the first vertex of the part makes it the "current part" for delete/zoom/measure.
-        _primaryVerticesLayer.SelectLocatable(part[0].Element);
+        _primaryVerticesLayer.SelectLocatable(part[0]);
     }
 
     private void GoToPreviousPart()

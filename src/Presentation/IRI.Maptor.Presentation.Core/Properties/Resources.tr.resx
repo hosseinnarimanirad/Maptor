@@ -4894,4 +4894,7 @@
   <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
     <value>Noktanın yanında uzunluğu, açıyı ve azimutu gösterir. L, A veya B tuşuna basıp değer yazın; Enter noktayı yerleştirir</value>
   </data>
+  <data name="notification_editVertices_zoomIn" xml:space="preserve">
+    <value>Görünümde {0} köşe noktasından fazlası var; tutamaçları gizlendi. Düzenlemek için yakınlaştırın.</value>
+  </data>
 </root>

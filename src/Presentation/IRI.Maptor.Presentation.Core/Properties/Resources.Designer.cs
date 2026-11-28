@@ -3940,6 +3940,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to More than {0} vertices are in view, so their handles are hidden. Zoom in to edit them..
+        /// </summary>
+        public static string notification_editVertices_zoomIn {
+            get {
+                return ResourceManager.GetString("notification_editVertices_zoomIn", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to {0} features in &quot;{1}&quot; have geometry problems. See Layer Settings › Geometry..
         /// </summary>
         public static string notification_geometryIssues_found {

@@ -4894,4 +4894,7 @@
   <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
     <value>बिंदु के पास लंबाई, कोण और दिशा दिखाता है। L, A या B दबाएँ और मान लिखें; Enter बिंदु रखता है</value>
   </data>
+  <data name="notification_editVertices_zoomIn" xml:space="preserve">
+    <value>दृश्य में {0} से अधिक शीर्ष हैं, इसलिए उनके हैंडल छिपा दिए गए हैं। उन्हें संपादित करने के लिए ज़ूम इन करें।</value>
+  </data>
 </root>

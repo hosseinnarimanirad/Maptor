@@ -109,9 +109,38 @@ public class Locateable : Notifier
     }
 
     protected System.Windows.FrameworkElement _element;
+
+    private Func<System.Windows.FrameworkElement>? _createElement;
+
+    /// <summary>
+    /// Makes the element the first time <see cref="Element"/> is read, instead of up front: for items of which only
+    /// a few are ever on the map (the vertices of a big geometry: only those in view are). After it is made,
+    /// <see cref="RequestChangeIsSelected"/> is raised once so the element shows the current selection.
+    /// </summary>
+    public Func<System.Windows.FrameworkElement>? CreateElement
+    {
+        get => _createElement;
+        set => _createElement = value;
+    }
+
+    /// <summary>The element if it was made already, else null; reading it never makes one (see <see cref="CreateElement"/>).</summary>
+    public System.Windows.FrameworkElement? CreatedElement => _element;
+
     public virtual System.Windows.FrameworkElement Element
     {
-        get { return _element; }
+        get
+        {
+            if (_element is null && _createElement is { } create)
+            {
+                _createElement = null;
+
+                Element = create();
+
+                RequestChangeIsSelected?.Invoke(_isSelected);
+            }
+
+            return _element;
+        }
         set
         {
             if (_element != null)

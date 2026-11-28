@@ -15,7 +15,8 @@ A block of parcels and a road are built in code, so there is something to snap t
   of an edge when midpoint snapping is on); click to add a vertex there, or press and drag to add it and move it at
   once; a right click beside the line offers **Add point**. Drag a length label where it reads best.
   While a point is placed or dragged, type `L` and a length in metres, `A` and a turn angle, or `B` and a bearing.
-- **Add a long line** adds a drawing of 2,000 vertices, to see how editing behaves on a big geometry.
+- **Add a long line** adds a drawing of 2,500 vertices, to see how editing behaves on a big geometry. With all of it
+  in view no handles are drawn (more than 2,000 vertices in view) and the map asks to zoom in.
 
 ## The essential code
 

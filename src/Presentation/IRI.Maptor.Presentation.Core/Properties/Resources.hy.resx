@@ -4894,4 +4894,7 @@
   <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
     <value>Կետի կողքին ցույց է տալիս երկարությունը, անկյունը և ազիմուտը։ Սեղմեք L, A կամ B և մուտքագրեք արժեքը. Enter-ը դնում է կետը</value>
   </data>
+  <data name="notification_editVertices_zoomIn" xml:space="preserve">
+    <value>Տեսադաշտում {0}-ից ավելի գագաթ կա, ուստի դրանց բռնակները թաքցված են։ Խմբագրելու համար մեծացրեք։</value>
+  </data>
 </root>

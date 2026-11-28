@@ -4894,4 +4894,7 @@
   <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
     <value>نقطے کے پاس لمبائی، زاویہ اور سمت دکھاتا ہے۔ L، A یا B دبائیں اور قدر لکھیں؛ Enter نقطہ رکھتا ہے</value>
   </data>
+  <data name="notification_editVertices_zoomIn" xml:space="preserve">
+    <value>منظر میں {0} سے زیادہ راس ہیں، اس لیے ان کے ہینڈل چھپا دیے گئے ہیں۔ ان میں ترمیم کے لیے زوم اِن کریں۔</value>
+  </data>
 </root>

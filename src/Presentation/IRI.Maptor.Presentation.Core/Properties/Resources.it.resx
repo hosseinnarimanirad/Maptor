@@ -4894,4 +4894,7 @@
   <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
     <value>Mostra lunghezza, angolo e azimut accanto al punto. Premere L, A o B e digitare un valore; Invio posiziona il punto</value>
   </data>
+  <data name="notification_editVertices_zoomIn" xml:space="preserve">
+    <value>Sono visibili più di {0} vertici, quindi le loro maniglie sono nascoste. Ingrandisci per modificarli.</value>
+  </data>
 </root>

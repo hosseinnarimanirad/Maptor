@@ -5049,4 +5049,7 @@
   <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
     <value>Shows the length, angle and bearing beside the point. Press L, A or B and type a value; Enter places the point</value>
   </data>
+  <data name="notification_editVertices_zoomIn" xml:space="preserve">
+    <value>More than {0} vertices are in view, so their handles are hidden. Zoom in to edit them.</value>
+  </data>
 </root>

@@ -4894,4 +4894,7 @@
   <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
     <value>Mostra o comprimento, o ângulo e o azimute junto ao ponto. Prima L, A ou B e escreva um valor; Enter coloca o ponto</value>
   </data>
+  <data name="notification_editVertices_zoomIn" xml:space="preserve">
+    <value>Há mais de {0} vértices visíveis, por isso as alças estão ocultas. Aproxime o zoom para editá-los.</value>
+  </data>
 </root>

@@ -4894,4 +4894,7 @@
   <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
     <value>Muestra la longitud, el ángulo y el rumbo junto al punto. Pulse L, A o B y escriba un valor; Enter coloca el punto</value>
   </data>
+  <data name="notification_editVertices_zoomIn" xml:space="preserve">
+    <value>Hay más de {0} vértices a la vista, por lo que sus controladores están ocultos. Acerque el mapa para editarlos.</value>
+  </data>
 </root>

@@ -4894,4 +4894,7 @@
   <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
     <value>在点旁显示长度、角度和方位角。按 L、A 或 B 并输入数值；按 Enter 放置该点</value>
   </data>
+  <data name="notification_editVertices_zoomIn" xml:space="preserve">
+    <value>视图中有超过 {0} 个顶点，因此已隐藏其控制点。请放大以编辑顶点。</value>
+  </data>
 </root>

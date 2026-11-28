@@ -4894,4 +4894,7 @@
   <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
     <value>Nöqtənin yanında uzunluğu, bucağı və azimutu göstərir. L, A və ya B düyməsini basıb qiymət yazın; Enter nöqtəni qoyur</value>
   </data>
+  <data name="notification_editVertices_zoomIn" xml:space="preserve">
+    <value>Görünüşdə {0}-dən çox təpə var, ona görə də onların tutacaqları gizlədilib. Redaktə etmək üçün yaxınlaşdırın.</value>
+  </data>
 </root>
