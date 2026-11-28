@@ -375,16 +375,18 @@ internal static class CursorSet
     }
 
     // ── Hands (Phosphor Icons, MIT: https://github.com/phosphor-icons/core) ──
-    // White body (the *Fill variant) under the black outline (the regular variant), on Phosphor's
+    // White body (the *Fill variant) under the black outline (the Light variant), on Phosphor's
     // 256-unit grid. Both hands share one scale and the same centre line and bottom, so switching
     // between them on mouse down/up does not make the cursor jump.
+    // 2026-11-28 (the user's choice, "more CAD-like"): a smaller hand (about 16 x 19 px at 100 %, was
+    // 19 x 23) with a line of about 1 px (the Light weight; the regular one gave 1.8 px and a heavy look).
 
     private static (List<Op>, int, int) Hand(int size, bool grabbing)
     {
         double s = size / 32.0;
 
-        const double k = 0.112;                       // Phosphor unit -> design unit
-        const double left = 5.0, top = 3.0;           // where the open hand's box (24,16) lands
+        const double k = 0.092;                       // Phosphor unit -> design unit
+        const double left = 8.0, top = 6.0;           // where the open hand's box (24,16) lands
 
         // open hand box: x 24..192, y 16..224; the grabbing hand box: x 40..176, y 64..176,
         // centred on the same x (108); its bottom is moved down to the open hand's bottom (+48)
@@ -398,7 +400,7 @@ internal static class CursorSet
         transform.Freeze();
 
         var body = Icon(grabbing ? PackIconPhosphorIconsKind.HandGrabbingFill : PackIconPhosphorIconsKind.HandFill, transform);
-        var outline = Icon(grabbing ? PackIconPhosphorIconsKind.HandGrabbing : PackIconPhosphorIconsKind.Hand, transform);
+        var outline = Icon(grabbing ? PackIconPhosphorIconsKind.HandGrabbingLight : PackIconPhosphorIconsKind.HandLight, transform);
 
         var ops = new List<Op>
         {
