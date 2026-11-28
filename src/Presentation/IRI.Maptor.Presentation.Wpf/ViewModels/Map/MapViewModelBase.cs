@@ -2861,7 +2861,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public async Task LoadDrawingItemFile(object owner)
     {
-        // .geojson/.json: a single drawing exported from the legend (same content as .mtd)
+        // .mtd: drawings saved by Maptor; .geojson/.json: the same, a drawing exported from the drawings list, or any
+        // other GeoJSON (a FeatureCollection, a feature, a geometry), drawn with the default style (DrawingItemFileReader)
         var fileNames = await DialogService.ShowOpenFilesDialogAsync($"*.{maptorDrawingFileExtension};*.geojson;*.json|*.{maptorDrawingFileExtension};*.geojson;*.json", owner);
 
         if (fileNames.IsNullOrEmpty())
@@ -2873,24 +2874,29 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             try
             {
-                // deserialize the geojsonfeature
-                var geoJsonFeatureString = System.IO.File.ReadAllText(fileName);
+                var json = System.IO.File.ReadAllText(fileName);
 
                 var layerName = System.IO.Path.GetFileNameWithoutExtension(fileName);
 
-                var layer = DrawingItemLayer.Deserialize(layerName, geoJsonFeatureString);
+                var entries = DrawingItemFileReader.Read(layerName, json);
 
-                if (layer is null)
+                if (entries.Count == 0)
                 {
                     failed.Add(Path.GetFileName(fileName));
                     continue;
                 }
 
-                AddDrawingItem(layer);
+                foreach (var entry in entries)
+                {
+                    if (entry.Styled is not null)
+                        AddDrawingItem(entry.Styled);
+                    else if (entry.Geometry is not null)
+                        AddDrawingItem(entry.Geometry, entry.Name);
+                }
             }
             catch (Exception)
             {
-                // not a Maptor drawing (e.g. a plain GeoJSON file without the embedded style)
+                // not JSON, or a style or geometry that cannot be read
                 failed.Add(Path.GetFileName(fileName));
             }
         }

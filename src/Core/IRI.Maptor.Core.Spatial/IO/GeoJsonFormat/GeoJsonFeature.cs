@@ -48,6 +48,8 @@ public class GeoJsonFeature
 
     public void AddSldAttribute(string sldString)
     {
+        this.Properties ??= new Dictionary<string, object>();
+
         if (this.Properties.ContainsKey(_defaultSymbologyPropertyName))
         {
             this.Properties[_defaultSymbologyPropertyName] = sldString;
@@ -58,9 +60,10 @@ public class GeoJsonFeature
         }
     }
 
+    /// <summary>The embedded style, or empty when there is none (also when the feature has no properties at all).</summary>
     public string RetrieveSldAttribute()
     {
-        if (this.Properties.ContainsKey(_defaultSymbologyPropertyName))
+        if (this.Properties?.ContainsKey(_defaultSymbologyPropertyName) == true)
             return Properties[_defaultSymbologyPropertyName]?.ToString()!;
 
         return string.Empty;

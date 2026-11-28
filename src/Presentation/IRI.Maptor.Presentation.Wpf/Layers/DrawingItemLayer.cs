@@ -180,11 +180,22 @@ public class DrawingItemLayer : VectorLayer
         return JsonHelper.Serialize(feature);
     }
 
-    public static DrawingItemLayer Deserialize(string featureName, string jsonLayer)
+    /// <summary>
+    /// A drawing saved by Maptor (a single GeoJSON feature with its style embedded), or null when
+    /// <paramref name="jsonLayer"/> is not one: a FeatureCollection (read as a feature it has neither a geometry nor
+    /// properties) or a feature without the embedded style. The callers report such a file as not opened.
+    /// </summary>
+    public static DrawingItemLayer? Deserialize(string featureName, string jsonLayer)
     {
-        var geoJsonFeature = JsonHelper.Deserialize<GeoJsonFeature>(jsonLayer)!;
+        var geoJsonFeature = JsonHelper.Deserialize<GeoJsonFeature>(jsonLayer);
+
+        if (geoJsonFeature?.Geometry is null)
+            return null;
 
         var sldString = geoJsonFeature.RetrieveSldAttribute();
+
+        if (string.IsNullOrWhiteSpace(sldString))
+            return null;
 
         // the style now lives in the layer (symbolizers, SourceSld) and every save regenerates it,
         // so it must not stay behind as an attribute of the feature built from these properties
