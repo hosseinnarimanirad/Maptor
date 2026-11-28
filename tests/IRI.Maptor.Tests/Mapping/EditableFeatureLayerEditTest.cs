@@ -7,6 +7,7 @@ using IRI.Maptor.Core.Common.Enums;
 using IRI.Maptor.Core.Common.Primitives;
 using IRI.Maptor.Core.Spatial.Primitives;
 using IRI.Maptor.Core.SpatialReferenceSystem;
+using IRI.Maptor.Presentation.Wpf.Controls.MapMarkers;
 using IRI.Maptor.Presentation.Wpf.Layers;
 using IRI.Maptor.Presentation.Wpf.Models;
 using IRI.Maptor.Tests.Common;
@@ -250,6 +251,181 @@ public class EditableFeatureLayerEditTest
         Assert.Equal(new[] { 2 }, PartSizes(layer));
         Assert.Equal(1, layer.GetVertices().FindSelectedLocatableIndex());
         Assert.Equal(0, refreshes);
+    });
+
+    [Fact]
+    public void DeleteCurrentPoint_OfTwoVerticesAtTheSamePlaceInOnePart_DeletesTheSelectedOne() => RunWithOwnStyles(() =>
+    {
+        // the line passes through (10 10) twice: the second and the fourth vertex
+        using var layer = Edit(Line((0, 0), (10, 10), (20, 0), (10, 10), (0, 20)));
+
+        layer.SelectPoint(3);
+
+        layer.TryDeleteCurrentPoint();
+
+        Assert.Equal(
+            new[] { (0d, 0d), (10d, 10d), (20d, 0d), (0d, 20d) },
+            layer.GetLastGeometry().Points.Select(p => (p.X, p.Y)));
+    });
+
+    // ---- what a vertex move touches ----
+
+    private static EditableFeatureLayer EditWithLabels(Geometry<Point> geometry)
+    {
+        var options = EditableFeatureLayerOptions.CreateDefaultForEditing(true, true);
+
+        options.IsMeasureVisible = true;
+        options.IsEdgeLabelVisible = true;
+
+        return new EditableFeatureLayer("edit", geometry, Transform.Identity, d => d, (_, _) => { }, options);
+    }
+
+    private static string Text(Locateable label) => ((RectangleLabelMarker)label.Element).LabelValue;
+
+    [Fact]
+    public void MovingAVertex_UpdatesTheLabelsOfItsTwoEdges_AndKeepsTheOthers() => RunWithOwnStyles(() =>
+    {
+        // edges: 0 (0→1), 1 (1→2), 2 (2→3); the last item is the label of the whole length
+        using var layer = EditWithLabels(Line((0, 0), (100, 0), (200, 0), (300, 0)));
+
+        var labels = layer.GetEdgeLengths().Items;
+
+        Assert.Equal(4, labels.Count);
+
+        var before = labels.ToList();
+        var texts = before.Select(Text).ToList();
+        var places = before.Select(l => (l.X, l.Y)).ToList();
+
+        layer.GetVertices().Items[1].MoveTo(100, 80);
+
+        // the same labels, not new ones
+        Assert.Equal(before, labels.ToList());
+
+        // the two edges of the moved vertex: new length, at the new middle of the edge
+        Assert.NotEqual(texts[0], Text(labels[0]));
+        Assert.NotEqual(texts[1], Text(labels[1]));
+        Assert.Equal((50d, 40d), (labels[0].X, labels[0].Y));
+        Assert.Equal((150d, 40d), (labels[1].X, labels[1].Y));
+
+        // the edge it does not touch
+        Assert.Equal(texts[2], Text(labels[2]));
+        Assert.Equal(places[2], (labels[2].X, labels[2].Y));
+
+        // the whole length changed; the last point did not move, so its label stays where it was
+        Assert.NotEqual(texts[3], Text(labels[3]));
+        Assert.Equal(places[3], (labels[3].X, labels[3].Y));
+    });
+
+    [Fact]
+    public void MovingAVertex_KeepsWhereTheUserPutALabel() => RunWithOwnStyles(() =>
+    {
+        using var layer = EditWithLabels(Line((0, 0), (100, 0), (200, 0)));
+
+        var labels = layer.GetEdgeLengths().Items;
+
+        // the user drags the label of the first edge 30 up from the middle of its edge
+        labels[0].MoveTo(50, 30);
+
+        layer.GetVertices().Items[1].MoveTo(100, 80);
+
+        // the middle of the edge went from (50 0) to (50 40): the label is still 30 above it
+        Assert.Equal((50d, 70d), (labels[0].X, labels[0].Y));
+    });
+
+    [Fact]
+    public void MovingTheFirstVertexOfARing_UpdatesTheClosingEdge() => RunWithOwnStyles(() =>
+    {
+        // edges: 0 (0→1), 1 (1→2), 2 (2→3), 3 (3→0, the closing edge)
+        var square = Geometry<Point>.CreatePolygon(new List<Point> { new(0, 0), new(100, 0), new(100, 100), new(0, 100) }, SridHelper.WebMercator);
+
+        using var layer = EditWithLabels(square);
+
+        var labels = layer.GetEdgeLengths().Items;
+
+        Assert.Equal(5, labels.Count);
+
+        var texts = labels.Select(Text).ToList();
+
+        layer.GetVertices().Items[0].MoveTo(-40, -40);
+
+        Assert.NotEqual(texts[0], Text(labels[0]));
+        Assert.Equal(texts[1], Text(labels[1]));
+        Assert.Equal(texts[2], Text(labels[2]));
+        Assert.NotEqual(texts[3], Text(labels[3]));
+        Assert.Equal((-20d, 30d), (labels[3].X, labels[3].Y));
+
+        // the area changed too
+        Assert.NotEqual(texts[4], Text(labels[4]));
+    });
+
+    [Fact]
+    public void MovingAVertex_MovesItsOwnPointOfTheScreenPath_InItsOwnPart() => RunWithOwnStyles(() =>
+    {
+        // both parts pass through (10 10): the second vertex of each
+        using var layer = Edit(MultiLine(Line((0, 0), (10, 10), (20, 0)), Line((0, 20), (10, 10), (20, 20))));
+
+        var path = (PathGeometry)layer.GetPath(Transform.Identity).Data;
+
+        // the fifth vertex over all parts: the one of the second part at (10 10)
+        layer.GetVertices().Items[4].MoveTo(10, 15);
+
+        Assert.Equal(new System.Windows.Point(10, 10), ((System.Windows.Media.LineSegment)path.Figures[0].Segments[0]).Point);
+        Assert.Equal(new System.Windows.Point(10, 15), ((System.Windows.Media.LineSegment)path.Figures[1].Segments[0]).Point);
+
+        var parts = layer.GetLastGeometry().Geometries;
+
+        Assert.Equal((10d, 10d), (parts[0].Points[1].X, parts[0].Points[1].Y));
+        Assert.Equal((10d, 15d), (parts[1].Points[1].X, parts[1].Points[1].Y));
+    });
+
+    [Fact]
+    public void MovingAVertex_UpdatesTheScreenPath_WithoutRebuildingIt() => RunWithOwnStyles(() =>
+    {
+        using var layer = Edit(Line((0, 0), (10, 0), (20, 0)));
+
+        var path = (PathGeometry)layer.GetPath(Transform.Identity).Data;
+
+        var figure = path.Figures[0];
+
+        layer.GetVertices().Items[0].MoveTo(-5, -5);
+        layer.GetVertices().Items[2].MoveTo(25, 5);
+
+        Assert.Same(figure, path.Figures[0]);
+        Assert.Equal(new System.Windows.Point(-5, -5), figure.StartPoint);
+        Assert.Equal(new System.Windows.Point(25, 5), ((System.Windows.Media.LineSegment)figure.Segments[1]).Point);
+    });
+
+    [Fact]
+    public void TheMeasures_FollowAVertexMove() => RunWithOwnStyles(() =>
+    {
+        using var layer = Edit(Line((5_700_000, 4_200_000), (5_700_100, 4_200_000)));
+
+        var before = (layer.EllipsoidalLength, layer.EuclideanLengthInUtm);
+
+        // read twice: the second read comes from the same transformed geometry
+        Assert.Equal(before, (layer.EllipsoidalLength, layer.EuclideanLengthInUtm));
+
+        layer.GetVertices().Items[1].MoveTo(5_700_200, 4_200_000);
+
+        Assert.True(layer.EllipsoidalLength > before.EllipsoidalLength * 1.9);
+        Assert.True(layer.EuclideanLengthInUtm > before.EuclideanLengthInUtm * 1.9);
+    });
+
+    [Fact]
+    public void AVertexAddedToASketch_IsFoundByItsPlaceToo() => RunWithOwnStyles(() =>
+    {
+        using var layer = new EditableFeatureLayer(
+            "draw", new List<Point> { new(0, 0) }, Transform.Identity, d => d, GeometryType.LineString, (_, _) => { },
+            EditableFeatureLayerOptions.CreateDefaultForDrawing(true, true));
+
+        layer.AddVertex(new Point(10, 0));
+        layer.AddVertex(new Point(20, 0));
+
+        var path = (PathGeometry)layer.GetPath(Transform.Identity).Data;
+
+        layer.GetVertices().Items[1].MoveTo(10, 7);
+
+        Assert.Equal(new System.Windows.Point(10, 7), ((System.Windows.Media.LineSegment)path.Figures[0].Segments[0]).Point);
     });
 
     // ---- the point layer ----

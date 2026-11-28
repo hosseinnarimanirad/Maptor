@@ -2190,13 +2190,11 @@ public partial class MapViewer : NotifiableUserControl
 
         void addItems(System.Collections.IList newItems)
         {
-            var children = new HashSet<UIElement>(this.mapView.Children.Cast<UIElement>());
-
             var animate = newItems.Count <= MaxItemsWithAnimation;
 
             foreach (var item in newItems)
             {
-                AddComplexLayerItem(specialPointLayer, (Locateable)item, withAnimation, children, animate);
+                AddComplexLayerItem(specialPointLayer, (Locateable)item, withAnimation, animate);
             }
         }
 
@@ -2216,28 +2214,29 @@ public partial class MapViewer : NotifiableUserControl
 
         var items = specialPointLayer.Items.Where(i => currentExtent.Intersects(new sb.Point(i.X, i.Y))).ToList();
 
-        // membership test hoisted to a set; Children.Contains is a linear scan per item
-        var canvasChildren = new HashSet<UIElement>(this.mapView.Children.Cast<UIElement>());
-
         // animateBatch only suppresses the opacity animation for large batches; it must NOT
         // change which add-branch runs — the two branches apply different z-index policies
         var animateBatch = items.Count <= MaxItemsWithAnimation;
 
         foreach (var item in items)
         {
-            AddComplexLayerItem(specialPointLayer, item, withAnimation, canvasChildren, animateBatch);
+            AddComplexLayerItem(specialPointLayer, item, withAnimation, animateBatch);
         }
     }
 
+    // Whether the element is already a child of the map canvas: asked of the element itself. Scanning the canvas
+    // children, or copying them into a set, for every added item made adding n items cost n times the canvas.
+    private bool IsOnMapCanvas(UIElement element) => ReferenceEquals(VisualTreeHelper.GetParent(element), this.mapView);
+
     //POTENTIALLY ERROR PRONOUN
-    private void AddComplexLayerItem(SpecialPointLayer specialPointLayer, Locateable item, bool withAnimation, HashSet<UIElement> canvasChildren, bool animateBatch = true)
+    private void AddComplexLayerItem(SpecialPointLayer specialPointLayer, Locateable item, bool withAnimation, bool animateBatch = true)
     {
         item.OnPositionChanged -= Item_OnPositionChanged;
         item.OnPositionChanged += Item_OnPositionChanged;
 
         var element = item.Element;
 
-        if (canvasChildren.Contains(element))
+        if (IsOnMapCanvas(element))
             return;
 
         //element.Opacity = specialPointLayer.Opacity;
@@ -2341,13 +2340,11 @@ public partial class MapViewer : NotifiableUserControl
 
         if (withAnimation)
         {
-            AddToCanvasWithAnimation(element, element.Opacity, specialPointLayer, canvasChildren, animateBatch);
+            AddToCanvasWithAnimation(element, element.Opacity, specialPointLayer, animateBatch);
         }
         else
         {
             this.mapView.Children.Add(element);
-
-            canvasChildren.Add(element);
 
             if (specialPointLayer.AlwaysTop)
             {
@@ -2357,9 +2354,9 @@ public partial class MapViewer : NotifiableUserControl
         }
     }
 
-    private void AddToCanvasWithAnimation(FrameworkElement element, double finalOpacity, SpecialPointLayer specialPointLayer, HashSet<UIElement> canvasChildren, bool animate = true)
+    private void AddToCanvasWithAnimation(FrameworkElement element, double finalOpacity, SpecialPointLayer specialPointLayer, bool animate = true)
     {
-        if (!canvasChildren.Add(element))
+        if (IsOnMapCanvas(element))
             return;
 
         this.mapView.Children.Add(element);
@@ -5055,6 +5052,12 @@ public partial class MapViewer : NotifiableUserControl
 
         _isPlacingVertex = withGuides;
 
+        // One mouse move reaches the gesture's two move callbacks, one after the other, with the same point. The
+        // point is resolved (snap query, guides, overlay) in the first and handed to the second; it is good for
+        // that one hand-over only, so anything later (a click, a key) resolves again.
+        sb.Point? resolvedFrom = null;
+        sb.Point? resolved = null;
+
         // every point of a draw phase goes through snapping; panning (left button down) never snaps
         var gesture = new ClickOrPanGesture(
             this,
@@ -5065,11 +5068,24 @@ public partial class MapViewer : NotifiableUserControl
                 // typed values are for one segment
                 _segmentInput.Clear();
             },
-            onHover: onMove is null ? null : pt => onMove(SnapForDrawing(pt, withGuides)),
+            onHover: onMove is null ? null : pt =>
+            {
+                var point = resolved is not null && ReferenceEquals(resolvedFrom, pt) ? resolved : SnapForDrawing(pt, withGuides);
+
+                resolvedFrom = null;
+                resolved = null;
+
+                onMove(point);
+            },
             onAfterPan: onAfterPan is null ? null : pt => onAfterPan(SnapForDrawing(pt, withGuides)),
             onAnyMove: mapPt =>
             {
-                var point = Mouse.LeftButton == MouseButtonState.Pressed ? HideSnapMarker(mapPt) : SnapForDrawing(mapPt, withGuides);
+                var panning = Mouse.LeftButton == MouseButtonState.Pressed;
+
+                var point = panning ? HideSnapMarker(mapPt) : SnapForDrawing(mapPt, withGuides);
+
+                resolvedFrom = panning ? null : mapPt;
+                resolved = panning ? null : point;
 
                 if (_presenter.SketchBar.Options.IsLinkedToMouseMove)
                     CurrentEditingPoint = point.AsWpfPoint();
