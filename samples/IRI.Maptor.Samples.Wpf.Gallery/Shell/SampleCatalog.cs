@@ -5,6 +5,7 @@ using IRI.Maptor.Samples.Wpf.Gallery.Samples.BasicMap;
 using IRI.Maptor.Samples.Wpf.Gallery.Samples.DayNight;
 using IRI.Maptor.Samples.Wpf.Gallery.Samples.DelaunayVoronoi;
 using IRI.Maptor.Samples.Wpf.Gallery.Samples.DrawingLegend;
+using IRI.Maptor.Samples.Wpf.Gallery.Samples.EditGeometry;
 using IRI.Maptor.Samples.Wpf.Gallery.Samples.GoTo;
 using IRI.Maptor.Samples.Wpf.Gallery.Samples.Identify;
 using IRI.Maptor.Samples.Wpf.Gallery.Samples.Localization;
@@ -47,6 +48,10 @@ public static class SampleCatalog
         new("Tools", "Drawing and drawing legend",
             "Draw points, polylines, polygons and text on the map; MapDrawingLegendView lists, styles, reorders and removes them.",
             "DrawingLegend", () => new DrawingLegendSample(), PackIconMaterialKind.VectorPolyline),
+
+        new("Tools", "Edit geometry",
+            "Draw and edit with snapping, guide lines, typed lengths and angles, and length labels you can move; parcels and a road are there to snap to.",
+            "EditGeometry", () => new EditGeometrySample(), PackIconMaterialKind.VectorPolylineEdit),
 
         new("Tools", "Measurement",
             "Measure lengths and areas interactively; SketchBarView offers finish/undo/cancel while a sketch is in progress.",

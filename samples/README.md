@@ -36,6 +36,7 @@ base-map provider, so the WPF samples need internet access to show a background 
 | [Attribute table](IRI.Maptor.Samples.Wpf.Gallery/Samples/AttributeTable/README.md) | `FeatureTabControl`, `SelectedLayer`, opening a layer's table from code |
 | [Map markers](IRI.Maptor.Samples.Wpf.Gallery/Samples/MapMarkers/README.md) | `SpecialPointLayer`, `Locateable`, built-in markers, extending `MapViewModelBase` with a command |
 | [Drawing and drawing legend](IRI.Maptor.Samples.Wpf.Gallery/Samples/DrawingLegend/README.md) | Draw commands, `MapDrawingLegendView`, `SketchBarView` |
+| [Edit geometry](IRI.Maptor.Samples.Wpf.Gallery/Samples/EditGeometry/README.md) | Editing, snapping, guides, cursor box, `MapDrawingLegendView` |
 | [Measurement](IRI.Maptor.Samples.Wpf.Gallery/Samples/Measurement/README.md) | `MeasureLengthCommand`, `MeasureAreaCommand` |
 | [Identify](IRI.Maptor.Samples.Wpf.Gallery/Samples/Identify/README.md) | `IdentifyModeCommand`, the Identify results window, overlapping layers |
 | [Delaunay and Voronoi](IRI.Maptor.Samples.Wpf.Gallery/Samples/DelaunayVoronoi/README.md) | `DelaunayTriangulation`, `VoronoiDiagram`, clipping unbounded cells, toggling layer visibility |

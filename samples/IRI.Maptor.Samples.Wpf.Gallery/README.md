@@ -16,6 +16,7 @@ with a README that explains it and links to the source.
 | Attribute table | [Samples/AttributeTable](Samples/AttributeTable/README.md) | `FeatureTabControl`, `SelectedLayer`, opening a table from code |
 | Map markers | [Samples/MapMarkers](Samples/MapMarkers/README.md) | `SpecialPointLayer`, `Locateable`, built-in markers, a custom command |
 | Drawing and drawing legend | [Samples/DrawingLegend](Samples/DrawingLegend/README.md) | Draw commands, `MapDrawingLegendView`, `SketchBarView` |
+| Edit geometry | [Samples/EditGeometry](Samples/EditGeometry/README.md) | Editing, snapping, guides, cursor box, `MapDrawingLegendView` |
 | Measurement | [Samples/Measurement](Samples/Measurement/README.md) | `MeasureLengthCommand`, `MeasureAreaCommand` |
 | Identify | [Samples/Identify](Samples/Identify/README.md) | `IdentifyModeCommand`, Identify results window |
 | Delaunay and Voronoi | [Samples/DelaunayVoronoi](Samples/DelaunayVoronoi/README.md) | `DelaunayTriangulation`, `VoronoiDiagram`, clipping unbounded cells |
