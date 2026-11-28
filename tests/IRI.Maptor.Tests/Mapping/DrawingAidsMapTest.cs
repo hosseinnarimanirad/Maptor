@@ -391,6 +391,23 @@ public class DrawingAidsMapTest
             Assert.Null(picker.Reference);
             Assert.False(picker.Clear());
             Assert.Equal(4, changes);
+
+            // the pointer is still on the edge that was just removed: resting there does not bring it back
+            picker.Hover(Standing, new System.Windows.Point(10, 10));
+            picker.PauseElapsed();
+            Assert.Null(picker.Reference);
+
+            // once the pointer has left it, resting on it picks it as before
+            picker.Hover(null);
+            picker.Hover(Standing, new System.Windows.Point(10, 10));
+            picker.PauseElapsed();
+            Assert.Same(Standing, picker.Reference);
+
+            // and so does resting on another edge right after a removal
+            picker.Clear();
+            picker.Hover(other, new System.Windows.Point(40, 40));
+            picker.PauseElapsed();
+            Assert.Same(other, picker.Reference);
         });
     }
 

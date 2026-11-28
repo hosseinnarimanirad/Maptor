@@ -2779,7 +2779,10 @@ public partial class MapViewer : NotifiableUserControl
         }
     }
 
-    public void UpdateMapCursor() => SetCursor(this.CursorSettings[this.MapAction]);
+    // While a geometry is edited the map tool is still Pan, but the open hand hides the vertex under it: the
+    // plain arrow points at one. Dragging the map still shows the grabbing hand.
+    public void UpdateMapCursor()
+        => SetCursor(_currentEditingLayer is not null && this.MapAction == MapAction.Pan ? Cursors.Arrow : this.CursorSettings[this.MapAction]);
 
     public void SetCursor(Cursor cursor)
     {
@@ -5919,7 +5922,13 @@ public partial class MapViewer : NotifiableUserControl
         get { return _currentEditingLayer; }
         set
         {
+            var editingChanged = (_currentEditingLayer is null) != (value is null);
+
             _currentEditingLayer = value;
+
+            // an edit begins or ends: the arrow instead of the pan hand, and back
+            if (editingChanged)
+                UpdateMapCursor();
 
             RaisePropertyChanged();
 

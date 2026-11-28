@@ -157,82 +157,78 @@
                             <Border.Effect>
                                 <StaticResource ResourceKey="IRI.Maptor.Effects.Elevation2"/>
                             </Border.Effect>
-                            <StackPanel Margin="4">
+                            <StackPanel Margin="2">
+                                <StackPanel.Resources>
+                                    <!--the shared check box (body size, the Persian font). The captions are plain content,
+                                        so the sketch bar's own accent-coloured TextBlock style does not reach them.-->
+                                    <Style TargetType="CheckBox" BasedOn="{StaticResource IRI.Maptor.Styles.CheckBox.Small}">
+                                        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                                    </Style>
+                                    <Style x:Key="snapGroupHeader" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}">
+                                        <Setter Property="Margin" Value="2,0,2,2"/>
+                                    </Style>
+                                    <Style x:Key="snapNote" TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.Caption}">
+                                        <Setter Property="TextWrapping" Value="Wrap"/>
+                                        <Setter Property="Margin" Value="2"/>
+                                    </Style>
+                                </StackPanel.Resources>
+
                                 <!--what to snap to: map settings (kept between sessions), reached through the sketch bar's
                                     own DataContext since this border's is the layer choice-->
                                 <!--the kinds, in the order they win: a line end over a vertex over an intersection over a
                                     midpoint over an edge-->
-                                <CheckBox Margin="2" IsChecked="{Binding DataContext.MapSettings.Snapping_ToEnds, ElementName=root, Mode=TwoWay}">
-                                    <TextBlock Text="{Binding [sketchBar_snapping_toEnds], Source={StaticResource Localization}}"
-                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
-                                </CheckBox>
-                                <CheckBox Margin="2" IsChecked="{Binding DataContext.MapSettings.Snapping_ToVertices, ElementName=root, Mode=TwoWay}">
-                                    <TextBlock Text="{Binding [sketchBar_snapping_toVertices], Source={StaticResource Localization}}"
-                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
-                                </CheckBox>
-                                <CheckBox Margin="2" IsChecked="{Binding DataContext.MapSettings.Snapping_ToIntersections, ElementName=root, Mode=TwoWay}">
-                                    <TextBlock Text="{Binding [sketchBar_snapping_toIntersections], Source={StaticResource Localization}}"
-                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
-                                </CheckBox>
-                                <CheckBox Margin="2" IsChecked="{Binding DataContext.MapSettings.Snapping_ToMidpoints, ElementName=root, Mode=TwoWay}">
-                                    <TextBlock Text="{Binding [sketchBar_snapping_toMidpoints], Source={StaticResource Localization}}"
-                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
-                                </CheckBox>
-                                <CheckBox Margin="2" IsChecked="{Binding DataContext.MapSettings.Snapping_ToEdges, ElementName=root, Mode=TwoWay}">
-                                    <TextBlock Text="{Binding [sketchBar_snapping_toEdges], Source={StaticResource Localization}}"
-                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
-                                </CheckBox>
+                                <CheckBox IsChecked="{Binding DataContext.MapSettings.Snapping_ToEnds, ElementName=root, Mode=TwoWay}"
+                                          Content="{Binding [sketchBar_snapping_toEnds], Source={StaticResource Localization}}"/>
+                                <CheckBox IsChecked="{Binding DataContext.MapSettings.Snapping_ToVertices, ElementName=root, Mode=TwoWay}"
+                                          Content="{Binding [sketchBar_snapping_toVertices], Source={StaticResource Localization}}"/>
+                                <CheckBox IsChecked="{Binding DataContext.MapSettings.Snapping_ToIntersections, ElementName=root, Mode=TwoWay}"
+                                          Content="{Binding [sketchBar_snapping_toIntersections], Source={StaticResource Localization}}"/>
+                                <CheckBox IsChecked="{Binding DataContext.MapSettings.Snapping_ToMidpoints, ElementName=root, Mode=TwoWay}"
+                                          Content="{Binding [sketchBar_snapping_toMidpoints], Source={StaticResource Localization}}"/>
+                                <CheckBox IsChecked="{Binding DataContext.MapSettings.Snapping_ToEdges, ElementName=root, Mode=TwoWay}"
+                                          Content="{Binding [sketchBar_snapping_toEdges], Source={StaticResource Localization}}"/>
 
-                                <Separator Margin="0,4"/>
+                                <Separator Style="{StaticResource IRI.Maptor.Styles.Separator.Horizontal}"/>
 
                                 <!--the drawing aids on top of snapping: map settings too-->
-                                <TextBlock Text="{Binding [sketchBar_aids_header], Source={StaticResource Localization}}"
-                                           FontWeight="SemiBold" Margin="2,0,2,4"/>
+                                <TextBlock Style="{StaticResource snapGroupHeader}"
+                                           Text="{Binding [sketchBar_aids_header], Source={StaticResource Localization}}"/>
 
-                                <CheckBox Margin="2" IsChecked="{Binding DataContext.MapSettings.Snapping_ShowGuides, ElementName=root, Mode=TwoWay}"
-                                          ToolTip="{Binding [sketchBar_aids_guides_tip], Source={StaticResource Localization}}">
-                                    <TextBlock Text="{Binding [sketchBar_aids_guides], Source={StaticResource Localization}}"
-                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
-                                </CheckBox>
-                                <CheckBox Margin="2" IsChecked="{Binding DataContext.MapSettings.Snapping_ShowCursorBox, ElementName=root, Mode=TwoWay}"
-                                          ToolTip="{Binding [sketchBar_aids_cursorBox_tip], Source={StaticResource Localization}}">
-                                    <TextBlock Text="{Binding [sketchBar_aids_cursorBox], Source={StaticResource Localization}}"
-                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
-                                </CheckBox>
+                                <CheckBox IsChecked="{Binding DataContext.MapSettings.Snapping_ShowGuides, ElementName=root, Mode=TwoWay}"
+                                          ToolTip="{Binding [sketchBar_aids_guides_tip], Source={StaticResource Localization}}"
+                                          Content="{Binding [sketchBar_aids_guides], Source={StaticResource Localization}}"/>
+                                <CheckBox IsChecked="{Binding DataContext.MapSettings.Snapping_ShowCursorBox, ElementName=root, Mode=TwoWay}"
+                                          ToolTip="{Binding [sketchBar_aids_cursorBox_tip], Source={StaticResource Localization}}"
+                                          Content="{Binding [sketchBar_aids_cursorBox], Source={StaticResource Localization}}"/>
 
-                                <Separator Margin="0,4"/>
+                                <Separator Style="{StaticResource IRI.Maptor.Styles.Separator.Horizontal}"/>
 
-                                <TextBlock Text="{Binding [sketchBar_snapping_layers], Source={StaticResource Localization}}"
-                                           FontWeight="SemiBold" Margin="2,0,2,4"/>
+                                <TextBlock Style="{StaticResource snapGroupHeader}"
+                                           Text="{Binding [sketchBar_snapping_layers], Source={StaticResource Localization}}"/>
 
                                 <!--the user's drawings: one entry for all of them, above the layers-->
-                                <CheckBox Margin="2" IsChecked="{Binding IsDrawingsChecked, Mode=TwoWay}">
-                                    <TextBlock Text="{Binding [ui_header_drawingLegend], Source={StaticResource Localization}}"
-                                               FontStyle="Italic"
-                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
-                                </CheckBox>
+                                <CheckBox IsChecked="{Binding IsDrawingsChecked, Mode=TwoWay}"
+                                          Content="{Binding [ui_header_drawingLegend], Source={StaticResource Localization}}"/>
 
                                 <ScrollViewer MaxHeight="300" VerticalScrollBarVisibility="Auto"
                                               HorizontalScrollBarVisibility="Disabled" Focusable="False">
                                     <ItemsControl ItemsSource="{Binding Layers}" Focusable="False">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <CheckBox Margin="2" IsChecked="{Binding IsChecked, Mode=TwoWay}">
-                                                    <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis"
-                                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                                                <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}">
+                                                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldValue}" Text="{Binding Name}"/>
                                                 </CheckBox>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                 </ScrollViewer>
 
-                                <TextBlock Text="{Binding [sketchBar_snapping_noLayers], Source={StaticResource Localization}}"
-                                           Margin="2" Opacity=".7" TextWrapping="Wrap"
-                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                                <TextBlock Style="{StaticResource snapNote}"
+                                           Text="{Binding [sketchBar_snapping_noLayers], Source={StaticResource Localization}}"
                                            Visibility="{Binding HasNoLayers, Converter={StaticResource boolToVisibilityConverter}}"/>
 
-                                <TextBlock Text="{Binding [sketchBar_snapping_tooMany], Source={StaticResource Localization}}"
-                                           Margin="2,4,2,0" TextWrapping="Wrap"
+                                <TextBlock Style="{StaticResource snapNote}"
+                                           Text="{Binding [sketchBar_snapping_tooMany], Source={StaticResource Localization}}"
                                            Foreground="{DynamicResource MahApps.Brushes.Accent}"
                                            Visibility="{Binding IsOverLimit, Converter={StaticResource boolToVisibilityConverter}}"/>
                             </StackPanel>

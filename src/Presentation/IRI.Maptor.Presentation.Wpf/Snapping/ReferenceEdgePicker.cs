@@ -49,6 +49,10 @@ public sealed class ReferenceEdgePicker
     private ReferenceEdge? _pending;
     private System.Windows.Point _pendingAt;
 
+    // the edge the user has just removed as the reference: resting on it does not pick it again until the pointer
+    // has left it, or the removal would be undone half a second later with the pointer still where it was
+    private ReferenceEdge? _removed;
+
     public ReferenceEdgePicker()
     {
         _timer = new DispatcherTimer { Interval = Pause };
@@ -65,13 +69,17 @@ public sealed class ReferenceEdgePicker
     /// <summary>
     /// Tells the picker what the pointer is on: an edge, or null (nothing, a typed value, a pan). The edge becomes
     /// the reference once the pointer has rested on it for <see cref="Pause"/>; moving on, or onto another edge,
-    /// starts the wait again. Resting on the current reference changes nothing.
+    /// starts the wait again. Resting on the current reference changes nothing, and neither does resting on the edge
+    /// that <see cref="Clear"/> has just removed, until the pointer has left it.
     /// </summary>
     /// <param name="edge">The edge under the pointer, or null.</param>
     /// <param name="screenPoint">Where the pointer is, in pixels.</param>
     public void Hover(ReferenceEdge? edge, System.Windows.Point screenPoint = default)
     {
-        if (edge is null || edge.SameAs(Reference))
+        if (edge is null || !edge.SameAs(_removed))
+            _removed = null;
+
+        if (edge is null || edge.SameAs(Reference) || edge.SameAs(_removed))
         {
             _pending = null;
             _timer.Stop();
@@ -106,6 +114,7 @@ public sealed class ReferenceEdgePicker
     public void Set(ReferenceEdge edge)
     {
         _pending = null;
+        _removed = null;
         _timer.Stop();
 
         Reference = edge ?? throw new ArgumentNullException(nameof(edge));
@@ -122,6 +131,7 @@ public sealed class ReferenceEdgePicker
         if (Reference is null)
             return false;
 
+        _removed = Reference;
         Reference = null;
 
         Changed?.Invoke();
