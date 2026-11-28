@@ -2546,6 +2546,26 @@ public abstract class MapViewModelBase : ViewModelBase
         return completion.Task;
     }
 
+    /// <summary>
+    /// Every vector layer of <paramref name="layers"/>, in groups too, searchable or not, drawings apart: what can be
+    /// snapped to. Being searchable is about search and identify; snapping offers every layer, and the user unchecks
+    /// what is not wanted in the sketch bar's list (decided 2026-11-28). The drawings have their own entry there.
+    /// </summary>
+    public List<VectorLayer> GetSnappableVectorLayers(IEnumerable<ILayer>? layers)
+    {
+        var result = new List<VectorLayer>();
+
+        foreach (var layer in layers ?? Enumerable.Empty<ILayer>())
+        {
+            if (layer is GroupLayer group)
+                result.AddRange(GetSnappableVectorLayers(group.SubLayers));
+            else if (layer is VectorLayer vector and not DrawingItemLayer)
+                result.Add(vector);
+        }
+
+        return result;
+    }
+
     public List<VectorLayer> GetAllVectorLayers(IEnumerable<ILayer>? layers)
     {
         var result = new List<VectorLayer>();

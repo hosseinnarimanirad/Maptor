@@ -700,7 +700,7 @@ public class MapUiSessionTest
             ((IRI.Maptor.Presentation.Wpf.ViewModels.MapOptionsViewModel)again.DataContext).LeftCommand.Execute(null);
 
             Assert.True(host.Await(editing, "Cancel from the menu did not end the edit").IsCanceled);
-        }, Plain);
+        }, settings => settings.Snapping_ShowCursorBox = false); // guides on: the menu is about them
     }
 
     [Fact]

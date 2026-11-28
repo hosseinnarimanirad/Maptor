@@ -650,7 +650,8 @@ public partial class MapViewer : NotifiableUserControl
             presenter.SketchBar.Snapping,
             () => this.CurrentExtent,
             ScreenToMap,
-            () => presenter.GetAllVectorLayers(this.Layers)
+            // every vector layer, searchable or not (being searchable is about search and identify)
+            () => presenter.GetSnappableVectorLayers(this.Layers)
                            .Where(l => l.Type == LayerType.VectorLayer && l.Visibility == Visibility.Visible && l.IsInScaleRange),
             () => presenter.MapSettings?.Snapping_TolerancePixels ?? MapSnapper.DefaultTolerancePixels,
             () => presenter.MapSettings is { } settings

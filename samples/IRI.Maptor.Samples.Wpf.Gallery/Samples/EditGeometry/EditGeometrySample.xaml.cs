@@ -142,8 +142,9 @@ public partial class EditGeometrySample : UserControl
     }
 
     /// <summary>
-    /// A drawing of 2,500 vertices north of the block, about 16 cm apart, to edit as a big geometry: more than the
-    /// 2,000 vertices in view that get handles, so zoomed out the map asks to zoom in.
+    /// A drawing of 2,500 vertices to edit as a big geometry: a line that winds over about 4 km around the block,
+    /// about 27 km long, with its vertices at equal distances of about 11 m: 14 px apart at zoom 17, more beyond. More than the 2,000
+    /// vertices in view that get handles, so zoomed out the map asks to zoom in.
     /// </summary>
     private void OnAddLongLine(object sender, RoutedEventArgs e)
     {
@@ -152,17 +153,37 @@ public partial class EditGeometrySample : UserControl
 
         const int count = 2_500;
 
+        // west to east over about 4.4 km, swinging about 1.1 km north and south six times; the curve is traced finely
+        // first and the vertices then put at equal distances along it, so none bunch up where the curve turns
+        Point Curve(double t) => ToWebMercator(West - 0.028 + t * 0.06, South + 0.001 + 0.01 * Math.Sin(t * Math.PI * 12));
+
+        const int fine = 100_000;
+
+        var trace = new Point[fine + 1];
+        var along = new double[fine + 1];
+
+        for (int i = 0; i <= fine; i++)
+        {
+            trace[i] = Curve(i / (double)fine);
+
+            if (i > 0)
+                along[i] = along[i - 1] + Math.Sqrt(Math.Pow(trace[i].X - trace[i - 1].X, 2) + Math.Pow(trace[i].Y - trace[i - 1].Y, 2));
+        }
+
         var points = new List<Point>(count);
 
-        for (int i = 0; i < count; i++)
+        for (int i = 0, j = 0; i < count; i++)
         {
-            var t = i / (double)(count - 1);
+            var wanted = along[fine] * i / (count - 1);
 
-            // a gentle wave just north of the block, about 400 m long
-            var longitude = West - 0.0005 + t * 0.0055;
-            var latitude = South + 0.0023 + 0.0001 * Math.Sin(t * Math.PI * 6);
+            while (j < fine && along[j + 1] < wanted)
+                j++;
 
-            points.Add(ToWebMercator(longitude, latitude));
+            var span = j < fine ? along[j + 1] - along[j] : 0;
+            var f = span > 0 ? (wanted - along[j]) / span : 0;
+            var next = trace[Math.Min(j + 1, fine)];
+
+            points.Add(new Point(trace[j].X + f * (next.X - trace[j].X), trace[j].Y + f * (next.Y - trace[j].Y)));
         }
 
         presenter.AddDrawingItem(Geometry<Point>.Create(points, GeometryType.LineString, SridHelper.WebMercator), "Long line (2,500 vertices)");
