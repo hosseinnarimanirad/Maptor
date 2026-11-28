@@ -879,6 +879,131 @@ public class EditableFeatureLayerEditTest
         Assert.Equal(3, layer.GetLastGeometry().Points.Count);
     });
 
+    // ---- step 8: undo and redo ----
+
+    private static (double X, double Y)[] Coordinates(EditableFeatureLayer layer)
+        => layer.GetLastGeometry().Points.Select(p => (p.X, p.Y)).ToArray();
+
+    [Fact]
+    public void AMove_IsUndoneAndRedone() => RunWithOwnStyles(() =>
+    {
+        using var layer = Edit(Line((0, 0), (100, 0), (200, 0)));
+
+        var before = Coordinates(layer);
+
+        // what the map does when a drag starts, then the drag itself
+        layer.RecordUndoPoint();
+        layer.GetVertices().Items[1].MoveTo(100, 50);
+        layer.GetVertices().Items[1].MoveTo(110, 60);
+
+        var after = Coordinates(layer);
+
+        Assert.True(layer.TryUndo());
+        Assert.Equal(before, Coordinates(layer));
+
+        Assert.True(layer.TryRedo());
+        Assert.Equal(after, Coordinates(layer));
+
+        Assert.False(layer.TryRedo());
+    });
+
+    [Fact]
+    public void AnInsertAndADelete_AreUndoneInTurn() => RunWithOwnStyles(() =>
+    {
+        using var layer = Edit(MultiLine(Line((0, 0), (100, 0)), Line((0, 50), (100, 50), (200, 50))));
+
+        var start = layer.GetLastGeometry().Geometries.Select(g => g.Points.Count).ToArray();
+
+        var hit = layer.FindEdge(new Point(150, 51), reach: 6, vertexReach: 8)!.Value;
+        layer.InsertVertex(hit, hit.Point);
+
+        layer.SelectPoint(2);
+        layer.TryDeleteCurrentPoint();
+
+        Assert.Equal(new[] { 2, 3 }, layer.GetLastGeometry().Geometries.Select(g => g.Points.Count));
+
+        Assert.True(layer.TryUndo());
+        Assert.Equal(new[] { 2, 4 }, layer.GetLastGeometry().Geometries.Select(g => g.Points.Count));
+
+        Assert.True(layer.TryUndo());
+        Assert.Equal(start, layer.GetLastGeometry().Geometries.Select(g => g.Points.Count));
+
+        Assert.False(layer.TryUndo());
+
+        // the handles follow the geometry put back
+        Assert.Equal(5, layer.GetVertices().Items.Count);
+    });
+
+    [Fact]
+    public void ANewChange_AfterAnUndo_DropsTheRedo() => RunWithOwnStyles(() =>
+    {
+        using var layer = Edit(Line((0, 0), (100, 0), (200, 0)));
+
+        layer.RecordUndoPoint();
+        layer.GetVertices().Items[1].MoveTo(100, 50);
+
+        layer.TryUndo();
+
+        Assert.True(layer.CanRedo);
+
+        layer.RecordUndoPoint();
+        layer.GetVertices().Items[2].MoveTo(200, 50);
+
+        Assert.False(layer.CanRedo);
+    });
+
+    [Fact]
+    public void InASketch_PlacedPointsAreUndone_AndBackspaceToo() => RunWithOwnStyles(() =>
+    {
+        using var layer = new EditableFeatureLayer(
+            "draw", new List<Point> { new(0, 0) }, Transform.Identity, d => d, GeometryType.LineString, (_, _) => { },
+            EditableFeatureLayerOptions.CreateDefaultForDrawing(true, true));
+
+        // the first point comes with the sketch: there is nothing to undo yet
+        Assert.False(layer.CanUndo);
+
+        layer.AddVertex(new Point(100, 0));
+        layer.AddVertex(new Point(200, 50));
+
+        Assert.True(layer.TryUndo());
+        Assert.Equal(new[] { (0d, 0d), (100d, 0d) }, Coordinates(layer));
+
+        Assert.True(layer.TryRedo());
+        Assert.Equal(3, layer.GetLastGeometry().Points.Count);
+
+        layer.TryRemoveLastPlacedVertex();
+
+        Assert.True(layer.TryUndo());
+        Assert.Equal(3, layer.GetLastGeometry().Points.Count);
+
+        // the dashed segment starts at the last placed point again
+        layer.UpdateLastSemiVertexLocation(new Point(250, 80));
+
+        var rubber = ((PathGeometry)layer.GetSketchPaths().First().Data).Figures.Single();
+
+        Assert.Equal(new System.Windows.Point(200, 50), rubber.StartPoint);
+    });
+
+    [Fact]
+    public void TheHistory_KeepsTheLastHundredSteps() => RunWithOwnStyles(() =>
+    {
+        using var layer = Edit(Line((0, 0), (100, 0)));
+
+        for (int i = 1; i <= 120; i++)
+        {
+            layer.RecordUndoPoint();
+            layer.GetVertices().Items[1].MoveTo(100, i);
+        }
+
+        var undone = 0;
+
+        while (layer.TryUndo())
+            undone++;
+
+        Assert.Equal(100, undone);
+        Assert.Equal((100d, 20d), (layer.GetLastGeometry().Points[1].X, layer.GetLastGeometry().Points[1].Y));
+    });
+
     // ---- the point layer ----
 
     [Fact]

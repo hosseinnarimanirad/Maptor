@@ -50,6 +50,16 @@ internal sealed class MapUiHost
 
     public MapViewer Map { get; private set; } = null!;
 
+    private System.Windows.Controls.StackPanel _strip = null!;
+
+    /// <summary>Puts <paramref name="element"/> in a strip above the map, as an application's toolbar.</summary>
+    public void AddBesideMap(UIElement element)
+    {
+        _strip.Children.Add(element);
+
+        Pump(100);
+    }
+
     public MapViewModelBase ViewModel => _presenter;
 
     private TestMap _presenter = null!;
@@ -112,10 +122,20 @@ internal sealed class MapUiHost
 
         Map = new MapViewer();
 
+        // a strip above the map for what a check puts beside it (a button that keeps the keyboard focus)
+        _strip = new System.Windows.Controls.StackPanel { Orientation = System.Windows.Controls.Orientation.Horizontal };
+
+        var layout = new System.Windows.Controls.DockPanel();
+
+        System.Windows.Controls.DockPanel.SetDock(_strip, System.Windows.Controls.Dock.Top);
+
+        layout.Children.Add(_strip);
+        layout.Children.Add(Map);
+
         _window = new Window
         {
             Title = "Maptor UI check (the mouse is in use for a few seconds)",
-            Content = Map,
+            Content = layout,
             Width = 900,
             Height = 650,
             WindowStartupLocation = WindowStartupLocation.Manual,
@@ -344,6 +364,45 @@ internal sealed class MapUiHost
         Pump(40);
     }
 
+    /// <summary>
+    /// A real key press through Windows, to the window that has the keyboard (the map's window is made active first):
+    /// it goes the way a key from the keyboard goes, through focus, unlike <see cref="Press"/>.
+    /// </summary>
+    public void PressReal(Key key, bool control = false, bool shift = false)
+    {
+        _window.Activate();
+
+        Pump(50);
+
+        const byte ControlKey = 0x11, ShiftKey = 0x10;
+
+        var virtualKey = (byte)KeyInterop.VirtualKeyFromKey(key);
+
+        try
+        {
+            if (control)
+                keybd_event(ControlKey, 0, 0, UIntPtr.Zero);
+
+            if (shift)
+                keybd_event(ShiftKey, 0, 0, UIntPtr.Zero);
+
+            keybd_event(virtualKey, 0, 0, UIntPtr.Zero);
+            Pump(30);
+            keybd_event(virtualKey, 0, KeyUp, UIntPtr.Zero);
+        }
+        finally
+        {
+            // never leave a modifier down
+            if (shift)
+                keybd_event(ShiftKey, 0, KeyUp, UIntPtr.Zero);
+
+            if (control)
+                keybd_event(ControlKey, 0, KeyUp, UIntPtr.Zero);
+        }
+
+        Pump(150);
+    }
+
     /// <summary>Takes the mouse capture away, as Alt+Tab or a dialog opening in the middle of a drag does.</summary>
     public void LoseCapture()
     {
@@ -467,6 +526,8 @@ internal sealed class MapUiHost
     private struct MonitorInfo { public int Size; public NativeRect Monitor; public NativeRect Work; public uint Flags; }
 
     [DllImport("user32.dll")] private static extern bool SetCursorPos(int x, int y);
+    [DllImport("user32.dll")] private static extern void keybd_event(byte key, byte scan, uint flags, UIntPtr extraInfo);
+    private const uint KeyUp = 0x0002;
     [DllImport("user32.dll")] private static extern bool GetCursorPos(out NativePoint point);
     [DllImport("user32.dll")] private static extern void mouse_event(uint flags, uint dx, uint dy, uint data, UIntPtr extraInfo);
     [DllImport("user32.dll")] private static extern uint GetDoubleClickTime();

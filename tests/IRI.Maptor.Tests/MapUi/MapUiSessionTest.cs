@@ -566,6 +566,38 @@ public class MapUiSessionTest
     }
 
     [Fact]
+    public void ARealEnterKey_FinishesALine_AfterTheDrawButtonWasClicked()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            // as in an application: a button outside the map starts the drawing and keeps the keyboard focus
+            var button = new System.Windows.Controls.Button { Content = "Draw polyline" };
+
+            host.AddBesideMap(button);
+
+            button.Focus();
+
+            var drawing = host.ViewModel.GetDrawingAsync(DrawMode.Polyline);
+
+            host.Pump(200);
+
+            host.Click(new WpfPoint(200, 300));
+            host.Click(new WpfPoint(350, 250));
+
+            host.MoveTo(new WpfPoint(420, 330));
+
+            host.PressReal(System.Windows.Input.Key.Enter);
+
+            var line = host.Await(drawing, $"a real Enter did not finish the line (focus: {System.Windows.Input.Keyboard.FocusedElement?.GetType().Name ?? "none"})").Result;
+
+            Assert.Equal(2, line.Points.Count);
+        }, Plain);
+    }
+
+    [Fact]
     public void Enter_OnASketchNotValidYet_SaysWhy_AndBackspaceOnTheOnlyPointCancels()
     {
         if (!MapUiHost.IsEnabled)
@@ -701,6 +733,82 @@ public class MapUiSessionTest
 
             Assert.True(host.Await(editing, "Cancel from the menu did not end the edit").IsCanceled);
         }, settings => settings.Snapping_ShowCursorBox = false); // guides on: the menu is about them
+    }
+
+    // ---- step 8: undo and redo ----
+
+    [Fact]
+    public void CtrlZ_UndoesADrag_AndAnInsertWithItsDrag_AsOneStepEach_CtrlYRedoes()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            StartEdit(host, out var editing, new WpfPoint(200, 300), new WpfPoint(400, 300), new WpfPoint(600, 300));
+
+            var start = Points(host);
+
+            // a drag of a vertex: one step
+            host.Drag(new WpfPoint(400, 300), new WpfPoint(420, 200));
+
+            var dragged = Points(host);
+
+            // an insert from the edge handle with its drag: one step. On the first edge, which now runs from
+            // (200 300) to (420 200): at x = 255 it is at y = 275
+            host.Drag(new WpfPoint(255, 277), new WpfPoint(260, 380));
+
+            Assert.Equal(4, Points(host).Length);
+
+            host.PressReal(System.Windows.Input.Key.Z, control: true);
+
+            Assert.Equal(3, Points(host).Length);
+            AssertNear(host, dragged[1], Points(host)[1]);
+
+            host.PressReal(System.Windows.Input.Key.Z, control: true);
+
+            AssertNear(host, start[1], Points(host)[1]);
+
+            host.PressReal(System.Windows.Input.Key.Y, control: true);
+
+            AssertNear(host, dragged[1], Points(host)[1]);
+
+            // Ctrl+Shift+Z redoes too
+            host.PressReal(System.Windows.Input.Key.Z, control: true, shift: true);
+
+            Assert.Equal(4, Points(host).Length);
+
+            CancelEdit(host, editing);
+        }, Plain);
+    }
+
+    [Fact]
+    public void CtrlZ_WhileDrawing_TakesBackTheLastPoint()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            var drawing = host.ViewModel.GetDrawingAsync(DrawMode.Polyline);
+
+            host.Pump(200);
+
+            host.Click(new WpfPoint(200, 300));
+            host.Click(new WpfPoint(350, 250));
+            host.Click(new WpfPoint(500, 320));
+
+            host.MoveTo(new WpfPoint(560, 360));
+
+            host.PressReal(System.Windows.Input.Key.Z, control: true);
+
+            host.PressReal(System.Windows.Input.Key.Enter);
+
+            var line = host.Await(drawing, "the line was not finished").Result;
+
+            Assert.Equal(2, line.Points.Count);
+            AssertNear(host, host.ToMap(new WpfPoint(350, 250)), line.Points[1]);
+        }, Plain);
     }
 
     [Fact]

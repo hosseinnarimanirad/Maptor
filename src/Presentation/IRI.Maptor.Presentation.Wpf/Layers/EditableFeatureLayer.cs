@@ -441,6 +441,9 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         ReconstructLocateables();
 
         UpdateRubberBand();
+
+        // undo while drawing covers the points of the part being drawn
+        ClearUndoHistory();
     }
 
     // add an empty new part
@@ -454,6 +457,8 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
         UpdateRubberBand();
 
+        ClearUndoHistory();
+
         return result;
     }
 
@@ -463,6 +468,8 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
     /// <returns>True if the part was successfully added, false otherwise</returns>
     public bool TryAddNewPart()
     {
+        RecordUndoPoint();
+
         var result = _webMercatorGeometry.TryAddNewPart();
 
         if (result)
@@ -802,6 +809,11 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
         if (currentEditingPoint == null)
             return;
+
+        // a coordinate typed on the sketch bar; the map also sets the point while a vertex is dragged, to where the
+        // vertex already is: that is not a change of its own
+        if (currentEditingPoint.X != point.X || currentEditingPoint.Y != point.Y)
+            RecordUndoPoint();
 
         currentEditingPoint.MoveTo(point.X, point.Y);
     }
@@ -1149,6 +1161,8 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         if (hit.Part < 0 || hit.Part >= _parts.Count || _parts[hit.Part].Geometry.Points is not { } points || hit.Edge >= points.Count)
             return null;
 
+        RecordUndoPoint();
+
         var part = _parts[hit.Part];
 
         var index = hit.Edge + 1;
@@ -1186,6 +1200,75 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         }
     }
 
+    // ---------------------------------------------------------------- undo and redo (step 8, decided 2026-11-28)
+    //
+    // Before each change the user makes, the geometry as it is is kept; undo puts it back and keeps the present one
+    // for redo. One step is one whole change: a vertex drag, an insert (with the drag of the inserted vertex), a
+    // delete, a typed coordinate, a placed point. While drawing, the history covers the points of the part being
+    // drawn; finishing a part starts it again. Finishing or cancelling ends the layer and its history.
+
+    private const int MaxUndoSteps = 100;
+
+    private readonly List<Geometry> _undo = new();
+
+    private readonly List<Geometry> _redo = new();
+
+    public bool CanUndo => _undo.Count > 0;
+
+    public bool CanRedo => _redo.Count > 0;
+
+    /// <summary>Keeps the geometry as it is now, before a change: one step of undo. Whatever could be redone is dropped.</summary>
+    public void RecordUndoPoint()
+    {
+        if (_webMercatorGeometry is null)
+            return;
+
+        _undo.Add(_webMercatorGeometry.Clone());
+
+        if (_undo.Count > MaxUndoSteps)
+            _undo.RemoveAt(0);
+
+        _redo.Clear();
+    }
+
+    public bool TryUndo() => TryRestore(_undo, _redo);
+
+    public bool TryRedo() => TryRestore(_redo, _undo);
+
+    private void ClearUndoHistory()
+    {
+        _undo.Clear();
+        _redo.Clear();
+    }
+
+    private bool TryRestore(List<Geometry> from, List<Geometry> to)
+    {
+        if (from.Count == 0 || _webMercatorGeometry is null)
+            return false;
+
+        var selected = _primaryVerticesLayer.FindSelectedLocatableIndex();
+
+        to.Add(_webMercatorGeometry.Clone());
+
+        _webMercatorGeometry = from[from.Count - 1];
+
+        from.RemoveAt(from.Count - 1);
+
+        // built again from the geometry put back; the map follows through the collection changes
+        MakePathGeometry();
+
+        ReconstructLocateables();
+
+        UpdateRubberBand();
+
+        var count = _primaryVerticesLayer.Items.Count;
+
+        if (count > 0)
+            SelectPoint(Math.Max(0, Math.Min(selected, count - 1)));
+
+        return true;
+    }
+
     /// <summary>
     /// Removes the last placed vertex of the part being drawn (Backspace while drawing). False when that part has
     /// fewer than two vertices: the sketch is then cancelled by the map instead. A sketch only.
@@ -1203,6 +1286,8 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         var index = points.Count - 1;
 
         var vertex = part.Vertices[index];
+
+        RecordUndoPoint();
 
         points.RemoveAt(index);
 
@@ -1295,6 +1380,8 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         if (points is null || points.Count <= minimumPoints || address.Index >= points.Count)
             return false;
 
+        RecordUndoPoint();
+
         var part = address.Part;
 
         var index = address.Index;
@@ -1376,6 +1463,8 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
             //geometry.Points.Count > 0, is to see if it is not going to add first point of a new part
             if (geometry.Points.Count > 0 && geometry.Points.Last().AreExactlyTheSame(webMercatorPoint) == true)
                 return null;
+
+            RecordUndoPoint();
 
             geometry.InsertLastPoint(webMercatorPoint);
 
@@ -1867,6 +1956,8 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
         if (currentPoint == null)
             return;
+
+        RecordUndoPoint();
 
         _webMercatorGeometry.TryRemoveEntireRingOrLineString(currentPoint.X, currentPoint.Y);
 

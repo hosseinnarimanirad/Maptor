@@ -2310,7 +2310,8 @@ public partial class MapViewer : NotifiableUserControl
         if (!IsOnMapCanvas(element))
             return;
 
-        StartMoveableItemSession(element, e.GetPosition(this.mapView));
+        // the insert was the step of undo: the drag that follows is part of it
+        StartMoveableItemSession(element, e.GetPosition(this.mapView), recordsUndo: false);
     }
 
     private void MapView_MouseLeaveForEdgeHandle(object sender, MouseEventArgs e) => HideEdgeHandle();
@@ -2663,8 +2664,10 @@ public partial class MapViewer : NotifiableUserControl
     /// Starts moving <paramref name="element"/>, a moveable item on the map, as if it had been pressed at
     /// <paramref name="pressLocation"/> (a point of the map canvas): it follows the pointer until the button is released.
     /// </summary>
-    private void StartMoveableItemSession(FrameworkElement element, Point pressLocation)
+    private void StartMoveableItemSession(FrameworkElement element, Point pressLocation, bool recordsUndo = true)
     {
+        _vertexDragRecordsUndo = recordsUndo;
+
         HideEdgeHandle();
 
         itemIsMoving = true;
@@ -2723,9 +2726,22 @@ public partial class MapViewer : NotifiableUserControl
             _vertexDragStarted =
                 Math.Abs(screenPoint.X - _vertexPressLocation.X) > _knownAsPanThreshold ||
                 Math.Abs(screenPoint.Y - _vertexPressLocation.Y) > _knownAsPanThreshold;
+
+            if (_vertexDragStarted)
+                OnVertexDragStarted();
         }
 
         return _vertexDragStarted;
+    }
+
+    // a drag is one step of undo, kept when the vertex starts to move (a click moves nothing and keeps nothing); a
+    // vertex just inserted from the edge handle is part of the insert's step
+    private bool _vertexDragRecordsUndo = true;
+
+    private void OnVertexDragStarted()
+    {
+        if (_vertexDragRecordsUndo)
+            CurrentEditingLayer?.RecordUndoPoint();
     }
 
     // with it, the vertices around the dragged one, as the segment the aids work on: Last is the neighbour the
@@ -2766,6 +2782,8 @@ public partial class MapViewer : NotifiableUserControl
                 return;
 
             _vertexDragStarted = true;
+
+            OnVertexDragStarted();
         }
 
         var target = VertexDragTarget(Mouse.GetPosition(this.mapView));
@@ -5687,6 +5705,33 @@ public partial class MapViewer : NotifiableUserControl
     // Backspace and Enter first (HostWindow_PreviewKeyDownForSegmentInput).
     private void HostWindow_PreviewKeyDownForSketchKeys(object sender, KeyEventArgs e)
     {
+        // Ctrl+Z undoes, Ctrl+Y and Ctrl+Shift+Z redo, in the sketch being drawn or the geometry being edited
+        // (step 8). Not in a text box, which has its own undo, and not in the middle of a drag.
+        if (!e.Handled && _presenter is not null && !itemIsMoving &&
+            Keyboard.FocusedElement is not System.Windows.Controls.Primitives.TextBoxBase &&
+            (Keyboard.Modifiers & ModifierKeys.Control) != 0 && (Keyboard.Modifiers & ModifierKeys.Alt) == 0 &&
+            (e.Key == Key.Z || e.Key == Key.Y))
+        {
+            var target = this.Status == MapStatus.Drawing ? drawingLayer?.GetLayer() : CurrentEditingLayer;
+
+            if (target is null)
+                return;
+
+            var redo = e.Key == Key.Y || (Keyboard.Modifiers & ModifierKeys.Shift) != 0;
+
+            e.Handled = true;
+
+            if (redo ? target.TryRedo() : target.TryUndo())
+            {
+                HideEdgeHandle();
+
+                // the dashed segment and the aids follow the restored sketch
+                _drawPhaseGesture?.RaiseHover();
+            }
+
+            return;
+        }
+
         if (e.Handled || _presenter is null || itemIsMoving ||
             Keyboard.FocusedElement is System.Windows.Controls.Primitives.TextBoxBase ||
             (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Windows)) != 0)
