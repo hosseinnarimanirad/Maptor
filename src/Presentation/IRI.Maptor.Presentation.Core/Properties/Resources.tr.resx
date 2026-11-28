@@ -4886,7 +4886,7 @@
     <value>Kılavuzlar</value>
   </data>
   <data name="sketchBar_aids_guides_tip" xml:space="preserve">
-    <value>Uzantı, dik ve paralel kılavuzlar, Shift ile 15° adımlar ve üzerinde durduğunuz çizgiden kılavuzlar</value>
+    <value>Uzantı, dik ve paralel kılavuzlar, Shift ile 15° adımlar ve sağ tıklayarak seçtiğiniz çizgiden kılavuzlar</value>
   </data>
   <data name="sketchBar_aids_cursorBox" xml:space="preserve">
     <value>Uzunluk ve açı kutusu</value>

@@ -8710,7 +8710,7 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Extension, perpendicular and parallel guides, 15° steps with Shift, and guides from a line you rest on.
+        ///   Looks up a localized string similar to Extension, perpendicular and parallel guides, 15° steps with Shift, and guides from a line you pick by right click.
         /// </summary>
         public static string sketchBar_aids_guides_tip {
             get {

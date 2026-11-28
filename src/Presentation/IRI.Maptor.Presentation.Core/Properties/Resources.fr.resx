@@ -4886,7 +4886,7 @@
     <value>Guides</value>
   </data>
   <data name="sketchBar_aids_guides_tip" xml:space="preserve">
-    <value>Guides de prolongement, perpendiculaire et parallèle, pas de 15° avec Shift, et guides depuis une ligne sur laquelle vous vous arrêtez</value>
+    <value>Guides de prolongement, perpendiculaire et parallèle, pas de 15° avec Shift, et guides depuis une ligne choisie par clic droit</value>
   </data>
   <data name="sketchBar_aids_cursorBox" xml:space="preserve">
     <value>Zone longueur et angle</value>

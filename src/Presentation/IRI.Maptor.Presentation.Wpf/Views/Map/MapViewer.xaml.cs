@@ -599,7 +599,7 @@ public partial class MapViewer : NotifiableUserControl
     private CursorBox? _cursorBox;
     private readonly SegmentInput _segmentInput = new();
 
-    // the existing edge guides are drawn from while drawing (picked by resting on it, or from the right-click options)
+    // the existing edge guides are drawn from while drawing (picked from the right-click options)
     private readonly ReferenceEdgePicker _referenceEdge = new();
 
     // the two drawing-aid choices of the map settings (the snapping pop-up); on when there are no settings
@@ -5036,14 +5036,6 @@ public partial class MapViewer : NotifiableUserControl
                                    reference: reference,
                                    next: next, afterNext: afterNext);
 
-        // resting on an edge (the pointer snapped onto it, not onto one of its vertices) makes it the reference
-        if (isDrawPhase && AreGuidesOn)
-        {
-            var isOnEdge = !result.IsTyped && result.Snap is { Kind: SnapKind.Edge or SnapKind.Midpoint };
-
-            _referenceEdge.Hover(isOnEdge ? _snapper?.EdgeAt(mapPoint) : null, MapToScreen(mapPoint.AsWpfPoint()));
-        }
-
         if (reference is not null)
             _guideOverlay?.ShowReference(MapToScreen(reference.Start.AsWpfPoint()), MapToScreen(reference.End.AsWpfPoint()));
         else
@@ -5309,9 +5301,6 @@ public partial class MapViewer : NotifiableUserControl
         _guideOverlay?.Hide();
         _guideOverlay?.HideReference();
         _cursorBox?.Hide();
-
-        // nothing under the pointer counts while the aids are hidden (a pan, the end of a phase)
-        _referenceEdge.Hover(null);
     }
 
     /// <summary>The placed vertex the segment being drawn starts from, and the one before it (null when there is none).</summary>

@@ -4886,7 +4886,7 @@
     <value>خطوط الإرشاد</value>
   </data>
   <data name="sketchBar_aids_guides_tip" xml:space="preserve">
-    <value>خطوط إرشاد للامتداد والتعامد والتوازي، خطوات 15° مع Shift، وخطوط إرشاد من الخط الذي تتوقف عليه</value>
+    <value>خطوط إرشاد للامتداد والتعامد والتوازي، خطوات 15° مع Shift، وخطوط إرشاد من خط تختاره بالنقر بالزر الأيمن</value>
   </data>
   <data name="sketchBar_aids_cursorBox" xml:space="preserve">
     <value>مربع الطول والزاوية</value>

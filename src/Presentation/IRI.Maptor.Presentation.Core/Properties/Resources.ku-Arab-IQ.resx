@@ -4886,7 +4886,7 @@
     <value>هێڵە ڕێنماکان</value>
   </data>
   <data name="sketchBar_aids_guides_tip" xml:space="preserve">
-    <value>ڕێنمای درێژکراوە، ستوون و تەریب، هەنگاوی ١٥ پلە بە Shift، و ڕێنما لەو هێڵەی لەسەری دەوەستیت</value>
+    <value>ڕێنمای درێژکراوە، ستوون و تەریب، هەنگاوی ١٥ پلە بە Shift، و ڕێنما لەو هێڵەی بە کلیکی ڕاست هەڵیدەبژێریت</value>
   </data>
   <data name="sketchBar_aids_cursorBox" xml:space="preserve">
     <value>خانەی درێژی و گۆشە</value>

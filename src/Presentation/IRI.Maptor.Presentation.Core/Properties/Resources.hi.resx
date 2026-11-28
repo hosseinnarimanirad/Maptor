@@ -4886,7 +4886,7 @@
     <value>गाइड रेखाएँ</value>
   </data>
   <data name="sketchBar_aids_guides_tip" xml:space="preserve">
-    <value>विस्तार, लंबवत और समानांतर गाइड, Shift के साथ 15° के चरण, और जिस रेखा पर आप रुकते हैं उससे गाइड</value>
+    <value>विस्तार, लंबवत और समानांतर गाइड, Shift के साथ 15° के चरण, और राइट-क्लिक से चुनी गई रेखा से गाइड</value>
   </data>
   <data name="sketchBar_aids_cursorBox" xml:space="preserve">
     <value>लंबाई और कोण बॉक्स</value>

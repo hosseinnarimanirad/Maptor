@@ -4886,7 +4886,7 @@
     <value>Направляющие</value>
   </data>
   <data name="sketchBar_aids_guides_tip" xml:space="preserve">
-    <value>Направляющие продолжения, перпендикуляра и параллели, шаги по 15° с Shift и направляющие от линии, на которой задержан указатель</value>
+    <value>Направляющие продолжения, перпендикуляра и параллели, шаги по 15° с Shift и направляющие от линии, выбранной правой кнопкой мыши</value>
   </data>
   <data name="sketchBar_aids_cursorBox" xml:space="preserve">
     <value>Поле длины и угла</value>

@@ -344,76 +344,31 @@ public class DrawingAidsMapTest
     }
 
     [Fact]
-    public void ReferenceEdgePicker_PicksTheEdgeThePointerRestsOn()
+    public void ReferenceEdgePicker_HoldsTheEdgeItIsGiven_AndTellsWhenItChanges()
     {
-        WpfTestHost.Run(() =>
-        {
-            var picker = new ReferenceEdgePicker();
-            var changes = 0;
-            picker.Changed += () => changes++;
+        var picker = new ReferenceEdgePicker();
+        var changes = 0;
+        picker.Changed += () => changes++;
 
-            var other = new ReferenceEdge(new Point(0, 0), new Point(50, 50));
+        var other = new ReferenceEdge(new Point(0, 0), new Point(50, 50));
 
-            // nothing rested on: the wait ending changes nothing
-            picker.PauseElapsed();
-            Assert.Null(picker.Reference);
+        Assert.Null(picker.Reference);
+        Assert.False(picker.Clear());
+        Assert.Equal(0, changes);
 
-            picker.Hover(Standing, new System.Windows.Point(10, 10));
-            Assert.Null(picker.Reference);
+        picker.Set(Standing);
+        Assert.Same(Standing, picker.Reference);
 
-            // moving off the edge drops the wait
-            picker.Hover(null);
-            picker.PauseElapsed();
-            Assert.Null(picker.Reference);
+        picker.Set(other);
+        Assert.Same(other, picker.Reference);
 
-            picker.Hover(Standing, new System.Windows.Point(10, 10));
-            picker.Hover(Standing, new System.Windows.Point(11, 10));
-            picker.PauseElapsed();
+        Assert.True(picker.Clear());
+        Assert.Null(picker.Reference);
+        Assert.False(picker.Clear());
+        Assert.Equal(3, changes);
 
-            Assert.Same(Standing, picker.Reference);
-            Assert.Equal(1, changes);
-
-            // resting on the reference again is nothing new
-            picker.Hover(new ReferenceEdge(Standing.End, Standing.Start), new System.Windows.Point(10, 10));
-            picker.PauseElapsed();
-            Assert.Same(Standing, picker.Reference);
-            Assert.Equal(1, changes);
-
-            // another edge replaces it
-            picker.Hover(other, new System.Windows.Point(40, 40));
-            picker.PauseElapsed();
-            Assert.Same(other, picker.Reference);
-
-            picker.Set(Standing);
-            Assert.Same(Standing, picker.Reference);
-
-            Assert.True(picker.Clear());
-            Assert.Null(picker.Reference);
-            Assert.False(picker.Clear());
-            Assert.Equal(4, changes);
-
-            // the pointer is still on the edge that was just removed: resting there does not bring it back
-            picker.Hover(Standing, new System.Windows.Point(10, 10));
-            picker.PauseElapsed();
-            Assert.Null(picker.Reference);
-
-            // once the pointer has left it, resting on it picks it as before
-            picker.Hover(null);
-            picker.Hover(Standing, new System.Windows.Point(10, 10));
-            picker.PauseElapsed();
-            Assert.Same(Standing, picker.Reference);
-
-            // and so does resting on another edge right after a removal
-            picker.Clear();
-            picker.Hover(other, new System.Windows.Point(40, 40));
-            picker.PauseElapsed();
-            Assert.Same(other, picker.Reference);
-        });
+        Assert.Throws<ArgumentNullException>(() => picker.Set(null!));
     }
-
-    #endregion
-
-    #region Moving a vertex of an existing geometry
 
     [Fact]
     public void AVertexBetweenTwoOthers_HasGuidesFromBothSides()

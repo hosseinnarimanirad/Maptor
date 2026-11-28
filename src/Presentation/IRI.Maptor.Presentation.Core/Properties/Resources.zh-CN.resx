@@ -4886,7 +4886,7 @@
     <value>参考线</value>
   </data>
   <data name="sketchBar_aids_guides_tip" xml:space="preserve">
-    <value>延长线、垂直和平行参考线，按住 Shift 以 15° 为步长，以及以指针停留的线为参考</value>
+    <value>延长线、垂直和平行参考线，按住 Shift 以 15° 为步长，以及以右键选择的线为参考</value>
   </data>
   <data name="sketchBar_aids_cursorBox" xml:space="preserve">
     <value>长度和角度框</value>

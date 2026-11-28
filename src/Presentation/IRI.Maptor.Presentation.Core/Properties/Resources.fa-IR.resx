@@ -4945,7 +4945,7 @@
     <value>خطوط راهنما</value>
   </data>
   <data name="sketchBar_aids_guides_tip" xml:space="preserve">
-    <value>راهنمای امتداد، عمود و موازی، گام‌های ۱۵ درجه با Shift، و راهنما از خطی که نشانگر روی آن مکث می‌کند</value>
+    <value>راهنمای امتداد، عمود و موازی، گام‌های ۱۵ درجه با Shift، و راهنما از خطی که با راست‌کلیک انتخاب می‌کنید</value>
   </data>
   <data name="sketchBar_aids_cursorBox" xml:space="preserve">
     <value>کادر طول و زاویه</value>

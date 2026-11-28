@@ -4886,7 +4886,7 @@
     <value>رہنما خطوط</value>
   </data>
   <data name="sketchBar_aids_guides_tip" xml:space="preserve">
-    <value>توسیع، عمود اور متوازی رہنما خطوط، Shift کے ساتھ 15° کے قدم، اور اس لکیر سے رہنما خطوط جس پر آپ رکتے ہیں</value>
+    <value>توسیع، عمود اور متوازی رہنما خطوط، Shift کے ساتھ 15° کے قدم، اور اس لکیر سے رہنما خطوط جسے آپ دائیں کلک سے چنتے ہیں</value>
   </data>
   <data name="sketchBar_aids_cursorBox" xml:space="preserve">
     <value>لمبائی اور زاویے کا خانہ</value>
