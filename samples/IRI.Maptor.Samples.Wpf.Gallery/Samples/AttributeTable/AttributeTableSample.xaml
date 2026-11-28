@@ -1,6 +1,7 @@
 <UserControl x:Class="IRI.Maptor.Samples.Wpf.Gallery.Samples.AttributeTable.AttributeTableSample"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:maptor="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls;assembly=IRI.Maptor.Presentation.Wpf"
              Loaded="OnLoaded">
     <DockPanel>
@@ -23,20 +24,36 @@
                 <RowDefinition Height="220" />
             </Grid.RowDefinitions>
 
-            <Border Style="{StaticResource SampleSidePanel}" Width="Auto">
+            <DockPanel Margin="0,0,6,0">
+                <Expander IsExpanded="True" Style="{StaticResource IRI.Maptor.Styles.Expander.Card}">
+                <Expander.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconPhosphorIcons Kind="StackFill" Style="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.CardHeader}" />
+                        <TextBlock Text="Layers" Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardHeaderTitle}" />
+                        <TextBlock Text="{Binding LegendViewModel.TotalLayerCount, StringFormat='({0})'}" Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardHeaderCount}" />
+                    </StackPanel>
+                </Expander.Header>
                 <maptor:MapLegendView LegendViewModel="{Binding LegendViewModel}" />
-            </Border>
+            </Expander>
+            </DockPanel>
 
             <maptor:MapViewer x:Name="map" Grid.Column="1" MapAction="{Binding MapAction, Mode=OneWay}" />
 
-            <GridSplitter Grid.Row="1" Grid.ColumnSpan="2" Height="5" HorizontalAlignment="Stretch"
-                          Background="{DynamicResource MahApps.Brushes.Gray8}" />
+            <!-- the gap between the map and the table; drag it to give either more room -->
+            <GridSplitter Grid.Row="1" Grid.ColumnSpan="2" Height="5" HorizontalAlignment="Stretch" Background="Transparent" />
 
             <!-- One tab per entry in the view model's SelectedLayers collection -->
-            <maptor:FeatureTabControl Grid.Row="2" Grid.ColumnSpan="2"
-                                      CanUserEditGeometry="False"
-                                      CanUserEditAttribute="True"
-                                      IsZoomToGeometryEnabled="True" />
+            <Expander IsExpanded="True" Style="{StaticResource IRI.Maptor.Styles.Expander.Card}" Grid.Row="2" Grid.ColumnSpan="2">
+                <Expander.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Kind="Table" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CardHeader}" />
+                        <TextBlock Text="Features" Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardHeaderTitle}" />
+                    </StackPanel>
+                </Expander.Header>
+                <maptor:FeatureTabControl CanUserEditGeometry="False"
+                                          CanUserEditAttribute="True"
+                                          IsZoomToGeometryEnabled="True" />
+            </Expander>
         </Grid>
     </DockPanel>
 </UserControl>

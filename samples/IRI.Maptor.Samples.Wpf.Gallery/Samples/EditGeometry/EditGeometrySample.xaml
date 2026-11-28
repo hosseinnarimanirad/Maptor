@@ -7,7 +7,7 @@
 
     <!-- The Maptor screen grammar: light cards on the grey canvas, 6 px apart; each card a 32 px accent-tint header
          (icon, title, count) over its content. The toolbar is a card of compact icon-and-label tools in groups. -->
-    <Border Background="{DynamicResource IRI.Maptor.Brushes.Surface.Canvas}" Padding="6">
+    <Border>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

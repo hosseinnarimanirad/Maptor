@@ -177,7 +177,11 @@
                 </DockPanel>
             </Border>
 
-            <ContentControl x:Name="sampleHost" Focusable="False" />
+            <!-- every sample on the grey canvas of the Maptor screen grammar, 6 px from its edges; the sample's
+                 panels are light cards on it (the Sample* styles in App.xaml) -->
+            <Border Background="{DynamicResource IRI.Maptor.Brushes.Surface.Canvas}" Padding="6">
+                <ContentControl x:Name="sampleHost" Focusable="False" />
+            </Border>
         </DockPanel>
     </Grid>
 </Window>
