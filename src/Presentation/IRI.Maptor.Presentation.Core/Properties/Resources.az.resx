@@ -4900,4 +4900,13 @@
   <data name="map_draw_notEnoughPoints" xml:space="preserve">
     <value>Bitirmək üçün ən azı {0} nöqtə lazımdır.</value>
   </data>
+  <data name="sketchBar_move_tip" xml:space="preserve">
+    <value>Paneli köçürmək üçün sürüşdürün. Yerinə qaytarmaq üçün iki dəfə klikləyin.</value>
+  </data>
+  <data name="sketchBar_move_reset" xml:space="preserve">
+    <value>Paneli yerinə qaytar</value>
+  </data>
+  <data name="sketchBar_details" xml:space="preserve">
+    <value>Təfərrüatlar: Cari nöqtə, Çox hissəli, Məkan Referans Sistemi, Ölçmə</value>
+  </data>
 </root>

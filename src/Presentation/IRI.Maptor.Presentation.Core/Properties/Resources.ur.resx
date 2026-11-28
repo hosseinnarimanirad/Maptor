@@ -4900,4 +4900,13 @@
   <data name="map_draw_notEnoughPoints" xml:space="preserve">
     <value>ختم کرنے کے لیے کم از کم {0} نقاط درکار ہیں۔</value>
   </data>
+  <data name="sketchBar_move_tip" xml:space="preserve">
+    <value>بار کو ہلانے کے لیے گھسیٹیں۔ واپس اپنی جگہ لانے کے لیے ڈبل کلک کریں۔</value>
+  </data>
+  <data name="sketchBar_move_reset" xml:space="preserve">
+    <value>بار کو اپنی جگہ واپس لائیں</value>
+  </data>
+  <data name="sketchBar_details" xml:space="preserve">
+    <value>تفصیلات: کرنٹ پوائنٹ، کثیر حصہ، مقامی حوالہ نظام، پیمائش</value>
+  </data>
 </root>

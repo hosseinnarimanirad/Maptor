@@ -4959,4 +4959,13 @@
   <data name="map_draw_notEnoughPoints" xml:space="preserve">
     <value>برای پایان دادن دست‌کم {0} نقطه لازم است.</value>
   </data>
+  <data name="sketchBar_move_tip" xml:space="preserve">
+    <value>برای جابه‌جا کردن نوار، آن را بکشید. با دوبار کلیک به جای خود برمی‌گردد.</value>
+  </data>
+  <data name="sketchBar_move_reset" xml:space="preserve">
+    <value>بازگرداندن نوار به جای خود</value>
+  </data>
+  <data name="sketchBar_details" xml:space="preserve">
+    <value>جزئیات: نقطه جاری، عوارض چندتکه‌ای، سیستم مرجع مکانی، اندازه‌گیری</value>
+  </data>
 </root>

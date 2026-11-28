@@ -4900,4 +4900,13 @@
   <data name="map_draw_notEnoughPoints" xml:space="preserve">
     <value>Se necesitan al menos {0} puntos para terminar.</value>
   </data>
+  <data name="sketchBar_move_tip" xml:space="preserve">
+    <value>Arrastre para mover la barra. Doble clic para devolverla a su sitio.</value>
+  </data>
+  <data name="sketchBar_move_reset" xml:space="preserve">
+    <value>Devolver la barra a su sitio</value>
+  </data>
+  <data name="sketchBar_details" xml:space="preserve">
+    <value>Detalles: Punto actual, varias partes, Sistema de referencia espacial, Medición</value>
+  </data>
 </root>

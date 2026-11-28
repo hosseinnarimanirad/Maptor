@@ -8737,6 +8737,33 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Drag to move the bar. Double-click to put it back..
+        /// </summary>
+        public static string sketchBar_move_tip {
+            get {
+                return ResourceManager.GetString("sketchBar_move_tip", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Put the bar back in its place.
+        /// </summary>
+        public static string sketchBar_move_reset {
+            get {
+                return ResourceManager.GetString("sketchBar_move_reset", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Details: Current Point, Multi part, Spatial Reference System, Measurement.
+        /// </summary>
+        public static string sketchBar_details {
+            get {
+                return ResourceManager.GetString("sketchBar_details", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Length and angle box.
         /// </summary>
         public static string sketchBar_aids_cursorBox {

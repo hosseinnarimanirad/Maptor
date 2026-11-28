@@ -153,6 +153,9 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
     public bool IsMultiPartGeometry => _webMercatorGeometry?.IsMultiPartGeometry == true;
 
+    /// <summary>A polygon (its measure is an area); a line's is a length. Fixed for the life of the edit.</summary>
+    public bool HasArea => _webMercatorGeometry?.IsRingBase() == true;
+
     public bool IsPreviousPartAvailable => FindCurrentPartIndex() > 0;
 
     public bool IsNextPartAvailable

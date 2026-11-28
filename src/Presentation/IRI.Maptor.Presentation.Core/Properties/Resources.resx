@@ -5055,4 +5055,13 @@
   <data name="map_draw_notEnoughPoints" xml:space="preserve">
     <value>At least {0} points are needed to finish.</value>
   </data>
+  <data name="sketchBar_move_tip" xml:space="preserve">
+    <value>Drag to move the bar. Double-click to put it back.</value>
+  </data>
+  <data name="sketchBar_move_reset" xml:space="preserve">
+    <value>Put the bar back in its place</value>
+  </data>
+  <data name="sketchBar_details" xml:space="preserve">
+    <value>Details: Current Point, Multi part, Spatial Reference System, Measurement</value>
+  </data>
 </root>

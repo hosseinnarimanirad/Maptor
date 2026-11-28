@@ -4900,4 +4900,13 @@
   <data name="map_draw_notEnoughPoints" xml:space="preserve">
     <value>समाप्त करने के लिए कम से कम {0} बिंदु चाहिए।</value>
   </data>
+  <data name="sketchBar_move_tip" xml:space="preserve">
+    <value>बार को हिलाने के लिए खींचें। वापस अपनी जगह रखने के लिए डबल-क्लिक करें।</value>
+  </data>
+  <data name="sketchBar_move_reset" xml:space="preserve">
+    <value>बार को उसकी जगह वापस रखें</value>
+  </data>
+  <data name="sketchBar_details" xml:space="preserve">
+    <value>विवरण: वर्तमान बिंदु, बहु भाग, स्थानिक संदर्भ प्रणाली, माप</value>
+  </data>
 </root>

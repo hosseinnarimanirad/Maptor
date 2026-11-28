@@ -18,27 +18,29 @@
 
             <Style  TargetType="{x:Type ToggleButton}" x:Key="simpleToggle">
                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
-                <Setter Property="Margin" Value="4,2"/>
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                <Setter Property="Margin" Value="2"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource IRI.Maptor.Brushes.Surface.Border}"/>
                 <Setter Property="Cursor" Value="Hand"/>
                 <Setter Property="Padding" Value="2"/>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ToggleButton}">
-                            <Grid>
-                                <Rectangle Margin="1" Fill="{TemplateBinding Property=Background}"/>
-                                <ContentPresenter Margin="4,1"/>
-                            </Grid>
+                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1"
+                                    CornerRadius="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}" MinHeight="28">
+                                <ContentPresenter Margin="4,1" VerticalAlignment="Center"/>
+                            </Border>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                        <Setter Property="Background" Value="{DynamicResource IRI.Maptor.Brushes.Surface.Hover}"/>
                     </Trigger>
                     <Trigger Property="IsChecked" Value="True">
-                        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                        <Setter Property="Background" Value="{DynamicResource IRI.Maptor.Brushes.Accent.Tint}"/>
+                        <Setter Property="BorderBrush" Value="{DynamicResource IRI.Maptor.Brushes.Accent.Tint.Border}"/>
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -56,53 +58,99 @@
             <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource IRI.Maptor.Styles.TabItem}"/>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Border CornerRadius="15" BorderThickness="2 0" MinWidth="420" VerticalAlignment="Top" HorizontalAlignment="Center" 
+    <!--a card of the Maptor screen grammar floating over the map: white body, 1 px edge, 6 px corners, a shadow because
+        it is over the map. Its place is the top centre; the header is its handle, so it can be dragged anywhere on the map
+        (barOffset, in the code-behind), and put back with the header's button or a double click.-->
+    <Border x:Name="bar" CornerRadius="6" BorderThickness="1" MinWidth="420" VerticalAlignment="Top" HorizontalAlignment="Center"
             Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
-            BorderBrush="{DynamicResource MahApps.Brushes.Accent}" Opacity=".95"
-            Margin="4">
+            BorderBrush="{DynamicResource IRI.Maptor.Brushes.Surface.Border}"
+            Effect="{StaticResource IRI.Maptor.Effects.Elevation2}"
+            Margin="0,8,0,0">
+        <Border.RenderTransform>
+            <TranslateTransform x:Name="barOffset"/>
+        </Border.RenderTransform>
         <StackPanel >
-            <Border  Background="{DynamicResource MahApps.Brushes.Accent}" 
-                     CornerRadius="13 13 0 0"
-                     BorderThickness="0">
-                <TextBlock Text="{Binding SketchBar.Title}" HorizontalAlignment="Center" Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
-            </Border>
-            
-            
-            <!--new drawing information text-->
-            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" TextDecorations="Underline" Margin="8,0"
-                       Text="{Binding [map_draw_newDrawing], Source={StaticResource Localization}}"
-                       Foreground="{DynamicResource MahApps.Brushes.Accent2}"
-                       Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}}">
-                <!--<TextBlock.Visibility>
-                    <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
-                        <Binding Path="IsDrawMode" />
-                        <Binding Path="ShowMapInfoPanel" />
-                    </MultiBinding>
-                </TextBlock.Visibility>-->
-            </TextBlock>
+            <!--the header: grip, what is being done, a note (how to finish, or the measure); details and back-to-its-place at the end-->
+            <Border x:Name="header" Height="32" CornerRadius="5,5,0,0" Background="{DynamicResource IRI.Maptor.Brushes.Accent.Tint}"
+                    BorderBrush="{DynamicResource IRI.Maptor.Brushes.Accent.Tint.Border}" BorderThickness="0,0,0,1"
+                    Cursor="SizeAll" ToolTip="{Binding [sketchBar_move_tip], Source={StaticResource Localization}}"
+                    MouseLeftButtonDown="Header_MouseLeftButtonDown" MouseMove="Header_MouseMove"
+                    MouseLeftButtonUp="Header_MouseLeftButtonUp" LostMouseCapture="Header_LostMouseCapture">
+                <DockPanel Margin="2,0,6,0">
+                    <!--details: point, part, coordinate system, measures-->
+                    <Button DockPanel.Dock="Right" Style="{StaticResource IRI.Maptor.Styles.Button.PanelGhost}" Width="24" Height="24" Margin="2,0,0,0"
+                            Cursor="Hand" Command="{Binding SketchBar.ToggleAdvancedVisibilityCommand}"
+                            ToolTip="{Binding [sketchBar_details], Source={StaticResource Localization}}"
+                            Visibility="{Binding SketchBar.Options.ShowAdvancedOptions, Converter={StaticResource boolToVisibilityConverter}}">
+                        <Grid>
+                            <iconPacks:PackIconMaterial Kind="ChevronDown" Width="12" Height="12" Margin="0" Foreground="{DynamicResource MahApps.Brushes.Gray2}"
+                                                        Visibility="{Binding SketchBar.IsDetailsNotVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
+                            <iconPacks:PackIconMaterial Kind="ChevronUp" Width="12" Height="12" Margin="0" Foreground="{DynamicResource MahApps.Brushes.Gray2}"
+                                                        Visibility="{Binding SketchBar.IsDetailsVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
+                        </Grid>
+                    </Button>
+                    <!--shown only once the bar has been moved-->
+                    <Button x:Name="resetPositionButton" DockPanel.Dock="Right" Style="{StaticResource IRI.Maptor.Styles.Button.PanelGhost}"
+                            Width="24" Height="24" Margin="2,0,0,0" Cursor="Hand" Visibility="Collapsed" Click="ResetPosition_Click"
+                            ToolTip="{Binding [sketchBar_move_reset], Source={StaticResource Localization}}">
+                        <iconPacks:PackIconMaterial Kind="ArrowCollapseUp" Width="12" Height="12" Margin="0" Foreground="{DynamicResource MahApps.Brushes.Gray2}"/>
+                    </Button>
 
-            
-            <DockPanel Margin="0" >
-
-
-                <!--link current point toggle-->
-                <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" DockPanel.Dock="Left" HorizontalAlignment="Right" Margin="2" 
-                                IsChecked="{Binding SketchBar.Options.IsLinkedToMouseMove, Mode=TwoWay}" 
-                                Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"
-                                ToolTip="{Binding [mapPanel_currentPoint_linkToMouseMove], Source={StaticResource Localization}}">
-                    <iconPacks:PackIconPhosphorIcons>
-                        <iconPacks:PackIconPhosphorIcons.Style>
-                            <Style TargetType="iconPacks:PackIconPhosphorIcons">
-                                <Setter Property="Kind" Value="LinkBreakBold"/>
+                    <iconPacks:PackIconMaterial Kind="DragVertical" Width="14" Height="14" Margin="2,0" VerticalAlignment="Center"
+                                                Foreground="{DynamicResource MahApps.Brushes.Gray5}"/>
+                    <iconPacks:PackIconMaterial>
+                        <iconPacks:PackIconMaterial.Style>
+                            <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CardHeader}">
+                                <Setter Property="Kind" Value="VectorSquareEdit"/>
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=ToggleButton}}" Value="True">
-                                        <Setter Property="Kind" Value="LinkBold"/>
+                                    <DataTrigger Binding="{Binding IsDrawMode}" Value="True">
+                                        <Setter Property="Kind" Value="Draw"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding SketchBar.Options.IsMeasureMode}" Value="True">
+                                        <Setter Property="Kind" Value="Ruler"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </iconPacks:PackIconPhosphorIcons.Style>
-                    </iconPacks:PackIconPhosphorIcons>
-                </ToggleButton>
+                        </iconPacks:PackIconMaterial.Style>
+                    </iconPacks:PackIconMaterial>
+                    <TextBlock Text="{Binding SketchBar.Title}" Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardHeaderTitle}"/>
+
+                    <!--the note: how to finish a drawing; the length or area of a measure-->
+                    <Grid Margin="8,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding [map_draw_newDrawing], Source={StaticResource Localization}}" TextTrimming="CharacterEllipsis"
+                                   Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardHeaderCount}" Margin="0"
+                                   Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}}"/>
+                        <StackPanel Orientation="Horizontal" DataContext="{Binding CurrentEditingLayer}">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DataContext.SketchBar.Options.IsMeasureMode, ElementName=root}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <StackPanel Orientation="Horizontal"
+                                        Visibility="{Binding HasArea, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False, FallbackValue=Collapsed}">
+                                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardHeaderCount}" Margin="0"
+                                           Text="{Binding GroundLength, Converter={StaticResource localizedNumberConverter}, ConverterParameter=N2}"/>
+                                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardHeaderCount}" Margin="4,0,0,0"
+                                           Text="{Binding [common_meter], Source={StaticResource Localization}}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal"
+                                        Visibility="{Binding HasArea, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
+                                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardHeaderCount}" Margin="0"
+                                           Text="{Binding GroundArea, Converter={StaticResource localizedNumberConverter}, ConverterParameter=N1}"/>
+                                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.CardHeaderCount}" Margin="4,0,0,0"
+                                           Text="{Binding [common_squareMeter], Source={StaticResource Localization}}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </DockPanel>
+            </Border>
+
+            <DockPanel Margin="6,4" >
 
 
                 <!--snapping: on/off and the layers to snap to (the choice lives on SketchBar, so it holds across modes).
@@ -237,8 +285,28 @@
                 </StackPanel>
 
 
+                <!--link current point toggle-->
+                <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" DockPanel.Dock="Left" HorizontalAlignment="Right" Margin="2" 
+                                IsChecked="{Binding SketchBar.Options.IsLinkedToMouseMove, Mode=TwoWay}" 
+                                Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"
+                                ToolTip="{Binding [mapPanel_currentPoint_linkToMouseMove], Source={StaticResource Localization}}">
+                    <iconPacks:PackIconPhosphorIcons>
+                        <iconPacks:PackIconPhosphorIcons.Style>
+                            <Style TargetType="iconPacks:PackIconPhosphorIcons">
+                                <Setter Property="Kind" Value="LinkBreakBold"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=ToggleButton}}" Value="True">
+                                        <Setter Property="Kind" Value="LinkBold"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </iconPacks:PackIconPhosphorIcons.Style>
+                    </iconPacks:PackIconPhosphorIcons>
+                </ToggleButton>
+
+
                 <!--input X-->
-                <TextBlock DockPanel.Dock="Left" Text="X:" Margin="8 0 0 0"
+                <TextBlock DockPanel.Dock="Left" Text="X" Margin="8,0,4,0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}" VerticalAlignment="Center"
                            Visibility="{Binding SketchBar.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"/>
                 <TextBox DockPanel.Dock="Left"
                          MaxWidth="100"
@@ -261,7 +329,7 @@
 
                 
                 <!--input Y-->
-                <TextBlock DockPanel.Dock="Left" Text="Y:" Margin="8 0 0 0"
+                <TextBlock DockPanel.Dock="Left" Text="Y" Margin="8,0,4,0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.FieldLabel}" VerticalAlignment="Center"
                            Visibility="{Binding SketchBar.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"/>
                 <TextBox DockPanel.Dock="Left" 
                          MaxWidth="100" 
@@ -386,11 +454,18 @@
                 </StackPanel>
             </DockPanel>
 
-            <Separator Background="{DynamicResource MahApps.Brushes.Accent}" Margin="2,4"/>
+            <Border Height="1" Margin="0,0,0,4" Background="{DynamicResource IRI.Maptor.Brushes.Surface.Border}">
+                <Border.Visibility>
+                    <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
+                        <Binding Path="SketchBar.Options.ShowAdvancedOptions"/>
+                        <Binding Path="SketchBar.IsDetailsVisible"/>
+                    </MultiBinding>
+                </Border.Visibility>
+            </Border>
 
             <!--tabs-->
             <!--centred track: this panel floats over the map rather than filling a dialog-->
-            <TabControl SelectedIndex="2" Style="{StaticResource IRI.Maptor.Styles.TabControl.Centered}">
+            <TabControl SelectedIndex="2" Margin="6,0,6,6" Style="{StaticResource IRI.Maptor.Styles.TabControl.Centered}">
                 <TabControl.Visibility>
                     <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
                         <Binding Path="SketchBar.Options.ShowAdvancedOptions"/>
@@ -508,16 +583,16 @@
                                         ToolTip="{Binding [srs_geodeticWgs84Title], Source={StaticResource Localization}}" 
                                         IsChecked="{Binding SketchBar.IsGeodeticWgs84EditingMode, Mode=TwoWay}">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
-                                    <iconPacks:PackIconMaterial Kind="Earth" Margin="0 0 4 0" VerticalAlignment="Center"/>
-                                    <TextBlock Text="WGS84" Margin="2" Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                                    <iconPacks:PackIconMaterial Kind="Earth" Width="14" Height="14" Margin="0 0 6 0" VerticalAlignment="Center" Foreground="{DynamicResource MahApps.Brushes.Accent}"/>
+                                    <TextBlock Text="WGS84" Margin="2" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
                                 </StackPanel>
                             </RadioButton>
                             <RadioButton GroupName="A" Style="{StaticResource simpleToggle}"
                                         ToolTip="{Binding [srs_utmTitle], Source={StaticResource Localization}}"
                                         IsChecked="{Binding SketchBar.IsUTMEditingMode, Mode=TwoWay}">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
-                                    <iconPacks:PackIconMaterial Kind="EarthBox" Margin="0 0 4 0" VerticalAlignment="Center"/>
-                                    <TextBlock Text="UTM" Margin="2" Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                                    <iconPacks:PackIconMaterial Kind="EarthBox" Width="14" Height="14" Margin="0 0 6 0" VerticalAlignment="Center" Foreground="{DynamicResource MahApps.Brushes.Accent}"/>
+                                    <TextBlock Text="UTM" Margin="2" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
                                 </StackPanel>
                             </RadioButton>
                             <TextBlock DockPanel.Dock="Left" Margin="4"
@@ -543,12 +618,12 @@
                                 </Style>
                                 <Style x:Key="headerTitle" TargetType="TextBlock" BasedOn="{StaticResource MahApps.Styles.TextBlock}">
                                     <Setter Property="Margin" Value="2"/>
-                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
                                     <Setter Property="FontSize" Value="{StaticResource IRI.Maptor.Styles.Size.Text.Body}"/>
                                     <Setter Property="VerticalAlignment" Value="Center"/>
                                 </Style>
                                 <Style x:Key="headerBorder" TargetType="Border">
-                                    <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                                    <Setter Property="Background" Value="{DynamicResource IRI.Maptor.Brushes.Accent.Tint}"/>
                                     <Setter Property="Padding" Value="6,0"/>
                                     <Setter Property="CornerRadius" Value="{StaticResource IRI.Maptor.Styles.CornerRadius.Small}"/>
                                 </Style>
@@ -664,56 +739,6 @@
                 </TabControl.Items>
             </TabControl>
 
-            <!--options semi expander at the below-->
-            <Button Margin="0 5 0 0" Cursor="Hand"
-                    Visibility="{Binding SketchBar.Options.ShowAdvancedOptions, Converter={StaticResource boolToVisibilityConverter}}"
-                    Command="{Binding SketchBar.ToggleAdvancedVisibilityCommand}" >
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-                        <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}"/>
-                        <!-- Remove default button chrome and set custom template -->
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="Button">
-                                    <Border Background="{TemplateBinding Background}"
-                                            CornerRadius="0 0 13 13"
-                                            BorderThickness="0">
-                                        <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
-                                    </Border>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-                        <!-- Hover effect: change background (the Border uses TemplateBinding) -->
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                                <!--<Setter Property="Foreground" Value="{DynamicResource WhiteBrush}"/>-->
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
-                                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" Value="0.5"/>
-                                <Setter Property="Cursor" Value="Arrow"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-
-                <!-- Original content (StackPanel with two icons) -->
-                <StackPanel HorizontalAlignment="Center">
-                    <iconPacks:PackIconMaterial Margin="2" Height="8" Kind="ChevronDown"
-                                    Visibility="{Binding SketchBar.IsDetailsNotVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
-                    <!--Foreground="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}"/>-->
-                    <iconPacks:PackIconMaterial Margin="2" Height="8" Kind="ChevronUp"
-                                    Visibility="{Binding SketchBar.IsDetailsVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
-                    <!--Foreground="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}"/>-->
-                </StackPanel>
-            </Button>
         </StackPanel>
     </Border>
 </UserControl>

@@ -4900,4 +4900,13 @@
   <data name="map_draw_notEnoughPoints" xml:space="preserve">
     <value>至少需要 {0} 个点才能完成。</value>
   </data>
+  <data name="sketchBar_move_tip" xml:space="preserve">
+    <value>拖动以移动此栏。双击可放回原位。</value>
+  </data>
+  <data name="sketchBar_move_reset" xml:space="preserve">
+    <value>放回原位</value>
+  </data>
+  <data name="sketchBar_details" xml:space="preserve">
+    <value>详细信息：当前点、多部分、空间参考系统、测量</value>
+  </data>
 </root>
