@@ -4936,4 +4936,7 @@
   <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
     <value>Направляющие: во время рисования щёлкните правой кнопкой по линии и выберите «Направляющие от этой линии» — её продолжение, перпендикуляр и параллель.</value>
   </data>
+  <data name="guide_drawing_title" xml:space="preserve">
+    <value>Рисование, привязка и редактирование</value>
+  </data>
 </root>

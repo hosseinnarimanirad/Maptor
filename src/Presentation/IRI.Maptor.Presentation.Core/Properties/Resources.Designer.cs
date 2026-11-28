@@ -8737,6 +8737,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Drawing, snapping and editing.
+        /// </summary>
+        public static string guide_drawing_title {
+            get {
+                return ResourceManager.GetString("guide_drawing_title", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Snap to.
         /// </summary>
         public static string sketchBar_snapping_kinds {

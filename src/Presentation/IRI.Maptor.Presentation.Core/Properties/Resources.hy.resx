@@ -4936,4 +4936,7 @@
   <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
     <value>Ուղեցույցներ․ գծելիս աջ սեղմեք գծի վրա և ընտրեք «Ուղեցույցներ այս գծից»՝ դրա շարունակության, ուղղահայացի և զուգահեռի համար։</value>
   </data>
+  <data name="guide_drawing_title" xml:space="preserve">
+    <value>Գծում, կպցում և խմբագրում</value>
+  </data>
 </root>

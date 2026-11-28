@@ -4995,4 +4995,7 @@
   <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
     <value>راهنماها: هنگام ترسیم، روی یک خط کلیک راست کنید و «راهنما از این خط» را بزنید تا امتداد، عمود و موازی آن نشان داده شود.</value>
   </data>
+  <data name="guide_drawing_title" xml:space="preserve">
+    <value>ترسیم، چسبیدن و ویرایش</value>
+  </data>
 </root>

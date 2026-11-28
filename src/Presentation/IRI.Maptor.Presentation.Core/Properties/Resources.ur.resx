@@ -4936,4 +4936,7 @@
   <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
     <value>رہنما خطوط: ڈرا کرتے وقت کسی لکیر پر دائیں کلک کریں اور اس کی توسیع، عمود اور متوازی کے لیے «اس لکیر سے رہنما خطوط» چنیں۔</value>
   </data>
+  <data name="guide_drawing_title" xml:space="preserve">
+    <value>ڈرائنگ، سنیپنگ اور ترمیم</value>
+  </data>
 </root>

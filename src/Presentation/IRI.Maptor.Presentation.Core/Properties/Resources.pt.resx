@@ -4936,4 +4936,7 @@
   <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
     <value>Guias: ao desenhar, clique com o botão direito numa linha e escolha "Guias a partir desta linha" para o prolongamento, a perpendicular e a paralela.</value>
   </data>
+  <data name="guide_drawing_title" xml:space="preserve">
+    <value>Desenho, ajuste e edição</value>
+  </data>
 </root>

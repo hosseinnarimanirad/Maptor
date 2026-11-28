@@ -4936,4 +4936,7 @@
   <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
     <value>Kılavuzlar: çizerken bir çizgiye sağ tıklayın ve uzantısı, dikmesi ve paraleli için "Bu çizgiden kılavuzlar" seçin.</value>
   </data>
+  <data name="guide_drawing_title" xml:space="preserve">
+    <value>Çizim, yapıştırma ve düzenleme</value>
+  </data>
 </root>

@@ -1,0 +1,212 @@
+<FlowDocument xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+              xmlns:controls="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls">
+
+    <!--Guide of drawing, snapping and editing on the map, English (the neutral page; Drawing.fa.xaml is the Persian one). Opened by the graduation cap of the sketch bar (SketchBarView) through GuideWindow. Keep the two pages in step by hand: same headings, rows and figures (DrawingGuideTest checks it). Every claim must match MapViewer's draw/edit keys, MapSnapper, MapDrawingAids and EditableFeatureLayer.-->
+
+    <FlowDocument.Resources>
+        <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Guide.xaml"/>
+    </FlowDocument.Resources>
+
+    <Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Title}">Drawing, snapping and editing</Paragraph>
+    <Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Lead}">How to draw a shape exactly: onto existing features with snapping, along guide lines, or by typing a length and an angle; and how to change a shape afterwards.</Paragraph>
+
+    <Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Heading}">Drawing a shape</Paragraph>
+    <Paragraph>Choose a drawing tool, then click on the map once for each point. The dashed segment follows the pointer and shows where the next point would go. While you draw, a bar is shown at the top of the map with the commands of this page; drag its header to move it out of the way.</Paragraph>
+    <Table>
+        <Table.Columns>
+            <TableColumn Width="270"/>
+            <TableColumn/>
+        </Table.Columns>
+        <TableRowGroup>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="Finish"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>Finishing.</Bold> Press <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Enter</Span>, double-click, or click the last point once more. <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Backspace</Span> takes back the last point, and <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Esc</Span> cancels the drawing.</Paragraph></TableCell>
+            </TableRow>
+        </TableRowGroup>
+    </Table>
+    <Section Style="{StaticResource IRI.Maptor.Styles.Guide.Note}">
+        <Paragraph>A line needs two points and a polygon three; with fewer, <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Enter</Span> tells you so and the drawing goes on. <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Ctrl&#x2060;+&#x2060;Z</Span> and <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Ctrl&#x2060;+&#x2060;Y</Span> undo and redo each point.</Paragraph>
+    </Section>
+
+    <Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Heading}">Snapping</Paragraph>
+    <Paragraph>With snapping on, a point placed near an existing feature jumps exactly onto it. A marker shows what was found, and a label beside it names the kind and the layer. The magnet <InlineUIContainer BaselineAlignment="Center"><iconPacks:PackIconMaterial Kind="MagnetOn" Width="13" Height="13" Foreground="{DynamicResource MahApps.Brushes.Accent}"/></InlineUIContainer> in the bar turns snapping on and off; the arrow <InlineUIContainer BaselineAlignment="Center"><iconPacks:PackIconMaterial Kind="ChevronDown" Width="13" Height="13" Foreground="{DynamicResource MahApps.Brushes.Accent}"/></InlineUIContainer> beside it chooses what to snap to.</Paragraph>
+    <Table>
+        <Table.Columns>
+            <TableColumn Width="270"/>
+            <TableColumn/>
+        </Table.Columns>
+        <TableRowGroup>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="SnapEnd"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>Line end</Bold> (filled square). The first or the last point of a line. It wins over every other kind.</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="SnapVertex"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>Vertex</Bold> (hollow square). Any corner of a line or of a polygon.</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="SnapIntersection"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>Intersection</Bold> (cross). Where two edges cross, also edges of two different layers.</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="SnapMidpoint"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>Midpoint</Bold> (triangle). The middle of an edge.</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="SnapEdge"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>Edge</Bold> (circle). The nearest point on an edge, when nothing above is in reach.</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="NoSnap"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>No snapping for one point.</Bold> Hold <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Ctrl</Span> and the point goes exactly where the pointer is, even right beside a feature. The guides pause too.</Paragraph></TableCell>
+            </TableRow>
+        </TableRowGroup>
+    </Table>
+    <Paragraph>When two candidates are in reach, the order above decides: a line end before a vertex, a vertex before an intersection, then the midpoint, then the edge. Each kind can be switched off in the menu.</Paragraph>
+    <Paragraph>Snapping looks only at the layers ticked under <Bold>Layers to snap to</Bold>; <Bold>Drawings</Bold> stands for your own drawings. When the view holds too many features, the menu says so: zoom in.</Paragraph>
+    <Section Style="{StaticResource IRI.Maptor.Styles.Guide.Note}">
+        <Paragraph>The lightbulb <InlineUIContainer BaselineAlignment="Center"><iconPacks:PackIconMaterial Kind="LightbulbOnOutline" Width="13" Height="13" Foreground="{DynamicResource MahApps.Brushes.Accent}"/></InlineUIContainer> at the top of the snapping menu repeats the keys of this page in a few lines.</Paragraph>
+    </Section>
+
+    <Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Heading}">Guide lines</Paragraph>
+    <Paragraph>From the second segment on, a dashed guide appears when the pointer comes near a useful direction, and the point is held on it. Where a guide crosses an existing edge is a place to snap to as well. <Bold>Guides</Bold> in the snapping menu turns them on and off.</Paragraph>
+    <Table>
+        <Table.Columns>
+            <TableColumn Width="270"/>
+            <TableColumn/>
+        </Table.Columns>
+        <TableRowGroup>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="GuideExtension"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>Extension.</Bold> Straight on from the segment just drawn.</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="GuidePerpendicular"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>Perpendicular.</Bold> At 90° to the segment just drawn.</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="AngleSteps"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>Angle steps.</Bold> Hold <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Shift</Span> and the direction locks to steps of <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">15°</Span>, counted from the segment just drawn (from north for the first segment).</Paragraph></TableCell>
+            </TableRow>
+        </TableRowGroup>
+    </Table>
+    <Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Subheading}">Guides from a line you pick</Paragraph>
+    <Paragraph>While drawing, right-click an existing line or the side of a polygon and choose <Bold>Guides from this line</Bold>. The line is highlighted, and guides are drawn from it until you choose <Bold>Remove the guide line</Bold> or press <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Esc</Span>.</Paragraph>
+    <Table>
+        <Table.Columns>
+            <TableColumn Width="270"/>
+            <TableColumn/>
+        </Table.Columns>
+        <TableRowGroup>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="GuideFromLine"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>Perpendicular to the picked line</Bold>, through your last point. The place where it meets the line at 90° is marked, and the point snaps to it.</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="GuideParallel"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>Parallel to the picked line</Bold>, through your last point. The extension of the picked line beyond each of its ends is a guide as well.</Paragraph></TableCell>
+            </TableRow>
+        </TableRowGroup>
+    </Table>
+
+    <Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Heading}">Typing a length and an angle</Paragraph>
+    <Paragraph>A small box beside the pointer shows the segment being drawn: <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">L</Span> its length, <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">A</Span> the angle it turns from the previous segment, and <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">B</Span> its bearing from north. <Bold>Length and angle box</Bold> in the snapping menu shows or hides it.</Paragraph>
+    <Table>
+        <Table.Columns>
+            <TableColumn Width="270"/>
+            <TableColumn/>
+        </Table.Columns>
+        <TableRowGroup>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="CursorBox"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>Reading the values.</Bold> They change as the pointer moves; snapping and the guides change them too.</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="TypedLength"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>Typing a value.</Bold> Press <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">L</Span> and type a length: the point is held at that distance, in the direction of the pointer or along the guide. <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Enter</Span> places it. <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">A</Span> and <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">B</Span> do the same for the angle and the bearing; <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Tab</Span> goes to the next value and <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Esc</Span> clears what was typed.</Paragraph></TableCell>
+            </TableRow>
+        </TableRowGroup>
+    </Table>
+    <Section Style="{StaticResource IRI.Maptor.Styles.Guide.Note}">
+        <Paragraph>To lengthen a line by exactly 25 m: move along the extension guide, press <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">L</Span>, type <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">25</Span>, press <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Enter</Span>.</Paragraph>
+    </Section>
+
+    <Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Heading}">Editing a shape</Paragraph>
+    <Paragraph>Start editing from the menu of a drawing, or with Edit on a row of a layer's table. Every vertex gets a square handle; the first one is a little bigger. Snapping, the guides and typed values work here as they do while drawing.</Paragraph>
+    <Table>
+        <Table.Columns>
+            <TableColumn Width="270"/>
+            <TableColumn/>
+        </Table.Columns>
+        <TableRowGroup>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="MoveVertex"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>Move a vertex.</Bold> Drag its handle. While dragging you can type <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">L</Span>, <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">A</Span> or <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">B</Span>; releasing the mouse places the vertex.</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="AddVertex"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>Add a vertex.</Bold> Point at an edge: a diamond appears on it. Click to add a vertex there, or press and drag to add it and move it in one go.</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="DeleteVertex"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>Delete a vertex.</Bold> Click the vertex to select it, then press <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Delete</Span>.</Paragraph></TableCell>
+            </TableRow>
+        </TableRowGroup>
+    </Table>
+    <Paragraph><Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Enter</Span> finishes the edit and <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Esc</Span> cancels it; <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Ctrl&#x2060;+&#x2060;Z</Span> and <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Ctrl&#x2060;+&#x2060;Y</Span> undo and redo each change. With more than 2,000 vertices in view the handles are hidden: zoom in to edit them.</Paragraph>
+
+    <Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Heading}">Keys</Paragraph>
+    <Table>
+        <Table.Columns>
+            <TableColumn Width="190"/>
+            <TableColumn/>
+        </Table.Columns>
+        <TableRowGroup Style="{StaticResource IRI.Maptor.Styles.Guide.TableHeader}">
+            <TableRow>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}">Key</Paragraph></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}">What it does</Paragraph></TableCell>
+            </TableRow>
+        </TableRowGroup>
+        <TableRowGroup>
+            <TableRow>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Enter</Span></Paragraph></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}">Finishes the drawing or the edit; places a typed value</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Backspace</Span></Paragraph></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}">Takes back the last point of a drawing</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Esc</Span></Paragraph></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}">Clears a typed value, then removes the guide line, then cancels</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Ctrl</Span></Paragraph></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}">Held: no snapping and no guides for this point</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Shift</Span></Paragraph></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}">Held: the direction locks to 15° steps</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">L   A   B</Span></Paragraph></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}">Type the length, the angle or the bearing of the segment</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Tab</Span></Paragraph></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}">Goes to the next value while typing</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Delete</Span></Paragraph></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}">Deletes the selected vertex while editing</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Ctrl+Z   Ctrl+Y</Span></Paragraph></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}">Undo and redo</Paragraph></TableCell>
+            </TableRow>
+        </TableRowGroup>
+    </Table>
+
+</FlowDocument>

@@ -4936,4 +4936,7 @@
   <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
     <value>Bələdçilər: çəkərkən xəttin üzərində sağ klikləyin və uzantısı, perpendikulyarı və paraleli üçün "Bu xətdən bələdçilər" seçin.</value>
   </data>
+  <data name="guide_drawing_title" xml:space="preserve">
+    <value>Çəkmə, yapışdırma və redaktə</value>
+  </data>
 </root>

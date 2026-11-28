@@ -4936,4 +4936,7 @@
   <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
     <value>参考线：绘制时右键单击一条线并选择“以此线为参考”，即可得到其延长线、垂线和平行线。</value>
   </data>
+  <data name="guide_drawing_title" xml:space="preserve">
+    <value>绘制、捕捉与编辑</value>
+  </data>
 </root>

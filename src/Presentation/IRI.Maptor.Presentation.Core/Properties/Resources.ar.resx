@@ -4936,4 +4936,7 @@
   <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
     <value>خطوط الإرشاد: أثناء الرسم انقر بزر الفأرة الأيمن على خط واختر «خطوط إرشاد من هذا الخط» لامتداده والعمودي عليه والموازي له.</value>
   </data>
+  <data name="guide_drawing_title" xml:space="preserve">
+    <value>الرسم والالتقاط والتحرير</value>
+  </data>
 </root>

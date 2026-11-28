@@ -4936,4 +4936,7 @@
   <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
     <value>ڕێنماکان: لە کاتی کێشاندا کلیکی ڕاست لەسەر هێڵێک بکە و «ڕێنما لەم هێڵەوە» هەڵبژێرە بۆ درێژکراوە، ستوون و تەریبەکەی.</value>
   </data>
+  <data name="guide_drawing_title" xml:space="preserve">
+    <value>کێشان، لکاندن و دەستکاریکردن</value>
+  </data>
 </root>

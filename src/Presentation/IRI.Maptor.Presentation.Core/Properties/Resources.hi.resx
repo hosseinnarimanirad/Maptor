@@ -4936,4 +4936,7 @@
   <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
     <value>गाइड: ड्रॉ करते समय किसी रेखा पर राइट-क्लिक करें और उसके विस्तार, लंब और समांतर के लिए "इस रेखा से गाइड" चुनें।</value>
   </data>
+  <data name="guide_drawing_title" xml:space="preserve">
+    <value>ड्रॉइंग, स्नैपिंग और संपादन</value>
+  </data>
 </root>

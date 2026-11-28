@@ -5091,4 +5091,7 @@
   <data name="sketchBar_snapping_tipFooter" xml:space="preserve">
     <value>Guides: while drawing, right-click a line and choose “Guides from this line” for its extension, perpendicular and parallel.</value>
   </data>
+  <data name="guide_drawing_title" xml:space="preserve">
+    <value>Drawing, snapping and editing</value>
+  </data>
 </root>

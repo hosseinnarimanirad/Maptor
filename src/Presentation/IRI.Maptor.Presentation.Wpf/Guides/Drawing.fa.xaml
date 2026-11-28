@@ -1,0 +1,212 @@
+<FlowDocument xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+              xmlns:controls="clr-namespace:IRI.Maptor.Presentation.Wpf.Controls">
+
+    <!--Guide of drawing, snapping and editing on the map, Persian (Drawing.xaml is the English, neutral page). Opened by the graduation cap of the sketch bar (SketchBarView) through GuideWindow. Keep the two pages in step by hand: same headings, rows and figures (DrawingGuideTest checks it). Every claim must match MapViewer's draw/edit keys, MapSnapper, MapDrawingAids and EditableFeatureLayer.-->
+
+    <FlowDocument.Resources>
+        <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Presentation.Wpf;component/Assets/Styles/Guide.xaml"/>
+    </FlowDocument.Resources>
+
+    <Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Title}">ترسیم، چسبیدن و ویرایش</Paragraph>
+    <Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Lead}">چگونه یک شکل را دقیق بکشیم: با چسبیدن روی عارضه‌های موجود، در امتداد خطوط راهنما، یا با تایپ طول و زاویه؛ و چگونه بعداً شکل را تغییر دهیم.</Paragraph>
+
+    <Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Heading}">ترسیم یک شکل</Paragraph>
+    <Paragraph>یک ابزار ترسیم را انتخاب کنید و برای هر نقطه یک بار روی نقشه کلیک کنید. پاره‌خط خط‌چین دنبال نشانگر می‌آید و نشان می‌دهد نقطهٔ بعدی کجا قرار می‌گیرد. هنگام ترسیم، نواری بالای نقشه دیده می‌شود که فرمان‌های این صفحه در آن است؛ برای کنار بردنش، سربرگ آن را بکشید.</Paragraph>
+    <Table>
+        <Table.Columns>
+            <TableColumn Width="270"/>
+            <TableColumn/>
+        </Table.Columns>
+        <TableRowGroup>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="Finish"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>پایان دادن.</Bold> کلید <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Enter</Span> را بزنید، دوبار کلیک کنید، یا یک بار دیگر روی آخرین نقطه کلیک کنید. <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Backspace</Span> آخرین نقطه را برمی‌دارد و <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Esc</Span> ترسیم را لغو می‌کند.</Paragraph></TableCell>
+            </TableRow>
+        </TableRowGroup>
+    </Table>
+    <Section Style="{StaticResource IRI.Maptor.Styles.Guide.Note}">
+        <Paragraph>خط دو نقطه و چندضلعی سه نقطه لازم دارد؛ با کمتر از آن، <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Enter</Span> همین را می‌گوید و ترسیم ادامه می‌یابد. <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Ctrl&#x2060;+&#x2060;Z</Span> و <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Ctrl&#x2060;+&#x2060;Y</Span> هر نقطه را واگرد و ازنو می‌کنند.</Paragraph>
+    </Section>
+
+    <Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Heading}">چسبیدن</Paragraph>
+    <Paragraph>وقتی چسبیدن روشن است، نقطه‌ای که نزدیک یک عارضهٔ موجود گذاشته شود دقیقاً روی آن می‌پرد. یک نشانه نشان می‌دهد چه چیزی پیدا شده و برچسب کنار آن نوع و لایه را می‌گوید. آهن‌ربای <InlineUIContainer BaselineAlignment="Center"><iconPacks:PackIconMaterial Kind="MagnetOn" Width="13" Height="13" Foreground="{DynamicResource MahApps.Brushes.Accent}"/></InlineUIContainer> روی نوار، چسبیدن را روشن و خاموش می‌کند؛ پیکان <InlineUIContainer BaselineAlignment="Center"><iconPacks:PackIconMaterial Kind="ChevronDown" Width="13" Height="13" Foreground="{DynamicResource MahApps.Brushes.Accent}"/></InlineUIContainer> کنار آن تعیین می‌کند به چه چیزی بچسبد.</Paragraph>
+    <Table>
+        <Table.Columns>
+            <TableColumn Width="270"/>
+            <TableColumn/>
+        </Table.Columns>
+        <TableRowGroup>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="SnapEnd"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>سر خط</Bold> (مربع توپر). نخستین یا آخرین نقطهٔ یک خط. بر همهٔ نوع‌های دیگر مقدم است.</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="SnapVertex"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>نقطه (رأس)</Bold> (مربع توخالی). هر گوشهٔ یک خط یا یک چندضلعی.</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="SnapIntersection"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>تقاطع</Bold> (ضربدر). جایی که دو ضلع یکدیگر را قطع می‌کنند، حتی ضلع‌های دو لایهٔ متفاوت.</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="SnapMidpoint"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>وسط ضلع</Bold> (مثلث). میانهٔ یک ضلع.</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="SnapEdge"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>ضلع</Bold> (دایره). نزدیک‌ترین نقطه روی یک ضلع، وقتی هیچ‌یک از موارد بالا در دسترس نیست.</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="NoSnap"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>بدون چسبیدن برای یک نقطه.</Bold> <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Ctrl</Span> را نگه دارید تا نقطه دقیقاً همان‌جا که نشانگر است گذاشته شود، حتی درست کنار یک عارضه. خطوط راهنما هم موقتاً کنار می‌روند.</Paragraph></TableCell>
+            </TableRow>
+        </TableRowGroup>
+    </Table>
+    <Paragraph>وقتی دو گزینه در دسترس باشد، ترتیب بالا تعیین می‌کند: سر خط پیش از رأس، رأس پیش از تقاطع، سپس وسط ضلع و بعد ضلع. هر نوع را می‌توان در منو خاموش کرد.</Paragraph>
+    <Paragraph>چسبیدن فقط لایه‌هایی را می‌بیند که زیر <Bold>لایه‌ها برای چسبیدن</Bold> تیک خورده‌اند؛ <Bold>عوارض ترسیمی</Bold> یعنی ترسیم‌های خود شما. وقتی عارضه‌های داخل دید بیش از حد زیاد باشد، منو همین را می‌گوید: بزرگ‌نمایی کنید.</Paragraph>
+    <Section Style="{StaticResource IRI.Maptor.Styles.Guide.Note}">
+        <Paragraph>لامپ <InlineUIContainer BaselineAlignment="Center"><iconPacks:PackIconMaterial Kind="LightbulbOnOutline" Width="13" Height="13" Foreground="{DynamicResource MahApps.Brushes.Accent}"/></InlineUIContainer> بالای منوی چسبیدن، کلیدهای این صفحه را در چند سطر یادآوری می‌کند.</Paragraph>
+    </Section>
+
+    <Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Heading}">خطوط راهنما</Paragraph>
+    <Paragraph>از پاره‌خط دوم به بعد، وقتی نشانگر به یک جهت سودمند نزدیک شود یک خط راهنمای خط‌چین پیدا می‌شود و نقطه روی آن نگه داشته می‌شود. جایی که خط راهنما یک ضلع موجود را قطع می‌کند هم جای چسبیدن است. <Bold>خطوط راهنما</Bold> در منوی چسبیدن آن‌ها را روشن و خاموش می‌کند.</Paragraph>
+    <Table>
+        <Table.Columns>
+            <TableColumn Width="270"/>
+            <TableColumn/>
+        </Table.Columns>
+        <TableRowGroup>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="GuideExtension"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>امتداد.</Bold> درست در ادامهٔ پاره‌خطی که تازه کشیده‌اید.</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="GuidePerpendicular"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>عمود.</Bold> با زاویهٔ ۹۰ درجه نسبت به پاره‌خطی که تازه کشیده‌اید.</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="AngleSteps"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>گام‌های زاویه.</Bold> <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Shift</Span> را نگه دارید تا جهت روی گام‌های <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">15°</Span> قفل شود؛ گام‌ها از پاره‌خط تازه‌کشیده شمرده می‌شوند (برای نخستین پاره‌خط، از شمال).</Paragraph></TableCell>
+            </TableRow>
+        </TableRowGroup>
+    </Table>
+    <Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Subheading}">راهنما از خطی که انتخاب می‌کنید</Paragraph>
+    <Paragraph>هنگام ترسیم، روی یک خط موجود یا ضلع یک چندضلعی کلیک راست کنید و <Bold>راهنما از این خط</Bold> را بزنید. آن خط پررنگ می‌شود و تا وقتی <Bold>حذف خط راهنما</Bold> را بزنید یا <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Esc</Span> را فشار دهید، راهنماها از آن کشیده می‌شوند.</Paragraph>
+    <Table>
+        <Table.Columns>
+            <TableColumn Width="270"/>
+            <TableColumn/>
+        </Table.Columns>
+        <TableRowGroup>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="GuideFromLine"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>عمود بر خط انتخاب‌شده</Bold>، گذرنده از آخرین نقطهٔ شما. جایی که با زاویهٔ ۹۰ درجه به آن خط می‌رسد علامت می‌خورد و نقطه به آن می‌چسبد.</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="GuideParallel"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>موازی با خط انتخاب‌شده</Bold>، گذرنده از آخرین نقطهٔ شما. امتداد خط انتخاب‌شده از هر دو سرش هم خط راهنماست.</Paragraph></TableCell>
+            </TableRow>
+        </TableRowGroup>
+    </Table>
+
+    <Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Heading}">تایپ طول و زاویه</Paragraph>
+    <Paragraph>کادر کوچکی کنار نشانگر، پاره‌خط در حال ترسیم را نشان می‌دهد: <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">L</Span> طول آن، <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">A</Span> زاویهٔ چرخش آن نسبت به پاره‌خط قبلی و <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">B</Span> آزیموت آن از شمال. <Bold>کادر طول و زاویه</Bold> در منوی چسبیدن آن را نشان می‌دهد یا پنهان می‌کند.</Paragraph>
+    <Table>
+        <Table.Columns>
+            <TableColumn Width="270"/>
+            <TableColumn/>
+        </Table.Columns>
+        <TableRowGroup>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="CursorBox"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>خواندن مقدارها.</Bold> با حرکت نشانگر تغییر می‌کنند؛ چسبیدن و خطوط راهنما هم آن‌ها را تغییر می‌دهند.</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="TypedLength"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>تایپ یک مقدار.</Bold> <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">L</Span> را بزنید و طول را تایپ کنید: نقطه در همان فاصله، در جهت نشانگر یا روی خط راهنما، نگه داشته می‌شود. <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Enter</Span> آن را می‌گذارد. <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">A</Span> و <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">B</Span> همین کار را برای زاویه و آزیموت می‌کنند؛ <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Tab</Span> به مقدار بعدی می‌رود و <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Esc</Span> آنچه تایپ شده را پاک می‌کند.</Paragraph></TableCell>
+            </TableRow>
+        </TableRowGroup>
+    </Table>
+    <Section Style="{StaticResource IRI.Maptor.Styles.Guide.Note}">
+        <Paragraph>برای بلندتر کردن یک خط دقیقاً به اندازهٔ ۲۵ متر: روی راهنمای امتداد حرکت کنید، <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">L</Span> را بزنید، <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">25</Span> را تایپ کنید و <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Enter</Span> را بزنید.</Paragraph>
+    </Section>
+
+    <Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Heading}">ویرایش یک شکل</Paragraph>
+    <Paragraph>ویرایش را از منوی یک عارضهٔ ترسیمی، یا با دکمهٔ ویرایش روی یک سطر از جدول لایه آغاز کنید. هر رأس یک دستگیرهٔ مربعی می‌گیرد؛ نخستین دستگیره کمی بزرگ‌تر است. چسبیدن، خطوط راهنما و مقدارهای تایپ‌شده اینجا هم مثل هنگام ترسیم کار می‌کنند.</Paragraph>
+    <Table>
+        <Table.Columns>
+            <TableColumn Width="270"/>
+            <TableColumn/>
+        </Table.Columns>
+        <TableRowGroup>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="MoveVertex"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>جابه‌جا کردن رأس.</Bold> دستگیرهٔ آن را بکشید. هنگام کشیدن می‌توانید <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">L</Span>، <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">A</Span> یا <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">B</Span> را تایپ کنید؛ با رها کردن ماوس رأس گذاشته می‌شود.</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="AddVertex"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>افزودن رأس.</Bold> نشانگر را روی یک ضلع ببرید: یک لوزی روی آن پیدا می‌شود. کلیک کنید تا همان‌جا رأسی افزوده شود، یا فشار دهید و بکشید تا در یک حرکت افزوده و جابه‌جا شود.</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><BlockUIContainer><controls:DrawingGuideFigure Kind="DeleteVertex"/></BlockUIContainer></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Bold>حذف رأس.</Bold> روی رأس کلیک کنید تا انتخاب شود، سپس <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Delete</Span> را بزنید.</Paragraph></TableCell>
+            </TableRow>
+        </TableRowGroup>
+    </Table>
+    <Paragraph><Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Enter</Span> ویرایش را پایان می‌دهد و <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Esc</Span> آن را لغو می‌کند؛ <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Ctrl&#x2060;+&#x2060;Z</Span> و <Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Ctrl&#x2060;+&#x2060;Y</Span> هر تغییر را واگرد و ازنو می‌کنند. وقتی بیش از ۲٬۰۰۰ رأس در دید باشد دستگیره‌ها پنهان می‌شوند: برای ویرایش آن‌ها بزرگ‌نمایی کنید.</Paragraph>
+
+    <Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Heading}">کلیدها</Paragraph>
+    <Table>
+        <Table.Columns>
+            <TableColumn Width="190"/>
+            <TableColumn/>
+        </Table.Columns>
+        <TableRowGroup Style="{StaticResource IRI.Maptor.Styles.Guide.TableHeader}">
+            <TableRow>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}">کلید</Paragraph></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}">چه می‌کند</Paragraph></TableCell>
+            </TableRow>
+        </TableRowGroup>
+        <TableRowGroup>
+            <TableRow>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Enter</Span></Paragraph></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}">ترسیم یا ویرایش را پایان می‌دهد؛ مقدار تایپ‌شده را می‌گذارد</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Backspace</Span></Paragraph></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}">آخرین نقطهٔ ترسیم را برمی‌دارد</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Esc</Span></Paragraph></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}">نخست مقدار تایپ‌شده را پاک می‌کند، سپس خط راهنما را برمی‌دارد، سپس لغو می‌کند</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Ctrl</Span></Paragraph></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}">نگه‌داشته: بدون چسبیدن و بدون خط راهنما برای این نقطه</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Shift</Span></Paragraph></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}">نگه‌داشته: جهت روی گام‌های ۱۵ درجه قفل می‌شود</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">L   A   B</Span></Paragraph></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}">تایپ طول، زاویه یا آزیموت پاره‌خط</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Tab</Span></Paragraph></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}">هنگام تایپ به مقدار بعدی می‌رود</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Delete</Span></Paragraph></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}">هنگام ویرایش، رأس انتخاب‌شده را حذف می‌کند</Paragraph></TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}"><Span Style="{StaticResource IRI.Maptor.Styles.Guide.Latin}">Ctrl+Z   Ctrl+Y</Span></Paragraph></TableCell>
+                <TableCell><Paragraph Style="{StaticResource IRI.Maptor.Styles.Guide.Cell}">واگرد و ازنو</Paragraph></TableCell>
+            </TableRow>
+        </TableRowGroup>
+    </Table>
+
+</FlowDocument>
