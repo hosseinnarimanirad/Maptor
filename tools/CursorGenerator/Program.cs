@@ -223,6 +223,9 @@ internal static class CursorSet
         new("DrawText.cur", "crosshair + T: Add text", s => Crosshair(s, TextBadge)),
         new("MeasureLength.cur", "crosshair + ruler: Measure length", s => Crosshair(s, RulerBadge)),
         new("MeasureArea.cur", "crosshair + grid square: Measure area", s => Crosshair(s, AreaBadge)),
+        // editing a geometry (2026-11-28, step 6 of the drawing and editing plan)
+        new("AddVertex.cur", "crosshair + plus: over an edge of an edited geometry, a press adds a vertex", s => Crosshair(s, PlusBadge)),
+        new("MoveVertex.cur", "four arrows: over a vertex of an edited geometry, a press moves it", MoveArrows),
     };
 
     // ── Crosshair ────────────────────────────────────────────────────────────
@@ -290,6 +293,37 @@ internal static class CursorSet
 
     private static List<Op> RectangleBadge(double s)
         => Ink.Compose(Ink.Stroke(Ink.Rect(20.5, 21.5, 30.5, 29.5), 1.6, s, PenLineCap.Square, Ink.Draw));
+
+    private static List<Op> PlusBadge(double s)
+        => Ink.Compose(
+            Ink.Stroke(Ink.Line(25.5, 20.5, 25.5, 30.5), 2.2, s, PenLineCap.Flat, Ink.Draw),
+            Ink.Stroke(Ink.Line(20.5, 25.5, 30.5, 25.5), 2.2, s, PenLineCap.Flat, Ink.Draw));
+
+    // ── Move: four arrows from the hotspot, black on a white outline ────────
+
+    private static (List<Op>, int, int) MoveArrows(int size)
+    {
+        double s = size / 32.0;
+
+        const double c = 15.5;   // centre, as the crosshair's
+        const double reach = 12; // from the centre to an arrow's tip
+        const double head = 4;   // arrowhead length
+        const double half = 3.4; // arrowhead half width
+
+        var shafts = Ink.Group(
+            Ink.Line(c - reach + head, c, c + reach - head, c),
+            Ink.Line(c, c - reach + head, c, c + reach - head));
+
+        var heads = Ink.Group(
+            Ink.Poly(true, c - reach, c, c - reach + head, c - half, c - reach + head, c + half),
+            Ink.Poly(true, c + reach, c, c + reach - head, c - half, c + reach - head, c + half),
+            Ink.Poly(true, c, c - reach, c - half, c - reach + head, c + half, c - reach + head),
+            Ink.Poly(true, c, c + reach, c - half, c + reach - head, c + half, c + reach - head));
+
+        var hot = (int)Math.Floor(c * s);
+
+        return (Ink.Compose(Ink.Stroke(shafts, 1.8, s, PenLineCap.Flat), Ink.Fill(heads, s)), hot, hot);
+    }
 
     private static List<Op> TextBadge(double s)
         => Ink.Compose(Ink.Fill(Ink.Group(Ink.Rect(20, 20, 31, 22.6), Ink.Rect(24.2, 20, 26.8, 31)), s, Ink.Draw));

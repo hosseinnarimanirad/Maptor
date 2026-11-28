@@ -14,4 +14,10 @@ public enum MapExtraCursor
 
     /// <summary>While measuring an area.</summary>
     MeasureArea,
+
+    /// <summary>Over an edge of an edited geometry: a press adds a vertex (crosshair with a plus).</summary>
+    AddVertex,
+
+    /// <summary>Over a vertex of an edited geometry: a press moves it (four arrows).</summary>
+    MoveVertex,
 }

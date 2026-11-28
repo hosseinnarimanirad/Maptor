@@ -20,6 +20,12 @@ public class SpecialPointLayer : BaseLayer
 {
     public Action<System.Collections.Specialized.NotifyCollectionChangedEventArgs> HandleCollectionChanged;
 
+    /// <summary>
+    /// Whether an item is put on the map; asked when it is added and on every refresh (pan, zoom). Every item is
+    /// when this is null. Used by the layers of an edit (for now the edge labels: none on an edge too short for it).
+    /// </summary>
+    public Func<Locateable, bool>? ShowItem { get; set; }
+
     private ObservableCollection<Locateable> _items;
     public ObservableCollection<Locateable> Items
     {

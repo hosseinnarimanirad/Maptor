@@ -727,6 +727,122 @@ public class EditableFeatureLayerEditTest
         Assert.Equal(10_000, layer.GetLastGeometry().Points.Count);
     });
 
+    // ---- step 6: the look ----
+
+    [Fact]
+    public void TheFirstVertexOfEachPart_IsTheLargerHandle() => RunWithOwnStyles(() =>
+    {
+        using var layer = Edit(MultiLine(Line((0, 0), (100, 0), (200, 0)), Line((0, 50), (100, 50))));
+
+        var handles = layer.GetVertices().Items.Select(v => (VertexHandle)v.Element).ToList();
+
+        Assert.Equal(new[] { true, false, false, true, false }, handles.Select(h => h.IsFirst));
+    });
+
+    [Fact]
+    public void DeletingTheFirstVertex_MakesTheNextOneFirst() => RunWithOwnStyles(() =>
+    {
+        using var layer = Edit(Line((0, 0), (100, 0), (200, 0)));
+
+        var second = (VertexHandle)layer.GetVertices().Items[1].Element;
+
+        Assert.False(second.IsFirst);
+
+        layer.SelectPoint(0);
+        layer.TryDeleteCurrentPoint();
+
+        Assert.True(second.IsFirst);
+    });
+
+    [Fact]
+    public void ALabelOnAnEdgeTooShortOnScreen_IsLeftOffTheMap() => RunWithOwnStyles(() =>
+    {
+        // one map unit is one pixel here: edges of 100 and of 30
+        using var layer = EditWithLabels(Line((0, 0), (100, 0), (130, 0)));
+
+        var labels = layer.GetEdgeLengths();
+
+        Assert.True(labels.ShowItem!(labels.Items[0]));
+        Assert.False(labels.ShowItem!(labels.Items[1]));
+
+        // the label of the whole is always shown
+        Assert.True(labels.ShowItem!(labels.Items[2]));
+    });
+
+    [Fact]
+    public void ASketch_HasSolidPlacedSegments_AndDashedOnesToThePointer() => RunWithOwnStyles(() =>
+    {
+        using var layer = new EditableFeatureLayer(
+            "draw", new List<Point> { new(0, 0) }, Transform.Identity, d => d, GeometryType.Polygon, (_, _) => { },
+            EditableFeatureLayerOptions.CreateDefaultForDrawing(true, true));
+
+        layer.AddVertex(new Point(100, 0));
+        layer.AddVertex(new Point(100, 100));
+
+        layer.UpdateLastSemiVertexLocation(new Point(20, 80));
+
+        var main = (PathGeometry)layer.GetPath(Transform.Identity).Data;
+
+        // the placed segments, open: the closing one is dashed, with the pointer's
+        Assert.False(main.Figures[0].IsClosed);
+        Assert.Equal(2, main.Figures[0].Segments.Count);
+
+        // the placed segments are solid
+        Assert.True(layer.GetPath(Transform.Identity).StrokeDashArray is null or { Count: 0 });
+
+        var paths = layer.GetSketchPaths().ToList();
+
+        // the fill (placed points and the pointer), then the two dashed segments
+        Assert.Equal(3, paths.Count);
+
+        var fill = ((PathGeometry)paths[0].Data).Figures.Single();
+
+        Assert.Equal(3, fill.Segments.Count);
+        Assert.Equal(new System.Windows.Point(20, 80), ((System.Windows.Media.LineSegment)fill.Segments[2]).Point);
+
+        var bands = paths.Skip(1).ToList();
+
+        Assert.All(bands, b => Assert.NotEmpty(b.StrokeDashArray));
+
+        var rubber = ((PathGeometry)bands[0].Data).Figures.Single();
+        var closing = ((PathGeometry)bands[1].Data).Figures.Single();
+
+        Assert.Equal(new System.Windows.Point(100, 100), rubber.StartPoint);
+        Assert.Equal(new System.Windows.Point(20, 80), ((System.Windows.Media.LineSegment)rubber.Segments[0]).Point);
+        Assert.Equal(new System.Windows.Point(20, 80), closing.StartPoint);
+        Assert.Equal(new System.Windows.Point(0, 0), ((System.Windows.Media.LineSegment)closing.Segments[0]).Point);
+        Assert.True(bands[1].Opacity < bands[0].Opacity);
+    });
+
+    [Fact]
+    public void AnEdit_HasNoDashedSegments_AndItsRingIsClosed() => RunWithOwnStyles(() =>
+    {
+        var square = Geometry<Point>.CreatePolygon(new List<Point> { new(0, 0), new(100, 0), new(100, 100), new(0, 100) }, SridHelper.WebMercator);
+
+        using var layer = Edit(square);
+
+        Assert.Empty(layer.GetSketchPaths());
+        Assert.True(((PathGeometry)layer.GetPath(Transform.Identity).Data).Figures[0].IsClosed);
+    });
+
+    [Fact]
+    public void TheVertexHandle_ShowsSelection() => RunWithOwnStyles(() =>
+    {
+        var handle = new VertexHandle();
+
+        var square = (System.Windows.Shapes.Rectangle)handle.Content;
+
+        Assert.Equal(8, square.Width);
+
+        handle.IsSelected = true;
+
+        Assert.True(handle.IsSelected);
+
+        handle.IsFirst = true;
+
+        Assert.Equal(10, square.Width);
+    });
+
     // ---- the point layer ----
 
     [Fact]

@@ -437,7 +437,7 @@ public class MapUiSessionTest
 
             StartEdit(host, out var editing, onMap);
 
-            int Handles() => host.CountInMap<IRI.Maptor.Presentation.Wpf.Controls.MapMarkers.Circle>(_ => true);
+            int Handles() => host.CountInMap<IRI.Maptor.Presentation.Wpf.Controls.MapMarkers.VertexHandle>(_ => true);
 
             Assert.Equal(0, Handles());
 
@@ -468,6 +468,63 @@ public class MapUiSessionTest
     }
 
     [Fact]
+    public void TheLook_OfASketchAndAnEdit()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            // a polygon half drawn: two placed segments solid, the pointer's segment and the closing one dashed
+            var drawing = host.ViewModel.GetDrawingAsync(DrawMode.Polygon);
+
+            host.Pump(200);
+
+            host.Click(new WpfPoint(200, 380));
+            host.Click(new WpfPoint(420, 360));
+            host.Click(new WpfPoint(480, 200));
+
+            host.MoveTo(new WpfPoint(300, 170));
+            host.Pump(200);
+
+            host.Snapshot("look-sketch");
+
+            Assert.Equal(2, host.CountInMap<System.Windows.Shapes.Path>(p => p.StrokeDashArray is { Count: > 0 } && !p.IsHitTestVisible && p.Fill is null));
+
+            host.Click(new WpfPoint(300, 170));
+            host.Click(new WpfPoint(300, 170));
+
+            var polygon = host.Await(drawing, "the polygon was not finished").Result;
+
+            // the edit: square handles, the first one larger, one selected, the edge handle under the pointer
+            var editing = host.ViewModel.EditAsync(polygon, null);
+
+            host.WaitFor(() => host.Map.CurrentEditingLayer is not null, "the edit did not start");
+
+            host.Pump(300);
+
+            host.Click(new WpfPoint(480, 200));
+
+            host.MoveTo(new WpfPoint(330, 372));
+            host.Pump(200);
+
+            host.Snapshot("look-edit");
+
+            var handles = host.Map.CurrentEditingLayer!.GetVertices().Items.Select(v => v.CreatedElement).OfType<IRI.Maptor.Presentation.Wpf.Controls.MapMarkers.VertexHandle>().ToList();
+
+            Assert.Equal(4, handles.Count);
+            Assert.Single(handles, h => h.IsFirst);
+            Assert.Single(handles, h => h.IsSelected);
+
+            // the add-vertex cursor over the edge, the move cursor on the handles
+            Assert.NotEqual(System.Windows.Input.Cursors.Hand, host.Map.Cursor);
+            Assert.All(handles, h => Assert.NotNull(h.Cursor));
+
+            CancelEdit(host, editing);
+        }, Plain);
+    }
+
+    [Fact]
     public void NoHandles_StandBetweenTheVertices()
     {
         if (!MapUiHost.IsEnabled)
@@ -480,7 +537,7 @@ public class MapUiSessionTest
             host.MoveTo(new WpfPoint(400, 500));
 
             // one handle per vertex, nothing between them
-            Assert.Equal(3, host.CountInMap<IRI.Maptor.Presentation.Wpf.Controls.MapMarkers.Circle>(_ => true));
+            Assert.Equal(3, host.CountInMap<IRI.Maptor.Presentation.Wpf.Controls.MapMarkers.VertexHandle>(_ => true));
 
             host.Snapshot("edit-without-mid-vertices");
 

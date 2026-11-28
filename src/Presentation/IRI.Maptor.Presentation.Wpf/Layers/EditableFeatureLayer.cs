@@ -41,11 +41,25 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
     Func<double, double> _screenToMap;
 
-    private Func<FrameworkElement> MakePrimaryVertex { get; set; } = () => new Circle(1);
 
     private Geometry? _webMercatorGeometry;
 
     private Path? _feature;
+
+    // While a sketch is drawn: the segment from the last placed vertex to the pointer, dashed, and for a polygon the
+    // closing segment from the pointer back to the part's first vertex, dashed and fainter. The placed segments are
+    // in _feature, solid, so it is clear which edges are fixed (V4 of the drawing and editing plan).
+    private Path? _rubberBand;
+
+    private Path? _closingBand;
+
+    // the fill of a polygon sketch: the placed parts and, for the part being drawn, its points and the pointer
+    private Path? _sketchFill;
+
+    private Point? _rubberPointer;
+
+    /// <summary>An edge shorter than this on screen shows no length label: the label would cover the edge (V5).</summary>
+    public const double MinEdgePixelsForLabel = 60;
 
     private MouseButtonEventHandler? _featureRightButtonUpHandler;
 
@@ -311,9 +325,103 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
         if (Options.IsNewDrawing)
         {
+            if (webMercatorGeometry.Type.GetCategory() != GeometryCategory.Point)
+            {
+                _rubberBand = MakeSketchPath(opacityFactor: 1);
+
+                _closingBand = webMercatorGeometry.IsRingBase() ? MakeSketchPath(opacityFactor: .5) : null;
+
+                _sketchFill = webMercatorGeometry.IsRingBase()
+                    ? new Path { Fill = Options.Visual.Fill, Opacity = Options.Visual.Opacity, IsHitTestVisible = false, Data = new PathGeometry() }
+                    : null;
+            }
+
             //add virtual vertex which show last point
             AddSemiVertex(webMercatorGeometry.Points == null ? webMercatorGeometry.Geometries.Last().Points.Last() : webMercatorGeometry.Points.Last());
         }
+
+        // a label on an edge too short to hold it is left off the map (asked again on every pan and zoom)
+        _edgeLabelLayer.ShowItem = item => item is not EdgeLabel label || label.ScreenLength(_screenToMap) >= MinEdgePixelsForLabel;
+    }
+
+    private Path MakeSketchPath(double opacityFactor)
+    {
+        return new Path
+        {
+            Stroke = Options.Visual.Stroke,
+            StrokeThickness = Options.Visual.StrokeThickness,
+            StrokeDashArray = new DoubleCollection { 4, 3 },
+            Opacity = Options.Visual.Opacity * opacityFactor,
+            StrokeLineJoin = PenLineJoin.Round,
+            IsHitTestVisible = false,
+            Data = new PathGeometry(),
+        };
+    }
+
+    /// <summary>The dashed segments of a sketch being drawn (see <c>_rubberBand</c>); none for an edit.</summary>
+    public IEnumerable<Path> GetSketchPaths()
+    {
+        UpdateRubberBand();
+
+        // the fill first: it goes under the lines
+        if (_sketchFill is not null)
+            yield return _sketchFill;
+
+        if (_rubberBand is not null)
+            yield return _rubberBand;
+
+        if (_closingBand is not null)
+            yield return _closingBand;
+    }
+
+    private void UpdateSketchFill()
+    {
+        if (_sketchFill?.Data is not PathGeometry fill)
+            return;
+
+        fill.Figures.Clear();
+
+        for (int p = 0; p < _parts.Count; p++)
+        {
+            var points = _parts[p].Geometry.Points?.Select(i => ToScreen(i.AsWpfPoint())).ToList();
+
+            if (points is null)
+                continue;
+
+            // the part being drawn goes round through the pointer
+            if (p == _parts.Count - 1 && _rubberPointer is { } pointer)
+                points.Add(ToScreen(pointer.AsWpfPoint()));
+
+            if (points.Count < 3)
+                continue;
+
+            fill.Figures.Add(new PathFigure(points[0], points.Skip(1).Select(i => (PathSegment)new LineSegment(i, false)), true));
+        }
+    }
+
+    private void UpdateRubberBand()
+    {
+        if (_rubberBand?.Data is not PathGeometry rubber)
+            return;
+
+        rubber.Figures.Clear();
+
+        if (_closingBand?.Data is PathGeometry closingGeometry)
+            closingGeometry.Figures.Clear();
+
+        UpdateSketchFill();
+
+        var placed = _webMercatorGeometry?.GetLastPart();
+
+        if (_rubberPointer is not { } pointer || placed is null || placed.Count == 0)
+            return;
+
+        var pointerOnScreen = ToScreen(pointer.AsWpfPoint());
+
+        rubber.Figures.Add(new PathFigure(ToScreen(placed[placed.Count - 1].AsWpfPoint()), new[] { new LineSegment(pointerOnScreen, true) }, false));
+
+        if (_closingBand?.Data is PathGeometry closing && placed.Count >= 2)
+            closing.Figures.Add(new PathFigure(pointerOnScreen, new[] { new LineSegment(ToScreen(placed[0].AsWpfPoint()), true) }, false));
     }
 
     private WpfPoint ToScreen(WpfPoint point)
@@ -331,6 +439,8 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         MakePathGeometry();
 
         ReconstructLocateables();
+
+        UpdateRubberBand();
     }
 
     // add an empty new part
@@ -341,6 +451,8 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         MakePathGeometry();
 
         ReconstructLocateables();
+
+        UpdateRubberBand();
 
         return result;
     }
@@ -399,16 +511,18 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
     private Path GetDefaultEditingPath()
     {
+        // A sketch's placed segments are solid: what is not fixed yet (the segment to the pointer, the closing one)
+        // is dashed, in paths of its own, and its fill, which includes the pointer, too (V4).
         var result = new Path()
         {
             Stroke = Options.Visual.Stroke,
             StrokeThickness = Options.Visual.StrokeThickness,
-            StrokeDashArray = Options.Visual.DashStyle?.Dashes,
+            StrokeDashArray = Options.IsNewDrawing ? null : Options.Visual.DashStyle?.Dashes,
             Opacity = Options.Visual.Opacity,
             StrokeLineJoin = PenLineJoin.Round,
         };
 
-        if (_webMercatorGeometry.IsRingBase())
+        if (_webMercatorGeometry.IsRingBase() && !Options.IsNewDrawing)
         {
             result.Fill = Options.Visual.Fill;
         }
@@ -703,7 +817,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
     {
         if (geometry.Points != null)
         {
-            PathFigure pathFigure = new PathFigure() { IsClosed = _webMercatorGeometry.IsRingBase() };
+            PathFigure pathFigure = new PathFigure() { IsClosed = _webMercatorGeometry.IsRingBase() && !Options.IsNewDrawing };
 
             if (geometry.Points.Count > 0)
             {
@@ -790,7 +904,8 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
     /// <summary>The control of a vertex, with its mouse handlers; undone by the vertex's <see cref="Locateable.Detach"/>.</summary>
     private FrameworkElement MakeVertexElement(Locateable locateable, IPoint webMercatorPoint)
     {
-        var element = /*Options*/this.MakePrimaryVertex();
+        // the first vertex of a part is drawn larger, so a line's direction can be seen
+        var element = new VertexHandle(isFirst: _addresses.TryGetValue(locateable, out var address) && address.Index == 0);
 
         if (Options.IsNewDrawing)
         {
@@ -1149,6 +1264,10 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         // by its place in the part: another vertex at the same coordinates is another point; in place, as an insert
         points.RemoveAt(index);
 
+        // the next vertex becomes the first of its part
+        if (index == 0 && part.Vertices.Count > 1 && part.Vertices[1].CreatedElement is VertexHandle next)
+            next.IsFirst = true;
+
         part.Vertices.RemoveAt(index);
 
         _addresses.Remove(vertex);
@@ -1245,6 +1364,8 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
                 _edgeLabelsInSync = false;
             }
 
+            UpdateRubberBand();
+
             // Incremental add bypasses ReconstructLocateables, so notify here.
             OnGeometryChanged?.Invoke();
 
@@ -1260,7 +1381,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
     {
         var edge = new LineSegment<Point>(first, second);
 
-        var label = new EdgeLabel { X = edge.Middle.X, Y = edge.Middle.Y, Text = EdgeLengthLabel(first, second) };
+        var label = new EdgeLabel { X = edge.Middle.X, Y = edge.Middle.Y, Text = EdgeLengthLabel(first, second), Start = first, End = second };
 
         // made when the label goes on the map, with the text it has then
         label.CreateElement = () => new RectangleLabelMarker(label.Text);
@@ -1276,6 +1397,21 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         }
 
         public string Text = string.Empty;
+
+        // the points of the geometry the edge runs between (moved in place with their vertices)
+        public Point Start = null!;
+
+        public Point End = null!;
+
+        public double ScreenLength(Func<double, double> screenToMap)
+        {
+            var onePixel = screenToMap(1);
+
+            if (Start is null || End is null || !(onePixel > 0))
+                return double.PositiveInfinity;
+
+            return Math.Sqrt((End.X - Start.X) * (End.X - Start.X) + (End.Y - Start.Y) * (End.Y - Start.Y)) / onePixel;
+        }
     }
 
     private static string EdgeLengthLabel(Point first, Point second)
@@ -1363,6 +1499,8 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         _toScreen = transform;
 
         MakePathGeometry();
+
+        UpdateRubberBand();
 
         return _feature;
     }
@@ -1557,28 +1695,15 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         //return null;
     }
 
+    /// <summary>Where the pointer is while a sketch is drawn: the end of the dashed segment from the last placed vertex.</summary>
     public void AddSemiVertex(Point webMercatorPoint)
     {
-        var point = ToScreen(webMercatorPoint.AsWpfPoint());
+        _rubberPointer = new Point(webMercatorPoint.X, webMercatorPoint.Y);
 
-        _pathGeometry.Figures.Last().Segments.Add(new LineSegment(new WpfPoint(point.X, point.Y), true));
+        UpdateRubberBand();
     }
 
-    public void UpdateLastSemiVertexLocation(Point newMercatorPoint)
-    {
-        if (_pathGeometry.Figures?.Last()?.Segments?.Count() < 1)
-            AddSemiVertex(newMercatorPoint);
-
-        if (_pathGeometry.Figures.Last().Segments.Count < _webMercatorGeometry.GetLastPart().Count)
-        {
-            AddSemiVertex(newMercatorPoint);
-        }
-
-        var newPoint = ToScreen(newMercatorPoint.AsWpfPoint());
-
-        //var lastSegment = ((LineSegment)_pathGeometry.Figures.Last().Segments.Last()).Point = new WpfPoint(newPoint.X, newPoint.Y);
-        ((LineSegment)_pathGeometry.Figures.Last().Segments.Last()).Point = new WpfPoint(newPoint.X, newPoint.Y);
-    }
+    public void UpdateLastSemiVertexLocation(Point newMercatorPoint) => AddSemiVertex(newMercatorPoint);
 
     public void FinishEditing()
     {

@@ -221,6 +221,12 @@ public partial class MapViewer : NotifiableUserControl
     // Cursors for states that are not a MapAction (MapExtraCursor). Null keeps the older behaviour:
     // no change while dragging, and Measure shows the Polyline/Polygon draw cursor.
     public Cursor? PanDraggingCursor { get; set; }
+
+    /// <summary>Over an edge of an edited geometry, where a press adds a vertex; the crosshair when not set.</summary>
+    public Cursor? AddVertexCursor { get; set; }
+
+    /// <summary>Over a vertex of an edited geometry, which a press moves; the four-arrow cursor of Windows when not set.</summary>
+    public Cursor? MoveVertexCursor { get; set; }
     public Cursor? MeasureLengthCursor { get; set; }
     public Cursor? MeasureAreaCursor { get; set; }
 
@@ -626,6 +632,8 @@ public partial class MapViewer : NotifiableUserControl
         _guideOverlay = new GuideOverlay(mapOverlay);
 
         _snapMarker = new SnapMarker(mapOverlay);
+
+        _edgeHandleMarker = new EdgeHandleMarker(mapOverlay);
 
         _cursorBox = new CursorBox(mapOverlay);
 
@@ -1852,6 +1860,19 @@ public partial class MapViewer : NotifiableUserControl
 
         Canvas.SetZIndex(path, layer.ZIndex);
 
+        foreach (var band in layer.GetSketchPaths())
+        {
+            band.RenderTransform = this.panTransformForPoints;
+
+            band.Tag = new LayerTag(0) { Layer = layer, IsTiled = false, LayerType = LayerType.EditableItem };
+
+            if (!IsOnMapCanvas(band))
+                this.mapView.Children.Add(band);
+
+            // a fill goes under the lines of the sketch
+            Canvas.SetZIndex(band, band.Fill is null ? layer.ZIndex : layer.ZIndex - 1);
+        }
+
         AddComplexLayer(layer.GetVertices(), false);
 
         //if (layer.Options.IsMeasureVisible)
@@ -2151,6 +2172,10 @@ public partial class MapViewer : NotifiableUserControl
 
     private EditableFeatureLayer.EdgeHit? _edgeHandleHit;
 
+    private EdgeHandleMarker? _edgeHandleMarker;
+
+    private Cursor EdgeHandleCursor => AddVertexCursor ?? Cursors.Cross;
+
     // the edited layer while editing a line or a polygon, and only then
     private EditableFeatureLayer? EdgeHandleLayer
         => CurrentEditingLayer is { CanInsertVertices: true } layer && this.Status != MapStatus.Drawing && !itemIsMoving &&
@@ -2219,10 +2244,21 @@ public partial class MapViewer : NotifiableUserControl
 
         _edgeHandleHit = handle.Hit;
 
-        _snapMarker?.Show(MapToScreen(handle.At.AsWpfPoint()), handle.IsMiddle ? SnapKind.Midpoint : SnapKind.Edge);
+        var screenPoint = MapToScreen(handle.At.AsWpfPoint());
 
-        // the crosshair says a press here adds a vertex (its own cursor comes with the look, step 6)
-        this.mapView.Cursor = Cursors.Cross;
+        // the circle with a plus on an edge; on its middle the snap marker's triangle
+        if (handle.IsMiddle)
+        {
+            _edgeHandleMarker?.Hide();
+            _snapMarker?.Show(screenPoint, SnapKind.Midpoint);
+        }
+        else
+        {
+            _snapMarker?.Hide();
+            _edgeHandleMarker?.Show(screenPoint);
+        }
+
+        this.mapView.Cursor = EdgeHandleCursor;
     }
 
     private void HideEdgeHandle()
@@ -2234,7 +2270,9 @@ public partial class MapViewer : NotifiableUserControl
 
         _snapMarker?.Hide();
 
-        if (ReferenceEquals(this.mapView.Cursor, Cursors.Cross))
+        _edgeHandleMarker?.Hide();
+
+        if (ReferenceEquals(this.mapView.Cursor, EdgeHandleCursor))
             this.mapView.Cursor = _activeCursor;
     }
 
@@ -2345,6 +2383,9 @@ public partial class MapViewer : NotifiableUserControl
                 if (onlyInView && !extent.Intersects(new sb.Point(locateable.X, locateable.Y)))
                     continue;
 
+                if (specialPointLayer.ShowItem?.Invoke(locateable) == false)
+                    continue;
+
                 AddComplexLayerItem(specialPointLayer, locateable, withAnimation, animate);
             }
         }
@@ -2362,7 +2403,9 @@ public partial class MapViewer : NotifiableUserControl
         // read once rather than per item; CurrentExtent is a computed property
         var currentExtent = this.CurrentExtent;
 
-        var items = specialPointLayer.Items.Where(i => currentExtent.Intersects(new sb.Point(i.X, i.Y))).ToList();
+        var items = specialPointLayer.Items
+            .Where(i => currentExtent.Intersects(new sb.Point(i.X, i.Y)) && (specialPointLayer.ShowItem?.Invoke(i) ?? true))
+            .ToList();
 
         if (onlyInView)
         {
@@ -2428,6 +2471,10 @@ public partial class MapViewer : NotifiableUserControl
 
         if (IsOnMapCanvas(element))
             return;
+
+        // a vertex of an edited geometry: a press moves it (a sketch's vertices keep the draw cursor: a click finishes)
+        if (CurrentEditingLayer is { } edited && ReferenceEquals(specialPointLayer, edited.GetVertices()))
+            element.Cursor = MoveVertexCursor ?? Cursors.SizeAll;
 
         //element.Opacity = specialPointLayer.Opacity;
 
@@ -2986,6 +3033,12 @@ public partial class MapViewer : NotifiableUserControl
                     break;
                 case MapExtraCursor.MeasureArea:
                     MeasureAreaCursor = entry.Value;
+                    break;
+                case MapExtraCursor.AddVertex:
+                    AddVertexCursor = entry.Value;
+                    break;
+                case MapExtraCursor.MoveVertex:
+                    MoveVertexCursor = entry.Value;
                     break;
             }
         }

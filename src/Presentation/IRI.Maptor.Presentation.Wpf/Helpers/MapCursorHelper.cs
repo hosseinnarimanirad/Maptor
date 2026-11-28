@@ -51,6 +51,8 @@ public static class MapCursorHelper
             { MapExtraCursor.PanDragging, Load("PanGrabbing.cur") },
             { MapExtraCursor.MeasureLength, Load("MeasureLength.cur") },
             { MapExtraCursor.MeasureArea, Load("MeasureArea.cur") },
+            { MapExtraCursor.AddVertex, Load("AddVertex.cur") },
+            { MapExtraCursor.MoveVertex, Load("MoveVertex.cur") },
         };
     }
 }

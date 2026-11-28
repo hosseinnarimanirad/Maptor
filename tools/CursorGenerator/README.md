@@ -26,6 +26,8 @@ opens them with `scaleWithDpi: true`, so Windows picks the image that matches th
 | `DrawPolyline.cur`, `DrawPolygon.cur`, `DrawRectangle.cur` | the matching draw tools |
 | `DrawText.cur` | Add text |
 | `MeasureLength.cur` / `MeasureArea.cur` | Measure (`MapExtraCursor.MeasureLength` / `MeasureArea`) |
+| `AddVertex.cur` | over an edge of an edited geometry: a press adds a vertex (`MapExtraCursor.AddVertex`) |
+| `MoveVertex.cur` | over a vertex of an edited geometry: a press moves it (`MapExtraCursor.MoveVertex`) |
 
 Style: black ink with a white outline, so the cursors read on light and dark maps alike. The two
 hands and the Identify arrow follow the Windows pointer look instead (white body, black outline); the
