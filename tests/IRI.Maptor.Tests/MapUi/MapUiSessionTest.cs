@@ -1,0 +1,484 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Shapes;
+
+using IRI.Maptor.Core.Common.Enums;
+using IRI.Maptor.Core.Spatial.Primitives;
+using IRI.Maptor.Core.SpatialReferenceSystem;
+using IRI.Maptor.Presentation.Core;
+using IRI.Maptor.Presentation.Core.Data;
+using IRI.Maptor.Presentation.Wpf;
+using IRI.Maptor.Presentation.Wpf.Models;
+using IRI.Maptor.Tests.Common;
+
+using WpfPoint = System.Windows.Point;
+using Point = IRI.Maptor.Core.Common.Primitives.Point;
+
+namespace IRI.Maptor.Tests.MapUi;
+
+/// <summary>
+/// What the mouse does in a drawing or an edit, on a real map with the real mouse (see <see cref="MapUiHost"/>):
+/// they run only when <c>MAPTOR_UI_TEST</c> is 1. Each check is one thing a person would otherwise try by hand
+/// after a change to drawing or editing.
+/// </summary>
+[Collection(WpfCollection.Name)]
+public class MapUiSessionTest
+{
+    private static void Plain(MapSettings settings)
+    {
+        settings.Snapping_ShowGuides = false;
+        settings.Snapping_ShowCursorBox = false;
+    }
+
+    private static Geometry<Point> Line(MapUiHost host, params WpfPoint[] onMap)
+        => Geometry<Point>.Create(onMap.Select(host.ToMap).ToList(), GeometryType.LineString, SridHelper.WebMercator);
+
+    private static void AssertNear(MapUiHost host, Point expected, Point actual, double pixels = 1.5)
+    {
+        var tolerance = host.MapLength(pixels);
+
+        Assert.True(
+            Math.Abs(expected.X - actual.X) <= tolerance && Math.Abs(expected.Y - actual.Y) <= tolerance,
+            $"expected ({expected.X:0.00} {expected.Y:0.00}), was ({actual.X:0.00} {actual.Y:0.00}), tolerance {tolerance:0.00}");
+    }
+
+    private static Point Copy(Point point) => new(point.X, point.Y);
+
+    private static void AssertSameView(MapUiHost host, Point centreBefore)
+        => AssertNear(host, centreBefore, host.Map.CurrentExtent.Center, pixels: 0.5);
+
+    [Fact]
+    public void AClickOnAVertexOfASketchThatIsNotValidYet_KeepsTheSketch()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            var a = new WpfPoint(250, 250);
+            var b = new WpfPoint(450, 300);
+
+            var drawing = host.ViewModel.GetDrawingAsync(DrawMode.Polyline);
+
+            host.Pump(200);
+
+            host.Click(a);
+
+            // a line of one point cannot be finished: the click on its point does nothing
+            host.Click(a);
+
+            Assert.False(drawing.IsCompleted, "a click on the only point ended the drawing");
+
+            host.Click(b);
+            host.Click(b);
+
+            var line = host.Await(drawing, "the line was not finished").Result;
+
+            Assert.Equal(2, line.Points.Count);
+            AssertNear(host, host.ToMap(a), line.Points[0]);
+            AssertNear(host, host.ToMap(b), line.Points[1]);
+        }, Plain);
+    }
+
+    [Fact]
+    public void AVertexBesideASnapPoint_StaysOnAClick_AndSnapsOnADrag()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            var a = new WpfPoint(200, 300);
+            var b = new WpfPoint(400, 300);
+            var c = new WpfPoint(600, 300);
+
+            // another feature with a vertex 6 px right and 4 px below b: inside the snap distance of 10 px
+            var target = new WpfPoint(406, 304);
+
+            host.ViewModel.SketchBar.Snapping.IsEnabled = true;
+            host.ViewModel.SketchBar.Snapping.IsDrawingsChecked = true;
+
+            host.ViewModel.AddDrawingItem(Line(host, target, new WpfPoint(406, 500)), "target");
+
+            host.Pump(300);
+
+            var editing = host.ViewModel.EditAsync(Line(host, a, b, c), null);
+
+            host.WaitFor(() => host.Map.CurrentEditingLayer is not null, "the edit did not start");
+
+            host.Pump(300);
+
+            var layer = host.Map.CurrentEditingLayer!;
+
+            Point Vertex(int index) => Copy(layer.GetLastGeometry().Points[index]);
+
+            // a first drag, of another vertex, so that what can be snapped to has been read
+            host.Drag(c, new WpfPoint(620, 360), steps: 12);
+
+            host.Pump(500);
+
+            var before = Vertex(1);
+
+            host.Click(b);
+
+            Assert.Equal((before.X, before.Y), (Vertex(1).X, Vertex(1).Y));
+
+            // dragged away and back to 2 px from the other vertex: it lands on that vertex
+            host.MoveTo(b);
+            host.Down();
+            host.MoveTo(new WpfPoint(330, 220));
+            host.MoveTo(new WpfPoint(380, 280));
+            host.Pump(300);
+            host.MoveTo(new WpfPoint(404, 302));
+            host.Pump(200);
+            host.MoveTo(new WpfPoint(404, 303));
+
+            host.Snapshot("snap-while-dragging");
+
+            host.Up();
+            host.Pump(600);
+
+            AssertNear(host, host.ToMap(target), Vertex(1), pixels: 0.2);
+
+            layer.CancelEditingCommand.Execute(null);
+
+            host.Await(editing, "the edit was not cancelled");
+        }, Plain);
+    }
+
+    [Fact]
+    public void ALabel_IsDragged_AndTheMapStays()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            var options = EditableFeatureLayerOptions.CreateDefaultForEditing(true, true);
+
+            options.IsMeasureVisible = true;
+            options.IsEdgeLabelVisible = true;
+
+            var editing = host.ViewModel.EditAsync(Line(host, new WpfPoint(200, 400), new WpfPoint(600, 400), new WpfPoint(600, 150)), options);
+
+            host.WaitFor(() => host.Map.CurrentEditingLayer is not null, "the edit did not start");
+
+            host.Pump(400);
+
+            var layer = host.Map.CurrentEditingLayer!;
+
+            // the label of the first edge; it stands on its point, so it is grabbed a little above it
+            var label = layer.GetEdgeLengths().Items[0];
+
+            host.Pump(300);
+
+            var centre = Copy(host.Map.CurrentExtent.Center);
+
+            var place = host.OnMap(new Point(label.X, label.Y));
+
+            var grab = new WpfPoint(place.X, place.Y - 8);
+
+            host.Drag(grab, new WpfPoint(grab.X + 40, grab.Y - 70));
+
+            var moved = host.OnMap(new Point(label.X, label.Y));
+
+            Assert.True(Math.Abs(moved.X - (place.X + 40)) <= 3 && Math.Abs(moved.Y - (place.Y - 70)) <= 3,
+                $"the label is at ({moved.X:0} {moved.Y:0}), expected about ({place.X + 40:0} {place.Y - 70:0})");
+
+            AssertSameView(host, centre);
+
+            // and a vertex of its edge takes it along, at the same distance
+            var middleBefore = host.OnMap(new Point((layer.GetVertices().Items[0].X + layer.GetVertices().Items[1].X) / 2, (layer.GetVertices().Items[0].Y + layer.GetVertices().Items[1].Y) / 2));
+
+            host.Drag(new WpfPoint(200, 400), new WpfPoint(200, 500));
+
+            var middleAfter = host.OnMap(new Point((layer.GetVertices().Items[0].X + layer.GetVertices().Items[1].X) / 2, (layer.GetVertices().Items[0].Y + layer.GetVertices().Items[1].Y) / 2));
+
+            var after = host.OnMap(new Point(label.X, label.Y));
+
+            Assert.True(
+                Math.Abs((after.X - moved.X) - (middleAfter.X - middleBefore.X)) <= 2 &&
+                Math.Abs((after.Y - moved.Y) - (middleAfter.Y - middleBefore.Y)) <= 2,
+                "the dragged label did not follow the middle of its edge");
+
+            host.Snapshot("labels-after-drag");
+
+            layer.CancelEditingCommand.Execute(null);
+
+            host.Await(editing, "the edit was not cancelled");
+        }, Plain);
+    }
+
+    [Fact]
+    public void AClickOnAMidVertex_InsertsAVertex_AndTheMapStays()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            var editing = host.ViewModel.EditAsync(Line(host, new WpfPoint(200, 300), new WpfPoint(600, 300)), null);
+
+            host.WaitFor(() => host.Map.CurrentEditingLayer is not null, "the edit did not start");
+
+            host.Pump(300);
+
+            var layer = host.Map.CurrentEditingLayer!;
+
+            // no handle between the vertices means the edge handle of step 4 is in: this check is then replaced
+            if (layer.GetMidVertices().Items.Count == 0)
+                return;
+
+            var centre = Copy(host.Map.CurrentExtent.Center);
+
+            var middle = new WpfPoint(400, 300);
+
+            // press, move as a hand does, release
+            host.Drag(middle, new WpfPoint(430, 330), steps: 4);
+
+            Assert.Equal(3, layer.GetLastGeometry().Points.Count);
+
+            AssertSameView(host, centre);
+
+            layer.CancelEditingCommand.Execute(null);
+
+            host.Await(editing, "the edit was not cancelled");
+        }, Plain);
+    }
+
+    [Fact]
+    public void APanWhileDrawing_ReleasedOutsideTheMap_LeavesTheDrawingWorking()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            var drawing = host.ViewModel.GetDrawingAsync(DrawMode.Polyline);
+
+            host.Pump(200);
+
+            var a = new WpfPoint(300, 200);
+
+            host.Click(a);
+
+            var first = host.ToMap(a);
+
+            var centre = Copy(host.Map.CurrentExtent.Center);
+
+            // pan with the left button, and let go below the window
+            host.Drag(new WpfPoint(500, 400), new WpfPoint(500, host.Map.ActualHeight + 120), steps: 10);
+
+            host.Pump(400);
+
+            var panned = host.Map.CurrentExtent.Center;
+
+            Assert.True(Math.Abs(panned.Y - centre.Y) > host.MapLength(100), "the map did not pan");
+
+            // the next click is a point of the line, where the pointer is on the panned map
+            var b = new WpfPoint(450, 320);
+
+            host.Click(b);
+
+            var second = host.ToMap(b);
+
+            host.Click(b);
+
+            var line = host.Await(drawing, "the line was not finished after the pan").Result;
+
+            Assert.Equal(2, line.Points.Count);
+            AssertNear(host, first, line.Points[0]);
+            AssertNear(host, second, line.Points[1]);
+        }, Plain);
+    }
+
+    [Fact]
+    public void ARectangleDragThatLosesTheMouse_LeavesNothingBehind_AndTheNextDragDraws()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            int Dashed() => host.CountInMap<Rectangle>(r => r.StrokeDashArray is { Count: > 0 });
+
+            var drawing = host.ViewModel.GetDrawingAsync(DrawMode.Rectangle);
+
+            host.Pump(200);
+
+            var before = Dashed();
+
+            host.MoveTo(new WpfPoint(200, 200));
+            host.Down();
+            host.MoveTo(new WpfPoint(300, 280));
+            host.MoveTo(new WpfPoint(380, 340));
+
+            Assert.Equal(before + 1, Dashed());
+
+            // Alt+Tab, or a dialog: the capture goes and the release never reaches the map
+            host.LoseCapture();
+            host.Up();
+            host.Pump(300);
+
+            Assert.Equal(before, Dashed());
+            Assert.False(drawing.IsCompleted, "a rectangle was made from a drag that lost the mouse");
+
+            var from = new WpfPoint(250, 220);
+            var to = new WpfPoint(520, 430);
+
+            host.Drag(from, to);
+
+            var rectangle = host.Await(drawing, "the next drag did not draw a rectangle").Result;
+
+            var box = rectangle.GetBoundingBox();
+
+            AssertNear(host, host.ToMap(new WpfPoint(from.X, to.Y)), new Point(box.XMin, box.YMin));
+            AssertNear(host, host.ToMap(new WpfPoint(to.X, from.Y)), new Point(box.XMax, box.YMax));
+        }, Plain);
+    }
+
+    [Fact]
+    public void DrawingsAndEdits_OneAfterAnother_EachEndClean()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            void AssertAtRest(string after)
+            {
+                host.Pump(200);
+
+                Assert.True(host.Map.CurrentEditingLayer is null, $"an edit is still open after {after}");
+                Assert.True(host.ViewModel.MapStatus == MapStatus.Idle, $"the map is {host.ViewModel.MapStatus} after {after}");
+                Assert.True(host.ViewModel.MapAction == MapAction.Pan, $"the tool is {host.ViewModel.MapAction} after {after}");
+            }
+
+            Geometry<Point> Draw(WpfPoint from, WpfPoint to)
+            {
+                var drawing = host.ViewModel.GetDrawingAsync(DrawMode.Polyline);
+
+                host.Pump(200);
+
+                host.Click(from);
+                host.Click(to);
+                host.Click(to);
+
+                return host.Await(drawing, "a line was not finished").Result;
+            }
+
+            // two drawings in a row
+            var first = Draw(new WpfPoint(150, 150), new WpfPoint(350, 180));
+
+            AssertAtRest("the first drawing");
+
+            var second = Draw(new WpfPoint(200, 450), new WpfPoint(500, 480));
+
+            AssertAtRest("the second drawing");
+
+            // edit one and finish, then edit the other and cancel
+            var editing = host.ViewModel.EditAsync(first, null);
+
+            host.WaitFor(() => host.Map.CurrentEditingLayer is not null, "the first edit did not start");
+
+            host.Pump(300);
+
+            host.Drag(new WpfPoint(350, 180), new WpfPoint(420, 260));
+
+            host.Map.FinishEditing();
+
+            var edited = host.Await(editing, "the first edit did not finish");
+
+            Assert.False(edited.IsCanceled);
+            AssertNear(host, host.ToMap(new WpfPoint(420, 260)), edited.Result.Points[1]);
+
+            AssertAtRest("the first edit");
+
+            editing = host.ViewModel.EditAsync(second, null);
+
+            host.WaitFor(() => host.Map.CurrentEditingLayer is not null, "the second edit did not start");
+
+            host.Pump(300);
+
+            host.Drag(new WpfPoint(500, 480), new WpfPoint(560, 400));
+
+            host.Map.CurrentEditingLayer!.CancelEditingCommand.Execute(null);
+
+            var cancelled = host.Await(editing, "the second edit was not cancelled");
+
+            Assert.True(cancelled.IsCanceled);
+
+            AssertAtRest("the cancelled edit");
+
+            // and the map still pans with the left button
+            var centre = Copy(host.Map.CurrentExtent.Center);
+
+            host.Drag(new WpfPoint(400, 300), new WpfPoint(300, 380));
+
+            host.Pump(300);
+
+            Assert.True(Math.Abs(host.Map.CurrentExtent.Center.X - centre.X) > host.MapLength(50), "the map does not pan after the edits");
+        }, Plain);
+    }
+
+    [Fact]
+    public void ATypedLength_MovesAPressedVertex_WithoutAMouseMove()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            var a = new WpfPoint(200, 300);
+            var b = new WpfPoint(400, 300);
+
+            var editing = host.ViewModel.EditAsync(Line(host, a, b), null);
+
+            host.WaitFor(() => host.Map.CurrentEditingLayer is not null, "the edit did not start");
+
+            host.Pump(300);
+
+            var layer = host.Map.CurrentEditingLayer!;
+
+            var before = Copy(layer.GetLastGeometry().Points[1]);
+
+            // press the second vertex, do not move, type L 5 0: 50 m from the first vertex, in the same direction
+            host.MoveTo(b);
+            host.Down();
+
+            host.Press(System.Windows.Input.Key.L);
+
+            Assert.Equal((before.X, before.Y), (layer.GetLastGeometry().Points[1].X, layer.GetLastGeometry().Points[1].Y));
+
+            host.Press(System.Windows.Input.Key.D5);
+            host.Press(System.Windows.Input.Key.D0);
+
+            host.Snapshot("typed-length");
+
+            host.Up();
+            host.Pump(600);
+
+            var first = layer.GetLastGeometry().Points[0];
+            var moved = layer.GetLastGeometry().Points[1];
+
+            var ground = WebMercatorGroundLength(first, moved);
+
+            Assert.True(Math.Abs(ground - 50) < 0.5, $"the segment is {ground:0.00} m long, expected 50");
+
+            layer.CancelEditingCommand.Execute(null);
+
+            host.Await(editing, "the edit was not cancelled");
+        }, settings => settings.Snapping_ShowGuides = false);
+    }
+
+    // the length on the ground of a short Web Mercator segment: its map length times the cosine of its latitude
+    private static double WebMercatorGroundLength(Point first, Point second)
+    {
+        var latitude = MapProjects.WebMercatorToGeodeticWgs84(new Point((first.X + second.X) / 2, (first.Y + second.Y) / 2)).Y;
+
+        var length = Math.Sqrt(Math.Pow(second.X - first.X, 2) + Math.Pow(second.Y - first.Y, 2));
+
+        return length * Math.Cos(latitude * Math.PI / 180);
+    }
+}
