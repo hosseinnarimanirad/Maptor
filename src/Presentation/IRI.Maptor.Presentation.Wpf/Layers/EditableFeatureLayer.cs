@@ -1244,27 +1244,38 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         {
             var index = part.IndexOf(vertex);
 
-            if (index < 0)
-                continue;
-
-            Point? At(int offset)
-            {
-                var i = index + offset;
-
-                if (isRing)
-                    i = ((i % part.Count) + part.Count) % part.Count;
-
-                // going round a small ring comes back to the vertex itself: not a neighbour
-                if (i < 0 || i >= part.Count || i == index)
-                    return null;
-
-                return new Point(part[i].X, part[i].Y);
-            }
-
-            return (At(-2), At(-1), At(1), At(2));
+            if (index >= 0)
+                return NeighboursOf(part.Select(l => new Point(l.X, l.Y)).ToList(), index, isRing);
         }
 
         return (null, null, null, null);
+    }
+
+    /// <summary>
+    /// The points around the one at <paramref name="index"/> in <paramref name="points"/>: the one before it and the
+    /// one before that, the one after it and the one after that. A ring goes round; a line stops at its ends. Null
+    /// where there is none, and never the point itself.
+    /// </summary>
+    public static (Point? BeforePrevious, Point? Previous, Point? Next, Point? AfterNext) NeighboursOf(IReadOnlyList<Point> points, int index, bool isRing)
+    {
+        if (points is null || index < 0 || index >= points.Count)
+            return (null, null, null, null);
+
+        Point? At(int offset)
+        {
+            var i = index + offset;
+
+            if (isRing)
+                i = ((i % points.Count) + points.Count) % points.Count;
+
+            // going round a small ring comes back to the point itself: not a neighbour
+            if (i < 0 || i >= points.Count || i == index)
+                return null;
+
+            return new Point(points[i].X, points[i].Y);
+        }
+
+        return (At(-2), At(-1), At(1), At(2));
     }
 
     public Geometry GetLastGeometry()

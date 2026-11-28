@@ -602,6 +602,11 @@ public partial class MapViewer : NotifiableUserControl
     // the existing edge guides are drawn from while drawing (picked by resting on it, or from the right-click options)
     private readonly ReferenceEdgePicker _referenceEdge = new();
 
+    // the two drawing-aid choices of the map settings (the snapping pop-up); on when there are no settings
+    private bool AreGuidesOn => _presenter?.MapSettings?.Snapping_ShowGuides ?? true;
+
+    private bool IsCursorBoxOn => _presenter?.MapSettings?.Snapping_ShowCursorBox ?? true;
+
     #endregion
 
     public async Task Register(MapViewModelBase presenter,
@@ -642,7 +647,7 @@ public partial class MapViewer : NotifiableUserControl
             // the user's drawings, as one group; text labels are not snap targets
             () => presenter.DrawingItems.Where(d => !d.IsTextLayer && d.Visibility == Visibility.Visible && d.Geometry is not null));
 
-        _aids = new MapDrawingAids(_snapper);
+        _aids = new MapDrawingAids(_snapper, () => AreGuidesOn);
 
         _layerManager.RequestUpdateLayerTocOrder = presenter.UpdateLayerCanMoveUpDown;
 
@@ -5013,7 +5018,15 @@ public partial class MapViewer : NotifiableUserControl
         // a reference edge belongs to a draw phase or to the drag of a vertex
         var isDrawPhase = _drawPhaseGesture is not null || _vertexDragSegment is not null;
 
+        // with guides switched off an edge picked earlier is dropped, not kept for when they come back
+        if (!AreGuidesOn)
+            _referenceEdge.Clear();
+
         var reference = isDrawPhase ? _referenceEdge.Reference : null;
+
+        // typed values belong to the cursor box: with the box switched off there are none
+        if (!IsCursorBoxOn)
+            _segmentInput.Clear();
 
         var result = _aids.Resolve(mapPoint, previous, last, lockToSteps: (Keyboard.Modifiers & ModifierKeys.Shift) != 0,
                                    typed: last is null ? null : _segmentInput.Constraint,
@@ -5021,7 +5034,7 @@ public partial class MapViewer : NotifiableUserControl
                                    next: next, afterNext: afterNext);
 
         // resting on an edge (the pointer snapped onto it, not onto one of its vertices) makes it the reference
-        if (isDrawPhase)
+        if (isDrawPhase && AreGuidesOn)
         {
             var isOnEdge = !result.IsTyped && result.Snap is { Kind: SnapKind.Edge or SnapKind.Midpoint };
 
@@ -5040,7 +5053,7 @@ public partial class MapViewer : NotifiableUserControl
 
         // with a segment being drawn the cursor box is at the point: what the point is on goes into its heading,
         // not beside the marker
-        var hasBox = last is not null && _cursorBox is not null;
+        var hasBox = last is not null && _cursorBox is not null && IsCursorBoxOn;
 
         string? label = null;
 
@@ -5171,7 +5184,7 @@ public partial class MapViewer : NotifiableUserControl
             return;
         }
 
-        if (!_isPlacingVertex && !isDragging)
+        if ((!_isPlacingVertex && !isDragging) || !IsCursorBoxOn)
             return;
 
         var (previous, last) = _vertexDragSegment is { } dragged ? (dragged.Previous, dragged.Last) : SketchEnds();
@@ -5675,8 +5688,8 @@ public partial class MapViewer : NotifiableUserControl
         // On an edge that can be snapped to: a fourth option, guides from that edge (its extension, the
         // perpendicular and the parallel to it). On the reference edge itself, or anywhere else while there is one:
         // remove it.
-        var edge = _snapper?.EdgeAt(mapPoint);
-        var current = _referenceEdge.Reference;
+        var edge = AreGuidesOn ? _snapper?.EdgeAt(mapPoint) : null;
+        var current = AreGuidesOn ? _referenceEdge.Reference : null;
 
         if (edge is null && current is null)
         {

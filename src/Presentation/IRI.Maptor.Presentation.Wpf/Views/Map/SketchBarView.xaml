@@ -185,6 +185,23 @@
 
                                 <Separator Margin="0,4"/>
 
+                                <!--the drawing aids on top of snapping: map settings too-->
+                                <TextBlock Text="{Binding [sketchBar_aids_header], Source={StaticResource Localization}}"
+                                           FontWeight="SemiBold" Margin="2,0,2,4"/>
+
+                                <CheckBox Margin="2" IsChecked="{Binding DataContext.MapSettings.Snapping_ShowGuides, ElementName=root, Mode=TwoWay}"
+                                          ToolTip="{Binding [sketchBar_aids_guides_tip], Source={StaticResource Localization}}">
+                                    <TextBlock Text="{Binding [sketchBar_aids_guides], Source={StaticResource Localization}}"
+                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                                </CheckBox>
+                                <CheckBox Margin="2" IsChecked="{Binding DataContext.MapSettings.Snapping_ShowCursorBox, ElementName=root, Mode=TwoWay}"
+                                          ToolTip="{Binding [sketchBar_aids_cursorBox_tip], Source={StaticResource Localization}}">
+                                    <TextBlock Text="{Binding [sketchBar_aids_cursorBox], Source={StaticResource Localization}}"
+                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                                </CheckBox>
+
+                                <Separator Margin="0,4"/>
+
                                 <TextBlock Text="{Binding [sketchBar_snapping_layers], Source={StaticResource Localization}}"
                                            FontWeight="SemiBold" Margin="2,0,2,4"/>
 

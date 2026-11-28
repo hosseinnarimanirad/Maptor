@@ -4879,4 +4879,19 @@
   <data name="map_draw_removeGuideEdge" xml:space="preserve">
     <value>Quitar la línea guía</value>
   </data>
+  <data name="sketchBar_aids_header" xml:space="preserve">
+    <value>Ayudas de dibujo</value>
+  </data>
+  <data name="sketchBar_aids_guides" xml:space="preserve">
+    <value>Guías</value>
+  </data>
+  <data name="sketchBar_aids_guides_tip" xml:space="preserve">
+    <value>Guías de prolongación, perpendicular y paralela, pasos de 15° con Shift y guías desde una línea sobre la que se detiene</value>
+  </data>
+  <data name="sketchBar_aids_cursorBox" xml:space="preserve">
+    <value>Cuadro de longitud y ángulo</value>
+  </data>
+  <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
+    <value>Muestra la longitud, el ángulo y el rumbo junto al punto. Pulse L, A o B y escriba un valor; Enter coloca el punto</value>
+  </data>
 </root>

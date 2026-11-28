@@ -4879,4 +4879,19 @@
   <data name="map_draw_removeGuideEdge" xml:space="preserve">
     <value>Retirer la ligne guide</value>
   </data>
+  <data name="sketchBar_aids_header" xml:space="preserve">
+    <value>Aides au dessin</value>
+  </data>
+  <data name="sketchBar_aids_guides" xml:space="preserve">
+    <value>Guides</value>
+  </data>
+  <data name="sketchBar_aids_guides_tip" xml:space="preserve">
+    <value>Guides de prolongement, perpendiculaire et parallèle, pas de 15° avec Shift, et guides depuis une ligne sur laquelle vous vous arrêtez</value>
+  </data>
+  <data name="sketchBar_aids_cursorBox" xml:space="preserve">
+    <value>Zone longueur et angle</value>
+  </data>
+  <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
+    <value>Affiche la longueur, l'angle et l'azimut près du point. Appuyez sur L, A ou B et saisissez une valeur ; Entrée place le point</value>
+  </data>
 </root>

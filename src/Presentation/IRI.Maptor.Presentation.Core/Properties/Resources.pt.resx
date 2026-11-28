@@ -4879,4 +4879,19 @@
   <data name="map_draw_removeGuideEdge" xml:space="preserve">
     <value>Remover a linha guia</value>
   </data>
+  <data name="sketchBar_aids_header" xml:space="preserve">
+    <value>Auxílios de desenho</value>
+  </data>
+  <data name="sketchBar_aids_guides" xml:space="preserve">
+    <value>Guias</value>
+  </data>
+  <data name="sketchBar_aids_guides_tip" xml:space="preserve">
+    <value>Guias de prolongamento, perpendicular e paralela, passos de 15° com Shift e guias a partir de uma linha sobre a qual se pára</value>
+  </data>
+  <data name="sketchBar_aids_cursorBox" xml:space="preserve">
+    <value>Caixa de comprimento e ângulo</value>
+  </data>
+  <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
+    <value>Mostra o comprimento, o ângulo e o azimute junto ao ponto. Prima L, A ou B e escreva um valor; Enter coloca o ponto</value>
+  </data>
 </root>

@@ -54,4 +54,16 @@ public interface IMapSettings
 
     /// <summary>Snap to where two edges meet without a vertex there.</summary>
     bool Snapping_ToIntersections { get; set; }
+
+    /// <summary>
+    /// While drawing or moving a vertex: guides (the extension of a segment, the perpendicular and the parallel to
+    /// it), the angle steps, and picking an existing edge to draw guides from.
+    /// </summary>
+    bool Snapping_ShowGuides { get; set; }
+
+    /// <summary>
+    /// While drawing or moving a vertex: the box beside the point with the segment's length, angle and bearing, and
+    /// typing those values.
+    /// </summary>
+    bool Snapping_ShowCursorBox { get; set; }
 }

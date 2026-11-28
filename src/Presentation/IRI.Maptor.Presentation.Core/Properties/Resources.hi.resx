@@ -4879,4 +4879,19 @@
   <data name="map_draw_removeGuideEdge" xml:space="preserve">
     <value>गाइड रेखा हटाएँ</value>
   </data>
+  <data name="sketchBar_aids_header" xml:space="preserve">
+    <value>ड्रॉइंग सहायक</value>
+  </data>
+  <data name="sketchBar_aids_guides" xml:space="preserve">
+    <value>गाइड रेखाएँ</value>
+  </data>
+  <data name="sketchBar_aids_guides_tip" xml:space="preserve">
+    <value>विस्तार, लंबवत और समानांतर गाइड, Shift के साथ 15° के चरण, और जिस रेखा पर आप रुकते हैं उससे गाइड</value>
+  </data>
+  <data name="sketchBar_aids_cursorBox" xml:space="preserve">
+    <value>लंबाई और कोण बॉक्स</value>
+  </data>
+  <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
+    <value>बिंदु के पास लंबाई, कोण और दिशा दिखाता है। L, A या B दबाएँ और मान लिखें; Enter बिंदु रखता है</value>
+  </data>
 </root>

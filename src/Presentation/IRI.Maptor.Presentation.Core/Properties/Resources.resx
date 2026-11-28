@@ -5034,4 +5034,19 @@
   <data name="map_draw_removeGuideEdge" xml:space="preserve">
     <value>Remove the guide line</value>
   </data>
+  <data name="sketchBar_aids_header" xml:space="preserve">
+    <value>Drawing aids</value>
+  </data>
+  <data name="sketchBar_aids_guides" xml:space="preserve">
+    <value>Guides</value>
+  </data>
+  <data name="sketchBar_aids_guides_tip" xml:space="preserve">
+    <value>Extension, perpendicular and parallel guides, 15° steps with Shift, and guides from a line you rest on</value>
+  </data>
+  <data name="sketchBar_aids_cursorBox" xml:space="preserve">
+    <value>Length and angle box</value>
+  </data>
+  <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
+    <value>Shows the length, angle and bearing beside the point. Press L, A or B and type a value; Enter places the point</value>
+  </data>
 </root>

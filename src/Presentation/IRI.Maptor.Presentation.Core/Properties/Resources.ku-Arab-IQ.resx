@@ -4879,4 +4879,19 @@
   <data name="map_draw_removeGuideEdge" xml:space="preserve">
     <value>لابردنی هێڵی ڕێنما</value>
   </data>
+  <data name="sketchBar_aids_header" xml:space="preserve">
+    <value>یارمەتیدەرەکانی کێشان</value>
+  </data>
+  <data name="sketchBar_aids_guides" xml:space="preserve">
+    <value>هێڵە ڕێنماکان</value>
+  </data>
+  <data name="sketchBar_aids_guides_tip" xml:space="preserve">
+    <value>ڕێنمای درێژکراوە، ستوون و تەریب، هەنگاوی ١٥ پلە بە Shift، و ڕێنما لەو هێڵەی لەسەری دەوەستیت</value>
+  </data>
+  <data name="sketchBar_aids_cursorBox" xml:space="preserve">
+    <value>خانەی درێژی و گۆشە</value>
+  </data>
+  <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
+    <value>درێژی، گۆشە و ئاڕاستە لە تەنیشت خاڵەکە پیشان دەدات. L، A یان B دابگرە و بەهاکە بنووسە؛ Enter خاڵەکە دادەنێت</value>
+  </data>
 </root>

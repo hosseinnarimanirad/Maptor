@@ -4938,4 +4938,19 @@
   <data name="map_draw_removeGuideEdge" xml:space="preserve">
     <value>حذف خط راهنما</value>
   </data>
+  <data name="sketchBar_aids_header" xml:space="preserve">
+    <value>کمک‌های ترسیم</value>
+  </data>
+  <data name="sketchBar_aids_guides" xml:space="preserve">
+    <value>خطوط راهنما</value>
+  </data>
+  <data name="sketchBar_aids_guides_tip" xml:space="preserve">
+    <value>راهنمای امتداد، عمود و موازی، گام‌های ۱۵ درجه با Shift، و راهنما از خطی که نشانگر روی آن مکث می‌کند</value>
+  </data>
+  <data name="sketchBar_aids_cursorBox" xml:space="preserve">
+    <value>کادر طول و زاویه</value>
+  </data>
+  <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
+    <value>طول، زاویه و آزیموت را کنار نقطه نشان می‌دهد. کلید L، A یا B را بزنید و مقدار را وارد کنید؛ Enter نقطه را ثبت می‌کند</value>
+  </data>
 </root>

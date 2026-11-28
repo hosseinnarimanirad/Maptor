@@ -4879,4 +4879,19 @@
   <data name="map_draw_removeGuideEdge" xml:space="preserve">
     <value>إزالة خط الإرشاد</value>
   </data>
+  <data name="sketchBar_aids_header" xml:space="preserve">
+    <value>مساعدات الرسم</value>
+  </data>
+  <data name="sketchBar_aids_guides" xml:space="preserve">
+    <value>خطوط الإرشاد</value>
+  </data>
+  <data name="sketchBar_aids_guides_tip" xml:space="preserve">
+    <value>خطوط إرشاد للامتداد والتعامد والتوازي، خطوات 15° مع Shift، وخطوط إرشاد من الخط الذي تتوقف عليه</value>
+  </data>
+  <data name="sketchBar_aids_cursorBox" xml:space="preserve">
+    <value>مربع الطول والزاوية</value>
+  </data>
+  <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
+    <value>يعرض الطول والزاوية والاتجاه بجانب النقطة. اضغط L أو A أو B واكتب القيمة؛ Enter يضع النقطة</value>
+  </data>
 </root>

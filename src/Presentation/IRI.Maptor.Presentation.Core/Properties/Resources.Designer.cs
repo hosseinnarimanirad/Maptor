@@ -8692,6 +8692,51 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Drawing aids.
+        /// </summary>
+        public static string sketchBar_aids_header {
+            get {
+                return ResourceManager.GetString("sketchBar_aids_header", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Guides.
+        /// </summary>
+        public static string sketchBar_aids_guides {
+            get {
+                return ResourceManager.GetString("sketchBar_aids_guides", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Extension, perpendicular and parallel guides, 15° steps with Shift, and guides from a line you rest on.
+        /// </summary>
+        public static string sketchBar_aids_guides_tip {
+            get {
+                return ResourceManager.GetString("sketchBar_aids_guides_tip", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Length and angle box.
+        /// </summary>
+        public static string sketchBar_aids_cursorBox {
+            get {
+                return ResourceManager.GetString("sketchBar_aids_cursorBox", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Shows the length, angle and bearing beside the point. Press L, A or B and type a value; Enter places the point.
+        /// </summary>
+        public static string sketchBar_aids_cursorBox_tip {
+            get {
+                return ResourceManager.GetString("sketchBar_aids_cursorBox_tip", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Extension.
         /// </summary>
         public static string sketchBar_guide_extension {

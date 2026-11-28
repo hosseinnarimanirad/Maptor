@@ -4879,4 +4879,19 @@
   <data name="map_draw_removeGuideEdge" xml:space="preserve">
     <value>移除参考线</value>
   </data>
+  <data name="sketchBar_aids_header" xml:space="preserve">
+    <value>绘图辅助</value>
+  </data>
+  <data name="sketchBar_aids_guides" xml:space="preserve">
+    <value>参考线</value>
+  </data>
+  <data name="sketchBar_aids_guides_tip" xml:space="preserve">
+    <value>延长线、垂直和平行参考线，按住 Shift 以 15° 为步长，以及以指针停留的线为参考</value>
+  </data>
+  <data name="sketchBar_aids_cursorBox" xml:space="preserve">
+    <value>长度和角度框</value>
+  </data>
+  <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
+    <value>在点旁显示长度、角度和方位角。按 L、A 或 B 并输入数值；按 Enter 放置该点</value>
+  </data>
 </root>

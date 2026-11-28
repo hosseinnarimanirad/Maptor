@@ -309,6 +309,26 @@ public class MapSettingsModel : Notifier, IMapSettings
         }
     }
 
+    public bool Snapping_ShowGuides
+    {
+        get => _settings.Snapping_ShowGuides;
+        set
+        {
+            _settings.Snapping_ShowGuides = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    public bool Snapping_ShowCursorBox
+    {
+        get => _settings.Snapping_ShowCursorBox;
+        set
+        {
+            _settings.Snapping_ShowCursorBox = value;
+            RaisePropertyChanged();
+        }
+    }
+
     #endregion
 
     public MapSettingsModel(IMapSettings settings/*, Action<bool> fireIsMouseWheelZoomEnabledChanged, Action<bool> fireIsDoubleClickZoomEnabledChanged*/)

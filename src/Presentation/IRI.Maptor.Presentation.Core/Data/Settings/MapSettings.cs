@@ -59,6 +59,10 @@ public class MapSettings : IMapSettings
 
     public bool Snapping_ToIntersections { get; set; } = true;
 
+    public bool Snapping_ShowGuides { get; set; } = true;
+
+    public bool Snapping_ShowCursorBox { get; set; } = true;
+
 
     public static MapSettings Default = new MapSettings();
 }

@@ -435,62 +435,59 @@ public class DrawingAidsMapTest
         });
     }
 
-    private static EditableFeatureLayer Editable(Core.Common.Enums.GeometryType type, params (double X, double Y)[] points)
-        => new("edit", points.Select(p => new Point(p.X, p.Y)).ToList(), System.Windows.Media.Transform.Identity, d => d, type, (locateable, index) => { });
+    private static List<Point> Points(params (double X, double Y)[] points) => points.Select(p => new Point(p.X, p.Y)).ToList();
 
     private static (double X, double Y)? XY(Point? point) => point is null ? null : (point.X, point.Y);
 
     [Fact]
     public void VertexNeighbours_OfALine_StopAtItsEnds()
     {
-        WpfTestHost.Run(() =>
-        {
-            WpfTestHost.EnsureMahAppsResources();
+        var line = Points((0, 0), (10, 0), (20, 0), (30, 0));
 
-            var layer = Editable(Core.Common.Enums.GeometryType.LineString, (0, 0), (10, 0), (20, 0), (30, 0));
-            var vertices = layer.GetVertices().Items;
+        var first = EditableFeatureLayer.NeighboursOf(line, 0, isRing: false);
+        Assert.Null(first.BeforePrevious);
+        Assert.Null(first.Previous);
+        Assert.Equal((10.0, 0.0), XY(first.Next));
+        Assert.Equal((20.0, 0.0), XY(first.AfterNext));
 
-            var first = layer.GetVertexNeighbours(vertices[0]);
-            Assert.Null(first.BeforePrevious);
-            Assert.Null(first.Previous);
-            Assert.Equal((10.0, 0.0), XY(first.Next));
-            Assert.Equal((20.0, 0.0), XY(first.AfterNext));
+        var second = EditableFeatureLayer.NeighboursOf(line, 1, isRing: false);
+        Assert.Null(second.BeforePrevious);
+        Assert.Equal((0.0, 0.0), XY(second.Previous));
+        Assert.Equal((20.0, 0.0), XY(second.Next));
+        Assert.Equal((30.0, 0.0), XY(second.AfterNext));
 
-            var second = layer.GetVertexNeighbours(vertices[1]);
-            Assert.Null(second.BeforePrevious);
-            Assert.Equal((0.0, 0.0), XY(second.Previous));
-            Assert.Equal((20.0, 0.0), XY(second.Next));
-            Assert.Equal((30.0, 0.0), XY(second.AfterNext));
+        var last = EditableFeatureLayer.NeighboursOf(line, 3, isRing: false);
+        Assert.Equal((10.0, 0.0), XY(last.BeforePrevious));
+        Assert.Equal((20.0, 0.0), XY(last.Previous));
+        Assert.Null(last.Next);
+        Assert.Null(last.AfterNext);
 
-            var last = layer.GetVertexNeighbours(vertices[3]);
-            Assert.Equal((10.0, 0.0), XY(last.BeforePrevious));
-            Assert.Equal((20.0, 0.0), XY(last.Previous));
-            Assert.Null(last.Next);
-            Assert.Null(last.AfterNext);
-        });
+        // not a position of the list
+        Assert.Null(EditableFeatureLayer.NeighboursOf(line, 4, isRing: false).Previous);
+        Assert.Null(EditableFeatureLayer.NeighboursOf(line, -1, isRing: true).Next);
     }
 
     [Fact]
-    public void VertexNeighbours_OfARing_GoRound()
+    public void VertexNeighbours_OfARing_GoRound_ButNeverBackToTheVertexItself()
     {
-        WpfTestHost.Run(() =>
-        {
-            WpfTestHost.EnsureMahAppsResources();
+        var ring = Points((0, 0), (10, 0), (10, 10), (0, 10));
 
-            var layer = Editable(Core.Common.Enums.GeometryType.Polygon, (0, 0), (10, 0), (10, 10), (0, 10));
-            var vertices = layer.GetVertices().Items;
+        var first = EditableFeatureLayer.NeighboursOf(ring, 0, isRing: true);
+        Assert.Equal((10.0, 10.0), XY(first.BeforePrevious));
+        Assert.Equal((0.0, 10.0), XY(first.Previous));
+        Assert.Equal((10.0, 0.0), XY(first.Next));
+        Assert.Equal((10.0, 10.0), XY(first.AfterNext));
 
-            var first = layer.GetVertexNeighbours(vertices[0]);
-            Assert.Equal((10.0, 10.0), XY(first.BeforePrevious));
-            Assert.Equal((0.0, 10.0), XY(first.Previous));
-            Assert.Equal((10.0, 0.0), XY(first.Next));
-            Assert.Equal((10.0, 10.0), XY(first.AfterNext));
+        // two points: each is the other's neighbour on both sides, and there is nothing beyond
+        var pair = EditableFeatureLayer.NeighboursOf(Points((0, 0), (10, 0)), 0, isRing: true);
+        Assert.Equal((10.0, 0.0), XY(pair.Previous));
+        Assert.Equal((10.0, 0.0), XY(pair.Next));
+        Assert.Null(pair.BeforePrevious);
+        Assert.Null(pair.AfterNext);
 
-            // a vertex that is not of this layer
-            var foreign = layer.GetVertexNeighbours(Editable(Core.Common.Enums.GeometryType.LineString, (0, 0), (1, 1)).GetVertices().Items[0]);
-            Assert.Null(foreign.Previous);
-            Assert.Null(foreign.Next);
-        });
+        var alone = EditableFeatureLayer.NeighboursOf(Points((0, 0)), 0, isRing: true);
+        Assert.Null(alone.Previous);
+        Assert.Null(alone.Next);
     }
 
     #endregion
@@ -704,6 +701,31 @@ public class DrawingAidsMapTest
         Assert.True(input.Constraint.AngleIsBearing);
 
         Assert.False(input.Backspace() && input.Constraint.IsActive);
+    }
+
+    #endregion
+
+    #region Settings
+
+    [Fact]
+    public void GuidesAndTheCursorBox_AreOnByDefault_AndTheSettingsModelPassesThemOn()
+    {
+        var settings = new IRI.Maptor.Presentation.Core.Data.MapSettings();
+
+        Assert.True(settings.Snapping_ShowGuides);
+        Assert.True(settings.Snapping_ShowCursorBox);
+
+        var model = new IRI.Maptor.Presentation.Wpf.Models.Settings.MapSettingsModel(settings);
+
+        var changed = new List<string?>();
+        model.PropertyChanged += (sender, e) => changed.Add(e.PropertyName);
+
+        model.Snapping_ShowGuides = false;
+        model.Snapping_ShowCursorBox = false;
+
+        Assert.False(settings.Snapping_ShowGuides);
+        Assert.False(settings.Snapping_ShowCursorBox);
+        Assert.Equal(new[] { nameof(settings.Snapping_ShowGuides), nameof(settings.Snapping_ShowCursorBox) }, changed);
     }
 
     #endregion

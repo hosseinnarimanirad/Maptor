@@ -4879,4 +4879,19 @@
   <data name="map_draw_removeGuideEdge" xml:space="preserve">
     <value>Kılavuz çizgisini kaldır</value>
   </data>
+  <data name="sketchBar_aids_header" xml:space="preserve">
+    <value>Çizim yardımcıları</value>
+  </data>
+  <data name="sketchBar_aids_guides" xml:space="preserve">
+    <value>Kılavuzlar</value>
+  </data>
+  <data name="sketchBar_aids_guides_tip" xml:space="preserve">
+    <value>Uzantı, dik ve paralel kılavuzlar, Shift ile 15° adımlar ve üzerinde durduğunuz çizgiden kılavuzlar</value>
+  </data>
+  <data name="sketchBar_aids_cursorBox" xml:space="preserve">
+    <value>Uzunluk ve açı kutusu</value>
+  </data>
+  <data name="sketchBar_aids_cursorBox_tip" xml:space="preserve">
+    <value>Noktanın yanında uzunluğu, açıyı ve azimutu gösterir. L, A veya B tuşuna basıp değer yazın; Enter noktayı yerleştirir</value>
+  </data>
 </root>
