@@ -524,6 +524,185 @@ public class MapUiSessionTest
         }, Plain);
     }
 
+    // ---- step 7: the feel ----
+
+    private static string NotEnoughPoints(int needed)
+        => string.Format(IRI.Maptor.Presentation.Core.Localization.LocalizationManager.Instance["map_draw_notEnoughPoints"],
+                         IRI.Maptor.Presentation.Core.Localization.LocalizationManager.GetLocalizedNumberString(needed));
+
+    private static bool HintShown(MapUiHost host, string text)
+        => host.CountInMap<System.Windows.Controls.TextBlock>(t => t.Text == text && t.IsVisible) > 0;
+
+    [Fact]
+    public void Backspace_RemovesTheLastPoint_AndEnter_Finishes()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            var drawing = host.ViewModel.GetDrawingAsync(DrawMode.Polyline);
+
+            host.Pump(200);
+
+            host.Click(new WpfPoint(200, 300));
+            host.Click(new WpfPoint(350, 250));
+            host.Click(new WpfPoint(500, 320));
+
+            host.MoveTo(new WpfPoint(560, 360));
+
+            // the last point goes, the drawing goes on
+            host.Press(System.Windows.Input.Key.Back);
+
+            Assert.False(drawing.IsCompleted);
+
+            host.Press(System.Windows.Input.Key.Enter);
+
+            var line = host.Await(drawing, "Enter did not finish the line").Result;
+
+            Assert.Equal(2, line.Points.Count);
+            AssertNear(host, host.ToMap(new WpfPoint(350, 250)), line.Points[1]);
+        }, Plain);
+    }
+
+    [Fact]
+    public void Enter_OnASketchNotValidYet_SaysWhy_AndBackspaceOnTheOnlyPointCancels()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            var drawing = host.ViewModel.GetDrawingAsync(DrawMode.Polygon);
+
+            host.Pump(200);
+
+            host.Click(new WpfPoint(200, 300));
+            host.Click(new WpfPoint(350, 250));
+
+            host.MoveTo(new WpfPoint(400, 380));
+
+            host.Press(System.Windows.Input.Key.Enter);
+
+            Assert.False(drawing.IsCompleted, "a polygon of two points was finished");
+            Assert.True(HintShown(host, NotEnoughPoints(3)), "no note beside the pointer");
+
+            host.Snapshot("why-not");
+
+            host.Press(System.Windows.Input.Key.Back);
+            host.Press(System.Windows.Input.Key.Back);
+
+            var result = host.Await(drawing, "Backspace on the only point did not end the sketch");
+
+            Assert.True(result.IsCanceled);
+        }, Plain);
+    }
+
+    [Fact]
+    public void ADoubleClick_FinishesALine_WithoutAnExtraPoint_AndDoesNotZoom()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            var drawing = host.ViewModel.GetDrawingAsync(DrawMode.Polyline);
+
+            host.Pump(200);
+
+            var scale = host.Map.MapScale;
+
+            host.Click(new WpfPoint(200, 300));
+            host.Click(new WpfPoint(350, 250));
+
+            host.DoubleClick(new WpfPoint(500, 320));
+
+            var line = host.Await(drawing, "the double click did not finish the line").Result;
+
+            Assert.Equal(3, line.Points.Count);
+            AssertNear(host, host.ToMap(new WpfPoint(500, 320)), line.Points[2]);
+            Assert.Equal(scale, host.Map.MapScale);
+        }, Plain);
+    }
+
+    [Fact]
+    public void InAnEdit_DeleteRemovesTheSelectedVertex_AndEnterFinishes()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            StartEdit(host, out var editing, new WpfPoint(200, 300), new WpfPoint(350, 250), new WpfPoint(500, 320));
+
+            host.Click(new WpfPoint(350, 250));
+
+            host.Press(System.Windows.Input.Key.Delete);
+
+            Assert.Equal(2, Points(host).Length);
+
+            host.Press(System.Windows.Input.Key.Enter);
+
+            var edited = host.Await(editing, "Enter did not finish the edit");
+
+            Assert.False(edited.IsCanceled);
+            Assert.Equal(2, edited.Result.Points.Count);
+        }, Plain);
+    }
+
+    [Fact]
+    public void InAnEdit_ARightClickOnAnotherFeaturesEdge_OffersGuides()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            host.ViewModel.SketchBar.Snapping.IsEnabled = true;
+            host.ViewModel.SketchBar.Snapping.IsDrawingsChecked = true;
+
+            // another feature: a long horizontal edge across the map
+            host.ViewModel.AddDrawingItem(Line(host, new WpfPoint(100, 450), new WpfPoint(800, 450)), "road");
+
+            host.Pump(300);
+
+            StartEdit(host, out var editing, new WpfPoint(200, 300), new WpfPoint(400, 250), new WpfPoint(600, 300));
+
+            // a first drag, so the snap candidates are read
+            host.Drag(new WpfPoint(600, 300), new WpfPoint(620, 310));
+            host.Pump(500);
+
+            host.MoveTo(new WpfPoint(500, 451));
+            host.RightClick();
+
+            var options = host.FindInMap<IRI.Maptor.Presentation.Wpf.Controls.MapOptions.MapThreeOptions>();
+
+            Assert.NotNull(options);
+
+            var menu = (IRI.Maptor.Presentation.Wpf.ViewModels.MapOptionsViewModel)options!.DataContext;
+
+            Assert.Equal(IRI.Maptor.Presentation.Core.Properties.Resources.map_draw_guidesFromEdge, menu.MiddleToolTip);
+            Assert.Equal(IRI.Maptor.Presentation.Core.Properties.Resources.mapPanel_edit_finish, menu.RightToolTip);
+
+            menu.MiddleCommand.Execute(null);
+
+            host.Pump(200);
+
+            // with the guide edge set, a right click on empty map offers to remove it
+            host.MoveTo(new WpfPoint(400, 120));
+            host.RightClick();
+
+            var again = host.FindInMap<IRI.Maptor.Presentation.Wpf.Controls.MapOptions.MapThreeOptions>();
+
+            Assert.Equal(IRI.Maptor.Presentation.Core.Properties.Resources.map_draw_removeGuideEdge,
+                ((IRI.Maptor.Presentation.Wpf.ViewModels.MapOptionsViewModel)again!.DataContext).MiddleToolTip);
+
+            ((IRI.Maptor.Presentation.Wpf.ViewModels.MapOptionsViewModel)again.DataContext).LeftCommand.Execute(null);
+
+            Assert.True(host.Await(editing, "Cancel from the menu did not end the edit").IsCanceled);
+        }, Plain);
+    }
+
     [Fact]
     public void NoHandles_StandBetweenTheVertices()
     {

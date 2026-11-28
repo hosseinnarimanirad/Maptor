@@ -277,6 +277,22 @@ internal sealed class MapUiHost
         Pump(SystemInformationDoubleClickTime() + 100);
     }
 
+    /// <summary>A double click at <paramref name="onMap"/>: two clicks within the double-click time of Windows.</summary>
+    public void DoubleClick(WpfPoint onMap)
+    {
+        MoveTo(onMap);
+
+        mouse_event(LeftDown, 0, 0, 0, UIntPtr.Zero);
+        Pump(15);
+        mouse_event(LeftUp, 0, 0, 0, UIntPtr.Zero);
+        Pump(30);
+        mouse_event(LeftDown, 0, 0, 0, UIntPtr.Zero);
+        Pump(15);
+        mouse_event(LeftUp, 0, 0, 0, UIntPtr.Zero);
+
+        Pump(SystemInformationDoubleClickTime() + 100);
+    }
+
     /// <summary>A right click where the pointer is.</summary>
     public void RightClick()
     {

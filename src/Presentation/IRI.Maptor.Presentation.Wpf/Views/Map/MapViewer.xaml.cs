@@ -537,6 +537,10 @@ public partial class MapViewer : NotifiableUserControl
         this.Loaded += (s, e) => { if (Window.GetWindow(this) is Window w) { w.PreviewKeyDown -= HostWindow_PreviewKeyDownForSegmentInput; w.PreviewKeyDown += HostWindow_PreviewKeyDownForSegmentInput; } };
         this.Unloaded += (s, e) => { if (Window.GetWindow(this) is Window w) w.PreviewKeyDown -= HostWindow_PreviewKeyDownForSegmentInput; };
 
+        // Backspace, Enter and Delete while drawing or editing: after the typed values, which take them first
+        this.Loaded += (s, e) => { if (Window.GetWindow(this) is Window w) { w.PreviewKeyDown -= HostWindow_PreviewKeyDownForSketchKeys; w.PreviewKeyDown += HostWindow_PreviewKeyDownForSketchKeys; } };
+        this.Unloaded += (s, e) => { if (Window.GetWindow(this) is Window w) w.PreviewKeyDown -= HostWindow_PreviewKeyDownForSketchKeys; };
+
         _layerManager.RequestRefreshVisibility = RefreshLayerVisibility;
 
         this.extentManager.OnTilesAdded -= ExtentManager_OnTilesAdded;
@@ -634,6 +638,8 @@ public partial class MapViewer : NotifiableUserControl
         _snapMarker = new SnapMarker(mapOverlay);
 
         _edgeHandleMarker = new EdgeHandleMarker(mapOverlay);
+
+        _pointerHint = new PointerHint(mapOverlay);
 
         _cursorBox = new CursorBox(mapOverlay);
 
@@ -2174,6 +2180,9 @@ public partial class MapViewer : NotifiableUserControl
 
     private EdgeHandleMarker? _edgeHandleMarker;
 
+    // why a sketch cannot be finished yet, beside the pointer (step 7)
+    private PointerHint? _pointerHint;
+
     private Cursor EdgeHandleCursor => AddVertexCursor ?? Cursors.Cross;
 
     // the edited layer while editing a line or a polygon, and only then
@@ -3454,7 +3463,15 @@ public partial class MapViewer : NotifiableUserControl
 
         FrameworkElement? view = null;
 
-        if (this.Status == MapStatus.Drawing && this.MapAction != MapAction.DrawRectangle)
+        if (this.Status != MapStatus.Drawing && GetRightClickOptionsForEditGuide(ScreenToMap(screenLocation).AsPoint()) is { } editOptions)
+        {
+            var context = (ILocatable)editOptions.DataContext;
+
+            context.Location = ScreenToMap(screenLocation).AsPoint();
+
+            view = editOptions;
+        }
+        else if (this.Status == MapStatus.Drawing && this.MapAction != MapAction.DrawRectangle)
         {
             view = GetRightClickOptionsForDraw(ScreenToMap(screenLocation).AsPoint());
 
@@ -3807,7 +3824,11 @@ public partial class MapViewer : NotifiableUserControl
         private readonly Action<sb.Point>? _onHover;
         private readonly Action<sb.Point>? _onAfterPan;
         private readonly Action<sb.Point>? _onAnyMove;
+        private readonly Action<sb.Point>? _onDoubleClick;
         private bool _wasPanning;
+
+        // the press being released is the second of a double click
+        private bool _isDoubleClick;
 
         // the last map point the pointer was seen at, for acting again without a mouse move (a key changed what
         // the point should be, or Enter places it)
@@ -3837,13 +3858,15 @@ public partial class MapViewer : NotifiableUserControl
             Action<sb.Point> onClick,
             Action<sb.Point>? onHover = null,
             Action<sb.Point>? onAfterPan = null,
-            Action<sb.Point>? onAnyMove = null)
+            Action<sb.Point>? onAnyMove = null,
+            Action<sb.Point>? onDoubleClick = null)
         {
             _v = v;
             _onClick = onClick;
             _onHover = onHover;
             _onAfterPan = onAfterPan;
             _onAnyMove = onAnyMove;
+            _onDoubleClick = onDoubleClick;
         }
 
         private bool Stale => IsActive != null && !IsActive();
@@ -3950,6 +3973,7 @@ public partial class MapViewer : NotifiableUserControl
             _leftButtonDownObserved = true;
             e.Handled = true;
             _wasPanning = false;
+            _isDoubleClick = e.ClickCount >= 2;
             _v.prevMouseLocation = e.GetPosition(_v.mapView);
         }
 
@@ -4022,6 +4046,14 @@ public partial class MapViewer : NotifiableUserControl
                 return;
 
             _v.prevMouseLocation = e.GetPosition(_v.mapView);
+
+            if (_isDoubleClick && _onDoubleClick is not null)
+            {
+                _isDoubleClick = false;
+                _onDoubleClick(_v.ScreenToMap(_v.prevMouseLocation).AsPoint());
+                return;
+            }
+
             _onClick(_v.ScreenToMap(_v.prevMouseLocation).AsPoint());
         }
     }
@@ -4496,6 +4528,10 @@ public partial class MapViewer : NotifiableUserControl
 
     private void MapView_MouseDownForDoubleClickZoom(object sender, MouseButtonEventArgs e)
     {
+        // while drawing a double click finishes the sketch (D3); it zooms everywhere else, an edit included
+        if (this.Status == MapStatus.Drawing)
+            return;
+
         if (e.ClickCount > 1)
             ZoomWheelAtWindowPoint(true, e.GetPosition(this.mapView));
     }
@@ -5305,6 +5341,9 @@ public partial class MapViewer : NotifiableUserControl
         Action<sb.Point>? onMove = null,
         Action<sb.Point>? onAfterPan = null)
     {
+        // a double click while the points of a sketch are placed finishes it (D3, 2026-11-28): its first click has
+        // placed a point, its second one places none. Mostly the second click lands on that point and finishes
+        // through it; this is for when snapping put the point away from the pointer.
         EndDrawPhase();
 
         // a phase that places a vertex has a move callback (the rubber band); only there do guides apply: while
@@ -5339,6 +5378,7 @@ public partial class MapViewer : NotifiableUserControl
                 onMove(point);
             },
             onAfterPan: onAfterPan is null ? null : pt => onAfterPan(SnapForDrawing(pt, withGuides)),
+            onDoubleClick: withGuides ? _ => TryFinishDrawingFromUser() : null,
             onAnyMove: mapPt =>
             {
                 var panning = Mouse.LeftButton == MouseButtonState.Pressed;
@@ -5638,6 +5678,92 @@ public partial class MapViewer : NotifiableUserControl
             _drawPhaseGesture?.RaiseHover();
     }
 
+    // Step 7 of the drawing and editing plan (decided 2026-11-28):
+    //  - drawing: Backspace removes the last placed point (the last one left cancels the sketch), Enter finishes a
+    //    valid sketch or says why it cannot be finished yet;
+    //  - editing (not a measurement): Enter finishes the edit, Delete removes the selected vertex.
+    // Not while typing in a text box, not with Ctrl or Alt, not during a vertex drag; typed lengths and angles take
+    // Backspace and Enter first (HostWindow_PreviewKeyDownForSegmentInput).
+    private void HostWindow_PreviewKeyDownForSketchKeys(object sender, KeyEventArgs e)
+    {
+        if (e.Handled || _presenter is null || itemIsMoving ||
+            Keyboard.FocusedElement is System.Windows.Controls.Primitives.TextBoxBase ||
+            (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Windows)) != 0)
+            return;
+
+        if (this.Status == MapStatus.Drawing && drawingLayer is not null && _drawPhaseGesture is not null)
+        {
+            switch (e.Key)
+            {
+                case Key.Back:
+                    e.Handled = true;
+
+                    if (drawingLayer.GetLayer().TryRemoveLastPlacedVertex())
+                        _drawPhaseGesture?.RaiseHover();
+                    else if (drawingLayer.GetLayer().GetVertices().Items.Count == 1)
+                        CancelDrawing();
+
+                    return;
+
+                case Key.Enter:
+                    e.Handled = true;
+
+                    TryFinishDrawingFromUser();
+
+                    return;
+            }
+
+            return;
+        }
+
+        if (this.Status != MapStatus.Drawing && CurrentEditingLayer is { } editing && drawingLayer is null)
+        {
+            switch (e.Key)
+            {
+                case Key.Enter when !editing.Options.IsMeasureMode:
+                    e.Handled = true;
+
+                    editing.FinishEditing();
+
+                    return;
+
+                case Key.Delete:
+                    e.Handled = true;
+
+                    editing.TryDeleteCurrentPoint();
+
+                    return;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Finishes the sketch when it is valid; else says beside the pointer how many points it needs. For what the
+    /// user does to finish (Enter, a double click, a click on a placed point), not for the Finish button, which is
+    /// disabled while the sketch is not valid.
+    /// </summary>
+    private void TryFinishDrawingFromUser()
+    {
+        if (drawingLayer is null)
+            return;
+
+        if (drawingLayer.GetLastGeometry()?.IsValid() == true)
+        {
+            FinishDrawing();
+            return;
+        }
+
+        var geometry = drawingLayer.GetLastGeometry();
+
+        var needed = geometry?.IsRingBase() == true ? 3 : 2;
+
+        var localization = IRI.Maptor.Presentation.Core.Localization.LocalizationManager.Instance;
+
+        var text = string.Format(localization["map_draw_notEnoughPoints"], IRI.Maptor.Presentation.Core.Localization.LocalizationManager.GetLocalizedNumberString(needed));
+
+        _pointerHint?.Show(Mouse.GetPosition(this.mapOverlay), text, localization.IsRightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight);
+    }
+
     private static char? SegmentInputCharacter(Key key) => key switch
     {
         >= Key.D0 and <= Key.D9 => (char)('0' + (key - Key.D0)),
@@ -5935,11 +6061,7 @@ public partial class MapViewer : NotifiableUserControl
 
         // A click on a placed vertex finishes the sketch. While the sketch is not valid yet (a line of one point, a
         // polygon of two) the click does nothing: FinishDrawing would throw the sketch away.
-        this.drawingLayer.OnRequestFinishDrawing += (s, arg) =>
-        {
-            if (drawingLayer?.GetLastGeometry()?.IsValid() == true)
-                FinishDrawing();
-        };
+        this.drawingLayer.OnRequestFinishDrawing += (s, arg) => TryFinishDrawingFromUser();
 
         // The layer owns geometry-change detection; recompute Finish/Finish-part state on its signal.
         this.drawingLayer.OnGeometryChanged += UpdateFinishDrawingCommandStates;
@@ -6062,6 +6184,74 @@ public partial class MapViewer : NotifiableUserControl
         _presenter.CanFinishDrawingPart = isValid;
     }
 
+
+    /// <summary>
+    /// D4 (2026-11-28): while a geometry is edited, a right click on an edge of another feature (one that can be
+    /// snapped to) offers guides from that edge, which the drag of a vertex then follows; while there is such an edge,
+    /// a right click elsewhere offers to remove it. With the edit's own Cancel and Finish. Null otherwise (the map's
+    /// usual options then). Not for a measurement, which has no edit options.
+    /// </summary>
+    private FrameworkElement? GetRightClickOptionsForEditGuide(sb.Point mapPoint)
+    {
+        if (CurrentEditingLayer is not { Options.IsMeasureMode: false } editing || drawingLayer is not null || !AreGuidesOn)
+            return null;
+
+        var edge = _snapper?.EdgeAt(mapPoint);
+        var current = _referenceEdge.Reference;
+
+        if (edge is null && current is null)
+            return null;
+
+        var isNew = edge is not null && !edge.SameAs(current);
+
+        var presenter = new MapOptionsViewModel(
+            leftToolTip: IRI.Maptor.Presentation.Core.Properties.Resources.mapPanel_edit_cancel,
+            rightToolTip: IRI.Maptor.Presentation.Core.Properties.Resources.mapPanel_edit_finish,
+            middleToolTip: isNew
+                ? IRI.Maptor.Presentation.Core.Properties.Resources.map_draw_guidesFromEdge
+                : IRI.Maptor.Presentation.Core.Properties.Resources.map_draw_removeGuideEdge,
+
+            leftSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CloseThick),
+            rightSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CheckBold),
+            middleSymbol: MapOptionsIcon.FromMaterial(isNew
+                ? MahApps.Metro.IconPacks.PackIconMaterialKind.AngleRight
+                : MahApps.Metro.IconPacks.PackIconMaterialKind.VectorPolylineRemove));
+
+        presenter.LeftCommandAction = i =>
+        {
+            this.RemoveRightClickOptions();
+
+            editing.CancelEditingCommand.Execute(null);
+        };
+
+        presenter.RightCommandAction = i =>
+        {
+            this.RemoveRightClickOptions();
+
+            editing.FinishEditing();
+        };
+
+        presenter.MiddleCommandAction = i =>
+        {
+            if (isNew)
+            {
+                _referenceEdge.Set(edge!);
+
+                // shown at once, so it is clear which edge was taken; the drag of a vertex shows it again
+                _guideOverlay?.ShowReference(MapToScreen(edge!.Start.AsWpfPoint()), MapToScreen(edge.End.AsWpfPoint()));
+            }
+            else
+            {
+                _referenceEdge.Clear();
+
+                _guideOverlay?.HideReference();
+            }
+
+            this.RemoveRightClickOptions();
+        };
+
+        return new MapThreeOptions(true) { DataContext = presenter };
+    }
 
     /// <param name="mapPoint">Where the right click was: on an edge that can be snapped to, the options offer guides from it.</param>
     private FrameworkElement GetRightClickOptionsForDraw(sb.Point mapPoint)
@@ -6343,6 +6533,11 @@ public partial class MapViewer : NotifiableUserControl
                 _layersOverHandleLimit.Clear();
 
                 _handleLimitNotified = false;
+
+                // a reference edge is for one edit
+                _referenceEdge.Clear();
+
+                _guideOverlay?.HideReference();
             }
 
             _currentEditingLayer = value;

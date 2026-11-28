@@ -4956,4 +4956,7 @@
   <data name="notification_editVertices_zoomIn" xml:space="preserve">
     <value>بیش از {0} رأس در دید است و دستگیره‌های آن‌ها پنهان شده است. برای ویرایش آن‌ها بزرگ‌نمایی کنید.</value>
   </data>
+  <data name="map_draw_notEnoughPoints" xml:space="preserve">
+    <value>برای پایان دادن دست‌کم {0} نقطه لازم است.</value>
+  </data>
 </root>

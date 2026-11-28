@@ -5052,4 +5052,7 @@
   <data name="notification_editVertices_zoomIn" xml:space="preserve">
     <value>More than {0} vertices are in view, so their handles are hidden. Zoom in to edit them.</value>
   </data>
+  <data name="map_draw_notEnoughPoints" xml:space="preserve">
+    <value>At least {0} points are needed to finish.</value>
+  </data>
 </root>

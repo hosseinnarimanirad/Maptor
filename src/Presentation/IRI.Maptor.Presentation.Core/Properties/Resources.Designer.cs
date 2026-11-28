@@ -6163,6 +6163,15 @@ namespace IRI.Maptor.Presentation.Core.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to At least {0} points are needed to finish..
+        /// </summary>
+        public static string map_draw_notEnoughPoints {
+            get {
+                return ResourceManager.GetString("map_draw_notEnoughPoints", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Remove the guide line.
         /// </summary>
         public static string map_draw_removeGuideEdge {

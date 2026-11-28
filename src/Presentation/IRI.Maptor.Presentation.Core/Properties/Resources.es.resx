@@ -4897,4 +4897,7 @@
   <data name="notification_editVertices_zoomIn" xml:space="preserve">
     <value>Hay más de {0} vértices a la vista, por lo que sus controladores están ocultos. Acerque el mapa para editarlos.</value>
   </data>
+  <data name="map_draw_notEnoughPoints" xml:space="preserve">
+    <value>Se necesitan al menos {0} puntos para terminar.</value>
+  </data>
 </root>

@@ -1186,6 +1186,44 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         }
     }
 
+    /// <summary>
+    /// Removes the last placed vertex of the part being drawn (Backspace while drawing). False when that part has
+    /// fewer than two vertices: the sketch is then cancelled by the map instead. A sketch only.
+    /// </summary>
+    public bool TryRemoveLastPlacedVertex()
+    {
+        if (!Options.IsNewDrawing || _parts.Count == 0)
+            return false;
+
+        var part = _parts[_parts.Count - 1];
+
+        if (part.Geometry.Points is not { Count: >= 2 } points || part.Vertices.Count != points.Count)
+            return false;
+
+        var index = points.Count - 1;
+
+        var vertex = part.Vertices[index];
+
+        points.RemoveAt(index);
+
+        part.Vertices.RemoveAt(index);
+
+        _addresses.Remove(vertex);
+
+        _primaryVerticesLayer.Items.Remove(vertex);
+
+        vertex.Detach();
+
+        if (part.Figure < _pathGeometry.Figures.Count && _pathGeometry.Figures[part.Figure].Segments is { Count: > 0 } segments)
+            segments.RemoveAt(segments.Count - 1);
+
+        AfterStructureChangeInPlace();
+
+        UpdateRubberBand();
+
+        return true;
+    }
+
     /// <summary>The place of the vertex at <paramref name="index"/> of <paramref name="part"/> among all vertices of the geometry.</summary>
     private int FlatIndex(EditedPart part, int index)
     {

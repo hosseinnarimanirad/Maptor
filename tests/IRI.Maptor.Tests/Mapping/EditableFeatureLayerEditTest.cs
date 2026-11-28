@@ -843,6 +843,42 @@ public class EditableFeatureLayerEditTest
         Assert.Equal(10, square.Width);
     });
 
+    [Fact]
+    public void Backspace_RemovesTheLastPlacedVertexOfASketch_DownToOne() => RunWithOwnStyles(() =>
+    {
+        using var layer = new EditableFeatureLayer(
+            "draw", new List<Point> { new(0, 0) }, Transform.Identity, d => d, GeometryType.LineString, (_, _) => { },
+            EditableFeatureLayerOptions.CreateDefaultForDrawing(true, true));
+
+        layer.AddVertex(new Point(100, 0));
+        layer.AddVertex(new Point(200, 50));
+
+        layer.UpdateLastSemiVertexLocation(new Point(250, 80));
+
+        Assert.True(layer.TryRemoveLastPlacedVertex());
+
+        Assert.Equal(new[] { (0d, 0d), (100d, 0d) }, layer.GetLastGeometry().Points.Select(p => (p.X, p.Y)));
+        Assert.Equal(2, layer.GetVertices().Items.Count);
+
+        // the dashed segment starts at the vertex that is last now
+        var rubber = ((PathGeometry)layer.GetSketchPaths().First().Data).Figures.Single();
+
+        Assert.Equal(new System.Windows.Point(100, 0), rubber.StartPoint);
+
+        Assert.True(layer.TryRemoveLastPlacedVertex());
+        Assert.False(layer.TryRemoveLastPlacedVertex());
+        Assert.Single(layer.GetLastGeometry().Points);
+    });
+
+    [Fact]
+    public void Backspace_IsForSketches_NotForEdits() => RunWithOwnStyles(() =>
+    {
+        using var layer = Edit(Line((0, 0), (100, 0), (200, 0)));
+
+        Assert.False(layer.TryRemoveLastPlacedVertex());
+        Assert.Equal(3, layer.GetLastGeometry().Points.Count);
+    });
+
     // ---- the point layer ----
 
     [Fact]

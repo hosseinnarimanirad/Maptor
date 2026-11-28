@@ -4897,4 +4897,7 @@
   <data name="notification_editVertices_zoomIn" xml:space="preserve">
     <value>Görünüşdə {0}-dən çox təpə var, ona görə də onların tutacaqları gizlədilib. Redaktə etmək üçün yaxınlaşdırın.</value>
   </data>
+  <data name="map_draw_notEnoughPoints" xml:space="preserve">
+    <value>Bitirmək üçün ən azı {0} nöqtə lazımdır.</value>
+  </data>
 </root>
