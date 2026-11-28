@@ -267,6 +267,18 @@ internal sealed class MapUiHost
         Pump(SystemInformationDoubleClickTime() + 100);
     }
 
+    /// <summary>A right click where the pointer is.</summary>
+    public void RightClick()
+    {
+        mouse_event(RightDown, 0, 0, 0, UIntPtr.Zero);
+
+        Pump(40);
+
+        mouse_event(RightUp, 0, 0, 0, UIntPtr.Zero);
+
+        Pump(200);
+    }
+
     /// <summary>Press at <paramref name="from"/>, move to <paramref name="to"/> in steps, release.</summary>
     public void Drag(WpfPoint from, WpfPoint to, int steps = 8)
     {
@@ -312,6 +324,29 @@ internal sealed class MapUiHost
         Mouse.Capture(null);
 
         Pump(40);
+    }
+
+    /// <summary>The first element of type <typeparamref name="T"/> inside the map, or null.</summary>
+    public T? FindInMap<T>() where T : DependencyObject
+    {
+        T? found = null;
+
+        void Walk(DependencyObject node)
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(node) && found is null; i++)
+            {
+                var child = VisualTreeHelper.GetChild(node, i);
+
+                if (child is T typed)
+                    found = typed;
+                else
+                    Walk(child);
+            }
+        }
+
+        Walk(Map);
+
+        return found;
     }
 
     /// <summary>The elements of type <typeparamref name="T"/> inside the map that <paramref name="match"/> accepts.</summary>
@@ -392,7 +427,7 @@ internal sealed class MapUiHost
         SetWindowPos(handle, IntPtr.Zero, info.Work.Left + 60, info.Work.Top + 60, 0, 0, NoSize | NoZOrder);
     }
 
-    private const uint Move = 0x0001, LeftDown = 0x0002, LeftUp = 0x0004;
+    private const uint Move = 0x0001, LeftDown = 0x0002, LeftUp = 0x0004, RightDown = 0x0008, RightUp = 0x0010;
     private const uint MonitorDefaultToNearest = 2;
     private const uint NoSize = 0x0001, NoZOrder = 0x0004;
 

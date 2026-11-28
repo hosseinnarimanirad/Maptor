@@ -134,7 +134,7 @@ public class EditableFeatureLayerEditTest
     // ---- moving a vertex ----
 
     [Fact]
-    public void MovingAVertex_ChangesTheGeometryOnce_AndMovesItsMidVertices() => RunWithOwnStyles(() =>
+    public void MovingAVertex_ChangesTheGeometryOnce() => RunWithOwnStyles(() =>
     {
         using var layer = Edit(Line((0, 0), (10, 0), (20, 0)));
 
@@ -146,15 +146,10 @@ public class EditableFeatureLayerEditTest
 
         Assert.Equal((10d, 10d), (points[1].X, points[1].Y));
         Assert.True(layer.HasChanges);
-
-        var mids = layer.GetMidVertices().Items;
-
-        Assert.Equal((5d, 5d), (mids[0].X, mids[0].Y));
-        Assert.Equal((15d, 5d), (mids[1].X, mids[1].Y));
     });
 
     [Fact]
-    public void MovingAVertexOfASketch_WhichHasNoMidVertices_Works() => RunWithOwnStyles(() =>
+    public void MovingAVertexOfASketch_Works() => RunWithOwnStyles(() =>
     {
         using var layer = new EditableFeatureLayer(
             "draw", new List<Point> { new(0, 0) }, Transform.Identity, d => d, GeometryType.LineString, (_, _) => { },
@@ -162,8 +157,6 @@ public class EditableFeatureLayerEditTest
 
         layer.AddVertex(new Point(10, 0));
         layer.AddVertex(new Point(20, 0));
-
-        Assert.Empty(layer.GetMidVertices().Items);
 
         // the sketch bar's typed coordinates move the selected vertex this way
         layer.GetVertices().Items[2].MoveTo(20, 5);
@@ -176,16 +169,150 @@ public class EditableFeatureLayerEditTest
     // ---- which items are dragged ----
 
     [Fact]
-    public void VerticesAndLabels_AreMovable_InAnEdit_MidVerticesAreNot() => RunWithOwnStyles(() =>
+    public void VerticesAndLabels_AreMovable_InAnEdit() => RunWithOwnStyles(() =>
     {
         using var layer = Edit(Line((0, 0), (10, 0), (20, 0)));
 
         Assert.True(layer.GetVertices().IsMovable);
-        Assert.False(layer.GetMidVertices().IsMovable);
 
         // the user lays the labels out by dragging them
         Assert.True(layer.GetEdgeLengths().IsMovable);
         Assert.True(layer.GetPrimaryVerticesLabels().IsMovable);
+    });
+
+    // ---- the edge handle: finding an edge, inserting a vertex on it ----
+
+    [Fact]
+    public void FindEdge_ReturnsTheNearestEdge_AndThePointOnIt() => RunWithOwnStyles(() =>
+    {
+        // edges: 0 (0 0 → 100 0), 1 (100 0 → 100 100)
+        using var layer = Edit(Line((0, 0), (100, 0), (100, 100)));
+
+        var hit = layer.FindEdge(new Point(30, 4), reach: 6, vertexReach: 8);
+
+        Assert.NotNull(hit);
+        Assert.Equal(0, hit!.Value.Part);
+        Assert.Equal(0, hit.Value.Edge);
+        Assert.Equal((30d, 0d), (hit.Value.Point.X, hit.Value.Point.Y));
+        Assert.Equal((50d, 0d), (hit.Value.Middle.X, hit.Value.Middle.Y));
+
+        hit = layer.FindEdge(new Point(97, 60), reach: 6, vertexReach: 8);
+
+        Assert.Equal(1, hit!.Value.Edge);
+        Assert.Equal((100d, 60d), (hit.Value.Point.X, hit.Value.Point.Y));
+    });
+
+    [Fact]
+    public void FindEdge_FindsNothing_TooFarFromAnEdge_OrNearAVertex() => RunWithOwnStyles(() =>
+    {
+        using var layer = Edit(Line((0, 0), (100, 0), (100, 100)));
+
+        // 7 from the edge, the reach is 6
+        Assert.Null(layer.FindEdge(new Point(30, 7), reach: 6, vertexReach: 8));
+
+        // on the edge, but 5 from a vertex: the vertex is meant
+        Assert.Null(layer.FindEdge(new Point(95, 0), reach: 6, vertexReach: 8));
+    });
+
+    [Fact]
+    public void FindEdge_OfARing_FindsTheClosingEdge() => RunWithOwnStyles(() =>
+    {
+        var square = Geometry<Point>.CreatePolygon(new List<Point> { new(0, 0), new(100, 0), new(100, 100), new(0, 100) }, SridHelper.WebMercator);
+
+        using var layer = Edit(square);
+
+        var hit = layer.FindEdge(new Point(2, 50), reach: 6, vertexReach: 8);
+
+        Assert.NotNull(hit);
+        Assert.Equal(3, hit!.Value.Edge);
+        Assert.Equal((0d, 100d), (hit.Value.Start.X, hit.Value.Start.Y));
+        Assert.Equal((0d, 0d), (hit.Value.End.X, hit.Value.End.Y));
+    });
+
+    [Fact]
+    public void FindEdge_InASecondPart_SaysWhichPart() => RunWithOwnStyles(() =>
+    {
+        using var layer = Edit(MultiLine(Line((0, 0), (100, 0)), Line((0, 50), (100, 50))));
+
+        var hit = layer.FindEdge(new Point(40, 48), reach: 6, vertexReach: 8);
+
+        Assert.Equal(1, hit!.Value.Part);
+        Assert.Equal(0, hit.Value.Edge);
+    });
+
+    [Fact]
+    public void ASketchBeingDrawn_HasNoEdgeHandle() => RunWithOwnStyles(() =>
+    {
+        using var layer = new EditableFeatureLayer(
+            "draw", new List<Point> { new(0, 0) }, Transform.Identity, d => d, GeometryType.LineString, (_, _) => { },
+            EditableFeatureLayerOptions.CreateDefaultForDrawing(true, true));
+
+        layer.AddVertex(new Point(100, 0));
+
+        Assert.False(layer.CanInsertVertices);
+        Assert.Null(layer.FindEdge(new Point(50, 1), reach: 6, vertexReach: 8));
+    });
+
+    [Fact]
+    public void InsertVertex_PutsItInItsPartAfterTheEdgeStart_AndSelectsIt() => RunWithOwnStyles(() =>
+    {
+        using var layer = Edit(MultiLine(Line((0, 0), (100, 0)), Line((0, 50), (100, 50), (200, 50))));
+
+        var refreshes = 0;
+
+        layer.RequestRefresh = _ => refreshes++;
+
+        var hit = layer.FindEdge(new Point(150, 52), reach: 6, vertexReach: 8)!.Value;
+
+        var vertex = layer.InsertVertex(hit, hit.Point);
+
+        Assert.NotNull(vertex);
+        Assert.Equal((150d, 50d), (vertex!.X, vertex.Y));
+
+        var parts = layer.GetLastGeometry().Geometries;
+
+        Assert.Equal(2, parts[0].Points.Count);
+        Assert.Equal(new[] { (0d, 50d), (100d, 50d), (150d, 50d), (200d, 50d) }, parts[1].Points.Select(p => (p.X, p.Y)));
+
+        // the fifth vertex over all parts, and the one selected
+        Assert.Same(vertex, layer.GetVertices().Items[4]);
+        Assert.Equal(4, layer.GetVertices().FindSelectedLocatableIndex());
+
+        Assert.Equal(1, refreshes);
+        Assert.True(layer.HasChanges);
+    });
+
+    [Fact]
+    public void InsertVertex_OnTheClosingEdgeOfARing_AddsItAtTheEnd() => RunWithOwnStyles(() =>
+    {
+        var square = Geometry<Point>.CreatePolygon(new List<Point> { new(0, 0), new(100, 0), new(100, 100), new(0, 100) }, SridHelper.WebMercator);
+
+        using var layer = Edit(square);
+
+        var hit = layer.FindEdge(new Point(1, 40), reach: 6, vertexReach: 8)!.Value;
+
+        layer.InsertVertex(hit, hit.Middle);
+
+        var ring = layer.GetLastGeometry().Geometries[0].Points;
+
+        Assert.Equal(new[] { (0d, 0d), (100d, 0d), (100d, 100d), (0d, 100d), (0d, 50d) }, ring.Select(p => (p.X, p.Y)));
+    });
+
+    [Fact]
+    public void AnInsertedVertex_MovesLikeAnyOther() => RunWithOwnStyles(() =>
+    {
+        using var layer = Edit(Line((0, 0), (100, 0)));
+
+        var hit = layer.FindEdge(new Point(50, 2), reach: 6, vertexReach: 8)!.Value;
+
+        var vertex = layer.InsertVertex(hit, hit.Point)!;
+
+        vertex.MoveTo(50, 30);
+
+        var path = (PathGeometry)layer.GetPath(Transform.Identity).Data;
+
+        Assert.Equal((50d, 30d), (layer.GetLastGeometry().Points[1].X, layer.GetLastGeometry().Points[1].Y));
+        Assert.Equal(new System.Windows.Point(50, 30), ((System.Windows.Media.LineSegment)path.Figures[0].Segments[0]).Point);
     });
 
     // ---- the sketch bar's "Delete point" ----

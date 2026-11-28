@@ -518,6 +518,11 @@ public partial class MapViewer : NotifiableUserControl
         this.mapView.PreviewMouseDown -= MapView_PreviewMouseDownForTextMarkerFocus;
         this.mapView.PreviewMouseDown += MapView_PreviewMouseDownForTextMarkerFocus;
 
+        // the edge handle of an edited geometry: shown on a move, used on a press (see #region Edge handle)
+        this.mapView.MouseMove += MapView_MouseMoveForEdgeHandle;
+        this.mapView.PreviewMouseLeftButtonDown += MapView_PreviewMouseDownForEdgeHandle;
+        this.mapView.MouseLeave += MapView_MouseLeaveForEdgeHandle;
+
         // the map canvas never takes keyboard focus, so Esc is caught on the host window
         this.Loaded += (s, e) => { if (Window.GetWindow(this) is Window w) { w.KeyDown -= HostWindow_KeyDownForSketchBar; w.KeyDown += HostWindow_KeyDownForSketchBar; } };
         this.Unloaded += (s, e) => { if (Window.GetWindow(this) is Window w) w.KeyDown -= HostWindow_KeyDownForSketchBar; };
@@ -1847,8 +1852,6 @@ public partial class MapViewer : NotifiableUserControl
 
         Canvas.SetZIndex(path, layer.ZIndex);
 
-        AddComplexLayer(layer.GetMidVertices(), false);
-
         AddComplexLayer(layer.GetVertices(), false);
 
         //if (layer.Options.IsMeasureVisible)
@@ -2138,6 +2141,131 @@ public partial class MapViewer : NotifiableUserControl
 
     #endregion
 
+    #region Edge handle
+
+    // While a geometry is edited, a handle shows on the edge under the pointer (within EdgeHandleReach pixels of it,
+    // and not near a vertex): a press there inserts a vertex and drags it, a click leaves it where it was inserted.
+    // It replaces the mid-vertex circles (decided 2026-11-28, docs/future-improvements/drawing-editing-review.md §5).
+    // When "midpoints" is on in snapping, near the middle of the edge the handle sits on the middle (decision D6).
+    // The handle is the snap marker (a circle on the edge, the triangle on a middle); nothing is created per edge.
+
+    private EditableFeatureLayer.EdgeHit? _edgeHandleHit;
+
+    // the edited layer while editing a line or a polygon, and only then
+    private EditableFeatureLayer? EdgeHandleLayer
+        => CurrentEditingLayer is { CanInsertVertices: true } layer && this.Status != MapStatus.Drawing && !itemIsMoving ? layer : null;
+
+    /// <summary>The edge and the point of it a press at <paramref name="screenPoint"/> would insert a vertex at, or null.</summary>
+    private (EditableFeatureLayer.EdgeHit Hit, sb.Point At, bool IsMiddle)? EdgeHandleAt(Point screenPoint, object? originalSource)
+    {
+        if (EdgeHandleLayer is not { } layer || this.viewTransform is null)
+            return null;
+
+        // over a marker of the map (a vertex, a label, a text, an option button): that one is meant
+        if (IsOverMapMarker(originalSource))
+            return null;
+
+        var mapPoint = ScreenToMap(screenPoint).AsPoint();
+
+        if (layer.FindEdge(mapPoint, ScreenToMap(EditableFeatureLayer.EdgeHandleReach), ScreenToMap(EditableFeatureLayer.VertexReach)) is not { } hit)
+            return null;
+
+        var settings = _presenter?.MapSettings;
+
+        var snapToMiddle = _presenter?.SketchBar.Snapping.IsEnabled == true && settings?.Snapping_ToMidpoints == true;
+
+        var tolerance = ScreenToMap(settings?.Snapping_TolerancePixels ?? MapSnapper.DefaultTolerancePixels);
+
+        var middle = hit.Middle;
+
+        if (snapToMiddle && Math.Sqrt(Math.Pow(mapPoint.X - middle.X, 2) + Math.Pow(mapPoint.Y - middle.Y, 2)) <= tolerance)
+            return (hit, middle, true);
+
+        return (hit, hit.Point, false);
+    }
+
+    // true when the pointer is over a marker on the map canvas: something on it is meant, not the edge below
+    private bool IsOverMapMarker(object? originalSource)
+    {
+        var node = originalSource as DependencyObject;
+
+        while (node is not null && !ReferenceEquals(node, this.mapView))
+        {
+            if (node is FrameworkElement { Tag: LayerTag tag } && (tag.Layer is SpecialPointLayer || tag.LayerType == LayerType.RightClickOption))
+                return true;
+
+            node = node is Visual ? VisualTreeHelper.GetParent(node) : LogicalTreeHelper.GetParent(node);
+        }
+
+        return false;
+    }
+
+    private void MapView_MouseMoveForEdgeHandle(object sender, MouseEventArgs e)
+    {
+        if (e.LeftButton == MouseButtonState.Pressed || e.RightButton == MouseButtonState.Pressed || e.MiddleButton == MouseButtonState.Pressed)
+        {
+            HideEdgeHandle();
+            return;
+        }
+
+        if (EdgeHandleAt(e.GetPosition(this.mapView), e.OriginalSource) is not { } handle)
+        {
+            HideEdgeHandle();
+            return;
+        }
+
+        _edgeHandleHit = handle.Hit;
+
+        _snapMarker?.Show(MapToScreen(handle.At.AsWpfPoint()), handle.IsMiddle ? SnapKind.Midpoint : SnapKind.Edge);
+
+        // the crosshair says a press here adds a vertex (its own cursor comes with the look, step 6)
+        this.mapView.Cursor = Cursors.Cross;
+    }
+
+    private void HideEdgeHandle()
+    {
+        if (_edgeHandleHit is null)
+            return;
+
+        _edgeHandleHit = null;
+
+        _snapMarker?.Hide();
+
+        if (ReferenceEquals(this.mapView.Cursor, Cursors.Cross))
+            this.mapView.Cursor = _activeCursor;
+    }
+
+    // a press on the handle: insert the vertex and start dragging it at once, as a press on a vertex does; a release
+    // without a move leaves it where it was inserted (the click rule of vertices)
+    private void MapView_PreviewMouseDownForEdgeHandle(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ChangedButton != MouseButton.Left)
+            return;
+
+        // worked out again for this press: the handle shown may be from before a key, a zoom or a refresh
+        var handle = EdgeHandleAt(e.GetPosition(this.mapView), e.OriginalSource);
+
+        HideEdgeHandle();
+
+        if (handle is not { } edge || EdgeHandleLayer is not { } layer)
+            return;
+
+        e.Handled = true;
+
+        if (layer.InsertVertex(edge.Hit, edge.At) is not { Element: { } element })
+            return;
+
+        // the layer was refreshed: the new vertex is on the map now, unless it is out of view
+        if (!IsOnMapCanvas(element))
+            return;
+
+        StartMoveableItemSession(element, e.GetPosition(this.mapView));
+    }
+
+    private void MapView_MouseLeaveForEdgeHandle(object sender, MouseEventArgs e) => HideEdgeHandle();
+
+    #endregion
+
     #region Moveable Item
 
     // Moveable-item handlers (vertex drag during edit/draw, draggable markers) are
@@ -2409,6 +2537,17 @@ public partial class MapViewer : NotifiableUserControl
 
         e.Handled = true;
 
+        StartMoveableItemSession(element!, e.GetPosition(this.mapView));
+    }
+
+    /// <summary>
+    /// Starts moving <paramref name="element"/>, a moveable item on the map, as if it had been pressed at
+    /// <paramref name="pressLocation"/> (a point of the map canvas): it follows the pointer until the button is released.
+    /// </summary>
+    private void StartMoveableItemSession(FrameworkElement element, Point pressLocation)
+    {
+        HideEdgeHandle();
+
         itemIsMoving = true;
 
         this.currentMoveableItem = element;
@@ -2427,7 +2566,7 @@ public partial class MapViewer : NotifiableUserControl
         this.mapView.MouseUp += Element_MouseUpForMoveableItem;
 
 
-        this.prevMouseLocation = (e.GetPosition(this.mapView));
+        this.prevMouseLocation = pressLocation;
 
         var layer = ((this.currentMoveableItem.Tag as LayerTag).Layer as SpecialPointLayer);
 
@@ -3084,8 +3223,6 @@ public partial class MapViewer : NotifiableUserControl
 
             ClearLayer((ILayer)layer.GetVertices(), remove: true, forceRemove: false);
 
-            ClearLayer((ILayer)layer.GetMidVertices(), remove: true, forceRemove: false);
-
             ClearLayer((ILayer)layer.GetEdgeLengths(), remove: true, forceRemove: false);
 
             ClearLayer(layer.GetPrimaryVerticesLabels(), remove: true, forceRemove: false);
@@ -3190,6 +3327,15 @@ public partial class MapViewer : NotifiableUserControl
             return;
 
         var screenLocation = e.GetPosition(this.mapView);
+
+        // beside the line of an edited geometry, within reach of the edge handle: its own options, with "Add point"
+        // (a right click on the line itself is handled by the line; a measurement has no such options)
+        if (EdgeHandleLayer is { Options.IsMeasureMode: false } edited && EdgeHandleAt(screenLocation, e.OriginalSource) is not null)
+        {
+            edited.ShowEditOptions(e, ScreenToMap(screenLocation).AsPoint());
+
+            return;
+        }
 
         FrameworkElement? view = null;
 
@@ -6074,6 +6220,9 @@ public partial class MapViewer : NotifiableUserControl
         set
         {
             var editingChanged = (_currentEditingLayer is null) != (value is null);
+
+            if (value is null)
+                HideEdgeHandle();
 
             _currentEditingLayer = value;
 

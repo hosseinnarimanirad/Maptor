@@ -11,7 +11,9 @@ A block of parcels and a road are built in code, so there is something to snap t
 - `MapLegendView` for the layers that are snapped to, and `MapDrawingLegendView` for the drawings: each drawing's
   menu has **Edit**.
 - `SketchBarView`: finish and cancel, the snapping switch and its layers, guides, the cursor box and the measures.
-- In an edit: drag a vertex (it snaps), click a mid-vertex to add a vertex, drag a length label where it reads best.
+- In an edit: drag a vertex (it snaps). Point at the line: a handle shows under the pointer (a triangle at the middle
+  of an edge when midpoint snapping is on); click to add a vertex there, or press and drag to add it and move it at
+  once; a right click beside the line offers **Add point**. Drag a length label where it reads best.
   While a point is placed or dragged, type `L` and a length in metres, `A` and a turn angle, or `B` and a bearing.
 - **Add a long line** adds a drawing of 2,000 vertices, to see how editing behaves on a big geometry.
 

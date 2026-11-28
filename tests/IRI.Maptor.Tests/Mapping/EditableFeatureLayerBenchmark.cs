@@ -145,10 +145,13 @@ public class EditableFeatureLayerBenchmark
                 layer.TryDeleteCurrentPoint();
             });
 
-            var mid = layer.GetMidVertices().Items[middle].Element;
+            // in the middle of the edge after the middle vertex, as a click on the edge handle does
+            var edgeStart = layer.GetLastGeometry().Points[middle];
+            var edgeEnd = layer.GetLastGeometry().Points[middle + 1];
 
-            var insert = Milliseconds(() =>
-                mid.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left) { RoutedEvent = UIElement.MouseLeftButtonDownEvent }));
+            var hit = layer.FindEdge(new Point((edgeStart.X + edgeEnd.X) / 2, (edgeStart.Y + edgeEnd.Y) / 2), reach: 1, vertexReach: 0.01)!.Value;
+
+            var insert = Milliseconds(() => layer.InsertVertex(hit, hit.Point));
 
             return (start, move, delete, insert);
         }

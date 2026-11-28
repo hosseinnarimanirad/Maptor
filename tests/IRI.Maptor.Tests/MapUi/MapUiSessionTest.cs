@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Shapes;
 
 using IRI.Maptor.Core.Common.Enums;
 using IRI.Maptor.Core.Spatial.Primitives;
 using IRI.Maptor.Core.SpatialReferenceSystem;
 using IRI.Maptor.Presentation.Core;
+using IRI.Maptor.Core.Common.Services;
 using IRI.Maptor.Presentation.Core.Data;
 using IRI.Maptor.Presentation.Wpf;
 using IRI.Maptor.Presentation.Wpf.Models;
@@ -210,40 +212,234 @@ public class MapUiSessionTest
         }, Plain);
     }
 
+    private static Geometry<Point> StartEdit(MapUiHost host, out Task<Response<Geometry<Point>>> editing, params WpfPoint[] onMap)
+    {
+        var line = Line(host, onMap);
+
+        editing = host.ViewModel.EditAsync(line, null);
+
+        host.WaitFor(() => host.Map.CurrentEditingLayer is not null, "the edit did not start");
+
+        host.Pump(300);
+
+        return line;
+    }
+
+    private static void CancelEdit(MapUiHost host, Task<Response<Geometry<Point>>> editing)
+    {
+        host.Map.CurrentEditingLayer?.CancelEditingCommand.Execute(null);
+
+        host.Await(editing, "the edit was not cancelled");
+    }
+
+    private static Point[] Points(MapUiHost host) => host.Map.CurrentEditingLayer!.GetLastGeometry().Points.Select(Copy).ToArray();
+
     [Fact]
-    public void AClickOnAMidVertex_InsertsAVertex_AndTheMapStays()
+    public void AClickOnAnEdge_AddsAVertexThere_AndTheMapStays()
     {
         if (!MapUiHost.IsEnabled)
             return;
 
         MapUiHost.Run(host =>
         {
-            var editing = host.ViewModel.EditAsync(Line(host, new WpfPoint(200, 300), new WpfPoint(600, 300)), null);
-
-            host.WaitFor(() => host.Map.CurrentEditingLayer is not null, "the edit did not start");
-
-            host.Pump(300);
-
-            var layer = host.Map.CurrentEditingLayer!;
-
-            // no handle between the vertices means the edge handle of step 4 is in: this check is then replaced
-            if (layer.GetMidVertices().Items.Count == 0)
-                return;
+            StartEdit(host, out var editing, new WpfPoint(200, 300), new WpfPoint(600, 300));
 
             var centre = Copy(host.Map.CurrentExtent.Center);
 
-            var middle = new WpfPoint(400, 300);
+            // 4 px beside the edge, far from its middle: the vertex goes on the edge, under the pointer
+            host.MoveTo(new WpfPoint(280, 296));
 
-            // press, move as a hand does, release
-            host.Drag(middle, new WpfPoint(430, 330), steps: 4);
+            host.Snapshot("edge-handle");
 
-            Assert.Equal(3, layer.GetLastGeometry().Points.Count);
+            host.Click(new WpfPoint(280, 296));
+
+            var points = Points(host);
+
+            Assert.Equal(3, points.Length);
+            AssertNear(host, host.ToMap(new WpfPoint(280, 300)), points[1]);
 
             AssertSameView(host, centre);
 
-            layer.CancelEditingCommand.Execute(null);
+            CancelEdit(host, editing);
+        }, Plain);
+    }
 
-            host.Await(editing, "the edit was not cancelled");
+    [Fact]
+    public void AClickNearTheMiddleOfAnEdge_AddsAVertexOnTheMiddle_WhenMidpointsSnap()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            host.ViewModel.SketchBar.Snapping.IsEnabled = true;
+
+            StartEdit(host, out var editing, new WpfPoint(200, 300), new WpfPoint(600, 300));
+
+            // 7 px from the middle along the edge, 3 px beside it: within the snap distance (10 px) of the middle
+            host.MoveTo(new WpfPoint(407, 303));
+
+            host.Snapshot("edge-handle-middle");
+
+            host.Click(new WpfPoint(407, 303));
+
+            var points = Points(host);
+
+            Assert.Equal(3, points.Length);
+            AssertNear(host, host.ToMap(new WpfPoint(400, 300)), points[1], pixels: 0.2);
+
+            CancelEdit(host, editing);
+        }, Plain);
+    }
+
+    [Fact]
+    public void AClickNearTheMiddle_StaysUnderThePointer_WhenSnappingIsOff()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            host.ViewModel.SketchBar.Snapping.IsEnabled = false;
+
+            StartEdit(host, out var editing, new WpfPoint(200, 300), new WpfPoint(600, 300));
+
+            host.Click(new WpfPoint(407, 303));
+
+            AssertNear(host, host.ToMap(new WpfPoint(407, 300)), Points(host)[1]);
+
+            CancelEdit(host, editing);
+        }, Plain);
+    }
+
+    [Fact]
+    public void APressOnAnEdgeAndADrag_AddsAVertexWhereItIsReleased()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            StartEdit(host, out var editing, new WpfPoint(200, 300), new WpfPoint(600, 300));
+
+            var centre = Copy(host.Map.CurrentExtent.Center);
+
+            host.Drag(new WpfPoint(300, 302), new WpfPoint(340, 180));
+
+            var points = Points(host);
+
+            // the vertex starts on the edge, 2 px above the press, and keeps that distance from the pointer (as a
+            // vertex grabbed off its centre does): it never jumps
+            Assert.Equal(3, points.Length);
+            AssertNear(host, host.ToMap(new WpfPoint(340, 178)), points[1]);
+
+            // the ends did not move, and neither did the map
+            AssertNear(host, host.ToMap(new WpfPoint(200, 300)), points[0]);
+            AssertNear(host, host.ToMap(new WpfPoint(600, 300)), points[2]);
+            AssertSameView(host, centre);
+
+            CancelEdit(host, editing);
+        }, Plain);
+    }
+
+    [Fact]
+    public void APressBesideTheReachOfAnEdge_PansTheMap_AndAddsNothing()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            StartEdit(host, out var editing, new WpfPoint(200, 300), new WpfPoint(600, 300));
+
+            var centre = Copy(host.Map.CurrentExtent.Center);
+
+            // 10 px from the edge: the reach is 6 px
+            host.Drag(new WpfPoint(400, 310), new WpfPoint(400, 410), steps: 10);
+
+            host.Pump(300);
+
+            Assert.Equal(2, Points(host).Length);
+            Assert.True(Math.Abs(host.Map.CurrentExtent.Center.Y - centre.Y) > host.MapLength(50), "the map did not pan");
+
+            CancelEdit(host, editing);
+        }, Plain);
+    }
+
+    [Fact]
+    public void APressNearAVertex_MovesTheVertex_AndAddsNothing()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            StartEdit(host, out var editing, new WpfPoint(200, 300), new WpfPoint(400, 300), new WpfPoint(600, 300));
+
+            // on the edge, 5 px from the middle vertex: the vertex is meant
+            host.Drag(new WpfPoint(405, 300), new WpfPoint(405, 220));
+
+            var points = Points(host);
+
+            Assert.Equal(3, points.Length);
+            AssertNear(host, host.ToMap(new WpfPoint(400, 220)), points[1]);
+
+            CancelEdit(host, editing);
+        }, Plain);
+    }
+
+    [Fact]
+    public void ARightClickBesideAnEdge_OffersAddPoint_WhichAddsAVertexThere()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            StartEdit(host, out var editing, new WpfPoint(200, 300), new WpfPoint(600, 300));
+
+            host.MoveTo(new WpfPoint(260, 304));
+            host.RightClick();
+
+            var options = host.FindInMap<IRI.Maptor.Presentation.Wpf.Controls.MapOptions.MapThreeOptions>();
+
+            Assert.NotNull(options);
+
+            var menu = (IRI.Maptor.Presentation.Wpf.ViewModels.MapOptionsViewModel)options!.DataContext;
+
+            Assert.Equal(IRI.Maptor.Presentation.Core.Properties.Resources.map_draw_addPoint, menu.MiddleToolTip);
+
+            menu.MiddleCommand.Execute(null);
+
+            host.Pump(300);
+
+            var points = Points(host);
+
+            Assert.Equal(3, points.Length);
+            AssertNear(host, host.ToMap(new WpfPoint(260, 300)), points[1]);
+
+            CancelEdit(host, editing);
+        }, Plain);
+    }
+
+    [Fact]
+    public void NoHandles_StandBetweenTheVertices()
+    {
+        if (!MapUiHost.IsEnabled)
+            return;
+
+        MapUiHost.Run(host =>
+        {
+            StartEdit(host, out var editing, new WpfPoint(200, 300), new WpfPoint(400, 300), new WpfPoint(600, 250));
+
+            host.MoveTo(new WpfPoint(400, 500));
+
+            // one handle per vertex, nothing between them
+            Assert.Equal(3, host.CountInMap<IRI.Maptor.Presentation.Wpf.Controls.MapMarkers.Circle>(_ => true));
+
+            host.Snapshot("edit-without-mid-vertices");
+
+            CancelEdit(host, editing);
         }, Plain);
     }
 

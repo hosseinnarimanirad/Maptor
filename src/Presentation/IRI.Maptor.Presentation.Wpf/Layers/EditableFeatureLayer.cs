@@ -43,8 +43,6 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
     private Func<FrameworkElement> MakePrimaryVertex { get; set; } = () => new Circle(1);
 
-    private Func<FrameworkElement> MakeSecondaryVertex { get; set; } = () => new Circle(.6);
-
     private Geometry? _webMercatorGeometry;
 
     private Path? _feature;
@@ -55,12 +53,10 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
     private RecursiveCollection<Locateable>? _vertices;
 
-    private RecursiveCollection<Locateable>? _midVertices;
-
     /// <summary>
-    /// One part of the geometry (a line or a ring) and what stands for it on the map. The vertices, the mid-vertices,
-    /// the edge labels and the figure of the screen path are all in the order of the part's points, so what belongs
-    /// to a vertex is found by its index, never by searching for its coordinates (two vertices can be at one place).
+    /// One part of the geometry (a line or a ring) and what stands for it on the map. The vertices, the edge labels and
+    /// the figure of the screen path are all in the order of the part's points, so what belongs to a vertex is found
+    /// by its index, never by searching for its coordinates (two vertices can be at one place).
     /// </summary>
     private sealed class EditedPart
     {
@@ -68,8 +64,6 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
         /// <summary>The index of the part's figure in the screen path.</summary>
         public int Figure;
-
-        public List<Locateable> MidVertices = new();
 
         /// <summary>The label of the edge that starts at each point, while edge labels are shown; else empty.</summary>
         public List<Locateable> EdgeLabels = new();
@@ -91,8 +85,6 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
 
     private SpecialPointLayer _primaryVerticesLayer;
-
-    private SpecialPointLayer _midVerticesLayer;
 
     // Edge Length
     private SpecialPointLayer _edgeLabelLayer;
@@ -278,7 +270,8 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         //}
         if (!Options.IsNewDrawing && !Options.IsMeasureMode)
         {
-            _featureRightButtonUpHandler = (sender, e) => { RegisterMapOptionsForEditPath(e); };
+            // a right click on the line itself; one beside it (within reach of the edge handle) comes from the map
+            _featureRightButtonUpHandler = (sender, e) => { ShowEditOptions(e, PathToMap(e.GetPosition(_feature))); };
 
             _feature.MouseRightButtonUp += _featureRightButtonUpHandler;
         }
@@ -299,9 +292,6 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
             RaisePropertyChanged(nameof(IsPreviousPartAvailable));
             RaisePropertyChanged(nameof(IsNextPartAvailable));
         };
-
-        // a mid-vertex is clicked (it inserts a vertex), never dragged
-        _midVerticesLayer = new SpecialPointLayer("#int. vert", new List<Locateable>(), .7, ScaleInterval.All, layerType) { AlwaysTop = true, IsMovable = false };
 
         // the labels can be dragged, so the user can lay them out around the line or polygon (user decision 2026-11-28)
         _edgeLabelLayer = new SpecialPointLayer("#edge length", new List<Locateable>(), .9, ScaleInterval.All, layerType) { AlwaysTop = false, IsMovable = isMovable };
@@ -429,11 +419,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         // event subscriptions (and WPF marker elements) can be garbage collected.
         _vertices?.GetFlattenCollection().ForEach(l => l.Detach());
 
-        _midVertices?.GetFlattenCollection().ForEach(l => l.Detach());
-
         _vertices = new RecursiveCollection<Locateable>();
-
-        _midVertices = new RecursiveCollection<Locateable>();
 
         _parts.Clear();
 
@@ -441,22 +427,13 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
         InvalidateMeasures();
 
-        MakeLocateables(_webMercatorGeometry, _vertices, _midVertices);
+        MakeLocateables(_webMercatorGeometry, _vertices);
 
         _primaryVerticesLayer.Items.Clear();
-
-        _midVerticesLayer.Items.Clear();
 
         _primaryVerticesLabelLayer.Items.Clear();
 
         var primary = _vertices.GetFlattenCollection();
-
-        var mid = _midVertices.GetFlattenCollection();
-
-        foreach (var item in mid)
-        {
-            _midVerticesLayer.Items.Add(item);
-        }
 
         foreach (var item in primary)
         {
@@ -660,16 +637,14 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         }
     }
 
-    private void MakeLocateables(Geometry geometry, RecursiveCollection<Locateable> primaryCollection, RecursiveCollection<Locateable> midCollection)
+    private void MakeLocateables(Geometry geometry, RecursiveCollection<Locateable> primaryCollection)
     {
         if (geometry.Points != null)
         {
             primaryCollection.Values = new List<Locateable>();
 
-            midCollection.Values = new List<Locateable>();
-
             // the parts are met in the order MakePathGeometry adds their figures
-            var part = new EditedPart { Geometry = geometry, Figure = _parts.Count, MidVertices = midCollection.Values };
+            var part = new EditedPart { Geometry = geometry, Figure = _parts.Count };
 
             _parts.Add(part);
 
@@ -680,44 +655,19 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
                 primaryCollection.Values.Add(locateable);
 
                 _addresses[locateable] = (part, i);
-
-                //do not make mid points in drawing mode
-                if (Options.IsNewDrawing)
-                    continue;
-
-                if (geometry.Type == GeometryType.Point || geometry.Type == GeometryType.MultiPoint)
-                    continue;
-
-                if (i == geometry.Points.Count - 1)
-                {
-                    if (_webMercatorGeometry.IsRingBase())
-                    {
-                        midCollection.Values.Add(ToSecondaryLocateable(geometry.Points[i], geometry.Points[0]));
-                    }
-                }
-                else
-                {
-                    midCollection.Values.Add(ToSecondaryLocateable(geometry.Points[i], geometry.Points[i + 1]));
-                }
             }
         }
         else
         {
             primaryCollection.Collections = new List<RecursiveCollection<Locateable>>();
 
-            midCollection.Collections = new List<RecursiveCollection<Locateable>>();
-
             foreach (var item in geometry.Geometries)
             {
                 RecursiveCollection<Locateable> subPrimaryCollection = new RecursiveCollection<Locateable>();
 
-                RecursiveCollection<Locateable> subMidCollection = new RecursiveCollection<Locateable>();
-
-                MakeLocateables(item, subPrimaryCollection, subMidCollection);
+                MakeLocateables(item, subPrimaryCollection);
 
                 primaryCollection.Collections.Add(subPrimaryCollection);
-
-                midCollection.Collections.Add(subMidCollection);
             }
         }
     }
@@ -851,13 +801,11 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
             InvalidateMeasures();
 
-            // only what the vertex touches is updated: its point of the screen path, its two mid-vertices, the labels
-            // of its two edges and the label of the whole
+            // only what the vertex touches is updated: its point of the screen path, the labels of its two edges and
+            // the label of the whole
             if (_addresses.TryGetValue(locateable, out var address))
             {
                 UpdatePathPoint(address.Part, address.Index, locateable);
-
-                MoveMidVertices(address.Part, address.Index, displacement);
 
                 UpdateLabelsAfterMove(address.Part, address.Index, displacement);
             }
@@ -882,41 +830,6 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
             e.Handled = true;
         }
-    }
-
-    private Locateable ToSecondaryLocateable(IPoint first, IPoint second)
-    {
-        var webMercatorPoint = new Point((first.X + second.X) / 2.0, (first.Y + second.Y) / 2.0);
-
-        //var element = new View.MapMarkers.Circle(.6);
-        var element = /*Options*/this.MakeSecondaryVertex();
-
-        var locateable = new Locateable(AnchorFunctionHandlers.CenterCenter) { Element = element, X = webMercatorPoint.X, Y = webMercatorPoint.Y };
-
-        MouseButtonEventHandler leftDown = (sender, e) =>
-        {
-            // the press belongs to the mid-vertex: it must not reach the map and start a pan
-            e.Handled = true;
-
-            webMercatorPoint.X = locateable.X;
-
-            webMercatorPoint.Y = locateable.Y;
-
-            if (!TryInsertPoint(webMercatorPoint, first, second, _webMercatorGeometry))
-            {
-                System.Diagnostics.Debug.WriteLine($"{nameof(EditableFeatureLayer)}: the segment of a mid-vertex was not found; nothing inserted");
-
-                return;
-            }
-
-            RequestRefresh?.Invoke(this);
-        };
-
-        element.MouseLeftButtonDown += leftDown;
-
-        locateable.OnDetach += () => element.MouseLeftButtonDown -= leftDown;
-
-        return locateable;
     }
 
     private void RegisterMapOptionsForVertices(MouseButtonEventArgs e, IPoint point, Locateable locateable)
@@ -978,16 +891,24 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
     }
 
-    private void RegisterMapOptionsForEditPath(MouseButtonEventArgs e)
+    /// <summary>
+    /// The right-click options of the edited geometry at <paramref name="mapPoint"/> (Web Mercator): finish and cancel,
+    /// and in the middle, when the point is on an edge (within reach of the edge handle), add a vertex there.
+    /// </summary>
+    public void ShowEditOptions(MouseButtonEventArgs e, Point mapPoint)
     {
+        var hit = CanInsertVertices
+            ? FindEdge(mapPoint, _screenToMap(EdgeHandleReach), _screenToMap(VertexReach))
+            : null;
+
         var presenter = new MapOptionsViewModel(
             leftToolTip: IRI.Maptor.Presentation.Core.Properties.Resources.mapPanel_edit_cancel,
             rightToolTip: IRI.Maptor.Presentation.Core.Properties.Resources.mapPanel_edit_finish,
-            middleToolTip: string.Empty,
+            middleToolTip: hit is null ? string.Empty : IRI.Maptor.Presentation.Core.Properties.Resources.map_draw_addPoint,
 
             leftSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CloseThick),
             rightSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CheckBold),
-            middleSymbol: string.Empty
+            middleSymbol: hit is null ? string.Empty : MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.VectorPolylinePlus)
             );
 
         presenter.RightCommandAction = i =>
@@ -1002,8 +923,18 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
             CancelEditing();
         };
 
-        RequestRightClickOptions?.Invoke(new MapTwoOptions(false), e, presenter);
+        if (hit is { } edge)
+        {
+            // on the edge at the place the menu was opened for (the menu covers the pointer once it is open)
+            presenter.MiddleCommandAction = i =>
+            {
+                RemoveMapOptions();
 
+                InsertVertex(edge, edge.Point);
+            };
+        }
+
+        RequestRightClickOptions?.Invoke(hit is null ? new MapTwoOptions(false) : new MapThreeOptions(false), e, presenter);
     }
 
     private void RemoveMapOptions()
@@ -1011,72 +942,121 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         RequestRemoveRightClickOptions?.Invoke();
     }
 
-    private int GetLeftMidPointIndex(int primaryIndex, int length)
+    // ---------------------------------------------------------------- inserting a vertex on an edge
+
+    /// <summary>How far from an edge, in pixels, the edge handle shows and a press inserts a vertex (decision D6).</summary>
+    public const double EdgeHandleReach = 6;
+
+    /// <summary>Within this many pixels of a vertex the vertex is meant, not its edges: no edge handle there.</summary>
+    public const double VertexReach = 8;
+
+    /// <summary>An edge of the edited geometry and the point on it nearest to where it was looked for (Web Mercator).</summary>
+    /// <param name="Part">The part, in the order of the geometry's lines and rings.</param>
+    /// <param name="Edge">The edge's index in its part: from point <c>Edge</c> to the next one (for a ring's last edge, to the first).</param>
+    public readonly record struct EdgeHit(int Part, int Edge, Point Start, Point End, Point Point, double Distance)
     {
-        int left;
-
-        if (primaryIndex == 0 && _webMercatorGeometry.IsRingBase())
-        {
-            left = length - 1;
-        }
-        else if (primaryIndex == 0 && !_webMercatorGeometry.IsRingBase())
-        {
-            left = int.MinValue;
-        }
-        else
-        {
-            left = primaryIndex - 1;
-        }
-
-        return left;
+        public Point Middle => new((Start.X + End.X) / 2.0, (Start.Y + End.Y) / 2.0);
     }
 
-    private int GetRightMidPointIndex(int primaryIndex, int length)
+    /// <summary>True when a vertex can be added on an edge: an edit of a line or a polygon, not a sketch being drawn.</summary>
+    public bool CanInsertVertices
+        => !Options.IsNewDrawing && _webMercatorGeometry?.Type.GetCategory() is GeometryCategory.Polyline or GeometryCategory.Polygon;
+
+    /// <summary>
+    /// The edge nearest to <paramref name="mapPoint"/> within <paramref name="reach"/>, or null. Null too when a vertex
+    /// is within <paramref name="vertexReach"/>: there the vertex is meant. Distances are in map units.
+    /// </summary>
+    public EdgeHit? FindEdge(Point mapPoint, double reach, double vertexReach)
     {
-        int right;
+        if (!CanInsertVertices || mapPoint.IsNaN())
+            return null;
 
-        if (primaryIndex == length && !_webMercatorGeometry.IsRingBase())
+        EdgeHit? best = null;
+
+        for (int p = 0; p < _parts.Count; p++)
         {
-            right = int.MinValue;
-        }
-        else
-        {
-            right = primaryIndex;
-        }
+            var points = _parts[p].Geometry.Points;
 
-        return right;
-    }
+            if (points is null)
+                continue;
 
-    private bool TryInsertPoint(Point webMercatorPoint, IPoint startLineSegment, IPoint endLineSegment, Geometry geometry)
-    {
-        var point = ToScreen(webMercatorPoint.AsWpfPoint());
-
-        if (geometry.Points != null)
-        {
-            for (int i = 0; i < geometry.Points.Count; i++)
+            foreach (var point in points)
             {
-                if (geometry.Points[i] == startLineSegment)
-                {
-
-                    geometry.InsertPoint(webMercatorPoint, i + 1);
-
-                    ReconstructLocateables();
-
-                    return true;
-                }
+                if (Distance(point, mapPoint) <= vertexReach)
+                    return null;
             }
-        }
-        else
-        {
-            for (int g = 0; g < geometry.Geometries.Count; g++)
-            {
-                if (TryInsertPoint(webMercatorPoint, startLineSegment, endLineSegment, geometry.Geometries[g]))
-                    return true;
 
+            var edges = EdgeCount(_parts[p]);
+
+            for (int i = 0; i < edges; i++)
+            {
+                var start = points[i];
+                var end = points[(i + 1) % points.Count];
+
+                var nearest = NearestOnSegment(start, end, mapPoint);
+
+                var distance = Distance(nearest, mapPoint);
+
+                if (distance <= reach && (best is null || distance < best.Value.Distance))
+                    best = new EdgeHit(p, i, new Point(start.X, start.Y), new Point(end.X, end.Y), nearest, distance);
             }
         }
 
-        return false;
+        return best;
+    }
+
+    /// <summary>
+    /// Adds a vertex at <paramref name="at"/> (Web Mercator) after the start of the edge <paramref name="hit"/>, selects
+    /// it and returns it, or null when the edge is not there any more.
+    /// </summary>
+    public Locateable? InsertVertex(EdgeHit hit, Point at)
+    {
+        if (hit.Part < 0 || hit.Part >= _parts.Count || _parts[hit.Part].Geometry.Points is not { } points || hit.Edge >= points.Count)
+            return null;
+
+        var index = hit.Edge + 1;
+
+        points.Insert(index, new Point(at.X, at.Y));
+
+        MakePathGeometry();
+
+        ReconstructLocateables();
+
+        var part = _parts[hit.Part];
+
+        var vertex = _addresses.FirstOrDefault(a => ReferenceEquals(a.Value.Part, part) && a.Value.Index == index).Key;
+
+        if (vertex is not null)
+            _primaryVerticesLayer.SelectLocatable(vertex.Element);
+
+        RequestRefresh?.Invoke(this);
+
+        return vertex;
+    }
+
+    /// <summary>A point of the screen path (in the path's own units) as a map point (Web Mercator).</summary>
+    private Point PathToMap(WpfPoint pathPoint)
+    {
+        var map = _toScreen.Inverse?.Transform(pathPoint) ?? new WpfPoint(double.NaN, double.NaN);
+
+        return new Point(map.X, map.Y);
+    }
+
+    private static double Distance(IPoint first, IPoint second)
+        => Math.Sqrt((first.X - second.X) * (first.X - second.X) + (first.Y - second.Y) * (first.Y - second.Y));
+
+    private static Point NearestOnSegment(IPoint start, IPoint end, IPoint point)
+    {
+        var dx = end.X - start.X;
+        var dy = end.Y - start.Y;
+
+        var lengthSquared = dx * dx + dy * dy;
+
+        var t = lengthSquared == 0 ? 0 : ((point.X - start.X) * dx + (point.Y - start.Y) * dy) / lengthSquared;
+
+        t = Math.Max(0, Math.Min(1, t));
+
+        return new Point(start.X + t * dx, start.Y + t * dy);
     }
 
     /// <summary>
@@ -1124,25 +1104,6 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         {
             segment.Point = screenPoint;
         }
-    }
-
-    /// <summary>The mid-vertices on the two sides of the vertex at <paramref name="index"/> follow it by half of its move.</summary>
-    private void MoveMidVertices(EditedPart part, int index, Point displacement)
-    {
-        // a sketch being drawn has no mid-vertices, and neither has a point: there is nothing to move then
-        var mids = part.MidVertices;
-
-        var length = mids.Count;
-
-        var leftIndex = GetLeftMidPointIndex(index, length);
-
-        var rightIndex = GetRightMidPointIndex(index, length);
-
-        if (leftIndex >= 0 && leftIndex < length)
-            mids[leftIndex].MoveTo(mids[leftIndex].X + displacement.X / 2.0, mids[leftIndex].Y + displacement.Y / 2.0);
-
-        if (rightIndex >= 0 && rightIndex < length)
-            mids[rightIndex].MoveTo(mids[rightIndex].X + displacement.X / 2.0, mids[rightIndex].Y + displacement.Y / 2.0);
     }
 
     //probably this method can be better
@@ -1295,8 +1256,6 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
     }
 
     public SpecialPointLayer GetVertices() => _primaryVerticesLayer;
-
-    public SpecialPointLayer GetMidVertices() => _midVerticesLayer;
 
     public SpecialPointLayer GetEdgeLengths()
     {
@@ -2204,9 +2163,9 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
                 this.RequestPanToPoint = null;
 
                 // Detach and release every locateable still held by the point layers so their
-                // per-vertex handlers (wired in ToPrimaryLocateable/ToSecondaryLocateable) don't
+                // per-vertex handlers (wired in ToPrimaryLocateable) don't
                 // outlive the layer. Detach must run *before* the items are cleared.
-                foreach (var layer in new[] { _primaryVerticesLayer, _midVerticesLayer, _edgeLabelLayer, _primaryVerticesLabelLayer })
+                foreach (var layer in new[] { _primaryVerticesLayer, _edgeLabelLayer, _primaryVerticesLabelLayer })
                 {
                     if (layer?.Items is null)
                         continue;
@@ -2245,8 +2204,6 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
                 }
 
                 _vertices = null;
-
-                _midVertices = null;
 
                 _parts.Clear();
 

@@ -30,7 +30,7 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Style="{StaticResource SampleHint}" TextWrapping="Wrap"
-                           Text="Draw on the parcels and the road: points snap to them. Edit a drawing from its menu in the drawings list below: drag a vertex, click a mid-vertex to add one, drag the length labels. The sketch bar has snapping, the guides and the cursor box (type L, A or B while placing a point)." />
+                           Text="Draw on the parcels and the road: points snap to them. Edit a drawing from its menu in the drawings list below: drag a vertex; point at the line and click (or press and drag) to add a vertex there, or right-click it for Add point; drag the length labels. The sketch bar has snapping, the guides and the cursor box (type L, A or B while placing a point)." />
 
                 <!-- the layers: what is snapped to -->
                 <maptor:MapLegendView Grid.Row="1" Margin="0,8,0,0" LegendViewModel="{Binding LegendViewModel}" />
